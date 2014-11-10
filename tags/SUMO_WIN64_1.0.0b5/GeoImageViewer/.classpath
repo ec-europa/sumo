@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-nop-1.7.5.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GeoTools11.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jhdf5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/imageio-ext"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jai"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="src/main/fengui"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="lib" path="lib/apache/commons-fileupload-1.2.1/lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache/commons-net-2.0/commons-net-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/apache/commons-net-2.0/commons-net-ftp-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/appframework-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-bean-collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-core.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/gekmllib.jar"/>
+	<classpathentry kind="lib" path="lib/geonames-source-0.5.jar"/>
+	<classpathentry kind="lib" path="lib/h2-1.2.121.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/lib/dsn.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/lib/imap.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/lib/mailapi.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/lib/pop3.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/lib/smtp.jar"/>
+	<classpathentry kind="lib" path="lib/javamail-1.4.1/mail.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-8.4-701.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/swing-layout-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/swing-worker-1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GeoImage"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GeoImageAnalysis"/>
+	<classpathentry kind="lib" path="lib/AppleJavaExtensions.jar"/>
+	<classpathentry kind="lib" path="lib/asm-debug-all.jar"/>
+	<classpathentry kind="lib" path="lib/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/lzma.jar"/>
+	<classpathentry kind="lib" path="lib/rome-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/georss-rome-0.9.8.jar"/>
+	<classpathentry kind="lib" path="lib/georss-rome-src-0.9.8.jar"/>
+	<classpathentry kind="lib" path="lib/svgSalamander.jar"/>
+	<classpathentry kind="lib" path="lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="lib/toplink-grid.jar"/>
+	<classpathentry kind="lib" path="lib/imageio-ext-jmatio-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/imageio-ext-mat-core-1.1M012010.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/javax.persistence.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/worldwind/plugin.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jogl"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/worldwin2.0"/>
+	<classpathentry kind="con" path="com.genuitec.runtime.library/com.genuitec.jaxb_ri_2.2"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

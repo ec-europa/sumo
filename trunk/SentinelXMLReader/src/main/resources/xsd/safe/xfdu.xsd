@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="urn:ccsds:schema:xfdu:1" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:gml="http://www.opengis.net/gml" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0">
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0" schemaLocation="manifest.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1" schemaLocation="s1.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" schemaLocation="s1sarl1.xsd"/>
+  <xs:import namespace="http://www.opengis.net/gml" schemaLocation="gml.xsd"/>
+  <xs:element name="XFDU">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="informationPackageMap" form="unqualified">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="xfdu:contentUnit"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="metadataSection" form="unqualified">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="metadataObject" form="unqualified">
+                <xs:complexType>
+                  <xs:choice>
+                    <xs:group ref="safe:dataObjectPointer"/>
+                    <xs:element name="metadataReference" form="unqualified">
+                      <xs:complexType>
+                        <xs:attribute name="href" use="required"/>
+                        <xs:attribute name="locatorType" use="required" type="xs:NCName"/>
+                        <xs:attribute name="mimeType" use="required"/>
+                        <xs:attribute name="vocabularyName" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="metadataWrap" form="unqualified">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="xmlData" form="unqualified">
+                            <xs:complexType>
+                              <xs:choice>
+                                <xs:element ref="safe:processing"/>
+                                <xs:element ref="safe:acquisitionPeriod"/>
+                                <xs:element ref="safe:frameSet"/>
+                                <xs:element ref="safe:orbitReference"/>
+                                <xs:element ref="safe:platform"/>
+                                <xs:element ref="s1sarl1:standAloneProductInformation"/>
+                              </xs:choice>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="mimeType" use="required"/>
+                        <xs:attribute name="textInfo" use="required"/>
+                        <xs:attribute name="vocabularyName" use="required" type="xs:NCName"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                  <xs:attribute name="ID" use="required" type="xs:NCName"/>
+                  <xs:attribute name="category" use="required" type="xs:NCName"/>
+                  <xs:attribute name="classification" use="required" type="xs:NCName"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dataObjectSection" form="unqualified">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="dataObject" form="unqualified">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="byteStream" form="unqualified">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="fileLocation" form="unqualified">
+                            <xs:complexType>
+                              <xs:attribute name="href" use="required"/>
+                              <xs:attribute name="locatorType" use="required" type="xs:NCName"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="checksum" form="unqualified">
+                            <xs:complexType mixed="true">
+                              <xs:attribute name="checksumName" use="required" type="xs:NCName"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="mimeType" use="required"/>
+                        <xs:attribute name="size" use="required" type="xs:integer"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="ID" use="required" type="xs:NCName"/>
+                  <xs:attribute name="repID" use="required" type="xs:NCName"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="contentUnit">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="xfdu:contentUnit"/>
+        <xs:group ref="safe:dataObjectPointer"/>
+      </xs:sequence>
+      <xs:attribute name="dmdID"/>
+      <xs:attribute name="pdiID" type="xs:NCName"/>
+      <xs:attribute name="repID" type="xs:NCName"/>
+      <xs:attribute name="textInfo"/>
+      <xs:attribute name="unitType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

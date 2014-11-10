@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*** GENERATED FROM jogl-projects module - DO NOT EDIT  ***
+***             EDIT ../build.xml INSTEAD              ***
+-->
+<project name="jogl-template-impl" default="default" basedir=".." >
+    <description>Builds the GeoImageViewer.</description>
+
+    <target name="-jogl-template-post-jar">
+        <echo message="Creating native distibutions"/>
+
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="linux-i586"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="linux-amd64"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="macosx-ppc"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="macosx-universal"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-sparc"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-sparcv9"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-i586"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="windows-i586"/>
+        </antcall>
+        <copy todir="${dist.dir}">
+            <fileset dir="${libs.JOGL.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+            <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+        </copy >
+    </target>
+
+    <target name="-create-native-distribution">
+        <mkdir dir="${dist.dir}-${platform.name}"/>
+        <!-- This is a bit of a hack to simulate string replacements with ant :/ -->
+        <pathconvert pathsep=" " property="platformFiles">
+            <path>
+                <fileset dir="${libs.JOGL.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+                <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+            </path>
+        </pathconvert>
+        <echo file="${java.io.tmpdir}/platformExcludes.properties" message="platformExcludes: ${platformFiles}" />
+        <replace file="${java.io.tmpdir}/platformExcludes.properties" value="">
+            <replacefilter token="${libs.JOGL.classpath}-natives-${natives.platform}"/>
+            <replacefilter token="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}"/>
+        </replace>
+        <property file="${java.io.tmpdir}/platformExcludes.properties"/>
+        <delete file="${java.io.tmpdir}/platformExcludes.properties"/>
+        <copy todir="${dist.dir}-${platform.name}" overwrite="yes">
+            <fileset dir="${dist.dir}" excludes="${platformExcludes}" defaultexcludes="no"/>
+            <fileset dir="${libs.JOGL.classpath}-natives-${platform.name}"/>
+            <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${platform.name}"/>
+        </copy >
+    </target>
+    
+    <target name="-jogl-template-post-clean">
+        <echo message="Removing native distibutions"/>
+        <delete dir="${dist.dir}-linux-i586"/>
+        <delete dir="${dist.dir}-linux-amd64"/>
+        <delete dir="${dist.dir}-macosx-ppc"/>
+        <delete dir="${dist.dir}-macosx-universal"/>
+        <delete dir="${dist.dir}-solaris-sparc"/>
+        <delete dir="${dist.dir}-solaris-sparcv9"/>
+        <delete dir="${dist.dir}-solaris-i586"/>
+        <delete dir="${dist.dir}-windows-i586"/>
+    </target>
+
+</project>

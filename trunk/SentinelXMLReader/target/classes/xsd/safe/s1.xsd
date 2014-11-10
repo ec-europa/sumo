@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:gml="http://www.opengis.net/gml" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0">
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0" schemaLocation="manifest.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" schemaLocation="s1sarl1.xsd"/>
+  <xs:import namespace="http://www.opengis.net/gml" schemaLocation="gml.xsd"/>
+  <xs:import namespace="urn:ccsds:schema:xfdu:1" schemaLocation="xfdu.xsd"/>
+  <xs:element name="orbitProperties">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="s1:pass"/>
+        <xs:element ref="s1:ascendingNodeTime"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pass" type="xs:NCName"/>
+  <xs:element name="ascendingNodeTime" type="xs:NMTOKEN"/>
+  <xs:element name="timeANX">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="s1:startTimeANX"/>
+        <xs:element ref="s1:stopTimeANX"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="startTimeANX" type="xs:double"/>
+  <xs:element name="stopTimeANX" type="xs:double"/>
+</xs:schema>

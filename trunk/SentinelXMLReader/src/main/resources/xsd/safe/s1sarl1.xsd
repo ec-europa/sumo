@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:gml="http://www.opengis.net/gml" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0">
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0" schemaLocation="manifest.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1" schemaLocation="s1.xsd"/>
+  <xs:import namespace="http://www.opengis.net/gml" schemaLocation="gml.xsd"/>
+  <xs:import namespace="urn:ccsds:schema:xfdu:1" schemaLocation="xfdu.xsd"/>
+  <xs:element name="standAloneProductInformation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="s1sarl1:instrumentConfigurationID"/>
+        <xs:element ref="s1sarl1:missionDataTakeID"/>
+        <xs:element maxOccurs="unbounded" ref="s1sarl1:transmitterReceiverPolarisation"/>
+        <xs:element ref="s1sarl1:productClass"/>
+        <xs:element ref="s1sarl1:productClassDescription"/>
+        <xs:element ref="s1sarl1:productComposition"/>
+        <xs:element ref="s1sarl1:productType"/>
+        <xs:element ref="s1sarl1:productTimelinessCategory"/>
+        <xs:element ref="s1sarl1:sliceProductFlag"/>
+        <xs:element ref="s1sarl1:segmentStartTime"/>
+        <xs:element ref="s1sarl1:sliceNumber"/>
+        <xs:element ref="s1sarl1:totalSlices"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="instrumentConfigurationID" type="xs:integer"/>
+  <xs:element name="missionDataTakeID" type="xs:integer"/>
+  <xs:element name="transmitterReceiverPolarisation" type="xs:NCName"/>
+  <xs:element name="productClass" type="xs:NCName"/>
+  <xs:element name="productClassDescription" type="xs:string"/>
+  <xs:element name="productComposition" type="xs:NCName"/>
+  <xs:element name="productType" type="xs:NCName"/>
+  <xs:element name="productTimelinessCategory" type="xs:NCName"/>
+  <xs:element name="sliceProductFlag" type="xs:boolean"/>
+  <xs:element name="segmentStartTime" type="xs:NMTOKEN"/>
+  <xs:element name="sliceNumber" type="xs:integer"/>
+  <xs:element name="totalSlices" type="xs:integer"/>
+  <xs:element name="instrumentMode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="s1sarl1:mode"/>
+        <xs:element maxOccurs="unbounded" ref="s1sarl1:swath"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="mode" type="xs:NCName"/>
+  <xs:element name="swath" type="xs:NCName"/>
+</xs:schema>
