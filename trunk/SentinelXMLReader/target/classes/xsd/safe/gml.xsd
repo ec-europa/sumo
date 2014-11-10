@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.opengis.net/gml" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:gml="http://www.opengis.net/gml" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0">
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0" schemaLocation="manifest.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1" schemaLocation="s1.xsd"/>
+  <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" schemaLocation="s1sarl1.xsd"/>
+  <xs:import namespace="urn:ccsds:schema:xfdu:1" schemaLocation="xfdu.xsd"/>
+  <xs:element name="coordinates" type="xs:string"/>
+</xs:schema>

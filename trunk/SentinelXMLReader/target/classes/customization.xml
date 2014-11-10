@@ -1,0 +1,26 @@
+<jxb:bindings 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    version="2.1">
+ 
+	<jxb:bindings schemaLocation="xsd/net/opengis/gml/3.0.0/base/measures.xsd">
+		<jxb:bindings node="//xs:complexType[@name='ScaleType']">
+			<jxb:class name="ScaleTypeFromMeasures"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="xsd/net/opengis/gml/3.0.0/base/measures.xsd">
+		<jxb:bindings node="//xs:complexType[@name='VelocityType']">
+			<jxb:class name="VelocityTypeFromMeasures"/>
+		</jxb:bindings>
+	</jxb:bindings>
+ 	<jxb:bindings schemaLocation="xsd/net/opengis/gml/3.0.0/base/measures.xsd">
+		<jxb:bindings node="//xs:complexType[@name='TimeType']">
+			<jxb:class name="TimeTypeFromMeasures"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<!--  jxb:bindings schemaLocation="xsd/net/opengis/gml/3.0.0/base/measures.xsd">
+		<jxb:bindings node="//xs:complexType[@name='ObjectFactory']">
+			<jxb:class name="ObjectFactoryFromMeasures"/>
+		</jxb:bindings>
+	</jxb:bindings -->
+</jxb:bindings>
