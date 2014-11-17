@@ -24,14 +24,16 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.common.OptionMenu;
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.PickedData;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.ISave;
@@ -48,7 +50,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -61,14 +62,15 @@ import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
  *
  * @author thoorfr
  */
-public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IClickable, IThreshable {
+public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IClickable, IThreshable {
 
     public final static String POINT = GeometricLayer.POINT;
     public final static String POLYGON = GeometricLayer.POLYGON;
     public final static String LINESTRING = GeometricLayer.LINESTRING;
     public final static String MIXED = GeometricLayer.MIXED;
     protected boolean active = true;
-    protected IImageLayer parent;
+    protected GeoImageReader reader;
+    protected GeoTransform geotransform;
     protected GeometricLayer glayer;
    	protected String type;
     protected String name;
@@ -86,6 +88,31 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
     //Pietro: for testing layer intersaction / union
     //public static ArrayList <Geometry>intersections=null;
     //public static ArrayList <Geometry>results=null;
+    
+    
+    
+    public MaskVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+        this.name = layername;
+        this.reader = reader;
+        this.geotransform=reader.getGeoTransform();
+        this.type = type;
+        if (layer == null) {
+            return;
+        }
+        this.glayer = layer;
+        String test = glayer.getSchema('/');
+        if (test.contains(VDSSchema.SIGNIFICANCE)) {
+            calculateMaxMinTresh();
+            threshable = true;
+        }
+       //Pietro: for testing layer intersaction / union 
+      /*  if(intersections==null)
+        	intersections=new ArrayList<Geometry>();
+        if(results==null)
+        	results=new ArrayList<Geometry>(); */
+    }
+    
+    
     
     public double getMaximumThresh() {
         return maxThresh;
@@ -155,24 +182,7 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
 
     public static enum symbol {point, circle, square, triangle, cross};
 
-    public SimpleVectorLayer(String layername, IImageLayer parent, String type, GeometricLayer layer) {
-        this.name = layername;
-        this.parent = parent;
-        this.type = type;
-        if (layer == null) {
-            return;
-        }
-        this.glayer = layer;
-        String test = glayer.getSchema('/');
-        if (test.contains(VDSSchema.SIGNIFICANCE)) {
-            calculateMaxMinTresh();
-            threshable = true;
-        }
-      /*  if(intersections==null)
-        	intersections=new ArrayList<Geometry>();
-        if(results==null)
-        	results=new ArrayList<Geometry>(); */
-    }
+ 
 
     public String getName() {
         return name;
@@ -529,17 +539,16 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
         return false;
     }
 
-    public ILayerManager getParent() {
-        return parent;
-    }
 
     public String getDescription() {
         return getName();
     }
 
     public void dispose() {
-        glayer.clear();
-        glayer = null;
+    	if(glayer!=null){
+    		glayer.clear();
+    		glayer = null;
+    	}	
     }
 
     public Color getColor() {
@@ -565,16 +574,16 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
             }
             Map config = new HashMap();
             config.put(GenericCSVIO.CONFIG_FILE, file);
-            AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config, ((IImageLayer) this.getParent()).getImageReader());//AndreaG changed csv(sumo) with genericcsv
-            csv.save(createThresholdedLayer(glayer), projection);
+            AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);//AndreaG changed csv(sumo) with genericcsv
+            csv.save(createThresholdedLayer(glayer), projection,reader);
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
             try {
                 Map config = new HashMap();
                 config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
-                AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config, ((IImageLayer) this.getParent()).getImageReader());
-                shp.save(createThresholdedLayer(glayer), projection);
+                AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+                shp.save(createThresholdedLayer(glayer), projection,reader);
             } catch (MalformedURLException ex) {
-                Logger.getLogger(SimpleVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -601,7 +610,7 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
             }
             return false;
         } catch (ParseException ex) {
-            Logger.getLogger(SimpleVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         }
         return false;
     }
@@ -663,7 +672,7 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
             }
             return false;
         } catch (ParseException ex) {
-            Logger.getLogger(SimpleVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         }
         return false;
     }
@@ -699,9 +708,11 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
         return image;
     }
 
-    public Area getShape() {
+    public Area getShape(int width, int height) {
         Area maskArea = new Area();
-        Rectangle rect = new Rectangle(0, 0, parent.getImageReader().getWidth(), parent.getImageReader().getHeight());
+        
+        Rectangle rect = new Rectangle(0, 0, width,height);//reader.getWidth(), reader.getHeight());
+
         GeometryFactory gf = new GeometryFactory();
         Coordinate[] coords = new Coordinate[]{
             new Coordinate((int) rect.getMinX(), (int) rect.getMinY()),
@@ -896,19 +907,12 @@ public class SimpleVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IC
     	return polygons;
     }
     
-    
-    public IMask createBufferedMask(double bufferingDistance) {
-        IMask mask = null;
-        try {
-            mask = (IMask) (new SimpleVectorLayer(getName(), (IImageLayer) getParent(), getType(), glayer.clone()));
-            mask.buffer(bufferingDistance);
-        } catch (Exception ex) {
-            Logger.getLogger(SimpleVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return mask;
-    }
-
     public List<Geometry> getGeometries() {
         return glayer.getGeometries();
     }
+
+	@Override
+	public ILayerManager getParent() {
+		return Platform.getLayerManager();
+	}
 }
