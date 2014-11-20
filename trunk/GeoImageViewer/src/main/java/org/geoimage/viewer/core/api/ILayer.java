@@ -5,7 +5,6 @@
 
 package org.geoimage.viewer.core.api;
 
-import org.geoimage.viewer.core.*;
 
 
 /**
