@@ -30,7 +30,7 @@ public class GeoContext {
     private int x = 0;
     private GLContext glContext;
     private GLU glu = new GLU();
-    private GeoTransform geoTransform;
+    //private GeoTransform geoTransform;
     
     
     /**
@@ -45,9 +45,9 @@ public class GeoContext {
      * provide the GeoTransform dealing with pixel and map coordinates
      * @return
      */
-    public GeoTransform getGeoTransform(){
+   /* public GeoTransform getGeoTransform(){
         return geoTransform;
-    }
+    }*/
     
     /**
      * gets access to the GL context to perform direct openGL operations
@@ -177,7 +177,7 @@ public class GeoContext {
         return fDisplay;
     }
 
-    public void setGeoTransform(GeoTransform geoTransform) {
+   /* public void setGeoTransform(GeoTransform geoTransform) {
         this.geoTransform = geoTransform;
-    }
+    }*/
 }
