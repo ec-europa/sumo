@@ -8,13 +8,12 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.util.ImageTiler;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.util.ImageTiler;
 
 /**
  *

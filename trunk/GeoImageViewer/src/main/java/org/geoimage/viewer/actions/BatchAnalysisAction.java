@@ -8,6 +8,7 @@ package org.geoimage.viewer.actions;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.offline.BatchAnalysisGUI;

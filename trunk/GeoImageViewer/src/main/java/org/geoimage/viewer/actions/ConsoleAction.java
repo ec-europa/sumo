@@ -7,6 +7,7 @@ package org.geoimage.viewer.actions;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
 import org.geoimage.viewer.core.api.IConsoleAction;
 
 /**
