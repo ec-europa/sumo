@@ -5,12 +5,14 @@
 package org.geoimage.viewer.actions;
 
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
 
 /**

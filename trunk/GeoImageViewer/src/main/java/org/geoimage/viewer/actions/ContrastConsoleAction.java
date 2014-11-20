@@ -6,20 +6,21 @@ package org.geoimage.viewer.actions;
 
 import java.util.List;
 import java.util.Vector;
+
 import org.fenggui.layout.FormAttachment;
 import org.fenggui.layout.FormData;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.widget.Slider;
 
 /**
  *
  * @author thoorfr+AG
  *
- * this class manages the contrast of the image. It adds a control in the menu where it is possible to manually insert the desired contrast. Otherwise, the contrast could be managed by the console. The command “c +” followed by a number will increase the actual contrast of the inserted number. The opposite is for “c –“ number. The command “c sl” opens a slider for changing the contrast.
+ * this class manages the contrast of the image. It adds a control in the menu where it is possible to manually insert the desired contrast. Otherwise, the contrast could be managed by the console. The command ï¿½c +ï¿½ followed by a number will increase the actual contrast of the inserted number. The opposite is for ï¿½c ï¿½ï¿½ number. The command ï¿½c slï¿½ opens a slider for changing the contrast.
  *
  */
 public class ContrastConsoleAction implements IConsoleAction {

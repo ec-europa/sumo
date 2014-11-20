@@ -14,15 +14,14 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.utils.IProgress;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 
 /**
@@ -53,20 +52,19 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
             public void run() {
                 Platform.setInfo("Importing land mask from GSHHS shapefile...",-1);
                 try {
-                    for (ILayer l : Platform.getLayerManager().getLayers()) {
-                        if (l instanceof IImageLayer & l.isActive()) {
-                            try {
-                                URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
-                                Map config=new HashMap();
-                                config.put("url", url);
-                                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config, ((IImageLayer) l).getImageReader());
-                                GeometricLayer gl = shpio.read();
-                                addLayerInThread(gl, (IImageLayer) l);
-                            } catch (Exception ex) {
-                                Logger.getLogger(AddWorldVectorLayerAction.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                	IImageLayer  l=Platform.getCurrentImageLayer();
+                	if(l!=null){
+                        try {
+                            URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
+                            Map config=new HashMap();
+                            config.put("url", url);
+                            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+                            GeometricLayer gl = shpio.read(l.getImageReader());
+                            addLayerInThread(gl, (IImageLayer) l);
+                        } catch (Exception ex) {
+                            Logger.getLogger(AddWorldVectorLayerAction.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    }
+                	}   
                 } catch (Exception e) {
                 }
                 Platform.setInfo(null);
@@ -81,7 +79,7 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
             new Thread(new Runnable() {
 
                 public void run() {
-                    il.addLayer(new SimpleEditVectorLayer(layer.getName(), il, layer.getGeometryType(), layer));
+                    il.addLayer(new SimpleEditVectorLayer(layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
                     done = true;
                 }
             }).start();

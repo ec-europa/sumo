@@ -23,9 +23,9 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
 import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
@@ -280,11 +280,11 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
                 lastDirectory = fileChooser.getSelectedFile().getParent();
                 Map config = new HashMap();
                 config.put(SumoXmlIOOld.CONFIG_FILE, fileChooser.getSelectedFile().getAbsolutePath());
-                csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config, null);
+                csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
             }
         }
         if(csv!=null){
-	        GeometricLayer positions = csv.read();
+	        GeometricLayer positions = csv.read(null);
 	        if (positions.getProjection() == null) {
 	            Platform.getLayerManager().addLayer(new ThumbnailsLayer(Platform.getLayerManager(), positions, null, "id", new ThumbnailsManager(lastDirectory)));
 	        } else {
