@@ -17,7 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.geoimage.analysis.VDSSchema;
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -34,10 +36,12 @@ import org.jdom.output.XMLOutputter;
  * @author thoorfr
  */
 public class GmlIO extends AbstractVectorIO {
-
     public static String CONFIG_FILE = "file";
 
-    public GeometricLayer read() {
+    public GmlIO(){
+    }
+    
+    public GeometricLayer read(GeoImageReader reader) {
         try {
             GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
             SAXBuilder builder = new SAXBuilder();
@@ -85,7 +89,9 @@ public class GmlIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    	GeoTransform transform=gir.getGeoTransform();
+    	
         Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
         Namespace vd=Namespace.getNamespace("vd", "http://cweb.ksat.no/cweb/schema/vessel");
         Namespace sat=Namespace.getNamespace("sat", "http://cweb.ksat.no/cweb/schema/satellite");
@@ -105,7 +111,7 @@ public class GmlIO extends AbstractVectorIO {
             Attributes att = glayer.getAttributes(geom);
             String[] atts = att.getSchema();
             Element featureMember = new Element("featureMember", gml);
-            double[] posA = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+            double[] posA = transform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
             Element feature = new Element("feature", vd);
             Element name = new Element("name", gml);
             name.addContent(c+"");

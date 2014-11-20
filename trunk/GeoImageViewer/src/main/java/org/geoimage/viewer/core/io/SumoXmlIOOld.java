@@ -4,11 +4,6 @@
  */
 package org.geoimage.viewer.core.io;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,27 +13,35 @@ import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarMetadata;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
-import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
  *
  * @author thoorfr
  */
 public class SumoXmlIOOld extends AbstractVectorIO {
-
     public static String CONFIG_FILE = "file";
     final Logger logger = Logger.getLogger(SumoXmlIOOld.class);
 
-    public GeometricLayer read() {
+    public SumoXmlIOOld(){
+	}
+    
+    
+    public GeometricLayer read(GeoImageReader gir) {
         try {
             GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
             
@@ -113,7 +116,9 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    	GeoTransform transform=gir.getGeoTransform();
+    	
         Element root = new Element("analysis");
         Element image = new Element("image_information");
         Element name = new Element("name");

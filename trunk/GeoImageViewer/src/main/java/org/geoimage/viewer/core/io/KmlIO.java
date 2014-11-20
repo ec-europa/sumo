@@ -4,32 +4,10 @@
  */
 package org.geoimage.viewer.core.io;
 
-import com.keithpower.gekmlib.Document;
-import com.keithpower.gekmlib.Folder;
-import com.keithpower.gekmlib.GroundOverlay;
-import com.keithpower.gekmlib.Icon;
-import com.keithpower.gekmlib.IconStyle;
-import com.keithpower.gekmlib.Kml;
-import com.keithpower.gekmlib.LatLonBox;
-import com.keithpower.gekmlib.LineStyle;
-import com.keithpower.gekmlib.LinearRing; 
-import com.keithpower.gekmlib.MultiGeometry;
-import com.keithpower.gekmlib.Placemark;
-import com.keithpower.gekmlib.Point;
-import com.keithpower.gekmlib.PolyStyle;
-import com.keithpower.gekmlib.Polygon;
-import com.keithpower.gekmlib.Style;
-import com.keithpower.gekmlib.TimeStamp;
-import com.keithpower.gekmlib.outerBoundaryIs;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
@@ -53,7 +31,26 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.util.ImageTiler;
+
+import com.keithpower.gekmlib.Document;
+import com.keithpower.gekmlib.Folder;
+import com.keithpower.gekmlib.GroundOverlay;
+import com.keithpower.gekmlib.Icon;
+import com.keithpower.gekmlib.IconStyle;
+import com.keithpower.gekmlib.Kml;
+import com.keithpower.gekmlib.LatLonBox;
+import com.keithpower.gekmlib.LineStyle;
+import com.keithpower.gekmlib.LinearRing;
+import com.keithpower.gekmlib.MultiGeometry;
+import com.keithpower.gekmlib.Placemark;
+import com.keithpower.gekmlib.Point;
+import com.keithpower.gekmlib.PolyStyle;
+import com.keithpower.gekmlib.Polygon;
+import com.keithpower.gekmlib.Style;
+import com.keithpower.gekmlib.TimeStamp;
+import com.keithpower.gekmlib.outerBoundaryIs;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *
@@ -64,19 +61,23 @@ import org.geoimage.viewer.util.ImageTiler;
  *
  */
 public class KmlIO extends AbstractVectorIO {
-
+	
     public static String CONFIG_FILE = "file";
 
-    public GeometricLayer read() {
+    public KmlIO(){
+    } 
+    
+    public GeometricLayer read(GeoImageReader gir) {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    	GeoTransform gt=gir.getGeoTransform();
         boolean toFlip = false;
         int t = 0; //thumbnails id name
         try {
             String file = ((String) config.get(CONFIG_FILE)).replace('\\', '/');
-            GeoTransform gt = gir.getGeoTransform();
+
             if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
                 return;
             }

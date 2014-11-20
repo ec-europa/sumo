@@ -7,6 +7,7 @@ package org.geoimage.viewer.core.io;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,9 @@ import java.sql.Timestamp;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
@@ -26,7 +30,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
 
     public static String CONFIG_FILE = "file";
 
-    public GeometricLayer read() {
+    public GeometricLayer read(GeoImageReader reader) {
         RandomAccessFile fss = null;
         String file = ((String) config.get(CONFIG_FILE)).replace('\\','/');
         try {
@@ -103,7 +107,8 @@ public class SimpleCSVIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader reader) {
+    	GeoTransform transform=reader.getGeoTransform();
         try {
             String file = ((String) config.get(CONFIG_FILE)).replace('\\','/');
             new File(file).createNewFile();
@@ -122,7 +127,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
                     }
                 } else {
                     for (Coordinate pos : geom.getCoordinates()) {
-                        double[] temp = gir.getGeoTransform().getGeoFromPixel(pos.x, pos.y, projection);
+                        double[] temp = transform.getGeoFromPixel(pos.x, pos.y, projection);
                         fis.write(temp[0] + " " + temp[1] + ";");
                     }
                 }

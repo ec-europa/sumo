@@ -4,43 +4,40 @@
  */
 package org.geoimage.viewer.core.io;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.geoimage.def.GeoTransform;
-import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeometricLayer;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
+import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.SelectParametersJDialog;
 import org.h2.tools.Csv;
-import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
-import org.geoimage.viewer.core.layers.vectors.SimpleVectorLayer;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  *
@@ -54,7 +51,7 @@ public class GenericCSVIO extends AbstractVectorIO {
 
     public static String CONFIG_FILE = "file";
 
-    public GeometricLayer read() {
+    public GeometricLayer read(GeoImageReader reader) {
 
         try {
             String csvfilename = (String) config.get(CONFIG_FILE);
@@ -71,15 +68,11 @@ public class GenericCSVIO extends AbstractVectorIO {
             if (meta.getColumnName(1).equals("type=point")) {
                 config = new HashMap();
                 config.put(SimpleCSVIO.CONFIG_FILE, csvfilename);
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
-                    if (l instanceof IImageLayer & l.isActive()) {
-                        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config, ((IImageLayer) l).getImageReader());
-                        GeometricLayer gl = csv.read();
-                        out = GeometricLayer.createImageProjectedLayer(gl, ((IImageLayer) l).getImageReader().getGeoTransform(), "EPSG:4326");
+                AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
+                GeometricLayer gl = csv.read(reader);
+                out = GeometricLayer.createImageProjectedLayer(gl,reader.getGeoTransform(), "EPSG:4326");
 
-                        return out;
-                    }
-                }
+                return out;
             }
 
             SelectParametersJDialog ff2 = new SelectParametersJDialog(meta);
@@ -97,16 +90,11 @@ public class GenericCSVIO extends AbstractVectorIO {
 
             sql = "select * from tempcsv";
             stat.execute(sql);
-            GeometricLayer gl = new GeometricLayer(SimpleVectorLayer.POINT);
+            GeometricLayer gl = new GeometricLayer(MaskVectorLayer.POINT);
             gl.setName(new File((String) config.get(CONFIG_FILE)).getName());
-            //gl.setName(csvfilename.substring(csvfilename.lastIndexOf("/") + 1, csvfilename.length()));
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    addCSVGeom("tempcsv", gl, latName, lonName, dateName, ((IImageLayer) l).getImageReader().getGeoTransform());
-                    out = GeometricLayer.createImageProjectedLayer(gl, ((IImageLayer) l).getImageReader().getGeoTransform(), "EPSG:4326");
-                    break;
-                }
-            }
+            addCSVGeom("tempcsv", gl, latName, lonName, dateName, reader.getGeoTransform(),reader.getWidth(),reader.getHeight());
+            out = GeometricLayer.createImageProjectedLayer(gl, reader.getGeoTransform(), "EPSG:4326");
+
             rs.close();
             stat.close();
             conn.close();
@@ -121,7 +109,8 @@ public class GenericCSVIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    	GeoTransform transform=gir.getGeoTransform();
         try {
             if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
                 return;
@@ -141,7 +130,7 @@ public class GenericCSVIO extends AbstractVectorIO {
                     fis.write(pos.x + "," + pos.y);
                 } else {
                     Coordinate pos = geom.getCoordinate();
-                    double[] temp = gir.getGeoTransform().getGeoFromPixel(pos.x, pos.y, projection);
+                    double[] temp = transform.getGeoFromPixel(pos.x, pos.y, projection);
                     fis.write(temp[1] + "," + temp[0]);
 
                 }
@@ -213,15 +202,14 @@ public class GenericCSVIO extends AbstractVectorIO {
 
                 sql = "select * from tempcsv";
                 stat.execute(sql);
-                GeometricLayer gl = new GeometricLayer(SimpleVectorLayer.POINT);
+                GeometricLayer gl = new GeometricLayer(MaskVectorLayer.POINT);
                 //gl.setName(csvfilename.substring(csvfilename.lastIndexOf("/") + 1, csvfilename.length()));
                 gl.setName(new File((String) config.get(CONFIG_FILE)).getName());
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
-                    if (l instanceof IImageLayer & l.isActive()) {
-                        addCSVGeom("tempcsv", gl, latName, lonName, dateName, ((IImageLayer) l).getImageReader().getGeoTransform());
-                        gl = GeometricLayer.createImageProjectedLayer(gl, ((IImageLayer) l).getImageReader().getGeoTransform(), "EPSG:4326");
-                        break;
-                    }
+                IImageLayer l=Platform.getCurrentImageLayer();
+                if(l!=null){
+                	GeoImageReader reader=l.getImageReader();
+                	addCSVGeom("tempcsv", gl, latName, lonName, dateName, reader.getGeoTransform(),reader.getWidth(),reader.getHeight());
+                	gl = GeometricLayer.createImageProjectedLayer(gl, ((IImageLayer) l).getImageReader().getGeoTransform(), "EPSG:4326");
                 }
                 rs.close();
                 stat.close();
@@ -234,7 +222,7 @@ public class GenericCSVIO extends AbstractVectorIO {
         }
     }
 
-    public void addCSVGeom(String tableName, GeometricLayer gl, String lat, String lon, String date, GeoTransform gt) throws SQLException {
+    public void addCSVGeom(String tableName, GeometricLayer gl, String lat, String lon, String date, GeoTransform gt,int width,int height) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
         Statement stat = conn.createStatement();
         String sql = "select * from " + tableName;
@@ -273,9 +261,9 @@ public class GenericCSVIO extends AbstractVectorIO {
             double[] x3;
             int margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
             x0 = gt.getGeoFromPixel(-margin, -margin, "EPSG:4326");
-            x2 = gt.getGeoFromPixel(margin + gir.getWidth(), margin + gir.getHeight(), "EPSG:4326");
-            x3 = gt.getGeoFromPixel(margin + gir.getWidth(), -margin, "EPSG:4326");
-            x1 = gt.getGeoFromPixel(-margin, margin + gir.getHeight(), "EPSG:4326");
+            x2 = gt.getGeoFromPixel(margin + width, margin + height, "EPSG:4326");
+            x3 = gt.getGeoFromPixel(margin + width, -margin, "EPSG:4326");
+            x1 = gt.getGeoFromPixel(-margin, margin + height, "EPSG:4326");
             Polygon imageP = (Polygon) new WKTReader(gf).read("POLYGON((" +
                     x0[0] + " " + x0[1] + "," +
                     x1[0] + " " + x1[1] + "," +

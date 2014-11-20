@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
 /**
@@ -16,18 +17,18 @@ import org.geoimage.viewer.core.api.GeometricLayer;
  */
 public abstract class AbstractVectorIO {
 	protected Map<String,Object> config;
-    protected GeoImageReader gir;
+    //protected GeoImageReader gir;
     protected String layername;
     
     
-    
+/*    
     public GeoImageReader getGir() {
 		return gir;
 	}
 
 	public void setGir(GeoImageReader gir) {
 		this.gir = gir;
-	}
+	}*/
 
 	public Map<String,Object>  getConfig() {
 		return config;
@@ -54,9 +55,9 @@ public abstract class AbstractVectorIO {
 
     
 
-    public abstract GeometricLayer read();
+    public abstract GeometricLayer read(GeoImageReader reader);
 
-    public abstract void save(GeometricLayer layer, String projection);
+    public abstract void save(GeometricLayer layer, String projection,GeoImageReader gir);
 
     /**
      * For some reasons, you may execute some commands for some special datastore (clening database, ensure existence, or manual upload...)

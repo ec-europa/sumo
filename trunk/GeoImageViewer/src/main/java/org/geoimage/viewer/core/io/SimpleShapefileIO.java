@@ -4,15 +4,12 @@
  */
 package org.geoimage.viewer.core.io;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.impl.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
@@ -21,7 +18,6 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FeatureSource;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -33,12 +29,7 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.text.cql2.CQL;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.map.FeatureLayer;
-import org.geotools.map.Layer;
-import org.geotools.map.MapContent;
 import org.geotools.referencing.CRS;
-import org.geotools.renderer.lite.RendererUtilities;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -59,7 +50,6 @@ import com.vividsolutions.jts.io.WKTReader;
  */
 public class SimpleShapefileIO extends AbstractVectorIO {
 	private static Logger logger= LoggerFactory.getLogger(SimpleShapefileIO.class);
-
     public static String CONFIG_URL = "url";
 
     public SimpleShapefileIO() {
@@ -203,7 +193,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         }
     }
 
-    public GeometricLayer read() {
+    public GeometricLayer read(GeoImageReader gir) {
         try {
             GeometricLayer out = null;
             int margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
@@ -361,9 +351,10 @@ public class SimpleShapefileIO extends AbstractVectorIO {
     }
 
     @Override
-    public void save(GeometricLayer layer, String projection) {
+    public void save(GeometricLayer layer, String projection,GeoImageReader reader) {
+    	GeoTransform transform=reader.getGeoTransform();
         try {
-            layer = GeometricLayer.createWorldProjectedLayer(layer, gir.getGeoTransform(), projection);
+            layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             String filename = ((URL) config.get(CONFIG_URL)).getPath();
             System.out.println(filename);
             //new File(filename).createNewFile();
@@ -372,7 +363,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             SimpleFeatureType ft = createFeatureType(layername, layer);
             //build the type
             FileDataStore fileDataStore = createDataStore(filename, ft, projection);
-            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection, gir.getGeoTransform());
+            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection, transform);
             
             writeToShapefile(fileDataStore, features);
         } catch (Exception ex) {

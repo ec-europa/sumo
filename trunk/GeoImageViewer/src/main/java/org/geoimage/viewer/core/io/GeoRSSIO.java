@@ -17,10 +17,14 @@ import com.sun.syndication.io.SyndFeedOutput;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
@@ -32,7 +36,8 @@ public class GeoRSSIO extends AbstractVectorIO {
 
     public static String CONFIG_FILE = "file";
 
-    public void save(GeometricLayer glayer, String projection) {
+    public void save(GeometricLayer glayer, String projection,GeoImageReader reader) {
+    	GeoTransform geotransform=reader.getGeoTransform();
 
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("atom_1.0");
@@ -59,7 +64,7 @@ public class GeoRSSIO extends AbstractVectorIO {
             if (projection == null) {
                 geoRSSModule.setPosition(new Position(geom.getCoordinate().y, geom.getCoordinate().x));
             } else {
-                double[] newPos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, projection);
+                double[] newPos = geotransform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, projection);
                 geoRSSModule.setPosition(new Position(newPos[1], newPos[0]));
             }
             entry.getModules().add(geoRSSModule);
@@ -91,11 +96,11 @@ public class GeoRSSIO extends AbstractVectorIO {
         glayer.put(new GeometryFactory().createPoint(new Coordinate(10 * Math.random(), 10 * Math.random())), Attributes.createAttributes(new String[]{"id", "name"}, new String[]{"String", "String"}));
         glayer.put(new GeometryFactory().createPoint(new Coordinate(10 * Math.random(), 10 * Math.random())), Attributes.createAttributes(new String[]{"id", "name"}, new String[]{"String", "String"}));
 
-        new GeoRSSIO().save(glayer, null);
+        new GeoRSSIO().save(glayer, null,null);
     }
 
     @Override
-    public GeometricLayer read() {
+    public GeometricLayer read(GeoImageReader reader) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

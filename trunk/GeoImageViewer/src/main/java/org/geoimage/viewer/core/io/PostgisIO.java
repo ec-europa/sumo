@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -60,7 +61,6 @@ import org.opengis.feature.type.PropertyDescriptor;
  */
 public class PostgisIO extends AbstractVectorIO {
 
-
     public static String CONFIG_DBTYPE = "dbtype";    //must be postgis
     public static String CONFIG_HOST = "host";        //the name or ip address of the machine running PostGIS
     public static String CONFIG_PORT = "port";        //the port that PostGIS is running on (generally 5432)
@@ -68,8 +68,11 @@ public class PostgisIO extends AbstractVectorIO {
     public static String CONFIG_USER = "user";        //the user to connect with
     public static String CONFIG_PASSWORD = "passwd";  //the password of the user
 
+    
+    public PostgisIO(){
+    }
 
-    public GeometricLayer read() {
+    public GeometricLayer read(GeoImageReader gir) {
         try {
             GeometricLayer out = null;
             DataStore dataStore = DataStoreFinder.getDataStore(config);
@@ -216,7 +219,7 @@ public class PostgisIO extends AbstractVectorIO {
                 //collection.add(simplefeature);
                 System.arraycopy(glayer.getAttributes(geom).getValues(), 0, data, 0, data.length-1);
                 // geocodification of boats
-                double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+                double[] pos = gt.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
                 // update of x,y pixel coordinates to geocoded lon,lat
                 Geometry geomgr = gf.createPoint(new Coordinate(pos[0], pos[1]));
                 data[data.length-1] = geomgr;
@@ -346,7 +349,7 @@ public class PostgisIO extends AbstractVectorIO {
  * @param projection
  */
 @Override
-    public void save(GeometricLayer layer, String projection) {
+    public void save(GeometricLayer layer, String projection,GeoImageReader gir) {
         try {
         	//Data store to get access to ddbb
             DataStore datastore = (DataStore) DataStoreFinder.getDataStore(config);
@@ -382,7 +385,7 @@ public class PostgisIO extends AbstractVectorIO {
      * @param projection
      * @param imageCis
      */
-    public void saveAll(GeometricLayer layer, String projection, Object[] imageCis) {
+    public void saveAll(GeometricLayer layer, String projection, Object[] imageCis,GeoImageReader gir) {
         try {
         	//Data store to get access to ddbb
             DataStore datastore = (DataStore) DataStoreFinder.getDataStore(config);
@@ -394,7 +397,7 @@ public class PostgisIO extends AbstractVectorIO {
             writeToDB(datastore, features);
             datastore.dispose();
             // store extracted VDS points
-            save(layer,projection);
+            save(layer,projection,gir);
         } catch (Exception ex) {
             Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
         }
