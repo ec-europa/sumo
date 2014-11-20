@@ -15,6 +15,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.Corners;
@@ -38,12 +39,14 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class SumoXMLWriter extends AbstractVectorIO {
-
 	public static String CONFIG_FILE = "file";
 	final Logger logger = Logger.getLogger(SumoXMLWriter.class);
 
+	public SumoXMLWriter(){
+	}
+	
 	@Override
-	public GeometricLayer read() {
+	public GeometricLayer read(GeoImageReader gir) {
 		GeometricLayer layer = null;
 		try {
 			layer = new GeometricLayer(GeometricLayer.POINT);
@@ -123,7 +126,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	}
 
 	@Override
-	public void save(GeometricLayer gLayer, String projection) {
+	public void save(GeometricLayer gLayer, String projection,GeoImageReader gir) {
 
 		int targetNumber = 0;
 
@@ -196,7 +199,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		}
 		
 		SatImageMetadata imageMeta = new SatImageMetadata();
-		imageMeta.setGcps(getCorners());
+		imageMeta.setGcps(getCorners(gir));
 		
 		
 		//TODO set the correct date
@@ -247,7 +250,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * Get Gpcs for corners
 	 * @return
 	 */
-	public Gcps getCorners() {
+	public Gcps getCorners(GeoImageReader gir) {
 		Corners corners=((SarImageReader)gir).getOriginalCorners();
 		
 		
