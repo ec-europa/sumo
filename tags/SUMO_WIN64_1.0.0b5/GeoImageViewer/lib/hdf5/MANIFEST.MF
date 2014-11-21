@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.8.0
-Created-By: 1.7.0_05-b05 (Oracle Corporation)
-Built-By: caron
-Built-On: 2012-07-23 20:08:18
-Implementation-Title: NetCDF-Java-Library
-Implementation-Version: 4.2.35
-Implementation-Vendor: UCAR/Unidata
-

@@ -1,3 +1,0 @@
-version: 11.2
-git revision: 4087475eb3be23fb61258618bad9f0bb3f24becc
-build date: 19-Jul-2014 14:45
