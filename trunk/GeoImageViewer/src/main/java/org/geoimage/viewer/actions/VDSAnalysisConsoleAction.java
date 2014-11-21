@@ -52,7 +52,6 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 			private VDSAnalysis analysis;
 			private IMask[] bufferedMask;
 			private String[] thresholds;
-			private SarImageReader reader;
 			private List<ComplexEditVDSVectorLayer>resultLayers;
 			
 			public List<ComplexEditVDSVectorLayer> getResultLayers() {
@@ -68,7 +67,6 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 				this.analysis=analysis;
 				this.bufferedMask=bufferedMask;
 				this.thresholds=thresholds;
-				this.reader=reader;
 				this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			}
        
@@ -244,7 +242,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      // look for Azimuth ambiguities in the pixels
                      AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
 
-                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", reader, "point", createGeometricLayer(gir, pixels));
+                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", gir, "point", createGeometricLayer(gir, pixels));
                      boolean display = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.DISPLAY_PIXELS).equalsIgnoreCase("true");
                      if (!agglomerationMethodology.startsWith("d")) {
                          vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
@@ -455,6 +453,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         }
     }
     
+    
     /**
      * 
      * @param ENL
@@ -463,21 +462,8 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
      * @param thresholds
      * @return
      */
-    public boolean runAnalysis(float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds){
-    	IImageLayer il=Platform.getCurrentImageLayer();
-    	Thread t=new Thread(new AnalysisProcess(ENL,analysis, bufferedMask, thresholds));
-        t.start();
-        return true;
-    }
-    /**
-     * 
-     * @param ENL
-     * @param analysis
-     * @param bufferedMask
-     * @param thresholds
-     * @return
-     */
-    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds){
+    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds){
+    	this.gir=reader;
     	AnalysisProcess ap=new AnalysisProcess(ENL,analysis, bufferedMask, thresholds);
         ap.run();
         return ap.resultLayers;
