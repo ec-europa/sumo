@@ -287,7 +287,7 @@ public class ImagePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        layer.addLayer(new SimpleEditVectorLayer(jTextField2.getText(), layer, (String)jComboBox1.getSelectedItem(), new GeometricLayer((String)jComboBox1.getSelectedItem())));
+        layer.addLayer(new SimpleEditVectorLayer(jTextField2.getText(), layer.getImageReader(), (String)jComboBox1.getSelectedItem(), new GeometricLayer((String)jComboBox1.getSelectedItem())));
         Platform.refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 
