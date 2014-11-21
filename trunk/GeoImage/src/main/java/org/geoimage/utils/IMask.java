@@ -21,9 +21,10 @@ public interface IMask {
     public boolean contains(int x, int y);
     public boolean includes(int x, int y, int width, int height);
     public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor);
-    public Area getShape();
+    public Area getShape(int width, int height);
     public void buffer(double bufferingDistance);
-    public IMask createBufferedMask(double bufferingDistance);
     public List<Geometry> getGeometries();
+    public String getName();
+    public String getType();
 
 }
