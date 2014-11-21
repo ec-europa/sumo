@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleVectorLayer;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 
@@ -78,11 +78,11 @@ public class DatabaseQuery extends javax.swing.JPanel {
 
             GeometricLayer glayer = null;
             if (geom instanceof Point) {
-                glayer = new GeometricLayer(SimpleVectorLayer.POINT);
+                glayer = new GeometricLayer(MaskVectorLayer.POINT);
             } else if (geom instanceof Polygon) {
-                glayer = new GeometricLayer(SimpleVectorLayer.POLYGON);
+                glayer = new GeometricLayer(MaskVectorLayer.POLYGON);
             } else if (geom instanceof LineString) {
-                glayer = new GeometricLayer(SimpleVectorLayer.LINESTRING);
+                glayer = new GeometricLayer(MaskVectorLayer.LINESTRING);
             }
             glayer.setName(jTextArea1.getText());
             Attributes att = Attributes.createAttributes(schema, types);
