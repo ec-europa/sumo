@@ -6,9 +6,7 @@ package org.geoimage.viewer.offline;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.def.GeoImageReader;
@@ -17,11 +15,11 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
-import org.geoimage.viewer.core.layers.vectors.SimpleVectorLayer;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -42,10 +40,10 @@ public class VDSAnalysis {
         System.out.println(url);
         Map config = new HashMap();
         config.put("url", url);
-        AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config, gir);
-        GeometricLayer mask = shpio.read();
+        AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+        GeometricLayer mask = shpio.read(gir);
         IMask[] masks = new IMask[1];
-        masks[0]=(new SimpleVectorLayer("mask", null, mask.getGeometryType(), mask));
+        masks[0]=(new MaskVectorLayer("mask", null, mask.getGeometryType(), mask));
         org.geoimage.analysis.VDSAnalysis vds = new org.geoimage.analysis.VDSAnalysis((SarImageReader) gir,masks, 5f, 15f, 15f,15f,15f, null);
         vds.run(null);
         DetectedPixels pixels = vds.getPixels();
@@ -54,11 +52,11 @@ public class VDSAnalysis {
         GeometricLayer gl = createGeometricLayer(pixels);
         Map config2 = new HashMap();
         config2.put(GenericCSVIO.CONFIG_FILE, args[0] + ".csv");
-        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config2, gir);
-        csv.save(gl, "EPSG:4326");
+        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config2);
+        csv.save(gl, "EPSG:4326",gir);
         config.put(SumoXmlIOOld.CONFIG_FILE, args[0] + ".sumo.xml");
-        AbstractVectorIO smio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO, config, gir);
-        smio.save(gl, "EPSG:4326");
+        AbstractVectorIO smio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO, config);
+        smio.save(gl, "EPSG:4326",gir);
         //ThumbnailsManager tm=new ThumbnailsManager(args[0]+"dir");
         //tm.createThumbnailsDir(gl, "id", gir, null);
         gir.dispose();

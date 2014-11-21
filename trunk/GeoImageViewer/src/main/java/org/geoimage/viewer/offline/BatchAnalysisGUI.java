@@ -40,12 +40,12 @@ import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
-import org.geoimage.viewer.core.layers.vectors.SimpleVectorLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 
@@ -457,12 +457,12 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             Map config = new HashMap();
             url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
             config.put("url", url);
-            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config, gir);
-            GeometricLayer mask = shpio.read();
+            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+            GeometricLayer mask = shpio.read(gir);
 
             IMask[] masks = new IMask[1];
             if (mask != null) {
-                masks[0]=(new SimpleVectorLayer("mask", null, mask.getGeometryType(), mask).createBufferedMask(buffer));
+                masks[0]=FactoryLayer.createBufferedLayer("mask",  mask.getGeometryType(), buffer,gir,mask);
             }
             for (int i = 0; i < gir.getNBand(); i++) {
                 gir.setBand(i);
@@ -479,16 +479,16 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 //VectorIO csv = VectorIO.createVectorIO(VectorIO.GENERIC_CSV, config2, gir);
                 // csv.save(gl, "EPSG:4326");
                 config.put(KmlIO.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.kmz");
-                AbstractVectorIO kmzio = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config, gir);
-                kmzio.save(gl, "EPSG:4326");
+                AbstractVectorIO kmzio = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
+                kmzio.save(gl, "EPSG:4326",gir);
                 if (createThumbs && gl.getGeometries().size() < 200) {
                     ThumbnailsManager tm = new ThumbnailsManager(output + "/" + f.getParentFile().getName() + "/band" + i + "/");
                     tm.createThumbnailsDir(gl, "id", gir, new progress());
                 } else {
                     Map config2 = new HashMap();
                     config2.put(SumoXmlIOOld.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.xml");
-                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config2, gir);
-                    csv.save(gl, "EPSG:4326");
+                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config2);
+                    csv.save(gl, "EPSG:4326",gir);
                 }
             }
             gir.dispose();
