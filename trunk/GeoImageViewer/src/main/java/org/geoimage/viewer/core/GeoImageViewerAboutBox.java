@@ -9,6 +9,7 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jdesktop.application.Action;
 
 public class GeoImageViewerAboutBox extends javax.swing.JDialog {

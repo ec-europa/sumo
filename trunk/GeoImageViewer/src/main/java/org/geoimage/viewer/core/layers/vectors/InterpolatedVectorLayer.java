@@ -4,27 +4,11 @@
  */
 package org.geoimage.viewer.core.layers.vectors;
 
-import org.geoimage.common.OptionMenu;
-import org.geoimage.viewer.core.api.GeoContext;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
-import java.awt.image.BufferedImage;
-
-import org.geoimage.viewer.core.*;
-import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.api.ILayer;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,14 +21,28 @@ import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.common.OptionMenu;
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.PickedData;
+import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
+import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ILayerManager;
+import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
+import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
@@ -53,7 +51,7 @@ import org.geoimage.viewer.core.io.factory.VectorIOFactory;
 public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, IClickable {
 
     protected boolean active = true;
-    protected IImageLayer parent;
+    protected  GeoImageReader reader;
     protected GeometricLayer glayer;
     protected String type;
     protected String name;
@@ -66,13 +64,13 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
     private String dateColumn;
     private List<Point> interpolated = new ArrayList<Point>();
 
-    public InterpolatedVectorLayer(String layername, IImageLayer parent, GeometricLayer layer, String idColumn, String dateColumn, Date date) {
+    public InterpolatedVectorLayer(String layername, GeoImageReader reader, GeometricLayer layer, String idColumn, String dateColumn, Date date) {
         this.name = layername;
-        this.parent = parent;
         this.date = date;
         this.glayer = layer;
         this.idColumn = idColumn;
         this.dateColumn = dateColumn;
+        this.reader=reader;
         createRenderingLayer();
     }
 
@@ -130,10 +128,6 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
         return false;
     }
 
-    public ILayerManager getParent() {
-        return parent;
-    }
-
     public String getDescription() {
         return getName();
     }
@@ -172,8 +166,8 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
 	            try {
 	                Map config =new HashMap();
 	                config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
-	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config,((IImageLayer) this.getParent()).getImageReader());
-	                shpio.save(glayer,projection);
+	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+	                shpio.save(glayer,projection,reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }
@@ -183,8 +177,8 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
 	            try {
 	                Map config = new HashMap();
 	                config.put(SumoXmlIOOld.CONFIG_FILE, file);
-	                AbstractVectorIO sio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config, ((IImageLayer) this.getParent()).getImageReader());
-	                sio.save(glayer, "");
+	                AbstractVectorIO sio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
+	                sio.save(glayer, "",reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }
@@ -194,8 +188,8 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
 	            try {
 	                Map config = new HashMap();
 	                config.put(GenericCSVIO.CONFIG_FILE, file);
-	                AbstractVectorIO sxl = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config, ((IImageLayer) this.getParent()).getImageReader());
-	                sxl.save(glayer, projection);
+	                AbstractVectorIO sxl = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);
+	                sxl.save(glayer, projection,reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }
@@ -280,7 +274,7 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
 
     public Area getShape() {
         Area maskArea = new Area();
-        Rectangle rect = new Rectangle(0, 0, parent.getImageReader().getWidth(), parent.getImageReader().getHeight());
+        Rectangle rect = new Rectangle(0, 0, reader.getWidth(), reader.getHeight());
         GeometryFactory gf = new GeometryFactory();
         Coordinate[] coords = new Coordinate[]{
             new Coordinate((int) rect.getMinX(), (int) rect.getMinY()),
@@ -369,4 +363,9 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
             }
         }
     }
+
+	@Override
+	public ILayerManager getParent() {
+		return Platform.getLayerManager();
+	}
 }

@@ -5,9 +5,6 @@
 
 package org.geoimage.viewer.core.layers.vectors;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +12,14 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.api.IImageLayer;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *
@@ -38,7 +39,8 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
         private String type = POINT;
         private List<Geometry> geometries;
         private boolean status;
-
+       
+        
         public additionalgeometries(String tag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)
         {
             this.color = color;
@@ -86,8 +88,8 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
 
     private List<additionalgeometries> additionalGeometries = new ArrayList<additionalgeometries>();
 
-    public ComplexEditVectorLayer(String layername, IImageLayer parent, String type, GeometricLayer layer) {
-        super(layername, parent, type, layer);
+    public ComplexEditVectorLayer(String layername,  GeoImageReader reader , String type, GeometricLayer layer) {
+        super(layername, reader, type, layer);
     }
 
     @Override

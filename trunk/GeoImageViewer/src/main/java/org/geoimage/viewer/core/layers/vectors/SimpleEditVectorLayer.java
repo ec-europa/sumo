@@ -11,13 +11,14 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
@@ -35,7 +36,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class SimpleEditVectorLayer extends SimpleVectorLayer implements IClickable, IMouseMove, IEditable, IMouseDrag, IKeyPressed {
+public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable, IMouseMove, IEditable, IMouseDrag, IKeyPressed {
 
     protected Coordinate editedPoint = null;
     protected boolean edit = false;
@@ -50,8 +51,8 @@ public class SimpleEditVectorLayer extends SimpleVectorLayer implements IClickab
     protected boolean undo=false;
     
     
-    public SimpleEditVectorLayer(String layername, IImageLayer parent, String type, GeometricLayer layer) {
-        super(layername, parent, type, layer);
+    public SimpleEditVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+        super(layername, reader, type, layer);
         gf = new GeometryFactory();
     }
 

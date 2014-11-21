@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +38,11 @@ import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
-import org.geoimage.viewer.core.io.factory.VectorIOFactory;
-import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -55,8 +54,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.operation.buffer.BufferParameters;
-import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
+import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
 /**
  *
@@ -78,10 +76,10 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
     protected Color color = new Color(1f, 1f, 1f);
     protected Geometry selectedGeometry;
     private symbol displaysymbol = symbol.point;
-    private boolean threshable = false;
+    protected boolean threshable = false;
     private double minThresh = 0;
     private double maxThresh = 0;
-    private double currentThresh = 0;
+    protected double currentThresh = 0;
     
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
     
@@ -162,23 +160,7 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         return currentThresh;
     }
 
-    protected GeometricLayer createThresholdedLayer(GeometricLayer layer) {
-        GeometricLayer out = layer.clone();
-        if (!threshable) {
-            return out;
-        }
-        List<Geometry> remove = new ArrayList<Geometry>();
-        for (Geometry geom : Collections.unmodifiableList(out.getGeometries())) {
-            if (new Double("" + out.getAttributes(geom).get(VDSSchema.SIGNIFICANCE)) < currentThresh) {
-                remove.add(geom);
-            }
-        }
-        for (Geometry geom : remove) {
-            out.remove(geom);
-        }
-        return out;
-
-    }
+  
 
     public static enum symbol {point, circle, square, triangle, cross};
 
@@ -575,13 +557,13 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
             Map config = new HashMap();
             config.put(GenericCSVIO.CONFIG_FILE, file);
             AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);//AndreaG changed csv(sumo) with genericcsv
-            csv.save(createThresholdedLayer(glayer), projection,reader);
+            csv.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
             try {
                 Map config = new HashMap();
                 config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
                 AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                shp.save(createThresholdedLayer(glayer), projection,reader);
+                shp.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -756,8 +738,8 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
-        	bufferedGeom[i] = bufferedGeom[i].buffer(bufferingDistance, 6, BufferParameters.CAP_ROUND);
-        	
+        	//bufferedGeom[i] = bufferedGeom[i].buffer(bufferingDistance, 6, BufferParameters.CAP_ROUND);
+        	bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
         	Geometry buff=bufferedGeom[i];
             if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
             	//bufferedGeom[i] = gf.createPolygon((LinearRing) ((Polygon) bufferedGeom[i]).getExteriorRing(), null);
@@ -792,7 +774,8 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         }
         glayer.clear();
 
-        newgeoms=mergePolygons2(newgeoms,bufferingDistance);
+        //newgeoms=PolygonOp.mergePolygons(newgeoms);
+        //newgeoms=PolygonOp.mergeCascadePolygons(newgeoms,bufferingDistance);
 
         // assign new value
         for (Geometry geom :newgeoms) {
@@ -800,112 +783,7 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         }
     }
     
-    /**
-     * 
-     * @param polygons
-     * @return
-     */
-    private List<Geometry> mergePolygons2(List<Geometry> polygons,double buffer) {
-    	List <List<Geometry>>intersectedGeom =new ArrayList<List<Geometry>>();
-    	List <Geometry>alreadySelected =new ArrayList<Geometry>();
-    	for (int i = 0; i < polygons.size(); i++) {
-    		
-    		Geometry a = polygons.get(i);
-    		List <Geometry> l=new ArrayList<Geometry>();
-    		l.add(a);
-    		
-    		alreadySelected.add(a);
-    		
-    		for (int j = i + 1; j < polygons.size();j++) {
-    			final Geometry b = polygons.get(j);
-    	        try{
-			        if (a.intersects(b)) {
-			        	l.add(b);
-			        	alreadySelected.add(b);
-			            //polygons.set(i, (Polygon) a.union(b));
-			            //a = polygons.get(i);
-			            //polygons.remove(j);
-			            //done = false;
-			        }
-    			}catch(Exception e){
-    				logger.warn(e.getMessage());
-    			}
-    	    }
-    		if(l.size()>1||!alreadySelected.contains(l.get(0)))
-    			intersectedGeom.add(l);
-    	}
-    	GeometryFactory factory = JTSFactoryFinder.getGeometryFactory();
-    	for(List<Geometry> ll:intersectedGeom){
-    		if(ll.size()>1){
-    			try{
-    				
-    				//10 e' un valore determinato solo da diversi test ...
-    				if(buffer>10){
-						for(int i=0;i<ll.size();i++){
-							Geometry g=ll.get(i);
-							ll.set(i,g.buffer(-buffer/2));
-						}
-    				}
-    				/*
-    				Geometry u=ll.get(0);
-    				for(int i=0;i<ll.size();i++){
-    					Geometry g=ll.get(i);
-						if(!g.equals(u)){
-							u=u.union(g).buffer(0);
-						}
-					}*/
-    				
-    				CascadedPolygonUnion cascadeU=new CascadedPolygonUnion(ll);
-    				Geometry union=cascadeU.union();
-    				
-    	            if (union instanceof Polygon && ((Polygon) union).getNumInteriorRing() > 0) {
-    	            	LineString p=((Polygon) union).getExteriorRing();
-    	            	union = factory.createPolygon(p.getCoordinates());
-    	            }
-    				polygons.add(union);
-    				
-	    		}catch(Exception e){
-	    			logger.warn(e.getMessage());
-	    			
-	    			for(Geometry g:ll){
-	    				polygons.add(g);
-	    			}
-				}
-    		}else{
-   				polygons.add(ll.get(0));
-    		}
-    	}
-    	
-    	
-    	return polygons;
-    }
-    
-    private List<Geometry> mergePolygons(List<Geometry> polygons) {
-    	boolean done;
-    	do {
-    	done = true;
-    	for (int i = 0; i < polygons.size(); i++) {
-    		Geometry a = polygons.get(i);
-    	    //if (0 != a.getNumInteriorRing()) {
-    	    //    throw new RuntimeException();
-    	    //}
-    	    for (int j = i + 1; j < polygons.size();) {
-    	        final Geometry b = polygons.get(j);
-    	        if (a.intersects(b)) {
-    	            polygons.set(i, (Polygon) a.buffer(0).union(b));
-    	            a = polygons.get(i);
-    	            polygons.remove(j);
-    	            done = false;
-    	        }
-    	        else {
-    	            j++;
-    	        }
-    	    }
-    	}
-    	} while (!done);
-    	
-    	return polygons;
-    }
+  
     
     public List<Geometry> getGeometries() {
         return glayer.getGeometries();

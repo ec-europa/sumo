@@ -5,15 +5,18 @@
 
 package org.geoimage.viewer.core;
 
-import org.geoimage.viewer.core.wwj.VectorObject;
-import com.vividsolutions.jts.geom.Geometry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.wwj.VectorObject;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * A class that deals with the Vector objects that have been clicked on.

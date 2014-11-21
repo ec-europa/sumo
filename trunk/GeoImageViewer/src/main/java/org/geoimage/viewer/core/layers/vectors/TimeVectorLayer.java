@@ -4,31 +4,29 @@
  */
 package org.geoimage.viewer.core.layers.vectors;
 
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ITime;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
-import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.GeometricLayer;
-
 /**
  *
  * @author thoorfr
  */
-public class TimeVectorLayer extends SimpleVectorLayer implements ITime {
+public class TimeVectorLayer extends MaskVectorLayer implements ITime {
 
     private String timeColumn;
     private Date minimumDate=new Date(Long.MAX_VALUE);
@@ -37,8 +35,8 @@ public class TimeVectorLayer extends SimpleVectorLayer implements ITime {
     private Hashtable<Geometry,Date> datesOfgeoms=new Hashtable<Geometry, Date>();
     private boolean onWork;
 
-    public TimeVectorLayer(String layername, IImageLayer parent, String type, GeometricLayer layer, String timeColumn) {
-        super(layername, parent, type, layer);
+    public TimeVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer, String timeColumn) {
+        super(layername, reader, type, layer);
         this.timeColumn = timeColumn;
         renderedLayer.addAll(layer.getGeometries());
         for(Geometry geom:renderedLayer){

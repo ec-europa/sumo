@@ -570,17 +570,27 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
     @Override
     public void dispose() {
         disposed = true;
-        pool.shutdownNow();
-        pool = null;
+        if(pool!=null){
+        	pool.shutdownNow();
+        	pool = null;
+        }	
         super.dispose();
-        activeGir.dispose();
-        activeGir = null;
-        tcm.clear();
-        tcm = null;
-        submitedTiles.clear();
-        submitedTiles = null;
-        imagePool.dispose();
-        imagePool = null;
+        if(activeGir!=null){
+        	activeGir.dispose();
+        	activeGir = null;
+        }
+        if(tcm!=null){
+        	tcm.clear();
+        	tcm = null;
+        }
+        if(submitedTiles!=null){
+        	submitedTiles.clear();
+        	submitedTiles = null;
+        }
+        if(imagePool!=null){
+        	imagePool.dispose();
+        	imagePool = null;
+        }	
     }
 
     private void disposeSync() {

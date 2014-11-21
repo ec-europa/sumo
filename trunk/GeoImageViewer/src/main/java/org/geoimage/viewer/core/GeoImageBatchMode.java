@@ -4,9 +4,10 @@
  */
 package org.geoimage.viewer.core;
 
-import org.geoimage.viewer.core.api.GeoContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 

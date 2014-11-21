@@ -29,8 +29,22 @@ public class Platform {
     public static String PREFERENCES_LASTVECTOR = "Last Vector";
     
     public final static String CACHE = "Cache Folder";
+    
+    private static boolean batchMode=false;
 
-    public static IProgress getProgressBar(){
+    public static boolean isBatchMode() {
+		return batchMode;
+	}
+
+	public static void setInBatchMode() {
+		batchMode = true;
+	}
+	
+	public static void setInteractiveMode() {
+		batchMode = false;
+	}
+
+	public static IProgress getProgressBar(){
         return new IProgress() {
             private boolean indeterminate=true;
             private boolean done=false;
@@ -160,7 +174,7 @@ public class Platform {
 
     public static IImageLayer getCurrentImageLayer() {
         for (ILayer l : getLayerManager().getLayers()) {
-            if (l instanceof IImageLayer & l.isActive()) {
+            if (l instanceof IImageLayer && l.isActive()) {
                 try {
                     return (IImageLayer) l;
                 } catch (Exception ex) {

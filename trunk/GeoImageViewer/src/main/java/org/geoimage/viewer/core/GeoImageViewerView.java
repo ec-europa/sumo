@@ -51,7 +51,6 @@ import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.geoimage.viewer.widget.InfoDialog;
 import org.geoimage.viewer.widget.LayerManagerWidget;
