@@ -22,7 +22,7 @@ import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleVectorLayer;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.AttributesEditor;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -186,8 +186,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             vdslayer.removeGeometriesByTag("boatshape");
             vdslayer.removeGeometriesByTag("target");
             // add new geometries
-            vdslayer.addGeometries("target", new Color(0xFF2200), 1, SimpleVectorLayer.LINESTRING, winGeom, display);
-            vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, SimpleVectorLayer.LINESTRING, boatGeom, display);
+            vdslayer.addGeometries("target", new Color(0xFF2200), 1, MaskVectorLayer.LINESTRING, winGeom, display);
+            vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, MaskVectorLayer.LINESTRING, boatGeom, display);
             Platform.getGeoContext().setDirty(true);
             System.out.println(selectionLine + " " + geom.getCoordinate().x + " " + geom.getCoordinate().y);
         } else {
