@@ -4,9 +4,6 @@
  */
 package org.geoimage.viewer.core.layers.vectors;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,23 +12,26 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.util.GeometricLayerIO;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  *
  * @author thoorfr
  */
-public class SelectableVectorLayer extends SimpleVectorLayer implements ISelect {
+public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
 
     private String whereClause = null;
 
-    public SelectableVectorLayer(String layername, IImageLayer parent, String type, GeometricLayer layer) {
-        super(layername, parent, type, layer);
+    public SelectableVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+        super(layername, reader, type, layer);
         buildDatabase(glayer);
     }
 

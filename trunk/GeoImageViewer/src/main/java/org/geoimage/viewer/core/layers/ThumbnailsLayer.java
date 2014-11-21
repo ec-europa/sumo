@@ -61,7 +61,7 @@ public class ThumbnailsLayer extends LayerManager implements IClickable, IImageL
         this.scale=gir.getWidth()/(1f*gir.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
-        addLayer(new SimpleEditVectorLayer("analysis", this, this.glayer.getGeometryType(), this.glayer));
+        addLayer(new SimpleEditVectorLayer("analysis", this.getImageReader(), this.glayer.getGeometryType(), this.glayer));
         setName("Thumbnails Image");
     }
 

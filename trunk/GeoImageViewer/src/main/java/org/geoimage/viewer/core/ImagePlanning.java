@@ -4,7 +4,6 @@
  */
 package org.geoimage.viewer.core;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -24,9 +22,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /** 
  * this is the main class dealing with planning image acquisition. FTP download, Analysis, Local storage are dealt within the class
