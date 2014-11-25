@@ -81,5 +81,12 @@ public class Preferences implements Serializable {
     public String toString() {
         return "org.geoimage.viewer.core.Preferences[name=" + name + "]";
     }
+    
+    
+  
+    
+    
+    
+    
 
 }

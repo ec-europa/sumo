@@ -4,6 +4,30 @@
  */
 package org.geoimage.viewer.core;
 
+import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
+import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
+import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
+import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_DISTANCE;
+import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_TILESIZE;
+import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
+
+import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +40,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.TransparentWidget;
 
 /**
@@ -25,25 +50,34 @@ import org.geoimage.viewer.widget.TransparentWidget;
 public class Platform {
 
     private static PreferencesDB preferences = null;
-    public static String PREFERENCES_LASTIMAGE = "Last Image";
-    public static String PREFERENCES_LASTVECTOR = "Last Vector";
-    
-    public final static String CACHE = "Cache Folder";
-    
     private static boolean batchMode=false;
 
+    
+    /**
+     * 
+     * @return true if sumo is running in batch mode
+     */
     public static boolean isBatchMode() {
 		return batchMode;
 	}
-
+    
+    /**
+     * set batch mode = true 
+     */
 	public static void setInBatchMode() {
 		batchMode = true;
 	}
 	
+	
+	/**
+	 * default
+	 */
 	public static void setInteractiveMode() {
 		batchMode = false;
 	}
 
+	
+	
 	public static IProgress getProgressBar(){
         return new IProgress() {
             private boolean indeterminate=true;
@@ -189,15 +223,19 @@ public class Platform {
         getCurrentImageLayer().addLayer(l);
     }
     
-    /** search the cache in the DB, if it doesn't exist then read the properties file
+    /** 
+     * search the cache in the DB, if it doesn't exist then read the properties file
      * even if the file is empty a default path is used
      */
     public static String getCachePath() {
-        String cache = Platform.getPreferences().readRow(Platform.CACHE);
+        String cache = Platform.getPreferences().readRow(Constant.PREF_CACHE);
         if (cache.equals("")) {
-            Platform.getPreferences().insertIfNotExistRow(Platform.CACHE, java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache"));
-            cache = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache");
+        	cache = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache");
+            Platform.getPreferences().updateRow(Constant.PREF_CACHE, cache);
         }
         return cache;
     }
+    
+    
+   
 }
