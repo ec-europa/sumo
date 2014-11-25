@@ -30,6 +30,7 @@ import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
+import org.geoimage.viewer.util.Constant;
 
 /**
  *
@@ -43,19 +44,15 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
     private String lastDirectory;
     boolean done = false;
     private String message = "Adding Image. Please wait...";
-    private static final String IMAGE_FOLDER = "Image Default Folder";
-    private static final String USE_GEOLOCATIONCORRECTION = "Image - use geolocation correction file";
+ 
 
     public AddImageConsoleAction() {
-        // create preference fields
-        Platform.getPreferences().insertIfNotExistRow(AddImageConsoleAction.IMAGE_FOLDER, java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory"));
-        Platform.getPreferences().insertIfNotExistRow(Platform.PREFERENCES_LASTIMAGE, "");
-        Platform.getPreferences().insertIfNotExistRow(USE_GEOLOCATIONCORRECTION, "true");
-        if(Platform.getPreferences().readRow(Platform.PREFERENCES_LASTIMAGE).equals("")){
+        
+        if(Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE).equals("")){
             //AG set the default directory if no images have been opened before
-            lastDirectory = Platform.getPreferences().readRow(AddImageConsoleAction.IMAGE_FOLDER);
+            lastDirectory = Platform.getPreferences().readRow(Constant.PREF_IMAGE_FOLDER);
         }else{
-            lastDirectory = new File(Platform.getPreferences().readRow(Platform.PREFERENCES_LASTIMAGE)).getAbsolutePath();
+            lastDirectory = new File(Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE)).getAbsolutePath();
         }
         fileChooser = new JFileChooser(lastDirectory);
     }
@@ -133,7 +130,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
             	temp=tempList.get(0);
             }
             // save the file name in the preferences
-            Platform.getPreferences().updateRow(Platform.PREFERENCES_LASTIMAGE, temp.getFilesList()[0]);
+            Platform.getPreferences().updateRow(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
             if (tempList==null||tempList.isEmpty()) {
                 this.done = true;
@@ -164,7 +161,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
 
         } else {
             //part used by the graphical interface
-            if (lastDirectory.equals(Platform.getPreferences().readRow(AddImageConsoleAction.IMAGE_FOLDER))) {
+            if (lastDirectory.equals(Platform.getPreferences().readRow(Constant.PREF_IMAGE_FOLDER))) {
                 if (fileChooser == null) {
                     fileChooser = new JFileChooser(lastDirectory);
                 }
@@ -196,7 +193,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
                 for(int i=0;i<tempList.size();i++){
             		temp=tempList.get(i);
 	                // save the file name in the preferences
-	                Platform.getPreferences().updateRow(Platform.PREFERENCES_LASTIMAGE, temp.getFilesList()[0]);
+	                Platform.getPreferences().updateRow(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
 	                Platform.getGeoContext().setX(0);
 	                Platform.getGeoContext().setY(0);

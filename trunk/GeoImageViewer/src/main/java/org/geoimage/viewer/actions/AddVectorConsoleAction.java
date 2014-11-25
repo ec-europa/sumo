@@ -34,6 +34,7 @@ import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
+import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.DatabaseDialog;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.slf4j.LoggerFactory;
@@ -52,15 +53,10 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
     private String message = "Adding data. Please wait...";
 
     public AddVectorConsoleAction() {
-    	//Platform.getPreferences().insertIfNotExistRow(AddVectorConsoleAction.VECTOR_FOLDER, java.util.ResourceBundle.getBundle("GeoImageViewer").getString("vector_directory"));
-        Platform.getPreferences().insertIfNotExistRow(Platform.PREFERENCES_LASTVECTOR, "");
-        
-    	//if(lastDirectory==null)
-    	//	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
-        if(Platform.getPreferences().readRow(Platform.PREFERENCES_LASTVECTOR).equals("")){
+        if(Platform.getPreferences().readRow(Constant.PREF_LASTVECTOR).equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
-            lastDirectory = new File(Platform.getPreferences().readRow(Platform.PREFERENCES_LASTVECTOR)).getAbsolutePath();
+            lastDirectory = new File(Platform.getPreferences().readRow(Constant.PREF_LASTVECTOR)).getAbsolutePath();
         }
     	fd = new JFileChooser(lastDirectory);
 
@@ -129,7 +125,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    Platform.getPreferences().insertIfNotExistRow(Platform.PREFERENCES_LASTVECTOR, lastDirectory);
+                    Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
                     Map<Object,String> config = new HashMap<Object,String>();
                     config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
                     IImageLayer l=Platform.getCurrentImageLayer();
@@ -243,7 +239,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 lastDirectory = fd.getSelectedFile().getParent();
-                Platform.getPreferences().updateRow(Platform.PREFERENCES_LASTVECTOR, lastDirectory);
+                Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
                 file = fd.getSelectedFile().getCanonicalPath();
             } catch (IOException ex) {
             	logger.error(ex.getMessage(), ex);
