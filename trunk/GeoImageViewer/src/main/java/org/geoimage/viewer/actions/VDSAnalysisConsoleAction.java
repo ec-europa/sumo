@@ -4,6 +4,8 @@
  */
 package org.geoimage.viewer.actions;
 
+import static org.geoimage.viewer.util.Constant.*;
+
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -102,12 +104,12 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      	pixels.merge(banddetectedpixels);
                      }	
                     
-                     boolean displaybandanalysis = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.DISPLAY_BANDS).equalsIgnoreCase("true");
+                     boolean displaybandanalysis = Platform.getPreferences().readRow(PREF_DISPLAY_BANDS).equalsIgnoreCase("true");
                      if ((numberofbands < 1) || displaybandanalysis) {
                          message =  new StringBuilder("VDS: agglomerating detections for band ").append(gir.getBandName(band)).append("...");
                          setCurrent(3);
 
-                         String agglomerationMethodology = (Platform.getPreferences()).readRow(AGGLOMERATION_METHODOLOGY);
+                         String agglomerationMethodology = (Platform.getPreferences()).readRow(PREF_AGGLOMERATION_METHODOLOGY);
                          if (agglomerationMethodology.startsWith("d")) {
                              // method distance used
                              banddetectedpixels.agglomerate();
@@ -116,17 +118,17 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                              // method neighbours used
                              double neighbouringDistance;
                              try {
-                                 neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(NEIGHBOUR_DISTANCE));
+                                 neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_DISTANCE));
                              } catch (NumberFormatException e) {
                                  neighbouringDistance = 1.0;
                              }
                              int tilesize;
                              try {
-                                 tilesize = Integer.parseInt((Platform.getPreferences()).readRow(NEIGHBOUR_TILESIZE));
+                                 tilesize = Integer.parseInt((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_TILESIZE));
                              } catch (NumberFormatException e) {
                                  tilesize = 200;
                              }
-                             boolean removelandconnectedpixels = (Platform.getPreferences().readRow(REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
+                             boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
                              banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, new int[]{band}, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                          }
 
@@ -137,7 +139,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 
                          ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis " + gir.getBandName(band) + " " + thresholds[band], (SarImageReader) gir, "point", createGeometricLayer(gir, banddetectedpixels));
                      
-                         boolean display = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.DISPLAY_PIXELS).equalsIgnoreCase("true");
+                         boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                          if (!agglomerationMethodology.startsWith("d")) {
                              vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdaggregatePixels(), display);
                              vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdclipPixels(), display);
@@ -152,16 +154,16 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          try {
                              String widthstring = "";
                              if (band == 0) {
-                                 widthstring = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_0);
+                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_0);
                              }
                              if (band == 1) {
-                                 widthstring = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_1);
+                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_1);
                              }
                              if (band == 2) {
-                                 widthstring = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_2);
+                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_2);
                              }
                              if (band == 3) {
-                                 widthstring = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_3);
+                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_3);
                              }
                              int displaywidth = Integer.parseInt(widthstring);
                              vdsanalysis.setWidth(displaywidth);
@@ -171,16 +173,16 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          try {
                              String colorString = "";
                              if (band == 0) {
-                                 colorString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_0);
+                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_0);
                              }
                              if (band == 1) {
-                                 colorString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_1);
+                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_1);
                              }
                              if (band == 2) {
-                                 colorString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_2);
+                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_2);
                              }
                              if (band == 3) {
-                                 colorString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_3);
+                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_3);
                              }
                              Color colordisplay = new Color(Integer.decode(colorString));
                              vdsanalysis.setColor(colordisplay);
@@ -190,16 +192,16 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          try {
                              String symbolString = "";
                              if (band == 0) {
-                                 symbolString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_0);
+                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_0);
                              }
                              if (band == 1) {
-                                 symbolString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_1);
+                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_1);
                              }
                              if (band == 2) {
-                                 symbolString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_2);
+                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_2);
                              }
                              if (band == 3) {
-                                 symbolString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_3);
+                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_3);
                              }
                              vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
                          } catch (EnumConstantNotPresentException e) {
@@ -216,7 +218,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      message =  new StringBuilder("VDS: agglomerating detections...");
                      setCurrent(3);
 
-                     String agglomerationMethodology = (Platform.getPreferences()).readRow(AGGLOMERATION_METHODOLOGY);
+                     String agglomerationMethodology = (Platform.getPreferences()).readRow(PREF_AGGLOMERATION_METHODOLOGY);
                      if (agglomerationMethodology.startsWith("d")) {
                          // method distance used
                          pixels.agglomerate();
@@ -225,17 +227,17 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          // method neighbours used
                          double neighbouringDistance;
                          try {
-                             neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(NEIGHBOUR_DISTANCE));
+                             neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_DISTANCE));
                          } catch (NumberFormatException e) {
                              neighbouringDistance = 1.0;
                          }
                          int tilesize;
                          try {
-                             tilesize = Integer.parseInt((Platform.getPreferences()).readRow(NEIGHBOUR_TILESIZE));
+                             tilesize = Integer.parseInt((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_TILESIZE));
                          } catch (NumberFormatException e) {
                              tilesize = 200;
                          }
-                         boolean removelandconnectedpixels = (Platform.getPreferences().readRow(REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
+                         boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
                          pixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                      }
 
@@ -243,7 +245,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
 
                      ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", gir, "point", createGeometricLayer(gir, pixels));
-                     boolean display = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.DISPLAY_PIXELS).equalsIgnoreCase("true");
+                     boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                      if (!agglomerationMethodology.startsWith("d")) {
                          vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
                          vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, pixels.getThresholdclipPixels(), display);
@@ -256,21 +258,21 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, analysis.getTiles(), false);
                      // set the color and symbol values for the VDS layer
                      try {
-                         String widthstring = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_MERGED);
+                         String widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_MERGED);
                          int displaywidth = Integer.parseInt(widthstring);
                          vdsanalysis.setWidth(displaywidth);
                      } catch (NumberFormatException e) {
                          vdsanalysis.setWidth(1);
                      }
                      try {
-                         String colorString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_MERGED);
+                         String colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_MERGED);
                          Color colordisplay = new Color(Integer.decode(colorString));
                          vdsanalysis.setColor(colordisplay);
                      } catch (NumberFormatException e) {
                          vdsanalysis.setColor(new Color(0xFFAA00));
                      }
                      try {
-                         String symbolString = Platform.getPreferences().readRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_MERGED);
+                         String symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_MERGED);
                          vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
                      } catch (EnumConstantNotPresentException e) {
                          vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.square);
@@ -297,53 +299,9 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
     private GeoImageReader gir = null;
     private IImageLayer il = null;
     private List<IMask> mask = null;
-    private static final String DISPLAY_PIXELS = "VDS Analaysis - Display detected pixels";
-    private static final String DISPLAY_BANDS = "VDS Analaysis - Display all bands detection results";
-    private static final String TARGETS_COLOR_BAND_0 = "VDS Analaysis - Target Color - Band 0";
-    private static final String TARGETS_SIZE_BAND_0 = "VDS Analaysis - Target Size - Band 0";
-    private static final String TARGETS_SYMBOL_BAND_0 = "VDS Analaysis - Target Symbol - Band 0";
-    private static final String TARGETS_COLOR_BAND_1 = "VDS Analaysis - Target Color - Band 1";
-    private static final String TARGETS_COLOR_BAND_2 = "VDS Analaysis - Target Color - Band 2";
-    private static final String TARGETS_COLOR_BAND_3 = "VDS Analaysis - Target Color - Band 3";
-    private static final String TARGETS_SIZE_BAND_1 = "VDS Analaysis - Target Size - Band 1";
-    private static final String TARGETS_SIZE_BAND_2 = "VDS Analaysis - Target Size - Band 2";
-    private static final String TARGETS_SIZE_BAND_3 = "VDS Analaysis - Target Size - Band 3";
-    private static final String TARGETS_SYMBOL_BAND_1 = "VDS Analaysis - Target Symbol - Band 1";
-    private static final String TARGETS_SYMBOL_BAND_2 = "VDS Analaysis - Target Symbol - Band 2";
-    private static final String TARGETS_SYMBOL_BAND_3 = "VDS Analaysis - Target Symbol - Band 3";
-    private static final String TARGETS_COLOR_BAND_MERGED = "VDS Analaysis - Target Color - Band Merged";
-    private static final String TARGETS_SIZE_BAND_MERGED = "VDS Analaysis - Target Size - Band Merged";
-    private static final String TARGETS_SYMBOL_BAND_MERGED = "VDS Analaysis - Target Symbol - Band Merged";
-    private static final String BUFFERING_DISTANCE = "VDS Analaysis - Buffering Distance in pixels";
-    private static final String AGGLOMERATION_METHODOLOGY = "VDS Analaysis - Agglomeration Method";
-    private static final String NEIGHBOUR_DISTANCE = "VDS Analaysis - Neighbours distance";
-    private static final String NEIGHBOUR_TILESIZE = "VDS Analaysis - Neighbours tile size";
-    private static final String REMOVE_LANDCONNECTEDPIXELS = "VDS Analaysis - Remove pixels connected to land in neighbour mode";
-
+   
     public VDSAnalysisConsoleAction() {
-        // creates preferences fields
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.DISPLAY_PIXELS, "true");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.DISPLAY_BANDS, "true");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_0, "0x0000FF");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_0, "1.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_0, "square");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_1, "triangle");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_1, "0x00FF00");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_1, "1.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_2, "0xFF0000");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_2, "1.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_2, "square");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_3, "0xFFFF00");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_3, "1.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_3, "triangle");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SYMBOL_BAND_MERGED, "cross");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_COLOR_BAND_MERGED, "0xFFAA00");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.TARGETS_SIZE_BAND_MERGED, "1.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.BUFFERING_DISTANCE, "15.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.AGGLOMERATION_METHODOLOGY, "neighbours");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.NEIGHBOUR_DISTANCE, "2.0");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.NEIGHBOUR_TILESIZE, "200");
-        Platform.getPreferences().insertIfNotExistRow(VDSAnalysisConsoleAction.REMOVE_LANDCONNECTEDPIXELS, "true");
+        
     }
 
     public String getName() {
@@ -360,7 +318,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
-        double bufferingDistance = Double.parseDouble((Platform.getPreferences()).readRow(BUFFERING_DISTANCE));
+        double bufferingDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
 
         if (args.length < 2) {
             return true;
@@ -597,7 +555,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         a3.setPossibleValues(vectors.toArray());
         Vector<Argument> out = new Vector<Argument>();
 
-        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, (Platform.getPreferences()).readRow(BUFFERING_DISTANCE));
+        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, (Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
 
         //management of the different threshold in the VDS parameters panel
         out.add(a1);
