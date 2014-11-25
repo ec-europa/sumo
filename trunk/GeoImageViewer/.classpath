@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="src/main/fengui"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GeoImage"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GeoImageAnalysis"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">

@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.actions;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -55,9 +56,10 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                            URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
+                        	File shape=new File("./resources/coastline/default/Global GSHHS Land Mask.shp");
+                            //URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
                             Map config=new HashMap();
-                            config.put("url", url);
+                            config.put("url", shape.toURI().toURL());
                             AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
                             GeometricLayer gl = shpio.read(l.getImageReader());
                             addLayerInThread(gl, (IImageLayer) l);
