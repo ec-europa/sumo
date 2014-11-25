@@ -51,6 +51,7 @@ import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.geoimage.viewer.widget.InfoDialog;
 import org.geoimage.viewer.widget.LayerManagerWidget;
@@ -105,14 +106,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
 	    animator.start();
 
         initComponents();
-        Platform.getPreferences().insertIfNotExistRow("Screenshot file", "~/screenshot.jpg");
+        
         //WidgetManager.addWidget("Navigation", GeoNavigationToolbar.class);
         WidgetManager.addWidget("Overview", GeoOverviewToolbar.class);
         //WidgetManager.addWidget("Time", CurrentTimeWidget.class);
         //WidgetManager.addWidget("Info", InfoWidget.class);
         // AG init the preferences
-        Platform.getPreferences().insertIfNotExistRow(Platform.CACHE, System.getProperty("user.dir") + "/sumocache/");
-        Platform.getPreferences().insertIfNotExistRow(Platform.PREFERENCES_LASTIMAGE, "");
+        Platform.getPreferences().insertIfNotExistRow(Constant.PREF_CACHE, System.getProperty("user.dir") + "/sumocache/");
+        Platform.getPreferences().insertIfNotExistRow(Constant.PREF_LASTIMAGE, "");
 
         mainPanel.addComponentListener(new ComponentListener() {
             // This method is called after the component's size changes
@@ -639,7 +640,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
      */
     @Action
     public void openLastImage() {
-        final String lastImage = Platform.getPreferences().readRow(Platform.PREFERENCES_LASTIMAGE);
+        final String lastImage = Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE);
         if (lastImage != null) {
             new Thread(new Runnable() {
 
@@ -655,17 +656,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         }
     }
 
-    /** search the cache in the DB, if it doesn't exist then read the properties file
-     * even if the file is empty a default path is used
-     */
-    public String getCachePath() {
-        String cache = Platform.getPreferences().readRow(Platform.CACHE);
-        if (cache.equals("")) {
-            Platform.getPreferences().insertIfNotExistRow(Platform.CACHE, java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache"));
-            cache = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache");
-        }
-        return cache;
-    }
 
     /**
      * open the preferences dialog to set some parameters

@@ -38,9 +38,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     private GeometricLayer gl;
     private IImageLayer il;
     private IComplexVectorLayer vdslayer;
-    private String AZIMUTH_GEOMETRYTAG = "Azimuth Geometry";
-    private String AZIMUTH_GEOMETRYCOLOR = "VDS Analysis - Azimuth Geometry Color";
-    private String AZIMUTH_GEOMETRYLINEWIDTH = "VDS Analysis - Azimuth Geometry Line Width";
+    
     private Color azimuthGeometrycolor = null;
     private int azimuthGeometrylinewidth;
 
@@ -57,15 +55,12 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
         vdslayer = (IComplexVectorLayer) layer;
 
-        // create the preferences fields in the database
         PreferencesDB preferences = Platform.getPreferences();
-        preferences.insertIfNotExistRow(AZIMUTH_GEOMETRYCOLOR, Color.ORANGE.getRGB() + "");
-        preferences.insertIfNotExistRow(AZIMUTH_GEOMETRYLINEWIDTH, "1");
         // set the preferences values
         try {
-            String colorString = preferences.readRow(AZIMUTH_GEOMETRYCOLOR);
+            String colorString = preferences.readRow(Constant.PREF_AZIMUTH_GEOMETRYCOLOR);
             this.azimuthGeometrycolor = new Color(Integer.parseInt(colorString.equals("") ? Color.ORANGE.getRGB() + "" : colorString));
-            this.azimuthGeometrylinewidth = Integer.parseInt(preferences.readRow(AZIMUTH_GEOMETRYLINEWIDTH));
+            this.azimuthGeometrylinewidth = Integer.parseInt(preferences.readRow(Constant.PREF_AZIMUTH_GEOMETRYLINEWIDTH));
         } catch (NumberFormatException e) {
             //Logger.getLogger(GeometricInteractiveVDSLayerModel.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "Wrong format with the preference settings", "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,8 +207,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
     public void toggleRulers(int selectionLine) {
         if (selectionLine != -1) {
-            if (vdslayer.tagExists(AZIMUTH_GEOMETRYTAG)) {
-                vdslayer.removeGeometriesByTag(AZIMUTH_GEOMETRYTAG);
+            if (vdslayer.tagExists(Constant.PREF_AZIMUTH_GEOMETRYTAG)) {
+                vdslayer.removeGeometriesByTag(Constant.PREF_AZIMUTH_GEOMETRYTAG);
             } else {
                 // get the position of the boat
                 Geometry geom = gl.getGeometries().get(selectionLine);
@@ -245,7 +240,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
                 coordinateshorizontal[0] = new Coordinate(0, posY);
                 coordinateshorizontal[1] = new Coordinate(il.getImageReader().getWidth(), posY);
                 winGeom.add(gf.createLineString(coordinateshorizontal));
-                vdslayer.addGeometries(AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, SimpleEditVectorLayer.LINESTRING, winGeom, true);
+                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, SimpleEditVectorLayer.LINESTRING, winGeom, true);
             }
         }
         Platform.getGeoContext().setDirty(true);
