@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;
+import org.geoimage.def.GeoMetadata;  
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;

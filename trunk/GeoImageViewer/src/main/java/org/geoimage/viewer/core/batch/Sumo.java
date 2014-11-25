@@ -54,9 +54,9 @@ class AnalysisParams{
 public class Sumo {
 
 	//status
-	private final int PARAM_ERROR=-1;
-	private final int SINGLE_IMG_ANALYSIS=1;
-	private final int FOLDER_IMG_ANALYSIS=2;
+	protected final int PARAM_ERROR=-1;
+	protected final int SINGLE_IMG_ANALYSIS=1;
+	protected final int FOLDER_IMG_ANALYSIS=2;
 	
 	private int status=SINGLE_IMG_ANALYSIS;
 	private String msg="";
@@ -65,6 +65,7 @@ public class Sumo {
 	
 	private AnalysisParams params;
 	private  List<ComplexEditVDSVectorLayer>layerResults=null;
+	
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
 	
@@ -78,7 +79,19 @@ public class Sumo {
 	 */
 	public void execAnalysis(){
 		if(status==SINGLE_IMG_ANALYSIS){
-			startAnalysis();
+			//crate the reader
+			List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg);
+			SarImageReader reader=(SarImageReader) readers.get(0);
+			
+			GeometricLayer gl=null;
+			if(params.shapeFile!=null)
+				gl=readShapeFile(reader);
+			
+			IMask[] masks = new IMask[1];
+			if(params.buffer!=0&&gl!=null)
+				masks[0]=FactoryLayer.createBufferedLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, reader, gl);
+			
+			startAnalysis(reader,masks);
 		}
 	}
 	
@@ -87,7 +100,7 @@ public class Sumo {
 	 * @param reader
 	 * @return
 	 */
-	private GeometricLayer readShapeFile(SarImageReader reader){
+	protected GeometricLayer readShapeFile(SarImageReader reader){
 		GeometricLayer gl=null;
   	    Map<String,Object> config = new HashMap<String,Object>();
 	    try {
@@ -105,18 +118,7 @@ public class Sumo {
 	/**
 	 * run analysis for 1 image
 	 */
-	public void startAnalysis(){
-		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg);
-		SarImageReader reader=(SarImageReader) readers.get(0);
-		
-		GeometricLayer gl=null;
-		if(params.shapeFile!=null)
-			gl=readShapeFile(reader);
-		
-		IMask[] masks = new IMask[1];
-		if(params.buffer!=0&&gl!=null)
-			masks[0]=FactoryLayer.createBufferedLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, reader, gl);
-
+	public void startAnalysis(SarImageReader reader,IMask[] masks){
 		
 		
         VDSAnalysis analysis = new VDSAnalysis(reader,
@@ -128,10 +130,6 @@ public class Sumo {
         		params.thresholdArrayValues[3], 
         		true);
   
-        //KDistributionEstimation k=new KDistributionEstimation(ENL.getFromGeoImageReader((SarImageReader)reader));
-        //analysis.run(k);
-         
-
         
         int numberofbands = reader.getNBand();
         final String[] thresholds = new String[numberofbands];
@@ -155,7 +153,7 @@ public class Sumo {
 	/**
 	 * 
 	 */
-	private void saveResults(){
+	protected void saveResults(){
 		if(layerResults!=null){
     	   for(ComplexEditVDSVectorLayer l:layerResults){
     		   String out=params.outputFolder+"\\"+l.getName();
@@ -174,7 +172,7 @@ public class Sumo {
 	 * @param params
 	 * @return
 	 */
-	private int parseParams(List<String> inputParams){
+	protected int parseParams(List<String> inputParams){
 		int status=0; //OK
 		//XOR se i parametri non contengono o contengono entrambi 
         if (!(inputParams.contains(AnalysisParams.IMG_FOLD_PARAM)  ^ inputParams.contains(AnalysisParams.IMG_PARAM) )){
