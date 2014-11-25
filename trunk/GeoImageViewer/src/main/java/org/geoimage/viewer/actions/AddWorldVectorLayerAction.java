@@ -24,6 +24,7 @@ import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.util.Constant;
 
 /**
  *
@@ -56,9 +57,9 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	File shape=new File("./resources/coastline/default/Global GSHHS Land Mask.shp");
+                        	File shape=new File(Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK));
                             //URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
-                            Map config=new HashMap();
+                            Map<String,Object> config=new HashMap<String,Object>();
                             config.put("url", shape.toURI().toURL());
                             AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
                             GeometricLayer gl = shpio.read(l.getImageReader());
