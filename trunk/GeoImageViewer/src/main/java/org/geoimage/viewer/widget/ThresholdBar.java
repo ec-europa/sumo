@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
+
 import org.fenggui.ObservableLabelWidget;
 import org.fenggui.Slider;
 import org.fenggui.border.PlainBorder;
@@ -23,6 +25,7 @@ import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IThreshable;
+import org.geoimage.viewer.util.Constant;
 
 /**
  *
@@ -33,14 +36,9 @@ public class ThresholdBar extends TransparentWidget {
     private final Slider slider;
     private int[] histogram = null;
     private final IThreshable layer;
-    private static String GOOGLE_CHART_API="Google Chart format";
-    private static String NUM_HISTOGRAM_CLASSES="Number of Histogram Classes";
-
+   
     public ThresholdBar(IThreshable layer) {
         super("Threshold");
-        Platform.getPreferences().insertIfNotExistRow(GOOGLE_CHART_API,"http://chart.apis.google.com/chart?chf=c,lg,45,CCCCCC,0,999999,0.75|bg,s,CCCCCC&chm=B,76A4FB,0,0,0&chxt=x&chtt=Histogram&chs=300x200&cht=lc&chco=0077CC");
-        Platform.getPreferences().insertIfNotExistRow(NUM_HISTOGRAM_CLASSES,"20");
-
         slider = new Slider(true);
         slider.setVisible(true);
         setLayoutManager(new RowLayout(false));
@@ -71,7 +69,7 @@ public class ThresholdBar extends TransparentWidget {
         ThresholdBar bar = new ThresholdBar(layer);
         final double min = layer.getMinimumThresh()-0.01;
         final double max = layer.getMaximumThresh()+0.01;
-        int classes=Integer.parseInt(Platform.getPreferences().readRow(NUM_HISTOGRAM_CLASSES));
+        int classes=Integer.parseInt(Platform.getPreferences().readRow(Constant.NUM_HISTOGRAM_CLASSES));
         bar.setHistogram(layer.getHistogram(classes));
         bar.slider.setValue((layer.getThresh()-min)/(max-min));
         bar.addListener(new ISliderMovedListener() {
@@ -98,8 +96,8 @@ public class ThresholdBar extends TransparentWidget {
         this.histogram = histogram;
         BufferedImage buf = null;
         try {
-            System.out.println(Platform.getPreferences().readRow(GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
-            buf = ImageIO.read(new URL(Platform.getPreferences().readRow(GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
+            System.out.println(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
+            buf = ImageIO.read(new URL(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
         } catch (IOException ex) {
             Logger.getLogger(ThresholdBar.class.getName()).log(Level.SEVERE, null, ex);
         }
