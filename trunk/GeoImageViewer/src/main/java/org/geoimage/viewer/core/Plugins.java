@@ -29,8 +29,30 @@ public class Plugins implements Serializable {
     private String className;
     @Column(name = "ACTIVE")
     private Boolean active;
+    
+    /*
+    @Column(name = "NEED_PARAMS")
+    private boolean needParams=false;
+    @Column(name = "PARAMS")
+    private Object[] params=null; 
+    
+    public boolean isNeedParams() {
+		return needParams;
+	}
 
-    public Plugins() {
+	public void setNeedParams(boolean needParams) {
+		this.needParams = needParams;
+	}
+
+	public Object[] getParams() {
+		return params;
+	}
+
+	public void setParams(Object[] params) {
+		this.params = params;
+	}*/
+
+	public Plugins() {
     }
 
     public Plugins(String className) {

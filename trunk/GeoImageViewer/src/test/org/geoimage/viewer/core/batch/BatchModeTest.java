@@ -48,7 +48,7 @@ public class BatchModeTest {
 			System.out.println("Run Analysis");
 			s.execAnalysis();
 			System.out.println("Save results");
-			s.saveResults();
+			//s.saveResults();
 		}
 		System.out.println("Exit");
 		assertTrue(true);
