@@ -4,9 +4,10 @@
  */
 package org.geoimage.viewer.actions;
 
+import java.awt.Color;
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,16 +15,14 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
-import org.geoimage.viewer.util.Constant;
 
 /**
  *
@@ -31,18 +30,17 @@ import org.geoimage.viewer.util.Constant;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  * 
  */
-public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
-    protected boolean done = false;
+public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
+    private String name="";
+    private File worldFile;
 
-    public AddWorldVectorLayerAction() {
+    public AddGenericWorldLayerAction(String actionName,File worldFile) {
+    	name=actionName;
+    	this.worldFile=worldFile;
     }
 
     public String getName() {
-        return "world";
-    }
-
-    public String getDescription() {
-        return " Add a land mask layer";
+        return name;
     }
 
     public boolean execute(final String[] args) {
@@ -50,20 +48,19 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.setInfo("Importing land mask from GSHHS shapefile...",-1);
+                Platform.setInfo("Importing land coastline "+name,-1);
                 try {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	File shape=new File(Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK));
-                            //URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
+                        	URL url=worldFile.toURI().toURL();
                             Map<String,Object> config=new HashMap<String,Object>();
-                            config.put("url", shape.toURI().toURL());
+                            config.put("url", url);
                             AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
                             GeometricLayer gl = shpio.read(l.getImageReader());
-                            addLayerInThread(gl, (IImageLayer) l);
+                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, gl, (IImageLayer) l);
                         } catch (Exception ex) {
-                            Logger.getLogger(AddWorldVectorLayerAction.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(AddGenericWorldLayerAction.class.getName()).log(Level.SEVERE, null, ex);
                         }
                 	}   
                 } catch (Exception e) {
@@ -74,18 +71,27 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
         return true;
     }
 
-    public void addLayerInThread(final GeometricLayer layer, final IImageLayer il) {
-        if(layer != null)
-        {
+    /**
+     * 
+     * @param type
+     * @param layer
+     * @param il
+     */
+    public void addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
+        if (layer != null) {
             new Thread(new Runnable() {
 
                 public void run() {
-                    il.addLayer(new SimpleEditVectorLayer(layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
+                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader());
+                    ivl.setColor(Color.GREEN);
+                    ivl.setWidth(5);
+                    il.addLayer((ILayer) ivl);
                     done = true;
                 }
             }).start();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
+
                 public void run() {
                     JOptionPane.showMessageDialog(null, "Empty layer, not added to layers", "Warning", JOptionPane.ERROR_MESSAGE);
                 }
@@ -93,47 +99,9 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
             done = true;
         }
     }
-
+    
     public String getPath() {
-        return "Import/Land mask";
+        return "Import/Coastline/"+name;
     }
 
-    public boolean isIndeterminate() {
-        return true;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public int getMaximum() {
-        return 1;
-    }
-
-    public int getCurrent() {
-        return 1;
-    }
-
-    public String getMessage() {
-        return "adding world layer...";
-    }
-
-    public List<Argument> getArgumentTypes() {
-        return null;
-    }
-
-    public void setCurrent(int i) {
-    }
-
-    public void setMaximum(int size) {
-    }
-
-    public void setMessage(String string) {
-    }
-
-    public void setIndeterminate(boolean value) {
-    }
-
-    public void setDone(boolean value) {
-    }
 }
