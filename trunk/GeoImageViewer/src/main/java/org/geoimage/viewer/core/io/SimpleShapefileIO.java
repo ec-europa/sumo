@@ -14,6 +14,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.impl.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
@@ -248,21 +249,9 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             Filter filter=CQL.toFilter(f);
             System.out.println(filter);
 
-            Polygon imageP = (Polygon) new WKTReader().read("POLYGON((" +
-                    x0[0] + " " + x0[1] + "," +
-                    x01[0] + " " + x01[1] + "," +
-                    x02[0] + " " + x02[1] + "," +
-                    x03[0] + " " + x03[1] + "," +
-                    x1[0] + " " + x1[1] + "," +
-                    x12[0] + " " + x12[1] + "," +
-                    x2[0] + " " + x2[1] + "," +
-                    x21[0] + " " + x21[1] + "," +
-                    x22[0] + " " + x22[1] + "," +
-                    x23[0] + " " + x23[1] + "," +
-                    x3[0] + " " + x3[1] + "," +
-                    x31[0] + " " + x31[1] + "," +
-                    x0[0] + " " + x0[1] + "" +
-                    "))");
+            
+            Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
+            
             System.out.println(imageP);
             FeatureCollection<?, ?> fc=featureSource.getFeatures(filter);
             if (fc.isEmpty()) {

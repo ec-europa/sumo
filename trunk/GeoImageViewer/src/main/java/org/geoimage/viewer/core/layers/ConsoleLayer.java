@@ -4,19 +4,6 @@
  */
 package org.geoimage.viewer.core.layers;
 
-import javax.persistence.EntityManagerFactory;
-import javax.swing.JTabbedPane;
-
-import org.geoimage.viewer.core.api.GeoContext;
-
-import java.util.List;
-
-import org.geoimage.viewer.core.*;
-import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
-import org.geoimage.viewer.core.api.IImageLayer;
-
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -27,12 +14,14 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.AbstractAction;
@@ -41,10 +30,21 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
+import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IProgress;
+import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
+import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.Plugins;
+import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.util.ClassPathHacker;
+import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.ActionDialog;
 
 /**
@@ -55,14 +55,18 @@ public class ConsoleLayer implements ILayer {
 
     private String message = "";
     private String oldMessage = "";
-    private Map<String, Plugins> actions;
+    private Map<String, IConsoleAction> actions;
+    private Map<String, Plugins> plugins;
     private String[] commands;
     private IProgress currentAction = null;
     private final EntityManagerFactory emf;
 
     public ConsoleLayer() {
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
-        actions = new HashMap<String, Plugins>();
+        
+        actions = new HashMap<String, IConsoleAction>();
+        plugins = new HashMap<String, Plugins>();
+        
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Query q = em.createQuery("select p from Plugins p");
@@ -77,8 +81,47 @@ public class ConsoleLayer implements ILayer {
         em.getTransaction().commit();
 
         em.close();
+        List<IConsoleAction> landActions=getDynamicActionForLandmask();
         parseActions(plugins);
-
+        parseActionsLandMask(landActions);
+        
+    }
+    
+    /**
+     * Create and return new actions dinamically for the land mask import options  
+     */
+    private List<IConsoleAction> getDynamicActionForLandmask(){
+    	List<IConsoleAction> actions=new ArrayList<IConsoleAction>();
+    	String folder=Platform.getPreferences().readRow(Constant.PREF_COASTLINES_FOLDER);
+    	
+    	File folderShapes=new File(folder);
+    	if(folderShapes.exists()&&folderShapes.isDirectory()){
+    		//cerco nelle sottocartelle altre shape files
+    		File[] childs=folderShapes.listFiles();
+    		for(File f:childs){
+    			//controllo se sono cartelle e se contengono uno shape file . In questo caso creo la nuova action 
+    			if(f.isDirectory()){
+    				File[] files=f.listFiles();
+    				for(File ff:files){
+    					String ext=FilenameUtils.getExtension(ff.getName());
+    					if(ext.equals("shp")){
+    						//creo la nuova azione da aggiungere
+    						AddGenericWorldLayerAction action=new AddGenericWorldLayerAction(f.getName(),ff);
+    						Plugins p=new Plugins(action.getClass().getName());
+    						p.setActive(Boolean.TRUE);
+    	                    p.setJarUrl(action.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
+    						actions.add(action);
+    						break;
+    					}
+    					
+    				}
+    				
+    			}
+    		}
+    		
+    	}
+    	return actions;
+    	
     }
 
     public void execute(String[] arguments) {
@@ -89,10 +132,10 @@ public class ConsoleLayer implements ILayer {
                     args[i - 1] = arguments[i];
                 }
                 try {
-                    if (!actions.get(c).isActive()) {
+                    if (!plugins.get(c).isActive()) {
                         return;
                     }
-                    Object a = Class.forName(actions.get(c).getClassName()).newInstance();
+                    Object a = actions.get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
                     if (!(a instanceof IConsoleAction)) {
                         return;
                     }
@@ -152,7 +195,7 @@ public class ConsoleLayer implements ILayer {
 	                        args[i - 1] = command[i];
 	                    }
 	                    try {
-	                        Object a = Class.forName(actions.get(c).getClassName()).newInstance();
+	                        Object a = actions.get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
 	                        if (!(a instanceof IConsoleAction)) {
 	                            return;
 	                        }
@@ -196,7 +239,7 @@ public class ConsoleLayer implements ILayer {
                         }
                         try {
 
-                            Object a = Class.forName(actions.get(c).getClassName(), true, new URLClassLoader(new URL[]{new URL(actions.get(c).getJarUrl())}, ClassLoader.getSystemClassLoader()));
+                            Object a = Class.forName(plugins.get(c).getClassName(), true, new URLClassLoader(new URL[]{new URL(plugins.get(c).getJarUrl())}, ClassLoader.getSystemClassLoader()));
                             if (!(a instanceof IConsoleAction)) {
                                 return;
                             }
@@ -231,9 +274,26 @@ public class ConsoleLayer implements ILayer {
                 Object temp = instanciate(p);
                 if (temp instanceof IConsoleAction) {
                     IConsoleAction action = (IConsoleAction) temp;
-                    getActions().put(action.getName(), p);
+                    getActions().put(action.getName(), action);
+                    getPlugins().put(action.getName(), p);
                     System.out.println(temp.toString() + " added");
                 }
+            } catch (Exception ex) {
+                //Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        commands = getActions().keySet().toArray(new String[getActions().size()]);
+    }
+    
+    private void parseActionsLandMask(List<IConsoleAction> acts) {
+        for (IConsoleAction act : acts) {
+            try {
+            	Plugins p=new Plugins(act.getClass().getName());
+				p.setActive(Boolean.TRUE);
+                p.setJarUrl(act.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
+                getPlugins().put(act.getName(), p);
+                getActions().put(act.getName(), act);
+                System.out.println(act.toString() + " added");
             } catch (Exception ex) {
                 //Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -324,9 +384,9 @@ public class ConsoleLayer implements ILayer {
         JMenuBar bar = new JMenuBar();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (Plugins p : getActions().values()) {
-            final IConsoleAction action = instanciate(p);
-            String[] path = action.getPath().split("/");
+        for (final IConsoleAction act : getActions().values()) {
+           // final IConsoleAction action = instanciate(p);
+            String[] path = act.getPath().split("/");
             JMenuItem mitem = null;
             String mediumpath = "";
             for (int i = 0; i < path.length; i++) {
@@ -339,10 +399,10 @@ public class ConsoleLayer implements ILayer {
                         temp = new JMenuItem(new AbstractAction(path[i]) {
 
                             public void actionPerformed(ActionEvent e) {
-                                if (action.getArgumentTypes() != null) {
-                                    new ActionDialog(JFrame.getFrames()[0], true, action).setVisible(true);
+                                if (act.getArgumentTypes() != null) {
+                                    new ActionDialog(JFrame.getFrames()[0], true, act).setVisible(true);
                                 } else {
-                                    action.execute(null);
+                                	act.execute(null);
                                 }
                             }
                         });
@@ -374,8 +434,8 @@ public class ConsoleLayer implements ILayer {
         List<JMenu> out = new Vector<JMenu>();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (Plugins p : getActions().values()) {
-            final IConsoleAction action = instanciate(p);
+        for (final IConsoleAction action : getActions().values()) {
+           // final IConsoleAction action = instanciate(p);
             String[] path = action.getPath().split("/");
             JMenuItem mitem = null;
             String mediumpath = "";
@@ -431,11 +491,11 @@ public class ConsoleLayer implements ILayer {
             }
         }
         JMenuItem temp = null;
-        for (Plugins p : getActions().values()) {
-            if (!p.isActive()) {
+        for (final IConsoleAction action : getActions().values()) {
+            if (!plugins.get(action.getName()).isActive()) {
                 continue;
             }
-            final IConsoleAction action = instanciate(p);
+            //final IConsoleAction action = instanciate(p);
             if (action == null) {
                 continue;
             }
@@ -509,19 +569,19 @@ public class ConsoleLayer implements ILayer {
     }
 
     public void updateTab(JTabbedPane jTabbedPane1) {
-        for (Plugins p : getActions().values()) {
-            if (!p.isActive()) {
+        for (final IConsoleAction act : getActions().values()) {
+            if (!plugins.get(act.getName()).isActive()) {
                 continue;
             }
-            final IConsoleAction action = instanciate(p);
-            if (action == null) {
+            //final IConsoleAction action = instanciate(p);
+            if (act == null) {
                 continue;
             }
-            if (action.getPath().startsWith("$")) {
-                String classname = action.getPath().replace("$", "");
+            if (act.getPath().startsWith("$")) {
+                String classname = act.getPath().replace("$", "");
                 try {
                     JPanel panel = (JPanel) Class.forName(classname).newInstance();
-                    jTabbedPane1.addTab(action.getName(), panel);
+                    jTabbedPane1.addTab(act.getName(), panel);
                 } catch (Exception ex) {
                     Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -532,10 +592,17 @@ public class ConsoleLayer implements ILayer {
     /**
      * @return the actions
      */
-    public Map<String, Plugins> getActions() {
+    public Map<String, IConsoleAction> getActions() {
         return actions;
     }
 
+    /**
+     * @return the actions
+     */
+    public Map<String, Plugins> getPlugins() {
+        return plugins;
+    }
+    
     private void populateDatabase() {
         String[] classes = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("actions").split(",");
         EntityManager em = emf.createEntityManager();
@@ -549,7 +616,7 @@ public class ConsoleLayer implements ILayer {
                     p.setJarUrl(temp.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
                     em.persist(p);
                     IConsoleAction action = (IConsoleAction) temp;
-                    getActions().put(action.getName(), p);
+                    getPlugins().put(action.getName(), p);
                     System.out.println(temp.toString() + " added");
                 }
             } catch (Exception ex) {

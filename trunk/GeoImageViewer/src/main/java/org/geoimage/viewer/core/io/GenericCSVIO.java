@@ -30,6 +30,7 @@ import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.PolygonOp;
 import org.geoimage.viewer.widget.SelectParametersJDialog;
 import org.h2.tools.Csv;
 
@@ -264,13 +265,9 @@ public class GenericCSVIO extends AbstractVectorIO {
             x2 = gt.getGeoFromPixel(margin + width, margin + height, "EPSG:4326");
             x3 = gt.getGeoFromPixel(margin + width, -margin, "EPSG:4326");
             x1 = gt.getGeoFromPixel(-margin, margin + height, "EPSG:4326");
-            Polygon imageP = (Polygon) new WKTReader(gf).read("POLYGON((" +
-                    x0[0] + " " + x0[1] + "," +
-                    x1[0] + " " + x1[1] + "," +
-                    x2[0] + " " + x2[1] + "," +
-                    x3[0] + " " + x3[1] + "," +
-                    x0[0] + " " + x0[1] + "" +
-                    "))");
+            
+            Polygon imageP=PolygonOp.createPolygon(x0,x1,x2,x3,x0);
+            
             int count=0;
             while (rset.next()) {
                 if(count==0){
