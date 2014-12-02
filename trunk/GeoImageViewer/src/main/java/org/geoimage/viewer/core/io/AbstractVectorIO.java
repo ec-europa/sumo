@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
 /**
