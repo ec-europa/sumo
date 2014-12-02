@@ -10,10 +10,36 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
 
 public class PolygonOp {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PolygonOp.class);
+	
+	
+	/**
+	 * 
+	 * @param xs
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static Polygon createPolygon(double[]...xs) throws ParseException{
+		StringBuilder builder =new StringBuilder("POLYGON((");
+		
+		for(int i=0;i<xs.length;i++){
+			double x[]=xs[i];
+			if(i<(xs.length-1))
+				builder=builder.append(x[0]).append(" ").append(x[1]).append(",");
+			else
+				builder=builder.append(x[0]).append(" ").append(x[1]).append("))");
+		}
+		
+		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
+		return imageP;
+	}
+	
+	
 	  /**
      * 
      * @param polygons
