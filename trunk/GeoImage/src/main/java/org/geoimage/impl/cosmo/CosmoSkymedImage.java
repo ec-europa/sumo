@@ -135,6 +135,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     Gcp gcp = new Gcp();
                     gcp.setXpix(0);
                     gcp.setYpix(ySize);
+                    gcp.setOriginalXpix(0.0);
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
