@@ -110,12 +110,16 @@ public class GenericCSVIO extends AbstractVectorIO {
         return null;
     }
 
+    /**
+     * 
+     */
+    //TODO: funziona solo con i points , bisogna correggerlo per salvare correttamente anche i poligoni
     public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
     	GeoTransform transform=gir.getGeoTransform();
         try {
-            if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
+           /* if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
                 return;
-            }
+            }*/
             String file = (String) config.get(CONFIG_FILE);
             new File(file).createNewFile();
             FileWriter fis = new FileWriter(file);
