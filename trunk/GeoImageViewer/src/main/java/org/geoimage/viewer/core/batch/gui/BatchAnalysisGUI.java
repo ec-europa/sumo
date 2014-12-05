@@ -3,7 +3,7 @@
  *
  * Created on November 17, 2008, 3:37 PM
  */
-package org.geoimage.viewer.offline;
+package org.geoimage.viewer.core.batch.gui;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -462,7 +462,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
             IMask[] masks = new IMask[1];
             if (mask != null) {
-                masks[0]=FactoryLayer.createBufferedLayer("mask",  mask.getGeometryType(), buffer,gir,mask);
+                masks[0]=FactoryLayer.createMaskLayer("mask",  mask.getGeometryType(), buffer,gir,mask);
             }
             for (int i = 0; i < gir.getNBand(); i++) {
                 gir.setBand(i);
