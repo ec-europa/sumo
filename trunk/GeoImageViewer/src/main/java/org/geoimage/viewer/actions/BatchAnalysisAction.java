@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IConsoleAction;
-import org.geoimage.viewer.offline.BatchAnalysisGUI;
+import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
 
 /**
  *
