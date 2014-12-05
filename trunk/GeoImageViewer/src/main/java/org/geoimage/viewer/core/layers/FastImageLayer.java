@@ -153,154 +153,157 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
      * displays the tiles on screen
      */
     public void render(GeoContext context) {
-        if (torescale) {
-            torescale = false;
-            tcm.clear();
-        }
-        GL gl = context.getGL();
-        
-        updateFutures(gl);
-        
-        float zoom = context.getZoom();
-        int width = context.getWidth();
-        int height = context.getHeight();
-        int x = context.getX(), y = context.getY();
-        
-        int xx = (int) (x + xpadding);
-        int yy = (int) (y + ypadding);
- 
-        //max tiles to compute time by time
-        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
-        
-        Cache c=CacheManager.getCacheInstance(activeGir.getName());
-        
-        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
-        
-	        if (zoom >= 1) {
-	            curlevel = (int) Math.sqrt(zoom + 1);
-	            //cycle to avoid the black area when zooming in/out and tiles not in memory
-	            for (int lll = maxlevels; lll > curlevel - 1; lll--) {
-	                //stop when lll=max zoom level
-	            	if (lll > maxlevels) {
-	                    break;
-	                }
-	                lll += il;
-	                
-	                if (lll < 0) {
-	                    continue;
-	                }
-	                if (this.mylevel != curlevel) {
-	                    this.mylevel = curlevel;
-	                    pool.shutdown();
-	                    pool = Executors.newFixedThreadPool(poolSize);
-	                }
-	                
-	                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
-	                int h0 = yy / ((1 << lll) << 8);
-	                
-	                
-	                final String initfile = new StringBuffer(c.getPath().toString()).append("\\").
-	                		append((int) lll ).
-	                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
-	                
-	                //AG loads the different tiles, starting from the center (k=0)
-	                for (int k = 0; k < max; k++) {
-	                	
-	                    for (int j = 0; j < max; j++) {
-	                        if (j + h0 < 0) {
-	                            continue;
-	                        }
-	                        for (int i = 0; i < max; i++) {
-	                            if (i + w0 < 0) {
-	                                continue;
-	                            }
-	                            if (arrayReadTilesOrder[i][j] == k) {
-	                                //start reading tiles in center of the image and go through the borders
-	                                float ymin = (float) (((j + h0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy) / (height * zoom));
-	                                float ymax = (float) (((j + h0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy) / (height * zoom));
-	                                float xmin = (float) (((i + w0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
-	                                float xmax = (float) (((i + w0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
-	
-	                                //check if the tile is in or out, if is not visible then is not loaded
-	                                if (ymin > 1 || ymax < 0) {
-	                                    continue;
-	                                }
-	                                if (xmin > 1 || xmax < 0) {
-	                                    continue;
-	                                }
-	                                
-	                                String file = new StringBuffer(initfile).append(getBandFolder(activeBand))
-	                                		.append("/")
-	                                		.append((i + w0))
-	                                		.append("_")
-	                                		.append((j + h0)).append(".png").toString();
-	                                //checked if the tile is already in memory or in cache, otherwise required it
-	                                if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
-	                                    if (!tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
-	                                        if (curlevel == 0 && lll == 0) {
-	                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
-	                                        } else if (curlevel == lll) {
-	                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
-	                                        }
-	                                    }
-	                                }
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-	        } else if (zoom > 0) {
-	        	
-	            curlevel = 0;//max zoom 
-	            int w0 = xx / Constant.TILE_SIZE;
-	            int h0 = yy / Constant.TILE_SIZE;
-	            
-	            final String initfile = new StringBuilder(c.getPath().toString())
-	            						.append("/0/")
-	            						.append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"/":"")).toString();
-	            for (int j = 0; j < max; j++) {
-	                if (j + h0 < 0) {
-	                    continue;
-	                }
-	                for (int i = 0; i < max; i++) {
-	                    if (i + w0 < 0) {
-	                        continue;
-	                    }
-	                    //start reading tiles in center of the image and go through the borders
-	                    float ymin = (float) (((j + h0) * Constant.OVERVIEW_SIZE_DOUBLE - yy) / (height * zoom));
-	                    float ymax = (float) (((j + h0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - yy) / (height * zoom));
-	                    float xmin = (float) (((i + w0) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
-	                    float xmax = (float) (((i + w0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
-	
-	                    //check if the tile is in or out, if is not visible then is not loaded
-	                    if (ymin > 1 || ymax < 0) {
-	                        continue;
-	                    }
-	                    if (xmin > 1 || xmax < 0) {
-	                        continue;
-	                    }
-	                    String file = new StringBuilder(initfile).append(getBandFolder(activeBand))
-	                    		.append("/")
-	                    		.append((i + w0))
-	                    		.append("_")
-	                    		.append((j + h0))
-	                    		.append(".png").toString();
-	
-	                    //checked if the tile is already in memory or in cache, otherwise required it
-	                    if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
-	                        if (!tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
-	                            addTileToQueue(initfile, 0, (i + w0), (j + h0));
-	                        }
-	                    }
-	                }
-	            }
-	
+    	if(activeGir!=null){	
+	        if (torescale) {
+	            torescale = false;
+	            tcm.clear();
 	        }
-        displayDownloading(futures.size());
-        super.render(context);
-        if (this.disposed) {
-            disposeSync();
-        }
+	        GL gl = context.getGL();
+	        
+	        updateFutures(gl);
+	        
+	        float zoom = context.getZoom();
+	        int width = context.getWidth();
+	        int height = context.getHeight();
+	        int x = context.getX(), y = context.getY();
+	        
+	        int xx = (int) (x + xpadding);
+	        int yy = (int) (y + ypadding);
+	 
+	        //max tiles to compute time by time
+	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
+        
+        
+	        Cache c=CacheManager.getCacheInstance(activeGir.getName());
+	        
+	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
+	        
+		        if (zoom >= 1) {
+		            curlevel = (int) Math.sqrt(zoom + 1);
+		            //cycle to avoid the black area when zooming in/out and tiles not in memory
+		            for (int lll = maxlevels; lll > curlevel - 1; lll--) {
+		                //stop when lll=max zoom level
+		            	if (lll > maxlevels) {
+		                    break;
+		                }
+		                lll += il;
+		                
+		                if (lll < 0) {
+		                    continue;
+		                }
+		                if (this.mylevel != curlevel) {
+		                    this.mylevel = curlevel;
+		                    pool.shutdown();
+		                    pool = Executors.newFixedThreadPool(poolSize);
+		                }
+		                
+		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
+		                int h0 = yy / ((1 << lll) << 8);
+		                
+		                
+		                final String initfile = new StringBuffer(c.getPath().toString()).append("\\").
+		                		append((int) lll ).
+		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
+		                
+		                //AG loads the different tiles, starting from the center (k=0)
+		                for (int k = 0; k < max; k++) {
+		                	
+		                    for (int j = 0; j < max; j++) {
+		                        if (j + h0 < 0) {
+		                            continue;
+		                        }
+		                        for (int i = 0; i < max; i++) {
+		                            if (i + w0 < 0) {
+		                                continue;
+		                            }
+		                            if (arrayReadTilesOrder[i][j] == k) {
+		                                //start reading tiles in center of the image and go through the borders
+		                                float ymin = (float) (((j + h0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy) / (height * zoom));
+		                                float ymax = (float) (((j + h0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy) / (height * zoom));
+		                                float xmin = (float) (((i + w0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
+		                                float xmax = (float) (((i + w0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
+		
+		                                //check if the tile is in or out, if is not visible then is not loaded
+		                                if (ymin > 1 || ymax < 0) {
+		                                    continue;
+		                                }
+		                                if (xmin > 1 || xmax < 0) {
+		                                    continue;
+		                                }
+		                                
+		                                String file = new StringBuffer(initfile).append(getBandFolder(activeBand))
+		                                		.append("/")
+		                                		.append((i + w0))
+		                                		.append("_")
+		                                		.append((j + h0)).append(".png").toString();
+		                                //checked if the tile is already in memory or in cache, otherwise required it
+		                                if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
+		                                    if (!tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
+		                                        if (curlevel == 0 && lll == 0) {
+		                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
+		                                        } else if (curlevel == lll) {
+		                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
+		                                        }
+		                                    }
+		                                }
+		                            }
+		                        }
+		                    }
+		                }
+		            }
+		        } else if (zoom > 0) {
+		        	
+		            curlevel = 0;//max zoom 
+		            int w0 = xx / Constant.TILE_SIZE;
+		            int h0 = yy / Constant.TILE_SIZE;
+		            
+		            final String initfile = new StringBuilder(c.getPath().toString())
+		            						.append("/0/")
+		            						.append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"/":"")).toString();
+		            for (int j = 0; j < max; j++) {
+		                if (j + h0 < 0) {
+		                    continue;
+		                }
+		                for (int i = 0; i < max; i++) {
+		                    if (i + w0 < 0) {
+		                        continue;
+		                    }
+		                    //start reading tiles in center of the image and go through the borders
+		                    float ymin = (float) (((j + h0) * Constant.OVERVIEW_SIZE_DOUBLE - yy) / (height * zoom));
+		                    float ymax = (float) (((j + h0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - yy) / (height * zoom));
+		                    float xmin = (float) (((i + w0) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
+		                    float xmax = (float) (((i + w0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
+		
+		                    //check if the tile is in or out, if is not visible then is not loaded
+		                    if (ymin > 1 || ymax < 0) {
+		                        continue;
+		                    }
+		                    if (xmin > 1 || xmax < 0) {
+		                        continue;
+		                    }
+		                    String file = new StringBuilder(initfile).append(getBandFolder(activeBand))
+		                    		.append("/")
+		                    		.append((i + w0))
+		                    		.append("_")
+		                    		.append((j + h0))
+		                    		.append(".png").toString();
+		
+		                    //checked if the tile is already in memory or in cache, otherwise required it
+		                    if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
+		                        if (!tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
+		                            addTileToQueue(initfile, 0, (i + w0), (j + h0));
+		                        }
+		                    }
+		                }
+		            }
+		
+		        }
+	        displayDownloading(futures.size());
+	        super.render(context);
+	        if (this.disposed) {
+	            disposeSync();
+	        }
+        }    
     }
 
     private void displayDownloading(int size) {

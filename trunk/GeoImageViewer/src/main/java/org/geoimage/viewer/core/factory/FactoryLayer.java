@@ -81,11 +81,12 @@ public class FactoryLayer {
 	 * @param bufferingDistance
 	 * @return
 	 */
-	 public static IMask createBufferedLayer(String name,String type,double bufferingDistance,GeoImageReader reader,GeometricLayer layer) {
+	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeoImageReader reader,GeometricLayer layer) {
 		 MaskVectorLayer mask = null;
         try {
             mask = (new MaskVectorLayer(name, reader,type, layer.clone()));
-            mask.buffer(bufferingDistance);
+            if(bufferingDistance!=0)
+            	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
             Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
         }
