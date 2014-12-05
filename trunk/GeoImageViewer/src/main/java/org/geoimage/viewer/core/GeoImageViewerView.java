@@ -313,7 +313,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
 	                    	   positionLabel.setText(infopos.toString());
 	                       }
 	                    } catch (Exception ex) {
-	                    	ex.printStackTrace();
+	                    	logger.warn(ex.getMessage());
 	                    }
 	                }
                 }
