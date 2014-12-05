@@ -43,6 +43,7 @@ import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
+import org.geoimage.viewer.util.PolygonOp;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -173,13 +174,42 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
     public void setName(String name) {
         this.name = name;
     }
+    
+    /**
+     * 
+     * @param gl
+     * @param cs
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
+    protected void drawPoly(GL2 gl,Coordinate[] cs,float width,float height,int x,int y,float rwidth){
+    	gl.glLineWidth(rwidth);
+        gl.glBegin(GL.GL_LINE_STRIP);
+        for (int p = 0; p < cs.length; p++) {
+        	double vx=(cs[p].x - x) / width;
+        	double vy=1 - (cs[p].y - y) / height;
+            gl.glVertex2d(vx,vy);
+        }
+       
+        //close polygon
+        Coordinate point = cs[0];
+        gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
+        gl.glEnd();
+        gl.glFlush();
+    }
 
     public void render(GeoContext context) {
         if (!context.isDirty()) {
             return;
         }
-        int x = context.getX(), y = context.getY();
-        float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
+        int x = context.getX();
+        int y = context.getY();
+        float zoom = context.getZoom();
+        float width = context.getWidth() * zoom;
+        float height = context.getHeight() * zoom;
+        
         GL2 gl = context.getGL().getGL2();
         float[] c = color.getColorComponents(null);
         gl.glColor3f(c[0], c[1], c[2]);
@@ -270,26 +300,29 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
                         }
                     }
                 } else if (getType().equalsIgnoreCase(POLYGON)) {
-                    for (Geometry temp : glayer.getGeometries()) {
-                        if (temp.getCoordinates().length < 1) {
+                    for (Geometry tmp : glayer.getGeometries()) {
+                    	Polygon polygon=(Polygon)tmp;
+                        if (polygon.getCoordinates().length < 1) {
                             continue;
                         }
-                        float rWidth=temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
+                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
                         
-                        gl.glLineWidth(rWidth);
-                        gl.glBegin(GL.GL_LINE_STRIP);
-                        Coordinate[] cs = temp.getCoordinates();
-                        for (int p = 0; p < cs.length; p++) {
-                        	double vx=(cs[p].x - x) / width;
-                        	double vy=1 - (cs[p].y - y) / height;
-                            gl.glVertex2d(vx,vy);
+                        
+                        int interior=polygon.getNumInteriorRing();
+
+                        if(interior>0){
+                        	//draw external polygon
+                        	LineString line=polygon.getExteriorRing();
+                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,rWidth);
+                        	//draw holes
+                        	for(int i=0;i<interior;i++){
+                        		LineString line2=polygon.getInteriorRingN(i);
+                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,rWidth);
+                        	}
+                        }else{
+                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
                         }
-                        //close polygon
-                        Coordinate point = cs[0];
-                        gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                       
-                        gl.glEnd();
-                        gl.glFlush();
+                        
                     }
                 } else if (getType().equalsIgnoreCase(LINESTRING)) {
                     for (Geometry temp : glayer.getGeometries()) {
@@ -583,20 +616,27 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
             if (getType().equals("point")) {
                 return false;
             }
-            WKTReader wkt = new WKTReader();
-            Geometry geom = wkt.read("POLYGON((" + x + " " + y + "," + (x + width) + " " + y + "," + (x + width) + " " + (y + height) + "," + x + " " + (y + height) + "," + x + " " + y + "))");
-            for (Geometry p : glayer.getGeometries()) {
-                if (p.intersects(geom)) {
-                    return true;
-                }
-            }
+            //WKTReader wkt = new WKTReader();
+            //Geometry geom = wkt.read("POLYGON((" + x + " " + y + "," + (x + width) + " " + y + "," + (x + width) + " " + (y + height) + "," + x + " " + (y + height) + "," + x + " " + y + "))");
+            
+            int[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
+            
+            Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
+            if(glayer!=null)
+	            for (Geometry p : glayer.getGeometries()) {
+	                if (p.intersects(geom)) {
+	                    return true;
+	                }
+	            }
             return false;
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
         }
         return false;
     }
-
+	/**
+	 * 
+	 */
     public void mouseClicked(java.awt.Point imagePosition, int button, GeoContext context) {
         this.selectedGeometry = null;
         GeometryFactory gf = new GeometryFactory();
@@ -731,22 +771,13 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
      * create the new buffered layer
      */
     public void buffer(double bufferingDistance) {
-        PrecisionModel pm=new PrecisionModel(1);
-        GeometryFactory gf = new GeometryFactory(pm);
-   
         Geometry[] bufferedGeom=glayer.getGeometries().toArray(new Geometry[0]);
         
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
         	//bufferedGeom[i] = bufferedGeom[i].buffer(bufferingDistance, 6, BufferParameters.CAP_ROUND);
         	bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
-        	Geometry buff=bufferedGeom[i];
-            if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
-            	//bufferedGeom[i] = gf.createPolygon((LinearRing) ((Polygon) bufferedGeom[i]).getExteriorRing(), null);
-            	
-            	LineString p=((Polygon) buff).getExteriorRing();
-            	bufferedGeom[i] = gf.createPolygon(p.getCoordinates());
-            }
+        	bufferedGeom[i]=PolygonOp.removeInteriorRing(bufferedGeom[i]);
         }
         // then merge them
         List<Geometry> newgeoms = new ArrayList<Geometry>();

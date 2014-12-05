@@ -20,6 +20,8 @@ import org.geoimage.viewer.core.api.GeometricLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
@@ -120,31 +122,29 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
                     gl.glEnd();
                     gl.glFlush();
                 } else if (geometry.getType().equalsIgnoreCase(POLYGON)) {
-                    for (Geometry temp : geometry.getGeometries()) {
-                        if (temp.getCoordinates().length < 1) {
-                            continue;
-                        }
-                  //      System.out.println("--------------------------------------------------");
-                        gl.glLineWidth(geometry.getLinewidth());
-                        gl.glBegin(GL.GL_LINE_STRIP);
-                       
-                        for (Coordinate point : temp.getCoordinates()) {
-                        	double xv=(point.x - x) / width;
-                        	double yv= 1 - (point.y - y) / height;
-                            gl.glVertex2d(xv,yv);
-                            
-                            if(point.x>14255 && point.x<14256){
-                        //    	System.out.println("XV:"+xv+" - YV:"+yv+"   POINT:"+point.x+","+point.y + "  x:"+x+"  y:"+y);
-                            }
-               //             if(point.x>14000 && point.y>19000)
-              //              	System.out.println("XV:"+xv+" - YV:"+yv+"   POINT:"+point.x+","+point.y + "  x:"+x+"  y:"+y);
-                        }
-                //        System.out.println("--------------------------------------------------");
-                        Coordinate point = temp.getCoordinates()[0];
-                        gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                        gl.glEnd();
-                        gl.glFlush();
+                    for (Geometry tmp : geometry.getGeometries()) {
+	                    	Polygon polygon=(Polygon)tmp;
+	                        if (polygon.getCoordinates().length < 1) {
+	                            continue;
+	                        }
+                        
+                        
+	                        int interior=polygon.getNumInteriorRing();
+
+	                        if(interior>0){
+	                        	//draw external polygon
+	                        	LineString line=polygon.getExteriorRing();
+	                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+	                        	//draw holes
+	                        	for(int i=0;i<interior;i++){
+	                        		LineString line2=polygon.getInteriorRingN(i);
+	                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+	                        	}
+	                        }else{
+	                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+	                        }
                     }
+                    
                 } else if (geometry.getType().equalsIgnoreCase(LINESTRING)) {
                     for (Geometry temp : geometry.getGeometries()) {
                         if (temp.getCoordinates().length < 1) {
@@ -161,40 +161,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
                 }
             }
         }
-        
-        //Pietro added for testing
-        /*if(intersections!=null){
-        	for (Geometry temp : intersections) {
-                if (temp.getCoordinates().length < 1) {
-                    continue;
-                }
-                gl.glLineWidth(30);
-                gl.glColor3f(100,100,100);
-                gl.glBegin(GL.GL_LINE_STRIP);
-                for (Coordinate point : temp.getCoordinates()) {
-                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                }
-                gl.glEnd();
-                gl.glFlush();
-            }
-        }*/
-        //Pietro added for testing
-    /*    if(results!=null){
-        	for (Geometry temp : results) {
-                if (temp.getCoordinates().length < 1) {
-                    continue;
-                }
-                gl.glLineWidth(20);
-                //viola
-                gl.glColor3f(100,0,100);
-                gl.glBegin(GL.GL_LINE_STRIP);
-                for (Coordinate point : temp.getCoordinates()) {
-                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                }
-                gl.glEnd();
-                gl.glFlush();
-            }
-        }*/
+    
     }
 
     public void addGeometries(String geometrytag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)
