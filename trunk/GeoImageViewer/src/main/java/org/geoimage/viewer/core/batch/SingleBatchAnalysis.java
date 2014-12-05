@@ -32,7 +32,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 		IMask[] masks = null;
 		if(params.buffer!=0&&gl!=null){
 			masks=new IMask[1];
-			masks[0]=FactoryLayer.createBufferedLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, reader, gl);
+			masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, reader, gl);
 		}	
 		
 		analizeImage(reader,masks);
