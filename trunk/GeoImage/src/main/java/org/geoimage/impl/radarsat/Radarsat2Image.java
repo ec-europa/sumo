@@ -189,6 +189,7 @@ public class Radarsat2Image extends SarImageReader {
             preloadedData = image.reader.read(0, tirp).getRaster().getSamples(0, 0, image.xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
             Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+            System.gc();
         }
     }
 
