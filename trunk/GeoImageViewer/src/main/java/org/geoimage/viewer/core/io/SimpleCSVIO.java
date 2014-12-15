@@ -172,4 +172,6 @@ public class SimpleCSVIO extends AbstractVectorIO {
             return gf.createPolygon(gf.createLinearRing(coords.toArray(new Coordinate[coords.size()])), null);
         }
     }
+
+
 }

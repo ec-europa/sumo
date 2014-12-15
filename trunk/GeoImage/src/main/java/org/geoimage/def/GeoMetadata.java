@@ -23,6 +23,7 @@ public interface GeoMetadata {
      * Width of the raster data in pixels
      */
     public static String WIDTH = "width";
+    
     /*
      * Timestamp of the beginning of the acquisition
      */

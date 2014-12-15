@@ -87,7 +87,7 @@ public class AddInterpolatedConsoleAction extends ConsoleAction implements IProg
     }
 
     private void addPostgis(String[] args) {
-        Map<?,?> config = null;
+        Map<String,Object> config = null;
         String layer = "";
         if (args.length == 4) {
             PostgisSettingsDialog ps = new PostgisSettingsDialog(null, true);
@@ -131,7 +131,7 @@ public class AddInterpolatedConsoleAction extends ConsoleAction implements IProg
     }
 
     private void addShapeFile(String[] args) {
-        Map  config = new HashMap();
+        Map<String, Object>  config = new HashMap<String, Object>();
         String file = "";
         if (args.length == 4) {
             file = args[3].split("=")[1].replace("%20", " ");
@@ -181,7 +181,7 @@ public class AddInterpolatedConsoleAction extends ConsoleAction implements IProg
 
     private void addSimpleCSV(String[] args) {
         if (args.length == 4&&args[1].contains("=")) {
-            Map config = new HashMap();
+            Map<String, Object> config = new HashMap<String, Object>();
             config.put(GenericCSVIO.CONFIG_FILE, args[1].split("=")[3]);
             IImageLayer l=Platform.getCurrentImageLayer();
             if(l!=null){
@@ -199,7 +199,7 @@ public class AddInterpolatedConsoleAction extends ConsoleAction implements IProg
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    Map config = new HashMap();
+                    Map<String, Object> config = new HashMap<String, Object>();
                     config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
                     IImageLayer l=Platform.getCurrentImageLayer();
                     if(l!=null){

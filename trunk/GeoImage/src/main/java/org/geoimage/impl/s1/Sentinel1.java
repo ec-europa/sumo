@@ -279,10 +279,10 @@ public abstract class Sentinel1 extends SarImageReader {
         	List<String> pols=prodInfo.getTransmitterReceiverPolarisation();
         	String strPol="";
             for (String p:pols) {
-                strPol.concat(p).concat(" ");
+            	strPol=strPol.concat(p).concat(" ");
             }
             setMetadata(POLARISATION, strPol);
-            
+            setMetadata(SENSOR, "Sentinel-1");
             
             //annotation header informations
             AdsHeader header=annotationReader.getHeader();
@@ -300,8 +300,8 @@ public abstract class Sentinel1 extends SarImageReader {
 
             String start=header.getStartTime().replace('T', ' ');	
             String stop=header.getStopTime().replace('T', ' ');
-            setMetadata(TIMESTAMP_START,Timestamp.valueOf(start));
-            setMetadata(TIMESTAMP_STOP,Timestamp.valueOf(stop));
+            setMetadata(TIMESTAMP_START,start);//Timestamp.valueOf(start));
+            setMetadata(TIMESTAMP_STOP,stop);//Timestamp.valueOf(stop));
             
             String bytesStr=annotationReader.getImageInformation().getOutputPixels();
             int bytes=Integer.parseInt(bytesStr.substring(0,3).trim())/8;

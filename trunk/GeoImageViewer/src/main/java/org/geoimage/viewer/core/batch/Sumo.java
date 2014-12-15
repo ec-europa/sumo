@@ -22,7 +22,7 @@ public class Sumo {
 	//status
 	protected final int PARAM_ERROR=-1;
 	protected final int SINGLE_IMG_ANALYSIS=1;
-	protected final int FOLDER_IMG_ANALYSIS=2;
+	protected final int MULTI_IMG_ANALYSIS=2;
 	
 	private int status=SINGLE_IMG_ANALYSIS;
 	private String msg="";
@@ -51,6 +51,8 @@ public class Sumo {
 	
 	
 	private AnalysisParams params;
+	private ConfigurationFile conf;
+	
 	private Date startDate;
 	
 	
@@ -69,7 +71,7 @@ public class Sumo {
 			batch=new SingleBatchAnalysis(params);
 			
 		}else{
-			batch=new MultipleBatchAnalysis(params);
+			batch=new MultipleBatchAnalysis(params,conf);
 		}
 		batch.runProcess();
 	}
@@ -82,18 +84,18 @@ public class Sumo {
 	protected int parseParams(List<String> inputParams){
 		this.status=0; //OK
 		
+		//for  the moment, the configuration file is ONLY FOR THE MULTIPLE ANALYSIS
 		int idx=inputParams.indexOf(GLOBAL_CONF_FILE_PARAM);
 		if(idx!=-1){
 			String confFile=inputParams.get(idx+1);
 			try {
-				ConfigurationFile conf=new ConfigurationFile(confFile);
+				conf=new ConfigurationFile(confFile);
 				params.shapeFile=conf.getShapeFile();
 				params.buffer=conf.getBuffer();
 				params.thresholdArrayValues=conf.getThresholdArray();
-				params.useLocalConfigurationFiles=conf.useLocalConfigurationFiles();
 				params.pathImg=conf.getInputImage();
 				params.outputFolder=conf.getOutputFolder();
-				status=SINGLE_IMG_ANALYSIS;
+				status=MULTI_IMG_ANALYSIS;
 			} catch (IOException e) {
 				e.printStackTrace();
 				status=PARAM_ERROR;
@@ -109,7 +111,7 @@ public class Sumo {
 	        	String dir=inputParams.get(idx+1);
 	        	File f=new File(dir);
 	        	if(f.exists()&&f.isDirectory()){
-	        		status=FOLDER_IMG_ANALYSIS;
+	        		status=MULTI_IMG_ANALYSIS;
 	        		params.pathImg=dir;
 	        	}else{
 	        		status=PARAM_ERROR;

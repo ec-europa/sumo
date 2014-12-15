@@ -12,33 +12,24 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
+import org.geoimage.viewer.core.io.SumoXMLWriter;
+import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.Utils;
 import org.slf4j.LoggerFactory;
 
-class AnalysisParams{
-	
-	//HH HV VH VV
-	public int[] thresholdArrayValues={1,1,1,1};
-	public String pathImg="";
-	public String shapeFile="";
-	public String outputFolder="";
-	public float enl=1;
-	public double buffer=0.0;
-	public String epsg="EPSG:4326";	
-	public Date startDate;
-	public boolean useLocalConfigurationFiles=false;
-	
-}
 
 
 public abstract class AbstractBatchAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractBatchAnalysis.class);
-	protected AnalysisParams params;
+	public AnalysisParams params;
 	private  List<ComplexEditVDSVectorLayer>layerResults=null;
-	private SimpleDateFormat dFormat=new SimpleDateFormat("dd-MM-yy");
-	
+	private SimpleDateFormat dFormat=new SimpleDateFormat("ddMMyy_hhmmss");//"dd-MM-yy hh-mm-ss");
+	private VDSAnalysis analysis;
 	
 	
 	public AbstractBatchAnalysis(AnalysisParams analysisParams){
@@ -81,10 +72,10 @@ public abstract class AbstractBatchAnalysis {
 	/**
 	 * run analysis for 1 image
 	 */
-	public void analizeImage(SarImageReader reader,IMask[] masks){
+	public void analizeImage(SarImageReader reader,IMask[] masks,AnalysisParams params){
 		
 		
-        VDSAnalysis analysis = new VDSAnalysis(reader,
+        analysis = new VDSAnalysis(reader,
         		masks, 
         		params.enl, 
         		params.thresholdArrayValues[0], 
@@ -94,20 +85,8 @@ public abstract class AbstractBatchAnalysis {
         		true);
   
         
-        int numberofbands = reader.getNBand();
-        final String[] thresholds = new String[numberofbands];
-        //management of the strings added at the end of the layer name in order to remember the used threshold
-        for (int bb = 0; bb < numberofbands; bb++) {
-            if (reader.getBandName(bb).equals("HH") || reader.getBandName(bb).equals("H/H")) {
-                thresholds[bb] = "" + params.thresholdArrayValues[0];
-            } else if (reader.getBandName(bb).equals("HV") || reader.getBandName(bb).equals("H/V")) {
-                thresholds[bb] = "" + params.thresholdArrayValues[1];
-            } else if (reader.getBandName(bb).equals("VH") || reader.getBandName(bb).equals("V/H")) {
-                thresholds[bb] = "" + params.thresholdArrayValues[2];
-            } else if (reader.getBandName(bb).equals("VV") || reader.getBandName(bb).equals("V/V")) {
-                thresholds[bb] = "" + params.thresholdArrayValues[3];
-            }
-        }
+        final String[] thresholds=Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
+        
         VDSAnalysisConsoleAction action= new VDSAnalysisConsoleAction();
         layerResults=action.runBatchAnalysis(reader,params.enl,analysis,masks,thresholds);
         
@@ -116,7 +95,7 @@ public abstract class AbstractBatchAnalysis {
 	/**
 	 * 
 	 */
-	protected void saveResults(String imageName){
+	protected void saveResults(String imageName,IMask[] masks,SarImageReader reader){
 		if(layerResults!=null){
     	   for(ComplexEditVDSVectorLayer l:layerResults){
     		   String outfolder=new StringBuilder(params.outputFolder)
@@ -134,7 +113,19 @@ public abstract class AbstractBatchAnalysis {
     		   
     		   System.out.println("Writing:"+outfile);
     		   l.save(outfile,ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
-    		   l.save(outfile+"_new",ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO,params.epsg);
+    		   
+    		   
+    		   SumoXMLWriter newWriter=new SumoXMLWriter();
+    		   
+    		   String file=new String(outfile+"_new");
+    		   if (!file.endsWith(".xml")) {
+	                file = file.concat(".xml");
+	            }
+	           HashMap<String,Object> config=new HashMap<String,Object>(); 
+	           config.put(SumoXmlIOOld.CONFIG_FILE, file);
+    		   newWriter.setConfig(config);
+    		   MaskVectorLayer mL=(MaskVectorLayer)masks[0];
+    		   newWriter.save(FactoryLayer.createThresholdedLayer(mL.getGeometriclayer(),mL.getThresh(),mL.isThreshable()), params.epsg,reader);
     	   }
         }
 	}

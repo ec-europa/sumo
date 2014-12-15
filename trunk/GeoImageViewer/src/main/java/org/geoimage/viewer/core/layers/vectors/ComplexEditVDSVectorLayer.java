@@ -29,6 +29,7 @@ import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
+import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.widget.AttributesEditor;
@@ -46,17 +47,24 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements IComplexVDSVectorLayer {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ComplexEditVDSVectorLayer.class);
 	GeoImageReader reader;
+	private String[] thresholds={};
+	private double enl=0;
+	private int buffer=0;
+
 	
-    public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
         super(layername, reader, type, layer);
         this.reader=reader;
     }
-
+    
+    public boolean anyDections(){
+    	return (glayer!=null && !glayer.getGeometries().isEmpty());
+    }
         
     @Override
     public void save(String file, int formattype, String projection) {
         super.save(file, formattype, projection);
-        Map <String,String>config = new HashMap<String,String>();
+        Map <String,Object>config = new HashMap<String,Object>();
         
         String[] msgResult={"","Succefull"};
         switch (formattype) {
@@ -92,7 +100,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            }
 	            config.put(GmlIO.CONFIG_FILE, file);
 	            AbstractVectorIO gml = VectorIOFactory.createVectorIO(VectorIOFactory.GML, config);
-	            gml.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	            ((GmlIO)gml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
 	            msgResult[0]="The GML file has been succesfully created";
 	            break;
 	        }
@@ -104,7 +112,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            
 	            config.put(SumoXmlIOOld.CONFIG_FILE, file);
 	            AbstractVectorIO sxml = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-	            sxml.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	            ((SumoXmlIOOld)sxml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            break;
 	        }
@@ -114,9 +122,11 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	                file = file.concat(".xml");
 	            }
 	            
-	            config.put(SumoXmlIOOld.CONFIG_FILE, file);
+	            config.put(SumoXMLWriter.CONFIG_FILE, file);
+	            
 	            AbstractVectorIO sxml = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO, config);
-	            sxml.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	            
+	            sxml.saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader,thresholds,buffer,enl);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            
 	            break;
@@ -128,7 +138,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	                }
 	                config.put(KmlIO.CONFIG_FILE, file);
 	                AbstractVectorIO kml = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
-	                kml.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	                ((KmlIO)kml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
 	                msgResult[0]="The KMZ file is succesfully created";
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(), ex);
@@ -150,6 +160,30 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         	logger.info(msgResult[0]);
     }
 
+    public String[] getThresholds() {
+		return thresholds;
+	}
+
+	public void setThresholds(String[] thresholds) {
+		this.thresholds = thresholds;
+	}
+    
+	public double getEnl() {
+		return enl;
+	}
+
+	public void setEnl(double enl) {
+		this.enl = enl;
+	}
+	
+	public int getBuffer() {
+		return buffer;
+	}
+
+	public void setBuffer(int buffer) {
+		this.buffer = buffer;
+	}
+	
     @Override
     public OptionMenu[] getFileFormatTypes() {
     	OptionMenu[] opts=new OptionMenu[8];
@@ -243,6 +277,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         return layer;
     }
 
+    
+    
     private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection) {
         // id counter for the postgis database
         int id = 0;

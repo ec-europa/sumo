@@ -103,4 +103,6 @@ public class GeoRSSIO extends AbstractVectorIO {
     public GeometricLayer read(GeoImageReader reader) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+	
 }

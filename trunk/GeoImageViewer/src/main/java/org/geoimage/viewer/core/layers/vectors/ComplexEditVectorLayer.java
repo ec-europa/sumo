@@ -13,7 +13,6 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;

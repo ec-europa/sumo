@@ -480,7 +480,10 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 // csv.save(gl, "EPSG:4326");
                 config.put(KmlIO.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.kmz");
                 AbstractVectorIO kmzio = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
-                kmzio.save(gl, "EPSG:4326",gir);
+                
+                //TODO add the save method
+                
+                //kmzio.save(gl, "EPSG:4326",gir);
                 if (createThumbs && gl.getGeometries().size() < 200) {
                     ThumbnailsManager tm = new ThumbnailsManager(output + "/" + f.getParentFile().getName() + "/band" + i + "/");
                     tm.createThumbnailsDir(gl, "id", gir, new progress());
@@ -488,7 +491,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     Map config2 = new HashMap();
                     config2.put(SumoXmlIOOld.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.xml");
                     AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config2);
-                    csv.save(gl, "EPSG:4326",gir);
+                    //csv.save(gl, "EPSG:4326",gir);
                 }
             }
             gir.dispose();

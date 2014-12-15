@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -371,13 +370,12 @@ public class Radarsat2Image extends SarImageReader {
             // change the string to match Timestamp format
             timestampStart = timestampStart.replaceAll("T", " ");
             timestampStart = timestampStart.replaceAll("Z", " ");
-            //timestampStart = timestampStart.substring(0, timestampStart.lastIndexOf(":") + 3) + "." + timestampStart.substring(timestampStart.lastIndexOf(":") + 3);
+
             timestampStop = timestampStop.replaceAll("T", " ");
             timestampStop = timestampStop.replaceAll("Z", " ");
-            //timestampStop = timestampStop.substring(0, timestampStop.lastIndexOf(":") + 3) + "." + timestampStop.substring(timestampStop.lastIndexOf(":") + 3);
 
-            setMetadata(TIMESTAMP_START, Timestamp.valueOf(timestampStart));
-            setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(timestampStop));
+            setMetadata(TIMESTAMP_START, timestampStart);//Timestamp.valueOf(timestampStart));
+            setMetadata(TIMESTAMP_STOP, timestampStop);//Timestamp.valueOf(timestampStop));
 
             atts = doc.getRootElement().getChild("sourceAttributes", ns);
             atts = atts.getChild("radarParameters", ns);

@@ -52,7 +52,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
@@ -71,7 +70,9 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
     protected GeoImageReader reader;
     protected GeoTransform geotransform;
     protected GeometricLayer glayer;
-   	protected String type;
+    
+   	
+	protected String type;
     protected String name;
     protected float renderWidth = 1;
     protected Color color = new Color(1f, 1f, 1f);
@@ -111,8 +112,8 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         	results=new ArrayList<Geometry>(); */
     }
     
-    
-    
+
+
     public double getMaximumThresh() {
         return maxThresh;
     }
@@ -686,7 +687,19 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
                 return false;
             }
             WKTReader wkt = new WKTReader();
-            Geometry geom = wkt.read("POLYGON((" + x + " " + y + "," + (x + width) + " " + y + "," + (x + width) + " " + (y + height) + "," + x + " " + (y + height) + "," + x + " " + y + "))");
+            StringBuilder polyStr=new StringBuilder("POLYGON((" )
+            						.append(x).append(" ")
+            						.append(y).append(",")
+            						.append((x + width)).append(" ")
+            						.append(y).append(",")
+            						.append((x + width)).append(" ")
+            						.append((y + height)).append(",")
+            						.append(x).append(" ")
+            						.append((y + height)).append(",")
+            						.append(x).append(" ")
+            						.append(y).append("))");
+            
+            Geometry geom = wkt.read(polyStr.toString());
             for (Geometry p : glayer.getGeometries()) {
                 if (geom.within(p)) {
                     return true;

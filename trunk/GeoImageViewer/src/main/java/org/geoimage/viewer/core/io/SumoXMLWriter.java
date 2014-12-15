@@ -6,11 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -18,6 +17,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.def.SarMetadata;
 import org.geoimage.utils.Corners;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -41,7 +41,8 @@ import com.vividsolutions.jts.geom.Polygon;
 public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
 	final Logger logger = Logger.getLogger(SumoXMLWriter.class);
-
+	
+	
 	public SumoXMLWriter(){
 	}
 	
@@ -125,34 +126,53 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		return layer;
 	}
 
-	@Override
-	public void save(GeometricLayer gLayer, String projection,GeoImageReader gir) {
-
-		int targetNumber = 0;
-
+	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,String[] thresholds,int buffer,double enl) {
+		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+		
+		
+		//vds analysis
 		VdsAnalysis vdsA = new VdsAnalysis();
-		vdsA.setAlgorithm("");
-		//vdsA.setAnyDetections(true);
-		vdsA.setBuffer(0);
+		vdsA.setAlgorithm("k-dist");
+		
+		vdsA.setBuffer(buffer);
 		vdsA.setDetectorVersion("");
-		vdsA.setNboat(0);
-
-		vdsA.setThreshHH(new Double(0));
-		vdsA.setThreshHV(new Double(0));
-		vdsA.setThreshVH(new Double(0));
-		vdsA.setThreshVV(new Double(0));
+		
+		vdsA.setThreshOrderChans(new Double(0));
+		
+		int numberOfBands=gir.getNBand();
+	    
+	    //add thresholds in order
+	    for (int bb = 0; bb < numberOfBands; bb++) {
+	        if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
+	        	vdsA.setThreshHH(Double.parseDouble(thresholds[bb]));
+	        } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
+	        	vdsA.setThreshHV(Double.parseDouble(thresholds[bb]));
+	        } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
+	        	vdsA.setThreshVH(Double.parseDouble(thresholds[bb]));
+	        } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
+	        	vdsA.setThreshVV(Double.parseDouble(thresholds[bb]));
+	        }
+	    }
 		
 		vdsA.setMatrixratio(new Double(0));
 		
-		vdsA.setEnl(0);
+		vdsA.setEnl(enl);
 		vdsA.setSumoRunid(0);
-		vdsA.setParameters("");
-		vdsA.setRunTime("");
+		
+		StringBuilder params=new StringBuilder(""+enl).append(",");
+		if(thresholds!=null && thresholds.length>0)
+			params=params.append(enl).append(",").append(Arrays.toString(thresholds)).append(",0.00");
+			
+		vdsA.setParameters(params.toString());
+		vdsA.setRunTime(format.format(new Date()));
+
 		vdsA.setRunVersion("");
 		vdsA.setRunVersionOri("");
 		
 		
 		
+		//Vds targets
+		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
 		for (Geometry geom : gLayer.getGeometries()) {
 
@@ -174,53 +194,52 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			b.setWidth((Double) att.get(VDSSchema.ESTIMATED_WIDTH));
 			b.setHeadingNorth((Double) att.get(VDSSchema.ESTIMATED_HEADING));
 			target.getBoat().add(b);
-
-			// TODO ask for this field: RUNID
-			// Element runid = new Element("runid");
-			// runid.setText(""+att.get(VDSSchema.RUN_ID));
-
-			// TODO fields not used in new xml, to verify
-			// Element typeAnalysis = new Element("type");
-			// typeAnalysis.setText("VDS");
-			// boat.addContent(typeAnalysis);
-			// Element averageTile = new Element("averageTile");
-			// averageTile.setText(""+att.get(VDSSchema.TILE_AVERAGE));
-			// boat.addContent(averageTile);
-
-			// Element tileSTD = new Element("tileSTD");
-			// tileSTD.setText(""+att.get(VDSSchema.TILE_STANDARD_DEVIATION));
-			// boat.addContent(tileSTD);
-			// Element subObjs = new Element("subObjs");
-			// subObjs.setText(""+att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS));
-			// boat.addContent(subObjs);
-			// Element mySize = new Element("sizeClassification");
-			// mySize.setText(att.get(VDSSchema.ESTIMATED_LENGTH) + "");
-			// boat.addContent(mySize);
 		}
+		vdsA.setNboat(targetNumber);
+		vdsA.setAnyDetections(targetNumber>0);
+		
+		
 		
 		SatImageMetadata imageMeta = new SatImageMetadata();
 		imageMeta.setGcps(getCorners(gir));
 		
-		
-		//TODO set the correct date
-		GregorianCalendar c = new GregorianCalendar();
 		try {
-			Timestamp start=(Timestamp)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
-			Timestamp stop=(Timestamp)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
-
-			c.setTimeInMillis(start.getTime());
-			XMLGregorianCalendar startCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-			c.setTimeInMillis(stop.getTime());
-			XMLGregorianCalendar stopCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+			String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+			String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
 			
-			imageMeta.setTimeStart(startCalendar);
-			imageMeta.setTimeStop(stopCalendar);
-			imageMeta.setTimestampStart(startCalendar);
-
-		} catch (DatatypeConfigurationException e) {
+			imageMeta.setTimestampStart(start);
+			
+			Timestamp tStart=Timestamp.valueOf(start);
+			imageMeta.setTimeStart(format.format(tStart));
+			
+			Timestamp tStop=Timestamp.valueOf(stop);
+			imageMeta.setTimeStop(format.format(tStop));
+			
+			String sensor=(String)gir.getMetadata(GeoMetadata.SENSOR);
+			format=new SimpleDateFormat("yyyyMMdd_HHmmSSS");
+			imageMeta.setImId(sensor+"_"+format.format(tStart));
+			imageMeta.setImageName(gir.getName());
+			
+			imageMeta.setSensor(sensor);
+			
+			String pol=(String)gir.getMetadata(SarMetadata.POLARISATION);
+			imageMeta.setPol(pol);
+			String polNumeric=pol.replace("HH","1");
+			polNumeric=polNumeric.replace("HV","2");
+			polNumeric=polNumeric.replace("VH","3");
+			polNumeric=polNumeric.replace("VV","4");
+			if(polNumeric.endsWith(" "))
+				polNumeric=polNumeric.substring(0, polNumeric.length()-1);
+			polNumeric=polNumeric.replace(" ",",");
+			imageMeta.setPolnumeric(polNumeric);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		
+		
+		
+		//Saving
 		Analysis an = new Analysis();
 		an.setSatImageMetadata(imageMeta);
 		an.setVdsAnalysis(vdsA);
@@ -292,5 +311,29 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		return gcps;
 	}
+	
+	
+	
+	public static void main(String[] args){
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd_HHmmSSS");
+		String dd="2014-12-12 13:00:44.123";
+		try {
+			Date d=format.parse(dd);
+			String dd2=format2.format(d);
+			System.out.println(dd2);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
+	@Override
+	public void save(GeometricLayer layer, String projection, GeoImageReader gir) {
+		
+	}
+
+	
+	
 }

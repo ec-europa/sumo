@@ -145,7 +145,7 @@ public class ThumbnailsManager {
         Map<String,Object> config = new HashMap<String,Object>();
         config.put(SumoXmlIOOld.CONFIG_FILE, new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml").getAbsolutePath());
         AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-        csv.save(glayer, "EPSG:4326",gir);
+        ((SumoXmlIOOld)csv).save(glayer, "EPSG:4326",gir);
         if (ip != null) {
             ip.setDone(true);
             ip.setMessage(null);
