@@ -348,7 +348,7 @@ public class PostgisIO extends AbstractVectorIO {
  * @param layer
  * @param projection
  */
-@Override
+//@Override
     public void save(GeometricLayer layer, String projection,GeoImageReader gir) {
         try {
         	//Data store to get access to ddbb
@@ -402,5 +402,7 @@ public class PostgisIO extends AbstractVectorIO {
             Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
 }

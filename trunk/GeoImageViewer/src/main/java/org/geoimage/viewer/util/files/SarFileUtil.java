@@ -12,14 +12,17 @@ public class SarFileUtil {
 	 * @param imagesFolder
 	 * @return
 	 */
-	public static List<File> scanFolderForImages(File imagesFolder){
+	public static List<File> scanFolderForImages(File imagesFolder,String patternFilterFolder){
 		List<File> imgFiles=new ArrayList<File>();
+		final String pattFilterFolder=patternFilterFolder.replace("*",".*");
 		//list only folders
 		File[] childs=imagesFolder.listFiles(new FileFilter() {
 			
 			@Override
 			public boolean accept(File pathname) {
-				return pathname.isDirectory();
+				boolean match=true;
+				match=pathname.getName().matches(pattFilterFolder);
+				return (pathname.isDirectory()&&match);
 			}
 		});
 				

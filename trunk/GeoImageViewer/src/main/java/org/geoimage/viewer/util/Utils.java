@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.geoimage.def.SarImageReader;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.Transaction;
 import org.geotools.data.collection.ListFeatureCollection;
@@ -194,5 +195,28 @@ public class Utils {
         return features;
     }   
     
+    /**
+     * 
+     * @param reader
+     * @param thresholdArrayValues
+     * @return
+     */
+    public static String[] getStringThresholdsArray(SarImageReader reader,int[] thresholdArrayValues){
+    	int numberOfBands=reader.getNBand();
+	    final String[] thresholds = new String[numberOfBands];
+	    //management of the strings added at the end of the layer name in order to remember the used threshold
+	    for (int bb = 0; bb < numberOfBands; bb++) {
+	        if (reader.getBandName(bb).equals("HH") || reader.getBandName(bb).equals("H/H")) {
+	            thresholds[bb] = "" + thresholdArrayValues[0];
+	        } else if (reader.getBandName(bb).equals("HV") || reader.getBandName(bb).equals("H/V")) {
+	            thresholds[bb] = "" + thresholdArrayValues[1];
+	        } else if (reader.getBandName(bb).equals("VH") || reader.getBandName(bb).equals("V/H")) {
+	            thresholds[bb] = "" + thresholdArrayValues[2];
+	        } else if (reader.getBandName(bb).equals("VV") || reader.getBandName(bb).equals("V/V")) {
+	            thresholds[bb] = "" + thresholdArrayValues[3];
+	        }
+	    }
+	    return thresholds;
+    }    
     
 }

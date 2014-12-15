@@ -126,7 +126,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
                     Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
-                    Map<Object,String> config = new HashMap<Object,String>();
+                    Map<String,Object> config = new HashMap<String,Object>();
                     config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
                     IImageLayer l=Platform.getCurrentImageLayer();
                     if(l!=null){

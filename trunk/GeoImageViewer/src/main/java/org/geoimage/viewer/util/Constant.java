@@ -57,5 +57,5 @@ public class Constant {
   public static final String PREF_COASTLINE_DEFAULT_LAND_MASK = "Default land mask";
   public static final String PREF_COASTLINES_FOLDER = "Coastline Shape folders";
   
-  
+  public static final String CONF_FILE="analysis.conf";
 }

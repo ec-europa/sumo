@@ -226,11 +226,11 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             rangeTimeStart = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("firstPixel").getText());
             rangeTimeStop = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("lastPixel").getText());
             String time = atts.getChild("sceneInfo").getChild("start").getChild("timeUTC").getText();
-            time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_START, Timestamp.valueOf(time.replaceAll("T", " ")));
+            //time = time.substring(0, time.lastIndexOf("."));
+            setMetadata(TIMESTAMP_START,time.replaceAll("T", " "));
             time = atts.getChild("sceneInfo").getChild("stop").getChild("timeUTC").getText();
-            time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(time.replaceAll("T", " ")));
+            //time = time.substring(0, time.lastIndexOf("."));
+            setMetadata(TIMESTAMP_STOP,time.replaceAll("T", " "));
 
             atts = doc.getRootElement().getChild("productSpecific");
             setMetadata(RANGE_SPACING, atts.getChild("complexImageInfo").getChild("projectedSpacingRange").getChild("slantRange").getText());
