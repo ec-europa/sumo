@@ -5,7 +5,6 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -16,7 +15,6 @@ import org.geoimage.impl.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
-import org.geoimage.viewer.util.Utils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
@@ -45,7 +43,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
 /**
@@ -330,10 +327,9 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-	                        Geometry p2 = EnhancedPrecisionOp.intersection(g,imageP);
-	                        //((Geometry) f.getDefaultGeometryProperty().getValue()).intersection(imageP);
-	                        
-	                        for (int i = 0; i < p2.getNumGeometries(); i++) {
+	                        //buffer(0) is used to avoid intersection errors 
+	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
+                        	for (int i = 0; i < p2.getNumGeometries(); i++) {
 	                            if (!p2.getGeometryN(i).isEmpty()) {
 	                                out.put(p2.getGeometryN(i), at);
 	                            }
@@ -371,7 +367,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         return out;
     }
 
-    @Override
+    //@Override
     public void save(GeometricLayer layer, String projection,GeoImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
         try {
@@ -409,7 +405,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         }
         return out;
     }
-    
+
     /*
     public GeometricLayer readTestWithAffine() {
         try {

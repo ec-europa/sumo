@@ -207,6 +207,5 @@ public class GmlIO extends AbstractVectorIO {
         }
     }
 
-
     
 }

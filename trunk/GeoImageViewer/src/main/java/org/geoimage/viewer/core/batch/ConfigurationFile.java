@@ -27,6 +27,9 @@ public class ConfigurationFile {
 	
 	public static  final String USE_LOCAL_CONF="use_local_conf";
 	public static  final String INPUT_IMG="input_image";
+	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
+	public static  final String FORCE_NEW_ANALYSIS="force_new_analysis";
+	public static  final String FILTER_FOLDER="filter";
 	
 	
 	private String confFile;
@@ -87,7 +90,7 @@ public class ConfigurationFile {
 		 * @return the buffer param or -1 if is not configured
 		 */
 		public double getBuffer(){
-			double buffer=0;
+			double buffer=-1;
 			String tmp=prop.getProperty(BUFFER_PARAM);
 			if(tmp!=null&&!tmp.isEmpty()){
 				buffer=Double.parseDouble(tmp);
@@ -121,11 +124,24 @@ public class ConfigurationFile {
 			return prop.getProperty(INPUT_IMG,"");
 		}
 		
+		public String getFilterFolder(){
+			return prop.getProperty(FILTER_FOLDER,"*");
+		}
+		
 		public boolean useLocalConfigurationFiles(){
 			String tmp= prop.getProperty(USE_LOCAL_CONF,"false");
 			return Boolean.parseBoolean(tmp);
-			
 		}
+		
+		public boolean forceNewAnalysis(){
+			String tmp= prop.getProperty(FORCE_NEW_ANALYSIS,"false");
+			return Boolean.parseBoolean(tmp);
+		}
+		
+		/*public boolean replaceOldAnalysis(){
+			String tmp= prop.getProperty(REP_OLD_XML_ANALYSIS,"false");
+			return Boolean.parseBoolean(tmp);
+		}*/
 		
 		public static void main(String[] args){
 			try {

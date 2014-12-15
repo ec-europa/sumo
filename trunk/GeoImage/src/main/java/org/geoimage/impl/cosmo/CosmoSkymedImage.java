@@ -168,10 +168,10 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcps.add(gcp);
                 } else if (a.getName().equals("Scene Sensing Start UTC")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(TIMESTAMP_START, Timestamp.valueOf(val[0]));
+                    setMetadata(TIMESTAMP_START, val[0]);
                 } else if (a.getName().equals("Scene Sensing Stop UTC")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(val[0]));
+                    setMetadata(TIMESTAMP_STOP, val[0]);
                 } else if (a.getName().equals("Equivalent Number of Looks")) {
                     double[] val = (double[]) a.getValue();
                     setMetadata(ENL, val[0]);

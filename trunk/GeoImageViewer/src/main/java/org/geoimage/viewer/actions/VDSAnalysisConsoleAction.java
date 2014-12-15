@@ -137,7 +137,8 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          setCurrent(4);
                          AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
 
-                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis " + gir.getBandName(band) + " " + thresholds[band], (SarImageReader) gir, "point", createGeometricLayer(gir, banddetectedpixels));
+                         String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(thresholds[band]).toString();
+                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, (SarImageReader) gir, "point", createGeometricLayer(gir, banddetectedpixels));
                      
                          boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                          if (!agglomerationMethodology.startsWith("d")) {

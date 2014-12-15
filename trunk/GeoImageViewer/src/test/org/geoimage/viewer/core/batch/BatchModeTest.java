@@ -38,7 +38,7 @@ public class BatchModeTest {
 	}
 
 	@Test
-	public void testSumo() {
+	public void testSumoSingleAnalysis() {
 		System.out.println("Start SUMO in batch mode");
 		String[] args= params.split(" ");
 		List<String> params=Arrays.asList(args);
@@ -54,6 +54,9 @@ public class BatchModeTest {
 		assertTrue(true);
 	}
 
+	
+	
+	
 	@Test
 	public void testParseParams() {
 		String[] args= params.split(" ");

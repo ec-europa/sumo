@@ -544,11 +544,11 @@ public class TerrasarXImage extends SarImageReader {
             rangeTimeStart = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("firstPixel").getText());
             rangeTimeStop = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("lastPixel").getText());
             String time = atts.getChild("sceneInfo").getChild("start").getChild("timeUTC").getText();
-            time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_START, Timestamp.valueOf(time.replaceAll("T", " ")));
+            //time = time.substring(0, time.lastIndexOf("."));
+            setMetadata(TIMESTAMP_START,time.replaceAll("T", " "));
             time = atts.getChild("sceneInfo").getChild("stop").getChild("timeUTC").getText();
-            time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(time.replaceAll("T", " ")));
+            //time = time.substring(0, time.lastIndexOf("."));
+            setMetadata(TIMESTAMP_STOP,time.replaceAll("T", " "));
             // calculate satellite speed using state vectors
             atts = doc.getRootElement().getChild("platform").getChild("orbit").getChild("stateVec");
             double xvelocity = Double.valueOf(atts.getChildText("velX"));

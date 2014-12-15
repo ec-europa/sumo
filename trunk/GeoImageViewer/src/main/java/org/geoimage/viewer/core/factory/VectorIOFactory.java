@@ -32,7 +32,7 @@ public class VectorIOFactory {
      * @param gir
      * @return
      */
-    public static AbstractVectorIO createVectorIO(int type, Map config) {
+    public static AbstractVectorIO createVectorIO(int type, Map<String, Object> config) {
     	AbstractVectorIO vio=null;
     	switch(type){
 	    	case SIMPLE_SHAPEFILE: {

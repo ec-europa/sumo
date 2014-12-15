@@ -26,5 +26,6 @@ public interface IMask {
     public List<Geometry> getGeometries();
     public String getName();
     public String getType();
+    
 
 }

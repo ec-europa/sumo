@@ -158,14 +158,14 @@
 				<!-- for AC,CS sensor = file   name without ext  for R1,R2,TX,S1 = directory name  -->
 				<xs:element name="image_name" type="xs:string"/>
 				<!-- UTC -->				
-				<xs:element name="timestampStart" type="xs:dateTime" /> 
+				<xs:element name="timestampStart" type="xs:string" /> 
 				<xs:element ref="sensor" />
 				<!-- Comma separated list of integers 1=HH 2=HV 3=VH 4=VV-->
 				<xs:element name="pol" type="xs:string"/>
 				<xs:element name="polnumeric" type="xs:string"/>
 				<!-- timestart yyy-mm-dd HH:MM:SS.FFF -->
-				<xs:element name="TimeStart" type="xs:dateTime"/>
-				<xs:element name="TimeStop" type="xs:dateTime"/>
+				<xs:element name="TimeStart" type="xs:string"/>
+				<xs:element name="TimeStop" type="xs:string"/>
 				<xs:element ref="gcps" />
 			</xs:sequence>
 		</xs:complexType>
