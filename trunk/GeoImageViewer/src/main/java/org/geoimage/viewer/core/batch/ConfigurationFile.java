@@ -89,11 +89,11 @@ public class ConfigurationFile {
 		 * 
 		 * @return the buffer param or -1 if is not configured
 		 */
-		public double getBuffer(){
-			double buffer=-1;
+		public int getBuffer(){
+			int buffer=-1;
 			String tmp=prop.getProperty(BUFFER_PARAM);
 			if(tmp!=null&&!tmp.isEmpty()){
-				buffer=Double.parseDouble(tmp);
+				buffer=Integer.parseInt(tmp);
 			}
 			return buffer;
 		}
