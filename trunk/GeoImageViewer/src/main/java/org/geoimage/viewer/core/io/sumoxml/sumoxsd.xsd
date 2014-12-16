@@ -45,19 +45,19 @@
 				<xs:element name="inc_angle" type="xs:decimal"/>
 				<xs:element name="reliability" type="xs:int"/>
 				<xs:element name="false_alarm_cause" type="xs:string" />
-				<xs:element name="nr_pixels" type="xs:int"/>
+				<xs:element name="nr_pixels" type="xs:int" nillable="true"/>
 				<xs:element name="length" type="xs:double"/>
 				<xs:element name="width" type="xs:double"/>
 				<xs:element name="size_class" type="xs:NCName"/>
-				<xs:element name="heading_range" type="xs:double"/>
+				<xs:element name="heading_range" type="xs:double" nillable="true"/>
 				<xs:element name="heading_north" type="xs:double"/>
-				<xs:element name="lwh_reliability" type="xs:boolean"/>
+				<xs:element name="lwh_reliability" type="xs:boolean" nillable="true" />
 				<xs:element name="significance" type="xs:string"/>
 				<xs:element name="rcs" type="xs:string"/>
 				<xs:element name="bgnd_mean" type="xs:string"/>
 				<xs:element name="bgnd_stdev" type="xs:string"/>
 				<xs:element name="bgnd_sigma0" type="xs:string"/>
-				<xs:element name="noise" type="xs:int"/>
+				<xs:element name="noise" type="xs:int" nillable="true" />
 				<xs:element name="maxValue" type="xs:string"/>
 				<xs:element name="minDetectableRcs" type="xs:string"/>
 			</xs:sequence>
@@ -134,10 +134,10 @@
 				<xs:element name="threshOrderChans" type="xs:double" minOccurs="0"/>
 
 				<!-- thresh values are used only if the polarization channel is used in the VDS analysis -->
-				<xs:element name="threshHH" type="xs:double" minOccurs="0"/>
-				<xs:element name="threshHV" type="xs:double" minOccurs="0"/>
-				<xs:element name="threshVH" type="xs:double" minOccurs="0"/>
-				<xs:element name="threshVV" type="xs:double" minOccurs="0"/>
+				<xs:element name="threshHH" type="xs:float" minOccurs="0"/>
+				<xs:element name="threshHV" type="xs:float" minOccurs="0"/>
+				<xs:element name="threshVH" type="xs:float" minOccurs="0"/>
+				<xs:element name="threshVV" type="xs:float" minOccurs="0"/>
 				
 				<!-- buffer for land mask used in vds_analysis -->
 				<xs:element name="buffer" type="xs:int" />

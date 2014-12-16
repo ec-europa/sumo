@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
@@ -126,11 +127,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		return layer;
 	}
 
-	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,String[] thresholds,int buffer,double enl) {
+	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,float[] thresholds,int buffer,double enl) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+		String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+		String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
+		Timestamp tStart=Timestamp.valueOf(start);
 		
-		
-		//vds analysis
+		/**** VDS ANALYSIS ***********/
 		VdsAnalysis vdsA = new VdsAnalysis();
 		vdsA.setAlgorithm("k-dist");
 		
@@ -144,13 +147,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	    //add thresholds in order
 	    for (int bb = 0; bb < numberOfBands; bb++) {
 	        if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-	        	vdsA.setThreshHH(Double.parseDouble(thresholds[bb]));
+	        	vdsA.setThreshHH(thresholds[bb]);
 	        } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-	        	vdsA.setThreshHV(Double.parseDouble(thresholds[bb]));
+	        	vdsA.setThreshHV(thresholds[bb]);
 	        } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-	        	vdsA.setThreshVH(Double.parseDouble(thresholds[bb]));
+	        	vdsA.setThreshVH(thresholds[bb]);
 	        } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-	        	vdsA.setThreshVV(Double.parseDouble(thresholds[bb]));
+	        	vdsA.setThreshVV(thresholds[bb]);
 	        }
 	    }
 		
@@ -171,7 +174,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		
 		
-		//Vds targets
+		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
 		for (Geometry geom : gLayer.getGeometries()) {
@@ -185,13 +188,34 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			b.setTargetNumber(targetNumber);
 			// position pos[0]=lon pos[1] =lat
 			double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x,geom.getCoordinate().y, "EPSG:4326");
-			b.setLat(pos[1]);
-			b.setLon(pos[0]);
-			b.setXpixel(Math.floor(geom.getCoordinate().x));
-			b.setYpixel(Math.floor(geom.getCoordinate().y));
+			
+			//lat and lon with 6 decimals
+			b.setLat(Precision.round(pos[1],6));
+			b.setLon(Precision.round(pos[0],6));
+			//x,y without decimal
+			b.setXpixel(Precision.round(geom.getCoordinate().x,0));
+			b.setYpixel(Precision.round(geom.getCoordinate().y,0));
+			
+			//for the moment we leave 
+			b.setDetecttime(format.format(tStart));
+			
 			b.setMaxValue(att.get(VDSSchema.MAXIMUM_VALUE).toString());
-			b.setLength((Double) att.get(VDSSchema.ESTIMATED_LENGTH));
-			b.setWidth((Double) att.get(VDSSchema.ESTIMATED_WIDTH));
+			
+			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
+			b.setLength(lenght);
+			b.setWidth(Precision.round((Double) att.get(VDSSchema.ESTIMATED_WIDTH),1));
+			
+			b.setSizeClass("S");//lenght<70
+			if(lenght>70 && lenght<=120)
+				b.setSizeClass("M");
+			else if(lenght>120)
+				b.setSizeClass("L");
+			
+			b.setNrPixels(null);
+			b.setHeadingRange(null);
+
+			b.setNoise(null);
+			
 			b.setHeadingNorth((Double) att.get(VDSSchema.ESTIMATED_HEADING));
 			target.getBoat().add(b);
 		}
@@ -199,17 +223,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setAnyDetections(targetNumber>0);
 		
 		
-		
+		/**** IMAGE METADATA ***********/
 		SatImageMetadata imageMeta = new SatImageMetadata();
 		imageMeta.setGcps(getCorners(gir));
 		
 		try {
-			String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
-			String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
-			
 			imageMeta.setTimestampStart(start);
 			
-			Timestamp tStart=Timestamp.valueOf(start);
 			imageMeta.setTimeStart(format.format(tStart));
 			
 			Timestamp tStop=Timestamp.valueOf(stop);
@@ -239,7 +259,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		
 		
-		//Saving
+		/**** SAVING ***********/
 		Analysis an = new Analysis();
 		an.setSatImageMetadata(imageMeta);
 		an.setVdsAnalysis(vdsA);
