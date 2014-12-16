@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -67,20 +69,21 @@ public class ConfigurationFile {
 		 * @return
 		 */
 		public float[] getThresholdArray(){
-			float[] thresholds={1,1,1,1};
+			float[] thresholds={0,0,0,0};
 			
 			//-1 not setted 
-			String tmp=prop.getProperty(TRESH_HH_PARAM,"-1");
-			thresholds[0]=Integer.parseInt(tmp);
+			String tmp=prop.getProperty(TRESH_HH_PARAM,"0");
+			thresholds[0]=Float.parseFloat(tmp);
 			
-			tmp=prop.getProperty(TRESH_HV_PARAM,"-1");
-			thresholds[1]=Integer.parseInt(tmp);
+			tmp=prop.getProperty(TRESH_HV_PARAM,"0");
+			thresholds[1]=Float.parseFloat(tmp);
 						
-			tmp=prop.getProperty(TRESH_VH_PARAM,"-1");
-			thresholds[2]=Integer.parseInt(tmp);
+			tmp=prop.getProperty(TRESH_VH_PARAM,"0");
+			thresholds[2]=Float.parseFloat(tmp);
 			
-			tmp=prop.getProperty(TRESH_VV_PARAM,"-1");
-			thresholds[3]=Integer.parseInt(tmp);
+			tmp=prop.getProperty(TRESH_VV_PARAM,"0");
+			thresholds[3]=Float.parseFloat(tmp);
+			
 			
 			return thresholds;
 		}

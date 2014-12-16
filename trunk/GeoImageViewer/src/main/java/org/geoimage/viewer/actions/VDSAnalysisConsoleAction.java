@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
@@ -325,7 +326,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
-        int bufferingDistance = Integer.parseInt((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
+        int bufferingDistance = Double.valueOf((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE)).intValue();
 
         if (args.length < 2) {
             return true;

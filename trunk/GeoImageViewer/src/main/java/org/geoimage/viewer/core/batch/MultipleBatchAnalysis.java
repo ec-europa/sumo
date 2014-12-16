@@ -7,6 +7,7 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -63,21 +64,27 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							activeParams=readLocalConfFile(params,localImageConfFilePath);
 						}
 						
+						
+						
 						//crate the reader
 						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath());
-						SarImageReader reader=(SarImageReader) readers.get(0);
+						for(GeoImageReader r:readers){
+							SarImageReader reader=(SarImageReader) r;
 						
-						GeometricLayer gl=null;
-						if(activeParams.shapeFile!=null)
-							gl=readShapeFile(reader);
 						
-						IMask[] masks = null;
-						if(activeParams.buffer!=0&&gl!=null){
-							masks=new IMask[1];
-							masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, activeParams.buffer, reader, gl);
+							GeometricLayer gl=null;
+							if(activeParams.shapeFile!=null)
+								gl=readShapeFile(reader);
+							
+							IMask[] masks = null;
+							if(activeParams.buffer!=0&&gl!=null){
+								masks=new IMask[1];
+								masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, activeParams.buffer, reader, gl);
+							}	
+							analizeImage(reader,masks,activeParams);
+							String name=image.getParentFile().getName();
+							saveResults(name,masks,reader);
 						}	
-						analizeImage(reader,masks,activeParams);
-						saveResults(image.getParentFile().getName(),masks,reader);
 					}	
 				}catch(Exception e){
 					logger.error(getClass().getName(),e);
