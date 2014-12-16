@@ -54,6 +54,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 			private VDSAnalysis analysis;
 			private IMask[] bufferedMask;
 			private String[] thresholds;
+			private int buffer;
 			private List<ComplexEditVDSVectorLayer>resultLayers;
 			
 			public List<ComplexEditVDSVectorLayer> getResultLayers() {
@@ -64,11 +65,12 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 				this.resultLayers = resultLayers;
 			}
 
-			public AnalysisProcess(float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds) {
+			public AnalysisProcess(float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer) {
 				this.ENL=ENL;
 				this.analysis=analysis;
 				this.bufferedMask=bufferedMask;
 				this.thresholds=thresholds;
+				this.buffer=buffer;
 				this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			}
        
@@ -138,7 +140,9 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
 
                          String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(thresholds[band]).toString();
-                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, (SarImageReader) gir, "point", createGeometricLayer(gir, banddetectedpixels));
+                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, 
+                        		 				(SarImageReader) gir, "point", 
+                        		 				createGeometricLayer(gir, banddetectedpixels),thresholds,ENL,buffer);
                      
                          boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                          if (!agglomerationMethodology.startsWith("d")) {
@@ -245,42 +249,44 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      // look for Azimuth ambiguities in the pixels
                      AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
 
-                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", gir, "point", createGeometricLayer(gir, pixels));
+                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", 
+                    		 																	gir, "point", createGeometricLayer(gir, pixels),
+                    		 																	thresholds,ENL,buffer);
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                      if (!agglomerationMethodology.startsWith("d")) {
-                         vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
-                         vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, pixels.getThresholdclipPixels(), display);
+                         vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
+                         vdsanalysisLayer.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, pixels.getThresholdclipPixels(), display);
                      }
-                     vdsanalysis.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, pixels.getAllDetectedPixels(), display);
-                     vdsanalysis.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
+                     vdsanalysisLayer.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, pixels.getAllDetectedPixels(), display);
+                     vdsanalysisLayer.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
                      if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-                         vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+                         vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                      }
-                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, analysis.getTiles(), false);
+                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, analysis.getTiles(), false);
                      // set the color and symbol values for the VDS layer
                      try {
                          String widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_MERGED);
                          int displaywidth = Integer.parseInt(widthstring);
-                         vdsanalysis.setWidth(displaywidth);
+                         vdsanalysisLayer.setWidth(displaywidth);
                      } catch (NumberFormatException e) {
-                         vdsanalysis.setWidth(1);
+                         vdsanalysisLayer.setWidth(1);
                      }
                      try {
                          String colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_MERGED);
                          Color colordisplay = new Color(Integer.decode(colorString));
-                         vdsanalysis.setColor(colordisplay);
+                         vdsanalysisLayer.setColor(colordisplay);
                      } catch (NumberFormatException e) {
-                         vdsanalysis.setColor(new Color(0xFFAA00));
+                         vdsanalysisLayer.setColor(new Color(0xFFAA00));
                      }
                      try {
                          String symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_MERGED);
-                         vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
+                         vdsanalysisLayer.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
                      } catch (EnumConstantNotPresentException e) {
-                         vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.square);
+                         vdsanalysisLayer.setDisplaysymbol(MaskVectorLayer.symbol.square);
                      }
                      if(il!=null)
-                    	 il.addLayer(vdsanalysis);
-                     resultLayers.add(vdsanalysis);
+                    	 il.addLayer(vdsanalysisLayer);
+                     resultLayers.add(vdsanalysisLayer);
                  }
                  done = true;
              }
@@ -319,7 +325,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
-        double bufferingDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
+        int bufferingDistance = Integer.parseInt((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
 
         if (args.length < 2) {
             return true;
@@ -377,7 +383,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                 }
 
                 //read the buffer distance
-                bufferingDistance = Double.parseDouble(args[numberofbands + 2]);
+                bufferingDistance = Integer.parseInt(args[numberofbands + 2]);
                 final float ENL = Float.parseFloat(args[numberofbands + 3]);
 
                 // create new buffered mask with bufferingDistance using the mask in parameters
@@ -404,7 +410,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                     }
                 }
                 
-                Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds));
+                Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds,bufferingDistance));
                 t.start();
             }
 
@@ -421,9 +427,9 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
      * @param thresholds
      * @return
      */
-    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds){
+    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
     	this.gir=reader;
-    	AnalysisProcess ap=new AnalysisProcess(ENL,analysis, bufferedMask, thresholds);
+    	AnalysisProcess ap=new AnalysisProcess(ENL,analysis, bufferedMask, thresholds, buffer);
         ap.run();
         return ap.resultLayers;
     }

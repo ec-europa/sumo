@@ -56,6 +56,14 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         super(layername, reader, type, layer);
         this.reader=reader;
     }
+	
+	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer) {
+        super(layername, reader, type, layer);
+        this.reader=reader;
+        this.thresholds=thresholds;
+        this.enl=enl;
+        this.buffer=buffer;
+    }
     
     public boolean anyDections(){
     	return (glayer!=null && !glayer.getGeometries().isEmpty());
