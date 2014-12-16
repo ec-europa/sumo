@@ -129,7 +129,7 @@ public abstract class AbstractBatchAnalysis {
 				}
 
     		   
-    		   System.out.println("Writing:"+outfile);
+    		   System.out.println("Writing:"+outfile.toString());
     		   l.save(outfile.toString(),ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
     		   
     		   
