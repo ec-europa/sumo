@@ -2,7 +2,6 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,7 @@ public abstract class AbstractBatchAnalysis {
         final String[] thresholds=Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
         
         VDSAnalysisConsoleAction action= new VDSAnalysisConsoleAction();
-        layerResults=action.runBatchAnalysis(reader,params.enl,analysis,masks,thresholds);
+        layerResults=action.runBatchAnalysis(reader,params.enl,analysis,masks,thresholds,params.buffer);
         
 	}	
 	

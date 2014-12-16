@@ -135,7 +135,7 @@ public class Sumo {
 	        if(status!=PARAM_ERROR){
 	        	int index=inputParams.indexOf(BUFFER_PARAM);
 	        	if(index!=-1){
-	        		params.buffer=Double.parseDouble(inputParams.get(index+1));
+	        		params.buffer=Integer.parseInt(inputParams.get(index+1));
 	        	}
 	
 	        	//set the treshold params
