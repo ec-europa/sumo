@@ -263,5 +263,6 @@
 	<classpathentry exported="true" kind="lib" path="commons-fileupload-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="commons-net-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="commons-net-ftp-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-math3-3.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
