@@ -2,6 +2,7 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,18 @@ import org.geoimage.viewer.util.Utils;
 import org.slf4j.LoggerFactory;
 
 
+class AnalysisParams {
+	//HH HV VH VV
+	public float[] thresholdArrayValues={1,1,1,1};
+	public String pathImg="";
+	public String shapeFile="";
+	public String outputFolder="";
+	public float enl=1;
+	public int buffer=0;
+	public String epsg="EPSG:4326";	
+	public Date startDate;
+	
+}
 
 public abstract class AbstractBatchAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractBatchAnalysis.class);
@@ -121,10 +134,10 @@ public abstract class AbstractBatchAnalysis {
 	                file = file.concat(".xml");
 	            }
 	           HashMap<String,Object> config=new HashMap<String,Object>(); 
-	           config.put(SumoXmlIOOld.CONFIG_FILE, file);
+	           config.put(SumoXMLWriter.CONFIG_FILE, file);
     		   newWriter.setConfig(config);
-    		   MaskVectorLayer mL=(MaskVectorLayer)masks[0];
-    		   newWriter.save(FactoryLayer.createThresholdedLayer(mL.getGeometriclayer(),mL.getThresh(),mL.isThreshable()), params.epsg,reader);
+    		   newWriter.saveNewXML(FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable()), 
+    				   params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl);
     	   }
         }
 	}
