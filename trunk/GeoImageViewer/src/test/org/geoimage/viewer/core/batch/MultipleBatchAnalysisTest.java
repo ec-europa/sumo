@@ -17,7 +17,7 @@ public class MultipleBatchAnalysisTest {
 		AnalysisParams params=new AnalysisParams();
 		
 		params.shapeFile="C:\\tmp\\land polygon opsm 50m\\land_grid_buffer_50m.shp";
-		params.thresholdArrayValues=new int[]{5,5,5,5};
+		params.thresholdArrayValues=new float[]{5,5,5,5};
 		params.epsg="C:\\tmp\\output\\";
 		params.buffer=10;
 		params.pathImg="C:\\tmp\\input"; 			//input folder
