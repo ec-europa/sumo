@@ -66,8 +66,8 @@ public class ConfigurationFile {
 		 * 
 		 * @return
 		 */
-		public int[] getThresholdArray(){
-			int[] thresholds={1,1,1,1};
+		public float[] getThresholdArray(){
+			float[] thresholds={1,1,1,1};
 			
 			//-1 not setted 
 			String tmp=prop.getProperty(TRESH_HH_PARAM,"-1");
@@ -148,7 +148,7 @@ public class ConfigurationFile {
 				ConfigurationFile f=new ConfigurationFile("C:\\tmp\\output\\analysis.conf");
 				double b=f.getBuffer();
 				System.out.println(b);
-				int[] tt=f.getThresholdArray();
+				float[] tt=f.getThresholdArray();
 				System.out.println(tt[0]);
 				System.out.println(tt[1]);
 				System.out.println(tt[2]);

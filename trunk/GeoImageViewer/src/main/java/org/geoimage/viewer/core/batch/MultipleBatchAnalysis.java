@@ -106,8 +106,9 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			if(localConf.getBuffer()!=-1)
 				params.buffer=localConf.getBuffer();
 			if(localConf.getThresholdArray()!=null){
-				int[] array=localConf.getThresholdArray();
-				for(int i=0,v=array[i];i<array.length;i++){
+				float[] array=localConf.getThresholdArray();
+				for(int i=0;i<array.length;i++){
+					float v=array[i];
 					if(v!=-1)
 						params.thresholdArrayValues[i]=v;
 				}
