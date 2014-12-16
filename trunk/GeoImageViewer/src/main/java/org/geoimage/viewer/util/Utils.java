@@ -201,7 +201,7 @@ public class Utils {
      * @param thresholdArrayValues
      * @return
      */
-    public static String[] getStringThresholdsArray(SarImageReader reader,int[] thresholdArrayValues){
+    public static String[] getStringThresholdsArray(SarImageReader reader,float[] thresholdArrayValues){
     	int numberOfBands=reader.getNBand();
 	    final String[] thresholds = new String[numberOfBands];
 	    //management of the strings added at the end of the layer name in order to remember the used threshold
