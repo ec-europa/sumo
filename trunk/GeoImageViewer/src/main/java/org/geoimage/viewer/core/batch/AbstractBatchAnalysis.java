@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -25,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 class AnalysisParams {
 	//HH HV VH VV
-	public float[] thresholdArrayValues={1,1,1,1};
+	public float[] thresholdArrayValues={};
 	public String pathImg="";
 	public String shapeFile="";
 	public String outputFolder="";
@@ -119,17 +120,22 @@ public abstract class AbstractBatchAnalysis {
     		   if(!folder.exists())
     			   folder.mkdirs();
     		   
-    		   String outfile=new StringBuilder(outfolder).append(File.separator)
+    		   StringBuilder outfile=new StringBuilder(outfolder).append(File.separator)
     				            .append(l.getName()).append("_")
-    				   			.append(dFormat.format(params.startDate)).toString();
+    				   			.append(dFormat.format(params.startDate));
+    		   
+				if(reader.isContainsMultipleImage() && reader instanceof CosmoSkymedImage){
+					outfile=outfile.append("_").append(((CosmoSkymedImage)reader).getGroup());
+				}
+
     		   
     		   System.out.println("Writing:"+outfile);
-    		   l.save(outfile,ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
+    		   l.save(outfile.toString(),ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
     		   
     		   
     		   SumoXMLWriter newWriter=new SumoXMLWriter();
     		   
-    		   String file=new String(outfile+"_new");
+    		   String file=new String(outfile.append("_new").toString());
     		   if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
