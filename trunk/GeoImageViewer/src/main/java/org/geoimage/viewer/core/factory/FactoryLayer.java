@@ -85,7 +85,7 @@ public class FactoryLayer {
 		 MaskVectorLayer mask = null;
         try {
             mask = (new MaskVectorLayer(name, reader,type, layer.clone()));
-            if(bufferingDistance!=0)
+            //if(bufferingDistance!=0)
             	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
             Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
