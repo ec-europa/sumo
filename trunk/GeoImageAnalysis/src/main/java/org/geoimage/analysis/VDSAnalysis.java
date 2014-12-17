@@ -145,7 +145,7 @@ public class VDSAnalysis {
 
                 tile[0][0] = i * sizeTile[0];
                 tile[0][1] = tile[0][0] + sizeTile[0];
-                if ((mask == null) || (mask.length == 0) || (mask[0] == null) || (!intersects(tile))) {
+                if (mask == null || mask.length == 0 || mask[0] == null || !intersects(tile)) {
                     kdist.setImageData(gir, tile[0][0], tile[1][0], 1, 1, sizeTile[0], sizeTile[1]);
                     kdist.estimate(null);
                     double[][][] thresh = kdist.getDetectThresh();

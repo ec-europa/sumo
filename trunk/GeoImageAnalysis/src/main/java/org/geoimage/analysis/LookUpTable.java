@@ -44,8 +44,6 @@ public class LookUpTable {
     private double[] clippedStd = new double[2];
     private double step = 0;
     private double clippedStep = 0;
-    private int pfm = 0;
-    private int pfn = 0;
     private double pcl = 0;
     private double nnu = 0;
     static String dbname = "algorithm_data";
