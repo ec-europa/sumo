@@ -87,12 +87,14 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                  int numberofbands = gir.getNBand();
                  int[] bands = new int[numberofbands];
                  
+                 message=new StringBuilder();
                  // compute detections for each band separately
                  for (int band = 0; band < numberofbands; band++) {
                      gir.setBand(band);
                      bands[band] = band;
-
-                     message =  new StringBuilder("VDS: analysing image...");
+                     
+                     message.setLength(0);
+                     message =  message.append("VDS: analysing image...");
                      if (numberofbands > 1) {
                          message = message.append(" for band ").append(gir.getBandName(band));
                      }
@@ -108,8 +110,10 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      }	
                     
                      boolean displaybandanalysis = Platform.getPreferences().readRow(PREF_DISPLAY_BANDS).equalsIgnoreCase("true");
-                     if ((numberofbands < 1) || displaybandanalysis) {
-                         message =  new StringBuilder("VDS: agglomerating detections for band ").append(gir.getBandName(band)).append("...");
+                     if (numberofbands < 1 || displaybandanalysis) {
+                    	 message.setLength(0);
+                         message =  message.append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).append("...");
+                         
                          setCurrent(3);
 
                          String agglomerationMethodology = (Platform.getPreferences()).readRow(PREF_AGGLOMERATION_METHODOLOGY);
@@ -132,15 +136,21 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                                  tilesize = 200;
                              }
                              boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
-                             banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, new int[]{band}, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+                             banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, 
+                            		 removelandconnectedpixels, 
+                            		 new int[]{band}, 
+                            		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                          }
-
+                         message.setLength(0);
                          // look for Azimuth ambiguities in the pixels
-                         message = new StringBuilder("VDS: looking for azimuth ambiguities...");
+                         message =message.append("VDS: looking for azimuth ambiguities...");
+                         
                          setCurrent(4);
+                         
                          AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
 
                          String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(thresholds[band]).toString();
+                         
                          ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, 
                         		 				(SarImageReader) gir, "point", 
                         		 				createGeometricLayer(gir, banddetectedpixels),thresholds,ENL,buffer);

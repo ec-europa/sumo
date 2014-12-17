@@ -7,12 +7,13 @@ package org.geoimage.analysis;
 import java.awt.Rectangle;
 import java.awt.image.Raster;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -27,28 +28,25 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class DetectedPixels {
 
-    private Hashtable<String, detectedPixel> allDetectedPixels = new Hashtable<String, detectedPixel>();
-    private Hashtable<String, detectedPixel> aggregatedPixels = new Hashtable<String, detectedPixel>();
-    private Hashtable<Integer, Vector<int[]>> aggregatedBoats = new Hashtable<Integer, Vector<int[]>>();
-    private ArrayList<double[]> boatArray = new ArrayList<double[]>();
+    private Map<String, DetectedPixel> allDetectedPixels = new HashMap<String, DetectedPixel>();
+    private Map<String, DetectedPixel> aggregatedPixels = new HashMap<String, DetectedPixel>();
+    private Map<Integer, List<int[]>> aggregatedBoats = new HashMap<Integer, List<int[]>>();
+    private List<double[]> boatArray = new ArrayList<double[]>();
     // size of the search window in meters
     private final int SEARCHWINDOW = 50;
     // filter size of boats in meters
     private final double FILTERminSIZE = 3;
     private final double FILTERmaxSIZE = 1000;
-    private double filterminSize = 1;
-    private double filtermaxSize = 1;
+    private final double filterminSize = FILTERminSIZE;
+    private final double filtermaxSize = FILTERmaxSIZE;
     private double pixsam;//range
     private double pixrec;//azimuth
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
     private SarImageReader gir = null;
 
-    private enum mode {
-
-        ALLpolarisations, HHpolarisation, HVpolarisation, VVpolarisation
-    };
-    Vector<boatPixels> listboatneighbours = new Vector<boatPixels>();
+    
+    ArrayList<boatPixels> listboatneighbours = new ArrayList<boatPixels>();
 
     public DetectedPixels(SarImageReader gir) {
         this.gir = gir;
@@ -68,11 +66,11 @@ public class DetectedPixels {
             this.searchwindowHeight = (int) (SEARCHWINDOW / pixrec);
         }
         // define the filtering size for boats
-        this.filterminSize = FILTERminSIZE;
-        this.filtermaxSize = FILTERmaxSIZE;
+       // this.filterminSize = FILTERminSIZE;
+       // this.filtermaxSize = FILTERmaxSIZE;
     }
 
-    private class detectedPixel {
+    private class DetectedPixel {
 
         public int x;
         public int y;
@@ -83,7 +81,7 @@ public class DetectedPixels {
         public int band;
         public int id;
 
-        public detectedPixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
+        public DetectedPixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
             this.x = x;
             this.y = y;
             this.value = value;
@@ -95,29 +93,31 @@ public class DetectedPixels {
     }
 
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
-        detectedPixel boat = new detectedPixel(x, y, value, tileAvg, tileStd, threshold, band);
+        DetectedPixel boat = new DetectedPixel(x, y, value, tileAvg, tileStd, threshold, band);
         allDetectedPixels.put(x + " " + y, boat);
 
     }
 
     // add the detectedpixels
     public void add(DetectedPixels pixels) {
-        Hashtable<String, detectedPixel> boatpixels = pixels.getDetectedPixels();
-        for (Enumeration<detectedPixel> boats = boatpixels.elements(); boats.hasMoreElements();) {
-            detectedPixel boat = boats.nextElement();
+    	Map<String, DetectedPixel> boatpixels = pixels.getDetectedPixels();
+    	Collection<DetectedPixel> boats = boatpixels.values();
+        for (DetectedPixel boat:boats) {
             allDetectedPixels.put(boat.x + " " + boat.y, boat);
         }
     }
 
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
-        Hashtable<String, detectedPixel> boatpixels = pixels.getDetectedPixels();
-        for (Enumeration<detectedPixel> boats = boatpixels.elements(); boats.hasMoreElements();) {
-            detectedPixel boat = boats.nextElement();
+    	Map<String, DetectedPixel> boatpixels = pixels.getDetectedPixels();
+    	Collection<DetectedPixel> boats = boatpixels.values();
+    	StringBuilder position = new StringBuilder();
+        for (DetectedPixel boat:boats) {
+        	position.setLength(0);
             // do not add if position already exists
-            String position = boat.x + " " + boat.y;
-            if (allDetectedPixels.get(position) == null) {
-                allDetectedPixels.put(position, boat);
+            position = new StringBuilder(boat.x).append(" ").append(boat.y);
+            if (allDetectedPixels.get(position.toString()) == null) {
+                allDetectedPixels.put(position.toString(), boat);
             }
         }
     }
@@ -126,13 +126,13 @@ public class DetectedPixels {
         return boatArray;
     }
 
-    private Hashtable<String, detectedPixel> getDetectedPixels() {
+    private Map<String, DetectedPixel> getDetectedPixels() {
         return allDetectedPixels;
     }
 
     private void aggregate(int x, int y, int id) {
         int[] seed = {x, y, id};
-        Vector<int[]> list = new Vector<int[]>();
+        ArrayList<int[]> list = new ArrayList<int[]>();
         list.add(seed);
         while (list.size() > 0) {
             int[] p = list.remove(0);
@@ -141,13 +141,13 @@ public class DetectedPixels {
             int idd = p[2];
             for (int i = xx - this.searchwindowWidth; i < xx + this.searchwindowWidth + 1; i++) {
                 for (int j = yy - this.searchwindowHeight; j < yy + this.searchwindowHeight + 1; j++) {
-                    detectedPixel boat = allDetectedPixels.get(i + " " + j);
+                    DetectedPixel boat = allDetectedPixels.get(i + " " + j);
                     if (boat != null && !(i == xx && j == yy)) {
                         if (aggregatedPixels.get(i + " " + j) == null) {
                             boat.id=idd;
-                            Vector<int[]> agBoat = aggregatedBoats.get(idd);
+                            List<int[]> agBoat = aggregatedBoats.get(idd);
                             if (agBoat == null) {
-                                agBoat = new Vector<int[]>();
+                                agBoat = new ArrayList<int[]>();
                             }
                             agBoat.add(new int[]{i, j});
                             aggregatedBoats.put(idd, agBoat);
@@ -162,7 +162,7 @@ public class DetectedPixels {
 
     private class boatPixels {
 
-        private Hashtable<String, int[]> connectedpixels = new Hashtable<String, int[]>();
+        private Map<String, int[]> connectedpixels = new HashMap<String, int[]>();
         private double[][] thresholdvalues;
         private double boatnumberofpixels = 0.0;
         private double[] boatposition;
@@ -195,11 +195,11 @@ public class DetectedPixels {
 
         public void computeValues() {
             // clip all values below thresholdclip
-            Vector<int[]> Clust = new Vector<int[]>();
-            for (Enumeration<int[]> pixels = connectedpixels.elements(); pixels.hasMoreElements();) {
-                int[] pixel = pixels.nextElement();
+            List<int[]> clust = new ArrayList<int[]>();
+            Collection<int[]> pixels = connectedpixels.values();
+            for (int[] pixel: pixels) {
                 if (pixel[3] == 1) {
-                    Clust.add(pixel);
+                    clust.add(pixel);
                 }
                 // look for maximum value in pixels
                 if (pixel[2] > boatmaximumvalue) {
@@ -207,7 +207,7 @@ public class DetectedPixels {
                 }
             }
             // calculate length and width for cluster
-            double[] result = LenWidHedd(Clust, new double[]{pixsam, pixrec});
+            double[] result = LenWidHedd(clust, new double[]{pixsam, pixrec});
             boatnumberofpixels = result[0];
             boatposition[0] = result[1];
             boatposition[1] = result[2];
@@ -270,26 +270,26 @@ public class DetectedPixels {
 
         private List<int[]> getThresholdclipPixels() {
             // clip all values below thresholdclip
-            Vector<int[]> Clust = new Vector<int[]>();
-            for (Enumeration<int[]> pixels = connectedpixels.elements(); pixels.hasMoreElements();) {
-                int[] pixel = pixels.nextElement();
+            List<int[]> clust = new ArrayList<int[]>();
+            Collection<int[]> pixels = connectedpixels.values();
+            for (int[] pixel:pixels) {
                 if (pixel[3] == 1) {
-                    Clust.add(pixel);
+                	clust.add(pixel);
                 }
             }
 
-            return Clust;
+            return clust;
         }
 
         private List<int[]> getThresholdaggregatePixels() {
             // clip all values below thresholdclip
-            Vector<int[]> Clust = new Vector<int[]>();
-            for (Enumeration<int[]> pixels = connectedpixels.elements(); pixels.hasMoreElements();) {
-                int[] pixel = pixels.nextElement();
-                Clust.add(pixel);
+            List<int[]> clust = new ArrayList<int[]>();
+            Collection<int[]> pixels = connectedpixels.values();
+            for (int[] pixel:pixels) {
+                clust.add(pixel);
             }
 
-            return Clust;
+            return clust;
         }
 
         private void setLandMask(boolean touchlandmask) {
@@ -305,9 +305,8 @@ public class DetectedPixels {
     private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist) {
         int id = 0;
         // scan through list of detected pixels
-        for (Enumeration<detectedPixel> pixels = allDetectedPixels.elements(); pixels.hasMoreElements();) {
-            // get pixel value
-            detectedPixel p = pixels.nextElement();
+        Collection<DetectedPixel>pixels=allDetectedPixels.values();
+        for (DetectedPixel p: pixels) {
             int xx = p.x;
             int yy = p.y;
             // check pixels is not aggregated
@@ -376,7 +375,7 @@ public class DetectedPixels {
                 boatpixel.setThresholdValue(p.threshold);
                 listboatneighbours.add(boatpixel);
                 // start list of aggregated pixels
-                Hashtable<String, int[]> boataggregatedpixels = new Hashtable<String, int[]>();
+                Map<String, int[]> boataggregatedpixels = new HashMap<String, int[]>();
                 int[] imagemap = new int[tilesize * tilesize];
                 for (int i = 0; i < tilesize * tilesize; i++) {
                     imagemap[i] = 0;
@@ -385,8 +384,8 @@ public class DetectedPixels {
                 // set flag for touching land
                 boatpixel.setLandMask(result);
                 // shift pixels by cornerx and cornery and store in boat list
-                for (Enumeration<int[]> aggregatedpixels = boataggregatedpixels.elements(); aggregatedpixels.hasMoreElements();) {
-                    int[] pixel = aggregatedpixels.nextElement();
+                Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
+                for (int[] pixel : aggregatedpixels) {
                     boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
                 }
             } else {
@@ -396,7 +395,7 @@ public class DetectedPixels {
         // if remove connected to land pixels flag
         if (removelandconnectedpixels) {
             // create copy of list of boats
-            Vector<boatPixels> listofboats = (Vector<boatPixels>) listboatneighbours.clone();
+            List<boatPixels> listofboats = (List<boatPixels>) listboatneighbours.clone();
             listboatneighbours.clear();
             // remove all boats connecting to land
             for (boatPixels boat : listofboats) {
@@ -430,7 +429,7 @@ public class DetectedPixels {
         return imagestat;
     }
 
-    public boolean checkNeighbours(Hashtable<String, int[]> pixels, int[] imagemap, int[][] imagedata, double[][] thresholdaggregate, int[] position, int neighboursdistance, int tilesize, Raster rastermask) {
+    public boolean checkNeighbours(Map<String, int[]> pixels, int[] imagemap, int[][] imagedata, double[][] thresholdaggregate, int[] position, int neighboursdistance, int tilesize, Raster rastermask) {
         int numberofbands = thresholdaggregate.length;
         // touches land flag
         boolean result = false;
@@ -508,11 +507,11 @@ public class DetectedPixels {
     }
 
     public void agglomerate() {
-        Enumeration<detectedPixel> enumeration = allDetectedPixels.elements();
+        
+    	Collection<DetectedPixel> boats = allDetectedPixels.values();
         int id = -1;
-        while (enumeration.hasMoreElements()) {
-            detectedPixel boat = enumeration.nextElement();
-            Vector<int[]> agBoat = new Vector<int[]>();
+        for (DetectedPixel boat:boats) {
+            List<int[]> agBoat = new ArrayList<int[]>();
             int x = boat.x;
             int y = boat.y;
             String position = x + " " + y;
@@ -532,10 +531,9 @@ public class DetectedPixels {
     }
 
     public void computeBoatsAttributes() {
-        Enumeration<Vector<int[]>> enumeration = aggregatedBoats.elements();
-        while (enumeration.hasMoreElements()) {
+        Collection<List<int[]>> enumeration = aggregatedBoats.values();
+        for (List<int[]>agBoat:enumeration) {
             // start with estimating length, size and heading
-            Vector<int[]> agBoat = enumeration.nextElement();
             double[] boatvalues = fLenWidHead(agBoat, this.pixsam, this.pixrec);
 
             // look for maximum brightness point in cluster
@@ -545,7 +543,7 @@ public class DetectedPixels {
             if (it.hasNext()) {
                 pixel = it.next();
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
-                detectedPixel pixelValue = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
+                DetectedPixel pixelValue = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
                 double[] boatValue = new double[11];
                 boatValue[0] = pixelValue.id;
                 boatValue[3] = pixelValue.value;
@@ -565,7 +563,7 @@ public class DetectedPixels {
                 // look for maximum value in agglomerate
                 while (it.hasNext()) {
                     pixel = it.next();
-                    detectedPixel boat = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
+                    DetectedPixel boat = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
                     if (boat.value > boatValue[3]) {
                         boatValue[3] = boat.value;
                     }
@@ -582,14 +580,14 @@ public class DetectedPixels {
         }
 
         // create new array
-        Hashtable<Integer, Vector<double[]>> hashtableBoat = new Hashtable<Integer, Vector<double[]>>();
+        Map<Integer, List<double[]>> hashtableBoat = new HashMap<Integer, List<double[]>>();
         // list for keys
-        Vector<Integer> keys = new Vector<Integer>();
+        List<Integer> keys = new ArrayList<Integer>();
         // sort the list by position
         for (double[] boat : boatArray) {
             // if entry does not exist in the hashtable create it
             if (hashtableBoat.get(new Integer((int) (boat[2] / 512))) == null) {
-                hashtableBoat.put(new Integer((int) (boat[2] / 512)), new Vector<double[]>());
+                hashtableBoat.put(new Integer((int) (boat[2] / 512)), new ArrayList<double[]>());
                 keys.add((int) (boat[2] / 512));
             }
             // sort boat positions by stripes of 512
@@ -603,7 +601,7 @@ public class DetectedPixels {
         Collections.sort(keys);
         for (Integer key : keys) {
             // get the boats in the stripe
-            Vector<double[]> boatsinStripe = hashtableBoat.get(key);
+            List<double[]> boatsinStripe = hashtableBoat.get(key);
             if (boatsinStripe != null) {
                 for (int i = 1; i < boatsinStripe.size(); i++) {
                     double positionX = boatsinStripe.get(i)[1];
@@ -612,7 +610,7 @@ public class DetectedPixels {
                             // insert element at the right position
                             boatsinStripe.add(j, boatsinStripe.get(i));
                             // remove element from its previous position increased by one position
-                            boatsinStripe.removeElementAt(i + 1);
+                            boatsinStripe.remove(i + 1);
                             break;
                         }
                     }
@@ -628,7 +626,7 @@ public class DetectedPixels {
     }
 
     //AG inserted a test to filter boats by length
-    private void computeBoatsAttributesAndStatistics(Vector<boatPixels> list) {
+    private void computeBoatsAttributesAndStatistics(List<boatPixels> list) {
 
         boatArray.clear();
         // compute attributes and statistics values on boats
@@ -642,14 +640,14 @@ public class DetectedPixels {
 
         // sort the boats array by positions to facilitate navigation
         // create new array
-        Hashtable<Integer, Vector<double[]>> hashtableBoat = new Hashtable<Integer, Vector<double[]>>();
+        Hashtable<Integer, List<double[]>> hashtableBoat = new Hashtable<Integer, List<double[]>>();
         // list for keys
-        Vector<Integer> keys = new Vector<Integer>();
+        List<Integer> keys = new ArrayList<Integer>();
         // sort the list by position
         for (double[] boat : boatArray) {
             // if entry does not exist in the hashtable create it
             if (hashtableBoat.get(new Integer((int) (boat[2] / 512))) == null) {
-                hashtableBoat.put(new Integer((int) (boat[2] / 512)), new Vector<double[]>());
+                hashtableBoat.put(new Integer((int) (boat[2] / 512)), new ArrayList<double[]>());
                 keys.add((int) (boat[2] / 512));
             }
             // sort boat positions by stripes of 512
@@ -663,7 +661,7 @@ public class DetectedPixels {
         Collections.sort(keys);
         for (Integer key : keys) {
             // get the boats in the stripe
-            Vector<double[]> boatsinStripe = hashtableBoat.get(key);
+            List<double[]> boatsinStripe = hashtableBoat.get(key);
             if (boatsinStripe != null) {
                 for (int i = 1; i < boatsinStripe.size(); i++) {
                     double positionX = boatsinStripe.get(i)[1];
@@ -672,7 +670,7 @@ public class DetectedPixels {
                             // insert element at the right position
                             boatsinStripe.add(j, boatsinStripe.get(i));
                             // remove element from its previous position increased by one position
-                            boatsinStripe.removeElementAt(i + 1);
+                            boatsinStripe.remove(i + 1);
                             break;
                         }
                     }
@@ -707,7 +705,7 @@ public class DetectedPixels {
     //
     // See also LenWidHed.m (script)
     // (c) H. Greidanus 2004
-    public double[] fLenWidHead(Vector<int[]> Clust, double PixszSam, double PixszRec) {
+    public double[] fLenWidHead(List<int[]> Clust, double PixszSam, double PixszRec) {
         double Tlen = 0.0;
         double Twid = 0.0;
         double Thed = 0.0;
@@ -835,7 +833,7 @@ public class DetectedPixels {
     //  (c) H. Greidanus 2008
 
     //  Subroutines: none
-    public double[] LenWidHedd(Vector<int[]> Clust, double[] Pixsz) {
+    public double[] LenWidHedd(List<int[]> Clust, double[] Pixsz) {
         double Len = 0.0;
         double Wid = 0.0;
         double Hed = Double.NaN;
@@ -866,7 +864,7 @@ public class DetectedPixels {
         //System.out.println("\nCen: " + Cen[0] + " " + Cen[1] + " Nptc: " + Nptc + " Sj2: " + Sj2[0] + " " + Sj2[1] + " Sjx: " + Sjx);
 
         // create new cluster
-        Vector<double[]> Clust0 = new Vector<double[]>();
+        List<double[]> Clust0 = new ArrayList<double[]>();
         for (int[] element : Clust) {
             Clust0.add(new double[]{(double) element[0] - Cen[0], (double) element[1] - Cen[1]}); //  Cluster pixels wrt centre
         }
@@ -911,7 +909,7 @@ public class DetectedPixels {
             //System.out.println(" Len: " + Len + " Wid: " + Wid + " ma1 " + ma1 + " dl1 " + dl1 + " ma2 " + ma2 + " dl2 " + dl2 + " ap " + ap + " a2 " + a2);
 
             //  Which points are outliers (further than fRec pixels out of box):
-            Vector<int[]> clust1 = new Vector<int[]>();
+            List<int[]> clust1 = new ArrayList<int[]>();
             // find( abs( d1)/ realsqrt( w1)- Wid/ 2> fRecw* dl1 | abs( d2)/ realsqrt( w2)- Len/ 2> fRecl* dl2);
             for (int i = 0; i < d1.length; i++) {
                 if ((Math.abs(d1[i]) / Math.sqrt(w1) - Wid / 2.0 > fRecw * dl1) || (Math.abs(d2[i]) / Math.sqrt(w2) - Len / 2.0 > fRecl * dl2)) {
@@ -974,7 +972,7 @@ public class DetectedPixels {
     }
 
     // return the smallest x and the smallest y in the Vector
-    private double[] matlabMinRow(Vector<int[]> table) {
+    private double[] matlabMinRow(List<int[]> table) {
         double[] result = {0.0, 0.0};
         if (table.size() > 0) {
             result[0] = table.get(0)[0];
@@ -992,7 +990,7 @@ public class DetectedPixels {
     }
 
     // return the largest x and the largest y in the Vector
-    private double[] matlabMaxRow(Vector<int[]> table) {
+    private double[] matlabMaxRow(List<int[]> table) {
         double[] result = {0.0, 0.0};
         if (table.size() > 0) {
             result[0] = table.get(0)[0];
@@ -1009,7 +1007,7 @@ public class DetectedPixels {
         return result;
     }
 
-    private double[] matlabSumRow(Vector<int[]> table, int power) {
+    private double[] matlabSumRow(List<int[]> table, int power) {
         double[] result = {0.0, 0.0};
         for (int i = 0; i < table.size(); i++) {
             result[0] = result[0] + Math.pow((double) table.get(i)[0], power);
@@ -1018,7 +1016,7 @@ public class DetectedPixels {
         return result;
     }
 
-    private double matlabSumCross(Vector<int[]> table) {
+    private double matlabSumCross(List<int[]> table) {
         double result = 0.0;
         for (int i = 0; i < table.size(); i++) {
             result = result + (double) table.get(i)[0] * (double) table.get(i)[1];
@@ -1026,7 +1024,7 @@ public class DetectedPixels {
         return result;
     }
 
-    private double[] matlabSumProdRegmat2D(double regmat[], Vector<double[]> table) {
+    private double[] matlabSumProdRegmat2D(double regmat[], List<double[]> table) {
         double[] result = new double[table.size()];
         for (int i = 0; i < table.size(); i++) {
             result[i] = regmat[0] * (double) table.get(i)[0] + regmat[1] * (double) table.get(i)[1];
@@ -1034,7 +1032,7 @@ public class DetectedPixels {
         return result;
     }
 
-    private double[] matlabMeanAbs2D(Vector<double[]> table) {
+    private double[] matlabMeanAbs2D(List<double[]> table) {
         double[] result = new double[]{0.0, 0.0};
         for (int i = 0; i < table.size(); i++) {
             result[0] = result[0] + (double) Math.abs(table.get(i)[0]);
@@ -1068,22 +1066,21 @@ public class DetectedPixels {
         return values;
     }
 
-    public Vector<Geometry> getAllDetectedPixels() {
-        Vector<Geometry> out = new Vector<Geometry>();
+    public List<Geometry> getAllDetectedPixels() {
+        List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        Enumeration<detectedPixel> enumeration = allDetectedPixels.elements();
-        while (enumeration.hasMoreElements()) {
-            detectedPixel pixel = enumeration.nextElement();
+        
+        Collection<DetectedPixel> enumeration = allDetectedPixels.values();
+        for (DetectedPixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
         }
 
         return out;
     }
 
-    public Vector<Geometry> getThresholdclipPixels() {
-        Vector<Geometry> out = new Vector<Geometry>();
+    public List<Geometry> getThresholdclipPixels() {
+        List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        int id = -1;
         for (boatPixels boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdclipPixels();
             for (int[] position : positions) {
@@ -1094,8 +1091,8 @@ public class DetectedPixels {
         return out;
     }
 
-    public Vector<Geometry> getThresholdaggregatePixels() {
-        Vector<Geometry> out = new Vector<Geometry>();
+    public List<Geometry> getThresholdaggregatePixels() {
+        List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         for (boatPixels boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdaggregatePixels();
