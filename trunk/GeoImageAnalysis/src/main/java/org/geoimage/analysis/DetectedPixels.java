@@ -115,7 +115,7 @@ public class DetectedPixels {
         for (DetectedPixel boat:boats) {
         	position.setLength(0);
             // do not add if position already exists
-            position = new StringBuilder(boat.x).append(" ").append(boat.y);
+            position = position.append(boat.x).append(" ").append(boat.y); 
             if (allDetectedPixels.get(position.toString()) == null) {
                 allDetectedPixels.put(position.toString(), boat);
             }
