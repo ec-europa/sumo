@@ -455,10 +455,10 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         int count=0;
         for (double[] boat : pixels.getBoats()) {
 
-            String[] schema = VDSSchema.getSchema();
-            String[] types = VDSSchema.getTypes();
+            //String[] schema = VDSSchema.getSchema();
+            //String[] types = VDSSchema.getTypes();
 
-            Attributes atts = Attributes.createAttributes(schema, types);
+            Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
             atts.set(VDSSchema.ID, count++);
             atts.set(VDSSchema.MAXIMUM_VALUE, boat[3]);
             atts.set(VDSSchema.TILE_AVERAGE, boat[4]);
@@ -498,10 +498,10 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         int count=0;
         for (double[] boat : pixels.getBoats()) {
 
-            String[] schema = VDSSchema.getSchema();
-            String[] types = VDSSchema.getTypes();
+           // String[] schema = VDSSchema.getSchema();
+           // String[] types = VDSSchema.getTypes();
 
-            Attributes atts = Attributes.createAttributes(schema, types);
+            Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
             atts.set(VDSSchema.ID, count++);
             atts.set(VDSSchema.MAXIMUM_VALUE, boat[3]);
             atts.set(VDSSchema.TILE_AVERAGE, boat[4]);

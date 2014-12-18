@@ -146,7 +146,7 @@ public class AttributesEditor extends javax.swing.JDialog {
 
             public void run() {
                 AttributesEditor dialog = new AttributesEditor(new javax.swing.JFrame(), true);
-                Attributes atts = Attributes.createAttributes(VDSSchema.getSchema(), VDSSchema.getTypes());
+                Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);//VDSSchema.getSchema(), VDSSchema.getTypes());
                 dialog.setAttributes(atts);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
