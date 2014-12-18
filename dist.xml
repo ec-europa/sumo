@@ -21,7 +21,7 @@
         <!--  copy file="trunk/libs/.jar" tofile="E:/SUMO/run_dist/sumo_li"/ -->
         <copy todir="E:/SUMO/run_dist/sumo_lib">
     		<fileset dir="trunk/libs/"
-    		    includes="*.jar,*hdf5/**,gdal_lib_win64"
+    		    includes="*.jar,*hdf5/**,gdal_lib_win64/**"
     		    
     		    />
     		<fileset dir="trunk/libs/geotools-12.0/"
