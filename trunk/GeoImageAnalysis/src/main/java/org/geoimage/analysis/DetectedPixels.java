@@ -28,8 +28,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class DetectedPixels {
 
-    private Map<String, DetectedPixel> allDetectedPixels = new HashMap<String, DetectedPixel>();
-    private Map<String, DetectedPixel> aggregatedPixels = new HashMap<String, DetectedPixel>();
+    private Map<String, Pixel> allDetectedPixels = new HashMap<String, Pixel>();
+    private Map<String, Pixel> aggregatedPixels = new HashMap<String, Pixel>();
     private Map<Integer, List<int[]>> aggregatedBoats = new HashMap<Integer, List<int[]>>();
     private List<double[]> boatArray = new ArrayList<double[]>();
     // size of the search window in meters
@@ -70,7 +70,7 @@ public class DetectedPixels {
        // this.filtermaxSize = FILTERmaxSIZE;
     }
 
-    private class DetectedPixel {
+    private class Pixel {
 
         public int x;
         public int y;
@@ -81,7 +81,7 @@ public class DetectedPixels {
         public int band;
         public int id;
 
-        public DetectedPixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
+        public Pixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
             this.x = x;
             this.y = y;
             this.value = value;
@@ -93,26 +93,30 @@ public class DetectedPixels {
     }
 
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
-        DetectedPixel boat = new DetectedPixel(x, y, value, tileAvg, tileStd, threshold, band);
-        allDetectedPixels.put(x + " " + y, boat);
+        Pixel boat = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
+        StringBuilder point=new StringBuilder(x).append(" ").append(y);
+        allDetectedPixels.put(point.toString(), boat);
 
     }
 
     // add the detectedpixels
     public void add(DetectedPixels pixels) {
-    	Map<String, DetectedPixel> boatpixels = pixels.getDetectedPixels();
-    	Collection<DetectedPixel> boats = boatpixels.values();
-        for (DetectedPixel boat:boats) {
-            allDetectedPixels.put(boat.x + " " + boat.y, boat);
+    	Map<String, Pixel> boatpixels = pixels.getDetectedPixels();
+    	Collection<Pixel> boats = boatpixels.values();
+    	StringBuilder point=new StringBuilder();
+        for (Pixel boat:boats) {
+        	point.setLength(0);
+        	point=point.append(boat.x).append(" ").append(boat.y);
+            allDetectedPixels.put(point.toString(), boat);
         }
     }
 
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
-    	Map<String, DetectedPixel> boatpixels = pixels.getDetectedPixels();
-    	Collection<DetectedPixel> boats = boatpixels.values();
+    	Map<String, Pixel> boatpixels = pixels.getDetectedPixels();
+    	Collection<Pixel> boats = boatpixels.values();
     	StringBuilder position = new StringBuilder();
-        for (DetectedPixel boat:boats) {
+        for (Pixel boat:boats) {
         	position.setLength(0);
             // do not add if position already exists
             position = position.append(boat.x).append(" ").append(boat.y); 
@@ -126,7 +130,7 @@ public class DetectedPixels {
         return boatArray;
     }
 
-    private Map<String, DetectedPixel> getDetectedPixels() {
+    private Map<String, Pixel> getDetectedPixels() {
         return allDetectedPixels;
     }
 
@@ -141,7 +145,7 @@ public class DetectedPixels {
             int idd = p[2];
             for (int i = xx - this.searchwindowWidth; i < xx + this.searchwindowWidth + 1; i++) {
                 for (int j = yy - this.searchwindowHeight; j < yy + this.searchwindowHeight + 1; j++) {
-                    DetectedPixel boat = allDetectedPixels.get(i + " " + j);
+                    Pixel boat = allDetectedPixels.get(i + " " + j);
                     if (boat != null && !(i == xx && j == yy)) {
                         if (aggregatedPixels.get(i + " " + j) == null) {
                             boat.id=idd;
@@ -305,8 +309,8 @@ public class DetectedPixels {
     private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist) {
         int id = 0;
         // scan through list of detected pixels
-        Collection<DetectedPixel>pixels=allDetectedPixels.values();
-        for (DetectedPixel p: pixels) {
+        Collection<Pixel>pixels=allDetectedPixels.values();
+        for (Pixel p: pixels) {
             int xx = p.x;
             int yy = p.y;
             // check pixels is not aggregated
@@ -508,9 +512,9 @@ public class DetectedPixels {
 
     public void agglomerate() {
         
-    	Collection<DetectedPixel> boats = allDetectedPixels.values();
+    	Collection<Pixel> boats = allDetectedPixels.values();
         int id = -1;
-        for (DetectedPixel boat:boats) {
+        for (Pixel boat:boats) {
             List<int[]> agBoat = new ArrayList<int[]>();
             int x = boat.x;
             int y = boat.y;
@@ -543,7 +547,7 @@ public class DetectedPixels {
             if (it.hasNext()) {
                 pixel = it.next();
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
-                DetectedPixel pixelValue = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
+                Pixel pixelValue = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
                 double[] boatValue = new double[11];
                 boatValue[0] = pixelValue.id;
                 boatValue[3] = pixelValue.value;
@@ -563,7 +567,7 @@ public class DetectedPixels {
                 // look for maximum value in agglomerate
                 while (it.hasNext()) {
                     pixel = it.next();
-                    DetectedPixel boat = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
+                    Pixel boat = aggregatedPixels.get(pixel[0] + " " + pixel[1]);
                     if (boat.value > boatValue[3]) {
                         boatValue[3] = boat.value;
                     }
@@ -1070,8 +1074,8 @@ public class DetectedPixels {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         
-        Collection<DetectedPixel> enumeration = allDetectedPixels.values();
-        for (DetectedPixel pixel:enumeration) {
+        Collection<Pixel> enumeration = allDetectedPixels.values();
+        for (Pixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
         }
 
