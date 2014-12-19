@@ -783,5 +783,10 @@ public class Radarsat1Image extends SarImageReader {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return true;
+	}
 }
 
