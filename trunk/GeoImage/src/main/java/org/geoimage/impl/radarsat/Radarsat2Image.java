@@ -459,5 +459,10 @@ public class Radarsat2Image extends SarImageReader {
 	public File getOverviewFile() {
 		return new File(this.overviewImage);
 	}
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return true;
+	}
 }
 

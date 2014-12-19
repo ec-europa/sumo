@@ -669,4 +669,9 @@ public class TerrasarXImage extends SarImageReader {
 	public File getOverviewFile() {
 		return new File(this.overview);
 	}
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return true;
+	}
 }
