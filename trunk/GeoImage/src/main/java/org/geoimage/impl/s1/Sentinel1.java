@@ -372,6 +372,11 @@ public abstract class Sentinel1 extends SarImageReader {
 	public void setAnnotationReader(SumoAnnotationReader annotationReader) {
 		this.annotationReader = annotationReader;
 	}
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return true;
+	}
 }
 
 
