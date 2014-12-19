@@ -57,7 +57,7 @@ public abstract class AbstractVectorIO {
     public abstract GeometricLayer read(GeoImageReader reader);
 
     public abstract void save(GeometricLayer layer, String projection,GeoImageReader gir);
-    public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,String[] thresholds,int buffer,double enl){}
+    //public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,String[] thresholds,int buffer,double enl){}
     
     /**
      * For some reasons, you may execute some commands for some special datastore (clening database, ensure existence, or manual upload...)

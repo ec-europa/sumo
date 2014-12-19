@@ -17,9 +17,7 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
-import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.Utils;
 import org.slf4j.LoggerFactory;
 
