@@ -98,11 +98,15 @@ public class CosmoSkymedImage extends SarImageReader {
         	
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
             extractQuickLook();
-            List<?> metadata = imagedata.getMetadata();
+            List<?> metadata = new ArrayList();
             metadata.addAll(h5file.get("/").getMetadata());
             metadata.addAll(h5file.get(internalImage.substring(0, 3)).getMetadata());
 
-            long[] selected = imagedata.getSelectedDims(); // the selected size of the dataet
+            if(imagedata==null)
+            	return false;
+        	metadata.addAll(imagedata.getMetadata());
+        
+            long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
             selected[0]=1;
             if(selected.length>2)
             	selected[2]=2;
@@ -122,10 +126,10 @@ public class CosmoSkymedImage extends SarImageReader {
 
             setMetadata(WIDTH, xSize);
             setMetadata(HEIGHT, ySize);
-
+            
             bounds = new Rectangle(0, 0, xSize, ySize);
+            
             gcps = new ArrayList<Gcp>();
-
 
             for (Object o : metadata) {
                 Attribute a = (Attribute) o;
@@ -415,6 +419,12 @@ public class CosmoSkymedImage extends SarImageReader {
 	@Override
 	public File getOverviewFile() {
 		return new File(this.overview);
+	}
+
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return true;
 	}
 
 
