@@ -58,7 +58,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                             config.put("url", url);
                             AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
                             GeometricLayer gl = shpio.read(l.getImageReader());
-                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, gl, (IImageLayer) l);
+                            addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
                         } catch (Exception ex) {
                             Logger.getLogger(AddGenericWorldLayerAction.class.getName()).log(Level.SEVERE, null, ex);
                         }

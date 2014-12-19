@@ -161,5 +161,10 @@ public class ThumbnailsImageReader extends SarImageReader {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean supportAzimuthAmbiguity() {
+		return false;
+	}
 }
 
