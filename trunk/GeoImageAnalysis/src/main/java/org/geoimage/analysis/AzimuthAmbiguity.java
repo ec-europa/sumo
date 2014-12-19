@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.cosmo.CosmoSkymedImage;
-import org.geoimage.impl.envi.EnvisatImage;
-import org.geoimage.impl.radarsat.Radarsat1Image;
-import org.geoimage.impl.radarsat.Radarsat2Image;
-import org.geoimage.impl.tsar.TerrasarXImage;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -309,7 +304,7 @@ public class AzimuthAmbiguity {
         this.sumoImage = image;
 
         // Get image type
-        if (!checkImageType()) {
+        if (!image.supportAzimuthAmbiguity()) {
             System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
             return;
         }
@@ -375,24 +370,4 @@ public class AzimuthAmbiguity {
 
     }
 
-    // check if azimuth ambiguity is supported for the current image
-    private boolean checkImageType() {
-        if (sumoImage instanceof EnvisatImage) {
-            return true;
-        }
-        if (sumoImage instanceof Radarsat1Image) {
-            return true;
-        }
-        if (sumoImage instanceof Radarsat2Image) {
-            return true;
-        }
-        if (sumoImage instanceof TerrasarXImage) {
-            return true;
-        }
-        if (sumoImage instanceof CosmoSkymedImage) {
-            return true;
-        }
-
-        return false;
-    }
 }
