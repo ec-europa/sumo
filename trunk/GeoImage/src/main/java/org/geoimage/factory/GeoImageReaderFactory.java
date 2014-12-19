@@ -87,11 +87,12 @@ public class GeoImageReaderFactory {
 	        			cosmo=new CosmoSkymedImage(obj.getName()+"/SBI",obj.getName());
 
 	                if (cosmo.initialise(f)) {
+	                	girList.add(cosmo);
 	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,cosmo.getClass()});
 	                }
-	                if(hObjs.size()>1)
+	                if(girList.size()>1)
 	                	cosmo.setContainsMultipleImage(true);
-	                girList.add(cosmo);
+	                
 	        	}
 	        }else if(parent.contains("S1A")||parent.contains("S1B")){//sentinel 1
 	        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());

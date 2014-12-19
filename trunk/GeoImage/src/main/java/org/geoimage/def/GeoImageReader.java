@@ -190,5 +190,7 @@ public interface GeoImageReader extends GeoMetadata {
     public GeoImageReader clone();
 
     public File getOverviewFile();
+    
+    public boolean supportAzimuthAmbiguity();
 }
 
