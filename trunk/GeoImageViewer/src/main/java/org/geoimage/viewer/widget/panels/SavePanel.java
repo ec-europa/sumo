@@ -208,7 +208,8 @@ public class SavePanel extends javax.swing.JPanel {
 private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
     // remove the previous extension for the file
     String filename = jTextField1.getText();
-    filename = filename.substring(0, filename.lastIndexOf("."));
+    int ii=filename.lastIndexOf(".");
+    filename = filename.substring(0,ii!=-1?ii:filename.length()-1);
     
     int id=(comboSaveFormat.getSelectedIndex()!=-1)?comboSaveFormat.getSelectedIndex():0;
     OptionMenu opt=comboSaveFormat.getItemAt(id);
