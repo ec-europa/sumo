@@ -54,10 +54,6 @@ public class DetectedPixels {
         this.pixsam = new Double(gir.getMetadata(SarImageReader.RANGE_SPACING).toString());
         this.pixrec = new Double(gir.getMetadata(SarImageReader.AZIMUTH_SPACING).toString());
 
-        /*double[] pixelsize = gir.getGeoTransform().getPixelSize();
-        this.pixsam = pixelsize[0];
-        this.pixrec = pixelsize[1];*/
-
         // calculate search window size using pixel size
         if (SEARCHWINDOW > pixsam) {
             this.searchwindowWidth = (int) (SEARCHWINDOW / pixsam);
@@ -65,9 +61,6 @@ public class DetectedPixels {
         if (SEARCHWINDOW > pixrec) {
             this.searchwindowHeight = (int) (SEARCHWINDOW / pixrec);
         }
-        // define the filtering size for boats
-       // this.filterminSize = FILTERminSIZE;
-       // this.filtermaxSize = FILTERmaxSIZE;
     }
 
     private class Pixel {
