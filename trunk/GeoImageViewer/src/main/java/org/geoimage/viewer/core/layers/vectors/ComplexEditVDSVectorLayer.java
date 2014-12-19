@@ -133,8 +133,11 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            config.put(SumoXMLWriter.CONFIG_FILE, file);
 	            
 	            AbstractVectorIO sxml = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO, config);
-	            
-	            sxml.saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader,thresholds,buffer,enl);
+	            float[] ts=new float[thresholds.length];
+	            for(int i=0;i<thresholds.length;i++){
+	            	ts[i]=Float.parseFloat(thresholds[i]);
+	            }
+	            ((SumoXMLWriter)sxml).saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),projection,reader,ts,buffer,enl);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            
 	            break;
