@@ -830,7 +830,7 @@ public class DetectedPixels {
     //  (c) H. Greidanus 2008
 
     //  Subroutines: none
-    public double[] LenWidHedd(List<int[]> Clust, double[] Pixsz) {
+    public double[] LenWidHedd(List<int[]> clust, double[] pixsz) {
         double Len = 0.0;
         double Wid = 0.0;
         double Hed = Double.NaN;
@@ -842,7 +842,7 @@ public class DetectedPixels {
         double fRecw = 0.4; //  # Pixels limit for outlier removal in width
         //  (the higher the less outliers removed)
 
-        double Nptc = (double) Clust.size(); //  # Pixels in cluster
+        double Nptc = (double) clust.size(); //  # Pixels in cluster
 
         if (Nptc == 0) {
             //  Empty cluster
@@ -851,27 +851,27 @@ public class DetectedPixels {
 
         //  (Note, Clust is [x; y] for each pixel in the cluster)
         //  Sums, quadratic sums and cross-sum in units of pixels
-        double[] Sj = matlabSumRow(Clust, 1); //  Sigma( x), Sigma( y)
-        double[] Sj2 = matlabSumRow(Clust, 2); //  Sigma( x2), Sigma( y2)
-        double Sjx = matlabSumCross(Clust); //  Sigma( xy)
+        final  double[] sJ = matlabSumRow(clust, 1); //  Sigma( x), Sigma( y)
+        final  double[] sJ2 = matlabSumRow(clust, 2); //  Sigma( x2), Sigma( y2)
+        final  double sJx = matlabSumCross(clust); //  Sigma( xy)
 
-        Cen[0] = Sj[0] / Nptc; //  [centre-x; centre-y]
-        Cen[1] = Sj[1] / Nptc; //  [centre-x; centre-y]
+        Cen[0] = sJ[0] / Nptc; //  [centre-x; centre-y]
+        Cen[1] = sJ[1] / Nptc; //  [centre-x; centre-y]
 
         //System.out.println("\nCen: " + Cen[0] + " " + Cen[1] + " Nptc: " + Nptc + " Sj2: " + Sj2[0] + " " + Sj2[1] + " Sjx: " + Sjx);
 
         // create new cluster
         List<double[]> Clust0 = new ArrayList<double[]>();
-        for (int[] element : Clust) {
+        for (int[] element : clust) {
             Clust0.add(new double[]{(double) element[0] - Cen[0], (double) element[1] - Cen[1]}); //  Cluster pixels wrt centre
         }
         //  Stdev and correlation in units of meters
-        double s2x = (Sj2[0] - Sj[0] * Sj[0] / Nptc) * Pixsz[0] * Pixsz[0]; //  Sigma( x2)- Sigma( x)^2/ N
-        double s2y = (Sj2[1] - Sj[1] * Sj[1] / Nptc) * Pixsz[1] * Pixsz[1]; //  Sigma( y2)- Sigma( y)^2/ N
-        double r2 = (Sjx - Sj[0] * Sj[1] / Nptc) * Pixsz[0] * Pixsz[1]; //  Sigma( xy)- Sigma( x).Sigma( y)/ N
+        final double s2x = (sJ2[0] - sJ[0] * sJ[0] / Nptc) * pixsz[0] * pixsz[0]; //  Sigma( x2)- Sigma( x)^2/ N
+        final double s2y = (sJ2[1] - sJ[1] * sJ[1] / Nptc) * pixsz[1] * pixsz[1]; //  Sigma( y2)- Sigma( y)^2/ N
+        final double r2 = (sJx - sJ[0] * sJ[1] / Nptc) * pixsz[0] * pixsz[1]; //  Sigma( xy)- Sigma( x).Sigma( y)/ N
         //System.out.println("Cen: " + Cen[0] + " " + Cen[1] + " r2 " + r2 + " s2x " + s2x + " s2y " + s2y);
 
-        if ((Math.abs(r2) / (Pixsz[0] * Pixsz[1])) > 1 / 40.0) // (if r2~= 0)
+        if ((Math.abs(r2) / (pixsz[0] * pixsz[1])) > 1 / 40.0) // (if r2~= 0)
         {
             //  Elongated shape (as seen in meters frame)
             double QQ = (s2y - s2x) / (2.0 * r2);
@@ -883,11 +883,11 @@ public class DetectedPixels {
             double w2 = a2 * a2 + 1.0;
             //  Distances of all cluster pixels to best fitting line (in meters)
             //  times sqrt( w1):
-            double[] d1 = matlabSumProdRegmat2D(new double[]{ap * Pixsz[0], -1.0 * Pixsz[1]}, Clust0);
+            double[] d1 = matlabSumProdRegmat2D(new double[]{ap * pixsz[0], -1.0 * pixsz[1]}, Clust0);
             //  Average (absolute) distance (m) of cluster pixels to line (times 2):
             double ma1 = 2.0 * matlabMeanAbs1D(d1) / Math.sqrt(w1);
             //  One pixel distance along direction ap is dl1 meters:
-            double dl1 = Math.sqrt((Pixsz[0] * Pixsz[0] + ap * ap * Pixsz[1] * Pixsz[1]) / w1);
+            double dl1 = Math.sqrt((pixsz[0] * pixsz[0] + ap * ap * pixsz[1] * pixsz[1]) / w1);
             // Wid= max( ma1+ realsqrt( 0.5* dl1* dl1+ ma1* ma1)- dl1, dl1); //  Width (meters)
             // Wid= max( ma1+ realsqrt( 0.5* dl1* dl1+ ma1* ma1), dl1); //  Width (meters)
             //  (The above formula approximates the relation between "ma1" and "Wid"
@@ -895,9 +895,9 @@ public class DetectedPixels {
             //  pixel and a minimum value of 1 pixel for an unresolved target.)
             Wid = Math.max(2.0 * ma1, dl1); //  Width (meters)
             //  Same for perpendicular line:
-            double[] d2 = matlabSumProdRegmat2D(new double[]{a2 * Pixsz[0], -1.0 * Pixsz[1]}, Clust0);
+            double[] d2 = matlabSumProdRegmat2D(new double[]{a2 * pixsz[0], -1.0 * pixsz[1]}, Clust0);
             double ma2 = 2 * matlabMeanAbs1D(d2) / Math.sqrt(w2);
-            double dl2 = Math.sqrt((Pixsz[0] * Pixsz[0] + a2 * a2 * Pixsz[1] * Pixsz[1]) / w2);
+            double dl2 = Math.sqrt((pixsz[0] * pixsz[0] + a2 * a2 * pixsz[1] * pixsz[1]) / w2);
             // Len= max( ma2+ realsqrt( 0.5* dl2* dl2+ ma2* ma2)- dl2, dl2); //  Length (meters)
             // Len= max( ma2+ realsqrt( 0.5* dl2* dl2+ ma2* ma2), dl2); //  Length (meters)
             Len = Math.max(2.0 * ma2, dl2); //  Length (meters)
@@ -912,14 +912,14 @@ public class DetectedPixels {
                 if ((Math.abs(d1[i]) / Math.sqrt(w1) - Wid / 2.0 > fRecw * dl1) || (Math.abs(d2[i]) / Math.sqrt(w2) - Len / 2.0 > fRecl * dl2)) {
                     //  Remove outliers and call recursively
                 } else {
-                    clust1.add(Clust.get(i));
+                    clust1.add(clust.get(i));
                 }
             }
 
             //System.out.println("Clust size : " + Clust.size() + " clust1 size: " + clust1.size());
-            if (clust1.size() < Clust.size()) {
+            if (clust1.size() < clust.size()) {
                 //System.out.println(clust1.size());
-                double[] result = LenWidHedd(clust1, Pixsz);
+                double[] result = LenWidHedd(clust1, pixsz);
                 return result;
             }
 
@@ -941,8 +941,8 @@ public class DetectedPixels {
             ma[1] = ma[1] * 2.0;
             //  Cluster size along [x-axis; y-axis] (meters):
             // Siz= max( ma+ realsqrt( 0.5+ ma.* ma)- 1, 1).* Pixsz;
-            double[] Siz = new double[]{Math.max(ma[0] + Math.sqrt(0.5 + ma[0] * ma[0]), 1) * Pixsz[0], Math.max(ma[1] + Math.sqrt(0.5 + ma[1] * ma[1]), 1) * Pixsz[1]};
-            if (Math.abs(Math.sqrt(s2x / Nptc) - Math.sqrt(s2y / Nptc)) < (Math.max(Pixsz[0], Pixsz[1]) / 40.0)) //  (if s2x== s2y)
+            double[] Siz = new double[]{Math.max(ma[0] + Math.sqrt(0.5 + ma[0] * ma[0]), 1) * pixsz[0], Math.max(ma[1] + Math.sqrt(0.5 + ma[1] * ma[1]), 1) * pixsz[1]};
+            if (Math.abs(Math.sqrt(s2x / Nptc) - Math.sqrt(s2y / Nptc)) < (Math.max(pixsz[0], pixsz[1]) / 40.0)) //  (if s2x== s2y)
             {
                 //  Round shape
                 Len = (Siz[0] + Siz[1]) / 2.0;
@@ -965,7 +965,7 @@ public class DetectedPixels {
 
         Hed = Math.atan(ap); //  Heading in rad [-pi/2..pi/2]
 
-        return new double[]{Clust.size(), Cen[0], Cen[1], Len, Wid, Math.toDegrees(Hed)};
+        return new double[]{clust.size(), Cen[0], Cen[1], Len, Wid, Math.toDegrees(Hed)};
     }
 
     // return the smallest x and the smallest y in the Vector
