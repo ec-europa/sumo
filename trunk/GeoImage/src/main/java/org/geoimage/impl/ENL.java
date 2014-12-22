@@ -76,22 +76,22 @@ public class ENL {
         	String name=((Sentinel1GRD) gir).getSafeFilePath();
         	String folder=new File(name).getParentFile().getAbsolutePath();
         	if(folder.contains("GRDF")){
-        		enl=3.9F;
+        		enl=3.5F;
         	}else if(folder.contains("GRDH")){
         		if(folder.contains("SM")){
-        			enl=34.4F;
+        			enl=27F;
         		}else if(folder.contains("IW")){
-        			enl=4.9F;
+        			enl=4.4F;
         		}else if(folder.contains("EW")){
-        			enl=2.9F;
+        			enl=2.7F;
         		}
         	}else if(folder.contains("GRDM")){
         		if(folder.contains("SM")){
-        			enl=464.7F;
+        			enl=50F;
         		}else if(folder.contains("IW")){
-        			enl=105.7F;
+        			enl=50.0F;
         		}else if(folder.contains("EW")){
-        			enl=12.7F;
+        			enl=9.6F;
         		}
         	}
         }else if (gir instanceof EnvisatImage) {
