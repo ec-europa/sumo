@@ -6,7 +6,8 @@ package org.geoimage.analysis;
 
 import java.awt.Rectangle;
 import java.awt.image.Raster;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -265,20 +266,28 @@ public class VDSAnalysis {
     }
 
     // return a geometry of grid of Tiles
-    public Vector<Geometry> getTiles() {
-        Vector<Geometry> tiles = new Vector<Geometry>();
+    public List<Geometry> getTiles() {
+        
         int horTiles = gir.getWidth() / this.tileSize;
         int verTiles = gir.getHeight() / this.tileSize;
+        
+        List<Geometry> tiles = new ArrayList<Geometry>(horTiles*verTiles*8);
+        
         int[] sizeTile = new int[2];
         // the real size of tiles
         sizeTile[0] = gir.getWidth() / horTiles;
         sizeTile[1] = gir.getHeight() / verTiles;
         GeometryFactory geomFactory = new GeometryFactory();
+        Coordinate[] coo=new Coordinate[2];
         for (int j = 0; j < verTiles; j++) {
-            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(0, j * sizeTile[1]), new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1])}));
+        	coo[0]=new Coordinate(0, j * sizeTile[1]);
+        	coo[1]=new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1]);
+            tiles.add(geomFactory.createLineString(coo));
         }
         for (int i = 0; i < horTiles; i++) {
-            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(i * sizeTile[0], 0), new Coordinate((double)i * sizeTile[0], (double)gir.getHeight())}));
+        	coo[0]=new Coordinate(i * sizeTile[0], 0);
+        	coo[1]=new Coordinate((double)i * sizeTile[0], (double)gir.getHeight());
+            tiles.add(geomFactory.createLineString(coo));
         }
         return tiles;
 

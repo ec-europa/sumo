@@ -161,8 +161,7 @@ public class LookUpTable {
 
     public void parseLUT() {
         try {
-            DataInputStream lutdis = new DataInputStream(
-                    new ByteArrayInputStream(lut));
+            DataInputStream lutdis = new DataInputStream(new ByteArrayInputStream(lut));
             numberOfElements = (int) lutdis.readDouble();
             pcl = lutdis.readDouble();
             nnu = lutdis.readDouble();
