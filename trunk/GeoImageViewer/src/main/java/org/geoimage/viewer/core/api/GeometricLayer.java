@@ -10,6 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -45,7 +46,7 @@ public class GeometricLayer implements Cloneable{
      * @return
      */
     public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) {
-        positions=positions.clone();
+        //positions=positions.clone();
        // positions.projection=null;
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
@@ -60,7 +61,7 @@ public class GeometricLayer implements Cloneable{
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */
     public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, AffineTransform geoTransform) {
-        positions=positions.clone();
+        //positions=positions.clone();
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
                 Point2D.Double temp=new Point2D.Double();
@@ -80,7 +81,7 @@ public class GeometricLayer implements Cloneable{
      * Modify the GeometricLayer so the layer coordinates system matches the world coordinate system (EPSG projection).
      */
     public static GeometricLayer createWorldProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) {
-        positions=positions.clone();
+        //positions=positions.clone();
         positions.projection=projection;
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
@@ -93,8 +94,8 @@ public class GeometricLayer implements Cloneable{
     }
 
     public GeometricLayer(String type) {
-        geoms = new Vector<Geometry>();
-        atts = new Vector<Attributes>();
+        geoms = new ArrayList<Geometry>();
+        atts = new ArrayList<Attributes>();
         this.type=type;
     }
     
@@ -137,7 +138,7 @@ public class GeometricLayer implements Cloneable{
      * @return a SHALLOW COPY of the attributes for Thread safe use
      */
     public List<Attributes> getAttributes() {
-       return new Vector<Attributes>(atts);
+       return new ArrayList<Attributes>(atts);
     }
 
     /**

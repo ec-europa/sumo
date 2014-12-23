@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 class AnalysisParams {
 	//HH HV VH VV
-	public float[] thresholdArrayValues={};
+	public float[] thresholdArrayValues={0,0,0,0};
 	public String pathImg="";
 	public String shapeFile="";
 	public String outputFolder="";
