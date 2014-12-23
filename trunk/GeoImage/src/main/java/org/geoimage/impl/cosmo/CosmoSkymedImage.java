@@ -92,7 +92,7 @@ public class CosmoSkymedImage extends SarImageReader {
         try {
         	this.name=file.getName();
         	if(group!=null&&!group.equalsIgnoreCase(""))
-        		this.name=group+"/"+this.name;
+        		this.name=this.name+"_"+group;
         	
         	h5file = new H5File(file.getAbsolutePath(), H5File.READ);
         	
