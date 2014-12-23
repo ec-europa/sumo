@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
 
@@ -136,18 +137,18 @@ public class Sumo {
 	        	int index=inputParams.indexOf(BUFFER_PARAM);
 	        	if(index!=-1){
 	        		params.buffer=Integer.parseInt(inputParams.get(index+1));
+	        	}else{
+	        		params.buffer=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_BUFFERING_DISTANCE));
 	        	}
 	
 	        	//set the treshold params
 	        	for(int i=0;i<TRESH_PARAMS.length;i++){
 	        		//leggo i valori di threshold se li trovo 
 	        		index=inputParams.indexOf(TRESH_PARAMS[i]);
-	        		if(i!=-1){
+	        		if(index!=-1){
 	        			//li setto nell'array dei threshold con questo ordine HH HV VH VV
-	        			int val=Integer.parseInt(inputParams.get(index+1));
+	        			float val=Float.parseFloat(inputParams.get(index+1));
 	        			params.thresholdArrayValues[i]=val;
-	        		}else{
-	        			//we need a default value??
 	        		}
 	        	}
 	        	
@@ -167,6 +168,9 @@ public class Sumo {
 	        	index=inputParams.indexOf(SHP_FILE);
 	        	if(index!=-1){
 	        		params.shapeFile=inputParams.get(index+1);
+	        	}else{
+	        		//search default shp file
+	        		params.shapeFile=Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK);
 	        	}
 	        } 	
         }
@@ -182,11 +186,10 @@ public class Sumo {
          * -d : path to the directory that contains the image folders
          * 
          * 
-         * -s: specify shape file (if is not passed , use land mask for the analysis)
+         * -sh: specify shape file (if is not passed , use land mask for the analysis)
          * 
          * -gf: specify global file configuration
          * 
-         * -lf: (Y/N) search local file default is N 
          * 
          * -enl : equinvalent number of looks
          * -thh threshold HH 
@@ -195,7 +198,6 @@ public class Sumo {
          * -tvv threshold HV 
          * 
          * -o output dir to store files if no ddbb storage
-         * 
          * 
          *
          */
