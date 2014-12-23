@@ -106,56 +106,13 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         return collection;
     }
 
+   
     /**
      * 
      * @param name
      * @param glayer
      * @return
      */
-    public static SimpleFeatureType createFeatureTypeOLD(String name, GeometricLayer glayer) {
-        try {
-        	
-        	/*String sch = "";
-            String[] schema = glayer.getSchema();
-            String[] types = glayer.getSchemaTypes();
-            for (int i = 0; i < schema.length; i++) {
-                sch += "," + schema[i] + ":" + types[i];
-            }
-            sch = sch.substring(1);*/
-
-            // Tell this shapefile what type of data it will store
-            // Shapefile handle only : Point, MultiPoint, MultiLineString, MultiPolygon
-            StringBuilder sch = new StringBuilder();
-            String[] schema = glayer.getSchema();
-            String[] types = glayer.getSchemaTypes();
-            for (int i = 0; i < schema.length; i++) {
-                sch.append(schema[i]).append(":").append(types[i]);
-            }
-            
-            String geomType = "MultiPolygon";
-            if (glayer.getGeometries().get(0) instanceof Point) {
-                geomType = "Point";
-            }
-            
-            String typeSpec=new StringBuilder("geom:").append(geomType).append(":srid=").append(glayer.getProjection().replace("EPSG:", ""))
-            		.append(",").append(sch.substring(1)).append(",").toString();
-            
-            SimpleFeatureType featureType = DataUtilities.createType(name, typeSpec);
-
-            //to create other fields you can use a string like :
-            // "geom:MultiLineString,FieldName:java.lang.Integer"
-            // field name can not be over 10 characters
-            // use a ',' between each field
-            // field types can be : java.lang.Integer, java.lang.Long,
-            // java.lang.Double, java.lang.String or java.util.Date
-
-            return featureType;
-        } catch (SchemaException ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
-        return null;
-    }
-
     public static SimpleFeatureType createFeatureType(String name, GeometricLayer glayer) {
         try {
 
