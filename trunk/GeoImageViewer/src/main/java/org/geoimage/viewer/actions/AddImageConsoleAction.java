@@ -178,7 +178,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
                 List<GeoImageReader> tempList = null;
                 if (args[1].equals("true")) {
                     GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(fileChooser.getSelectedFile().getAbsolutePath()).get(0);
-                    temp = new TiledBufferedImage(new File(CacheManager.getCacheInstance(gir1.getName()).getPath(), gir1.getFilesList()[0] + "/data"), gir1);
+                    temp = new TiledBufferedImage(new File(CacheManager.getCacheInstance(gir1.getDisplayName()).getPath(), gir1.getFilesList()[0] + "/data"), gir1);
                     if(temp!=null){
                     	tempList=new ArrayList<GeoImageReader>();
                     	tempList.add(temp);
