@@ -50,19 +50,22 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	private String[] thresholds={};
 	private double enl=0;
 	private int buffer=0;
+	private String landMask;
 
 	
-	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String landMask) {
         super(layername, reader, type, layer);
         this.reader=reader;
+        this.landMask=landMask;
     }
 	
-	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer) {
+	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
         super(layername, reader, type, layer);
         this.reader=reader;
         this.thresholds=thresholds;
         this.enl=enl;
         this.buffer=buffer;
+        this.landMask=landMask;
     }
     
     public boolean anyDections(){
@@ -137,7 +140,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            for(int i=0;i<thresholds.length;i++){
 	            	ts[i]=Float.parseFloat(thresholds[i]);
 	            }
-	            ((SumoXMLWriter)sxml).saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),projection,reader,ts,buffer,enl);
+	            ((SumoXMLWriter)sxml).saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),projection,reader,ts,buffer,enl,landMask);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            
 	            break;
@@ -328,7 +331,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
             values.append("null,");
             values.append((Double) attributes.get(VDSSchema.ESTIMATED_LENGTH) < 15 ? "'small'" : ((Double) attributes.get(VDSSchema.ESTIMATED_LENGTH) > 150 ? "'large'" : "'medium'")).append(",");
             values.append("0,");
-            String name = reader.getName();
+            String name = reader.getDisplayName();
             name = name.substring(name.lastIndexOf("/") + 1);
             values.append("'").append(glayer.getName()).append("')");
             postgiscommands.add(values.toString());

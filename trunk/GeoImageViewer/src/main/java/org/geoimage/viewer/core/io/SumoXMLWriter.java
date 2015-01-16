@@ -127,10 +127,12 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		return layer;
 	}
 
-	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,float[] thresholds,int buffer,double enl) {
+	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,float[] thresholds,int buffer,double enl,String landmask) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 		String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+		start=start.replace("Z","");
 		String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
+		stop=stop.replace("Z","");
 		Timestamp tStart=Timestamp.valueOf(start);
 		
 		/**** VDS ANALYSIS ***********/
@@ -140,7 +142,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setBuffer(buffer);
 		vdsA.setDetectorVersion("");
 		
-		vdsA.setThreshOrderChans(new Double(0));
+		
 		
 		int numberOfBands=gir.getNBand();
 	    
@@ -158,20 +160,26 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	    }
 		
 		vdsA.setMatrixratio(new Double(0));
-		
+		 
 		vdsA.setEnl(enl);
 		vdsA.setSumoRunid(0);
 		
 		StringBuilder params=new StringBuilder(""+enl).append(",");
-		if(thresholds!=null && thresholds.length>0)
-			params=params.append(enl).append(",").append(Arrays.toString(thresholds)).append(",0.00");
+		if(thresholds!=null && thresholds.length>0){
+			String th=Arrays.toString(thresholds);
+			th=th.substring(1, th.length()-1);
 			
+			vdsA.setThreshOrderChans(th);
+			params=params.append(enl).append(",").append(th).append(",0.00");
+			
+		}
 		vdsA.setParameters(params.toString());
 		vdsA.setRunTime(format.format(new Date()));
 
 		vdsA.setRunVersion("");
 		vdsA.setRunVersionOri("");
 		
+		vdsA.setLandMaskRead(landmask);
 		
 		
 		/**** VDS TARGETS ***********/
@@ -181,6 +189,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 			Attributes att = gLayer.getAttributes(geom);
 
+			/**Boat section **/
 			// create new boat
 			Boat b = new Boat();
 			// set boat target number
@@ -236,9 +245,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			imageMeta.setTimeStop(format.format(tStop));
 			
 			String sensor=(String)gir.getMetadata(GeoMetadata.SENSOR);
-			format=new SimpleDateFormat("yyyyMMdd_HHmmSSS");
+			format=new SimpleDateFormat("yyyyMMdd_HHmmSS");
 			imageMeta.setImId(sensor+"_"+format.format(tStart));
-			imageMeta.setImageName(gir.getName());
+			imageMeta.setImageName(((SarImageReader)gir).getImgName());
 			
 			imageMeta.setSensor(sensor);
 			

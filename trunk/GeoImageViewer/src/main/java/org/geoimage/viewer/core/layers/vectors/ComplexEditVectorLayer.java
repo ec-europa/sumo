@@ -126,8 +126,6 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
 	                        if (polygon.getCoordinates().length < 1) {
 	                            continue;
 	                        }
-                        
-                        
 	                        int interior=polygon.getNumInteriorRing();
 
 	                        if(interior>0){
