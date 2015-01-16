@@ -158,7 +158,7 @@ import org.geoimage.viewer.util.Constant;
             onbuilding = true;
             
             //search file in cache
-            File f=CacheManager.getCacheInstance(gir.getName()).getOverviewFile();
+            File f=CacheManager.getCacheInstance(gir.getDisplayName()).getOverviewFile();
             
             //if we have found the overview in cache we use it
             if (f.exists()) {
