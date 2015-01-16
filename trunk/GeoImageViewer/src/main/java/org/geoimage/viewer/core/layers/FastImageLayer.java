@@ -95,7 +95,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 
         setName(gir);
         
-        description = gir.getName();
+        description = gir.getDisplayName();
         activeBand = 0;
      //   double test=Math.log(Math.max(gir.getWidth() , gir.getHeight()))/Math.log(2);
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;
@@ -119,7 +119,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
         if (activeGir.getMetadata() != null) {
             return activeGir.getDescription();
         } else {
-            return activeGir.getName();
+            return activeGir.getDisplayName();
         }
     }
     
@@ -174,7 +174,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
         
         
-	        Cache c=CacheManager.getCacheInstance(activeGir.getName());
+	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
 	        
 	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 	        
@@ -344,11 +344,11 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
-        if (CacheManager.getCacheInstance(activeGir.getName()).contains(file) & !submitedTiles.contains(level + " " + getBandFolder(activeBand) + " " + i + " " + j)) {
+        if (CacheManager.getCacheInstance(activeGir.getDisplayName()).contains(file) & !submitedTiles.contains(level + " " + getBandFolder(activeBand) + " " + i + " " + j)) {
             try {
             	BufferedImage temp =null;
             	try {
-            		temp = ImageIO.read(CacheManager.getCacheInstance(activeGir.getName()).newFile(file));
+            		temp = ImageIO.read(CacheManager.getCacheInstance(activeGir.getDisplayName()).newFile(file));
             	} catch (Exception ex) {
             		logger.warn(ex.getMessage());
                 }	
@@ -464,7 +464,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
             futures.add(0, pool.submit(new Callable<Object[]>() {
 
                 public Object[] call() {
-                	Cache c=CacheManager.getCacheInstance(activeGir.getName());
+                	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
                 	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
                     final File f = c.newFile(ff.toString());
                     if (f == null) {
@@ -630,8 +630,8 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
     
     
     public void setName(GeoImageReader gir){
-    	if(gir.getName()!=null&&!gir.getName().equals(""))
-        	setName(gir.getName());
+    	if(gir.getDisplayName()!=null&&!gir.getDisplayName().equals(""))
+        	setName(gir.getDisplayName());
         else{
         	String temp = gir.getFilesList()[0].replace("\\", "/");
         	String name=temp.substring(temp.lastIndexOf("/") + 1);

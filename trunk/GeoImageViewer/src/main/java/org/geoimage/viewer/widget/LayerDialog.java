@@ -45,7 +45,7 @@ public class LayerDialog extends javax.swing.JDialog {
             }
         }  
         if(layer instanceof IEditable) jTabbedPane1.add("Edit",new EditorPanel((IEditable)layer));
-        //jTabbedPane1.add("Info",new InfoPanel());
+        
         if(layer instanceof ISave) jTabbedPane1.add("Save",new SavePanel((ISave)layer));
         if(layer instanceof ISelect) jTabbedPane1.add("Select",new SelectPanel((ISelect)layer));
         pack();
@@ -64,6 +64,8 @@ public class LayerDialog extends javax.swing.JDialog {
         getContentPane().setLayout(new java.awt.GridLayout(1, 1));
         getContentPane().add(jTabbedPane1);
         jTabbedPane1.getAccessibleContext().setAccessibleName("Image Settings");
+        
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

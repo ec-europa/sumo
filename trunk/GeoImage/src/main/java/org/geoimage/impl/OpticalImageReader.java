@@ -43,7 +43,7 @@ public abstract class OpticalImageReader implements GeoImageReader, OpticalMetad
         return this.band;
     }
 
-    public String getName() {
+    public String getDisplayName() {
         return name;
     }
 

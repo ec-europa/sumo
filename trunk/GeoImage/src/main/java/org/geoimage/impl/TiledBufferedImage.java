@@ -329,8 +329,8 @@ public class TiledBufferedImage implements GeoImageReader {
         return gir.getFrameLatLon(xSize,ySize);
     }
 
-    public String getName() {
-        return gir.getName();
+    public String getDisplayName() {
+        return gir.getDisplayName();
     }
 
     public int getWidth() {

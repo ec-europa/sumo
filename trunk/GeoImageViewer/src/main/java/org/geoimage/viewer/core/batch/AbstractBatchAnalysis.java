@@ -141,7 +141,7 @@ public abstract class AbstractBatchAnalysis {
 	           config.put(SumoXMLWriter.CONFIG_FILE, file);
     		   newWriter.setConfig(config);
     		   newWriter.saveNewXML(FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable()), 
-    				   params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl);
+    				   params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
     	   }
         }
 	}

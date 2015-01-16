@@ -316,7 +316,8 @@ public class TerrasarXImage extends SarImageReader {
     @Override
     public boolean initialise(File file) {
     	 try {
-    		 this.name=file.getName();
+    		 this.displayName=file.getName();
+    		 this.imgName=file.getParentFile().getName();
     		 
 	    	setFile(file);
 	    	parseProductXML(productxml);
@@ -515,7 +516,7 @@ public class TerrasarXImage extends SarImageReader {
             doc = builder.build(productxml);
             Element atts = doc.getRootElement().getChild("productInfo");
             setMetadata(SATELLITE, new String("TerraSAR-X"));
-            setMetadata(SENSOR, atts.getChild("acquisitionInfo").getChild("sensor").getText());
+            setMetadata(SENSOR, "TX");//atts.getChild("acquisitionInfo").getChild("sensor").getText());
             String pols = "";
             for (Object o : atts.getChild("acquisitionInfo").getChild("polarisationList").getChildren("polLayer")) {
                 Element elem = (Element) o;
@@ -647,7 +648,7 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
         return image.getImageFile().getName();
     }
 
@@ -673,5 +674,10 @@ public class TerrasarXImage extends SarImageReader {
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return true;
+	}
+
+	@Override
+	public String getImgName() {
+		return imgName;
 	}
 }

@@ -282,7 +282,7 @@ public abstract class Sentinel1 extends SarImageReader {
             	strPol=strPol.concat(p).concat(" ");
             }
             setMetadata(POLARISATION, strPol);
-            setMetadata(SENSOR, "Sentinel-1");
+            setMetadata(SENSOR, "S1");
             
             //annotation header informations
             AdsHeader header=annotationReader.getHeader();
@@ -331,12 +331,18 @@ public abstract class Sentinel1 extends SarImageReader {
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
     	try{
         	return tiffImages.get(getBandName(band)).getImageFile().getName();
     	}catch(Exception e){
     		return "S1"+System.currentTimeMillis();
     	}		
+    }
+    
+    @Override
+    public String getImgName() {
+       	return tiffImages.get(getBandName(band)).getImageFile().getParentFile().getName();
+    		
     }
 
     public String getInternalImage() {

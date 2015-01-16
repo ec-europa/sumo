@@ -93,7 +93,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
     @Override
     public boolean initialise(File file) {
     	try {
-    		this.name=file.getName();
+    		this.displayName=file.getName();
 	    	setFile(file);
 	    	parseProductXML(productxml);
 	    	tiffImages = getImages();

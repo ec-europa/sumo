@@ -37,7 +37,7 @@ public class ThumbnailsImageReader extends SarImageReader {
         overview = tm.getOverview();
         size = tm.getImageSize();
         ratio = new float[]{overview.getWidth()/(1f*size[0]),overview.getHeight()/(1f*size[1])};
-        name = "Thumbnails";
+        displayName = "Thumbnails";
         xSize = size[0];
         ySize = size[1];
     }
@@ -165,6 +165,11 @@ public class ThumbnailsImageReader extends SarImageReader {
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return false;
+	}
+
+	@Override
+	public String getImgName() {
+		return displayName;
 	}
 }
 
