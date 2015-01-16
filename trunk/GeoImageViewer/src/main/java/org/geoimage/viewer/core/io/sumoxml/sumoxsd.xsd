@@ -131,7 +131,7 @@
 				
 				
 				<!-- correspond to pol/polnumeric from sat_image_metadata    -->	
-				<xs:element name="threshOrderChans" type="xs:double" minOccurs="0"/>
+				<xs:element name="threshOrderChans" type="xs:string" minOccurs="0"/>
 
 				<!-- thresh values are used only if the polarization channel is used in the VDS analysis -->
 				<xs:element name="threshHH" type="xs:float" minOccurs="0"/>
@@ -141,6 +141,7 @@
 				
 				<!-- buffer for land mask used in vds_analysis -->
 				<xs:element name="buffer" type="xs:int" />
+				<xs:element name="land_mask_read" type="xs:string" />
 				<xs:element name="matrixratio" type="xs:double" minOccurs="0"/>
 				
 				<!-- number of boats detected -->

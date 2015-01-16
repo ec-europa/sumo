@@ -186,7 +186,7 @@ public class VDSAnalysis {
                     // create raster mask
                     Raster rastermask = null;
                     rastermask = (mask[0].rasterize(new Rectangle(tile[0][0], tile[1][0], sizeTile[0], sizeTile[1]), -tile[0][0], -tile[1][0], 1.0)).getData();
-                    // check there are enough sea pixels
+                    //Read pixels for the area and check there are enough sea pixels
                     int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                     int pixelcount = 0;
                     for(int count = 0; count < maskdata.length; count++)
@@ -278,13 +278,15 @@ public class VDSAnalysis {
         sizeTile[0] = gir.getWidth() / horTiles;
         sizeTile[1] = gir.getHeight() / verTiles;
         GeometryFactory geomFactory = new GeometryFactory();
-        Coordinate[] coo=new Coordinate[2];
+        Coordinate[] coo=null;
         for (int j = 0; j < verTiles; j++) {
+        	coo=new Coordinate[2];
         	coo[0]=new Coordinate(0, j * sizeTile[1]);
         	coo[1]=new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1]);
             tiles.add(geomFactory.createLineString(coo));
         }
         for (int i = 0; i < horTiles; i++) {
+        	coo=new Coordinate[2];
         	coo[0]=new Coordinate(i * sizeTile[0], 0);
         	coo[1]=new Coordinate((double)i * sizeTile[0], (double)gir.getHeight());
             tiles.add(geomFactory.createLineString(coo));
@@ -292,4 +294,27 @@ public class VDSAnalysis {
         return tiles;
 
     }
+    
+    
+    /*
+    // return a geometry of grid of Tiles
+    public Vector<Geometry> getTiles() {
+        Vector<Geometry> tiles = new Vector<Geometry>();
+        int horTiles = gir.getWidth() / this.tileSize;
+        int verTiles = gir.getHeight() / this.tileSize;
+        int[] sizeTile = new int[2];
+        // the real size of tiles
+        sizeTile[0] = gir.getWidth() / horTiles;
+        sizeTile[1] = gir.getHeight() / verTiles;
+        GeometryFactory geomFactory = new GeometryFactory();
+        for (int j = 0; j < verTiles; j++) {
+            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(0, j * sizeTile[1]), new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1])}));
+        }
+        for (int i = 0; i < horTiles; i++) {
+            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(i * sizeTile[0], 0), new Coordinate((double)i * sizeTile[0], (double)gir.getHeight())}));
+        }
+        return tiles;
+
+    }*/
+    
 }
