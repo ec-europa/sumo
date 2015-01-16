@@ -52,7 +52,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
         new Thread(new Runnable() {
 
             public void run() {
-                il.addLayer((ILayer)(FactoryLayer.createVectorLayer(type, layer, il.getImageReader())));
+                il.addLayer((ILayer)(FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"")));
             }
         }).start();
     }
