@@ -83,7 +83,7 @@ public class Radarsat1Image extends SarImageReader {
 
     @Override
     public String[] getFilesList() {
-        return new String[]{name, lea == null ? "No LEA" : lea.toString(), tra == null ? "No TRA" : tra.toString()};
+        return new String[]{displayName, lea == null ? "No LEA" : lea.toString(), tra == null ? "No TRA" : tra.toString()};
     }
 
     /**
@@ -93,7 +93,8 @@ public class Radarsat1Image extends SarImageReader {
     @Override
     public boolean initialise(File f) {
         try {
-        	this.name=f.getName();
+        	super.imgName=f.getParentFile().getName();
+        	this.displayName=f.getName();
         	setFile(f);
             if (dat == null) {
                 return false;
@@ -130,7 +131,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     public void setFile(File imageFile) {
-        name = imageFile.getPath();
+        displayName = imageFile.getPath();
         try {
             dat = new RandomAccessFile(imageFile, "r");
             directory = imageFile.getParent();
@@ -787,6 +788,10 @@ public class Radarsat1Image extends SarImageReader {
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return true;
+	}
+	@Override
+	public String getImgName() {
+		return imgName;
 	}
 }
 

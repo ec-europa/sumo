@@ -28,7 +28,8 @@ import org.geotools.referencing.GeodeticCalculator;
 public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 
     protected static int MAXTILESIZE = 16 * 1024 * 1024;
-    protected String name = "";
+    protected String displayName = "";
+    protected String imgName = "";
     protected List<Gcp> gcps;
     private HashMap<String, Object> metadata = new HashMap<String, Object>();
     protected GeoTransform geotransform;
@@ -38,9 +39,14 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
     BufferedImage overViewImage;
 
 
-	
-	public String getName() {
-        return name;
+    /**
+     * used for XML
+     */
+	public abstract String getImgName();
+    
+    
+	public String getDisplayName() {
+        return displayName;
     }
 
     public abstract int getWidth();

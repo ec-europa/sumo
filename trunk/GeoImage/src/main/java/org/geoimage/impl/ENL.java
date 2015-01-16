@@ -50,8 +50,8 @@ public class ENL {
         float enl = 1;
         if (gir instanceof Radarsat1Image) {
             int ENLColumn = 0, ENLLine = 0;
-            String processor = (String) gir.getMetadata().get(gir.PROCESSOR);
-            String mode = "" + ((String)gir.getMetadata().get(gir.MODE));
+            String processor = (String) gir.getMetadata().get(SarImageReader.PROCESSOR);
+            String mode = "" + ((String)gir.getMetadata().get(SarImageReader.MODE));
             if (processor.charAt(0) == 'K' || processor.charAt(0) == 'S') {
                 ENLColumn = 0;
             } else {
@@ -66,7 +66,7 @@ public class ENL {
             if (mode.equalsIgnoreCase("w")) {
                 ENLLine = 2;
             }
-            if (((String)gir.getMetadata().get(gir.PRODUCT)).equalsIgnoreCase("scn")) {
+            if (((String)gir.getMetadata().get(SarImageReader.PRODUCT)).equalsIgnoreCase("scn")) {
                 ENLLine = 3;
             }
             enl = radarsatENLArray[ENLLine][ENLColumn];
@@ -78,7 +78,7 @@ public class ENL {
         	if(folder.contains("GRDF")){
         		enl=3.5F;
         	}else if(folder.contains("GRDH")){
-        		if(folder.contains("SM")){
+        		if(folder.matches(".*S(.){1}_GRDH.*")){
         			enl=27F;
         		}else if(folder.contains("IW")){
         			enl=4.4F;
@@ -86,7 +86,7 @@ public class ENL {
         			enl=2.7F;
         		}
         	}else if(folder.contains("GRDM")){
-        		if(folder.contains("SM")){
+        		if(folder.matches(".*S(.){1}_GRDM.*")){
         			enl=50F;
         		}else if(folder.contains("IW")){
         			enl=50.0F;

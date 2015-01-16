@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Array;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,15 +15,15 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.SarImageReader;
-import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.Gcp;
-
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.object.Attribute;
 import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5ScalarDS;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
+import org.geoimage.factory.GeoTransformFactory;
+import org.geoimage.impl.Gcp;
 
 /**
  * Class to read Cosmo Skymed Images in hdf5 format.
@@ -90,9 +89,11 @@ public class CosmoSkymedImage extends SarImageReader {
     @SuppressWarnings("unchecked")
 	public boolean initialise(File file) {
         try {
-        	this.name=file.getName();
+        	this.imgName=file.getName();
+        	this.imgName=this.imgName.substring(0, this.imgName.lastIndexOf("."));
+        	this.displayName=file.getName();
         	if(group!=null&&!group.equalsIgnoreCase(""))
-        		this.name=this.name+"_"+group;
+        		this.displayName=this.displayName+"_"+group;
         	
         	h5file = new H5File(file.getAbsolutePath(), H5File.READ);
         	
@@ -222,6 +223,7 @@ public class CosmoSkymedImage extends SarImageReader {
 
 
             }
+            setMetadata(SENSOR,"CS");
             if (("" + getMetadata(TYPE)).startsWith("SCS")) {
                 complex = true;
             }
@@ -427,6 +429,9 @@ public class CosmoSkymedImage extends SarImageReader {
 		return true;
 	}
 
-
+	@Override
+	public String getImgName() {
+		return imgName;
+	}
 	
 }

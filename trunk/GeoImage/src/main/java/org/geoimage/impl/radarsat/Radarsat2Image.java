@@ -74,7 +74,8 @@ public class Radarsat2Image extends SarImageReader {
     @Override
     public boolean initialise(File f) {
     	try {
-    		this.name=f.getName();
+    		super.imgName=f.getParentFile().getName();
+    		this.displayName=f.getName();
     		
     		SAXBuilder builder = new SAXBuilder();
     		setFile(f);
@@ -463,6 +464,10 @@ public class Radarsat2Image extends SarImageReader {
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return true;
+	}
+	@Override
+	public String getImgName() {
+		return imgName;
 	}
 }
 

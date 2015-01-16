@@ -44,10 +44,10 @@ public class ImageTiler {
             for (int h = 0; h < powerI; h++) {
                 for (int w = 0; w < powerI; w++) {
                     String file = cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png";
-                    if (!CacheManager.getCacheInstance(gir.getName()).contains(file)) {
+                    if (!CacheManager.getCacheInstance(gir.getDisplayName()).contains(file)) {
                         try {
                             int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE - xpadding, h * numI * Constant.TILE_SIZE - ypadding, numI * Constant.TILE_SIZE, numI * Constant.TILE_SIZE, Constant.TILE_SIZE, Constant.TILE_SIZE,gir.getWidth(),gir.getHeight(), true);
-                            File f = CacheManager.getCacheInstance(gir.getName()).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
+                            File f = CacheManager.getCacheInstance(gir.getDisplayName()).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
                             ImageIO.write(createImage(t, Constant.TILE_SIZE, Constant.TILE_SIZE, gir), "png", f);
 
                         } catch (IOException ex) {

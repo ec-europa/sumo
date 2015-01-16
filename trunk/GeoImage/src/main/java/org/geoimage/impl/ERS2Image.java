@@ -18,7 +18,7 @@ public class ERS2Image extends EnvisatImage {
 
     @Override
     public boolean initialise(File f) {
-    	this.name=f.getName();
+    	this.displayName=f.getName();
         
     	boolean result = super.initialise(f);
         
