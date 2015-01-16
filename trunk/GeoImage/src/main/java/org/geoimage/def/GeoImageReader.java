@@ -31,7 +31,7 @@ public interface GeoImageReader extends GeoMetadata {
      *
      * @return the name of the image
      */
-    public String getName();
+    public String getDisplayName();
 
     /**
      *

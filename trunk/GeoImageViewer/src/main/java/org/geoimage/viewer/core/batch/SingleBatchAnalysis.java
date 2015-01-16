@@ -38,7 +38,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 			}	
 			
 			analizeImage(reader,masks,params);
-			saveResults(reader.getName(),masks,reader);
+			saveResults(reader.getDisplayName(),masks,reader);
 		}	
 	}	
 }

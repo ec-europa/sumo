@@ -87,7 +87,7 @@ public class GeotiffImage extends SarImageReader {
     @Override
     public boolean initialise(File f) {
         try {
-           this.name=f.getName();
+           this.displayName=f.getName();
         	
            this.tfw=f;
            
@@ -479,6 +479,11 @@ public class GeotiffImage extends SarImageReader {
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return false;
+	}
+
+	@Override
+	public String getImgName() {
+		return displayName;
 	}
 }
 

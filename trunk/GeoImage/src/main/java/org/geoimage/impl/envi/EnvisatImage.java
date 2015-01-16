@@ -85,7 +85,8 @@ public class EnvisatImage extends SarImageReader {
 
     @Override
     public boolean initialise(File file) {
-    	this.name=file.getName();
+    	super.imgName=file.getParentFile().getName();
+    	this.displayName=file.getName();
     	this.file=file;
         fss = null;
         try {
@@ -123,7 +124,7 @@ public class EnvisatImage extends SarImageReader {
 
                 }
             }
-            name = getFilesList()[0]; //String) getMetadata("PRODUCT");
+            displayName = getFilesList()[0]; //String) getMetadata("PRODUCT");
             extractGcps(fss);
             getWidth();
             setMetadata(WIDTH, xSize);
@@ -603,4 +604,12 @@ public class EnvisatImage extends SarImageReader {
 	public boolean supportAzimuthAmbiguity() {
 		return true;
 	}
+
+	@Override
+	public String getImgName() {
+		
+		return imgName;
+	}
+	
+	
 }
