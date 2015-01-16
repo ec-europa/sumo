@@ -82,7 +82,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
             new Thread(new Runnable() {
 
                 public void run() {
-                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader());
+                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
                     il.addLayer((ILayer) ivl);

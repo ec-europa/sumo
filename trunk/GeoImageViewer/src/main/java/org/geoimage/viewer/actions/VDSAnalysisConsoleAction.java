@@ -153,7 +153,8 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          
                          ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, 
                         		 				(SarImageReader) gir, "point", 
-                        		 				createGeometricLayer(gir, banddetectedpixels),thresholds,ENL,buffer);
+                        		 				createGeometricLayer(gir, banddetectedpixels),
+                        		 				thresholds,ENL,buffer,bufferedMask[0].getName());
                      
                          boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                          if (!agglomerationMethodology.startsWith("d")) {
@@ -262,7 +263,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 
                      ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", 
                     		 																	gir, "point", createGeometricLayer(gir, pixels),
-                    		 																	thresholds,ENL,buffer);
+                    		 																	thresholds,ENL,buffer,bufferedMask[0].getName());
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                      if (!agglomerationMethodology.startsWith("d")) {
                          vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
@@ -469,7 +470,9 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
             atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
             atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
             atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
-            atts.set(VDSSchema.DATE, Timestamp.valueOf("" + gir.getMetadata(GeoMetadata.TIMESTAMP_START)));
+            String t=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+            t=t.replace("Z", "");
+            atts.set(VDSSchema.DATE, Timestamp.valueOf(t));
             atts.set(VDSSchema.VS, 0);
             //compute the direction of the vessel considering the azimuth of the image
             //result is between 0 and 180 degree

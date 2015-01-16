@@ -37,7 +37,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */
-	public static IVectorLayer createVectorLayer(String type, GeometricLayer layer, GeoImageReader reader) {
+	public static IVectorLayer createVectorLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
         String[] types = layer.getSchemaTypes();
         boolean timestamplayer = false;
@@ -48,11 +48,11 @@ public class FactoryLayer {
                 layer.remove(frame);
                 Vector<Geometry> frames = new Vector<Geometry>();
                 frames.add(frame);
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer,landMask);
                 clayer.addGeometries("image frame", Color.BLUE, 1, MaskVectorLayer.LINESTRING, frames, false);
                 return clayer;
             } else {
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer,landMask);
                 return clayer;
             }
 
