@@ -150,5 +150,11 @@ public class PreferencesDB {
         insertIfNotExistRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK,"./resources/coastline/default/Global GSHHS Land Mask.shp");
         insertIfNotExistRow(Constant.PREF_COASTLINES_FOLDER, "./resources/coastline");
         
+        
+        //check pixel for analysis
+        insertIfNotExistRow(Constant.PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS, "0");
+        insertIfNotExistRow(Constant.PREF_YMARGIN_EXCLUSION_PIXEL_ANALYSIS, "0");
+        insertIfNotExistRow(Constant.PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS,"5");
+        
     }
 }
