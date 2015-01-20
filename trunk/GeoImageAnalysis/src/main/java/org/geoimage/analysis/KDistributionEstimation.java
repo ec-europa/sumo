@@ -67,10 +67,15 @@ public class KDistributionEstimation {
     private static String dbport = "5432";
     private double[][][] detectThresh = null;
     private double[][][] tileStat = null;
+    
+    private int xMarginCheck=0;
+    private int yMarginCheck=0;
+    private int minPixelVal=0;
+
 
     // CONSTRUCTOR
     /** the cinstructor */
-    public KDistributionEstimation(float enlf) {
+    public KDistributionEstimation(float enlf,int xMarginCheck,int yMarginCheck,int minPixelVal) {
         String enl = "" + (int) (enlf * 10);
         if (enl.length() == 2) {
             enl = "0" + enl;
@@ -79,6 +84,10 @@ public class KDistributionEstimation {
         URL lut = VDSAnalysis.class.getClassLoader().getResource("ktables/TabK" + enl + "17.r8");
         System.out.println(lut.getPath());
         loadLookUpTable(lut);
+        this.xMarginCheck=xMarginCheck;
+        this.yMarginCheck=yMarginCheck;
+        this.minPixelVal=minPixelVal;
+        
     }
 
     // load the lookup table for thresholds estimation from a file
@@ -256,20 +265,24 @@ public class KDistributionEstimation {
         double val = 0.;
         double std = 0.0;
         int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
-
+        
+        
         // System.out.println("\tclip: "+clip1);
         for (int y = 0; y < sizeTile[1] / 2; y += 2) {
             for (int x = 0; x < sizeTile[0] / 2; x += 2) {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
                     val = data[y*sizeTile[0]+x];
-                    // System.out.println(val);
-                    if (val > 0 && val < clip1) {
-                        mu1 += val;
-                        std += val * val;
-                        tempN1++;
-                    // System.out.print(tempN1+" "+mu1);
-                    }
+                    if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
+	                    	
+	                    // System.out.println(val);
+	                    if (val > 0 && val < clip1) {
+	                        mu1 += val;
+	                        std += val * val;
+	                        tempN1++;
+	                    // System.out.print(tempN1+" "+mu1);
+	                    }
+                    }   
                 } else {
                 }
             }
@@ -290,11 +303,13 @@ public class KDistributionEstimation {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
                     val = data[y*sizeTile[0]+x];
-                    if (val > 0 && val < clip2) {
-                        mu2 += val;
-                        std += val * val;
-                        tempN2++;
-                    }
+                    if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
+	                    if (val > 0 && val < clip2) {
+	                        mu2 += val;
+	                        std += val * val;
+	                        tempN2++;
+	                    }
+                    }    
                 } else {
                 }
             }
@@ -315,11 +330,13 @@ public class KDistributionEstimation {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
                     val = data[y*sizeTile[0]+x];
-                    if (val > 0 && val < clip3) {
-                        mu3 += val;
-                        std += val * val;
-                        tempN3++;
-                    }
+                    if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
+	                    if (val > 0 && val < clip3) {
+	                        mu3 += val;
+	                        std += val * val;
+	                        tempN3++;
+	                    }
+                    }   
                 } else {
                 }
             }
@@ -340,11 +357,13 @@ public class KDistributionEstimation {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
                     val = data[y*sizeTile[0]+x];
-                    if (val > 0 && val < clip4) {
-                        mu4 += val;
-                        std += val * val;
-                        tempN4++;
-                    }
+                    if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
+	                    if (val > 0 && val < clip4) {
+	                        mu4 += val;
+	                        std += val * val;
+	                        tempN4++;
+	                    }
+                    }    
                 } else {
                 }
             }
