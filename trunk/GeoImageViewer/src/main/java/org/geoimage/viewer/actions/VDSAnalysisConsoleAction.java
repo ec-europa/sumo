@@ -35,6 +35,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.Constant;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -53,7 +54,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 	public  class AnalysisProcess implements Runnable {
 			private float ENL;
 			private VDSAnalysis analysis;
-			private IMask[] bufferedMask;
+			private IMask[] bufferedMask=null;
 			private String[] thresholds;
 			private int buffer;
 			private List<ComplexEditVDSVectorLayer>resultLayers;
@@ -70,6 +71,9 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 				this.ENL=ENL;
 				this.analysis=analysis;
 				this.bufferedMask=bufferedMask;
+				/*if(bufferedMask==null){
+					this.bufferedMask=new IMask[1];
+				}*/
 				this.thresholds=thresholds;
 				this.buffer=buffer;
 				this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
@@ -78,9 +82,14 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 			public void run() {
 
                  running = false;
+                 
+                 int xMarginCheck=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS));
+                 int yMarginCheck=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_YMARGIN_EXCLUSION_PIXEL_ANALYSIS));
+                 int minPixelVal=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS));
 
+                 
                  // create K distribution
-                 KDistributionEstimation kdist = new KDistributionEstimation(ENL);
+                 KDistributionEstimation kdist = new KDistributionEstimation(ENL,xMarginCheck,yMarginCheck,minPixelVal);
 
                  DetectedPixels pixels = new DetectedPixels((SarImageReader) gir);
                  // list of bands
@@ -151,10 +160,15 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 
                          String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(thresholds[band]).toString();
                          
+                         
+                         String name="";
+                         if(bufferedMask.length>0){
+                        	name=bufferedMask[0].getName(); 
+                         }
                          ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, 
                         		 				(SarImageReader) gir, "point", 
                         		 				createGeometricLayer(gir, banddetectedpixels),
-                        		 				thresholds,ENL,buffer,bufferedMask[0].getName());
+                        		 				thresholds,ENL,buffer,name);
                      
                          boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                          if (!agglomerationMethodology.startsWith("d")) {
@@ -260,10 +274,15 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
 
                      // look for Azimuth ambiguities in the pixels
                      AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
-
+                     
+                     
+                     String name="";
+                     if ((bufferedMask != null) && (bufferedMask.length > 0)) {
+                    	 name=bufferedMask[0].getName();
+                     }
                      ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", 
                     		 																	gir, "point", createGeometricLayer(gir, pixels),
-                    		 																	thresholds,ENL,buffer,bufferedMask[0].getName());
+                    		 																	thresholds,ENL,buffer,name);
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                      if (!agglomerationMethodology.startsWith("d")) {
                          vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
@@ -302,6 +321,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                  }
                  done = true;
              }
+
          }
 	
 	
@@ -423,6 +443,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                 }
                 
                 Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds,bufferingDistance));
+                t.setName("VDS analysis thread");
                 t.start();
             }
 
