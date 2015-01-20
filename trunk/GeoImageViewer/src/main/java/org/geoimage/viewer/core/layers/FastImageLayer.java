@@ -472,7 +472,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
                     }
 
                     GeoImageReader gir2 = imagePool.get();
-                    String next=new StringBuilder(level)
+                    String next=new StringBuilder().append(level)
                     		.append(" ").append(getBandFolder(activeBand))
                     		.append(" ").append(i)
                     		.append(" ").append(j).toString();
