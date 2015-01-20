@@ -87,7 +87,7 @@ public class DetectedPixels {
 
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
         Pixel boat = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
-        StringBuilder point=new StringBuilder(x).append(" ").append(y);
+        StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
         allDetectedPixels.put(point.toString(), boat);
 
     }
@@ -303,9 +303,16 @@ public class DetectedPixels {
         int id = 0;
         // scan through list of detected pixels
         Collection<Pixel>pixels=allDetectedPixels.values();
+        int count=0;
         for (Pixel p: pixels) {
+        	count++;
+        	
             int xx = p.x;
             int yy = p.y;
+            
+            if((count % 100)==0)
+            	System.out.println("Aggregating pixel Num:"+count + "  x:"+xx+"   y:"+yy );
+            
             // check pixels is not aggregated
             boolean checked = false;
             for (boatPixels boatpixel : listboatneighbours) {
