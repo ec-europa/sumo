@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-
 import org.geoimage.impl.TIFF;
 import org.geoimage.utils.ByteUtils;
 import org.slf4j.Logger;
@@ -22,8 +20,8 @@ public class Sentinel1SLC extends Sentinel1 {
 	protected RandomAccessFile fss;
     protected byte[] preloadedData;
 
-	public Sentinel1SLC(SumoJaxbSafeReader safeReader, String swath) {
-		super(safeReader, swath);
+	public Sentinel1SLC(String swath) {
+		super(swath);
 	}
 	
 

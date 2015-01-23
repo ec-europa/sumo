@@ -3,11 +3,7 @@ package org.geoimage.impl.s1;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Collection;
 
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-
-import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,22 +20,48 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
     protected SentinelDeburstUtil util;
     int lines=0;
 
-	public Sentinel1SLCDebursted(SumoJaxbSafeReader safeReader, String swath) {
-		super(safeReader, swath);
+	public Sentinel1SLCDebursted(String swath) {
+		super(swath);
 	}
 	
 	
 	@Override
 	public boolean initialise(File manifestXML) {
 		boolean init = super.initialise(manifestXML);
-		util=new SentinelDeburstUtil(getSafeReader(),getAnnotationReader());
-		util.readBurstInformation();
-		lines=util.getLinesToRemove();
-		Collection<TIFF>tiffs=tiffImages.values();
-		for(TIFF t:tiffs){
-			t.ySize=t.ySize-util.getLinesToRemove();
-			t.refreshBounds();
-		}
+		/*try {
+			SumoJaxbSafeReader safeReader;
+			
+				safeReader = new SumoJaxbSafeReader(manifestXML);
+			
+			//load the correct annotation file for the current images (per swath) 
+			mainFolder=manifestXML.getParentFile();
+			
+			String bandName=getBandName(0);
+			String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();//new File(safeReader.getHrefsTiff()[0]).getName();
+	        nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
+			String annotationFilePath=new StringBuilder(mainFolder.getAbsolutePath()).append("/annotation/").append(nameFirstFile).toString();
+			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
+	
+			util=new SentinelDeburstUtil(safeReader,annotationReader);
+			
+			
+			util.readBurstInformation();
+			lines=util.getLinesToRemove();
+			Collection<TIFF>tiffs=tiffImages.values();
+			for(TIFF t:tiffs){
+				t.ySize=t.ySize-util.getLinesToRemove();
+				t.refreshBounds();
+			}
+			} catch (JDOMException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		return init;
 	}
 	 
