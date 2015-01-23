@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +52,8 @@ public abstract class Sentinel1 extends SarImageReader {
     protected Map<String, TIFF> tiffImages;
 
     protected List<String> bands = new ArrayList<String>();
-    private SumoJaxbSafeReader safeReader=null;
-    private SumoAnnotationReader annotationReader=null;
+  //  private SumoJaxbSafeReader safeReader=null;
+  //  private SumoAnnotationReader annotationReader=null;
 
 	protected double xposition = 0;
     protected double yposition = 0;
@@ -64,11 +63,15 @@ public abstract class Sentinel1 extends SarImageReader {
     private String swath=null;
     
 	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
+	
+	private String files[]=new String[1];
+    private List<GeolocationGridPoint> points=null;
+    private List<String> tiffs=null;
+    private List<String> polarizations=null;
+    private String safeFilePath=null;
     
-    
-    
-    public Sentinel1(SumoJaxbSafeReader safeReader,String swath) {
-    	this.safeReader=safeReader; 
+    public Sentinel1(String swath) {
+    	//this.safeReader=safeReader; 
     	this.swath=swath;
     }
 
@@ -99,7 +102,6 @@ public abstract class Sentinel1 extends SarImageReader {
         if (gcps == null||gcps.size()==0) {
 	        	
         	//read the ground control points
-        	List<GeolocationGridPoint> points= annotationReader.getGridPoints();
             gcps = new ArrayList<Gcp>(points.size());
 			
             for(int index=0;index<points.size()-1;index++){
@@ -131,16 +133,22 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public String[] getFilesList() {
-    	String files[]=new String[1];
-    	files[0]=this.safeReader.getSafefile().getAbsolutePath();
         return files;
     }
 
+    public boolean initialise(String manifestXML) {
+    	return initialise(new File(manifestXML));
+    }
+    
     @Override
     public boolean initialise(File manifestXML) {
         try {
-        	if(safeReader==null)
-        		safeReader=new SumoJaxbSafeReader(manifestXML);
+        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(manifestXML);
+
+        	files[0]=safeReader.getSafefile().getAbsolutePath();
+        	tiffs=safeReader.getTiffsBySwath(this.swath);
+        	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
+        	safeFilePath=safeReader.getSafefile().getAbsolutePath();
         	
 			//set image properties
             tiffImages=getImages();
@@ -153,10 +161,13 @@ public abstract class Sentinel1 extends SarImageReader {
 			//load the correct annotation file for the current images (per swath) 
 			mainFolder=manifestXML.getParentFile();
 			String annotationFilePath=new StringBuilder(mainFolder.getAbsolutePath()).append("/annotation/").append(nameFirstFile).toString();
-			annotationReader=new SumoAnnotationReader(annotationFilePath);
-		
+			
+			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
+			//read the ground control points
+        	points= annotationReader.getGridPoints();
+			
 			//read and set the metadata from the manifest and the annotation
-			setXMLMetaData(manifestXML);
+			setXMLMetaData(manifestXML,safeReader,annotationReader);
             
             gcps = getGcps();
             if (gcps == null) {
@@ -211,11 +222,7 @@ public abstract class Sentinel1 extends SarImageReader {
     * @return
     */
     private Map<String, TIFF> getImages() {
-    	List<String> tiffs=safeReader.getTiffsBySwath(this.swath);
-    	
         Map<String, TIFF> tiffsMap = new HashMap<String, TIFF>();
-
-    	List<String> polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
@@ -269,7 +276,7 @@ public abstract class Sentinel1 extends SarImageReader {
         tiffImages=null;
     }
 
-    public void setXMLMetaData(File productxml) throws TransformException {
+    private void setXMLMetaData(File productxml,SumoJaxbSafeReader safeReader,SumoAnnotationReader annotationReader) throws TransformException {
 
         	setMetadata(SATELLITE, new String("Sentinel-1"));
         	setMetadata(SWATH,this.swath);
@@ -360,9 +367,9 @@ public abstract class Sentinel1 extends SarImageReader {
 	
 	
 	public String getSafeFilePath(){
-		return safeReader.getSafefile().getAbsolutePath();
+		return safeFilePath;
 	}
-	
+	/*
 	public SumoJaxbSafeReader getSafeReader() {
 		return safeReader;
 	}
@@ -377,7 +384,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
 	public void setAnnotationReader(SumoAnnotationReader annotationReader) {
 		this.annotationReader = annotationReader;
-	}
+	}*/
 
 	@Override
 	public boolean supportAzimuthAmbiguity() {
