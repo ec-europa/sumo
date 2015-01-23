@@ -3,7 +3,6 @@ package org.geoimage.impl.s1;
 import java.awt.Rectangle;
 import java.io.File;
 
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
@@ -20,8 +19,8 @@ public class  Sentinel1GRD extends Sentinel1 {
 	private Logger logger= LoggerFactory.getLogger(Sentinel1GRD.class);
 	protected int[] preloadedData;
     
-    public Sentinel1GRD(SumoJaxbSafeReader safeReader,String swath) {
-    	super(safeReader,swath);
+    public Sentinel1GRD(String swath) {
+    	super(swath);
     }
 
 
