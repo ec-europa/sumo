@@ -145,10 +145,14 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                                  tilesize = 200;
                              }
                              boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
+                             
+                             
+                             
                              banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, 
                             		 removelandconnectedpixels, 
                             		 new int[]{band}, 
                             		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+                            
                          }
                          message.setLength(0);
                          // look for Azimuth ambiguities in the pixels

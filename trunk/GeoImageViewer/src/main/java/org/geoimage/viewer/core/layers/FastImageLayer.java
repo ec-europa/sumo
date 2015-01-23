@@ -56,9 +56,9 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
     private TextureCacheManager tcm;
     
     
-    private Vector<String> submitedTiles;
+    private List<String> submitedTiles;
     private ImagePool imagePool;
-    private List<Future<Object[]>> futures = new Vector<Future<Object[]>>();
+    private List<Future<Object[]>> futures = new ArrayList<Future<Object[]>>();
     private int mylevel = -1;
     private RescaleOp rescale = new RescaleOp(1f, brightness, null);
     private boolean disposed = false;
@@ -83,7 +83,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
         Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "128");
     }
-    @SuppressWarnings("unused")
+
     public FastImageLayer(ILayerManager parent, GeoImageReader gir) {
         super(parent);
         this.activeGir = gir;
@@ -344,11 +344,13 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
-        if (CacheManager.getCacheInstance(activeGir.getDisplayName()).contains(file) & !submitedTiles.contains(level + " " + getBandFolder(activeBand) + " " + i + " " + j)) {
+    	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
+    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName());
+        if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
             try {
             	BufferedImage temp =null;
             	try {
-            		temp = ImageIO.read(CacheManager.getCacheInstance(activeGir.getDisplayName()).newFile(file));
+            		temp = ImageIO.read(cacheInstance.newFile(file));
             	} catch (Exception ex) {
             		logger.warn(ex.getMessage());
                 }	

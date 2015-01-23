@@ -206,11 +206,16 @@ public class KDistributionEstimation {
             initialise(0.0, 0.0);
         }
         for (int j = 0; j < tile[1]; j++) {
-
             for (int i = 0; i < tile[0]; i++) {
 
                 statData = new double[]{1, 1, 1, 1, 1};
-                double[] result = computeStat(256 * 256, i, j, mask);
+                
+                int iniX = startTile[0]+i * sizeTile[0];
+                int iniY = startTile[1]+j * sizeTile[1];
+                int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
+                
+                double[] result = computeStat(256 * 256, i, j, mask,data);
+                
                 for (int k = 0; k < 5; k++) {
                     tileStat[j][i][k] = result[k];
                 }
@@ -219,7 +224,7 @@ public class KDistributionEstimation {
 
                 for (int iter = 0; iter < iteration; iter++) {
 
-                    result = computeStat(clippingThresh, i, j, mask);
+                    result = computeStat(clippingThresh, i, j, mask,data);
                     if (iter != iteration - 1) {
                         clippingThresh = lookUpTable.getClippingThreshFromClippedStd(result[0]);
                     } /*
@@ -250,7 +255,7 @@ public class KDistributionEstimation {
      *            the column of the tile
      * @return the stats of each subtiles
      */
-    protected double[] computeStat(double clip, int i, int j, Raster mask) {
+    protected double[] computeStat(double clip, int iniX, int iniY, Raster mask ,int[] data) {
         double clip1 = statData[1] * clip, clip2 = statData[2] * clip, clip3 = statData[3] * clip, clip4 = statData[4] * clip;
         double mu1 = 0., mu2 = 0., mu3 = 0., mu4 = 0.;
         // used to fill in the zero values for the means
@@ -258,13 +263,12 @@ public class KDistributionEstimation {
         int meancounter = 0;
         int thresholdpixels = Math.min(sizeTile[0] * sizeTile[1] / 4 / 4, 500);
         standardDeviation = 0.0;
-        int iniX = startTile[0]+i * sizeTile[0];
-        int iniY = startTile[1]+j * sizeTile[1];
+        
         double tempN1 = 0., tempN2 = 0., tempN3 = 0., tempN4 = 0.;
         double tempTileN = 0.;
         double val = 0.;
         double std = 0.0;
-        int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
+        //int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
         
         
         // System.out.println("\tclip: "+clip1);
@@ -392,12 +396,20 @@ public class KDistributionEstimation {
                 mu4 = mean;
         }
 
-        standardDeviation = Math.sqrt((standardDeviation - tempTileN) / (tempTileN - 1.));
-        statData[0] = standardDeviation;
-        statData[1] = mu1;
-        statData[2] = mu2;
-        statData[3] = mu3;
-        statData[4] = mu4;
+        if(meancounter!=0){
+	        standardDeviation = Math.sqrt((standardDeviation - tempTileN) / (tempTileN - 1.));
+	        statData[0] = standardDeviation;
+	        statData[1] = mu1;
+	        statData[2] = mu2;
+	        statData[3] = mu3;
+	        statData[4] = mu4;
+        }else{
+        	statData[0] = 0.001;
+	        statData[1] = 100000;
+	        statData[2] = 100000;
+	        statData[3] = 100000;
+	        statData[4] = 100000;
+        }    
         return statData;
     }
 
