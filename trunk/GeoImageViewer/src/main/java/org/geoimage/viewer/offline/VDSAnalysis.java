@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class VDSAnalysis {
 
     public static void main(String[] args) throws Exception {
-        String image = args[0];
+    /*    String image = args[0];
         GeoImageReader gir = GeoImageReaderFactory.createReaderForName(image).get(0);
         if (!(gir instanceof SarImageReader)) {
             return;
@@ -59,9 +59,9 @@ public class VDSAnalysis {
         smio.save(gl, "EPSG:4326",gir);
         //ThumbnailsManager tm=new ThumbnailsManager(args[0]+"dir");
         //tm.createThumbnailsDir(gl, "id", gir, null);
-        gir.dispose();
+        gir.dispose();*/
     }
-
+/*
     private static GeometricLayer createGeometricLayer(DetectedPixels pixels) {
         GeometricLayer out = new GeometricLayer("point");
         GeometryFactory gf = new GeometryFactory();
@@ -81,5 +81,5 @@ public class VDSAnalysis {
             out.setName("VDS Analysis");
         }
         return out;
-    }
+    }*/
 }

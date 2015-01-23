@@ -50,9 +50,8 @@ public class GeoImageReaderFactory {
     	//TODO : add "if" for other reader with multiple images (cosmoskymed)
     	GeoImageReader clone=null;
     	if(gir instanceof Sentinel1SLC){
-			SumoJaxbSafeReader safeReader = ((Sentinel1SLC) gir).getSafeReader();
-			clone=new Sentinel1SLC(safeReader,((Sentinel1SLC) gir).getSwath());
-			clone.initialise(safeReader.getSafefile());
+			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath());
+			clone.initialise(new File(((Sentinel1SLC)clone).getSafeFilePath()));
     	}else {
     		clone=createReaderForName(gir.getFilesList()[0]).get(0);
     	}
@@ -107,9 +106,9 @@ public class GeoImageReaderFactory {
         		Sentinel1 sentinel=null;
         		for(String sw:swath){
         			if(parent.contains("SLC_"))
-        				sentinel=new Sentinel1SLC(safeReader,sw);
+        				sentinel=new Sentinel1SLC(sw);
         			else
-        				sentinel=new Sentinel1GRD(safeReader,sw);
+        				sentinel=new Sentinel1GRD(sw);
         			
         			sentinel.setContainsMultipleImage(multipleImages);
         			if (sentinel.initialise(f)) {

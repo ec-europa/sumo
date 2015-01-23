@@ -43,7 +43,7 @@ public class AzimuthAmbiguity {
     private int halfWindow = defaultWindowsSize / 2;
     private int numSteps = defaultSteps;
     private SarImageReader sumoImage = null;
-    private List<double[]> boatArray = null;
+    private double[][] boatArray = null;
 
     // lits of boats having been filtered out
     List<double[]> ambiguityboatlist = new ArrayList<double[]>();
@@ -53,8 +53,8 @@ public class AzimuthAmbiguity {
     }
 
     // get a geometry layer from the list of ambiguity boats
-    public Vector<Geometry> getAmbiguityboatgeometry() {
-        Vector<Geometry> out = new Vector<Geometry>();
+    public List<Geometry> getAmbiguityboatgeometry() {
+        List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         for (int i = 0; i < ambiguityboatlist.size(); i++) {
             double[] position = ambiguityboatlist.get(i);
@@ -98,7 +98,7 @@ public class AzimuthAmbiguity {
 
     }
 
-    public AzimuthAmbiguity(List<double[]> boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold) {
+    public AzimuthAmbiguity(double[][] boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold) {
 
         setRCSThreshold(rcsThreshold);
         setSizeSearchWindow(windowSize);
@@ -290,14 +290,14 @@ public class AzimuthAmbiguity {
 
     }
 
-    public AzimuthAmbiguity(List<double[]> boatList, SarImageReader image) {
+    public AzimuthAmbiguity(double[][] boatList, SarImageReader image) {
 
         int echo = 4;
         int[] windowCoords, deltaAzimuth;
 
         this.boatArray = boatList;
 
-        if ((boatArray == null) || (boatArray.size() < 1)) {
+        if ((boatArray == null) || (boatArray.length < 1)) {
             return;
         }
 
@@ -322,9 +322,9 @@ public class AzimuthAmbiguity {
         }*/
 
         // scan through the list of boats
-        for (int i = 0; i < boatArray.size(); i++) {
+        for (int i = 0; i < boatArray.length; i++) {
 
-            double[] myBoat = boatArray.get(i);
+            double[] myBoat = boatArray[i];
             int xPos = (int) myBoat[1];
             int yPos = (int) myBoat[2];
             int id = (int) myBoat[0];
@@ -345,12 +345,12 @@ public class AzimuthAmbiguity {
                 continue;
             }*/
 
-            for (int j = 0; j < boatArray.size(); j++) {
+            for (int j = 0; j < boatArray.length; j++) {
 
                 if (j == i) {
                     continue;
                 }
-                double[] testBoat = boatArray.get(j);
+                double[] testBoat = boatArray[j];
 
                 int test_id = (int) testBoat[0];
 
