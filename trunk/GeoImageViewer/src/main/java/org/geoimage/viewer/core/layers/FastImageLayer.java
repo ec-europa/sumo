@@ -27,8 +27,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.ILayerManager;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.Cache;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImagePool;
@@ -44,7 +43,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class FastImageLayer extends LayerManager implements IImageLayer {
+public class FastImageLayer extends AbstractLayer {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FastImageLayer.class);
 
     private GeoImageReader activeGir;
@@ -78,14 +77,15 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
     
     private int maxnumberoftiles = 7;
     static String MaxNumberOfTiles = "Max Number Of Tiles";
+  //  private String description=null;
 
     static {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
         Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "128");
     }
 
-    public FastImageLayer(ILayerManager parent, GeoImageReader gir) {
-        super(parent);
+    public FastImageLayer(GeoImageReader gir) {
+  
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
         pool = Executors.newFixedThreadPool(poolSize);
@@ -95,7 +95,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 
         setName(gir);
         
-        description = gir.getDisplayName();
+  //      description = gir.getDisplayName();
         activeBand = 0;
      //   double test=Math.log(Math.max(gir.getWidth() , gir.getHeight()))/Math.log(2);
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;
@@ -299,7 +299,8 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 		
 		        }
 	        displayDownloading(futures.size());
-	        super.render(context);
+	        //Platform.getCurrentImageLayer().render(context);
+	        Platform.refresh();
 	        if (this.disposed) {
 	            disposeSync();
 	        }
@@ -579,7 +580,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
         	pool.shutdownNow();
         	pool = null;
         }	
-        super.dispose();
+        Platform.getLayerManager().dispose();
         if(activeGir!=null){
         	activeGir.dispose();
         	activeGir = null;
@@ -602,7 +603,7 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
 
         pool.shutdownNow();
         pool = null;
-        super.dispose();
+        Platform.getLayerManager().dispose();
         activeGir.dispose();
         activeGir = null;
         tcm.clear();
@@ -643,5 +644,5 @@ public class FastImageLayer extends LayerManager implements IImageLayer {
         }	
     }
     
-    
+   
 }

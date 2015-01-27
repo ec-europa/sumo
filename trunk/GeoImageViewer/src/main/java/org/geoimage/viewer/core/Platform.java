@@ -220,7 +220,7 @@ public class Platform {
     }
     
     public static void addLayerToCurrentImageLayer(ILayer l) {
-        getCurrentImageLayer().addLayer(l);
+        getLayerManager().addLayer(l);
     }
     
     /** 

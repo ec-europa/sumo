@@ -243,7 +243,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                              vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.square);
                          }
                          if(il!=null)
-                        	 il.addLayer(vdsanalysis);
+                        	 Platform.getLayerManager().addLayer(vdsanalysis);
                          resultLayers.add(vdsanalysis);
                      }
                  }
@@ -320,7 +320,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          vdsanalysisLayer.setDisplaysymbol(MaskVectorLayer.symbol.square);
                      }
                      if(il!=null)
-                    	 il.addLayer(vdsanalysisLayer);
+                    	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
                      resultLayers.add(vdsanalysisLayer);
                  }
                  done = true;
@@ -412,7 +412,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                 //read the land mask
                 mask = new ArrayList<IMask>();
                 //if (args.length > 5) {
-                for (ILayer l : il.getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers()) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                         mask.add((IMask) l);
                     }
@@ -592,7 +592,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         }*/
 
         if (il != null) {
-            for (ILayer l : il.getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers()) {
                 if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(MaskVectorLayer.POINT)) {
                     vectors.add(l.getName());
                 }

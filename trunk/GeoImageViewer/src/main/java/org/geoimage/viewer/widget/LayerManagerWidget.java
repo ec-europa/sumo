@@ -9,6 +9,7 @@ import org.fenggui.Display;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.border.PlainBorder;
 import org.fenggui.util.Color;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 
@@ -19,9 +20,9 @@ import org.geoimage.viewer.core.layers.LayerManager;
 public class LayerManagerWidget extends Container {
 
     public static LayerManagerWidget instance;
-    private LayerManager lm;
+    private ILayer lm;
 
-    public LayerManagerWidget(LayerManager lm, Display display) {
+    public LayerManagerWidget(ILayer lm, Display display) {
         LayerManagerWidget.instance = this;
         this.lm = lm;
         buildWidget(lm, this);
@@ -34,17 +35,20 @@ public class LayerManagerWidget extends Container {
 
     }
 
-    private void buildWidget(final LayerManager lmm, Container parent) {
-        Container c=new LayerWidget(lmm);
+    private void buildWidget(final ILayer l, Container parent) {
+        Container c=new LayerWidget(l);
         parent.addWidget(c);
-        if(!lmm.isActive()) return;
-        for (final ILayer l : lmm.getLayers()) {
+        
+        if(!l.isActive()) return;
+        parent.addWidget(new LayerWidget(l));
+        
+        /*for (final ILayer l : lmm.getLayers()) {
             if (l instanceof LayerManager) {
                buildWidget((LayerManager) l, c);
             } else {
                 parent.addWidget(new LayerWidget(l));
             }
-        }
+        }*/
     }
 
     public static void updateLayout() {
