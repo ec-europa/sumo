@@ -22,6 +22,7 @@ import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
@@ -197,7 +198,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
 	                Platform.getGeoContext().setX(0);
 	                Platform.getGeoContext().setY(0);
 	                //Platform.getGeoContext().setZoom(temp.getWidth() / Platform.getGeoContext().getWidth() + 1);
-	                FastImageLayer newImage = new FastImageLayer( temp);
+	                IImageLayer newImage = new FastImageLayer( temp);
 	                Platform.getLayerManager().addLayer(newImage);
 	                try {
 	                    Thread.sleep(1000);

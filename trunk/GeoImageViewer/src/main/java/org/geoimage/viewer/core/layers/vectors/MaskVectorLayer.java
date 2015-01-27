@@ -28,13 +28,11 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.PickedData;
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.IVectorLayer;
@@ -43,6 +41,7 @@ import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
+import org.geoimage.viewer.core.layers.AbstractLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
  *
  * @author thoorfr
  */
-public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, IClickable, IThreshable {
+public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IMask, IClickable, IThreshable {
 
     public final static String POINT = GeometricLayer.POINT;
     public final static String POLYGON = GeometricLayer.POLYGON;
@@ -91,7 +90,8 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
     
     
     
-    public MaskVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+    public MaskVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+    	super.parent=parent;
         this.name = layername;
         this.reader = reader;
         this.geotransform=reader.getGeoTransform();

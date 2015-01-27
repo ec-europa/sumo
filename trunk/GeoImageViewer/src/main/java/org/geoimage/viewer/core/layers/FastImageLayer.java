@@ -27,7 +27,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.layers.image.Cache;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImagePool;
@@ -43,7 +43,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class FastImageLayer extends AbstractLayer {
+public class FastImageLayer extends AbstractLayer implements IImageLayer {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FastImageLayer.class);
 
     private GeoImageReader activeGir;
@@ -112,6 +112,8 @@ public class FastImageLayer extends AbstractLayer {
         setInitialContrast();
         maxnumberoftiles = Integer.parseInt(Platform.getPreferences().readRow(MaxNumberOfTiles));
         createMatrixTileOrder();
+        
+        
     }
 
     @Override
@@ -580,7 +582,6 @@ public class FastImageLayer extends AbstractLayer {
         	pool.shutdownNow();
         	pool = null;
         }	
-        Platform.getLayerManager().dispose();
         if(activeGir!=null){
         	activeGir.dispose();
         	activeGir = null;
@@ -596,14 +597,14 @@ public class FastImageLayer extends AbstractLayer {
         if(imagePool!=null){
         	imagePool.dispose();
         	imagePool = null;
-        }	
+        }
+        Platform.getLayerManager().removeLayer(this);
     }
 
     private void disposeSync() {
 
         pool.shutdownNow();
         pool = null;
-        Platform.getLayerManager().dispose();
         activeGir.dispose();
         activeGir = null;
         tcm.clear();
@@ -612,7 +613,7 @@ public class FastImageLayer extends AbstractLayer {
         submitedTiles = null;
         imagePool.dispose();
         imagePool = null;
-
+        Platform.getLayerManager().removeLayer(this);
     }
 
     public GeoImageReader getImageReader() {

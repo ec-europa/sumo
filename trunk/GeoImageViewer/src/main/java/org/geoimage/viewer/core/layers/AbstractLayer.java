@@ -1,14 +1,18 @@
 package org.geoimage.viewer.core.layers;
 
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 
 public abstract class AbstractLayer implements ILayer{
 	private String name = "";
 	private boolean active = true;
 	protected boolean isRadio = false;
-	    
 	
+	protected ILayer parent=null;
 	
+	@Override
+	public abstract void render(GeoContext context);
+
 	public boolean isActive() {
         return active;
     }
@@ -34,7 +38,17 @@ public abstract class AbstractLayer implements ILayer{
         isRadio = radio;
     }
     
-   
+    public void init(ILayer parent) {
+		this.parent = parent;
+	}
 
+	
+	public ILayer getParent() {
+		return parent;
+	}
+
+	public void setParent(ILayer parent) {
+		this.parent = parent;
+	}
 	
 }

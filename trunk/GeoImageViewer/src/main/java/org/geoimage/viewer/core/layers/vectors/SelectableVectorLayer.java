@@ -16,6 +16,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.util.GeometricLayerIO;
 
@@ -30,8 +31,8 @@ public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
 
     private String whereClause = null;
 
-    public SelectableVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
-        super(layername, reader, type, layer);
+    public SelectableVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+        super(parent,layername, reader, type, layer);
         buildDatabase(glayer);
     }
 

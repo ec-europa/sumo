@@ -23,6 +23,7 @@ import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
@@ -53,14 +54,14 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	private String landMask;
 
 	
-	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String landMask) {
-        super(layername, reader, type, layer);
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer,String landMask) {
+        super(parent,layername, reader, type, layer);
         this.reader=reader;
         this.landMask=landMask;
     }
 	
-	public ComplexEditVDSVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
-        super(layername, reader, type, layer);
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
+        super(parent,layername, reader, type, layer);
         this.reader=reader;
         this.thresholds=thresholds;
         this.enl=enl;

@@ -17,7 +17,11 @@ public interface ILayer {
     public void render(GeoContext context);
     public boolean isActive();
     public void setActive(boolean active);
+    public void setParent(ILayer parent);
+    public ILayer getParent();
     public boolean isRadio();
     public String getDescription();
     public void dispose();
+    public void init(ILayer parent);
+    
 }

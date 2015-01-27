@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.LayerManager;
 
 /**
  *
@@ -28,7 +28,7 @@ public class GeoImageBatchMode {
 
     public GeoImageBatchMode() {
         instance = this;
-        lm = new LayerManager();
+        lm = LayerManager.getIstanceManager();
         //lm.setName("Layers");
         //lm.setIsRadio(true);
         cl = new ConsoleLayer(null);

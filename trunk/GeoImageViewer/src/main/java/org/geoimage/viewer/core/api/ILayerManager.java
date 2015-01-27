@@ -5,6 +5,7 @@
 
 package org.geoimage.viewer.core.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public interface ILayerManager{// extends ILayer {
 
     public void addLayer(ILayer layer);
     public void removeLayer(ILayer layer);
-    public List<ILayer> getLayers();
+    public HashMap<ILayer,List<ILayer>> getLayers();
+    public List<ILayer> getAllLayers();
 
 }

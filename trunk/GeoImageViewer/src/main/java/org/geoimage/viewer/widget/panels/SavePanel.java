@@ -70,13 +70,13 @@ public class SavePanel extends javax.swing.JPanel {
                 epsg=epsg.replace("EPSG:", "");
             }
         });
-      /*  if(layer instanceof MaskVectorLayer)
-            /*if(((MaskVectorLayer)layer).getParent() instanceof IImageLayer){
+        if(layer instanceof MaskVectorLayer)
+            if(((MaskVectorLayer)layer).getParent() instanceof IImageLayer){
             	OptionMenu opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
             	if (opt==null)
             		opt=comboSaveFormat.getItemAt(0);
                 jTextField1.setText(((IImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
-            } */   
+            }    
     }
 
     /** This method is called from within the constructor to
@@ -181,7 +181,7 @@ public class SavePanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String filename = null;
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
+        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer & l.isActive()) {
                 filename = ((IImageLayer) l).getName();
                 break;

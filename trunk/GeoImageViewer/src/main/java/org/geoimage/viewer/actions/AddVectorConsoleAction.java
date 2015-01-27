@@ -180,7 +180,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
                 }
             }
         }
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
+        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer && l.isActive()) {
                 try {
                     DatabaseDialog dialog = new DatabaseDialog(null, false);
@@ -201,7 +201,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
 
     private void addQuery(String[] args) {
         try {
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer && l.isActive()) {
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");

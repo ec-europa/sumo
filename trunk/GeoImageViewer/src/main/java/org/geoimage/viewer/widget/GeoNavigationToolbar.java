@@ -77,7 +77,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
             // check image has not changed
             {
                 boolean found=false;
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer && l.isActive()) {
                         if (il != (IImageLayer) l) {
                             try {
@@ -248,7 +248,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
             // check image has not changed
             if ((il == null) || (!il.isActive())) {
                 il = null;
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer && l.isActive()) {
                         il = (IImageLayer) l;
                         // update the max zoom value
