@@ -56,7 +56,7 @@ public class TreeLayerManagerWidget extends TransparentWidget {
             }
 
             public ILayer getRoot() {
-                return lm;
+                return null;
             }
         };
     }

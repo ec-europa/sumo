@@ -159,7 +159,7 @@ public class LayerPanel extends javax.swing.JPanel {
         layer.dispose();
         IImageLayer l=Platform.getCurrentImageLayer();
         if(l!=null)
-        	Platform.getCurrentImageLayer().removeLayer(layer);
+        	Platform.getLayerManager().removeLayer(layer);
         else
         	Platform.getLayerManager().removeLayer(layer);
         ((JDialog)this.getParent().getParent().getParent().getParent().getParent()).dispose();
