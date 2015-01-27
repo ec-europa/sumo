@@ -37,6 +37,7 @@ import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
+import org.geoimage.viewer.core.layers.AbstractLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -48,7 +49,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, IClickable {
+public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IClickable {
 
     protected boolean active = true;
     protected  GeoImageReader reader;

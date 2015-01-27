@@ -16,6 +16,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.ILayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -89,8 +90,8 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
 
     private List<additionalgeometries> additionalGeometries = new ArrayList<additionalgeometries>();
 
-    public ComplexEditVectorLayer(String layername,  GeoImageReader reader , String type, GeometricLayer layer) {
-        super(layername, reader, type, layer);
+    public ComplexEditVectorLayer(ILayer parent,String layername,  GeoImageReader reader , String type, GeometricLayer layer) {
+        super(parent,layername, reader, type, layer);
     }
 
     @Override

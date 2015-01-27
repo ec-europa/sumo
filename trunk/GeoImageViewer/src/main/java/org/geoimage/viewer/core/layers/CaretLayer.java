@@ -4,14 +4,12 @@
  */
 package org.geoimage.viewer.core.layers;
 
-import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.*;
-import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.ILayer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
 
 /**
  *
@@ -20,17 +18,16 @@ import org.geoimage.viewer.core.api.IImageLayer;
  * not used anymore
  *
  */
-public class CaretLayer implements ILayer {
+public class CaretLayer extends AbstractLayer {
 
     private boolean active=true;
     private int width;
     private int height;
-    private ILayer parent;
 
     public CaretLayer(IImageLayer parent) {
         this.width = parent.getImageReader().getWidth();
         this.height = parent.getImageReader().getHeight();
-        this.parent=(ILayer) parent;
+        super.setParent((ILayer) parent);
     }
 
     public String getName() {
@@ -69,10 +66,7 @@ public class CaretLayer implements ILayer {
         return false;
     }
 
-    public ILayer getParent() {
-        return parent;
-    }
-
+    
     public String getDescription() {
         return "Position of the view in the Image";
     }

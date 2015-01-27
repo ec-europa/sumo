@@ -84,6 +84,7 @@ public class ConsoleLayer extends AbstractLayer {
         parseActions(plugins);
         parseActionsLandMask(landActions);
         
+        super.init(parent);
     }
     
     /**
@@ -152,7 +153,7 @@ public class ConsoleLayer extends AbstractLayer {
 
         try {
             if (message.startsWith("google")) {
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer) {
                         GeoImageReader gir = ((IImageLayer) l).getImageReader();
                         double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
@@ -169,7 +170,7 @@ public class ConsoleLayer extends AbstractLayer {
 
         try {
             if (message.startsWith("level")) {
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer) {
                         ((IImageLayer) l).level(Integer.parseInt(message.split(" ")[1]));
                     }
@@ -345,9 +346,6 @@ public class ConsoleLayer extends AbstractLayer {
         return false;
     }
 
-    public ILayer getParent() {
-        return null;
-    }
 
     public String getDescription() {
         return "Inline Console";

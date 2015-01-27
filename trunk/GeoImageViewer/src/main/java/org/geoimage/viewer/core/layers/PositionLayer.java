@@ -33,10 +33,11 @@ public class PositionLayer extends AbstractLayer implements  IMouseMove, IClicka
     private Point initPosition = null;
     private Point endPosition = null;
 
-    public PositionLayer(ILayer layer) {
+    public PositionLayer(ILayer parent) {
     	//this.parent = layer;
         this.pd = new PositionDialog(Frame.getFrames()[0], false, this);
         this.pd.setVisible(true);
+        super.init(parent);
     }
 
     public String getName() {

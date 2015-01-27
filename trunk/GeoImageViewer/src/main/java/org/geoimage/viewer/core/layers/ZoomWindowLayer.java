@@ -27,9 +27,8 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class ZoomWindowLayer implements ILayer, IMouseMove {
+public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
 
-    private IImageLayer parent;
     private String name = "";
     private boolean active = true;
     private BufferedImage image;
@@ -43,7 +42,7 @@ public class ZoomWindowLayer implements ILayer, IMouseMove {
     private boolean automaticConstrast=true;
 
     public ZoomWindowLayer(IImageLayer parent) {
-        this.parent = parent;
+        init(parent);
         this.gir=parent.getImageReader();
         //this.gir = GeoImageReaderFactory.create(parent.getImageReader().getFilesList()[0]).get(0);
         this.band = parent.getBand();
@@ -84,7 +83,7 @@ public class ZoomWindowLayer implements ILayer, IMouseMove {
             this.image = createImage(this.gir, position.x - 50, position.y - 50, 100, 100);
             BufferedImageOp temp = null;
             if (!isAutomaticConstrast()) {
-                temp = new RescaleOp(parent.getContrast(), parent.getBrightness(), null);
+                temp = new RescaleOp(((IImageLayer)super.getParent()).getContrast(), ((IImageLayer)super.getParent()).getBrightness(), null);
             } else {
                 float average = 0;
                 for (int i = 0; i < nat.length; i += 20) {
@@ -230,9 +229,6 @@ public class ZoomWindowLayer implements ILayer, IMouseMove {
         return false;
     }
 
-    public ILayer getParent() {
-        return this.parent;
-    }
 
     public String getDescription() {
         return "zoom of the image at full resolution";

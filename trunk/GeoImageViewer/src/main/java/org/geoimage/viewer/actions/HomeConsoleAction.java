@@ -32,7 +32,7 @@ public class HomeConsoleAction implements IConsoleAction {
 
     public boolean execute(String[] args) {
         ILayerManager lm = Platform.getLayerManager();
-        for (ILayer l : lm.getLayers()) {
+        for (ILayer l : lm.getLayers().keySet()) {
             if (l instanceof IImageLayer & l.isActive()) {
                GeoImageReader gir=((IImageLayer)l).getImageReader();
                
