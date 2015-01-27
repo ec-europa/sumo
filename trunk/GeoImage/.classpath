@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/libs"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>

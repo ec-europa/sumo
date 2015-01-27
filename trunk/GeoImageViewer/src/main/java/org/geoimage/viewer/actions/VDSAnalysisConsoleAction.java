@@ -4,7 +4,28 @@
  */
 package org.geoimage.viewer.actions;
 
-import static org.geoimage.viewer.util.Constant.*;
+import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
+import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
+import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
+import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_DISTANCE;
+import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_TILESIZE;
+import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_0;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
+import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
 
 import java.awt.Color;
 import java.sql.Timestamp;
@@ -12,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
@@ -169,7 +189,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                          if(bufferedMask.length>0){
                         	name=bufferedMask[0].getName(); 
                          }
-                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(layerName, 
+                         ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName, 
                         		 				(SarImageReader) gir, "point", 
                         		 				createGeometricLayer(gir, banddetectedpixels),
                         		 				thresholds,ENL,buffer,name);
@@ -284,7 +304,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                      if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                     	 name=bufferedMask[0].getName();
                      }
-                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer("VDS analysis all bands merged", 
+                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
                     		 																	gir, "point", createGeometricLayer(gir, pixels),
                     		 																	thresholds,ENL,buffer,name);
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
@@ -412,7 +432,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
                 //read the land mask
                 mask = new ArrayList<IMask>();
                 //if (args.length > 5) {
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getAllLayers()) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                         mask.add((IMask) l);
                     }
@@ -592,7 +612,7 @@ public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
         }*/
 
         if (il != null) {
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getAllLayers()) {
                 if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(MaskVectorLayer.POINT)) {
                     vectors.add(l.getName());
                 }

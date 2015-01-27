@@ -16,17 +16,16 @@ import org.geoimage.viewer.widget.ThumbnailsDialog;
  *
  * @author thoorfr
  */
-public class ThumbnailsSmallLayer implements ILayer, IClickable {
+public class ThumbnailsSmallLayer extends AbstractLayer implements IClickable {
 
-    private ThumbnailsLayer parent;
     private boolean active = true;
     private Point imagePosition;
     private ThumbnailsDialog pd;
 
     public ThumbnailsSmallLayer(ThumbnailsLayer layer) {
-        this.parent = layer;
         this.pd = new ThumbnailsDialog(Frame.getFrames()[0], false, layer);
         this.pd.setVisible(true);
+        super.init((ILayer)layer);
     }
 
     public String getName() {
@@ -53,9 +52,6 @@ public class ThumbnailsSmallLayer implements ILayer, IClickable {
         return false;
     }
 
-    public ILayer getParent() {
-        return this.parent;
-    }
 
     public String getDescription() {
         return "Gives the positon of the mouse in the image";
@@ -69,7 +65,7 @@ public class ThumbnailsSmallLayer implements ILayer, IClickable {
     public void mouseClicked(Point imagePosition, int button, GeoContext context) {
         this.imagePosition = imagePosition;
         if (active) {
-            pd.setBufferedImage(parent.get(imagePosition));
+            pd.setBufferedImage(((ThumbnailsLayer)super.getParent()).get(imagePosition));
         }
     }
 }

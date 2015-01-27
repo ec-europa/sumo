@@ -25,7 +25,7 @@ import org.geoimage.def.GeoMetadata;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
-import org.geoimage.viewer.core.layers.LayerManager;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 
 /**
  *
@@ -48,7 +48,7 @@ public class WorldWindLayer extends RenderableLayer implements ITime {
     public void render(DrawContext dc) {
         super.render(dc);
         boolean done = false;
-        for (ILayer layer : lm.getLayers()) {
+        for (ILayer layer : lm.getLayers().keySet()) {
             if (layer instanceof IImageLayer) {
                 GeoImageReader gir = ((IImageLayer) layer).getImageReader();
                 Polyline pol = geoms.get(gir);

@@ -33,7 +33,7 @@ public class DeleteConsoleAction implements IConsoleAction {
 
     public boolean execute(String[] args) {
         ILayerManager lm = Platform.getLayerManager();
-        for (ILayer l : lm.getLayers()) {
+        for (ILayer l : lm.getAllLayers()) {
             // delete command
             if (args==null||args.length == 0)
             {
@@ -59,7 +59,7 @@ public class DeleteConsoleAction implements IConsoleAction {
                 if (l instanceof IImageLayer & (l.getName().compareTo(args[0]) == 0))
                 {
                     // loops through the image layer layers
-                    for (ILayer lvector : ((ILayerManager)l).getLayers())
+                    for (ILayer lvector : ((ILayerManager)l).getAllLayers())
                     {
                         if(lvector.getName().compareTo(args[1]) == 0)
                         {

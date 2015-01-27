@@ -5,6 +5,7 @@
 package org.geoimage.viewer.widget;
 
 import java.io.IOException;
+
 import org.fenggui.render.Graphics;
 import org.fenggui.render.Pixmap;
 import org.fenggui.theme.xml.IXMLStreamableException;
@@ -13,7 +14,7 @@ import org.fenggui.tree.ITreeModel;
 import org.fenggui.tree.Tree;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.layers.LayerManager;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 
 /**
  *
@@ -45,7 +46,7 @@ public class TreeLayerManagerWidget extends TransparentWidget {
 
             public ILayer getNode(ILayer parent, int index) {
                 if (parent instanceof ILayerManager) {
-                    return ((ILayerManager) parent).getLayers().get(index);
+                    return null;//((ILayerManager) parent).getLayers().get(index);
                 } else {
                     return null;
                 }
