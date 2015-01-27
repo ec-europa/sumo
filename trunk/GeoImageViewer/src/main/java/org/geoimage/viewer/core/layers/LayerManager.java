@@ -4,29 +4,24 @@
  */
 package org.geoimage.viewer.core.layers;
 
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.GeoContext;
-
-import java.awt.event.KeyEvent;
-
-import org.geoimage.viewer.core.*;
+import org.geoimage.viewer.core.api.IClickable;
+import org.geoimage.viewer.core.api.IKeyPressed;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IMouseMove;
-import org.geoimage.viewer.core.api.ILayer;
-
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.IListenerUser;
 import org.geoimage.viewer.core.api.IMouseDrag;
+import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ITime;
 
 /**
@@ -35,28 +30,18 @@ import org.geoimage.viewer.core.api.ITime;
  */
 public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMouseDrag, IKeyPressed, IListenerUser {
 
-    private boolean active = true;
+    
     List<ILayerListener> listeners = new ArrayList<ILayerListener>();
-    protected List<ILayer> layers = new Vector<ILayer>();
-    private String name = "";
-    protected boolean isRadio = false;
-    private ILayerManager parent;
-    protected String description = "Layer Manager";
-    protected Vector<ILayer> remove = new Vector<ILayer>();
-    protected Vector<ILayer> add = new Vector<ILayer>();
+    protected List<ILayer> layers = new ArrayList<ILayer>();
+  
+    protected List<ILayer> remove = new ArrayList<ILayer>();
+    protected List<ILayer> add = new ArrayList<ILayer>();
+  
 
-    public LayerManager(ILayerManager parent) {
-        this.parent = parent;
+    public LayerManager() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    
     public void render(final GeoContext context) {
         if (this.add.size() > 0) {
             layers.addAll(add);
@@ -97,24 +82,22 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    
+    
+    public void setActive(ILayer layer) {
+        for (ILayer l : layers) {
+            if (l == layer) {
+                l.setActive(true);
+            } else {
+                l.setActive(false);
+            }
+        }
         for (ILayerListener l : listeners) {
-            l.layerClicked(this);
+            l.layerClicked(layer);
         }
     }
 
-    public boolean isRadio() {
-        return isRadio;
-    }
-
-    public void setIsRadio(boolean radio) {
-        isRadio = radio;
-    }
+    
 
     public void setActiveRadioLayer(ILayer layer) {
         for (ILayer l : layers) {
@@ -126,13 +109,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
-    public ILayerManager getParent() {
-        return parent;
-    }
 
-    public String getDescription() {
-        return description;
-    }
 
     public void mouseClicked(Point imagePosition, int button, GeoContext context) {
         for (ILayer l : layers) {
@@ -145,8 +122,8 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     public void dispose() {
-        active = false;
         for (ILayer l : layers) {
+        	l.setActive(false);
             l.dispose();
         }
         layers.clear();
@@ -164,10 +141,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
     public void addLayer(ILayer layer) {
         // if we are adding an image layer turn off all the other image active layers
-        if (layer instanceof IImageLayer) {
+        if (layer instanceof FastImageLayer) {
             // look for other image layers active
             for (ILayer il : layers) {
-                if (il instanceof IImageLayer) {
+                if (il instanceof FastImageLayer) {
                     if (il.isActive()) {
                         il.setActive(false);
                     }
@@ -192,7 +169,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     public List<ILayer> getLayers() {
-        return new Vector(layers);
+        return new ArrayList(layers);
     }
 
     public void mouseDragged(Point initPosition, Point imagePosition, int button, GeoContext context) {

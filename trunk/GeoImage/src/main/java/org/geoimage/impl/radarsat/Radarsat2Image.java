@@ -75,7 +75,6 @@ public class Radarsat2Image extends SarImageReader {
     public boolean initialise(File f) {
     	try {
     		super.imgName=f.getParentFile().getName();
-    		this.displayName=f.getName();
     		
     		SAXBuilder builder = new SAXBuilder();
     		setFile(f);
@@ -87,6 +86,9 @@ public class Radarsat2Image extends SarImageReader {
     		if(tiffImages==null) return false;
     		
             image = tiffImages.values().iterator().next();
+            
+            this.displayName=super.imgName;//+ "  " +image.getImageFile().getName();
+            
             parseProductXML(productxml);
             
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
@@ -468,6 +470,11 @@ public class Radarsat2Image extends SarImageReader {
 	@Override
 	public String getImgName() {
 		return imgName;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
 	}
 }
 

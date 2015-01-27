@@ -48,7 +48,9 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
+import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.Constant;
@@ -82,7 +84,10 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
     private int dyy = 0;
     private boolean onRefresh = false;
     private CacheManager cm;
+    
     private ConsoleLayer cl;
+    private BaseLayer base;
+    
     private TimeBarDialog timeSlider;
     private WWJPanel wwjPanel = null;
     gov.nasa.worldwind.awt.WorldWindowGLCanvas wwjCanvas = null;
@@ -218,14 +223,19 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         /**
          * Real Stuff
          */
-        //setCacheManager(new CacheManager(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache")));
-        //reads the cache from the embedded database SUMO_DB
-        //setCacheManager(new CacheManager(getCachePath()));
-        lm = new LayerManager(null);
-        lm.setName("Layers");
-        lm.setIsRadio(true);
-        cl = new ConsoleLayer();
+        lm = new LayerManager();
+        
+        base=new BaseLayer();
+        base.setName("Layers");
+        base.setIsRadio(true);
+        lm.addLayer(base);
+        
+        cl = new ConsoleLayer(null);
+        cl.setName("Console Layer");
+        cl.setIsRadio(true);
         lm.addLayer(cl);
+        
+        
         infod = new InfoDialog(null, false);
 
         cl.setMenus(getMenuBar());
@@ -465,7 +475,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         display.setSize(mainCanvas.getWidth(), mainCanvas.getHeight());
         new EventBinding(mainCanvas, display);
 
-        LayerManagerWidget lmw = new LayerManagerWidget(lm, display);
+        LayerManagerWidget lmw = new LayerManagerWidget(base, display);
         display.addWidget(lmw);
         {
             FormData fd = new FormData();

@@ -70,13 +70,13 @@ public class SavePanel extends javax.swing.JPanel {
                 epsg=epsg.replace("EPSG:", "");
             }
         });
-        if(layer instanceof MaskVectorLayer)
-            if(((MaskVectorLayer)layer).getParent() instanceof IImageLayer){
+      /*  if(layer instanceof MaskVectorLayer)
+            /*if(((MaskVectorLayer)layer).getParent() instanceof IImageLayer){
             	OptionMenu opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
             	if (opt==null)
             		opt=comboSaveFormat.getItemAt(0);
                 jTextField1.setText(((IImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
-            }    
+            } */   
     }
 
     /** This method is called from within the constructor to
