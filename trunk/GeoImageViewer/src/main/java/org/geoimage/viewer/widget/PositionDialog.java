@@ -35,7 +35,7 @@ public class PositionDialog extends javax.swing.JDialog{
         super(parent, modal);
         initComponents();
         this.layer=player;
-      //  gt=((IImageLayer)layer.getParent()).getImageReader().getGeoTransform();
+        gt=((IImageLayer)layer.getParent()).getImageReader().getGeoTransform();
         this.jComboBox1.setModel(new DefaultComboBoxModel(CRS.getSupportedCodes("EPSG").toArray()));
         this.jComboBox1.getModel().setSelectedItem("4326");
         this.jComboBox1.addItemListener(new ItemListener() {
@@ -78,7 +78,7 @@ public class PositionDialog extends javax.swing.JDialog{
         double[] geo= gt.getGeoFromPixel(imagePosition.x,imagePosition.y, "EPSG:"+epsg);
         this.jLabel5.setText(""+geo[0]);
         this.jLabel6.setText(""+geo[1]);
-   //     this.jLabel8.setText(""+((IImageLayer)layer.getParent()).getImageReader().read(imagePosition.x, imagePosition.y));
+        this.jLabel8.setText(""+((IImageLayer)layer.getParent()).getImageReader().read(imagePosition.x, imagePosition.y));
     }
     
     public void setDistance(final String distance){

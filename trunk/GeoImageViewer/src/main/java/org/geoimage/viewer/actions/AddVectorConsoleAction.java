@@ -429,7 +429,7 @@ public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
                     IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
-                    Platform.getLayerManager().addLayer((ILayer) ivl);
+                    il.addLayer((ILayer) ivl);
                     done = true;
                 }
             }).start();

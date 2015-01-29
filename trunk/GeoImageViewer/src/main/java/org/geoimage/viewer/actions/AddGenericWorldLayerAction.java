@@ -85,7 +85,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                     IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
-                    Platform.getLayerManager().addLayer((ILayer) ivl);
+                    il.addLayer((ILayer) ivl);
                     done = true;
                 }
             }).start();

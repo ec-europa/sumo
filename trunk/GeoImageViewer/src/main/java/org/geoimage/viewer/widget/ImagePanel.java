@@ -268,26 +268,26 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(layer instanceof FastImageLayer){
-            Platform.getLayerManager().addLayer(new ZoomWindowLayer(layer));
+            layer.addLayer(new ZoomWindowLayer(layer));
         }
         else if(layer instanceof ThumbnailsLayer){
-        	Platform.getLayerManager().addLayer(new ThumbnailsSmallLayer((ThumbnailsLayer)layer));
+            layer.addLayer(new ThumbnailsSmallLayer((ThumbnailsLayer)layer));
         }
         Platform.refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    	Platform.getLayerManager().addLayer(new CaretLayer(layer));
+        layer.addLayer(new CaretLayer(layer));
         Platform.refresh();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    	Platform.getLayerManager().addLayer(new PositionLayer(layer));
+        layer.addLayer(new PositionLayer(layer));
         Platform.refresh();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    	Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(jTextField2.getText(), layer.getImageReader(), (String)jComboBox1.getSelectedItem(), new GeometricLayer((String)jComboBox1.getSelectedItem())));
+        layer.addLayer(new SimpleEditVectorLayer(jTextField2.getText(), layer.getImageReader(), (String)jComboBox1.getSelectedItem(), new GeometricLayer((String)jComboBox1.getSelectedItem())));
         Platform.refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 

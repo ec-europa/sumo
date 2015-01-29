@@ -14,13 +14,16 @@ import java.awt.image.WritableRaster;
 import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.widget.ZoomDialog;
 
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 /**
@@ -230,7 +233,7 @@ public class ZoomWindowLayer implements ILayer, IMouseMove {
         return false;
     }
 
-    public ILayer getParent() {
+    public ILayerManager getParent() {
         return this.parent;
     }
 

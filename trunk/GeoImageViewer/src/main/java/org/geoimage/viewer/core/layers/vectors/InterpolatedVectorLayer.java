@@ -364,4 +364,8 @@ public class InterpolatedVectorLayer implements ILayer, IVectorLayer, ISave, ICl
         }
     }
 
+	@Override
+	public ILayerManager getParent() {
+		return Platform.getLayerManager();
+	}
 }

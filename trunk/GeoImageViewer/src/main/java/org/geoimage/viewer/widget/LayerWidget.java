@@ -37,7 +37,7 @@ public class LayerWidget extends Container {
     }
 
     private void createWidget() {
-        setLayoutManager(new RowLayout(false));//!(layer instanceof LayerManager)));
+        setLayoutManager(new RowLayout(!(layer instanceof LayerManager)));
 
         final Button bl = FengGUI.createButton(this, layer.getName());
         bl.addMousePressedListener(new IMousePressedListener() {
@@ -68,7 +68,7 @@ public class LayerWidget extends Container {
             }
         });
 
-        if (layer!=null&&!layer.isActive()) {
+        if (!layer.isActive()) {
             bl.getAppearance().setTextColor(Color.GRAY);
         } else {
             bl.getAppearance().setTextColor(Color.WHITE);
