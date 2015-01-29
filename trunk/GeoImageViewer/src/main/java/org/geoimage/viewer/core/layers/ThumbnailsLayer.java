@@ -13,17 +13,18 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsImageReader;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
+import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -33,7 +34,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  *
  * @author thoorfr
  */
-public class ThumbnailsLayer extends AbstractLayer implements IClickable {
+public class ThumbnailsLayer extends LayerManager implements IClickable, IImageLayer {
 
     private GeometricLayer glayer;
     private String id;
@@ -46,7 +47,8 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
     private GeoImageReader gir;
     private float scale;
 
-    public ThumbnailsLayer(ILayer parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) {
+    public ThumbnailsLayer(ILayerManager parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) {
+        super(parent);
         gir = new ThumbnailsImageReader(tmanager);
         if (projection == null) {
             this.glayer = glayer;
@@ -59,7 +61,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         this.scale=gir.getWidth()/(1f*gir.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
-        Platform.getLayerManager().addLayer(new SimpleEditVectorLayer("analysis", this.getImageReader(), this.glayer.getGeometryType(), this.glayer));
+        addLayer(new SimpleEditVectorLayer("analysis", this.getImageReader(), this.glayer.getGeometryType(), this.glayer));
         setName("Thumbnails Image");
     }
 
@@ -85,7 +87,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         context.setX(0);
         context.setY(0);
         context.setZoom(Math.max(gir.getWidth() / context.getWidth(),gir.getHeight() / context.getHeight()));
-        Platform.getLayerManager().render(context);
+        super.render(context);
     }
 
     public BufferedImage get(Point position) {
@@ -166,16 +168,4 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
     public void level(int levelIncrease) {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseClicked(Point imagePosition, int button, GeoContext context) {
-		// TODO Auto-generated method stub
-		
-	}
 }

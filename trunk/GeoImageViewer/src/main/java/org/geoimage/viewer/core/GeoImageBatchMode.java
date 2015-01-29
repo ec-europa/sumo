@@ -28,10 +28,10 @@ public class GeoImageBatchMode {
 
     public GeoImageBatchMode() {
         instance = this;
-        lm = new LayerManager();
-        //lm.setName("Layers");
-        //lm.setIsRadio(true);
-        cl = new ConsoleLayer(null);
+        lm = new LayerManager(null);
+        lm.setName("Layers");
+        lm.setIsRadio(true);
+        cl = new ConsoleLayer();
         lm.addLayer(cl);
         new Thread(new Runnable() {
             private GeoContext gc=new GeoContext(null);

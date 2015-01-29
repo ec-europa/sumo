@@ -231,7 +231,7 @@ public class AddInterpolatedConsoleAction extends ConsoleAction implements IProg
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.getLayerManager().addLayer(createLayer(id, date, layer, il));
+                il.addLayer(createLayer(id, date, layer, il));
                 done = true;
             }
         }).start();

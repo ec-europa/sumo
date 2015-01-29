@@ -5,8 +5,6 @@
 package org.geoimage.viewer.core.layers.image;
 
 import com.jogamp.opengl.util.texture.Texture;
-
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -32,7 +30,7 @@ public class TextureCacheManager {
         if (count >= max) {
             map.remove(paths[index]);
         }
-        map.put(new File(path).getAbsolutePath(), texture);
+        map.put(path, texture);
         paths[index++] = path;
         if (index >= max) {
             index = 0;
@@ -45,8 +43,7 @@ public class TextureCacheManager {
     }
 
     public Texture getTexture(String path) {
-    	File f=new File(path);
-        return map.get(f.getAbsolutePath());
+        return map.get(path);
     }
 
     public void clear() {

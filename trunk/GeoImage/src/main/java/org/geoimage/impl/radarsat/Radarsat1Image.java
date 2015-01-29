@@ -793,10 +793,5 @@ public class Radarsat1Image extends SarImageReader {
 	public String getImgName() {
 		return imgName;
 	}
-
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
 }
 

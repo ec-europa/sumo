@@ -80,7 +80,7 @@ public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
             new Thread(new Runnable() {
 
                 public void run() {
-                    Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
+                    il.addLayer(new SimpleEditVectorLayer(layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
                     done = true;
                 }
             }).start();

@@ -22,6 +22,7 @@ import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
@@ -140,7 +141,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
             	for(int i=0;i<tempList.size();i++){
             		temp=tempList.get(i);
 	             
-            		FastImageLayer newImage = new FastImageLayer(temp);
+	                IImageLayer newImage = new FastImageLayer(Platform.getLayerManager(), temp);
 	                Platform.getLayerManager().addLayer(newImage);
 	                try {
 	                    Thread.sleep(5000);
@@ -197,7 +198,7 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
 	                Platform.getGeoContext().setX(0);
 	                Platform.getGeoContext().setY(0);
 	                //Platform.getGeoContext().setZoom(temp.getWidth() / Platform.getGeoContext().getWidth() + 1);
-	                FastImageLayer newImage = new FastImageLayer( temp);
+	                IImageLayer newImage = new FastImageLayer(Platform.getLayerManager(), temp);
 	                Platform.getLayerManager().addLayer(newImage);
 	                try {
 	                    Thread.sleep(1000);
@@ -282,9 +283,9 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
         if(csv!=null){
 	        GeometricLayer positions = csv.read(null);
 	        if (positions.getProjection() == null) {
-	            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
+	            Platform.getLayerManager().addLayer(new ThumbnailsLayer(Platform.getLayerManager(), positions, null, "id", new ThumbnailsManager(lastDirectory)));
 	        } else {
-	            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
+	            ThumbnailsLayer tm = new ThumbnailsLayer(Platform.getLayerManager(), positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
 	            Platform.getLayerManager().addLayer(tm);
 	        }
         }    

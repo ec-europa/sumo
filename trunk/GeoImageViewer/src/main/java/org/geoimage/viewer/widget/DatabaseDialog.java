@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
@@ -53,7 +52,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.getLayerManager().addLayer((ILayer)(FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"")));
+                il.addLayer((ILayer)(FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"")));
             }
         }).start();
     }

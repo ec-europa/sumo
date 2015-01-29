@@ -25,12 +25,12 @@ public class CaretLayer implements ILayer {
     private boolean active=true;
     private int width;
     private int height;
-    private ILayer parent;
+    private ILayerManager parent;
 
     public CaretLayer(IImageLayer parent) {
         this.width = parent.getImageReader().getWidth();
         this.height = parent.getImageReader().getHeight();
-        this.parent=(ILayer) parent;
+        this.parent=(ILayerManager) parent;
     }
 
     public String getName() {
@@ -69,7 +69,7 @@ public class CaretLayer implements ILayer {
         return false;
     }
 
-    public ILayer getParent() {
+    public ILayerManager getParent() {
         return parent;
     }
 

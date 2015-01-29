@@ -42,6 +42,7 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.ActionDialog;
@@ -50,7 +51,7 @@ import org.geoimage.viewer.widget.ActionDialog;
  *
  * @author thoorfr
  */
-public class ConsoleLayer extends AbstractLayer {
+public class ConsoleLayer implements ILayer {
 
     private String message = "";
     private String oldMessage = "";
@@ -60,7 +61,7 @@ public class ConsoleLayer extends AbstractLayer {
     private IProgress currentAction = null;
     private final EntityManagerFactory emf;
 
-    public ConsoleLayer(ILayer parent) {
+    public ConsoleLayer() {
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
         
         actions = new HashMap<String, IConsoleAction>();
@@ -345,7 +346,7 @@ public class ConsoleLayer extends AbstractLayer {
         return false;
     }
 
-    public ILayer getParent() {
+    public ILayerManager getParent() {
         return null;
     }
 

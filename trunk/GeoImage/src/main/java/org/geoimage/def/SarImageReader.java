@@ -45,7 +45,9 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 	public abstract String getImgName();
     
     
-	public abstract String getDisplayName(); 
+	public String getDisplayName() {
+        return displayName;
+    }
 
     public abstract int getWidth();
 

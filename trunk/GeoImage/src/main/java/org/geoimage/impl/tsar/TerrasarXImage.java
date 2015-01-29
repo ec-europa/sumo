@@ -316,7 +316,7 @@ public class TerrasarXImage extends SarImageReader {
     @Override
     public boolean initialise(File file) {
     	 try {
-    		 
+    		 this.displayName=file.getName();
     		 this.imgName=file.getParentFile().getName();
     		 
 	    	setFile(file);
@@ -327,8 +327,6 @@ public class TerrasarXImage extends SarImageReader {
        
             //System.out.println(reader.getNumImages(false));
             image = tiffImages.values().iterator().next();
-            this.displayName= this.imgName;//image.getImageFile().getName();
-            
             image.xSize = new Integer(getMetadata(WIDTH).toString());
             image.ySize = new Integer(getMetadata(HEIGHT).toString());
             
@@ -651,7 +649,7 @@ public class TerrasarXImage extends SarImageReader {
 
     @Override
     public String getDisplayName() {
-        return displayName;
+        return image.getImageFile().getName();
     }
 
     public String getInternalImage() {
