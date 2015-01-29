@@ -11,7 +11,7 @@ import org.geoimage.def.GeoImageReader;
  *
  * @author thoorfr
  */
-public interface IImageLayer extends ILayer{
+public interface IImageLayer extends ILayerManager{
 
     public float getContrast();
     public float getBrightness();

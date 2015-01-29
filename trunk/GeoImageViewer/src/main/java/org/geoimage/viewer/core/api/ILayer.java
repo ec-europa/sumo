@@ -18,6 +18,7 @@ public interface ILayer {
     public boolean isActive();
     public void setActive(boolean active);
     public boolean isRadio();
+    public ILayerManager getParent();
     public String getDescription();
     public void dispose();
 }

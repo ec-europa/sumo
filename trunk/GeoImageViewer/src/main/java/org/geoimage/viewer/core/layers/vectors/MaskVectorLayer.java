@@ -833,5 +833,8 @@ public class MaskVectorLayer implements ILayer, IVectorLayer, ISave, IMask, ICli
         return glayer.getGeometries();
     }
 
-	
+	@Override
+	public ILayerManager getParent() {
+		return Platform.getLayerManager();
+	}
 }
