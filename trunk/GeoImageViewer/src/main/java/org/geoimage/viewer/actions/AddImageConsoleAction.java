@@ -142,14 +142,12 @@ public class AddImageConsoleAction extends ConsoleAction implements IProgress {
             		temp=tempList.get(i);
 	             
             		FastImageLayer newImage = new FastImageLayer(temp);
-	                Platform.getLayerManager().addLayer(newImage);
+	                Platform.getLayerManager().addLayer(newImage,i==0);
 	                try {
 	                    Thread.sleep(5000);
 	                } catch (InterruptedException ex) {
 	                    Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
 	                }
-	                
-	                
             	}
             	try {
                     Platform.refresh();
