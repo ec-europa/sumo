@@ -12,6 +12,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.java2d.util.Positioning;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IImageLayer;
@@ -19,13 +20,13 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.widget.PositionDialog;
-import org.geotools.referencing.*;
+import org.geotools.referencing.GeodeticCalculator;
 
 /**
  *
  * @author thoorfr
  */
-public class PositionLayer implements ILayer, IMouseMove, IClickable {
+public class PositionLayer extends AbstractLayer implements  IMouseMove, IClickable {
 
     private IImageLayer parent;
     private boolean active = true;
@@ -35,9 +36,9 @@ public class PositionLayer implements ILayer, IMouseMove, IClickable {
     private Point endPosition = null;
 
     public PositionLayer(IImageLayer layer) {
-        this.parent = layer;
         this.pd = new PositionDialog(Frame.getFrames()[0], false, this);
         this.pd.setVisible(true);
+        super.init(parent);
     }
 
     public String getName() {
@@ -81,9 +82,7 @@ public class PositionLayer implements ILayer, IMouseMove, IClickable {
         return false;
     }
 
-    public ILayerManager getParent() {
-        return this.parent;
-    }
+   
 
     public String getDescription() {
         return "Gives the positon of the mouse in the image";
@@ -98,7 +97,7 @@ public class PositionLayer implements ILayer, IMouseMove, IClickable {
         this.imagePosition = imagePosition;
         if (active) {
             if (initPosition != null) {
-            	GeodeticCalculator gc=Positioning.computeDistance(parent.getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+            	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
     	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
     	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
 
@@ -114,7 +113,7 @@ public class PositionLayer implements ILayer, IMouseMove, IClickable {
             } else if (endPosition == null) {
                 endPosition = imagePosition;
 
-                GeodeticCalculator gc=Positioning.computeDistance(parent.getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+                GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
     	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
     	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
 

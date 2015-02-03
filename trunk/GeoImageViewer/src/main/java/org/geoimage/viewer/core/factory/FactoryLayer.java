@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IMask;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
@@ -48,11 +49,11 @@ public class FactoryLayer {
                 layer.remove(frame);
                 Vector<Geometry> frames = new Vector<Geometry>();
                 frames.add(frame);
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer,landMask);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), reader, layer.getGeometryType(), layer,landMask);
                 clayer.addGeometries("image frame", Color.BLUE, 1, MaskVectorLayer.LINESTRING, frames, false);
                 return clayer;
             } else {
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer,landMask);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), reader, layer.getGeometryType(), layer,landMask);
                 return clayer;
             }
 
@@ -66,10 +67,10 @@ public class FactoryLayer {
                 }
             }
             if (!timestamplayer) {
-                return new SimpleEditVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer);
+                return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), reader, layer.getGeometryType(), layer);
             } else {
                 TimeComponent.setDirty(true);
-                return new TimeVectorLayer(layer.getName(), reader, layer.getGeometryType(), layer, timecolumnname);
+                return new TimeVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), reader, layer.getGeometryType(), layer, timecolumnname);
             }
         }
     }
@@ -84,7 +85,7 @@ public class FactoryLayer {
 	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeoImageReader reader,GeometricLayer layer) {
 		 MaskVectorLayer mask = null;
         try {
-            mask = (new MaskVectorLayer(name, reader,type, layer.clone()));
+            mask = (new MaskVectorLayer(Platform.getCurrentImageLayer(),name, reader,type, layer.clone()));
             //if(bufferingDistance!=0)
             	mask.buffer(bufferingDistance);
         } catch (Exception ex) {

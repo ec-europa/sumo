@@ -17,6 +17,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -35,8 +36,8 @@ public class TimeVectorLayer extends MaskVectorLayer implements ITime {
     private Hashtable<Geometry,Date> datesOfgeoms=new Hashtable<Geometry, Date>();
     private boolean onWork;
 
-    public TimeVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer, String timeColumn) {
-        super(layername, reader, type, layer);
+    public TimeVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer, String timeColumn) {
+        super(parent,layername, reader, type, layer);
         this.timeColumn = timeColumn;
         renderedLayer.addAll(layer.getGeometries());
         for(Geometry geom:renderedLayer){

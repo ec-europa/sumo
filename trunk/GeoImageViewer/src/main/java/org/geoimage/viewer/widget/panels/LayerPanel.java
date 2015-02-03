@@ -157,11 +157,7 @@ public class LayerPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         layer.dispose();
-        IImageLayer l=Platform.getCurrentImageLayer();
-        if(l!=null)
-        	Platform.getCurrentImageLayer().removeLayer(layer);
-        else
-        	Platform.getLayerManager().removeLayer(layer);
+       	Platform.getLayerManager().removeLayer(layer);
         ((JDialog)this.getParent().getParent().getParent().getParent().getParent()).dispose();
         Platform.refresh();
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -31,7 +31,7 @@ public class BandSwitcherConsoleAction implements IConsoleAction {
     }
 
     public boolean execute(String[] args) {
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
+        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer & l.isActive()) {
             	IImageLayer imL=((IImageLayer) l);
             	

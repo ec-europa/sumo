@@ -42,7 +42,7 @@ public class ContrastConsoleAction implements IConsoleAction {
         }
         //manage a slider for changing the contrast
         if(args[0].equals("sl")){
-             for (ILayer l : Platform.getLayerManager().getLayers()) {
+             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer && l.isActive()) {
                 Slider slider = new Slider(true, Slider.CONTRAST);
                 slider.setSize(200, 40);
@@ -68,7 +68,7 @@ public class ContrastConsoleAction implements IConsoleAction {
         // c +(number) to increase the actual contrast
         if (args[0].startsWith("+")) {
             float contrast = Float.parseFloat(args[0].substring(1));
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer & l.isActive()) {
                     ((IImageLayer) l).setContrast(((IImageLayer) l).getContrast() + contrast);
                 }
@@ -76,14 +76,14 @@ public class ContrastConsoleAction implements IConsoleAction {
         // c -(number) to decrease the actual contrast
         } else if (args[0].startsWith("-")) {
             float contrast = Float.parseFloat(args[0].substring(1));
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer & l.isActive()) {
                     ((IImageLayer) l).setContrast(((IImageLayer) l).getContrast() - contrast);
                 }
             }
         } else {
             float contrast = Float.parseFloat(args[0]);
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer & l.isActive()) {
                     ((IImageLayer) l).setContrast(contrast);
                 }
