@@ -51,7 +51,7 @@ public class GeoImageReaderFactory {
     	GeoImageReader clone=null;
     	if(gir instanceof Sentinel1SLC){
 			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath());
-			clone.initialise(new File(((Sentinel1SLC)clone).getSafeFilePath()));
+			clone.initialise(new File(((Sentinel1SLC)gir).getSafeFilePath()));
     	}else {
     		clone=createReaderForName(gir.getFilesList()[0]).get(0);
     	}

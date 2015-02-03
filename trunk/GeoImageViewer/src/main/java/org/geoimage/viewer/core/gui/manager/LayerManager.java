@@ -164,7 +164,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 
     public void mouseClicked(Point imagePosition, int button, GeoContext context) {
-        for (ILayer l : layers.keySet()) {
+        for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IClickable) {
                     ((IClickable) l).mouseClicked(imagePosition, button, context);
@@ -184,7 +184,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
   
 
     public void mouseMoved(Point imagePosition, GeoContext context) {
-        for (ILayer l : layers.keySet()) {
+        for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseMove) {
                     ((IMouseMove) l).mouseMoved(imagePosition, context);
@@ -213,6 +213,27 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
+    public void addLayer(ILayer layer,boolean needActive) {
+        if (needActive && layer instanceof FastImageLayer) {
+            // look for other image layers active
+            for (ILayer il : layers.keySet()) {
+                if (il instanceof FastImageLayer) {
+                    if (il.isActive()) {
+                        il.setActive(false);
+                    }
+                }
+            }
+        }
+        layer.setActive(needActive);
+        // now add layer
+        this.add.add(layer);
+        if (layer instanceof ITime) {
+            TimeComponent.getTimeLayers().add((ITime) layer);
+            TimeComponent.setDirty(true);
+        }
+    }
+    
+    
     public void removeLayer(ILayer layer) {
         layer.setActive(false);
         this.remove.add(layer);
@@ -228,7 +249,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     public void mouseDragged(Point initPosition, Point imagePosition, int button, GeoContext context) {
-        for (ILayer l : layers.keySet()) {
+        for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseDrag) {
                     ((IMouseDrag) l).mouseDragged(initPosition, imagePosition, button, context);
@@ -238,7 +259,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     public void keyPressed(KeyEvent evt) {
-        for (ILayer l : layers.keySet()) {
+        for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IKeyPressed) {
                     ((IKeyPressed) l).keyPressed(evt);

@@ -610,6 +610,11 @@ public class EnvisatImage extends SarImageReader {
 		
 		return imgName;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
 	
 	
 }

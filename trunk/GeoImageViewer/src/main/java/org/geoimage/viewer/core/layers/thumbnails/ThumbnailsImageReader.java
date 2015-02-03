@@ -171,5 +171,9 @@ public class ThumbnailsImageReader extends SarImageReader {
 	public String getImgName() {
 		return displayName;
 	}
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
 }
 

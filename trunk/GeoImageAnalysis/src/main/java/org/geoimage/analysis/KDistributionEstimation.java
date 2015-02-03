@@ -23,7 +23,8 @@ public class KDistributionEstimation {
     /** the size of the processed image */
     protected int[] startTile = {0, 0};
     /** the size of the tile */
-    protected int[] sizeTile;
+    protected int sizeTileX=0;
+    protected int sizeTileY=0;
     /** */
     protected int N;
     /** the stats of subtiles */
@@ -45,7 +46,8 @@ public class KDistributionEstimation {
     private boolean initialisation = false;
 
     // number of tiles (X,Y) for analysis
-    private int[] tile = new int[2];
+    private int nTileX =0;
+    private int nTileY =0;
 
     // number of iteration for the detect threshold estimation
     int iteration = 2;
@@ -151,14 +153,13 @@ public class KDistributionEstimation {
     public void setImageData(SarImageReader gir, int sizeX, int sizeY,
             int numTileX, int numTileY, int sizeTileX, int sizeTileY) {
         this.gir = gir;
-        tile[0] = numTileX;
-        tile[1] = numTileY;
+        nTileX = numTileX;
+        nTileY = numTileY;
         startTile[0] = sizeX;
         startTile[1] = sizeY;
-        sizeTile = new int[2];
-        sizeTile[0] = sizeTileX;
-        sizeTile[1] = sizeTileY;
-        N = sizeTile[0] * sizeTile[1] / 2;
+        this.sizeTileX = sizeTileX;
+        this.sizeTileY = sizeTileY;
+        N = sizeTileX * sizeTileY / 2;
     }
 
     /**
@@ -200,19 +201,19 @@ public class KDistributionEstimation {
     // iteration
     /** the main method launching the process */
     public void estimate(Raster mask) {
-        detectThresh = new double[tile[0]][tile[1]][6];
-        tileStat = new double[tile[1]][tile[0]][5];
+        detectThresh = new double[nTileX][nTileY][6];
+        tileStat = new double[nTileY][nTileX][5];
         if (!initialisation) {
             initialise(0.0, 0.0);
         }
-        for (int j = 0; j < tile[1]; j++) {
-            for (int i = 0; i < tile[0]; i++) {
+        for (int j = 0; j < nTileY; j++) {
+            for (int i = 0; i < nTileX; i++) {
 
                 statData = new double[]{1, 1, 1, 1, 1};
                 
-                int iniX = startTile[0]+i * sizeTile[0];
-                int iniY = startTile[1]+j * sizeTile[1];
-                int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
+                int iniX = startTile[0]+i * sizeTileX;
+                int iniY = startTile[1]+j * sizeTileY;
+                int[] data=gir.readTile(iniX, iniY, sizeTileX, sizeTileY);
                 
                 double[] result = computeStat(256 * 256, i, j, mask,data);
                 
@@ -261,22 +262,22 @@ public class KDistributionEstimation {
         // used to fill in the zero values for the means
         double mean = 0.0;
         int meancounter = 0;
-        int thresholdpixels = Math.min(sizeTile[0] * sizeTile[1] / 4 / 4, 500);
+        int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
         standardDeviation = 0.0;
         
         double tempN1 = 0., tempN2 = 0., tempN3 = 0., tempN4 = 0.;
         double tempTileN = 0.;
         double val = 0.;
         double std = 0.0;
-        //int[] data=gir.readTile(iniX, iniY, sizeTile[0], sizeTile[1]);
+        //int[] data=gir.readTile(iniX, iniY, sizeTileX, sizeTileY);
         
         
         // System.out.println("\tclip: "+clip1);
-        for (int y = 0; y < sizeTile[1] / 2; y += 2) {
-            for (int x = 0; x < sizeTile[0] / 2; x += 2) {
+        for (int y = 0; y < sizeTileY / 2; y += 2) {
+            for (int x = 0; x < sizeTileX / 2; x += 2) {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
-                    val = data[y*sizeTile[0]+x];
+                    val = data[y*sizeTileX+x];
                     if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
 	                    	
 	                    // System.out.println(val);
@@ -302,11 +303,11 @@ public class KDistributionEstimation {
         }
 
         std = 0.0;
-        for (int y = 0; y < sizeTile[1] / 2; y += 2) {
-            for (int x = sizeTile[0] / 2; x < sizeTile[0]; x += 2) {
+        for (int y = 0; y < sizeTileY / 2; y += 2) {
+            for (int x = sizeTileX / 2; x < sizeTileX; x += 2) {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
-                    val = data[y*sizeTile[0]+x];
+                    val = data[y*sizeTileX+x];
                     if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
 	                    if (val > 0 && val < clip2) {
 	                        mu2 += val;
@@ -329,11 +330,11 @@ public class KDistributionEstimation {
         }
 
         std = 0.0;
-        for (int y = sizeTile[1] / 2; y < sizeTile[1]; y += 2) {
-            for (int x = 0; x < sizeTile[0] / 2; x += 2) {
+        for (int y = sizeTileY / 2; y < sizeTileY; y += 2) {
+            for (int x = 0; x < sizeTileX / 2; x += 2) {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
-                    val = data[y*sizeTile[0]+x];
+                    val = data[y*sizeTileX+x];
                     if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
 	                    if (val > 0 && val < clip3) {
 	                        mu3 += val;
@@ -356,11 +357,11 @@ public class KDistributionEstimation {
         }
 
         std = 0.0;
-        for (int y = sizeTile[1] / 2; y < sizeTile[1]; y += 2) {
-            for (int x = sizeTile[0] / 2; x < sizeTile[0]; x += 2) {
+        for (int y = sizeTileY / 2; y < sizeTileY; y += 2) {
+            for (int x = sizeTileX / 2; x < sizeTileX; x += 2) {
                 if((mask == null) || (mask.getSample(x, y, 0) == 0))
                 {
-                    val = data[y*sizeTile[0]+x];
+                    val = data[y*sizeTileX+x];
                     if(!((val<minPixelVal) &&	(iniX+x<xMarginCheck||iniY+y<yMarginCheck||iniX+x>(gir.getWidth()-xMarginCheck)||iniY+y>(gir.getHeight()-yMarginCheck)))){
 	                    if (val > 0 && val < clip4) {
 	                        mu4 += val;
