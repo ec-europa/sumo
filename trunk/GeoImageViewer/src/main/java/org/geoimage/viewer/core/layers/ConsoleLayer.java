@@ -42,7 +42,6 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.ActionDialog;
@@ -51,7 +50,7 @@ import org.geoimage.viewer.widget.ActionDialog;
  *
  * @author thoorfr
  */
-public class ConsoleLayer implements ILayer {
+public class ConsoleLayer extends AbstractLayer {
 
     private String message = "";
     private String oldMessage = "";
@@ -61,7 +60,7 @@ public class ConsoleLayer implements ILayer {
     private IProgress currentAction = null;
     private final EntityManagerFactory emf;
 
-    public ConsoleLayer() {
+    public ConsoleLayer(ILayer parent) {
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
         
         actions = new HashMap<String, IConsoleAction>();
@@ -85,6 +84,7 @@ public class ConsoleLayer implements ILayer {
         parseActions(plugins);
         parseActionsLandMask(landActions);
         
+        super.init(parent);
     }
     
     /**
@@ -153,7 +153,7 @@ public class ConsoleLayer implements ILayer {
 
         try {
             if (message.startsWith("google")) {
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer) {
                         GeoImageReader gir = ((IImageLayer) l).getImageReader();
                         double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
@@ -170,7 +170,7 @@ public class ConsoleLayer implements ILayer {
 
         try {
             if (message.startsWith("level")) {
-                for (ILayer l : Platform.getLayerManager().getLayers()) {
+                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer) {
                         ((IImageLayer) l).level(Integer.parseInt(message.split(" ")[1]));
                     }
@@ -346,9 +346,6 @@ public class ConsoleLayer implements ILayer {
         return false;
     }
 
-    public ILayerManager getParent() {
-        return null;
-    }
 
     public String getDescription() {
         return "Inline Console";

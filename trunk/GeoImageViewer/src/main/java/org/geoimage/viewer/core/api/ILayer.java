@@ -12,13 +12,16 @@ package org.geoimage.viewer.core.api;
  * @author thoorfr
  */
 public interface ILayer {
-    public String getName();
+	public String getName();
     public void setName(String name);
     public void render(GeoContext context);
     public boolean isActive();
     public void setActive(boolean active);
+    public void setParent(ILayer parent);
+    public ILayer getParent();
     public boolean isRadio();
-    public ILayerManager getParent();
     public String getDescription();
     public void dispose();
+    public void init(ILayer parent);
+    
 }

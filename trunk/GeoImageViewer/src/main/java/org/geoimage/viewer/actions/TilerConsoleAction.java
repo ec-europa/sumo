@@ -31,7 +31,7 @@ public class TilerConsoleAction implements IConsoleAction {
     }
 
     public boolean execute(String[] args) {
-        for (final ILayer l : Platform.getLayerManager().getLayers()) {
+        for (final ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer & l.isActive()) {
                 new Thread(new Runnable() {
                     public void run() {

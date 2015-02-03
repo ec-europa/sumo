@@ -34,7 +34,7 @@ import org.geoimage.viewer.core.GeoImageViewer;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.layers.LayerManager;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.wwj.H2Fetcher;
 import org.geoimage.viewer.core.wwj.TimeRenderableLayer;
 import org.geoimage.viewer.core.wwj.WWGeoImage;

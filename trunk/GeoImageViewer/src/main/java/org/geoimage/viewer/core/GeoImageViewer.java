@@ -10,8 +10,8 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JPopupMenu;
 
 import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
