@@ -77,7 +77,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     
     private int maxnumberoftiles = 7;
     static String MaxNumberOfTiles = "Max Number Of Tiles";
-  //  private String description=null;
 
     static {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
@@ -95,7 +94,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 
         setName(gir);
         
-  //      description = gir.getDisplayName();
         activeBand = 0;
      //   double test=Math.log(Math.max(gir.getWidth() , gir.getHeight()))/Math.log(2);
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;

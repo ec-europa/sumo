@@ -11,4 +11,9 @@ public class ConstantVDSAnalysis {
 	  
 	  public static int ROW_TILE_SAMPLES_ARRAY[]={10,50,90}; //10% 50% 90% indicate how many and what rows we want to use as samples for each tile 
 	  
+	  // Minimum Tile Size for VDS analysis in meters
+	  public static final int TILESIZE = 1000;
+	  // Minimum Tile Size for VDS analysis in pixels
+	  public static final int TILESIZEPIXELS = 200;
+
 }
