@@ -20,6 +20,7 @@ import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.IKeyPressed;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.widget.AttributesEditor;
@@ -51,8 +52,8 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
     protected boolean undo=false;
     
     
-    public SimpleEditVectorLayer(String layername, GeoImageReader reader, String type, GeometricLayer layer) {
-        super(layername, reader, type, layer);
+    public SimpleEditVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+        super(parent,layername, reader, type, layer);
         gf = new GeometryFactory();
     }
 

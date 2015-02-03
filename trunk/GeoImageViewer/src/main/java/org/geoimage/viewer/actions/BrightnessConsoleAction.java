@@ -32,14 +32,14 @@ public class BrightnessConsoleAction implements IConsoleAction {
 
     public boolean execute(String[] args) {
         if (args.length == 1) {
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer & l.isActive()) {
                     ((IImageLayer) l).setBrightness(Float.parseFloat(args[0]));
                 }
             }
         } else if (args.length == 2) {
             float br = Float.parseFloat(args[0]);
-            for (ILayer l : Platform.getLayerManager().getLayers()) {
+            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                 if (l instanceof IImageLayer & l.isActive()) {
                     ((IImageLayer) l).setBrightness(((IImageLayer) l).getBrightness() + br);
                 }

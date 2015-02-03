@@ -46,7 +46,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         this.gl = ((SimpleEditVectorLayer) layer).getGeometriclayer();
         this.il = null;
 
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
+        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer && l.isActive()) {
                 il = (IImageLayer) l;
                 break;

@@ -181,7 +181,7 @@ public class SavePanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String filename = null;
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
+        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer & l.isActive()) {
                 filename = ((IImageLayer) l).getName();
                 break;

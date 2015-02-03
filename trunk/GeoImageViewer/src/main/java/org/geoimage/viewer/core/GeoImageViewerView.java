@@ -48,19 +48,21 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
+import org.geoimage.viewer.core.gui.manager.WidgetManager;
+import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.LayerManager;
+import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.geoimage.viewer.widget.InfoDialog;
-import org.geoimage.viewer.widget.LayerManagerWidget;
 import org.geoimage.viewer.widget.PluginManagerDialog;
 import org.geoimage.viewer.widget.PreferencesDialog;
 import org.geoimage.viewer.widget.TimeBarDialog;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.geoimage.viewer.widget.WWJPanel;
-import org.geoimage.viewer.widget.WidgetManager;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -70,6 +72,11 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLReadBufferUtil;
+
+
+
+
+
 
 /**
  * The application's main frame.
@@ -82,7 +89,10 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
     private int dyy = 0;
     private boolean onRefresh = false;
     private CacheManager cm;
+    
     private ConsoleLayer cl;
+    private BaseLayer base;
+    
     private TimeBarDialog timeSlider;
     private WWJPanel wwjPanel = null;
     gov.nasa.worldwind.awt.WorldWindowGLCanvas wwjCanvas = null;
@@ -94,6 +104,31 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
 
     
+	class LayerListener implements ILayerListener {
+		
+		public LayerListener() {}
+		
+	    public void layerAdded(ILayer l) {
+	        if (l instanceof IImageLayer) {
+	            wwjPanel.add((IImageLayer) l);
+	        }
+	    }
+
+	    public void layerRemoved(ILayer l) {
+	        if (l instanceof IImageLayer) {
+	            wwjPanel.remove((IImageLayer) l);
+	        }
+	    }
+
+	    public void layerClicked(ILayer l) {
+	        if (l instanceof IImageLayer) {
+	            wwjPanel.triggerState((IImageLayer) l);
+	        }
+	    }
+	}
+	
+	
+	
     public GeoImageViewerView(SingleFrameApplication app) {
         super(app);
 
@@ -108,7 +143,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         initComponents();
         
         //WidgetManager.addWidget("Navigation", GeoNavigationToolbar.class);
-        WidgetManager.addWidget("Overview", GeoOverviewToolbar.class);
+        WidgetManager.getWManagerInstance().addWidget("Overview", GeoOverviewToolbar.class);
         //WidgetManager.addWidget("Time", CurrentTimeWidget.class);
         //WidgetManager.addWidget("Info", InfoWidget.class);
         // AG init the preferences
@@ -218,14 +253,19 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         /**
          * Real Stuff
          */
-        //setCacheManager(new CacheManager(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache")));
-        //reads the cache from the embedded database SUMO_DB
-        //setCacheManager(new CacheManager(getCachePath()));
-        lm = new LayerManager(null);
-        lm.setName("Layers");
-        lm.setIsRadio(true);
-        cl = new ConsoleLayer();
-        lm.addLayer(cl);
+        lm = LayerManager.getIstanceManager();
+        
+        base=new BaseLayer(null);
+        base.setName("Layers");
+        base.setIsRadio(true);
+        lm.setBaseLayer(base);
+        
+        cl = new ConsoleLayer(null);
+        cl.setName("Console Layer");
+        cl.setIsRadio(true);
+        lm.setConsoleLayer(cl);
+        
+        
         infod = new InfoDialog(null, false);
 
         cl.setMenus(getMenuBar());
@@ -234,27 +274,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
             wwjPanel = new WWJPanel();
             wwjPanel.setPreferredSize(new Dimension(100,jTabbedPane1.getHeight()));
             jTabbedPane1.addTab("3D", wwjPanel);
-            lm.addListenner(new ILayerListener() {
-
-                public void layerAdded(ILayer l) {
-                    if (l instanceof IImageLayer) {
-                        wwjPanel.add((IImageLayer) l);
-
-                    }
-                }
-
-                public void layerRemoved(ILayer l) {
-                    if (l instanceof IImageLayer) {
-                        wwjPanel.remove((IImageLayer) l);
-                    }
-                }
-
-                public void layerClicked(ILayer l) {
-                    if (l instanceof IImageLayer) {
-                        wwjPanel.triggerState((IImageLayer) l);
-                    }
-                }
-            });
+            lm.addListener(new GeoImageViewerView.LayerListener());
         }
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -465,15 +485,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         display.setSize(mainCanvas.getWidth(), mainCanvas.getHeight());
         new EventBinding(mainCanvas, display);
 
-        LayerManagerWidget lmw = new LayerManagerWidget(lm, display);
-        display.addWidget(lmw);
-        {
-            FormData fd = new FormData();
-            fd.left = new FormAttachment(0, 0);
-            fd.bottom = new FormAttachment(0, 0);
-            lmw.setLayoutData(fd);
-        }
-
+        LayerManagerWidget lmw = LayerManagerWidget.getManagerInstance(display);
+        lmw.buildWidget();
+        display.addWidget(lmw.getWidget());
+        
+        
         // add overview window
         {
             FormData fd = new FormData();
@@ -687,7 +703,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
     }
 
     public TransparentWidget addWidget(String name, FormData fd, String title) {
-        TransparentWidget tw = WidgetManager.createWidget(name);
+        TransparentWidget tw = WidgetManager.getWManagerInstance().createWidget(name);
         tw.setName(title);
         tw.setLayoutData(fd);
         geoContext.getFenguiDisplay().addWidget(tw);

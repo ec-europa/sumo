@@ -5,16 +5,18 @@
 
 package org.geoimage.viewer.core.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Interface that codes the behavior of a Layer Manager which consists of a set of layers.
  * @author thoorfr
  */
-public interface ILayerManager extends ILayer {
+public interface ILayerManager  {
 
     public void addLayer(ILayer layer);
     public void removeLayer(ILayer layer);
-    public List<ILayer> getLayers();
+    public HashMap<ILayer,List<ILayer>> getLayers();
+    public List<ILayer> getAllLayers();
 
 }

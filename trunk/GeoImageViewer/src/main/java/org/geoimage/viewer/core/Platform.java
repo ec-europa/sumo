@@ -4,30 +4,6 @@
  */
 package org.geoimage.viewer.core;
 
-import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
-import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
-import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
-import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
-import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_DISTANCE;
-import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_TILESIZE;
-import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
-
-import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +13,8 @@ import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.TransparentWidget;
@@ -207,7 +183,7 @@ public class Platform {
     }
 
     public static IImageLayer getCurrentImageLayer() {
-        for (ILayer l : getLayerManager().getLayers()) {
+        for (ILayer l : getLayerManager().getLayers().keySet()) {
             if (l instanceof IImageLayer && l.isActive()) {
                 try {
                     return (IImageLayer) l;
@@ -219,10 +195,7 @@ public class Platform {
         return null;
     }
     
-    public static void addLayerToCurrentImageLayer(ILayer l) {
-        getCurrentImageLayer().addLayer(l);
-    }
-    
+ 
     /** 
      * search the cache in the DB, if it doesn't exist then read the properties file
      * even if the file is empty a default path is used
