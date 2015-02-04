@@ -29,6 +29,7 @@ import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
@@ -44,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author thoorfr+ga
  * this class is called whenever you want to open one of the supported vector formats (shp, csv, xml, gml, query). It is opened as a new layer, linked to the active image.
  */
-public class AddVectorConsoleAction extends ConsoleAction implements IProgress {
+public class AddVectorConsoleAction extends AbstractAction implements IProgress {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddVectorConsoleAction.class);
 	
     private JFileChooser fd;

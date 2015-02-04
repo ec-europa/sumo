@@ -1,62 +1,40 @@
 package org.geoimage.viewer.actions;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClearCacheAction extends AbstractAction implements IProgress{
-	private Logger logger = LoggerFactory.getLogger(ClearCacheAction.class);
+public class TileAnalysisAction extends AbstractAction implements IProgress{
+	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
 	
 	
 	@Override
 	public String getName() {
-		return "Clear cache";
+		return "Analyze Tile Values";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Clear image cache";
+		return "Analyze Tile Values";
 	}
 
 	@Override
 	public String getPath() {
-		return "Tools/ClearCache";
+		return "Tools/CheckTile";
 	}
 
 	@Override
 	public boolean execute(String[] args) {
-		File folder=CacheManager.getRootCacheInstance().getPath();
-		System.gc();
 		try {
-			Files.walkFileTree(folder.toPath(), new SimpleFileVisitor<Path>() {
-				   @Override
-				   public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					   Files.delete(file);
-					   return FileVisitResult.CONTINUE;
-				   }
-
-				   @Override
-				   public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					   Files.delete(dir);
-					   return FileVisitResult.CONTINUE;
-				   }
-
-			   });
-		} catch (IOException e) {
+			
+		
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;
 		}

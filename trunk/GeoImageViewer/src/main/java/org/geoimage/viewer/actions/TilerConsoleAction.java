@@ -10,16 +10,16 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.util.ImageTiler;
 
 /**
  *
  * @author thoorfr
  */
-public class TilerConsoleAction implements IConsoleAction {
+public class TilerConsoleAction extends AbstractAction {
 
     public String getName() {
         return "tiler";

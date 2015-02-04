@@ -19,13 +19,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+
 import org.geoimage.viewer.core.Plugins;
-import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.util.ClassPathHacker;
 
 /**

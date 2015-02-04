@@ -28,6 +28,7 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
@@ -39,7 +40,7 @@ import org.geoimage.viewer.widget.PostgisSettingsDialog;
  *
  * @author thoorfr
  */
-public class AddInterpolatedConsoleAction extends ConsoleAction implements IProgress {
+public class AddInterpolatedConsoleAction extends AbstractAction implements IProgress {
 
     private JFileChooser fd;
     private static String lastDirectory;

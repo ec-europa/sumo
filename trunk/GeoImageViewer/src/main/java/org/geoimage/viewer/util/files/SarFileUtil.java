@@ -26,14 +26,14 @@ public class SarFileUtil {
 			}
 		});
 				
-
-		for(File f:childs){
-			File[] imgFile=f.listFiles(new SarImageFileFilter());
-			if(imgFile.length==1){
-				imgFiles.add(imgFile[0]);
+		if(childs!=null){
+			for(File f:childs){
+				File[] imgFile=f.listFiles(new SarImageFileFilter());
+				if(imgFile.length==1){
+					imgFiles.add(imgFile[0]);
+				}
 			}
 		}
-		
 		
 		
 		return imgFiles;

@@ -39,9 +39,10 @@ import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.Plugins;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.ActionDialog;
@@ -54,7 +55,7 @@ public class ConsoleLayer extends AbstractLayer {
 
     private String message = "";
     private String oldMessage = "";
-    private Map<String, IConsoleAction> actions;
+    private Map<String, IAction> actions;
     private Map<String, Plugins> plugins;
     private String[] commands;
     private IProgress currentAction = null;
@@ -63,7 +64,7 @@ public class ConsoleLayer extends AbstractLayer {
     public ConsoleLayer(ILayer parent) {
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
         
-        actions = new HashMap<String, IConsoleAction>();
+        actions = new HashMap<String, IAction>();
         plugins = new HashMap<String, Plugins>();
         
         EntityManager em = emf.createEntityManager();
@@ -80,7 +81,7 @@ public class ConsoleLayer extends AbstractLayer {
         em.getTransaction().commit();
 
         em.close();
-        List<IConsoleAction> landActions=getDynamicActionForLandmask();
+        List<IAction> landActions=getDynamicActionForLandmask();
         parseActions(plugins);
         parseActionsLandMask(landActions);
         
@@ -90,8 +91,8 @@ public class ConsoleLayer extends AbstractLayer {
     /**
      * Create and return new actions dinamically for the land mask import options  
      */
-    private List<IConsoleAction> getDynamicActionForLandmask(){
-    	List<IConsoleAction> actions=new ArrayList<IConsoleAction>();
+    private List<IAction> getDynamicActionForLandmask(){
+    	List<IAction> actions=new ArrayList<IAction>();
     	String folder=Platform.getPreferences().readRow(Constant.PREF_COASTLINES_FOLDER);
     	
     	File folderShapes=new File(folder);
@@ -136,10 +137,10 @@ public class ConsoleLayer extends AbstractLayer {
                         return;
                     }
                     Object a = actions.get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
-                    if (!(a instanceof IConsoleAction)) {
+                    if (!(a instanceof IAction)) {
                         return;
                     }
-                    IConsoleAction ica = (IConsoleAction) a;
+                    IAction ica = (IAction) a;
                     if (ica instanceof IProgress) {
                         currentAction = (IProgress) ica;
                     }
@@ -272,8 +273,8 @@ public class ConsoleLayer extends AbstractLayer {
         for (Plugins p : plugins) {
             try {
                 Object temp = instanciate(p);
-                if (temp instanceof IConsoleAction) {
-                    IConsoleAction action = (IConsoleAction) temp;
+                if (temp instanceof IAction) {
+                    IAction action = (IAction) temp;
                     getActions().put(action.getName(), action);
                     getPlugins().put(action.getName(), p);
                     System.out.println(temp.toString() + " added");
@@ -285,8 +286,8 @@ public class ConsoleLayer extends AbstractLayer {
         commands = getActions().keySet().toArray(new String[getActions().size()]);
     }
     
-    private void parseActionsLandMask(List<IConsoleAction> acts) {
-        for (IConsoleAction act : acts) {
+    private void parseActionsLandMask(List<IAction> acts) {
+        for (IAction act : acts) {
             try {
             	Plugins p=new Plugins(act.getClass().getName());
 				p.setActive(Boolean.TRUE);
@@ -312,7 +313,7 @@ public class ConsoleLayer extends AbstractLayer {
     public void render(GeoContext context) {
         if (currentAction != null) {
             if (currentAction.isDone()) {
-                Platform.setInfo(((IConsoleAction) currentAction).getName() + " done", 10000);
+                Platform.setInfo(((IAction) currentAction).getName() + " done", 10000);
                 currentAction = null;
             } else {
                 if (currentAction.isIndeterminate()) {
@@ -325,10 +326,10 @@ public class ConsoleLayer extends AbstractLayer {
         }
     }
 
-    private IConsoleAction instanciate(Plugins p) {
+    private IAction instanciate(Plugins p) {
         try {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
-            return (IConsoleAction) Class.forName(p.getClassName()).newInstance();
+            return (IAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
             Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -381,7 +382,7 @@ public class ConsoleLayer extends AbstractLayer {
         JMenuBar bar = new JMenuBar();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (final IConsoleAction act : getActions().values()) {
+        for (final IAction act : getActions().values()) {
            // final IConsoleAction action = instanciate(p);
             String[] path = act.getPath().split("/");
             JMenuItem mitem = null;
@@ -431,7 +432,7 @@ public class ConsoleLayer extends AbstractLayer {
         List<JMenu> out = new Vector<JMenu>();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (final IConsoleAction action : getActions().values()) {
+        for (final IAction action : getActions().values()) {
            // final IConsoleAction action = instanciate(p);
             String[] path = action.getPath().split("/");
             JMenuItem mitem = null;
@@ -488,7 +489,7 @@ public class ConsoleLayer extends AbstractLayer {
             }
         }
         JMenuItem temp = null;
-        for (final IConsoleAction action : getActions().values()) {
+        for (final IAction action : getActions().values()) {
             if (!plugins.get(action.getName()).isActive()) {
                 continue;
             }
@@ -566,7 +567,7 @@ public class ConsoleLayer extends AbstractLayer {
     }
 
     public void updateTab(JTabbedPane jTabbedPane1) {
-        for (final IConsoleAction act : getActions().values()) {
+        for (final IAction act : getActions().values()) {
             if (!plugins.get(act.getName()).isActive()) {
                 continue;
             }
@@ -589,7 +590,7 @@ public class ConsoleLayer extends AbstractLayer {
     /**
      * @return the actions
      */
-    public Map<String, IConsoleAction> getActions() {
+    public Map<String, IAction> getActions() {
         return actions;
     }
 
@@ -607,12 +608,12 @@ public class ConsoleLayer extends AbstractLayer {
         for (int i = 0; i < classes.length; i++) {
             try {
                 Object temp = Class.forName(classes[i]).newInstance();
-                if (temp instanceof IConsoleAction) {
+                if (temp instanceof IAction) {
                     Plugins p = new Plugins(classes[i]);
                     p.setActive(Boolean.TRUE);
                     p.setJarUrl(temp.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
                     em.persist(p);
-                    IConsoleAction action = (IConsoleAction) temp;
+                    IAction action = (IAction) temp;
                     getPlugins().put(action.getName(), p);
                     System.out.println(temp.toString() + " added");
                 }
