@@ -3,18 +3,16 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.actions;
+package org.geoimage.viewer.core.api.iactions;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
-import org.geoimage.viewer.core.api.IConsoleAction;
 
 /**
  *
  * @author leforth
  */
-public abstract class ConsoleAction implements IConsoleAction {
+public abstract class AbstractAction implements IAction {
 
     public void errorWindow(String message)
     {

@@ -9,9 +9,9 @@ import java.util.Vector;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
 import org.geoimage.viewer.core.layers.FastImageLayer;
 
 /**
@@ -20,7 +20,7 @@ import org.geoimage.viewer.core.layers.FastImageLayer;
  * this class manages the switch between different bands if the loaded image is multiband. Inserting �bs� in the console the visible band change each time.
  *
  */
-public class BandSwitcherConsoleAction implements IConsoleAction {
+public class BandSwitcherConsoleAction extends AbstractConsoleAction {
 
     public String getName() {
         return "bs";
@@ -55,4 +55,10 @@ public class BandSwitcherConsoleAction implements IConsoleAction {
         out.add(a1);
         return out;
     }
+
+
+	@Override
+	public String getCommand() {
+		return "bs";
+	}
 }

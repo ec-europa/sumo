@@ -18,8 +18,8 @@ import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
@@ -31,7 +31,7 @@ import org.geoimage.viewer.util.Constant;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  * 
  */
-public class AddWorldVectorLayerAction implements IConsoleAction, IProgress {
+public class AddWorldVectorLayerAction extends AbstractAction implements IProgress {
     protected boolean done = false;
 
     public AddWorldVectorLayerAction() {

@@ -9,15 +9,15 @@ import java.util.Vector;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.IAction;
 
 /**
  *
  * @author thoorfr
  */
-public class BrightnessConsoleAction implements IConsoleAction {
+public class BrightnessConsoleAction implements IAction	 {
 
     public String getName() {
         return "brightness";

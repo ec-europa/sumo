@@ -53,7 +53,6 @@ import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
 import org.geoimage.viewer.core.gui.manager.WidgetManager;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;

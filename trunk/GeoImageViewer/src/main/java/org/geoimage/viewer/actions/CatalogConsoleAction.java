@@ -8,13 +8,14 @@ package org.geoimage.viewer.actions;
 import java.util.List;
 
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 
 /**
  *
  * @author thoorfr
  */
-public class CatalogConsoleAction implements IConsoleAction{
+public class CatalogConsoleAction implements IAction{
 
     public String getName() {
         return "catalog";

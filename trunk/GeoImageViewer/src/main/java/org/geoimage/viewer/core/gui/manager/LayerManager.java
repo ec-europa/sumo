@@ -336,9 +336,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 				}
 			}	
 		}
-		
 	}
-    
+
+	
+	
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;
 	}
