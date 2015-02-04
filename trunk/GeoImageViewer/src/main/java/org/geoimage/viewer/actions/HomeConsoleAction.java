@@ -9,16 +9,18 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 
 /**
  *
  * @author thoorfr
  */
-public class HomeConsoleAction implements IConsoleAction {
+public class HomeConsoleAction extends AbstractConsoleAction {
 
     public String getName() {
         return "home";
@@ -61,4 +63,9 @@ public class HomeConsoleAction implements IConsoleAction {
     public List<Argument> getArgumentTypes() {
         return null;
     }
+
+	@Override
+	public String getCommand() {
+		return "home";
+	}
 }

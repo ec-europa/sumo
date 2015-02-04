@@ -5,21 +5,25 @@
 
 package org.geoimage.viewer.actions;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
 import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
 
 /**
  *
  * @author thoorfr
  */
-public class BatchAnalysisAction implements IConsoleAction{
+public class BatchAnalysisAction extends AbstractConsoleAction{
 
     public String getName() {
+        return "batch";
+    }
+    public String getCommand() {
         return "batch";
     }
 

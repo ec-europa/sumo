@@ -49,9 +49,9 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
@@ -64,7 +64,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  *
  * @author thoorfr
  */
-public class VDSAnalysisConsoleAction implements IConsoleAction, IProgress {
+public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgress {
 	
 	/**
 	 * 

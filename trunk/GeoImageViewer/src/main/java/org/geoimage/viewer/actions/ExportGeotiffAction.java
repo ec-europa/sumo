@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 import org.geoimage.impl.GeotiffWriter;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 
 /**
  *
  * @author thoorfr
  */
-public class ExportGeotiffAction implements IConsoleAction {
+public class ExportGeotiffAction extends AbstractAction{
 
     public String getName() {
         return "exportGeotiff";

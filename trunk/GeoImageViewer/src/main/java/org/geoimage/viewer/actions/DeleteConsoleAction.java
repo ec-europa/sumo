@@ -10,16 +10,16 @@ import javax.swing.JOptionPane;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 
 /**
  *
  * @author thoorfr
  */
-public class DeleteConsoleAction implements IConsoleAction {
+public class DeleteConsoleAction extends AbstractAction {
 
     public String getName() {
         return "delete";

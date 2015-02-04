@@ -23,6 +23,7 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
@@ -38,7 +39,7 @@ import org.geoimage.viewer.util.Constant;
  * this class is called whenever we want to open an image. A new image consists in a new layer (SimpleVectorLayer).
  * thumbnails part need to be revised
  */
-public class AddImageConsoleAction extends ConsoleAction implements IProgress {
+public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
     private JFileChooser fileChooser;
     private String lastDirectory;

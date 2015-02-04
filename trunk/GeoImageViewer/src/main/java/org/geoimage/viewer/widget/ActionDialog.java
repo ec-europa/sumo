@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -22,11 +23,11 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
-//import org.openswing.swing.client.DateControl;
-//import org.openswing.swing.util.java.Consts;
+import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 
 /**
  *
@@ -34,11 +35,11 @@ import org.geoimage.viewer.core.api.IConsoleAction;
  */
 public class ActionDialog extends javax.swing.JDialog {
 
-    private IConsoleAction action;
+    private IAction action;
     private List<JComponent> components = new Vector<JComponent>();
 
     /** Creates new form ActionDialog */
-    public ActionDialog(java.awt.Frame parent, boolean modal, IConsoleAction action) {
+    public ActionDialog(java.awt.Frame parent, boolean modal, IAction action) {
         super(parent, modal);
         this.action = action;
         List<Argument> args = action.getArgumentTypes();

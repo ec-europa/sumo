@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 
 /**
  *
@@ -19,7 +19,7 @@ import org.geoimage.viewer.core.api.IConsoleAction;
  * It works with the GeoImageViewerView class changing the value of the onScreenshot Boolean variable, used by the method display().
  *
  */
-public class ScreenShotConsoleAction implements IConsoleAction{
+public class ScreenShotConsoleAction extends AbstractAction{
 
     public String getName() {
         return "Screenshot";

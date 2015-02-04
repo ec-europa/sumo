@@ -51,7 +51,12 @@ public class LayerWidget extends Container {
             public void mousePressed(MousePressedEvent e) {
                 if (e.getButton() == MouseButton.LEFT) {
                 	if(!(layer instanceof ConsoleLayer || layer instanceof BaseLayer)){
-                		layer.setActive(!layer.isActive());
+                		if(layer.getParent()==null)
+                			layer.setActive(!layer.isActive());
+                		else{
+                			if(layer.getParent().isActive())
+                				layer.setActive(!layer.isActive());
+                		}
                     	Platform.getLayerManager().notifyLayerClicked(layer);
                     	Platform.refresh();
                 	}	

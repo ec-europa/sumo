@@ -22,12 +22,13 @@ import javax.mail.internet.MimeMultipart;
 
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.iactions.AbstractAction;
 
 /**
  *
  * @author leforth
  */
-public class SendMailAction extends ConsoleAction implements IProgress {
+public class SendMailAction extends AbstractAction implements IProgress {
 
     boolean done = false;
     private final String message = "Sending email. Please wait...";
