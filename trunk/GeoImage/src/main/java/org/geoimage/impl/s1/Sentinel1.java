@@ -348,8 +348,12 @@ public abstract class Sentinel1 extends SarImageReader {
     
     @Override
     public String getImgName() {
-       	return tiffImages.get(getBandName(band)).getImageFile().getParentFile().getName();
-    		
+    	try{
+    		String name=tiffImages.get(getBandName(band)).getImageFile().getParentFile().getParentFile().getName();
+    		return name;
+    	}catch(Exception e ){			
+    		return tiffImages.get(getBandName(band)).getImageFile().getName();
+    	}	
     }
 
     public String getInternalImage() {

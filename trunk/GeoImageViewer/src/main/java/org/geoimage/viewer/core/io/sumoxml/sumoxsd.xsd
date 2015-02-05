@@ -24,8 +24,8 @@
 	<xs:element name="gcp">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="row" type="xs:double"/>
-				<xs:element name="column" type="xs:double"/>
+				<xs:element name="row" type="xs:int"/>
+				<xs:element name="column" type="xs:int"/>
 				<xs:element name="lon" type="xs:double"/>
 				<xs:element name="lat" type="xs:double"/>
 			</xs:sequence>

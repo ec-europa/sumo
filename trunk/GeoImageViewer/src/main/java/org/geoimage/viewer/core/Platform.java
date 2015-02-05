@@ -183,15 +183,17 @@ public class Platform {
     }
 
     public static IImageLayer getCurrentImageLayer() {
-        for (ILayer l : getLayerManager().getLayers().keySet()) {
-            if (l instanceof IImageLayer && l.isActive()) {
-                try {
-                    return (IImageLayer) l;
-                } catch (Exception ex) {
-                    Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+    	if(!Platform.batchMode){
+	        for (ILayer l : getLayerManager().getLayers().keySet()) {
+	            if (l instanceof IImageLayer && l.isActive()) {
+	                try {
+	                    return (IImageLayer) l;
+	                } catch (Exception ex) {
+	                    Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
+	                }
+	            }
+	        }
+    	}    
         return null;
     }
     

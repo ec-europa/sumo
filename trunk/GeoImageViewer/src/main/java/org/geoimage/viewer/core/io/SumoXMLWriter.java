@@ -237,7 +237,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		imageMeta.setGcps(getCorners(gir));
 		
 		try {
-			imageMeta.setTimestampStart(start);
+			imageMeta.setTimestampStart(format.format(tStart));
 			
 			imageMeta.setTimeStart(format.format(tStart));
 			
@@ -245,28 +245,26 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			imageMeta.setTimeStop(format.format(tStop));
 			
 			String sensor=(String)gir.getMetadata(GeoMetadata.SENSOR);
-			format=new SimpleDateFormat("yyyyMMdd_HHmmSS");
+			format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+			
 			imageMeta.setImId(sensor+"_"+format.format(tStart));
 			imageMeta.setImageName(((SarImageReader)gir).getImgName());
 			
 			imageMeta.setSensor(sensor);
 			
 			String pol=(String)gir.getMetadata(SarMetadata.POLARISATION);
-			imageMeta.setPol(pol);
+			imageMeta.setPol(pol.trim());
 			String polNumeric=pol.replace("HH","1");
 			polNumeric=polNumeric.replace("HV","2");
 			polNumeric=polNumeric.replace("VH","3");
 			polNumeric=polNumeric.replace("VV","4");
 			if(polNumeric.endsWith(" "))
 				polNumeric=polNumeric.substring(0, polNumeric.length()-1);
-			polNumeric=polNumeric.replace(" ",",");
+			polNumeric=polNumeric.replace(" ",",").trim();
 			imageMeta.setPolnumeric(polNumeric);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 		
 		/**** SAVING ***********/
 		Analysis an = new Analysis();
@@ -309,26 +307,26 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
 		*/
 		Gcp gcpTopL = new Gcp();
-		gcpTopL.setColumn(corners.getTopLeft().getOriginalXpix());
-		gcpTopL.setRow(corners.getTopLeft().getYpix());
+		gcpTopL.setColumn(corners.getTopLeft().getOriginalXpix().intValue());
+		gcpTopL.setRow(new Double(corners.getTopLeft().getYpix()).intValue());
 		gcpTopL.setLon(corners.getTopLeft().getXgeo());
 		gcpTopL.setLat(corners.getTopLeft().getYgeo());
 
 		Gcp gcpTopR = new Gcp();
-		gcpTopR.setColumn(corners.getTopRight().getOriginalXpix());
-		gcpTopR.setRow(corners.getTopRight().getYpix());
+		gcpTopR.setColumn(corners.getTopRight().getOriginalXpix().intValue());
+		gcpTopR.setRow(new Double(corners.getTopRight().getYpix()).intValue());
 		gcpTopR.setLon(corners.getTopRight().getXgeo());
 		gcpTopR.setLat(corners.getTopRight().getYgeo());
 
 		Gcp gcpBottomL = new Gcp();
-		gcpBottomL.setColumn(corners.getBottomLeft().getOriginalXpix());
-		gcpBottomL.setRow(corners.getBottomLeft().getYpix());
+		gcpBottomL.setColumn(corners.getBottomLeft().getOriginalXpix().intValue());
+		gcpBottomL.setRow(new Double(corners.getBottomLeft().getYpix()).intValue());
 		gcpBottomL.setLon(corners.getBottomLeft().getXgeo());
 		gcpBottomL.setLat(corners.getBottomLeft().getYgeo());
 
 		Gcp gcpBottomR = new Gcp();
-		gcpBottomR.setColumn(corners.getBottomRight().getOriginalXpix());
-		gcpBottomR.setRow(corners.getBottomRight().getYpix());
+		gcpBottomR.setColumn(corners.getBottomRight().getOriginalXpix().intValue());
+		gcpBottomR.setRow(new Double(corners.getBottomRight().getYpix()).intValue());
 		gcpBottomR.setLon(corners.getBottomRight().getXgeo());
 		gcpBottomR.setLat(corners.getBottomRight().getYgeo());
 

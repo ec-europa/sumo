@@ -186,7 +186,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                          
                          
                          String name="";
-                         if(bufferedMask.length>0){
+                         if(bufferedMask!=null && bufferedMask.length>0){
                         	name=bufferedMask[0].getName(); 
                          }
                          ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName, 
