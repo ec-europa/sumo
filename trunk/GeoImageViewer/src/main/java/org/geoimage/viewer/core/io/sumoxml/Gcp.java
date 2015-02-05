@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="row" type="{http://www.w3.org/2001/XMLSchema}double"/>
- *         &lt;element name="column" type="{http://www.w3.org/2001/XMLSchema}double"/>
+ *         &lt;element name="row" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="column" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="lon" type="{http://www.w3.org/2001/XMLSchema}double"/>
  *         &lt;element name="lat" type="{http://www.w3.org/2001/XMLSchema}double"/>
  *       &lt;/sequence>
@@ -46,8 +46,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "gcp")
 public class Gcp {
 
-    protected double row;
-    protected double column;
+    protected int row;
+    protected int column;
     protected double lon;
     protected double lat;
 
@@ -55,7 +55,7 @@ public class Gcp {
      * Gets the value of the row property.
      * 
      */
-    public double getRow() {
+    public int getRow() {
         return row;
     }
 
@@ -63,7 +63,7 @@ public class Gcp {
      * Sets the value of the row property.
      * 
      */
-    public void setRow(double value) {
+    public void setRow(int value) {
         this.row = value;
     }
 
@@ -71,7 +71,7 @@ public class Gcp {
      * Gets the value of the column property.
      * 
      */
-    public double getColumn() {
+    public int getColumn() {
         return column;
     }
 
@@ -79,7 +79,7 @@ public class Gcp {
      * Sets the value of the column property.
      * 
      */
-    public void setColumn(double value) {
+    public void setColumn(int value) {
         this.column = value;
     }
 
