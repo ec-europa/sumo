@@ -26,7 +26,8 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 		
 		for(GeoImageReader r:readers){
 			SarImageReader reader=(SarImageReader) r;
-			params.enl=new Float((Double)reader.getMetadata(SarImageReader.ENL));
+			String enl=reader.getMetadata(SarImageReader.ENL).toString();
+			params.enl=Float.parseFloat(enl);
 			
 			GeometricLayer gl=null;
 			if(params.shapeFile!=null)

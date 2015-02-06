@@ -3,20 +3,22 @@ package org.geoimage.viewer.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geoimage.utils.IProgress;
+import org.geoimage.analysis.BlackBorderAnalysis;
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TileAnalysisAction extends AbstractAction implements IProgress{
+public class TileAnalysisAction extends AbstractAction{
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
 	
 	
 	@Override
 	public String getName() {
-		return "Analyze Tile Values";
+		return "tyle";
 	}
 
 	@Override
@@ -32,13 +34,21 @@ public class TileAnalysisAction extends AbstractAction implements IProgress{
 	@Override
 	public boolean execute(String[] args) {
 		try {
+			if(Platform.getCurrentImageLayer()!=null && args.length==2){
+				int row=Integer.parseInt(args[0]);
+				int col=Integer.parseInt(args[1]);
+				
+				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer());
+				borderAn.analyse(row,col);
+			
+			}
+			
 			
 		
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;
 		}
-		setDone(true);
 		return true;
 	}
 
@@ -48,51 +58,6 @@ public class TileAnalysisAction extends AbstractAction implements IProgress{
 		return args;
 	}
 
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-	@Override
-	public boolean isDone() {
-		return done;
-	}
-
-	@Override
-	public int getMaximum() {
-		return 0;
-	}
-
-	@Override
-	public int getCurrent() {
-		return 0;
-	}
-
-	@Override
-	public String getMessage() {
-		return "Clear the sumo cache?";
-	}
-
-	@Override
-	public void setCurrent(int i) {
-	}
-
-	@Override
-	public void setMaximum(int size) {
-	}
-
-	@Override
-	public void setMessage(String string) {
-	}
-
-	@Override
-	public void setIndeterminate(boolean value) {
-	}
-
-	@Override
-	public void setDone(boolean value) {
-		done=value;
-		
-	}
+	
 
 }
