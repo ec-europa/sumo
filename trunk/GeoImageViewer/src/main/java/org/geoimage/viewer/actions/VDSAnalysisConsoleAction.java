@@ -43,6 +43,7 @@ import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
+import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
@@ -100,7 +101,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 			}
        
 			public void run() {
-
                  running = false;
                  
                  int xMarginCheck=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS));
@@ -110,8 +110,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                  
                  // create K distribution
                  KDistributionEstimation kdist = new KDistributionEstimation(ENL,xMarginCheck,yMarginCheck,minPixelVal);
-
                  DetectedPixels pixels = new DetectedPixels((SarImageReader) gir);
+
                  // list of bands
                  int numberofbands = gir.getNBand();
                  int[] bands = new int[numberofbands];
@@ -128,6 +128,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                          message = message.append(" for band ").append(gir.getBandName(band));
                      }
                      setCurrent(2);
+                     
                      analysis.run(kdist);
                      DetectedPixels banddetectedpixels = analysis.getPixels();
                      
@@ -152,20 +153,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                              banddetectedpixels.computeBoatsAttributes();
                          } else {
                              // method neighbours used
-                             double neighbouringDistance;
-                             try {
-                                 neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_DISTANCE));
-                             } catch (NumberFormatException e) {
-                                 neighbouringDistance = 1.0;
-                             }
-                             int tilesize;
-                             try {
-                                 tilesize = Integer.parseInt((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_TILESIZE));
-                             } catch (NumberFormatException e) {
-                                 tilesize = 200;
-                             }
+                             double neighbouringDistance=Platform.getPreferences().getNeighbourDistance(1.0);
+                             int tilesize=Platform.getPreferences().getTileSize(200);
                              boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
-                             
                              
                              
                              banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, 
@@ -204,60 +194,46 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                              vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                          }
-                         vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, analysis.getTiles(), false);
+                         vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir,analysis.getTileSize()), false);
                          // set the color and symbol values for the VDS layer
-                         try {
-                             String widthstring = "";
-                             if (band == 0) {
-                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_0);
-                             }
-                             if (band == 1) {
-                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_1);
-                             }
-                             if (band == 2) {
-                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_2);
-                             }
-                             if (band == 3) {
-                                 widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_3);
-                             }
+                        
+                    	 String colorString = "";
+                         String widthstring = "";
+                         String symbolString = "";
+                         if (band == 0) {
+                             widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_0);
+                             colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_0);
+                             symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_0);
+                         }
+                         if (band == 1) {
+                             widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_1);
+                             colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_1);
+                             symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_1);
+                         }
+                         if (band == 2) {
+                             widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_2);
+                             colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_2);
+                             symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_2);
+                         }
+                         if (band == 3) {
+                             widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_3);
+                             colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_3);
+                             symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_3);
+                         }
+                         
+                         try {    
                              int displaywidth = Integer.parseInt(widthstring);
                              vdsanalysis.setWidth(displaywidth);
                          } catch (NumberFormatException e) {
                              vdsanalysis.setWidth(1);
                          }
                          try {
-                             String colorString = "";
-                             if (band == 0) {
-                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_0);
-                             }
-                             if (band == 1) {
-                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_1);
-                             }
-                             if (band == 2) {
-                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_2);
-                             }
-                             if (band == 3) {
-                                 colorString = Platform.getPreferences().readRow(PREF_TARGETS_COLOR_BAND_3);
-                             }
                              Color colordisplay = new Color(Integer.decode(colorString));
                              vdsanalysis.setColor(colordisplay);
                          } catch (NumberFormatException e) {
                              vdsanalysis.setColor(new Color(0x0000FF));
                          }
                          try {
-                             String symbolString = "";
-                             if (band == 0) {
-                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_0);
-                             }
-                             if (band == 1) {
-                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_1);
-                             }
-                             if (band == 2) {
-                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_2);
-                             }
-                             if (band == 3) {
-                                 symbolString = Platform.getPreferences().readRow(PREF_TARGETS_SYMBOL_BAND_3);
-                             }
                              vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
                          } catch (EnumConstantNotPresentException e) {
                              vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.square);
@@ -280,18 +256,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                          pixels.computeBoatsAttributes();
                      } else {
                          // method neighbours used
-                         double neighbouringDistance;
-                         try {
-                             neighbouringDistance = Double.parseDouble((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_DISTANCE));
-                         } catch (NumberFormatException e) {
-                             neighbouringDistance = 1.0;
-                         }
-                         int tilesize;
-                         try {
-                             tilesize = Integer.parseInt((Platform.getPreferences()).readRow(PREF_NEIGHBOUR_TILESIZE));
-                         } catch (NumberFormatException e) {
-                             tilesize = 200;
-                         }
+                         double neighbouringDistance=Platform.getPreferences().getNeighbourDistance(1.0);
+                         int tilesize=Platform.getPreferences().getTileSize(200);
+
                          boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
                          pixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                      }
@@ -317,7 +284,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                      if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                          vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                      }
-                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, analysis.getTiles(), false);
+                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING,GeometryExtractor.getTiles(gir,analysis.getTileSize()), false);
                      // set the color and symbol values for the VDS layer
                      try {
                          String widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_MERGED);

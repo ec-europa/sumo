@@ -5,10 +5,14 @@
 
 package org.geoimage.utils;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,5 +42,34 @@ public class GeometryExtractor {
         }
         return null;
     }
+    
+    // return a geometry of grid of Tiles
+    public static List<Geometry> getTiles(GeoImageReader gir,int tileSize) {
+        
+        int horTiles = gir.getWidth() / tileSize;
+        int verTiles = gir.getHeight() / tileSize;
+        
+        List<Geometry> tiles = new ArrayList<Geometry>(horTiles*verTiles*8);
+        
+        int[] sizeTile = new int[2];
+        // the real size of tiles
+        sizeTile[0] = gir.getWidth() / horTiles;
+        sizeTile[1] = gir.getHeight() / verTiles;
+        GeometryFactory geomFactory = new GeometryFactory();
+        Coordinate[] coo=null;
+        for (int j = 0; j < verTiles; j++) {
+        	coo=new Coordinate[2];
+        	coo[0]=new Coordinate(0, j * sizeTile[1]);
+        	coo[1]=new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1]);
+            tiles.add(geomFactory.createLineString(coo));
+        }
+        for (int i = 0; i < horTiles; i++) {
+        	coo=new Coordinate[2];
+        	coo[0]=new Coordinate(i * sizeTile[0], 0);
+        	coo[1]=new Coordinate((double)i * sizeTile[0], (double)gir.getHeight());
+            tiles.add(geomFactory.createLineString(coo));
+        }
+        return tiles;
 
+    }
 }

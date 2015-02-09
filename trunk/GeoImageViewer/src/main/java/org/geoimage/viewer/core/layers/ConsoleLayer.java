@@ -442,7 +442,6 @@ public class ConsoleLayer extends AbstractLayer {
                 if (menus.containsKey(mediumpath)) {
                     temp = menus.get(mediumpath);
                 } else {
-
                     if (i == path.length - 1) {
                         temp = new JMenuItem(new AbstractAction(path[i]) {
 

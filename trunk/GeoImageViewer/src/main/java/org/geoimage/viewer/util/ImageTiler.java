@@ -30,7 +30,7 @@ public class ImageTiler {
     public ImageTiler(GeoImageReader gir) {
         this.gir = gir;
         this.cachePath = gir.getFilesList()[0];
-        levels = (int) (Math.log(Math.max(gir.getWidth() / Constant.TILE_SIZE, gir.getHeight() / Constant.TILE_SIZE)) / Math.log(2)) + 1;
+        levels = (int) (Math.log(Math.max(gir.getWidth() / Constant.TILE_SIZE_IMG_LAYER, gir.getHeight() / Constant.TILE_SIZE_IMG_LAYER)) / Math.log(2)) + 1;
         xpadding = ((1 << levels) * Constant.OVERVIEW_SIZE - gir.getWidth()) / 2;
         ypadding = ((1 << levels) * Constant.OVERVIEW_SIZE - gir.getHeight()) / 2;
     }
@@ -46,9 +46,9 @@ public class ImageTiler {
                     String file = cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png";
                     if (!CacheManager.getCacheInstance(gir.getDisplayName()).contains(file)) {
                         try {
-                            int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE - xpadding, h * numI * Constant.TILE_SIZE - ypadding, numI * Constant.TILE_SIZE, numI * Constant.TILE_SIZE, Constant.TILE_SIZE, Constant.TILE_SIZE,gir.getWidth(),gir.getHeight(), true);
+                            int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE_IMG_LAYER - xpadding, h * numI * Constant.TILE_SIZE_IMG_LAYER - ypadding, numI * Constant.TILE_SIZE_IMG_LAYER, numI * Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER,gir.getWidth(),gir.getHeight(), true);
                             File f = CacheManager.getCacheInstance(gir.getDisplayName()).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
-                            ImageIO.write(createImage(t, Constant.TILE_SIZE, Constant.TILE_SIZE, gir), "png", f);
+                            ImageIO.write(createImage(t, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, gir), "png", f);
 
                         } catch (IOException ex) {
                             Logger.getLogger(ImageTiler.class.getName()).log(Level.SEVERE, null, ex);

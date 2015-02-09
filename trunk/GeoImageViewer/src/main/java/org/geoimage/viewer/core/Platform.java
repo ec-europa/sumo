@@ -25,7 +25,6 @@ import org.geoimage.viewer.widget.TransparentWidget;
  */
 public class Platform {
 
-    private static PreferencesDB preferences = null;
     private static boolean batchMode=false;
 
     
@@ -172,10 +171,7 @@ public class Platform {
     }
 
     public static PreferencesDB getPreferences() {
-        if (preferences == null) {
-            preferences = new PreferencesDB();
-        }
-        return preferences;
+        return PreferencesDB.getPrefDBInstance();
     }
 
     public static void addWidget(TransparentWidget widget) {
@@ -210,6 +206,8 @@ public class Platform {
         }
         return cache;
     }
+    
+    
     
     
    

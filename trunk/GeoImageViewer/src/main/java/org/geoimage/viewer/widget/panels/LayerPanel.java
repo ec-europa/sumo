@@ -9,9 +9,7 @@ package org.geoimage.viewer.widget.panels;
 import javax.swing.JDialog;
 
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.widget.LayerDialog;
 
 /**
