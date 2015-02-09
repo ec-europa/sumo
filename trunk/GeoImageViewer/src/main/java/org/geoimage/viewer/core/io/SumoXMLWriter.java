@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.apache.commons.math3.util.MathUtils;
 import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -160,17 +161,17 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	    }
 		
 		vdsA.setMatrixratio(new Double(0));
-		 
-		vdsA.setEnl(enl);
+		double enlround=Precision.round(enl,2); 
+		vdsA.setEnl(enlround);
 		vdsA.setSumoRunid(0);
 		
-		StringBuilder params=new StringBuilder(""+enl).append(",");
+		StringBuilder params=new StringBuilder(""+enlround).append(",");
 		if(thresholds!=null && thresholds.length>0){
 			String th=Arrays.toString(thresholds);
 			th=th.substring(1, th.length()-1);
 			
 			vdsA.setThreshOrderChans(th);
-			params=params.append(enl).append(",").append(th).append(",0.00");
+			params=params.append(th).append(",0.00");
 			
 		}
 		vdsA.setParameters(params.toString());

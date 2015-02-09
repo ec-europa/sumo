@@ -294,9 +294,9 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel {
         );
     }
     
-    private class debugtableModel extends javax.swing.table.DefaultTableModel {
+    private class DebugTableModel extends javax.swing.table.DefaultTableModel {
 
-        private debugtableModel(Object[][] object, String[] string) {
+        private DebugTableModel(Object[][] object, String[] string) {
             super(object, string);
         }
 
@@ -310,7 +310,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel {
         }
         
     }
-    private debugtableModel debugTableModel = new debugtableModel(
+    private DebugTableModel debugTableModel = new DebugTableModel(
             new Object [][] {
             },
             new String [] {

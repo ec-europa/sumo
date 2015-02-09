@@ -82,7 +82,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     private double maxThresh = 0;
     protected double currentThresh = 0;
     
-    private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
+    private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
     
     //Pietro: for testing layer intersaction / union
     //public static ArrayList <Geometry>intersections=null;
