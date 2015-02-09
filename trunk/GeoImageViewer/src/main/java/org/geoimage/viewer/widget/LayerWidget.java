@@ -59,7 +59,7 @@ public class LayerWidget extends Container {
                 		}
                     	Platform.getLayerManager().notifyLayerClicked(layer);
                     	Platform.refresh();
-                	}	
+                	}
                 } else if (e.getButton() == MouseButton.RIGHT) {
                     LayerDialog dialog = dialogs.get(layer);
                     if (dialog == null) {

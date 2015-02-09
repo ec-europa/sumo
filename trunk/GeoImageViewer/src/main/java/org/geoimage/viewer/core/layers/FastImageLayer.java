@@ -254,8 +254,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		        } else if (zoom > 0) {
 		        	
 		            curlevel = 0;//max zoom 
-		            int w0 = xx / Constant.TILE_SIZE;
-		            int h0 = yy / Constant.TILE_SIZE;
+		            int w0 = xx / Constant.TILE_SIZE_IMG_LAYER;
+		            int h0 = yy / Constant.TILE_SIZE_IMG_LAYER;
 		            
 		            final String initfile = new StringBuilder(c.getPath().toString())
 		            						.append("/0/")
@@ -483,10 +483,10 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                         return new Object[]{f.getAbsolutePath(),next, null};
                     }
                     try {
-                    	int x=i * (1 << level) * Constant.TILE_SIZE - xpadding;
-                    	int y=j * (1 << level) * Constant.TILE_SIZE - ypadding;
+                    	int x=i * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - xpadding;
+                    	int y=j * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - ypadding;
                     	float zoom=(1 << level);
-                        final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE, Constant.TILE_SIZE, zoom);
+                        final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
                         imagePool.release(gir2);
                         
                         //write tile

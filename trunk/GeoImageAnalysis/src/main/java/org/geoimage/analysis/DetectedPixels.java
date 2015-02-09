@@ -304,15 +304,16 @@ public class DetectedPixels {
         int id = 0;
         // scan through list of detected pixels
         Pixel pixels[]=allDetectedPixels.values().toArray(new Pixel[0]);
-//   int count=0;
+        int count=0;
+        
         for (Pixel p: pixels) {
-//  	count++;
+        	count++;
         	
             int xx = p.x;
             int yy = p.y;
             
-//    if((count % 100)==0)
-//    	System.out.println("Aggregating pixel Num:"+count + "  x:"+xx+"   y:"+yy );
+            if((count % 100)==0)
+            	System.out.println("Aggregating pixel Num:"+count + "  x:"+xx+"   y:"+yy );
             
             // check pixels is not aggregated
             boolean checked = false;
@@ -426,7 +427,7 @@ public class DetectedPixels {
         for (int i = 0; i < numberofbands; i++) {
             int band = bands[i];
             gir.setBand(band);
-            kdist.setImageData(gir, imagerectangle.x, imagerectangle.y, 1, 1, imagerectangle.width, imagerectangle.height);
+            kdist.setImageData(gir, imagerectangle.x, imagerectangle.y, 1, 1, imagerectangle.width, imagerectangle.height,true);
             kdist.estimate(null);
             double[][][] thresh = kdist.getDetectThresh();
             imagestat[i][0] = thresh[0][0][0];

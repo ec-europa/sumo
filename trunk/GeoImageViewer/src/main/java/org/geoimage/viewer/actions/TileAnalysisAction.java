@@ -18,7 +18,7 @@ public class TileAnalysisAction extends AbstractAction{
 	
 	@Override
 	public String getName() {
-		return "tyle";
+		return "chktile";
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class TileAnalysisAction extends AbstractAction{
 				int row=Integer.parseInt(args[0]);
 				int col=Integer.parseInt(args[1]);
 				
-				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer());
+				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer().getImageReader(),0);
 				borderAn.analyse(row,col);
 			
 			}

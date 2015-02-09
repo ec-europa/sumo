@@ -6,16 +6,10 @@ package org.geoimage.analysis;
 
 import java.awt.Rectangle;
 import java.awt.image.Raster;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  *
@@ -33,7 +27,10 @@ public class VDSAnalysis {
     private DetectedPixels pixels;
     private IMask[] mask;
     private int tileSize;
-    // batch mode flag
+    
+    
+
+	// batch mode flag
     private boolean isBatch = false;
     // application progress bar
     private IProgress progressBar = null;
@@ -170,7 +167,7 @@ public class VDSAnalysis {
                 xLeftTile = i * dx;
                 xRightTile = xLeftTile + dx;
                 if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
-                	kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, dx, dy);
+                	kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, dx, dy,true);
                 	kdist.estimate(null);
 
                 	double[][][] thresh = kdist.getDetectThresh();
@@ -222,7 +219,7 @@ public class VDSAnalysis {
                     if(((double)pixelcount / maskdata.length) < 0.7)
                     {
                         // if there are pixels to estimate, calculate statistics using the mask
-                        kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, dx, dy);
+                        kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, dx, dy,true);
                         kdist.estimate(rastermask);
                         double[][][] thresh = kdist.getDetectThresh();
                         tileStat[j] = kdist.getTileStat()[0];
@@ -313,36 +310,10 @@ public class VDSAnalysis {
         return false;
     }
 
-    // return a geometry of grid of Tiles
-    public List<Geometry> getTiles() {
-        
-        int horTiles = gir.getWidth() / this.tileSize;
-        int verTiles = gir.getHeight() / this.tileSize;
-        
-        List<Geometry> tiles = new ArrayList<Geometry>(horTiles*verTiles*8);
-        
-        int[] sizeTile = new int[2];
-        // the real size of tiles
-        sizeTile[0] = gir.getWidth() / horTiles;
-        sizeTile[1] = gir.getHeight() / verTiles;
-        GeometryFactory geomFactory = new GeometryFactory();
-        Coordinate[] coo=null;
-        for (int j = 0; j < verTiles; j++) {
-        	coo=new Coordinate[2];
-        	coo[0]=new Coordinate(0, j * sizeTile[1]);
-        	coo[1]=new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1]);
-            tiles.add(geomFactory.createLineString(coo));
-        }
-        for (int i = 0; i < horTiles; i++) {
-        	coo=new Coordinate[2];
-        	coo[0]=new Coordinate(i * sizeTile[0], 0);
-        	coo[1]=new Coordinate((double)i * sizeTile[0], (double)gir.getHeight());
-            tiles.add(geomFactory.createLineString(coo));
-        }
-        return tiles;
-
-    }
-    
+  
+    public int getTileSize() {
+		return tileSize;
+	}
     
     /*
     // return a geometry of grid of Tiles

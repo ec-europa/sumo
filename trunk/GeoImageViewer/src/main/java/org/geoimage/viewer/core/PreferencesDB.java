@@ -42,9 +42,21 @@ import org.geoimage.viewer.util.Constant;
  * @author gabbaan + leforth + thoorfr
  */
 public class PreferencesDB {
+	private static PreferencesDB instance=null;
+	
     EntityManagerFactory emf;
 
-    public PreferencesDB() {
+    public static PreferencesDB getPrefDBInstance(){
+    	if (instance == null) {
+            instance = new PreferencesDB();
+        }
+    	
+    	return instance;
+    }
+    
+    
+    
+    private PreferencesDB() {
         emf=Persistence.createEntityManagerFactory("GeoImageViewerPU");
         initializePreferences();
     }
@@ -157,4 +169,47 @@ public class PreferencesDB {
         insertIfNotExistRow(Constant.PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS,"5");
         
     }
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public double getNeighbourDistance(double defaultValue){
+    	double neighbouringDistance=defaultValue;
+    	try {
+            neighbouringDistance = Double.parseDouble(readRow(PREF_NEIGHBOUR_DISTANCE));
+        } catch (NumberFormatException e) {
+            neighbouringDistance = defaultValue;
+        }
+    	return neighbouringDistance;
+    }
+    
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public int getTileSize(int defaultValue){
+        try {
+            return Integer.parseInt(readRow(PREF_NEIGHBOUR_TILESIZE));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+
+    }
+    /*
+    public int getPrefTargetsSizeBand(int band,double defaultValue){
+    	double val=defaultValue;
+    	try{
+    		if
+    		Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_0);
+    	
+    	}catch(Exception e){
+    		
+    	}
+    	return val;
+    }*/
+    
 }

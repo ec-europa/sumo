@@ -65,7 +65,9 @@ public class LayerManagerWidget {
     	wContainer.setLayoutManager(new RowLayout(true));
     	
     	LayerWidget console=new LayerWidget(Platform.getLayerManager().getConsoleLayer());
-    	console.setMinSize(20,20);
+    	//console.setMinSize(20,20);
+    	
+    	
     	wContainer.addWidget(console);
     	
     	Container parent=new LayerWidget(Platform.getLayerManager().getBaseLayer());
