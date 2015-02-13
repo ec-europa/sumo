@@ -467,7 +467,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             for (int i = 0; i < gir.getNBand(); i++) {
                 gir.setBand(i);
                 org.geoimage.analysis.VDSAnalysis vds = new org.geoimage.analysis.VDSAnalysis((SarImageReader) gir, masks, ENL.getFromGeoImageReader((SarImageReader) gir), (float) thresh, (float) thresh, (float) thresh, (float) thresh, new progress());
-                vds.run(new KDistributionEstimation(ENL.getFromGeoImageReader((SarImageReader)gir),0,0,0));
+                vds.run(new KDistributionEstimation(ENL.getFromGeoImageReader((SarImageReader)gir)),null);
                 DetectedPixels pixels = vds.getPixels();
                 pixels.agglomerate();
                 pixels.computeBoatsAttributes();

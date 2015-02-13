@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.def.SarImageReader;
+import org.slf4j.LoggerFactory;
 
 /**
  * the class applying the algorithm based on k-distribution
@@ -71,12 +72,16 @@ public class KDistributionEstimation {
 	private double[][][] detectThresh = null;
 	private double[][][] tileStat = null;
 
-	private int xMarginCheck = 0;
+	  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
+/*	private int xMarginCheck = 0;
 	private int yMarginCheck = 0;
-	private int minPixelVal = 0;
+	private int minPixelVal = 0;*/
 
-	private boolean useBlackBorderAnalysis = false;
-	private BlackBorderAnalysis blackTtileAnalysis = null;
+	private BlackBorderAnalysis borderAnalysis;
+	private int rowTile;
+	private int colTile;
+	
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
 	
 	class SupportStats{
 		public double std;
@@ -87,8 +92,7 @@ public class KDistributionEstimation {
 
 	// CONSTRUCTOR
 	/** the cinstructor */
-	public KDistributionEstimation(float enlf, int xMarginCheck,
-			int yMarginCheck, int minPixelVal) {
+	public KDistributionEstimation(float enlf) {
 		String enl = "" + (int) (enlf * 10);
 		if (enl.length() == 2) {
 			enl = "0" + enl;
@@ -98,9 +102,6 @@ public class KDistributionEstimation {
 				"ktables/TabK" + enl + "17.r8");
 		System.out.println(lut.getPath());
 		loadLookUpTable(lut);
-		this.xMarginCheck = xMarginCheck;
-		this.yMarginCheck = yMarginCheck;
-		this.minPixelVal = minPixelVal;
 
 	}
 
@@ -161,10 +162,18 @@ public class KDistributionEstimation {
 	 *            the x tile
 	 * @param tileY
 	 *            the y tile
+	 * @param row
+	 * 			  vertical index for the tile
+	 * @param col
+	 * 			  horiz index for the tile
+	 * @param useBlackBorderAnalysis
+	 * 			  true = use the black border analysis to analize the tiles
+	 * 
+	 *  
 	 */
 	public void setImageData(SarImageReader gir, int sizeX, int sizeY,
 			int numTileX, int numTileY, int sizeTileX, int sizeTileY,
-			boolean useBlackBorderAnalysis) {
+			int row,int col,BlackBorderAnalysis blackBorderAnalysis) {
 		this.gir = gir;
 		nTileX = numTileX;
 		nTileY = numTileY;
@@ -173,7 +182,9 @@ public class KDistributionEstimation {
 		this.sizeTileX = sizeTileX;
 		this.sizeTileY = sizeTileY;
 		N = sizeTileX * sizeTileY / 2;
-		this.useBlackBorderAnalysis = useBlackBorderAnalysis;
+		this.borderAnalysis=blackBorderAnalysis;
+		this.rowTile=row;
+		this.colTile=col;
 	}
 
 	/**
@@ -211,12 +222,9 @@ public class KDistributionEstimation {
 		initialisation = true;
 	}
 
-	// main method to estimate the mean and the standard deviation with
-	// iteration
+	// main method to estimate the mean and the standard deviation with iteration
 	/** the main method launching the process */
 	public void estimate(Raster mask) {
-		if (useBlackBorderAnalysis)
-			blackTtileAnalysis = new BlackBorderAnalysis(gir, sizeTileX);
 
 		detectThresh = new double[nTileX][nTileY][6];
 		tileStat = new double[nTileY][nTileX][5];
@@ -233,7 +241,6 @@ public class KDistributionEstimation {
 				int iniY = startTile[1] + j * sizeTileY;
 				int[] data = gir.readTile(iniX, iniY, sizeTileX, sizeTileY);
 				double[] result = computeStat(256 * 256, i, j, mask, data);
-				//double[] result = computeStat_orig(256 * 256, i, j, mask, data2);
 
 				for (int k = 0; k < 5; k++) {
 					tileStat[j][i][k] = result[k];
@@ -275,29 +282,39 @@ public class KDistributionEstimation {
 	 * @param clipx
 	 * @return
 	 */
-	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,Raster mask,int iniX, int iniY,int[] data,int thresholdpixels,double clipx){
+	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,Raster mask,int iniX, int iniY,int[] data,int thresholdpixels,double clipx,TileAnalysis blackAn){
 		double val = 0.;
 		double std = 0.0;
 		double tempN=0.0;
 		double mux=0.0;
-
+		
+		
 		for (int y = starty; y <endy; y += 2) {
-			for (int x = startx; x < endx ; x += 2) {
+			int newStart=startx;
+			int newEnd=endx;
+			
+			if(blackAn!=null){
+				if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y])
+					newStart=startx+blackAn.horizLeftCutOffArray[y];
+				if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y])
+					newEnd=blackAn.horizRightCutOffArray[y];
+			}	
+			for (int x = newStart; x < newEnd ; x += 2) {
+				
 				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
 					val = data[y * sizeTileX + x];
-					if (!((val < minPixelVal) && (iniX + x < xMarginCheck
+				  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
+					/*if (!((val < minPixelVal) && (iniX + x < xMarginCheck
 							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY
-							+ y > (gir.getHeight() - yMarginCheck)))) {
-
-
-						if (val > 0 && val < clipx) {
-							mux += val;
-							std += val * val;
-							tempN++;
-						}
+							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY + y > (gir.getHeight() - yMarginCheck)))) {
+					*/
+					if (val > 0 && val < clipx) {
+						mux += val;
+						std += val * val;
+						tempN++;
 					}
-				} 
+				}
+				//} 
 			}
 		}
 		SupportStats result=new SupportStats();
@@ -328,253 +345,109 @@ public class KDistributionEstimation {
 		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
 		standardDeviation = 0.0;
 
-
-		/*
-		 * //check the black border analysis for the first 5 tile on rows
-		 * if(i<5){ TileAnalysis black=tileAnalysis.getAnalysisTile(j,i);
-		 * if(black.bBtoWBorder)
-		 * 
-		 * }
-		 */
-		double mean = 0.0;
-		int meancounter = 0;
-		double tempTileN = 0.;
-		SupportStats[] result=new SupportStats[4];
 		
-		result[0]=calcStatValues(0,0,sizeTileX/2,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip1);
-		// make sure we have enough points
-		if (result[0].tempN > thresholdpixels) {
-			result[0].mu /= result[0].tempN;
-			standardDeviation += result[0].std / (result[0].mu * result[0].mu);
-			tempTileN += result[0].tempN;
-			mean += result[0].mu;
-			meancounter++;
-		}
+		boolean estimate=true;
+		//check the black border analysis for the first 5 tile on rows
+		TileAnalysis black=null;
+		if(this.borderAnalysis!=null)black=this.borderAnalysis.getAnalysisTile(rowTile,colTile);
 		
-		result[1]=calcStatValues(sizeTileX/2,0,sizeTileX,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip2);
-		// make sure we have enough points
-		if (result[1].tempN > thresholdpixels) {
-			result[1].mu /= result[1].tempN;
-			standardDeviation += result[1].std / (result[1].mu * result[1].mu);
-			tempTileN += result[1].tempN;
-			mean += result[1].mu;
-			meancounter++;
+		if(black!=null){
+			if(black.bIsBorder)
+				estimate=false;//the tile is completely on the black border
 		}
-		result[2]=calcStatValues(0,sizeTileY/2,sizeTileX/2,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip3);
-		// make sure we have enough points
-		if (result[2].tempN > thresholdpixels) {
-			result[2].mu /= result[2].tempN;
-			standardDeviation += result[2].std / (result[2].mu * result[2].mu);
-			tempTileN += result[2].tempN;
-			mean += result[2].mu;
-			meancounter++;
-		}
-		result[3]=calcStatValues(sizeTileX/2,sizeTileY/2,sizeTileX,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip4);
-		// make sure we have enough points
-		if (result[3].tempN > thresholdpixels) {
-			result[3].mu /= result[3].tempN;
-			standardDeviation += result[3].std / (result[3].mu * result[3].mu);
-			tempTileN += result[3].tempN;
-			mean += result[3].mu;
-			meancounter++;
-		}
+	  
+		try{
+			if(estimate){
+				double mean = 0.0;
+				int meancounter = 0;
+				double tempTileN = 0.;
+				SupportStats[] result=new SupportStats[4];
+				
+				result[0]=calcStatValues(0,0,sizeTileX/2,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip1,black);
+				// make sure we have enough points
+				if (result[0].tempN > thresholdpixels) {
+					result[0].mu /= result[0].tempN;
+					standardDeviation += result[0].std / (result[0].mu * result[0].mu);
+					tempTileN += result[0].tempN;
+					mean += result[0].mu;
+					meancounter++;
+				}
+				
+				result[1]=calcStatValues(sizeTileX/2,0,sizeTileX,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip2,black);
+				// make sure we have enough points
+				if (result[1].tempN > thresholdpixels) {
+					result[1].mu /= result[1].tempN;
+					standardDeviation += result[1].std / (result[1].mu * result[1].mu);
+					tempTileN += result[1].tempN;
+					mean += result[1].mu;
+					meancounter++;
+				}
+				result[2]=calcStatValues(0,sizeTileY/2,sizeTileX/2,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip3,black);
+				// make sure we have enough points
+				if (result[2].tempN > thresholdpixels) {
+					result[2].mu /= result[2].tempN;
+					standardDeviation += result[2].std / (result[2].mu * result[2].mu);
+					tempTileN += result[2].tempN;
+					mean += result[2].mu;
+					meancounter++;
+				}
+				result[3]=calcStatValues(sizeTileX/2,sizeTileY/2,sizeTileX,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip4,black);
+				// make sure we have enough points
+				if (result[3].tempN > thresholdpixels) {
+					result[3].mu /= result[3].tempN;
+					standardDeviation += result[3].std / (result[3].mu * result[3].mu);
+					tempTileN += result[3].tempN;
+					mean += result[3].mu;
+					meancounter++;
+				}
+				
+				// at least one mean was set to zero
+				if ((meancounter != 4) && (meancounter > 0)) {
+					mean = mean / meancounter;
+					if (result[0].tempN < thresholdpixels)
+						result[0].mu = mean;
+					if (result[1].tempN < thresholdpixels)
+						result[1].mu = mean;
+					if (result[2].tempN < thresholdpixels)
+						result[2].mu = mean;
+					if (result[3].tempN < thresholdpixels)
+						result[3].mu = mean;
+				}
 		
-		// at least one mean was set to zero
-		if ((meancounter != 4) && (meancounter > 0)) {
-			mean = mean / meancounter;
-			if (result[0].tempN < thresholdpixels)
-				result[0].mu = mean;
-			if (result[1].tempN < thresholdpixels)
-				result[1].mu = mean;
-			if (result[2].tempN < thresholdpixels)
-				result[2].mu = mean;
-			if (result[3].tempN < thresholdpixels)
-				result[3].mu = mean;
-		}
-
-		if (meancounter != 0) {
-			standardDeviation = Math.sqrt((standardDeviation - tempTileN)
-					/ (tempTileN - 1.));
-			statData[0] = standardDeviation;
-			statData[1] = result[0].mu;
-			statData[2] = result[1].mu;
-			statData[3] = result[2].mu;
-			statData[4] = result[3].mu;
-		} else {
+				if (meancounter != 0) {
+					standardDeviation = Math.sqrt((standardDeviation - tempTileN)
+							/ (tempTileN - 1.));
+					statData[0] = standardDeviation;
+					statData[1] = result[0].mu;
+					statData[2] = result[1].mu;
+					statData[3] = result[2].mu;
+					statData[4] = result[3].mu;
+				} else {
+					statData[0] = 0.001;
+					statData[1] = 100000;
+					statData[2] = 100000;
+					statData[3] = 100000;
+					statData[4] = 100000;
+				}
+			}else{
+					statData[0] = 0.001;
+					statData[1] = 100000;
+					statData[2] = 100000;
+					statData[3] = 100000;
+					statData[4] = 100000;
+			}	
+		}catch(Exception e){
+			logger.error("Error computing statistics for iniX:"+iniX+"   iniY:"+iniY);
 			statData[0] = 0.001;
 			statData[1] = 100000;
 			statData[2] = 100000;
 			statData[3] = 100000;
 			statData[4] = 100000;
-		}
+		}	
 		return statData;
 	}
 	
 	
-	/**
-	 * compute the stats of thesubtiles
-	 *
-	 * @param clip
-	 *            the ciping thresh
-	 * @param i
-	 *            the line of the tile
-	 * @param j
-	 *            the column of the tile
-	 * @return the stats of each subtiles
-	 */
-	protected double[] computeStat_orig(double clip, int iniX, int iniY,	Raster mask, int[] data) {
-		double clip1 = statData[1] * clip, clip2 = statData[2] * clip, clip3 = statData[3]* clip, clip4 = statData[4] * clip;
-		double mu1 = 0., mu2 = 0., mu3 = 0., mu4 = 0.;
-		// used to fill in the zero values for the means
-		double mean = 0.0;
-		int meancounter = 0;
-		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
-		standardDeviation = 0.0;
-
-		double tempN1 = 0., tempN2 = 0., tempN3 = 0., tempN4 = 0.;
-		double tempTileN = 0.;
-		double val = 0.;
-		
-
-		double std = 0.0;
-		for (int y = 0; y < sizeTileY / 2; y += 2) {
-			for (int x = 0; x < sizeTileX / 2; x += 2) {
-				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-					val = data[y * sizeTileX + x];
-					if (!((val < minPixelVal) && (iniX + x < xMarginCheck
-							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY
-							+ y > (gir.getHeight() - yMarginCheck)))) {
-						if (val > 0 && val < clip1) {
-							mu1 += val;
-							std += val * val;
-							tempN1++;
-						}
-					}
-				} 
-			}
-		}
-		// make sure we have enough points
-		if (tempN1 > thresholdpixels) {
-			mu1 /= tempN1;
-			standardDeviation += std / (mu1 * mu1);
-			tempTileN += tempN1;
-			mean += mu1;
-			meancounter++;
-		}
-
-		std = 0.0;
-		for (int y = 0; y < sizeTileY / 2; y += 2) {
-			for (int x = sizeTileX / 2; x < sizeTileX; x += 2) {
-				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-					val = data[y * sizeTileX + x];
-					if (!((val < minPixelVal) && (iniX + x < xMarginCheck
-							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY
-							+ y > (gir.getHeight() - yMarginCheck)))) {
-						if (val > 0 && val < clip2) {
-							mu2 += val;
-							std += val * val;
-							tempN2++;
-						}
-					}
-				} 
-			}
-		}
-		// make sure we have enough points
-		if (tempN2 > thresholdpixels) {
-			mu2 /= tempN2;
-			standardDeviation += std / (mu2 * mu2);
-			tempTileN += tempN2;
-			mean += mu2;
-			meancounter++;
-		}
-
-		std = 0.0;
-		for (int y = sizeTileY / 2; y < sizeTileY; y += 2) {
-			for (int x = 0; x < sizeTileX / 2; x += 2) {
-				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-					val = data[y * sizeTileX + x];
-					if (!((val < minPixelVal) && (iniX + x < xMarginCheck
-							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY
-							+ y > (gir.getHeight() - yMarginCheck)))) {
-						if (val > 0 && val < clip3) {
-							mu3 += val;
-							std += val * val;
-							tempN3++;
-						}
-					}
-				} 
-			}
-		}
-		// make sure we have enough points
-		if (tempN3 > thresholdpixels) {
-			mu3 /= tempN3;
-			standardDeviation += std / (mu3 * mu3);
-			tempTileN += tempN3;
-			mean += mu3;
-			meancounter++;
-		}
-
-		std = 0.0;
-		for (int y = sizeTileY / 2; y < sizeTileY; y += 2) {
-			for (int x = sizeTileX / 2; x < sizeTileX; x += 2) {
-				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-					val = data[y * sizeTileX + x];
-					if (!((val < minPixelVal) && (iniX + x < xMarginCheck
-							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY
-							+ y > (gir.getHeight() - yMarginCheck)))) {
-						if (val > 0 && val < clip4) {
-							mu4 += val;
-							std += val * val;
-							tempN4++;
-						}
-					}
-				} 
-			}
-		}
-		// make sure we have enough points
-		if (tempN4 > thresholdpixels) {
-			mu4 /= tempN4;
-			standardDeviation += std / (mu4 * mu4);
-			tempTileN += tempN4;
-			mean += mu4;
-			meancounter++;
-		}
-
-		// at least one mean was set to zero
-		if ((meancounter != 4) && (meancounter > 0)) {
-			mean = mean / meancounter;
-			if (tempN1 < thresholdpixels)
-				mu1 = mean;
-			if (tempN2 < thresholdpixels)
-				mu2 = mean;
-			if (tempN3 < thresholdpixels)
-				mu3 = mean;
-			if (tempN4 < thresholdpixels)
-				mu4 = mean;
-		}
-
-		if (meancounter != 0) {
-			standardDeviation = Math.sqrt((standardDeviation - tempTileN)
-					/ (tempTileN - 1.));
-			statData[0] = standardDeviation;
-			statData[1] = mu1;
-			statData[2] = mu2;
-			statData[3] = mu3;
-			statData[4] = mu4;
-		} else {
-			statData[0] = 0.001;
-			statData[1] = 100000;
-			statData[2] = 100000;
-			statData[3] = 100000;
-			statData[4] = 100000;
-		}
-		return statData;
-	}
-
 	// return [normalized standardDeviation, mean1, mean2, mean3, mean4] of each
 	// sub-window
 	/**

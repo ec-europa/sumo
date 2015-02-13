@@ -60,11 +60,11 @@ public class Constant {
   public static final String CONF_FILE="analysis.conf";
   
   
-  
+  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
   //constants to define the margin x,y in which we need to check the value of the pixel 
-  public static final String PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS="Horizontal exclusion margin pixel";
+  /*public static final String PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS="Horizontal exclusion margin pixel";
   public static final String PREF_YMARGIN_EXCLUSION_PIXEL_ANALYSIS="Vertical exclusion margin pixel";
-  public static final String PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS="Min pixel exclusion value";
+  public static final String PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS="Min pixel exclusion value";*/
   
   
   

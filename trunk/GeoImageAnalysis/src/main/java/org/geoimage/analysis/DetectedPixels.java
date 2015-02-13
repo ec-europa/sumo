@@ -427,7 +427,7 @@ public class DetectedPixels {
         for (int i = 0; i < numberofbands; i++) {
             int band = bands[i];
             gir.setBand(band);
-            kdist.setImageData(gir, imagerectangle.x, imagerectangle.y, 1, 1, imagerectangle.width, imagerectangle.height,true);
+            kdist.setImageData(gir, imagerectangle.x, imagerectangle.y, 1, 1, imagerectangle.width, imagerectangle.height,0,0,null);
             kdist.estimate(null);
             double[][][] thresh = kdist.getDetectThresh();
             imagestat[i][0] = thresh[0][0][0];

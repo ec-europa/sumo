@@ -157,7 +157,7 @@ public class WWJPanel extends javax.swing.JPanel {
                                     GlobeAnnotation an = ((WWGeoImage) top).getAnnotation();
                                     LayerManager lm = null;
                                     try {
-                                        lm = GeoImageViewer.getLayerManager();
+                                        lm = LayerManager.getIstanceManager();
                                     } catch (Exception e) {
                                     }
                                     if (lm == null) {

@@ -40,11 +40,7 @@ public class TileAnalysisAction extends AbstractAction{
 				
 				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer().getImageReader(),0);
 				borderAn.analyse(row,col);
-			
 			}
-			
-			
-		
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;
