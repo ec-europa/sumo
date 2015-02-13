@@ -40,7 +40,7 @@ public class ExportGeotiffAction extends AbstractAction{
                 try {
                     Platform.setInfo("Exporting file...", -1);
                     f.createNewFile();
-                    GeotiffWriter.create(Platform.getCurrentImageLayer().getImageReader(), f.getAbsolutePath(), Platform.getProgressBar());
+                    GeotiffWriter.create(Platform.getCurrentImageLayer().getImageReader(), f.getAbsolutePath(),null);// Platform.getProgressBar());
                 } catch (Exception ex) {
                     Logger.getLogger(ExportGeotiffAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
