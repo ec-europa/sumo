@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import javax.media.opengl.awt.GLCanvas;
 
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
@@ -51,7 +50,7 @@ public class Platform {
 		batchMode = false;
 	}
 
-	
+	/*
 	
 	public static IProgress getProgressBar(){
         return new IProgress() {
@@ -103,7 +102,7 @@ public class Platform {
                 this.done=value;
             }
         };
-    }
+    }*/
 
     public static ConsoleLayer getConsoleLayer() {
         return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getConsole();
@@ -133,36 +132,37 @@ public class Platform {
     public static void setInfo(String info, long timeout) {
         //AG progress bar management
         int progress = 0;//AG
+        GeoImageViewerView mainView=((GeoImageViewerView) GeoImageViewer.getApplication().getMainView());
         if (info == null || "".equals(info)) {
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setInfo("");
+        	mainView.setInfo("");
             maxPBar = 0;//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressValue(0);//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(0);//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).iconTimer(false);//AG
+            mainView.setProgressValue(0);//AG
+            mainView.setProgressMax(0);//AG
+            mainView.iconTimer(false);//AG
             return;
         }
         if (timeout==-1) {//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(-1);//AG
+        	mainView.setProgressMax(-1);//AG
         }
         if (info.startsWith("Adding ")) {//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(-1);//AG
+        	mainView.setProgressMax(-1);//AG
         } else if (info.startsWith("loading ")) {//AG
             progress = new Integer(info.replace("loading ", ""));      //AG
         }//AG
         else if(timeout>0){
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(0);//AG
+        	mainView.setProgressMax(0);//AG
         }
         if (maxPBar < progress) {//AG
             maxPBar = progress;//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(maxPBar);//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).iconTimer(true);//AG
+            mainView.setProgressMax(maxPBar);//AG
+            mainView.iconTimer(true);//AG
         }
-        ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setInfo(info);
-        ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressValue(maxPBar - progress);//AG
+        mainView.setInfo(info);
+        mainView.setProgressValue(maxPBar - progress);//AG
         if (progress == 1) {//AG
             maxPBar = 0;//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressValue(0);//AG
-            ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).iconTimer(false);//AG
+            mainView.setProgressValue(0);//AG
+            mainView.iconTimer(false);//AG
         }
     }
 
