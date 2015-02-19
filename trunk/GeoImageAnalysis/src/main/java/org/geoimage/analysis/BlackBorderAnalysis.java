@@ -408,6 +408,8 @@ public class BlackBorderAnalysis {
 						}
 					}catch(Exception e ){
 						    
+						   
+						
 						
 						
 					}	
