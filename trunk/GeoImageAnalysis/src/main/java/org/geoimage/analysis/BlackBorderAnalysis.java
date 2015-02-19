@@ -6,8 +6,13 @@ import java.util.HashMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.geoimage.def.GeoImageReader;
+import org.slf4j.LoggerFactory;
 
 public class BlackBorderAnalysis {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BlackBorderAnalysis.class);
+
+	
+	
 	public class TileAnalysis{
 		int[] horizLeftCutOffArray=null;
 		int[] horizRightCutOffArray=null;
@@ -87,9 +92,9 @@ public class BlackBorderAnalysis {
 	 * @param col
 	 */
 	public void analyse(int row,int col) {
-		int iniY = (col-1) * sizeY;
-		int iniX = (row-1) * sizeX;
-		analyzeTile(iniX,iniY,true,true);
+		int iniX = (col-1) * sizeX;
+		int iniY = (row-1) * sizeY;
+		analyzeTile(iniX,iniY,false,true);
 		
 	}
 	
@@ -104,9 +109,9 @@ public class BlackBorderAnalysis {
 		horizAnalysis(false);
 		
 		//top five row tiles
-		//vertAnalysis(true);
+		vertAnalysis(true);
 		//bottom five row tiles
-		//vertAnalysis(false);
+		vertAnalysis(false);
 	}
 
 	/**
@@ -190,29 +195,39 @@ public class BlackBorderAnalysis {
 	 * 	
 	 * @param top true start from left margin , false start from right  margin 
 	 *  analyze first/last numTilesMargin(default 5) tiles
-	 */
+	 **/
 	public void vertAnalysis(boolean top) {
-        int startYPixelTile=0;
+		int startYPixelTile=0;
         int startXPixelTile=0;
         
-        int startY=0;
+        int startTileY=0;
         
         if(top){
-        	startY=0;
+        	startTileY=0;
         }else{
-        	startY=verTiles;
+        	//start from last tile
+        	startTileY=verTiles-1;
         }
+        
+        
+        
         for (int colIdx = 0; colIdx < horTiles; colIdx++) {
         	
         	TileAnalysis previous=null;
         	boolean stop=false;
-        	startYPixelTile=startY*sizeY;
-        	for (int rowIdx = startY,iteration=0; iteration < numTilesMargin&&!stop; iteration++) {
-        		
-        		if(rowIdx==startY||colIdx==0||previous!=null){
+        	startYPixelTile=startTileY*sizeY;
+        	
+        	int iteration=0;
+        	for (int rowIdx = startTileY; iteration < numTilesMargin&&!stop;iteration++ ) {
+        		//entro se sono sulla prima colonna oppure se previous!=null
+        		if(rowIdx==startTileY||previous!=null){
         			//check if we are on the last tile to correct the size
+        			int sx=sizeX;
+        			if(colIdx==horTiles-1){
+        				sx=sizeX+correctionXForLastTile;
+        			}
         			int sy=sizeY;
-        			if(colIdx==verTiles-1){
+        			if(rowIdx==verTiles-1){
         				sy=sizeY+correctionYForLastTile;
         			}
         			TileAnalysis result=getAnalysisTile(rowIdx, colIdx);
@@ -220,22 +235,35 @@ public class BlackBorderAnalysis {
         			if(result==null||result.bIsBorder==false){
         				if(result==null)
         					result=new TileAnalysis();
-        				int resultArray[]=analyzeTile(startXPixelTile,startYPixelTile,false,top,sy,sizeX);
+
+        				int[] resultArray=analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy);
+        			
         				result.bIsBorder=resultArray==null; //if resultArray is null the tile is all on the black border
-        				result.verTopCutOffArray=resultArray;
-        				putAnalysisTile(rowIdx,colIdx,result);
-        			}	
-            		if(result.bIsBorder){
+        				if(top){
+        					result.verTopCutOffArray=resultArray;
+        					result.verBottomOffArray=null;
+        				}else{
+        					result.verBottomOffArray=resultArray;
+        					result.verTopCutOffArray=null;
+        				}	
+	            		putAnalysisTile(rowIdx,colIdx,result);
+        			}
+	            	
+	            	if(result.bIsBorder){
             			previous=result;
             		}else{
             			stop=true;
             		}
         		}
-        		startYPixelTile=startYPixelTile+sizeY;
         		if(top){
         			rowIdx++;
+        			startYPixelTile=startYPixelTile+sizeY;
         		}else{
         			rowIdx--;
+        			if(colIdx==verTiles-1){
+        				startYPixelTile=startYPixelTile-sizeY-correctionYForLastTile;
+        			}
+        			startYPixelTile=startYPixelTile-sizeY;
         		}
         	}
         	startXPixelTile=startXPixelTile+sizeX;
@@ -267,18 +295,24 @@ public class BlackBorderAnalysis {
 	}
 	
 	
-	/*
-	public int[] traspone(int lineMatrix[],int rowSize,int colSize){
-	    int trasposta[]=new int[lineMatrix.lenght];
-		for(int idx=0;idx<lineMatrix.lenght;idx++){
-		    int idTrasposta=(idx*rowSize)%lineMatrix.lenght;
-			trasposta[idTrasposta]=
-			
-		}
+	/**
+	 * 
+	 * @param lineMatrix
+	 * @param numberOfCols
+	 * @param numberOfRows
+	 * @return
+	 */
+	public int[] traspone(int lineMatrix[],int numberOfCols,int numberOfRows){
+	    int trasposta[]=new int[lineMatrix.length];
 		
+	    
+	    for(int idr=0;idr<lineMatrix.length;idr++){
+			int idTrasposta=(idr*numberOfCols)%lineMatrix.length;
+			trasposta[idr]=lineMatrix[idTrasposta];
+		}
+		return trasposta;
 	} 
 	
-	*/
 	/**
 	 * 
 	 * @param iniX
@@ -308,7 +342,7 @@ public class BlackBorderAnalysis {
 				dataRow[idxSamples]=gir.readTile(iniX, row, tileWidth,1);
 				vCutOffSize=tileHeight;
 			}else{
-				dataRow[idxSamples]=gir.readTile(iniX, row, 1,sizeY);
+				dataRow[idxSamples]=gir.readTile(iniX, row, 1,tileHeight);
 				vCutOffSize=tileWidth;
 			}	
 				
@@ -380,38 +414,46 @@ public class BlackBorderAnalysis {
 			//if the difference is too high we calculate the Cutoffpoint for each row
 			if(NumberUtils.max(viCutOffColTemp)-NumberUtils.min(viCutOffColTemp)>3){
 				//read complete tile
-				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,sizeY);
+				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,tileHeight);
 				viCutOffColTemp=new int[vCutOffSize];
-				
 
+				if(!horizontal){
+					dataTile=traspone(dataTile, tileWidth,tileHeight);
+				}
+				
 				//loop on each element of the data readed if stop is false
 				for(int arraySamplesId=0;arraySamplesId<vCutOffSize;arraySamplesId++){
 					try{
 						int posStart=arraySamplesId*tileWidth;
-						
+						//leggo la riga del tile (il tile e' mem come array)
 						int[] singleRow=ArrayUtils.subarray(dataTile,posStart,posStart+tileWidth);
-						int maxValue=NumberUtils.max(singleRow);
-						double thres=maxValue*ConstantVDSAnalysis.THRESH_MAX_FACTOR;
 						
-						boolean stop=false;
-						for(int idCutOffElement=0;idCutOffElement<singleRow.length&&!stop;idCutOffElement++){
-							
-							if((singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_VALUE_SAFE||
-									(singleRow[idCutOffElement]>thres&&singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_IS_BORDER))||
-									(idCutOffElement==singleRow.length)){
-									if(startFromLeft)
-										viCutOffColTemp[arraySamplesId]=idCutOffElement;
-									else
-										viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
-									stop=true;
-							}
+						if(!startFromLeft){
+							ArrayUtils.reverse(singleRow);
 						}
+						
+						if(singleRow.length>0){
+							int maxValue=NumberUtils.max(singleRow);
+							double thres=maxValue*ConstantVDSAnalysis.THRESH_MAX_FACTOR;
+							
+							boolean stop=false;
+							
+							//loop on row elements
+							for(int idCutOffElement=0;idCutOffElement<singleRow.length&&!stop;idCutOffElement++){
+								
+								if((singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_VALUE_SAFE||
+										(singleRow[idCutOffElement]>thres&&singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_IS_BORDER))||
+										(idCutOffElement==singleRow.length)){
+										if(startFromLeft)
+											viCutOffColTemp[arraySamplesId]=idCutOffElement;
+										else
+											viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
+										stop=true;
+								}
+							}
+						}	
 					}catch(Exception e ){
-						    
-						   
-						
-						
-						
+						logger.error(e.getMessage());
 					}	
 				}
 			}else{
@@ -426,9 +468,14 @@ public class BlackBorderAnalysis {
 			}
 		}else{
 			if(result.bIsBorder){
-				viCutOffColTemp=null;
-				//viCutOffColTemp=new int[vCutOffSize];
-				//Arrays.fill(viCutOffColTemp, vCutOffSize);
+				//viCutOffColTemp=null;
+				if(startFromLeft){
+					viCutOffColTemp=new int[vCutOffSize];
+					Arrays.fill(viCutOffColTemp, tileWidth);
+				}else{
+					viCutOffColTemp=new int[vCutOffSize];
+					Arrays.fill(viCutOffColTemp, 0);
+				}	
 			}else{
 				viCutOffColTemp=new int[vCutOffSize];
 				if(startFromLeft)

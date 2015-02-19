@@ -289,7 +289,22 @@ public class KDistributionEstimation {
 		double mux=0.0;
 		
 		
+		
+
+		
+		
 		for (int y = starty; y <endy; y += 2) {
+			if(blackAn!=null&&blackAn.verTopCutOffArray!=null&&endy<blackAn.verTopCutOffArray[0]){
+				int cutOffY=blackAn.verTopCutOffArray[0];
+				if(y<=cutOffY)
+					continue;
+			}	
+			if(blackAn!=null&&blackAn.verBottomOffArray!=null&&endy>blackAn.verBottomOffArray[0]){
+				int cutOffY=blackAn.verBottomOffArray[0];
+				if(y>cutOffY)
+					break;
+			}
+			
 			int newStart=startx;
 			int newEnd=endx;
 			
@@ -303,11 +318,7 @@ public class KDistributionEstimation {
 				
 				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
 					val = data[y * sizeTileX + x];
-				  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
-					/*if (!((val < minPixelVal) && (iniX + x < xMarginCheck
-							|| iniY + y < yMarginCheck
-							|| iniX + x > (gir.getWidth() - xMarginCheck) || iniY + y > (gir.getHeight() - yMarginCheck)))) {
-					*/
+
 					if (val > 0 && val < clipx) {
 						mux += val;
 						std += val * val;
