@@ -25,10 +25,28 @@ import org.geoimage.viewer.widget.TransparentWidget;
 public class Platform {
 
     private static boolean batchMode=false;
-    //private Thread currentThreadRunning=null;
+    private static Thread currentThreadRunning=null;
     
     
-    /**
+    public Thread getCurrentThreadRunning() {
+		return currentThreadRunning;
+	}
+
+	public static void setCurrentThreadRunning(Thread currentThread) {
+		currentThreadRunning = currentThread;
+	}
+
+	public static void stopCurrentThread(){
+		if(currentThreadRunning!=null&&currentThreadRunning.isAlive()){
+			try{
+				currentThreadRunning.interrupt();
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}	
+		}
+	}
+	
+	/**
      * 
      * @return true if sumo is running in batch mode
      */
