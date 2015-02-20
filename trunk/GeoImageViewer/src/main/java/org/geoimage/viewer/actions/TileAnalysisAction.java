@@ -34,12 +34,17 @@ public class TileAnalysisAction extends AbstractAction{
 	@Override
 	public boolean execute(String[] args) {
 		try {
-			if(Platform.getCurrentImageLayer()!=null && args.length==2){
+			if(Platform.getCurrentImageLayer()!=null && args.length>=2){
 				int row=Integer.parseInt(args[0]);
 				int col=Integer.parseInt(args[1]);
+				String direction="H"; //h= horizontal v=vertical
+				if(args.length==3)
+					direction=args[2];
+				
+				
 				
 				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer().getImageReader(),0);
-				borderAn.analyse(row,col);
+				borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
