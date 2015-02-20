@@ -1,5 +1,6 @@
 package org.geoimage.analysis;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -91,10 +92,18 @@ public class BlackBorderAnalysis {
 	 * @param row
 	 * @param col
 	 */
-	public void analyse(int row,int col) {
+	public void analyse(int col,int row,boolean horizontalAnalysis) {
 		int iniX = (col-1) * sizeX;
 		int iniY = (row-1) * sizeY;
-		analyzeTile(iniX,iniY,false,true);
+		boolean normalDirection=true; //from left to right or from top to bottom
+		
+		if((iniX>(gir.getWidth()/2)&&horizontalAnalysis)){
+			normalDirection=false;
+		}
+		if((iniY>(gir.getWidth()/2)&&!horizontalAnalysis)){
+			normalDirection=false;
+		}
+		analyzeTile(iniX,iniY,horizontalAnalysis,normalDirection);
 		
 	}
 	
@@ -124,10 +133,7 @@ public class BlackBorderAnalysis {
         int startXPixelTile=0;
         
         int startX=0;
-        
-        if(left){
-        	startX=0;
-        }else{
+        if(!left){
         	//start from last tile
         	startX=horTiles-1;
         }
@@ -155,16 +161,8 @@ public class BlackBorderAnalysis {
         			if(result==null||result.bIsBorder==false){
         				if(result==null)
         					result=new TileAnalysis();
-        				int[] resultArray=analyzeTile(startXPixelTile,startYPixelTile,true,left,sx,sy);
-        			
-        				result.bIsBorder=resultArray==null; //if resultArray is null the tile is all on the black border
-        				if(left){
-        					result.horizLeftCutOffArray=resultArray;
-        					result.horizRightCutOffArray=null;
-        				}else{
-        					result.horizRightCutOffArray=resultArray;
-        					result.horizLeftCutOffArray=null;
-        				}	
+        				
+        				analyzeTile(startXPixelTile,startYPixelTile,true,left,sx,sy,result);
 	            		putAnalysisTile(rowIdx,colIdx,result);
         			}
 	            	
@@ -202,14 +200,10 @@ public class BlackBorderAnalysis {
         
         int startTileY=0;
         
-        if(top){
-        	startTileY=0;
-        }else{
+        if(!top){
         	//start from last tile
         	startTileY=verTiles-1;
         }
-        
-        
         
         for (int colIdx = 0; colIdx < horTiles; colIdx++) {
         	
@@ -236,16 +230,16 @@ public class BlackBorderAnalysis {
         				if(result==null)
         					result=new TileAnalysis();
 
-        				int[] resultArray=analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy);
+        					analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy,result);
         			
-        				result.bIsBorder=resultArray==null; //if resultArray is null the tile is all on the black border
-        				if(top){
+        				//result.bIsBorder=resultArray==null; //if resultArray is null the tile is all on the black border
+        				/*if(top){
         					result.verTopCutOffArray=resultArray;
         					result.verBottomOffArray=null;
         				}else{
         					result.verBottomOffArray=resultArray;
         					result.verTopCutOffArray=null;
-        				}	
+        				}	*/
 	            		putAnalysisTile(rowIdx,colIdx,result);
         			}
 	            	
@@ -287,11 +281,12 @@ public class BlackBorderAnalysis {
 	 * @param startFromLeft
 	 * @return
 	 */
-	private int[] analyzeTile(int iniX,int iniY,boolean horizontal,boolean startFromLeft){
+	private int[] analyzeTile(int iniX,int iniY,boolean horizontal,boolean normalDirection){
 		//correctionXForLastTile=gir.getWidth()-sizeX*horTiles;
-		int[]cutOff=analyzeTile(iniX, iniY,horizontal, startFromLeft, sizeX+correctionXForLastTile, sizeY);
+		TileAnalysis tile=new TileAnalysis();
+		analyzeTile(iniX, iniY,horizontal, normalDirection, sizeX+correctionXForLastTile, sizeY,tile);
 		
-		return cutOff;
+		return tile.horizLeftCutOffArray;
 	}
 	
 	
@@ -315,16 +310,17 @@ public class BlackBorderAnalysis {
 	
 	/**
 	 * 
-	 * @param iniX
+	 * @param iniX	
 	 * @param iniY
-	 * @param horizontal
-	 * @param invert
-	 * @param tileWidth
-	 * @param tileHeight
+	 * @param horizontalAnalysis   if true the tile is analyzed horizontally
+	 * @param normalDirection if true= mean from left to right if horizontalAnalysis==true else from top to bottom 
+	 * @param tileWidth real tile width 
+	 * @param tileHeight real tile height
+	 * 
 	 * @return
 	 */
-	private int[] analyzeTile(int iniX,int iniY,boolean horizontal,boolean startFromLeft,int tileWidth,int tileHeight){
-		TileAnalysis result=new TileAnalysis();
+	private TileAnalysis analyzeTile(int iniX,int iniY,boolean horizontalAnalysis,boolean normalDirection,int tileWidth,int tileHeight,TileAnalysis result){
+		//TileAnalysis result=new TileAnalysis();
 		int vCutOffSize=0;
 		
 		//array che contine un boolean per ogni riga analizzata se true=la linea contiene un'area di transizione da un "black border" ad un'area valida
@@ -338,7 +334,7 @@ public class BlackBorderAnalysis {
 			int row=iniY+((ConstantVDSAnalysis.ROW_TILE_SAMPLES_ARRAY[idxSamples]*sizeY)/100);
 			
 			//leggo i dati di 1 riga o di 1 colonna
-			if(horizontal){
+			if(horizontalAnalysis){
 				dataRow[idxSamples]=gir.readTile(iniX, row, tileWidth,1);
 				vCutOffSize=tileHeight;
 			}else{
@@ -346,7 +342,7 @@ public class BlackBorderAnalysis {
 				vCutOffSize=tileWidth;
 			}	
 				
-			if(!startFromLeft){
+			if(!normalDirection){
 				ArrayUtils.reverse(dataRow[idxSamples]);
 			}
 			
@@ -366,15 +362,11 @@ public class BlackBorderAnalysis {
 					&& dAvEtremeDiff[idxSamples]>ConstantVDSAnalysis.THRESH_D_EXTREMES_DIFF
 					&& dAvEtreme2[idxSamples]>=ConstantVDSAnalysis.THRESH_IS_BORDER
 					&& dAvEtreme1[idxSamples]<ConstantVDSAnalysis.THRESH_VALUE_SAFE;
-			
-			
 		}	
-		
 
 		boolean bBtoWBorder=bBtoWBorderV[0]||bBtoWBorderV[1]||bBtoWBorderV[2];
-		
 		boolean bIsBorderV[]={false,false,false};
-		
+		boolean bIsBorder=false;
 		
 		if(bBtoWBorder==false){
 			bIsBorderV[0]=dAvEtreme2[0]<ConstantVDSAnalysis.THRESH_IS_BORDER&&dAvEtreme1[0]<ConstantVDSAnalysis.THRESH_IS_BORDER;
@@ -382,7 +374,7 @@ public class BlackBorderAnalysis {
 			bIsBorderV[2]=dAvEtreme2[2]<ConstantVDSAnalysis.THRESH_IS_BORDER&&dAvEtreme1[2]<ConstantVDSAnalysis.THRESH_IS_BORDER;
 			
 			//is true if all elements in BIsBorderV are true
-			result.bIsBorder=bIsBorderV[0]&&bIsBorderV[1]&&bIsBorderV[2];
+			bIsBorder=bIsBorderV[0]&&bIsBorderV[1]&&bIsBorderV[2];
 		}
 		
 		int[] viCutOffColTemp={0,0,0};
@@ -402,7 +394,7 @@ public class BlackBorderAnalysis {
 					if(dataRow[arraySamplesId][idCutOffElement]>=ConstantVDSAnalysis.THRESH_VALUE_SAFE||
 					  (dataRow[arraySamplesId][idCutOffElement]>dThresValue[arraySamplesId]&&dataRow[arraySamplesId][idCutOffElement]>=ConstantVDSAnalysis.THRESH_IS_BORDER)){
 						//save the cutoff and stop
-						if(startFromLeft)
+						if(normalDirection)
 							viCutOffColTemp[arraySamplesId]=idCutOffElement;
 						else
 							viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
@@ -417,7 +409,7 @@ public class BlackBorderAnalysis {
 				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,tileHeight);
 				viCutOffColTemp=new int[vCutOffSize];
 
-				if(!horizontal){
+				if(!horizontalAnalysis){
 					dataTile=traspone(dataTile, tileWidth,tileHeight);
 				}
 				
@@ -428,7 +420,7 @@ public class BlackBorderAnalysis {
 						//leggo la riga del tile (il tile e' mem come array)
 						int[] singleRow=ArrayUtils.subarray(dataTile,posStart,posStart+tileWidth);
 						
-						if(!startFromLeft){
+						if(!normalDirection){
 							ArrayUtils.reverse(singleRow);
 						}
 						
@@ -444,7 +436,7 @@ public class BlackBorderAnalysis {
 								if((singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_VALUE_SAFE||
 										(singleRow[idCutOffElement]>thres&&singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_IS_BORDER))||
 										(idCutOffElement==singleRow.length)){
-										if(startFromLeft)
+										if(normalDirection)
 											viCutOffColTemp[arraySamplesId]=idCutOffElement;
 										else
 											viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
@@ -467,9 +459,9 @@ public class BlackBorderAnalysis {
 				Arrays.fill(viCutOffColTemp, m);
 			}
 		}else{
-			if(result.bIsBorder){
+			if(bIsBorder){
 				//viCutOffColTemp=null;
-				if(startFromLeft){
+				if(normalDirection){
 					viCutOffColTemp=new int[vCutOffSize];
 					Arrays.fill(viCutOffColTemp, tileWidth);
 				}else{
@@ -478,18 +470,33 @@ public class BlackBorderAnalysis {
 				}	
 			}else{
 				viCutOffColTemp=new int[vCutOffSize];
-				if(startFromLeft)
+				if(normalDirection)
 					Arrays.fill(viCutOffColTemp, 0);
 				else
 					Arrays.fill(viCutOffColTemp, tileWidth-1);
 			}
 		}
-		if(viCutOffColTemp!=null)
+		/*if(viCutOffColTemp!=null)
 			for(int i=0;i<viCutOffColTemp.length;i++){
 				System.out.println(viCutOffColTemp[i]);
-			}
+			}*/
 		
-		return viCutOffColTemp;
+		if(horizontalAnalysis){
+			if(normalDirection){
+				result.horizLeftCutOffArray=viCutOffColTemp;
+			}else{
+				result.horizRightCutOffArray=viCutOffColTemp;
+			}	
+		}else{
+			if(normalDirection){
+				result.verTopCutOffArray=viCutOffColTemp;
+			}else{
+				result.verBottomOffArray=viCutOffColTemp;
+			}
+		}
+		result.bIsBorder=bIsBorder;
+		
+		return result;
 	}
 	
 	

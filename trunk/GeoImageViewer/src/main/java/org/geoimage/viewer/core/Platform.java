@@ -25,7 +25,8 @@ import org.geoimage.viewer.widget.TransparentWidget;
 public class Platform {
 
     private static boolean batchMode=false;
-
+    //private Thread currentThreadRunning=null;
+    
     
     /**
      * 
