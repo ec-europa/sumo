@@ -452,6 +452,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds,bufferingDistance,useBlackAn));
                 t.setName("VDS_analysis_"+gir.getDisplayName());
                 t.start();
+                Platform.setCurrentThreadRunning(t);
             }
 
             return true;
