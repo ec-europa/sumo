@@ -15,7 +15,7 @@ import org.geoimage.utils.IProgress;
  *
  * @author thoorfr
  */
-public class VDSAnalysis {
+public class VDSAnalysis implements Runnable{
 
     private SarImageReader gir;
     private String enl = "010";
@@ -317,6 +317,12 @@ public class VDSAnalysis {
   
     public int getTileSize() {
 		return tileSize;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
     
     /*
