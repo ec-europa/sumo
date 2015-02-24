@@ -1,6 +1,5 @@
 package org.geoimage.analysis;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
 
 public class BlackBorderAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BlackBorderAnalysis.class);
