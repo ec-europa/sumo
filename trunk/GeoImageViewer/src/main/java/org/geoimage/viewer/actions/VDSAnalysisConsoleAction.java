@@ -58,7 +58,6 @@ import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.Constant;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -104,25 +103,23 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 				this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			}
        
+			
 			public void run() {
-                 running = false;
-               
-                 //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
-                 /*int xMarginCheck=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS));
-                 int yMarginCheck=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_YMARGIN_EXCLUSION_PIXEL_ANALYSIS));
-                 int minPixelVal=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS));*/
-
+				
+				//run the black border analysis 
                  BlackBorderAnalysis blackBorderAnalysis=null;
                  if(useBlackBorderAnalysis){
-                	 blackBorderAnalysis= new BlackBorderAnalysis(gir);
+                	 MaskVectorLayer mv=null;
+                	 if(bufferedMask!=null&&bufferedMask.length>0)
+                		 mv=(MaskVectorLayer)bufferedMask[0];
+                	 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv);
                 	 blackBorderAnalysis.analyse(5);
                  }	 
 
                  
                  // create K distribution
-                 KDistributionEstimation kdist = new KDistributionEstimation(ENL);//,xMarginCheck,yMarginCheck,minPixelVal);
+                 KDistributionEstimation kdist = new KDistributionEstimation(ENL);
                  DetectedPixels pixels = new DetectedPixels((SarImageReader) gir);
-
                  
                  
                  // list of bands
@@ -328,8 +325,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
          }
 	
-
-	
 	
 
     private StringBuilder message = new StringBuilder("starting VDS Analysis...");
@@ -338,7 +333,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     private boolean done = false;
     private boolean indeterminate;
     @SuppressWarnings("unused")
-	private boolean running = false;
+	//private boolean running = false;
     private GeoImageReader gir = null;
     private IImageLayer il = null;
     private List<IMask> mask = null;
@@ -449,10 +444,16 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 boolean useBlackAn=false;
                 if(gir instanceof Sentinel1)
                 	useBlackAn=true;
-                Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds,bufferingDistance,useBlackAn));
+
+                Thread t=new Thread(new AnalysisProcess(ENL, analysis, bufferedMask, thresholds,bufferingDistance,useBlackAn)){
+                	@Override
+                	public boolean isInterrupted() {
+                		return super.isInterrupted();
+                	}
+                	
+                };
                 t.setName("VDS_analysis_"+gir.getDisplayName());
                 t.start();
-                Platform.setCurrentThreadRunning(t);
             }
 
             return true;

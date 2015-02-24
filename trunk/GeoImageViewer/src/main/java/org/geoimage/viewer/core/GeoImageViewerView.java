@@ -861,7 +861,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         stopThreadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Platform.stopCurrentThread();
+				//Platform.stopCurrentThread();
 				
 			}
 		});
