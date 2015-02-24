@@ -2,14 +2,16 @@ package org.geoimage.analysis;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 
@@ -48,10 +50,10 @@ public class BlackBorderAnalysis {
 	private int correctionXForLastTile=0;
 	private int correctionYForLastTile=0;
 	private int numTilesMargin=5;
-	private MaskVectorLayer land;
+	private List<Geometry> land;
 	
 	
-	public BlackBorderAnalysis(GeoImageReader gir,int tSize,MaskVectorLayer land) {
+	public BlackBorderAnalysis(GeoImageReader gir,int tSize,List<Geometry> land) {
 		this.gir=gir;
 		
 		if(tSize==0){
@@ -75,7 +77,7 @@ public class BlackBorderAnalysis {
         this.land=land;
 	}
 		
-	public BlackBorderAnalysis(GeoImageReader gir,MaskVectorLayer land) {
+	public BlackBorderAnalysis(GeoImageReader gir,List<Geometry> land) {
 		this.gir=gir;
 		
 		//define the size of the tiles
@@ -126,13 +128,23 @@ public class BlackBorderAnalysis {
 	 * @return
 	 */
 	public boolean checkIfTileIsOnLand(double top,double left,double bottom,double right){
+		
+		
+		
 		boolean isOnLand=false;
 		if(land!=null){
 			GeometryFactory fact = new GeometryFactory();
 			Coordinate[] cs={new Coordinate(top, left),new Coordinate(bottom,right)};
 			LinearRing tile=fact.createLinearRing(cs);
-			
-			isOnLand=land.contains(tile);
+
+			for (Geometry p : land) {
+	            if (p.contains(tile)) {
+	            	isOnLand=true;
+	            	break;
+	            }
+ 	        }
+
+
 		}
 		
 		return isOnLand;
