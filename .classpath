@@ -10,283 +10,283 @@
 	<classpathentry kind="src" path="trunk/GeoImage/src/main/java"/>
 	<classpathentry kind="src" path="trunk/GeoImageAnalysis/src/main/resources"/>
 	<classpathentry kind="src" path="trunk/GeoImageAnalysis/src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_17"/>
-	<classpathentry kind="lib" path="trunk/libs/appframework-1.0.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/AppleJavaExtensions.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/asm-debug-all.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-beanutils-bean-collections.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-beanutils-core.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-beanutils.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-digester-1.8.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-fileupload-1.2.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-logging.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-net-2.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/commons-net-ftp-2.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/dsn.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/eclipselink.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/gekmllib.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geonames-source-0.5.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/georss-rome-0.9.8.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/georss-rome-src-0.9.8.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/h2-1.2.121.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/imageio-ext-gdalframework-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/imageio-ext-jmatio-1.1.7.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/imageio-ext-kakadujni-5.2.6.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/imageio-ext-mat-core-1.1M012010.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/imap.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/javax.persistence.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jdom-2.0.5.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jinput.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/lwjgl.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/lzma.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/mail.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/mailapi.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/pop3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/postgresql-8.4-701.jdbc3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/rome-0.9.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/slf4j-api-1.7.6.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/slf4j-nop-1.7.5.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/smtp.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/svgSalamander.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/swing-layout-1.0.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/swing-worker-1.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/toplink-grid.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/gdal_lib_win64/gdal/java/gdal.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/worldwind2.0/plugin.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/worldwind2.0/vpf-symbols.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/worldwind2.0/worldwind-buildutil.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/worldwind2.0/worldwind.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/worldwind2.0/worldwindx.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/batik-transcoder-1.7.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/bridj-0.6-c-only.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/bufr-4.3.16.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/common-2.6.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-beanutils-1.7.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-cli-2.0-gt2-pre1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-codec-1.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-dbcp-1.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-digester-1.7.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-io-2.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-jxpath-1.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-lang-2.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/commons-pool-1.5.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/core.commands-3.6.0.I20100512-1500.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/core.runtime-3.6.0.v20100505.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/eastwood-1.1.1-20090908.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/ecore-2.6.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/ehcache-1.6.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/equinox.common-3.6.0.v20100503.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gdal-1.8.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/geodb-0.7-RC2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/grib-4.3.16.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-api-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-app-schema-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-app-schema-resolver-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-arcgrid-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-arcsde-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-arcsde-common-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-brewer-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-charts-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-complex-12.0-tests.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-complex-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-coverage-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-coverage-api-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-coveragetools-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-cql-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-csv-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-data-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-epsg-extension-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-epsg-wkt-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-feature-aggregate-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-feature-pregeneralized-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-geojson-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-geometry-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-geopkg-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-geotiff-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-graph-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-grassraster-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-grib-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-grid-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-gtopo30-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-image-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-imageio-ext-gdal-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-imagemosaic-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-imagemosaic-jdbc-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-imagepyramid-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-h2-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-postgis-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-spatialite-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jp2k-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-jts-wrapper-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-main-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-matfile5-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-mbtiles-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-metadata-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-netcdf-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-bridj-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-core-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-jni-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-opengis-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-process-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-process-feature-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-process-geometry-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-process-raster-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-property-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-property-ng-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-referencing-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-referencing3D-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-render-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-sample-data-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-sample-data-access-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-sfs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-shapefile-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-svg-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-swing-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-swt-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-transform-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-validation-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-vpf-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-wfs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-wfs-ng-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-wms-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-wps-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xml-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-core-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-csw-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-fes-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-filter-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-gml2-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-gml3-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-kml-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-ows-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-sld-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wcs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wfs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wms-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wps-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/h2-1.1.119.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/hsqldb-2.2.8.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/icu4j-3.4.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-arcgrid-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalarcbinarygrid-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdaldted-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalecw-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalecwjp2-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalehdr-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalenvihdr-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalerdasimg-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalidrisi-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalkakadujp2-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalmrsid-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalmrsidjp2-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalnitf-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalrpftoc-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-geocore-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-imagereadmt-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-imagereadmt-1.1M012010.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-mat-sas-1.1M012010.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-streams-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-tiff-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-utilities-1.1.10.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jai_codec-1.1.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jai_core-1.1.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jai_imageio-1.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/javacsv-2.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jdom-1.1.3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jface-3.6.1.M20100825-0800.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jgridshift-1.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jsqlparser-0.3.14.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jsr-275-1.0-beta-2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-contour-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-rangelookup-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-utils-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-vectorbinarize-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-vectorize-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jt-zonalstats-1.3.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/jts-1.13.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/miglayout-3.7-swing.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/mongo-java-driver-2.5.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.csw-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.fes-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.ows-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wcs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wfs-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wps-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/netcdf-4.3.16.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/opendap-2.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/org.w3.xlink-12.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/picocontainer-1.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/postgresql-8.4-701.jdbc3.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/slf4j-log4j12-1.6.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/spatialite-jdbc-3.7.2-2.4.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/sqlite-jdbc-3.7.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/swt.gtk.linux.x86-3.6.1.v3655c.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/swt.win32.win32.x86_64-3.6.1.v3655c.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/ui.workbench-3.6.1.M20100826-1330.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/vecmath-1.3.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/xml-commons-resolver-1.2.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/xpp3-1.1.3.4.O.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/geotools-12.0/xsd-2.6.0.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/fits.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarfitsobj.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarh4obj.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarh5obj.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarhdf-2.10.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarhdf5-2.10.1.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarhdfobj.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jarnc2obj.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/hdf5/jhdfview.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jai/jai_codec.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jai/jai_core.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/gdal_lib_win64/gdal.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/joal-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/joal-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/joal-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/joal-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/joal-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jocl-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jocl-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jocl.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jogl-all-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jogl-all-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jogl-all-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/jogl-all.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-awt.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-core.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/nativewindow-os-win.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/newt-ogl.jar"/>
-	<classpathentry kind="lib" path="trunk/libs/jogl/newt-swt.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.5.2">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_17"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/appframework-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/AppleJavaExtensions.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/asm-debug-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-beanutils-bean-collections.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-beanutils-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-beanutils.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-collections-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-digester-1.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-fileupload-1.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-logging.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-net-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-net-ftp-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/dsn.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/eclipselink.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/gekmllib.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geonames-source-0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/georss-rome-0.9.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/georss-rome-src-0.9.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/h2-1.2.121.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/imageio-ext-gdalframework-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/imageio-ext-jmatio-1.1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/imageio-ext-kakadujni-5.2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/imageio-ext-mat-core-1.1M012010.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/imap.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/javax.persistence.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jdom-2.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jinput.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/log4j-1.2.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/lwjgl_util.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/lwjgl.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/lzma.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/mailapi.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/pop3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/postgresql-8.4-701.jdbc3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/rome-0.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/slf4j-api-1.7.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/slf4j-nop-1.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/smtp.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/svgSalamander.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/swing-layout-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/swing-worker-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/toplink-grid.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/gdal_lib_win64/gdal/java/gdal.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/worldwind2.0/plugin.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/worldwind2.0/vpf-symbols.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/worldwind2.0/worldwind-buildutil.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/worldwind2.0/worldwind.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/worldwind2.0/worldwindx.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/batik-transcoder-1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/bridj-0.6-c-only.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/bufr-4.3.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/common-2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-beanutils-1.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-cli-2.0-gt2-pre1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-codec-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-collections-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-dbcp-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-digester-1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-httpclient-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-io-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-jxpath-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-lang-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/commons-pool-1.5.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/core.commands-3.6.0.I20100512-1500.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/core.runtime-3.6.0.v20100505.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/eastwood-1.1.1-20090908.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/ecore-2.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/ehcache-1.6.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/equinox.common-3.6.0.v20100503.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gdal-1.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/geodb-0.7-RC2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/grib-4.3.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-api-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-app-schema-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-app-schema-resolver-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-arcgrid-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-arcsde-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-arcsde-common-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-brewer-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-charts-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-complex-12.0-tests.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-complex-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-coverage-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-coverage-api-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-coveragetools-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-cql-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-csv-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-data-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-epsg-extension-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-epsg-wkt-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-feature-aggregate-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-feature-pregeneralized-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-geojson-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-geometry-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-geopkg-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-geotiff-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-graph-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-grassraster-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-grib-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-grid-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-gtopo30-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-image-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-imageio-ext-gdal-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-imagemosaic-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-imagemosaic-jdbc-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-imagepyramid-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-h2-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-postgis-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jdbc-spatialite-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jp2k-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-jts-wrapper-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-main-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-matfile5-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-mbtiles-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-metadata-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-netcdf-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-bridj-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-core-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-ogr-jni-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-opengis-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-process-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-process-feature-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-process-geometry-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-process-raster-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-property-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-property-ng-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-referencing-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-referencing3D-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-render-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-sample-data-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-sample-data-access-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-sfs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-shapefile-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-svg-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-swing-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-swt-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-transform-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-validation-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-vpf-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-wfs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-wfs-ng-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-wms-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-wps-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xml-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-core-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-csw-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-fes-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-filter-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-gml2-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-gml3-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-kml-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-ows-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-sld-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wcs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wfs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wms-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/gt-xsd-wps-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/h2-1.1.119.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/hsqldb-2.2.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/icu4j-3.4.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-arcgrid-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalarcbinarygrid-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdaldted-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalecw-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalecwjp2-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalehdr-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalenvihdr-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalerdasimg-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalidrisi-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalkakadujp2-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalmrsid-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalmrsidjp2-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalnitf-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-gdalrpftoc-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-geocore-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-imagereadmt-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-imagereadmt-1.1M012010.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-mat-sas-1.1M012010.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-streams-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-tiff-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/imageio-ext-utilities-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jai_codec-1.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jai_core-1.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jai_imageio-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/javacsv-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jdom-1.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jface-3.6.1.M20100825-0800.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jgridshift-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/json-simple-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jsqlparser-0.3.14.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jsr-275-1.0-beta-2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-contour-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-rangelookup-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-utils-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-vectorbinarize-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-vectorize-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jt-zonalstats-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/jts-1.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/miglayout-3.7-swing.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/mongo-java-driver-2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.csw-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.fes-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.ows-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wcs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wfs-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/net.opengis.wps-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/netcdf-4.3.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/opendap-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/org.w3.xlink-12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/picocontainer-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/postgresql-8.4-701.jdbc3.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/slf4j-log4j12-1.6.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/spatialite-jdbc-3.7.2-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/swt.gtk.linux.x86-3.6.1.v3655c.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/swt.win32.win32.x86_64-3.6.1.v3655c.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/ui.workbench-3.6.1.M20100826-1330.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/vecmath-1.3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/xml-commons-resolver-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/xpp3_min-1.1.4c.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/xpp3-1.1.3.4.O.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/geotools-12.0/xsd-2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/fits.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarfitsobj.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarh4obj.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarh5obj.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarhdf-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarhdf5-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarhdfobj.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jarnc2obj.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/hdf5/jhdfview.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jai/jai_codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jai/jai_core.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/gdal_lib_win64/gdal.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/gluegen-rt.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/joal-natives-linux-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/joal-natives-linux-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/joal-natives-macosx-universal.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/joal-natives-windows-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/joal-natives-windows-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jocl-natives-windows-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jocl-natives-windows-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jocl.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/jogl-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-awt.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-natives-linux-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-natives-linux-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-natives-windows-amd64.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-natives-windows-i586.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/nativewindow-os-win.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/newt-ogl.jar"/>
+	<classpathentry exported="true" kind="lib" path="trunk/libs/jogl/newt-swt.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.5.2">
 		<attributes>
 			<attribute name="owner.project.facets" value="jpt.jpa"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/libs/commons-math3-3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/libs/commons-math3-3.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
