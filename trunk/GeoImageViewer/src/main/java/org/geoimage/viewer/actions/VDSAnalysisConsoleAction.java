@@ -57,6 +57,8 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
+
+
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
