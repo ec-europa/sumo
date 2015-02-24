@@ -14,6 +14,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class BlackBorderAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BlackBorderAnalysis.class);
@@ -134,8 +135,13 @@ public class BlackBorderAnalysis {
 		boolean isOnLand=false;
 		if(land!=null){
 			GeometryFactory fact = new GeometryFactory();
-			Coordinate[] cs={new Coordinate(top, left),new Coordinate(bottom,right)};
-			LinearRing tile=fact.createLinearRing(cs);
+			Coordinate[] cs=new Coordinate[5];
+			cs[0]=new Coordinate(top, left);
+			cs[1]=new Coordinate(bottom, left);
+			cs[2]=new Coordinate(top,right);
+			cs[3]=new Coordinate(bottom,right);
+			cs[4]=new Coordinate(top,left);
+			Polygon tile=fact.createPolygon(cs);
 
 			for (Geometry p : land) {
 	            if (p.contains(tile)) {
