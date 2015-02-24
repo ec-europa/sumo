@@ -666,7 +666,21 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     public void setGeometriclayer(GeometricLayer glayer) {
         this.glayer = glayer;
     }
-
+    
+    /**
+     * check if the layer contains the geometry
+     * @param g
+     * @return
+     */
+    public boolean contains(Geometry g) {
+        for (Geometry p : glayer.getGeometries()) {
+            if (p.contains(g)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean contains(int x, int y) {
         if (getType().equals(POINT)) {
             return false;

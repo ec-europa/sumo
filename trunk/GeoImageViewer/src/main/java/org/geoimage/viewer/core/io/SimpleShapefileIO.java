@@ -330,10 +330,10 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         try {
             layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             String filename = ((URL) config.get(CONFIG_URL)).getPath();
-            System.out.println(filename);
+            //System.out.println(filename);
             //new File(filename).createNewFile();
             layername = filename.substring(filename.lastIndexOf(File.separator) + 1, filename.lastIndexOf("."));
-            System.out.println(layername);
+            //System.out.println(layername);
             SimpleFeatureType ft = createFeatureType(layername, layer);
             //build the type
             FileDataStore fileDataStore = createDataStore(filename, ft, projection);
@@ -363,101 +363,5 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         return out;
     }
 
-    /*
-    public GeometricLayer readTestWithAffine() {
-        try {
-            GeometricLayer out = null;
-            int margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
-            //margin=0;
-            //create a DataStore object to connect to the physical source 
-            DataStore dataStore = DataStoreFinder.getDataStore(config);
-            //retrieve a FeatureSource to work with the feature data
-            SimpleFeatureStore featureSource = (SimpleFeatureStore) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
-            String geomName = featureSource.getSchema().getGeometryDescriptor().getLocalName();
-            
-            FeatureSource<SimpleFeatureType, SimpleFeature> ss = DataUtilities.source(featureSource.getFeatures());        
-
-            
-            MapContent  map = new MapContent();
-            map.setTitle("The Point");
-            Layer layer=new FeatureLayer(ss.getFeatures(),null);
-            map.addLayer(layer);     
-            ReferencedEnvelope mapBounds=map.getMaxBounds();
-            Rectangle imageBounds=new Rectangle(new Dimension(gir.getWidth(),gir.getHeight()));
-
-            AffineTransform gt =RendererUtilities.worldToScreenTransform(mapBounds, imageBounds);
-            
-            Point2D x0=new Point2D.Double();
-            Point2D x1=new Point2D.Double();
-            Point2D x2=new Point2D.Double();
-            Point2D x3=new Point2D.Double();
-            Point2D x01=new Point2D.Double(); //image center coords           
-            Point2D x02=new Point2D.Double(); //image center coords
-            Point2D x03=new Point2D.Double(); //image center coords
-            Point2D x12=new Point2D.Double(); //image center coords
-            Point2D x21=new Point2D.Double(); //image center coords
-            Point2D x22=new Point2D.Double(); //image center coords
-            Point2D x23=new Point2D.Double(); //image center coords
-            Point2D x31=new Point2D.Double(); //image center coords
-
-            gt.transform(new Point2D.Double(-margin, -margin), x0);
-            gt.transform(new Point2D.Double(-margin, gir.getHeight()/3), x01);
-            gt.transform(new Point2D.Double(-margin, gir.getHeight()/2), x02);
-            gt.transform(new Point2D.Double(-margin, gir.getHeight()*2/3), x03);
-            gt.transform(new Point2D.Double(-margin, margin + gir.getHeight()), x1);
-            gt.transform(new Point2D.Double(margin + gir.getWidth()/2, margin +gir.getHeight()), x12);
-            gt.transform(new Point2D.Double(margin + gir.getWidth(), margin + gir.getHeight()), x2);
-            gt.transform(new Point2D.Double(margin + gir.getWidth(), gir.getHeight()*2/3), x21);
-            gt.transform(new Point2D.Double(margin + gir.getWidth(), gir.getHeight()/2), x22);
-            gt.transform(new Point2D.Double(margin + gir.getWidth(), gir.getHeight()/3), x23);
-            gt.transform(new Point2D.Double(margin + gir.getWidth(), -margin), x3);
-            gt.transform(new Point2D.Double(margin + gir.getWidth()/2, -margin), x31);
-
-
-            double minx = Math.min(x0.getX(), Math.min(x01.getX(), Math.min(x02.getX(), Math.min(x03.getX(), Math.min(x1.getX(), Math.min(x12.getX(), Math.min(x2.getX(), Math.min(x21.getX(), Math.min(x22.getX(), Math.min(x23.getX(), Math.min(x3.getX(), x31.getX())))))))))));
-            double maxx = Math.max(x0.getX(), Math.max(x01.getX(), Math.max(x02.getX(), Math.max(x03.getX(), Math.max(x1.getX(), Math.max(x12.getX(), Math.max(x2.getX(), Math.max(x21.getX(), Math.max(x22.getX(), Math.max(x23.getX(), Math.max(x3.getX(), x31.getX())))))))))));
-            double miny = Math.min(x0.getY(), Math.min(x01.getY(), Math.min(x02.getY(), Math.min(x03.getY(), Math.min(x1.getY(), Math.min(x12.getY(), Math.min(x2.getY(), Math.min(x21.getY(), Math.min(x22.getY(), Math.min(x23.getY(), Math.min(x3.getY(), x31.getY())))))))))));
-            double maxy = Math.max(x0.getY(), Math.max(x01.getY(), Math.max(x02.getY(), Math.max(x03.getY(), Math.max(x1.getY(), Math.max(x12.getY(), Math.max(x2.getY(), Math.max(x21.getY(), Math.max(x22.getY(), Math.max(x23.getY(), Math.max(x3.getY(), x31.getY())))))))))));
-
-            String f=new StringBuilder("BBOX(").append(geomName).append(",").append(minx).append(",").append(miny).append(",").append(maxx).append(",").append(maxy+")").toString();
-            
-            Filter filter=CQL.toFilter(f);
-            System.out.println(filter);
-
-            Polygon imageP = (Polygon) new WKTReader().read("POLYGON((" +
-                    x0.getX() + " " + x0.getY() + "," +
-                    x01.getX() + " " + x01.getY() + "," +
-                    x02.getX() + " " + x02.getY() + "," +
-                    x03.getX() + " " + x03.getY() + "," +
-                    x1.getX() + " " + x1.getY() + "," +
-                    x12.getX() + " " + x12.getY() + "," +
-                    x2.getX() + " " + x2.getY() + "," +
-                    x21.getX() + " " + x21.getY() + "," +
-                    x22.getX() + " " + x22.getY() + "," +
-                    x23.getX() + " " + x23.getY() + "," +
-                    x3.getX() + " " + x3.getY() + "," +
-                    x31.getX() + " " + x31.getY() + "," +
-                    x0.getX() + " " + x0.getY() + "" +
-                    "))");
-            System.out.println(imageP);
-            FeatureCollection<?, ?> fc=featureSource.getFeatures(filter);
-            if (fc.isEmpty()) {
-                return null;
-            }
-            String[] schema = createSchema(fc.getSchema().getDescriptors());
-            String[] types = createTypes(fc.getSchema().getDescriptors());
-
-            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
-            out=createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
-            dataStore.dispose();
-            fc=null;
-            System.gc();
-            GeometricLayer glout = GeometricLayer.createImageProjectedLayer(out, gt);
-            return glout;
-        } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
-        return null;
-
-    }*/
+   
 }

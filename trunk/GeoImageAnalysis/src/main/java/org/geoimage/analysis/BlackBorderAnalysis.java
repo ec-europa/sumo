@@ -7,7 +7,13 @@ import java.util.HashMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class BlackBorderAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BlackBorderAnalysis.class);
@@ -44,9 +50,10 @@ public class BlackBorderAnalysis {
 	private int correctionXForLastTile=0;
 	private int correctionYForLastTile=0;
 	private int numTilesMargin=5;
+	private MaskVectorLayer land;
 	
 	
-	public BlackBorderAnalysis(GeoImageReader gir,int tSize) {
+	public BlackBorderAnalysis(GeoImageReader gir,int tSize,MaskVectorLayer land) {
 		this.gir=gir;
 		
 		if(tSize==0){
@@ -66,9 +73,11 @@ public class BlackBorderAnalysis {
         sizeY = gir.getHeight() / verTiles;	   //y step
         
         iNPixExtremes=tileSize/10;
+        
+        this.land=land;
 	}
 		
-	public BlackBorderAnalysis(GeoImageReader gir) {
+	public BlackBorderAnalysis(GeoImageReader gir,MaskVectorLayer land) {
 		this.gir=gir;
 		
 		//define the size of the tiles
@@ -85,6 +94,8 @@ public class BlackBorderAnalysis {
         correctionXForLastTile=gir.getWidth()-sizeX*horTiles;
         correctionYForLastTile=gir.getHeight()-sizeY*verTiles;
         iNPixExtremes=tileSize/10;
+        
+        this.land=land;
 	}
 	
 	/**
@@ -106,6 +117,30 @@ public class BlackBorderAnalysis {
 		analyzeTile(iniX,iniY,horizontalAnalysis,normalDirection);
 		
 	}
+	
+	/**
+	 *  check if the tile is on land
+	 *  
+	 * @param top
+	 * @param left
+	 * @param bottom
+	 * @param right
+	 * @return
+	 */
+	public boolean checkIfTileIsOnLand(double top,double left,double bottom,double right){
+		boolean isOnLand=false;
+		if(land!=null){
+			GeometryFactory fact = new GeometryFactory();
+			Coordinate[] cs={new Coordinate(top, left),new Coordinate(bottom,right)};
+			LinearRing tile=fact.createLinearRing(cs);
+			
+			isOnLand=land.contains(tile);
+		}
+		
+		return isOnLand;
+	}
+	
+	
 	
 	/**
 	 * 
@@ -156,21 +191,28 @@ public class BlackBorderAnalysis {
         			if(rowIdx==verTiles-1){
         				sy=sizeY+correctionYForLastTile;
         			}
-        			TileAnalysis result=getAnalysisTile(rowIdx, colIdx);
-        			//if is not already analyzed or if is not completely on the black margin
-        			if(result==null||result.bIsBorder==false){
-        				if(result==null)
-        					result=new TileAnalysis();
-        				
-        				analyzeTile(startXPixelTile,startYPixelTile,true,left,sx,sy,result);
-	            		putAnalysisTile(rowIdx,colIdx,result);
-        			}
-	            	
-	            	if(result.bIsBorder){
-            			previous=result;
-            		}else{
-            			stop=true;
-            		}
+        			
+        			boolean isOnLand=checkIfTileIsOnLand(startXPixelTile,startYPixelTile,startXPixelTile+sx,startYPixelTile+sy);
+        			if(!isOnLand){
+	        			TileAnalysis result=getAnalysisTile(rowIdx, colIdx);
+	        			//if is not already analyzed or if is not completely on the black margin
+	        			if(result==null||result.bIsBorder==false){
+	        				if(result==null)
+	        					result=new TileAnalysis();
+	        				
+	        				analyzeTile(startXPixelTile,startYPixelTile,true,left,sx,sy,result);
+		            		putAnalysisTile(rowIdx,colIdx,result);
+	        			}
+		            	
+		            	if(result.bIsBorder){
+	            			previous=result;
+	            		}else{
+	            			stop=true;
+	            		}
+        			}else{
+        				stop=true;
+        				System.out.println("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        			}	
         		}
         		
         		if(left){
@@ -224,30 +266,27 @@ public class BlackBorderAnalysis {
         			if(rowIdx==verTiles-1){
         				sy=sizeY+correctionYForLastTile;
         			}
-        			TileAnalysis result=getAnalysisTile(rowIdx, colIdx);
-        			//if is not already analyzed or if is not completely on the black margin
-        			if(result==null||result.bIsBorder==false){
-        				if(result==null)
-        					result=new TileAnalysis();
-
-        					analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy,result);
+        			boolean isOnLand=checkIfTileIsOnLand(startXPixelTile,startYPixelTile,startXPixelTile+sx,startYPixelTile+sy);
+        			if(!isOnLand){
         			
-        				//result.bIsBorder=resultArray==null; //if resultArray is null the tile is all on the black border
-        				/*if(top){
-        					result.verTopCutOffArray=resultArray;
-        					result.verBottomOffArray=null;
-        				}else{
-        					result.verBottomOffArray=resultArray;
-        					result.verTopCutOffArray=null;
-        				}	*/
-	            		putAnalysisTile(rowIdx,colIdx,result);
-        			}
+	        			TileAnalysis result=getAnalysisTile(rowIdx, colIdx);
+	        			//if is not already analyzed or if is not completely on the black margin
+	        			if(result==null||result.bIsBorder==false){
+	        				if(result==null)
+	        					result=new TileAnalysis();
+	        					analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy,result);
+	        					putAnalysisTile(rowIdx,colIdx,result);
+	        			}
 	            	
-	            	if(result.bIsBorder){
-            			previous=result;
-            		}else{
-            			stop=true;
-            		}
+		            	if(result.bIsBorder){
+	            			previous=result;
+	            		}else{
+	            			stop=true;
+	            		}
+        			}else{
+        				stop=true;
+        				System.out.println("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        			}	
         		}
         		if(top){
         			rowIdx++;

@@ -25,7 +25,7 @@ import org.geoimage.viewer.widget.TransparentWidget;
 public class Platform {
 
     private static boolean batchMode=false;
-    private static Thread currentThreadRunning=null;
+    /*private static Thread currentThreadRunning=null;
     
     
     public Thread getCurrentThreadRunning() {
@@ -44,7 +44,7 @@ public class Platform {
 				ex.printStackTrace();
 			}	
 		}
-	}
+	}*/
 	
 	/**
      * 
