@@ -114,7 +114,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 	 MaskVectorLayer mv=null;
                 	 if(bufferedMask!=null&&bufferedMask.length>0)
                 		 mv=(MaskVectorLayer)bufferedMask[0];
-                	 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv);
+                	 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
                 	 blackBorderAnalysis.analyse(5);
                  }	 
 

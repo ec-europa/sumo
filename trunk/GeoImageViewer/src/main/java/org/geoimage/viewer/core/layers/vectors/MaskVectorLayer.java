@@ -26,7 +26,6 @@ import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
