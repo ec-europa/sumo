@@ -430,19 +430,22 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV, this);
                 
-                final String[] thresholds = new String[numberofbands];
+                final String[] thresholds = {"0.0","0.0","0.0","0.0"};
                 //management of the strings added at the end of the layer name in order to remember the used threshold
                 for (int bb = 0; bb < numberofbands; bb++) {
                     if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-                        thresholds[bb] = "" + thresholdHH;
+                        thresholds[0] = "" + thresholdHH;
                     } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-                        thresholds[bb] = "" + thresholdHV;
+                        thresholds[1] = "" + thresholdHV;
                     } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-                        thresholds[bb] = "" + thresholdVH;
+                        thresholds[2] = "" + thresholdVH;
                     } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-                        thresholds[bb] = "" + thresholdVV;
+                        thresholds[3] = "" + thresholdVV;
                     }
                 }
+                
+                
+                
                 boolean useBlackAn=false;
                 if(gir instanceof Sentinel1)
                 	useBlackAn=true;

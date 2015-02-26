@@ -121,6 +121,17 @@ public interface GeoImageReader extends GeoMetadata {
     public int[] readTile(int x, int y, int width, int height);
 
     /**
+     * Reads the data in int[]. Access the pixels value (x,y): data[x+y*width].
+     * A call to preloadLineTile can be considered to improve memory management.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @return
+     */
+    public int[] readTile(int x, int y, int width, int height,int band) ;
+    
+    /**
      *
      * @param x
      * @param y
