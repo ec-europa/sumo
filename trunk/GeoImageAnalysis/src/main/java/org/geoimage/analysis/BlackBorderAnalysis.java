@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class BlackBorderAnalysis {
@@ -27,7 +26,7 @@ public class BlackBorderAnalysis {
 		int[] verTopCutOffArray=null;
 		int[] verBottomOffArray=null;
 		boolean bIsBorder=false;
-	//	boolean bBtoWBorder=false;
+		boolean fullAnalysis=false;
 
 	}
 	
@@ -53,9 +52,22 @@ public class BlackBorderAnalysis {
 	private int numTilesMargin=5;
 	private List<Geometry> land;
 	
+	private int bandAnalysis=0;
+	
 	
 	public BlackBorderAnalysis(GeoImageReader gir,int tSize,List<Geometry> land) {
 		this.gir=gir;
+		
+		//if there is an image with cross-pol (HV or VH) we use it 
+		int nb=gir.getNBand();
+		if(nb>1){
+			for(int i=0;i<nb;i++){
+				if(gir.getBandName(i).equalsIgnoreCase("HV")||gir.getBandName(i).equalsIgnoreCase("VH")){
+					bandAnalysis=i;
+					break;
+				}
+			}
+		}
 		
 		if(tSize==0){
 			//define the size of the tiles
@@ -79,24 +91,7 @@ public class BlackBorderAnalysis {
 	}
 		
 	public BlackBorderAnalysis(GeoImageReader gir,List<Geometry> land) {
-		this.gir=gir;
-		
-		//define the size of the tiles
-		tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getGeoTransform().getPixelSize()[0]);
-		if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
-			
-		horTiles = gir.getWidth() / tileSize;
-		verTiles = gir.getHeight() / tileSize;
-		
-		 // the real size of tiles
-        sizeX = gir.getWidth() / horTiles;     //x step
-        sizeY = gir.getHeight() / verTiles;	//y step
-       
-        correctionXForLastTile=gir.getWidth()-sizeX*horTiles;
-        correctionYForLastTile=gir.getHeight()-sizeY*verTiles;
-        iNPixExtremes=tileSize/10;
-        
-        this.land=land;
+		this(gir,0,land);
 	}
 	
 	/**
@@ -188,6 +183,9 @@ public class BlackBorderAnalysis {
         	//start from last tile
         	startX=horTiles-1;
         }
+        int countTilesAnalyzed=0;
+        int countFullTilesAnalyzed=0;
+        
         for (int rowIdx = 0; rowIdx < verTiles; rowIdx++) {
         	
         	TileAnalysis previous=null;
@@ -218,6 +216,8 @@ public class BlackBorderAnalysis {
 	        				
 	        				analyzeTile(startXPixelTile,startYPixelTile,true,left,sx,sy,result);
 		            		putAnalysisTile(rowIdx,colIdx,result);
+		            		countTilesAnalyzed++;
+		            		if(result.fullAnalysis)countFullTilesAnalyzed++;
 	        			}
 		            	
 		            	if(result.bIsBorder){
@@ -244,6 +244,7 @@ public class BlackBorderAnalysis {
         	}
         	startYPixelTile=startYPixelTile+sizeY;
         }
+        System.out.println("Tiles Analized H:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	
@@ -262,6 +263,8 @@ public class BlackBorderAnalysis {
         	//start from last tile
         	startTileY=verTiles-1;
         }
+        int countTilesAnalyzed=0;
+        int countFullTilesAnalyzed=0;
         
         for (int colIdx = 0; colIdx < horTiles; colIdx++) {
         	
@@ -292,6 +295,8 @@ public class BlackBorderAnalysis {
 	        					result=new TileAnalysis();
 	        					analyzeTile(startXPixelTile,startYPixelTile,false,top,sx,sy,result);
 	        					putAnalysisTile(rowIdx,colIdx,result);
+	        					countTilesAnalyzed++;
+	        					if(result.fullAnalysis)countFullTilesAnalyzed++;
 	        			}
 	            	
 		            	if(result.bIsBorder){
@@ -317,6 +322,7 @@ public class BlackBorderAnalysis {
         	}
         	startXPixelTile=startXPixelTile+sizeX;
         }
+        System.out.println("Tiles Analized V:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	public void putAnalysisTile(int row,int col,TileAnalysis result){
@@ -385,15 +391,18 @@ public class BlackBorderAnalysis {
 		
 		for(int idxSamples=0;idxSamples<nRowSamples;idxSamples++){
 			
-			//riga di campionamento 1 al 10% al 50% e al 90%
-			int row=iniY+((ConstantVDSAnalysis.ROW_TILE_SAMPLES_ARRAY[idxSamples]*sizeY)/100);
 			
 			//leggo i dati di 1 riga o di 1 colonna
 			if(horizontalAnalysis){
-				dataRow[idxSamples]=gir.readTile(iniX, row, tileWidth,1);
+				//riga di campionamento 1 al 10% al 50% e al 90%
+				int row=iniY+((ConstantVDSAnalysis.ROW_TILE_SAMPLES_ARRAY[idxSamples]*sizeY)/100);
+
+				dataRow[idxSamples]=gir.readTile(iniX, row, tileWidth,1,bandAnalysis);
 				vCutOffSize=tileHeight;
 			}else{
-				dataRow[idxSamples]=gir.readTile(iniX, row, 1,tileHeight);
+				//riga di campionamento 1 al 10% al 50% e al 90%
+				int col=iniX+((ConstantVDSAnalysis.ROW_TILE_SAMPLES_ARRAY[idxSamples]*sizeX)/100);
+				dataRow[idxSamples]=gir.readTile(col, iniY, 1,tileHeight,bandAnalysis);
 				vCutOffSize=tileWidth;
 			}	
 				
@@ -460,8 +469,10 @@ public class BlackBorderAnalysis {
 			
 			//if the difference is too high we calculate the Cutoffpoint for each row
 			if(NumberUtils.max(viCutOffColTemp)-NumberUtils.min(viCutOffColTemp)>3){
+				result.fullAnalysis=true;
+				
 				//read complete tile
-				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,tileHeight);
+				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,tileHeight,bandAnalysis);
 				viCutOffColTemp=new int[vCutOffSize];
 
 				if(!horizontalAnalysis){

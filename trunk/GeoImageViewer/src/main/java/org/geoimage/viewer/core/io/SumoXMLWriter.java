@@ -9,8 +9,11 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -126,14 +129,56 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		}
 		return layer;
 	}
-
+	
+	/**
+	 * trunc and round off the milliseconds in a date using 3 digits
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private String roundedMillis(String date){
+		String millis=date.substring(date.indexOf(".")+1,date.length());
+		if(millis!=null&&millis.length()>0){
+			double val=Double.parseDouble("0."+millis);
+			double finalValue = Math.round( val * 1000.0 ) / 1000.0;
+			String milli=(""+finalValue).substring(2,5);
+			
+			date=date.substring(0, date.indexOf(".")+1)+milli;
+			
+			//System.out.println(millis+"   "+val+ "  "+finalValue+"  "+date);
+		}	
+		
+		
+		
+		return date;
+	} 
+	
+	
+	
+	/**
+	 * 
+	 * @param gLayer
+	 * @param projection
+	 * @param gir
+	 * @param thresholds
+	 * @param buffer
+	 * @param enl
+	 * @param landmask
+	 */
 	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,float[] thresholds,int buffer,double enl,String landmask) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+		
 		String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+		Timestamp tStart=Timestamp.valueOf(start);
+		
 		start=start.replace("Z","");
+		start=roundedMillis(start);
+		
 		String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
 		stop=stop.replace("Z","");
-		Timestamp tStart=Timestamp.valueOf(start);
+		stop=roundedMillis(start);
+		
+		
 		
 		/**** VDS ANALYSIS ***********/
 		VdsAnalysis vdsA = new VdsAnalysis();
@@ -164,7 +209,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setEnl(enlround);
 		vdsA.setSumoRunid(0);
 		
-		StringBuilder params=new StringBuilder(""+enlround).append(",");
+		StringBuilder params=new StringBuilder("").append(enlround).append(",");
 		if(thresholds!=null && thresholds.length>0){
 			String th=Arrays.toString(thresholds);
 			th=th.substring(1, th.length()-1);
@@ -237,8 +282,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		imageMeta.setGcps(getCorners(gir));
 		
 		try {
-			//SimpleDateFormat format2=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.");
-			imageMeta.setTimestampStart(tStart.toString());//format2.format(tStart));
+			
+			
+			
+			imageMeta.setTimestampStart(tStart.toString());
 			
 			imageMeta.setTimeStart(format.format(tStart));
 			

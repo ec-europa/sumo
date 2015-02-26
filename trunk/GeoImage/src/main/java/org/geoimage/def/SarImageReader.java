@@ -535,5 +535,14 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 	public void setOverViewImage(BufferedImage overViewImage) {
 		this.overViewImage = overViewImage;
 	}
+	
+    public int[] readTile(int x, int y, int width, int height,int band) {
+    	int oldBand=getBand();
+    	setBand(band);
+    	int[] vals=readTile(x, y, width, height);
+    	setBand(oldBand);
+    	
+        return vals;
+    }
 
 }
