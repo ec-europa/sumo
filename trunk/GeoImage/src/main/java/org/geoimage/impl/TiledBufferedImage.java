@@ -470,5 +470,13 @@ public class TiledBufferedImage implements GeoImageReader {
 	public boolean supportAzimuthAmbiguity() {
 		return false;
 	}
+    public int[] readTile(int x, int y, int width, int height,int band) {
+    	int oldBand=getBand();
+    	setBand(band);
+    	int[] vals=readTile(x, y, width, height);
+    	setBand(oldBand);
+    	
+        return vals;
+    }
 
 }
