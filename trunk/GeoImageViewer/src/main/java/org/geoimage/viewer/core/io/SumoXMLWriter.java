@@ -176,7 +176,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
 		stop=stop.replace("Z","");
-		stop=roundedMillis(start);
+		stop=roundedMillis(stop);
 		
 		
 		
@@ -187,23 +187,12 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setBuffer(buffer);
 		vdsA.setDetectorVersion("");
 		
-		
-		
-		int numberOfBands=gir.getNBand();
-	    
-	    //add thresholds in order
-	    for (int bb = 0; bb < numberOfBands; bb++) {
-	        if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-	        	vdsA.setThreshHH(thresholds[bb]);
-	        } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-	        	vdsA.setThreshHV(thresholds[bb]);
-	        } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-	        	vdsA.setThreshVH(thresholds[bb]);
-	        } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-	        	vdsA.setThreshVV(thresholds[bb]);
-	        }
-	    }
-		
+		//add thresholds in order
+    	vdsA.setThreshHH(thresholds[0]);
+    	vdsA.setThreshHV(thresholds[1]);
+    	vdsA.setThreshVH(thresholds[2]);
+    	vdsA.setThreshVV(thresholds[3]);
+    	
 		vdsA.setMatrixratio(new Double(0));
 		double enlround=Precision.round(enl,2); 
 		vdsA.setEnl(enlround);
@@ -345,8 +334,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @return
 	 */
 	public Gcps getCorners(GeoImageReader gir) {
-		Corners corners=((SarImageReader)gir).getOriginalCorners();
-		
+		//Corners corners=((SarImageReader)gir).getOriginalCorners();
+        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
+        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
+        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight(), "EPSG:4326");
+        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
 		
 		
 		/*double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0,"EPSG:4326");
@@ -355,28 +347,28 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
 		*/
 		Gcp gcpTopL = new Gcp();
-		gcpTopL.setColumn(corners.getTopLeft().getOriginalXpix().intValue());
-		gcpTopL.setRow(new Double(corners.getTopLeft().getYpix()).intValue());
-		gcpTopL.setLon(corners.getTopLeft().getXgeo());
-		gcpTopL.setLat(corners.getTopLeft().getYgeo());
+		gcpTopL.setColumn(0);
+		gcpTopL.setRow(0);
+		gcpTopL.setLon(topLeft[0]);
+		gcpTopL.setLat(topLeft[1]);
 
 		Gcp gcpTopR = new Gcp();
-		gcpTopR.setColumn(corners.getTopRight().getOriginalXpix().intValue());
-		gcpTopR.setRow(new Double(corners.getTopRight().getYpix()).intValue());
-		gcpTopR.setLon(corners.getTopRight().getXgeo());
-		gcpTopR.setLat(corners.getTopRight().getYgeo());
+		gcpTopR.setColumn(gir.getWidth());
+		gcpTopR.setRow(0);
+		gcpTopR.setLon(topRight[0]);
+		gcpTopR.setLat( topRight[1]);
 
 		Gcp gcpBottomL = new Gcp();
-		gcpBottomL.setColumn(corners.getBottomLeft().getOriginalXpix().intValue());
-		gcpBottomL.setRow(new Double(corners.getBottomLeft().getYpix()).intValue());
-		gcpBottomL.setLon(corners.getBottomLeft().getXgeo());
-		gcpBottomL.setLat(corners.getBottomLeft().getYgeo());
+		gcpBottomL.setColumn(0);
+		gcpBottomL.setRow(gir.getHeight());
+		gcpBottomL.setLon(bottomLeft[0]);
+		gcpBottomL.setLat(bottomLeft[1]);
 
 		Gcp gcpBottomR = new Gcp();
-		gcpBottomR.setColumn(corners.getBottomRight().getOriginalXpix().intValue());
-		gcpBottomR.setRow(new Double(corners.getBottomRight().getYpix()).intValue());
-		gcpBottomR.setLon(corners.getBottomRight().getXgeo());
-		gcpBottomR.setLat(corners.getBottomRight().getYgeo());
+		gcpBottomR.setColumn(gir.getWidth());
+		gcpBottomR.setRow(gir.getHeight());
+		gcpBottomR.setLon(bottomRight[0]);
+		gcpBottomR.setLat(bottomRight[1]);
 
 		Gcps gcps = new Gcps();
 		gcps.getGcp().add(gcpTopL);

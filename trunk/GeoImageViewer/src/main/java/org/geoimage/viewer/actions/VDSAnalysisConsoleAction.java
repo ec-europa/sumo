@@ -8,8 +8,6 @@ import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
 import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
 import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
 import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
-import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_DISTANCE;
-import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_TILESIZE;
 import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
@@ -57,8 +55,6 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-
-
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -107,14 +103,16 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
        
 			
 			public void run() {
-				
 				//run the black border analysis 
                  BlackBorderAnalysis blackBorderAnalysis=null;
                  if(useBlackBorderAnalysis){
                 	 MaskVectorLayer mv=null;
                 	 if(bufferedMask!=null&&bufferedMask.length>0)
                 		 mv=(MaskVectorLayer)bufferedMask[0];
-                	 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+                	 if(mv!=null)
+                		 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+                	 else 
+                		 blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
                 	 blackBorderAnalysis.analyse(5);
                  }	 
 
@@ -131,6 +129,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                  message=new StringBuilder();
                  // compute detections for each band separately
                  for (int band = 0; band < numberofbands; band++) {
+                	 
+                	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
+                	 
                      gir.setBand(band);
                      bands[band] = band;
                      
@@ -184,7 +185,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                          
                          AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
 
-                         String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(thresholds[band]).toString();
+                         
+                         
+                         String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
                          
                          
                          String name="";
@@ -430,21 +433,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV, this);
                 
-                final String[] thresholds = {"0.0","0.0","0.0","0.0"};
-                //management of the strings added at the end of the layer name in order to remember the used threshold
-                for (int bb = 0; bb < numberofbands; bb++) {
-                    if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-                        thresholds[0] = "" + thresholdHH;
-                    } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-                        thresholds[1] = "" + thresholdHV;
-                    } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-                        thresholds[2] = "" + thresholdVH;
-                    } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-                        thresholds[3] = "" + thresholdVV;
-                    }
-                }
-                
-                
+                final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
                 boolean useBlackAn=false;
                 if(gir instanceof Sentinel1)
@@ -464,6 +453,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             return true;
         }
     }
+    
+    
     
     
     /**
@@ -642,6 +633,21 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         return out;
     }
 
+    
+    protected int getPolIdx(String polarization){
+    	 int pol=0;
+    	 if (polarization.equals("HH") || polarization.equals("H/H")) {
+            pol=0;
+         } else if (polarization.equals("HV") || polarization.equals("H/V")) {
+        	pol=1;
+         } else if (polarization.equals("VH") || polarization.equals("V/H")) {
+        	pol=2;
+         } else if (polarization.equals("VV") || polarization.equals("V/V")) {
+        	pol=3;
+         }
+    	 return pol;
+    }
+    
     public boolean isIndeterminate() {
         return this.indeterminate;
     }

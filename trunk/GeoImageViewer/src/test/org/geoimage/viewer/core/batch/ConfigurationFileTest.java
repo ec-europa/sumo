@@ -67,10 +67,7 @@ public class ConfigurationFileTest {
 		cf.getInputFolder();
 	}
 
-	@Test
-	public void testGetInputImage() {
-		cf.getInputImage();
-	}
+	
 
 	@Test
 	public void testUseLocalConfigurationFiles() {

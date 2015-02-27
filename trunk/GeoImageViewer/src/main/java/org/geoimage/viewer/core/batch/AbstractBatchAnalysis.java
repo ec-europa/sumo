@@ -96,7 +96,11 @@ public abstract class AbstractBatchAnalysis {
         		true);
   
         
-        final String[] thresholds=Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
+        final String[] thresholds={""+params.thresholdArrayValues[0], 
+        		""+params.thresholdArrayValues[1], 
+        		""+params.thresholdArrayValues[2], 
+        		""+params.thresholdArrayValues[3]};
+        		//Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
         
         VDSAnalysisConsoleAction action= new VDSAnalysisConsoleAction();
         layerResults=action.runBatchAnalysis(reader,params.enl,analysis,masks,thresholds,params.buffer);

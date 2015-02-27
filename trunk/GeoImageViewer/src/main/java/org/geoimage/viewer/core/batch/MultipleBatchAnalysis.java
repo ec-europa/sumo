@@ -7,7 +7,6 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -29,7 +28,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 */
 	public void startAnalysis(){
 			File mainFolder=new File(super.params.pathImg);
-			File outputFolder=new File(super.params.outputFolder);
 			
 			List<File>filesImg=SarFileUtil.scanFolderForImages(mainFolder,confFile.getFilterFolder());
 			

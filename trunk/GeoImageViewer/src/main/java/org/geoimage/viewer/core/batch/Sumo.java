@@ -94,7 +94,7 @@ public class Sumo {
 				params.shapeFile=conf.getShapeFile();
 				params.buffer=conf.getBuffer();
 				params.thresholdArrayValues=conf.getThresholdArray();
-				params.pathImg=conf.getInputImage();
+				params.pathImg=conf.getInputFolder();
 				params.outputFolder=conf.getOutputFolder();
 				status=MULTI_IMG_ANALYSIS;
 			} catch (IOException e) {
