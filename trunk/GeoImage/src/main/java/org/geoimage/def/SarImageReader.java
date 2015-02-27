@@ -484,7 +484,7 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 	public void setContainsMultipleImage(boolean containsMultipleImage) {
 		this.containsMultipleImage = containsMultipleImage;
 	}
-	
+	/*
 	private Corners findOriginalCorners(){
 		Corners corners=new Corners();
 		corners.setTopLeft(gcps.get(0));
@@ -494,35 +494,35 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 		
 		
 		for(Gcp gcp:gcps){
-			
 			double origX=0;
 			if(gcp.getOriginalXpix()!=null)
 				origX=gcp.getOriginalXpix();
 			else
-				origX=gcp.getOriginalXpix();
+				origX=gcp.getXpix();
 			
 			
 			//top left
-			if(corners.getTopLeft().getOriginalXpix()==null||(origX<corners.getTopLeft().getOriginalXpix()&&gcp.getYpix()<corners.getTopLeft().getYpix()))
+			if((origX<corners.getTopLeft().getOriginalXpix()&&gcp.getYpix()<corners.getTopLeft().getYpix()))
 				corners.setTopLeft(gcp);
 			//top right
-			if(corners.getTopRight().getOriginalXpix()==null||(origX>=corners.getTopRight().getOriginalXpix()&&gcp.getYpix()<=corners.getTopRight().getYpix()))
+			if((origX>=corners.getTopRight().getOriginalXpix()&&gcp.getYpix()<=corners.getTopRight().getYpix()))
 				corners.setTopRight(gcp);
 			//bottom left
-			if(corners.getBottomLeft().getOriginalXpix()==null||(origX<=corners.getBottomLeft().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomLeft().getYpix()))
+			if((origX<=corners.getBottomLeft().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomLeft().getYpix()))
 				corners.setBottomLeft(gcp);
 			//bottom right
-			if(corners.getTopLeft().getOriginalXpix()==null||(origX>=corners.getBottomRight().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomRight().getYpix()))
+			if((origX>=corners.getBottomRight().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomRight().getYpix()))
 				corners.setBottomRight(gcp);
 		}
 		return corners;
-	}
+	}*/
 	
-	public Corners getOriginalCorners(){originalCorners=null;
+	/*public Corners getOriginalCorners(){
+		originalCorners=null;
 		if(originalCorners==null)
 			originalCorners=findOriginalCorners();
 		return originalCorners;
-	}
+	}*/
 
 	@Override
 	public abstract File getOverviewFile();

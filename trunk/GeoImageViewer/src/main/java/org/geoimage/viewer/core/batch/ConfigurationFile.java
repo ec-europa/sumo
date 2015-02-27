@@ -26,7 +26,6 @@ public class ConfigurationFile {
 	public static  final String OUTPUT_FOLD_PARAM="output_folder";
 	
 	public static  final String USE_LOCAL_CONF="use_local_conf";
-	public static  final String INPUT_IMG="input_image";
 	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
 	public static  final String FORCE_NEW_ANALYSIS="force_new_analysis";
 	public static  final String FILTER_FOLDER="filter";
@@ -121,9 +120,6 @@ public class ConfigurationFile {
 			return prop.getProperty(INPUT_FOLD_PARAM,"");
 		}
 		
-		public String getInputImage(){
-			return prop.getProperty(INPUT_IMG,"");
-		}
 		
 		public String getFilterFolder(){
 			return prop.getProperty(FILTER_FOLDER,"*");
