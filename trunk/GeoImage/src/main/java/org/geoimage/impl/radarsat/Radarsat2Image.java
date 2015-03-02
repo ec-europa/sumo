@@ -224,8 +224,8 @@ public class Radarsat2Image extends SarImageReader {
         try {
             gcps = new ArrayList<Gcp>();
 
-            setMetadata(SATELLITE, "RADARSAT-2");
-            setMetadata(SENSOR, "SAR Payload Module");
+            setSatellite("RADARSAT-2");
+            setSensor("SAR Payload Module");
 
             
             Element atts = doc.getRootElement().getChild("imageGenerationParameters", ns);
@@ -247,11 +247,11 @@ public class Radarsat2Image extends SarImageReader {
             // rasterattributes
             atts = doc.getRootElement().getChild("imageAttributes", ns).getChild("rasterAttributes", ns);
             if(atts.getChild("numberOfLines", ns) != null)
-                setMetadata(HEIGHT,Integer.parseInt(atts.getChild("numberOfLines", ns).getText()));
+                setHeight(Integer.parseInt(atts.getChild("numberOfLines", ns).getText()));
             if(atts.getChild("numberOfSamplesPerLine", ns) != null)
-                setMetadata(WIDTH,Integer.parseInt(atts.getChild("numberOfSamplesPerLine", ns).getText()));
+                setWidth(Integer.parseInt(atts.getChild("numberOfSamplesPerLine", ns).getText()));
             if(atts.getChild("bitsPerSample", ns) != null)
-                setMetadata(NUMBER_BYTES,Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
+                setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
             double pixSpace=Double.parseDouble((String)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns));
             setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns);
@@ -266,7 +266,7 @@ public class Radarsat2Image extends SarImageReader {
             
             double max=Double.parseDouble((String)setMetadataXML(attsEllipsoid,MAJOR_AXIS, "semiMajorAxis",ns));
             double min=Double.parseDouble((String)setMetadataXML(attsEllipsoid,MINOR_AXIS, "semiMinorAxis",ns));
-            double sixeXPixel=new Double((Integer)getMetadata(WIDTH));
+            double sixeXPixel=new Double(getWidth());
             double geoH=Double.parseDouble((String)setMetadataXML(attsEllipsoid,GEODETIC_TERRA_HEIGHT, "geodeticTerrainHeight",ns));
             
             atts = atts.getChild("geolocationGrid", ns);
@@ -359,7 +359,7 @@ public class Radarsat2Image extends SarImageReader {
 
             // check if ascending or descending
             boolean ascending = doc.getRootElement().getChild("sourceAttributes", ns).getChild("orbitAndAttitude", ns).getChild("orbitInformation", ns).getChild("passDirection", ns).getText().equalsIgnoreCase("Ascending");
-            setMetadata(ORBIT_DIRECTION, ascending ? new String("ASCENDING") : new String("DESCENDING"));
+            setOrbitDirection(ascending ? new String("ASCENDING") : new String("DESCENDING"));
             Element sarProcessingInformation = doc.getRootElement().getChild("imageGenerationParameters", ns).getChild("sarProcessingInformation", ns);
             // use different values if ascending or descending
             if(ascending)
@@ -377,8 +377,8 @@ public class Radarsat2Image extends SarImageReader {
             timestampStop = timestampStop.replaceAll("T", " ");
             timestampStop = timestampStop.replaceAll("Z", " ");
 
-            setMetadata(TIMESTAMP_START, timestampStart);//Timestamp.valueOf(timestampStart));
-            setMetadata(TIMESTAMP_STOP, timestampStop);//Timestamp.valueOf(timestampStop));
+            setTimeStampStart(timestampStart);//Timestamp.valueOf(timestampStart));
+            setTimeStampStop(timestampStop);//Timestamp.valueOf(timestampStop));
 
             atts = doc.getRootElement().getChild("sourceAttributes", ns);
             atts = atts.getChild("radarParameters", ns);
@@ -389,8 +389,8 @@ public class Radarsat2Image extends SarImageReader {
             setMetadataXML(atts, "pulseRepetitionFrequency", PRF, ns);
             setMetadataXML(atts, "radarCenterFrequency", RADAR_WAVELENGTH, ns);
             //convert to wavelength
-            double radarFrequency = Double.parseDouble((String) getMetadata(RADAR_WAVELENGTH));
-            setMetadata(RADAR_WAVELENGTH, String.valueOf(299792457.9 / radarFrequency));
+            double radarFrequency = getRadarWaveLenght();
+            setRadarWaveLenght(299792457.9 / radarFrequency);
 
 
             // orbitandattitude
@@ -404,13 +404,13 @@ public class Radarsat2Image extends SarImageReader {
                 double yvelocity = Double.valueOf(atts.getChildText("yVelocity", ns));
                 double zvelocity = Double.valueOf(atts.getChildText("zVelocity", ns));
                 double satellite_speed = Math.pow(Math.pow(xvelocity, 2) + Math.pow(yvelocity, 2) + Math.pow(zvelocity, 2), 0.5);
-                setMetadata(SATELLITE_SPEED, String.valueOf(satellite_speed));
+                setSatelliteSpeed(satellite_speed);
             }
 
-            setMetadata(HEADING_ANGLE, String.valueOf(this.getImageAzimuth()));
-            setMetadata(SATELLITE_ORBITINCLINATION, "98.5795");
-            setMetadata(REVOLUTIONS_PERDAY, (new Double(14 + 7/34)).toString());
-            setMetadata(K, new String("0.0"));
+            setHeadingAngle(this.getImageAzimuth());
+            setSatelliteOrbitInclination(98.5795);
+            setRevolutionsPerday((new Double(14 + 7/34)));
+            setk(0.0);
         
         } catch (Exception ex) {
             Logger.getLogger(Radarsat2Image.class.getName()).log(Level.SEVERE, null, ex);

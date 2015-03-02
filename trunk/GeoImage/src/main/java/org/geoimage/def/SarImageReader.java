@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.geoimage.factory.GeoImageReaderFactory;
@@ -25,19 +24,20 @@ import org.geotools.referencing.GeodeticCalculator;
  * class MySarReader extends SarImageReader { ... }
  * @author leforth
  */
-public abstract class SarImageReader implements GeoImageReader, SarMetadata {
+public abstract class SarImageReader extends SUMOMetadata implements GeoImageReader{
 
     protected static int MAXTILESIZE = 16 * 1024 * 1024;
     protected String displayName = "";
     protected String imgName = "";
     protected List<Gcp> gcps;
-    private HashMap<String, Object> metadata = new HashMap<String, Object>();
+    
     protected GeoTransform geotransform;
     protected int band = 0;
     protected boolean containsMultipleImage=false;
     protected Corners originalCorners=null;
     BufferedImage overViewImage;
 
+   
 
     /**
      * used for XML
@@ -51,17 +51,7 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
 
     public abstract int getHeight();
 
-    public HashMap<String, Object> getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(String key, Object value) {
-        metadata.put(key, value);
-    }
-
-    public Object getMetadata(String key) {
-        return metadata.get(key);
-    }
+  
 
     public List<Gcp> getGcps() {
         return gcps;
@@ -206,42 +196,45 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
         StringBuilder description = new StringBuilder("Image Acquisition and Generation Parameters:\n")
         	 .append("--------------------\n\n")
         	 .append("Satellite and Instrument: ")
-	         .append("\n").append(getMetadata(SATELLITE)).append("  " + getMetadata(SENSOR))
+	         .append("\n").append(getSatellite()).append("  " + getSensor())
 	         .append("\nProduct: ")
-	         .append(getMetadata(PRODUCT))
+	         .append(getProduct())
 	         .append("\nMode: ")
-	         .append(getMetadata(MODE))
+	         .append(getMode())
 	         .append("\nBeam: ")
-	         .append(getMetadata(BEAM))
+	         .append(getBeam())
 	         .append("\nPolarisations: ")
-	         .append(getMetadata(POLARISATION))
+	         .append(getPolarization())
 	         .append("\nHeading Angle: ")
-	         .append(getMetadata(HEADING_ANGLE))
+	         .append(getHeadingAngle())
 	         .append("\nOrbit Direction: ")
-	         .append(getMetadata(ORBIT_DIRECTION))
+	         .append(getOrbitDirection())
 	         .append("\nImage Dimensions:\n")
-	         .append("\tWidth:").append(getMetadata(WIDTH))
-	         .append("\n\tHeight:").append(getMetadata(HEIGHT))
+	         .append("\tWidth:").append(getWidth())
+	         .append("\n\tHeight:").append(getHeight())
 	         .append("\nImage Acquisition Time:\n")
-	         .append("\tStart:").append(getMetadata(TIMESTAMP_START))
-	         .append("\n\tStop:").append(getMetadata(TIMESTAMP_STOP))
+	         .append("\tStart:").append(getTimeStampStart())
+	         .append("\n\tStop:").append(getTimeStampStop())
 	         .append("\nImage Pixel Spacing:\n")
-	         .append("\tAzimuth:").append(getMetadata(AZIMUTH_SPACING))
-	         .append("\n\tRange:").append(getMetadata(RANGE_SPACING))
+	         .append("\tAzimuth:").append(getAzimuthSpacing())
+	         .append("\n\tRange:").append(getRangeSpacing())
 	         .append("\nImage Processor and Algorithm: ")
-	         .append(getMetadata(PROCESSOR))
+	         .append(getProcessor())
 	         .append("\nImage ENL: ")
-	         .append(getMetadata(ENL))
+	         .append(getENL())
 	         .append("\nSatellite Altitude (m): ")
-	         .append(getMetadata(SATELLITE_ALTITUDE))
+	         .append(getSatelliteAltitude())
 	         .append("\nSatellite Speed (m/s): ")
-	         .append(getMetadata(SATELLITE_SPEED))
+	         .append(getSatelliteSpeed())
 	         .append("\nIncidence Angles (degrees):\n")
-	         .append("\tNear: ").append(getMetadata(INCIDENCE_NEAR))
-	         .append("\n\tFar: ").append(getMetadata(INCIDENCE_FAR));
+	         .append("\tNear: ").append(getIncidenceNear())
+	         .append("\n\tFar: ").append(getIncidenceFar());
 
         return description.toString();
     }
+    
+    
+    
 /*
     public void geoCorrect() {
         String imagepath = this.getFilesList()[0];
@@ -280,10 +273,10 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
             // already in radian
             double incidenceAngle = getIncidence(position);
             double satelliteSpeed = getSatelliteSpeed();
-            double radarWavelength = Double.parseDouble((String) getMetadata(RADAR_WAVELENGTH));
+            double radarWavelength = getRadarWaveLenght();
             double prf = getPRF(position); //Double.parseDouble((String) getMetadata(PRF));
-            double orbitInclination = Math.toRadians(Double.parseDouble((String) getMetadata(SATELLITE_ORBITINCLINATION)));
-            double revolutionsPerDay = Double.parseDouble((String) getMetadata(REVOLUTIONS_PERDAY));
+            double orbitInclination = Math.toRadians(getSatelliteOrbitInclination());
+            double revolutionsPerDay = getRevolutionsPerday();
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];
             double sampleDistRange = getGeoTransform().getPixelSize()[1];
 
@@ -298,6 +291,7 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
             output[1] = (int) Math.floor(deltaRange);
 
         } catch (Exception ex) {
+        	ex.printStackTrace();
         }
         return output;
 
@@ -306,14 +300,16 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
         // estimation of incidence angle based on near and range distance values
-        double nearincidence = Math.toRadians(Double.parseDouble((String) getMetadata(INCIDENCE_NEAR)));
-        double sataltitude = Double.parseDouble((String) getMetadata(SATELLITE_ALTITUDE));
+        double nearincidence = Math.toRadians(getIncidenceNear());
+        double sataltitude=getSatelliteAltitude();
+        
+        
         double distancerange = sataltitude * Math.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
         incidenceangle = Math.atan(distancerange / sataltitude);
         return incidenceangle;
     }
 
-    private double getSatelliteSpeed() {
+    private double calcSatelliteSpeed() {
         // calculate satellite speed
 /*
         double seconds = ((double)(getTimestamp(GeoImageReaderBasic.TIMESTAMP_STOP).getTime() - getTimestamp(GeoImageReaderBasic.TIMESTAMP_START).getTime())) / 1000;
@@ -324,14 +320,14 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
         double satellite_speed = 0.0;
 
         // check if satellite speed has been calculated
-        if (getMetadata(SATELLITE_SPEED) != null) {
-            satellite_speed = Double.valueOf((String) getMetadata(SATELLITE_SPEED));
+        if (getSatelliteSpeed() != null) {
+            satellite_speed = getSatelliteSpeed();
         } else {
             // Ephemeris --> R + H
             //Approaching the orbit as circular V=SQRT(GM/(R+H))
-            double sataltitude = Double.parseDouble((String) getMetadata(SATELLITE_ALTITUDE));
+            double sataltitude = getSatelliteAltitude();
             satellite_speed = Math.pow(3.986005e14 / (6371000 + sataltitude), 0.5);
-            setMetadata(SATELLITE_SPEED, String.valueOf(satellite_speed));
+            setSatelliteSpeed(satellite_speed);
         }
 
         return satellite_speed;
@@ -340,7 +336,7 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
     public double getSlantRange(int position) {
         double slantrange = 0.0;
         double incidenceangle = getIncidence(position);
-        double sataltitude = Double.parseDouble((String) getMetadata(SATELLITE_ALTITUDE));
+        double sataltitude = getSatelliteAltitude();
         // calculate slant range
         if (Math.cos(incidenceangle) != 0.0) {
             slantrange = sataltitude / Math.cos(incidenceangle);
@@ -351,33 +347,32 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
     public double getPRF(int position) {
         double prf = 0;
         //check if is the case of TSX ScanSAR
-        if (getMetadata(SATELLITE).equals("TerraSAR-X") && getMetadata(MODE).equals("SC")) {
-            int bound1 = new Integer((String) getMetadata(STRIPBOUND1)).intValue();
-            int bound2 = new Integer((String) getMetadata(STRIPBOUND2)).intValue();
-            int bound3 = new Integer((String) getMetadata(STRIPBOUND3)).intValue();
+        if (getSatellite().equals("TerraSAR-X") && getMode().equals("SC")) {
+            int bound1 = getStripBound1();
+            int bound2 = getStripBound2();
+            int bound3 = getStripBound3();
             //return the different PRF depending by the strip
             if (position >= 0 && position < bound1) {
-                return Double.parseDouble((String) getMetadata(PRF1));
+                return getPRF1();
             }
             if (position < bound2) {
-                return Double.parseDouble((String) getMetadata(PRF2));
+            	return getPRF2();
             }
             if (position < bound3) {
-                return Double.parseDouble((String) getMetadata(PRF3));
+            	return getPRF3();
             }
 
-            return Double.parseDouble((String) getMetadata(PRF4));
+            return getPRF4();
         }
 
         //for all the other cases with only one PRF
-        return Double.parseDouble((String) getMetadata(PRF));
+        return getPRF();
 
 
     }
 
     public double getBetaNought(int x, double DN) {
-        double Kvalue = Double.parseDouble((String) getMetadata(K));
-
+        double Kvalue = getK();
         return Math.pow(DN, 2) / Kvalue;
     }
 
@@ -544,5 +539,12 @@ public abstract class SarImageReader implements GeoImageReader, SarMetadata {
     	
         return vals;
     }
+    
+    
+    
+    
+    
+    
+    
 
 }
