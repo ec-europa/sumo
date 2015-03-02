@@ -14,74 +14,72 @@ import java.util.HashMap;
  */
 public interface GeoMetadata {
 
-    public static String TYPE = "type";
+    public final static String TYPE = "type";
     /*
      * Height of the raster data in pixels
      */
-    public static String HEIGHT = "height";
+    public final static String HEIGHT = "height";
     /*
      * Width of the raster data in pixels
      */
-    public static String WIDTH = "width";
+    public final  static String WIDTH = "width";
     
     /*
      * Timestamp of the beginning of the acquisition
      */
-    public static String TIMESTAMP_START = "timestamp start";
+    public final static String TIMESTAMP_START = "timestamp start";
     /*
      * Timestamp of the end of the acquisition
      */
-    public static String TIMESTAMP_STOP = "timestamp stop";
+    public final static String TIMESTAMP_STOP = "timestamp stop";
     /*
      * 1 for 8 bits coded band, 2 for 16 bits coded band and so on...
      */
-    public static String NUMBER_BYTES = "number of bytes per band";
-    public static String HEADING_ANGLE = "heading angle";
-    public static String SENSOR = "sensor";
-    public static String LOOK_DIRECTION = "look direction";
-    public static String ORBIT_DIRECTION = "orbit direction";
+    public final static String NUMBER_BYTES = "number of bytes per band";
+    public final static String HEADING_ANGLE = "heading angle";
+    public final static String SENSOR = "sensor";
+    public final static String LOOK_DIRECTION = "look direction";
+    public final static String ORBIT_DIRECTION = "orbit direction";
     /*
      * name of the satellite: Envisat, Radarsat, ERS....
      */
-    public static String SATELLITE = "satellite";
-    public static String PROCESSOR = "processor";
-    public static String NUMBER_BANDS = "number of bands";
-    public static String INCIDENCE_NEAR = "near incidence angle";
-    public static String INCIDENCE_FAR = "far incidence angle";
-    public static String SLANT_RANGE_NEAR_EDGE = "slant range near edge";
-    public static String AZIMUTH_SPACING = "Azimuth Spacing";
-    public static String RANGE_SPACING = "Range Spacing";
-    public static String SATELLITE_ALTITUDE = "Satellite Altitude";
-    public static String SATELLITE_ORBITINCLINATION = "Satellite Orbit Inclination";
-    public static String SIMPLE_TIME_ORDERING = "pixel time ordering";
+    public final static String SATELLITE = "satellite";
+    public final static String PROCESSOR = "processor";
+    public final static String NUMBER_BANDS = "number of bands";
+    public final static String INCIDENCE_NEAR = "near incidence angle";
+    public final static String INCIDENCE_FAR = "far incidence angle";
+    public final static String SLANT_RANGE_NEAR_EDGE = "slant range near edge";
+    public final static String AZIMUTH_SPACING = "Azimuth Spacing";
+    public final static String RANGE_SPACING = "Range Spacing";
+    public final static String SATELLITE_ALTITUDE = "Satellite Altitude";
+    public final static String SATELLITE_ORBITINCLINATION = "Satellite Orbit Inclination";
+    public final static String SIMPLE_TIME_ORDERING = "pixel time ordering";
     
     
     
     
     //Ellipsoid Parameters
-    public static String MAJOR_AXIS="semiMajorAxis";
-    public static String MINOR_AXIS="semiMinorAxis";
-    public static String GEODETIC_TERRA_HEIGHT="geodeticTerrainHeight";
+    public final static String MAJOR_AXIS="semiMajorAxis";
+    public final static String MINOR_AXIS="semiMinorAxis";
+    public final static String GEODETIC_TERRA_HEIGHT="geodeticTerrainHeight";
 
     /*
      * SENTINEL 1
      */
-    public static String SWATH = "swath";
+    public final static String SWATH = "swath";
     
     
-    public static String REVOLUTIONS_PERDAY = "Satellite revolutions per day";
+    public final static String REVOLUTIONS_PERDAY = "Satellite revolutions per day";
     /*
      * Speed od the satellite during the acquisition
      */
-    public static String SATELLITE_SPEED = "Satellite Speed";
+    public final static String SATELLITE_SPEED = "Satellite Speed";
     
     
     
-    public HashMap<String, Object> getMetadata();
     
-    public void setMetadata(String key, Object value);
     
-    public Object getMetadata(String key);
+    
     
     //return the rotation of azimuth angle 0-180degree 
     public double getImageAzimuth();

@@ -100,14 +100,14 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
 	    	
 	        if(tiffImages==null) return false;
 	        //Check if it is a complex product
-	        if (getMetadata(PRODUCT).equals("SSC")) {
+	        if (getProduct().equals("SSC")) {
 	            return false;
 	        }
         
             //System.out.println(reader.getNumImages(false));
             image = tiffImages.values().iterator().next();
-            image.xSize = new Integer(getMetadata(WIDTH).toString());
-            image.ySize = new Integer(getMetadata(HEIGHT).toString());
+            image.xSize = getWidth();
+            image.ySize = getHeight();
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
             
             //TODO check why is commented          gcps = getGcps();
@@ -126,14 +126,14 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
-            setMetadata(SATELLITE_ALTITUDE, String.valueOf(radialdist - earthradial));
+            setSatelliteAltitude(radialdist - earthradial);
 
             // get incidence angles from gcps
             // !!possible to improve
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
-            setMetadata(INCIDENCE_NEAR, String.valueOf(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
-            setMetadata(INCIDENCE_FAR, String.valueOf(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
+            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
 
         } catch (TransformException ex) {
@@ -189,8 +189,8 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             SAXBuilder builder = new SAXBuilder();
             doc = builder.build(productxml);
             Element atts = doc.getRootElement().getChild("productInfo");
-            setMetadata(SATELLITE, new String("TerraSAR-X"));
-            setMetadata(SENSOR, atts.getChild("acquisitionInfo").getChild("sensor").getText());
+            setSatellite("TerraSAR-X");
+            setSensor(atts.getChild("acquisitionInfo").getChild("sensor").getText());
             String pols = "";
             for (Object o : atts.getChild("acquisitionInfo").getChild("polarisationList").getChildren("polLayer")) {
                 Element elem = (Element) o;
@@ -198,52 +198,52 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
                 //bands.add(elem.getText());
             }
             pols.substring(0, pols.length()-1);
-            setMetadata(POLARISATION, pols);
+            setPolarization(pols);
 
-            setMetadata(LOOK_DIRECTION, atts.getChild("acquisitionInfo").getChild("lookDirection").getText());
-            setMetadata(MODE, atts.getChild("acquisitionInfo").getChild("imagingMode").getText());
+            setLookDirection(atts.getChild("acquisitionInfo").getChild("lookDirection").getText());
+            setMode(atts.getChild("acquisitionInfo").getChild("imagingMode").getText());
 
 
-            setMetadata(PRODUCT, atts.getChild("productVariantInfo").getChild("productType").getText());
-            setMetadata(ORBIT_DIRECTION, atts.getChild("missionInfo").getChild("orbitDirection").getText());
-            setMetadata(HEIGHT, atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText());
+            setProduct(atts.getChild("productVariantInfo").getChild("productType").getText());
+            setOrbitDirection(atts.getChild("missionInfo").getChild("orbitDirection").getText());
+            setHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String xSize=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
-            setMetadata(WIDTH,xSize );
-            setMetadata(RANGE_SPACING, atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText());
-            setMetadata(AZIMUTH_SPACING, atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText());
+            setWidth(Integer.parseInt(xSize) );
+            setRangeSpacing(Double.parseDouble(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
+            setAzimuthSpacing(Double.parseDouble(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
 
-            setMetadata(NUMBER_BYTES, new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
-            setMetadata(ENL, atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());
+            setNumberOfBytes(new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
+            setENL(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());
 
-            setMetadata(HEADING_ANGLE, atts.getChild("sceneInfo").getChild("headingAngle").getText());
+            setHeadingAngle(Double.parseDouble(atts.getChild("sceneInfo").getChild("headingAngle").getText()));
             rangeTimeStart = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("firstPixel").getText());
             rangeTimeStop = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("lastPixel").getText());
             String time = atts.getChild("sceneInfo").getChild("start").getChild("timeUTC").getText();
             //time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_START,time.replaceAll("T", " "));
+            setTimeStampStart(time.replaceAll("T", " "));
             time = atts.getChild("sceneInfo").getChild("stop").getChild("timeUTC").getText();
             //time = time.substring(0, time.lastIndexOf("."));
-            setMetadata(TIMESTAMP_STOP, time.replaceAll("T", " "));
+            setTimeStampStop(time.replaceAll("T", " "));
             // calculate satellite speed using state vectors
             atts = doc.getRootElement().getChild("platform").getChild("orbit").getChild("stateVec");
             double xvelocity = Double.valueOf(atts.getChildText("velX"));
             double yvelocity = Double.valueOf(atts.getChildText("velY"));
             double zvelocity = Double.valueOf(atts.getChildText("velZ"));
             double satellite_speed = Math.sqrt(xvelocity * xvelocity + yvelocity * yvelocity + zvelocity * zvelocity);
-            setMetadata(SATELLITE_SPEED, String.valueOf(satellite_speed));
+            setSatelliteSpeed(satellite_speed);
             xposition = Double.valueOf(atts.getChildText("posX"));
             yposition = Double.valueOf(atts.getChildText("posY"));
             zposition = Double.valueOf(atts.getChildText("posZ"));
 
             float radarFrequency = new Float(doc.getRootElement().getChild("instrument").getChild("radarParameters").getChild("centerFrequency").getText());
-            setMetadata(RADAR_WAVELENGTH, String.valueOf(299792457.9 / radarFrequency));
+            setRadarWaveLenght(299792457.9 / radarFrequency);
 
-            setMetadata(SATELLITE_ORBITINCLINATION, "97.44");
-            setMetadata(REVOLUTIONS_PERDAY, String.valueOf(11));
+            setSatelliteOrbitInclination(97.44);
+            setRevolutionsPerday(11.0);
 
 
             //metadata used for ScanSAR mode during the Azimuth ambiguity computation
-            if (getMetadata(MODE).equals("SC")) {
+            if (getMode().equals("SC")) {
                 //extraction of the 4 PRF codes
                 int prf_count = 1;
                 for (Object o : doc.getRootElement().getChild("instrument").getChildren("settings")) {
@@ -251,7 +251,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
                     setMetadata("PRF" + prf_count, elem.getChild("settingRecord").getChild("PRF").getText());
                     prf_count++;
                 }
-                setMetadata(PRF, ""); //to recognise the TSX SC in the azimuth computation
+                setPRF(0); //to recognise the TSX SC in the azimuth computation
 
                 //the SC mode presents 4 strips which overlap, the idea is to consider one strip till the middle of the overlap area
                 int b = 1;

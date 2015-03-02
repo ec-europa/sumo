@@ -125,8 +125,8 @@ public class CosmoSkymedImage extends SarImageReader {
             starts = imagedata.getStartDims();
 
 
-            setMetadata(WIDTH, xSize);
-            setMetadata(HEIGHT, ySize);
+            setWidth(xSize);
+            setHeight(ySize);
             
             bounds = new Rectangle(0, 0, xSize, ySize);
             
@@ -173,58 +173,58 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcps.add(gcp);
                 } else if (a.getName().equals("Scene Sensing Start UTC")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(TIMESTAMP_START, val[0]);
+                    setTimeStampStart(val[0]);
                 } else if (a.getName().equals("Scene Sensing Stop UTC")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(TIMESTAMP_STOP, val[0]);
+                    setTimeStampStop(val[0]);
                 } else if (a.getName().equals("Equivalent Number of Looks")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(ENL, val[0]);
+                    setENL(String.valueOf(val[0]));
                 } else if (a.getName().equals("Column Spacing")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(RANGE_SPACING, val[0]);
+                    setRangeSpacing(val[0]);
                 } else if (a.getName().equals("Far Incidence Angle")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(INCIDENCE_FAR, val[0]);
+                    setIncidenceFar(val[0]);
                 } else if (a.getName().equals("Near Incidence Angle")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(INCIDENCE_NEAR, val[0]);
+                    setIncidenceNear(val[0]);
                 } else if (a.getName().equals("Line Spacing")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(AZIMUTH_SPACING, val[0]);
+                    setAzimuthSpacing(val[0]);
                 } else if (a.getName().equals("Look Side")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(LOOK_DIRECTION, val[0]);
+                    setLookDirection(val[0]);
                 } else if (a.getName().equals("Orbit Direction")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(ORBIT_DIRECTION, val[0]);
+                    setOrbitDirection(val[0]);
                 } else if (a.getName().equals("Processing Centre")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(PROCESSOR, val[0]);
+                    setProcessor(val[0]);
                 } else if (a.getName().equals("Radar Wavelength")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(RADAR_WAVELENGTH, val[0]);
+                    setRadarWaveLenght(val[0]);
                 } else if (a.getName().equals("Product Type")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(TYPE, val[0]);
+                    setType(val[0]);
                 } else if (a.getName().equals("Satellite ID")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(SATELLITE, val[0]);
+                    setSatellite(val[0]);
                 } else if (a.getName().equals("Satellite Height")) {
                     double[] val = (double[]) a.getValue();
-                    setMetadata(SATELLITE_ALTITUDE, val[0]);
+                    setSatelliteAltitude(val[0]);
                 } else if (a.getName().equals("Polarisation")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(POLARISATION, val[0]);
+                    setPolarization(val[0]);
                 } else if (a.getName().equals("Multi-Beam ID")) {
                     String[] val = (String[]) a.getValue();
-                    setMetadata(BEAM, val[0]);
+                    setBeam(val[0]);
                 }
 
 
             }
-            setMetadata(SENSOR,"CS");
-            if (("" + getMetadata(TYPE)).startsWith("SCS")) {
+            setSensor("CS");
+            if (getType().startsWith("SCS")) {
                 complex = true;
             }
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
@@ -312,7 +312,7 @@ public class CosmoSkymedImage extends SarImageReader {
     }
 
     public String getBandName(int band) {
-        return (String)getMetadata(POLARISATION);
+        return getPolarization();
     }
 
     public void setBand(int band) {
