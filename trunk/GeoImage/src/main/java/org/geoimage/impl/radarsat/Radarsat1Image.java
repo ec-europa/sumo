@@ -104,7 +104,8 @@ public class Radarsat1Image extends SarImageReader {
                 return false;
             }
             char chartype = getCharValue(dat, 219);
-            setMetadata(NUMBER_BYTES, chartype);
+            int bytes=Integer.parseInt(""+chartype);
+            setNumberOfBytes(bytes);
             if (chartype == '8') {
                 numberOfBytes = 1;
             }
@@ -113,8 +114,8 @@ public class Radarsat1Image extends SarImageReader {
             }
             xSize = getIntegerValue(dat, 251, 5);
             ySize = getIntegerValue(dat, 239, 5);
-            setMetadata(WIDTH, xSize);
-            setMetadata(HEIGHT, ySize);
+            setWidth(xSize);
+            setHeight(ySize);
             if (!extractGcps()) {
                 return false;
             }
@@ -192,12 +193,12 @@ public class Radarsat1Image extends SarImageReader {
 
     private boolean extractMetadata() {
         try {
-            setMetadata(SATELLITE, "RADARSAT-1");
-            setMetadata(SENSOR, "SAR Payload Module");
+            setSatellite("RADARSAT-1");
+            setSensor("SAR Payload Module");
             initializeModeBeamProduct();
-            setMetadata(PRODUCT, getStringValue(dat, 59, 3));
-            setMetadata(TYPE, getStringValue(dat, 48, 16));
-            setMetadata(PROCESSOR, getStringValue(lea, 1782, 16));
+            setProduct(getStringValue(dat, 59, 3));
+            setType(getStringValue(dat, 48, 16));
+            setProcessor(getStringValue(lea, 1782, 16));
             // convert time position into an offset value
             String time = null;
             String date = null;
@@ -207,18 +208,18 @@ public class Radarsat1Image extends SarImageReader {
             day = getIntegerValue(lea, 40276 + 149 + 5, 3);
             date = getDate(day, year);
             time = getStringValue(lea, 40276 + 149 + 9, 12);
-            setMetadata(TIMESTAMP_START, date + " " + time);
+            setTimeStampStart(date + " " + time);
             year = getIntegerValue(lea, 40276 + 170, 4);
             day = getIntegerValue(lea, 40276 + 170 + 5, 3);
             date = getDate(day, year);
             time = getStringValue(lea, 40276 + 170 + 9, 12);
-            setMetadata(TIMESTAMP_STOP, date + " " + time);
-            setMetadata(ENL, String.valueOf(org.geoimage.impl.ENL.getFromGeoImageReader(this)));
-            setMetadata(HEADING_ANGLE, String.valueOf(this.getImageAzimuth()));
-            setMetadata(POLARISATION, "HH");
+            setTimeStampStop(date + " " + time);
+            setENL(String.valueOf(org.geoimage.impl.ENL.getFromGeoImageReader(this)));
+            setHeadingAngle(this.getImageAzimuth());
+            setPolarization("HH");
             lea.seek(offset_processingparam + 533);
-            setMetadata(ORBIT_DIRECTION, new String(lea.readByte() == 'A' ? "ASCENDING" : "DESCENDING"));
-            if (((String) getMetadata(ORBIT_DIRECTION)).equalsIgnoreCase("ASCENDING")) {
+            setOrbitDirection(new String(lea.readByte() == 'A' ? "ASCENDING" : "DESCENDING"));
+            if (getOrbitDirection().equalsIgnoreCase("ASCENDING")) {
                 nearRangeFirst = true;
             } else {
                 nearRangeFirst = false;
@@ -226,11 +227,11 @@ public class Radarsat1Image extends SarImageReader {
             lea.seek(offset_dataset + 1703 - 1);
             byte[] AzimuthString = new byte[16];
             lea.read(AzimuthString, 0, 16);
-            setMetadata(AZIMUTH_SPACING, new String(AzimuthString));
+            setAzimuthSpacing(Double.parseDouble(new String(AzimuthString)));
             lea.seek(offset_dataset + 1687 - 1);
             byte[] RangeString = new byte[16];
             lea.read(RangeString, 0, 16);
-            setMetadata(RANGE_SPACING, new String(RangeString));
+            setRangeSpacing(Double.parseDouble(new String(RangeString)));
             lea.seek(offset_processingparam + 4649 - 1);
             byte[] radialsatString = new byte[16];
             lea.read(radialsatString, 0, 16);
@@ -241,28 +242,28 @@ public class Radarsat1Image extends SarImageReader {
             convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
             earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
-            setMetadata(SATELLITE_ALTITUDE, String.valueOf(radialsat - earthradial));
-            setMetadata(SATELLITE_ORBITINCLINATION, "98.5795");
+            setSatelliteAltitude(radialsat - earthradial);
+            setSatelliteOrbitInclination(98.5795);
             lea.seek(offset_processingparam + 4649 - 1);
             byte[] ephorbData = new byte[16];
             lea.read(ephorbData, 0, 16);
             double satellite_speed = Math.pow(3.986005e14 / Double.valueOf(new String(ephorbData)), 0.5);
-            setMetadata(SATELLITE_SPEED, String.valueOf(satellite_speed));
+            setSatelliteSpeed(satellite_speed);
             lea.seek(offset_processingparam + 958 + 1);
             byte[] PRFString = new byte[16];
             lea.read(PRFString, 0, 16);
-            setMetadata(PRF, new String(PRFString));
+            setPRF(Double.parseDouble(new String(PRFString)));
             lea.seek(offset_dataset + 501 + 1);
             byte[] radarWavelength = new byte[16];
             lea.read(radarWavelength, 0, 16);
-            setMetadata(RADAR_WAVELENGTH, new String(radarWavelength));
-            setMetadata(REVOLUTIONS_PERDAY, String.valueOf(14.29988851));
+            setRadarWaveLenght(Double.parseDouble(new String(radarWavelength)));
+            setRevolutionsPerday(14.29988851);
             // for the constant calibration, with the radarsat we take the
             // middle value of the look up table (line Constant.TILE_SIZE)
             lea.seek(65922 + 88 + 16 * Constant.TILE_SIZE);
             byte[] KString = new byte[16];
             lea.read(KString, 0, 16);
-            setMetadata(K, new String(KString));
+            setk(Double.parseDouble(new String(KString)));
 
             // get the SRGR parameters values
             int pointer;
@@ -298,8 +299,8 @@ public class Radarsat1Image extends SarImageReader {
 
             if ((srgr_coef[0] < 500000) || (srgr_coef[5] == -1)) {
                 System.out.println("srgr coefficients from the header are not good, default coefficients are applied...");
-                String imgBeam = (String) getMetadata(BEAM);
-                String imgMode = (String) getMetadata(MODE);
+                String imgBeam = getBeam();
+                String imgMode = getMode();
                 if (imgBeam.equalsIgnoreCase("S1")) {
                     srgrCoefLine = 0;
                 }
@@ -338,8 +339,8 @@ public class Radarsat1Image extends SarImageReader {
             // get incidence angles from gcps and convert them into radians
             double firstIncidenceangle = getIncidence(0);
             double lastIncidenceAngle = getIncidence(getWidth());
-            setMetadata(INCIDENCE_NEAR, String.valueOf(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
-            setMetadata(INCIDENCE_FAR, String.valueOf(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
+            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
         } catch (Exception ex) {
             Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, null, ex);
@@ -690,7 +691,7 @@ public class Radarsat1Image extends SarImageReader {
         double slant_range;
         double r, h;
 
-        h = Double.parseDouble((String) getMetadata(SATELLITE_ALTITUDE));
+        h = getSatelliteAltitude();
 
         // Calculate the slant range for the incidence angle
         slant_range = this.getSlantRange(pos_range);
@@ -760,8 +761,8 @@ public class Radarsat1Image extends SarImageReader {
             e.printStackTrace();
         }
 
-        setMetadata(BEAM, imgBeam);
-        setMetadata(MODE, imgMode);
+        setBeam(imgBeam);
+        setMode(imgMode);
 
     }
 

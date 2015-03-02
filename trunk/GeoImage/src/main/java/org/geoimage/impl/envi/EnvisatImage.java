@@ -127,31 +127,33 @@ public class EnvisatImage extends SarImageReader {
             displayName = getFilesList()[0]; //String) getMetadata("PRODUCT");
             extractGcps(fss);
             getWidth();
-            setMetadata(WIDTH, xSize);
+            setWidth(xSize);
             getHeight();
-            setMetadata(HEIGHT, ySize);
+            setHeight(ySize);
             getTimestamp();
             bounds = new Rectangle(0, 0, xSize, ySize);
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
-            setMetadata(SATELLITE, "ENVISAT");
-            setMetadata(SENSOR, "ASAR");
-            setMetadata(BEAM, getMetadata("SWATH"));
-            setMetadata(TYPE, "ASAR");
-            setMetadata(ENL, String.valueOf(org.geoimage.impl.ENL.getFromGeoImageReader(this)));
-            setMetadata(HEADING_ANGLE, String.valueOf(this.getImageAzimuth()));
+            setSatellite("ENVISAT");
+            setSensor("ASAR");
+            setBeam(getSwath());
+            setType("ASAR");
+            setENL(String.valueOf(org.geoimage.impl.ENL.getFromGeoImageReader(this)));
+            setHeadingAngle(this.getImageAzimuth());
             // get incidence angles from gcps and convert them into radians
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
-            setMetadata(LOOK_DIRECTION, firstIncidenceangle < lastIncidenceAngle ? "RIGHT" : "LEFT");
-            setMetadata(INCIDENCE_NEAR, String.valueOf(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
-            setMetadata(INCIDENCE_FAR, String.valueOf(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
-            setMetadata(POLARISATION, getMetadata("MDS1_TX_RX_POLAR") + ", " + getMetadata("MDS2_TX_RX_POLAR"));
-            setMetadata(ORBIT_DIRECTION, getMetadata("PASS"));
-            setMetadata(PROCESSOR, getMetadata("SOFTWARE_VER") + " with " + getMetadata("ALGORITHM"));
+            setLookDirection(firstIncidenceangle < lastIncidenceAngle ? "RIGHT" : "LEFT");
+            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            
+            setPolarization(getMetadata("MDS1_TX_RX_POLAR") + ", " + getMetadata("MDS2_TX_RX_POLAR"));
+            
+            setOrbitDirection(getMetadata("PASS"));
+            setProcessor(getMetadata("SOFTWARE_VER") + " with " + getMetadata("ALGORITHM"));
             //remove the <m> otherwise crashed in detected pixels
-            setMetadata(AZIMUTH_SPACING, getMetadata("AZIMUTH_SPACING").toString().replace("<m>", ""));
-            setMetadata(RANGE_SPACING, getMetadata("RANGE_SPACING").toString().replace("<m>", ""));
-            setMetadata(MODE, getMetadata("SPH_DESCRIPTOR"));
+            setAzimuthSpacing(getMetadata("AZIMUTH_SPACING").toString().replace("<m>", ""));
+            setRangeSpacing(getMetadata("RANGE_SPACING").toString().replace("<m>", ""));
+            setMode(MODE, getMetadata("SPH_DESCRIPTOR"));
             if(getMetadata("SPH_DESCRIPTOR").equals("Image Mode Medium Res Image")){
                 //if IMM then set the ENL to 18
                 setMetadata(ENL, String.valueOf(18));

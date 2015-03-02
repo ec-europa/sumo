@@ -9,7 +9,7 @@ import org.geoimage.utils.IProgress;
 /**
  * Interface to be implemented by all the readers for "geographic" images
  */
-public interface GeoImageReader extends GeoMetadata {
+public interface GeoImageReader  {
     /**
      * version of the reader
      */
