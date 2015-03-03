@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.Hashtable;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.def.SarMetadata;
 import org.geoimage.impl.envi.EnvisatImage;
 import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
@@ -21,7 +20,7 @@ import org.geoimage.impl.s1.Sentinel1SLC;
  * This is based on the work of Harm Greidanus
  * @author thoorfr
  */
-public class ENL {
+public class ENL  {
 
     private static Hashtable<String, String> envisatENLMap = new Hashtable<String, String>();
     private static float[][] radarsatENLArray = {
@@ -50,8 +49,8 @@ public class ENL {
         float enl = 1;
         if (gir instanceof Radarsat1Image) {
             int ENLColumn = 0, ENLLine = 0;
-            String processor = (String) gir.getMetadata().get(SarImageReader.PROCESSOR);
-            String mode = "" + ((String)gir.getMetadata().get(SarImageReader.MODE));
+            String processor = gir.getProcessor();
+            String mode = gir.getMode();
             if (processor.charAt(0) == 'K' || processor.charAt(0) == 'S') {
                 ENLColumn = 0;
             } else {
@@ -66,7 +65,7 @@ public class ENL {
             if (mode.equalsIgnoreCase("w")) {
                 ENLLine = 2;
             }
-            if (((String)gir.getMetadata().get(SarImageReader.PRODUCT)).equalsIgnoreCase("scn")) {
+            if (((String)gir.getProduct()).equalsIgnoreCase("scn")) {
                 ENLLine = 3;
             }
             enl = radarsatENLArray[ENLLine][ENLColumn];
@@ -95,10 +94,10 @@ public class ENL {
         		}
         	}
         }else if (gir instanceof EnvisatImage) {
-            String swath = (String) gir.getMetadata().get("SWATH");
+            String swath = gir.getSwath();
             enl = Float.parseFloat(envisatENLMap.get(swath));
         } else if (gir instanceof Radarsat2Image) {
-            String temp = (String) gir.getMetadata().get(SarMetadata.ENL);
+            String temp = gir.getENL();
             enl = Float.parseFloat(temp);
         } else if (gir instanceof GeotiffImage) {
             enl = 1;

@@ -499,13 +499,13 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
             atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
             atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
-            String t=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+            String t=((SarImageReader)gir).getTimeStampStart();
             t=t.replace("Z", "");
             atts.set(VDSSchema.DATE, Timestamp.valueOf(t));
             atts.set(VDSSchema.VS, 0);
             //compute the direction of the vessel considering the azimuth of the image
             //result is between 0 and 180 degree
-            double azimuth = gir.getImageAzimuth();
+            double azimuth = ((SarImageReader)gir).getImageAzimuth();
             double degree = boat[10] + 90 + azimuth;
             if (degree > 180) {
                 degree = degree - 180;
@@ -544,19 +544,14 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
             atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
             atts.set(VDSSchema.SIGNIFICANCE, (boat[3]-boat[4])/(boat[4]*boat[5]));
-            try{
-                atts.set(VDSSchema.DATE,Timestamp.valueOf(""+gir.getMetadata(GeoMetadata.TIMESTAMP_START)));
-            }catch (java.lang.IllegalArgumentException iae){
-               //stores directly timestamp
-               atts.set(VDSSchema.DATE,gir.getMetadata(GeoMetadata.TIMESTAMP_START));
-            }
+            atts.set(VDSSchema.DATE,Timestamp.valueOf(((SarImageReader)gir).getTimeStampStart()));
 
             atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
-            atts.set(VDSSchema.DATE, Timestamp.valueOf("" + gir.getMetadata(GeoMetadata.TIMESTAMP_START)));
+            atts.set(VDSSchema.DATE, Timestamp.valueOf(((SarImageReader)gir).getTimeStampStart()));
             atts.set(VDSSchema.VS, 0);
             //compute the direction of the vessel considering the azimuth of the image
             //result is between 0 and 180 degree
-            double azimuth = gir.getImageAzimuth();
+            double azimuth = ((SarImageReader)gir).getImageAzimuth();
             double degree = boat[10] + 90 + azimuth;
             if (degree > 180) {
                 degree = degree - 180;
