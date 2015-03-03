@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -232,16 +234,16 @@ public class Radarsat2Image extends SarImageReader {
 
             // generalprocessinginformation
             atts = atts.getChild("generalProcessingInformation", ns);
-            setMetadataXML(atts, "productType", PRODUCT, ns);
-            setMetadataXML(atts, "processingFacility", PROCESSOR, ns);
+            setMetadataXML(atts, "productType", PRODUCT, ns, String.class);
+            setMetadataXML(atts, "processingFacility", PROCESSOR, ns,String.class);
 
             // sarprocessinginformation
             atts = doc.getRootElement().getChild("imageGenerationParameters", ns).getChild("sarProcessingInformation", ns);
-            setMetadataXML(atts, "numberOfAzimuthLooks", ENL, ns);
-            setMetadataXML(atts, "incidenceAngleNearRange", INCIDENCE_NEAR, ns);
-            setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns);
-            double slantRange=Double.parseDouble((String)setMetadataXML(atts, "slantRangeNearEdge", SLANT_RANGE_NEAR_EDGE, ns));
-            double satH=Double.parseDouble((String)setMetadataXML(atts, "satelliteHeight", SATELLITE_ALTITUDE, ns));
+            setMetadataXML(atts, "numberOfAzimuthLooks", ENL, ns,String.class);
+            setMetadataXML(atts, "incidenceAngleNearRange", INCIDENCE_NEAR, ns,Double.class);
+            setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns,Double.class);
+            double slantRange=(Double)setMetadataXML(atts, "slantRangeNearEdge", SLANT_RANGE_NEAR_EDGE, ns,Double.class);
+            double satH=(Double)setMetadataXML(atts, "satelliteHeight", SATELLITE_ALTITUDE, ns,Double.class);
             
             
             // rasterattributes
@@ -253,9 +255,9 @@ public class Radarsat2Image extends SarImageReader {
             if(atts.getChild("bitsPerSample", ns) != null)
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
-            double pixSpace=Double.parseDouble((String)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns));
-            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns);
-            String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns);
+            double pixSpace=(Double)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Double.class);
+            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,String.class);
+            String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns,String.class);
             
             // geolocationgrid
             atts = doc.getRootElement().getChild("imageAttributes", ns);
@@ -264,10 +266,10 @@ public class Radarsat2Image extends SarImageReader {
             Element attsEllipsoid =atts.getChild("referenceEllipsoidParameters", ns);
             
             
-            double max=Double.parseDouble((String)setMetadataXML(attsEllipsoid,MAJOR_AXIS, "semiMajorAxis",ns));
-            double min=Double.parseDouble((String)setMetadataXML(attsEllipsoid,MINOR_AXIS, "semiMinorAxis",ns));
+            double max=(Double)setMetadataXML(attsEllipsoid,MAJOR_AXIS, "semiMajorAxis",ns,Double.class);
+            double min=(Double)setMetadataXML(attsEllipsoid,MINOR_AXIS, "semiMinorAxis",ns,Double.class);
             double sixeXPixel=new Double(getWidth());
-            double geoH=Double.parseDouble((String)setMetadataXML(attsEllipsoid,GEODETIC_TERRA_HEIGHT, "geodeticTerrainHeight",ns));
+            double geoH=(Double)setMetadataXML(attsEllipsoid,GEODETIC_TERRA_HEIGHT, "geodeticTerrainHeight",ns,Double.class);
             
             atts = atts.getChild("geolocationGrid", ns);
                         
@@ -382,12 +384,13 @@ public class Radarsat2Image extends SarImageReader {
 
             atts = doc.getRootElement().getChild("sourceAttributes", ns);
             atts = atts.getChild("radarParameters", ns);
-            setMetadataXML(atts, "beams", BEAM, ns);
-            setMetadataXML(atts, "acquisitionType", MODE, ns);
-            setMetadataXML(atts, "polarizations", POLARISATION, ns);
-            setMetadataXML(atts, "antennaPointing", LOOK_DIRECTION, ns);
-            setMetadataXML(atts, "pulseRepetitionFrequency", PRF, ns);
-            setMetadataXML(atts, "radarCenterFrequency", RADAR_WAVELENGTH, ns);
+            
+            setMetadataXML(atts, "beams", BEAM, ns,Integer.class);
+            setMetadataXML(atts, "acquisitionType", MODE, ns,String.class);
+            setMetadataXML(atts, "polarizations", POLARISATION, ns,String.class);
+            setMetadataXML(atts, "antennaPointing", LOOK_DIRECTION, ns,String.class);
+            setMetadataXML(atts, "pulseRepetitionFrequency", PRF, ns,double.class);
+            setMetadataXML(atts, "radarCenterFrequency", RADAR_WAVELENGTH, ns,Double.class);
             //convert to wavelength
             double radarFrequency = getRadarWaveLenght();
             setRadarWaveLenght(299792457.9 / radarFrequency);
@@ -395,7 +398,7 @@ public class Radarsat2Image extends SarImageReader {
 
             // orbitandattitude
             atts = doc.getRootElement().getChild("sourceAttributes", ns).getChild("orbitAndAttitude", ns).getChild("orbitInformation", ns);
-            setMetadataXML(atts, "passDirection", ORBIT_DIRECTION, ns);
+            setMetadataXML(atts, "passDirection", ORBIT_DIRECTION, ns,String.class);
             // calculate satellite speed using state vectors
             atts = atts.getChild("stateVector", ns);
             if(atts != null)
@@ -409,24 +412,21 @@ public class Radarsat2Image extends SarImageReader {
 
             setHeadingAngle(this.getImageAzimuth());
             setSatelliteOrbitInclination(98.5795);
-            setRevolutionsPerday((new Double(14 + 7/34)));
-            setk(0.0);
+            setRevolutionsPerdayDouble(new Double(14 + 7/34));
+            setK(0.0);
         
         } catch (Exception ex) {
             Logger.getLogger(Radarsat2Image.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private String setMetadataXML(Element atts, String attribute, String metadata, Namespace namespace)
-    {
-    	Element o=atts.getChild(attribute, namespace);
-    	String value=null;
-        if((atts != null) && (o != null)){
-        	value=o.getText();
-            setMetadata(metadata, value);
-        }
-        return value;
+    public double getRevolutionsPerdayDouble(){
+    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
     }
+    public void setRevolutionsPerdayDouble(double data){
+    	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
+    }
+   
 
     @Override
     public int getNumberOfBytes() {

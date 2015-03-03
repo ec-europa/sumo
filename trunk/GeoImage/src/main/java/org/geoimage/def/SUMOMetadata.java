@@ -2,6 +2,9 @@ package org.geoimage.def;
 
 import java.util.HashMap;
 
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
 	private HashMap<String, Object> metadata = new HashMap<String, Object>();
 	
@@ -12,7 +15,7 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
 	 * @param key
 	 * @param value
 	 */
-	private  void setMetadata(String key, Object value){
+	protected  void setMetadata(String key, Object value){
 		metadata.put(key, value);
 	}
     
@@ -21,10 +24,43 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
 	 * @param key
 	 * @return
 	 */
-    private Object getMetadata(String key){
+	protected Object getMetadata(String key){
     	return metadata.get(key);
     }
 	
+	
+		
+	
+	/**
+	 * 	
+	 * @param atts
+	 * @param attribute
+	 * @param metadata
+	 * @param namespace
+	 * @param type
+	 * @return
+	 */
+	 protected Object setMetadataXML(Element atts, String attribute, String metadata, Namespace namespace, Class<?> type) {
+    	Element o=atts.getChild(attribute, namespace);
+    	String value=null;
+    	Object val=null;
+        if((atts != null) && (o != null)){
+        	value=o.getText();
+        	if(type==String.class){
+        		setMetadata(metadata,(String)value);
+        	}else if(type==Integer.class){
+        		val=Integer.parseInt(value);
+        		setMetadata(metadata, val);
+        	}else if(type==Double.class){
+        		val=Double.parseDouble(value);
+        		setMetadata(metadata, val);
+        	}else if(type==Float.class){
+        		val=Float.parseFloat(value);
+        		setMetadata(metadata, val);
+        	}	
+        }
+        return val;
+    }
 	
 	
     public String getTimeStampStart(){
@@ -98,17 +134,17 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.NUMBER_BANDS,data);
     }
     
-    public double getIncidenceNear(){
-    	return (Double)getMetadata(GeoMetadata.INCIDENCE_NEAR);
+    public Float getIncidenceNear(){
+    	return (Float)getMetadata(GeoMetadata.INCIDENCE_NEAR);
     }
-    public void setIncidenceNear(Double data){
+    public void setIncidenceNear(Float data){
     	setMetadata(GeoMetadata.INCIDENCE_NEAR,data);
     }
     
-    public double getIncidenceFar(){
-    	return (Double)getMetadata(GeoMetadata.INCIDENCE_FAR);
+    public Float getIncidenceFar(){
+    	return (Float)getMetadata(GeoMetadata.INCIDENCE_FAR);
     }
-    public void setIncidenceFar(Double data){
+    public void setIncidenceFar(Float data){
     	setMetadata(GeoMetadata.INCIDENCE_FAR,data);
     }
     
@@ -185,10 +221,10 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     }
     
 
-    public double getRevolutionsPerday(){
-    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
+    public int getRevolutionsPerday(){
+    	return (Integer)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
     }
-    public void setRevolutionsPerday(Double data){
+    public void setRevolutionsPerday(int data){
     	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
     }
     
@@ -275,10 +311,10 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     }
     
     
-    public double getPRF(){
+    public Double getPRF(){
     	return (Double)getMetadata(SarMetadata.PRF);
     }
-    public void setPRF(double data){
+    public void setPRF(Double data){
     	setMetadata(SarMetadata.PRF,data);
     }
     
@@ -325,7 +361,7 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     public int getStripBound2(){
     	return (Integer)getMetadata(SarMetadata.STRIPBOUND2);
     }
-    public void setStripBound2(String data){
+    public void setStripBound2(Integer data){
     	setMetadata(SarMetadata.STRIPBOUND2,data);
     }
     
@@ -339,7 +375,7 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     public double getK(){
     	return (Double)getMetadata(SarMetadata.K);
     }
-    public void setk(Double data){
+    public void setK(Double data){
     	setMetadata(SarMetadata.K,data);
     }
     

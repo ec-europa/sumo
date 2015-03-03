@@ -23,9 +23,9 @@ public class ERS2Image extends EnvisatImage {
     	boolean result = super.initialise(f);
         
         // change name of satellite and instrument
-        setMetadata(SATELLITE, "ERS2");
-        setMetadata(SENSOR, "ERS2");
-        setMetadata(TYPE, "ERS2");
+        setSatellite("ERS2");
+        setSensor("ERS2");
+        setType("ERS2");
         
         return result;
     }

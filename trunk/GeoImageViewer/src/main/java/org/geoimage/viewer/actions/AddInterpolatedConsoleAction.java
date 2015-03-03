@@ -22,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.GeoMetadata;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
@@ -224,7 +225,8 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
     }
 
     private static ILayer createLayer(String id, final String date, GeometricLayer layer, IImageLayer parent) {
-        return new InterpolatedVectorLayer(layer.getName(),parent.getImageReader(), layer, id, date,(Timestamp) parent.getImageReader().getMetadata(GeoMetadata.TIMESTAMP_START));
+    	Timestamp t=Timestamp.valueOf(((SarImageReader)parent.getImageReader()).getTimeStampStart());
+        return new InterpolatedVectorLayer(layer.getName(),parent.getImageReader(), layer, id, date,t);
 
     }
 

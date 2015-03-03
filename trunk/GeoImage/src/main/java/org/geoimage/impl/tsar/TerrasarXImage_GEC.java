@@ -239,24 +239,32 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             setRadarWaveLenght(299792457.9 / radarFrequency);
 
             setSatelliteOrbitInclination(97.44);
-            setRevolutionsPerday(11.0);
+            setRevolutionsPerday(11);
 
 
+            Integer [] prfs=new Integer[3];
             //metadata used for ScanSAR mode during the Azimuth ambiguity computation
             if (getMode().equals("SC")) {
                 //extraction of the 4 PRF codes
-                int prf_count = 1;
+                int prf_count = 0;
                 for (Object o : doc.getRootElement().getChild("instrument").getChildren("settings")) {
                     Element elem = (Element) o;
-                    setMetadata("PRF" + prf_count, elem.getChild("settingRecord").getChild("PRF").getText());
+                    //setMetadata("PRF" + prf_count, elem.getChild("settingRecord").getChild("PRF").getText());
+                    prfs[prf_count]=Integer.parseInt(elem.getChild("settingRecord").getChild("PRF").getText());
                     prf_count++;
                 }
-                setPRF(0); //to recognise the TSX SC in the azimuth computation
+                setPRF1(prfs[0]);
+                setPRF2(prfs[1]);
+                setPRF3(prfs[2]);
+                
+                
+                setPRF(null); //to recognise the TSX SC in the azimuth computation
 
+                int strip[]=new int[3];
                 //the SC mode presents 4 strips which overlap, the idea is to consider one strip till the middle of the overlap area
-                int b = 1;
+                int b = 0;
                 for (Object o : doc.getRootElement().getChild("processing").getChildren("processingParameter")) {
-                    if (b == 4) {
+                    if (b == 3) {
                         continue;
                     }
                     Element elem = (Element) o;
@@ -265,11 +273,17 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
                     double aver_range_time = start_range_time + (stop_range_time - start_range_time) / 2;
 
                     int stripBound = new Double(((aver_range_time - rangeTimeStart) * new Integer(xSize)) / (rangeTimeStop - rangeTimeStart)).intValue();
-                    setMetadata("STRIPBOUND" + b++, new Integer(stripBound).toString());
+                    strip[b]=new Integer(stripBound);
+                    //setMetadata("STRIPBOUND" + b++, new Integer(stripBound).toString());
                 }
+                setStripBound1(strip[0]);
+                setStripBound2(strip[1]);
+                setStripBound3(strip[2]);
             }
 
-            setMetadata(K, doc.getRootElement().getChild("calibration").getChild("calibrationConstant").getChild("calFactor").getText());
+            String val=doc.getRootElement().getChild("calibration").getChild("calibrationConstant").getChild("calFactor").getText();
+            
+            super.setK(Double.parseDouble(val));
 
             //row and cols of the mapping_grid table used for geolocation
             MGRows = new Integer(doc.getRootElement().getChild("productSpecific").getChild("geocodedImageInfo").getChild("mappingGridInfo").getChild("imageRaster").getChild("numberOfRows").getText());

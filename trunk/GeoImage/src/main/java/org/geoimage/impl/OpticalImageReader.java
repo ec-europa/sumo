@@ -4,18 +4,16 @@
  */
 package org.geoimage.impl;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.OpticalMetadata;
+import org.geoimage.def.SUMOMetadata;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.IProgress;
 import org.geotools.referencing.GeodeticCalculator;
@@ -28,7 +26,7 @@ import org.geotools.referencing.GeodeticCalculator;
  * }
  * @author leforth
  */
-public abstract class OpticalImageReader implements GeoImageReader, OpticalMetadata {
+public abstract class OpticalImageReader extends SUMOMetadata implements OpticalMetadata ,GeoImageReader{
 
     protected static int MAXTILESIZE = 16 * 1024 * 1024;
     protected int xSize = -1;
@@ -277,7 +275,7 @@ public abstract class OpticalImageReader implements GeoImageReader, OpticalMetad
         return incidenceangle;
     }
 
-    private double getSatelliteSpeed() {
+    private double calcSatelliteSpeed() {
         // calculate satellite speed
 /*
         double seconds = ((double)(getTimestamp(GeoImageReaderBasic.TIMESTAMP_STOP).getTime() - getTimestamp(GeoImageReaderBasic.TIMESTAMP_START).getTime())) / 1000;
@@ -288,7 +286,7 @@ public abstract class OpticalImageReader implements GeoImageReader, OpticalMetad
         double satellite_speed = 0.0;
 
         // check if satellite speed has been calculated
-        if (getMetadata(SATELLITE_SPEED) != null) {
+        if (getSatelliteSpeed() != null) {
             satellite_speed = Double.valueOf((String) getMetadata(SATELLITE_SPEED));
         } else {
             // Ephemeris --> R + H
