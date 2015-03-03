@@ -94,8 +94,8 @@ public class GeotiffImage extends SarImageReader {
             System.out.println(reader.getNumImages(false));
             xSize = reader.getWidth(0);
             ySize = reader.getHeight(0);
-            setMetadata(HEIGHT, ySize);
-            setMetadata(WIDTH, xSize);
+            setHeight(ySize);
+            setWidth(xSize);
             String epsg = null;
             if (gcps != null) {
                 epsg = "EPSG:4326";
@@ -308,8 +308,8 @@ public class GeotiffImage extends SarImageReader {
         try {
             String datetime = td.getTIFFField(BaselineTIFFTagSet.TAG_DATE_TIME).getAsString(0);
             datetime = datetime.replaceFirst(":", "-").replaceFirst(":", "-");
-            setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(datetime));
-            setMetadata(TIMESTAMP_START, Timestamp.valueOf(datetime));
+            setTimeStampStop(Timestamp.valueOf(datetime).toString());
+            setTimeStampStart(Timestamp.valueOf(datetime).toString());
         } catch (Exception e) {
         }
     }

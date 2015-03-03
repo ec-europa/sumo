@@ -51,8 +51,8 @@ public class DetectedPixels {
     public DetectedPixels(SarImageReader gir) {
         this.gir = gir;
         // get the image pixel size
-        this.pixsam = new Double(gir.getMetadata(SarImageReader.RANGE_SPACING).toString());
-        this.pixrec = new Double(gir.getMetadata(SarImageReader.AZIMUTH_SPACING).toString());
+        this.pixsam = gir.getRangeSpacing();
+        this.pixrec = gir.getAzimuthSpacing();
 
         // calculate search window size using pixel size
         if (SEARCHWINDOW > pixsam) {

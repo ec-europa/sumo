@@ -395,7 +395,7 @@ public class TiledBufferedImage implements GeoImageReader {
         gir = null;
         root.delete();
     }
-
+/*
     public HashMap<String, Object> getMetadata() {
         return gir.getMetadata();
     }
@@ -419,7 +419,7 @@ public class TiledBufferedImage implements GeoImageReader {
     public double getSlantRange(int position) {
         return gir.getSlantRange(position);
     }
-
+*/
     public void geoCorrect() {
         //gir.geoCorrect();
     }

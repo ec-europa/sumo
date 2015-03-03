@@ -193,13 +193,13 @@ public abstract class Sentinel1 extends SarImageReader {
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
-            setMetadata(SATELLITE_ALTITUDE, String.valueOf(radialdist - earthradial));
+            setSatelliteAltitude(radialdist - earthradial);
 
             // get incidence angles from gcps
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
-            setMetadata(INCIDENCE_NEAR, String.valueOf(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
-            setMetadata(INCIDENCE_FAR, String.valueOf(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
+            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceNear(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
 
             return true;
@@ -278,8 +278,8 @@ public abstract class Sentinel1 extends SarImageReader {
 
     private void setXMLMetaData(File productxml,SumoJaxbSafeReader safeReader,SumoAnnotationReader annotationReader) throws TransformException {
 
-        	setMetadata(SATELLITE, new String("Sentinel-1"));
-        	setMetadata(SWATH,this.swath);
+        	setSatellite(new String("Sentinel-1"));
+        	setSwath(this.swath);
         	
         	//polarizations string
         	StandAloneProductInformation prodInfo=safeReader.getProductInformation();
@@ -288,34 +288,34 @@ public abstract class Sentinel1 extends SarImageReader {
             for (String p:pols) {
             	strPol=strPol.concat(p).concat(" ");
             }
-            setMetadata(POLARISATION, strPol);
-            setMetadata(SENSOR, "S1");
+            setPolarization(strPol);
+            setSensor("S1");
             
             //annotation header informations
             AdsHeader header=annotationReader.getHeader();
-            setMetadata(PRODUCT, header.getProductType());
+            setProduct(header.getProductType());
             
-            setMetadata(ORBIT_DIRECTION, safeReader.getOrbitDirection());
+            setOrbitDirection(safeReader.getOrbitDirection());
 
             ImageInformation imageInformaiton=annotationReader.getImageInformation();
-            setMetadata(RANGE_SPACING,imageInformaiton.getRangePixelSpacing());
-            setMetadata(AZIMUTH_SPACING,imageInformaiton.getAzimuthPixelSpacing());
-            setMetadata(HEIGHT,imageInformaiton.getNumberOfLines());
-            setMetadata(WIDTH, imageInformaiton.getNumberOfSamples());
+            setRangeSpacing(imageInformaiton.getRangePixelSpacing());
+            setAzimuthSpacing(imageInformaiton.getAzimuthPixelSpacing());
+            setHeight(imageInformaiton.getNumberOfLines().intValue());
+            setWidth(imageInformaiton.getNumberOfSamples().intValue());
 			float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
-            setMetadata(ENL,enl );
+            setENL(String.valueOf(enl));
 
             String start=header.getStartTime().replace('T', ' ');	
             String stop=header.getStopTime().replace('T', ' ');
-            setMetadata(TIMESTAMP_START,start);//Timestamp.valueOf(start));
-            setMetadata(TIMESTAMP_STOP,stop);//Timestamp.valueOf(stop));
+            setTimeStampStart(start);//Timestamp.valueOf(start));
+            setTimeStampStop(stop);//Timestamp.valueOf(stop));
             
             String bytesStr=annotationReader.getImageInformation().getOutputPixels();
             int bytes=Integer.parseInt(bytesStr.substring(0,3).trim())/8;
-            setMetadata(NUMBER_BYTES,bytes);
+            setNumberOfBytes(bytes);
 
             Double radarFrequency = new Double(annotationReader.getProductInformation().getRadarFrequency());
-            setMetadata(RADAR_WAVELENGTH, String.valueOf(299792457.9 / radarFrequency));
+            setRadarWaveLenght(299792457.9 / radarFrequency);
             
 
             
@@ -323,7 +323,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public int getNumberOfBytes() {
-        return (Integer) getMetadata(NUMBER_BYTES);
+        return getNumberOfBytes();
     }
 
     @Override

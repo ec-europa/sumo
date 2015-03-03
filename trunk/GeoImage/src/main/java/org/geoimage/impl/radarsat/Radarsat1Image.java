@@ -10,6 +10,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -67,6 +68,29 @@ public class Radarsat1Image extends SarImageReader {
 
     public Radarsat1Image() {
     }
+    
+    
+    public double getRevolutionsPerdayDouble(){
+    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
+    }
+    public void setRevolutionsPerdayDouble(double data){
+    	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
+    }
+    
+    public double getIncidenceNearDouble(){
+    	return (Double)getMetadata(GeoMetadata.INCIDENCE_NEAR);
+    }
+    public void setIncidenceNearDouble(double data){
+    	setMetadata(GeoMetadata.INCIDENCE_NEAR,data);
+    }
+    
+    public double getIncidenceFarDouble(){
+    	return (Double)getMetadata(GeoMetadata.INCIDENCE_FAR);
+    }
+    public void setIncidenceFarDouble(double data){
+    	setMetadata(GeoMetadata.INCIDENCE_FAR,data);
+    }
+    
 
     @Override
     public int getNBand() {
@@ -257,13 +281,13 @@ public class Radarsat1Image extends SarImageReader {
             byte[] radarWavelength = new byte[16];
             lea.read(radarWavelength, 0, 16);
             setRadarWaveLenght(Double.parseDouble(new String(radarWavelength)));
-            setRevolutionsPerday(14.29988851);
+            setRevolutionsPerdayDouble(14.29988851);
             // for the constant calibration, with the radarsat we take the
             // middle value of the look up table (line Constant.TILE_SIZE)
             lea.seek(65922 + 88 + 16 * Constant.TILE_SIZE);
             byte[] KString = new byte[16];
             lea.read(KString, 0, 16);
-            setk(Double.parseDouble(new String(KString)));
+            setK(Double.parseDouble(new String(KString)));
 
             // get the SRGR parameters values
             int pointer;
@@ -339,8 +363,8 @@ public class Radarsat1Image extends SarImageReader {
             // get incidence angles from gcps and convert them into radians
             double firstIncidenceangle = getIncidence(0);
             double lastIncidenceAngle = getIncidence(getWidth());
-            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceNearDouble(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceFarDouble(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
         } catch (Exception ex) {
             Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, null, ex);

@@ -184,10 +184,10 @@ public class CosmoSkymedImage extends SarImageReader {
                     double[] val = (double[]) a.getValue();
                     setRangeSpacing(val[0]);
                 } else if (a.getName().equals("Far Incidence Angle")) {
-                    double[] val = (double[]) a.getValue();
+                    float[] val = (float[]) a.getValue();
                     setIncidenceFar(val[0]);
                 } else if (a.getName().equals("Near Incidence Angle")) {
-                    double[] val = (double[]) a.getValue();
+                    float[] val = (float[]) a.getValue();
                     setIncidenceNear(val[0]);
                 } else if (a.getName().equals("Line Spacing")) {
                     double[] val = (double[]) a.getValue();

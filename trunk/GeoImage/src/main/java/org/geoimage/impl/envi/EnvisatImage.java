@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -39,9 +40,23 @@ public class EnvisatImage extends SarImageReader {
     protected float[] incidenceTab = new float[11];
     protected int[] sampNumberTab = new int[11];
 
+    public static final String LINE_LENGHT="LINE_LENGTH";
+    public static final String MDS1_NUM_DSR="MDS1_NUM_DSR";
+    public static final String MDS2_TX_RX_POLAR="MDS1_NUM_DSR";
+    
     public EnvisatImage() {
     }
 
+    
+    public void setLineLenght(int data){
+    	setMetadata(LINE_LENGHT,data);
+    }
+    
+    public int getLineLenght(){
+    	return (Integer)getMetadata(LINE_LENGHT);
+    }
+    
+    
     @Override
     public int getWidth() {
         if (this.xSize == -1) {
@@ -148,12 +163,18 @@ public class EnvisatImage extends SarImageReader {
             
             setPolarization(getMetadata("MDS1_TX_RX_POLAR") + ", " + getMetadata("MDS2_TX_RX_POLAR"));
             
-            setOrbitDirection(getMetadata("PASS"));
+            setOrbitDirection("");//getMetadata("PASS"));
             setProcessor(getMetadata("SOFTWARE_VER") + " with " + getMetadata("ALGORITHM"));
             //remove the <m> otherwise crashed in detected pixels
-            setAzimuthSpacing(getMetadata("AZIMUTH_SPACING").toString().replace("<m>", ""));
-            setRangeSpacing(getMetadata("RANGE_SPACING").toString().replace("<m>", ""));
-            setMode(MODE, getMetadata("SPH_DESCRIPTOR"));
+            String val=getMetadata("AZIMUTH_SPACING").toString().replace("<m>", "");
+            if(val!=null)
+            	setAzimuthSpacing(Double.parseDouble(val));
+            
+            val=getMetadata("RANGE_SPACING").toString().replace("<m>", "");
+            if(val!=null)
+            	setRangeSpacing(Double.parseDouble(val));
+            
+            setMode("");//getMetadata("SPH_DESCRIPTOR"));
             if(getMetadata("SPH_DESCRIPTOR").equals("Image Mode Medium Res Image")){
                 //if IMM then set the ENL to 18
                 setMetadata(ENL, String.valueOf(18));
@@ -168,22 +189,22 @@ public class EnvisatImage extends SarImageReader {
             convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
-            setMetadata(SATELLITE_ALTITUDE, String.valueOf(radialdist - earthradial));
+            setSatelliteAltitude(radialdist - earthradial);
             double xvelocity = Double.parseDouble(((String) getMetadata("X_VELOCITY")).replaceAll("<m/s>", ""));
             double yvelocity = Double.parseDouble(((String) getMetadata("Y_VELOCITY")).replaceAll("<m/s>", ""));
             double zvelocity = Double.parseDouble(((String) getMetadata("Z_VELOCITY")).replaceAll("<m/s>", ""));
             double velocity = Math.pow(xvelocity * xvelocity + yvelocity * yvelocity + zvelocity * zvelocity, 0.5);
-            setMetadata(SATELLITE_SPEED, String.valueOf(velocity));
-            setMetadata(SATELLITE_ORBITINCLINATION, "98.5485");
+            setSatelliteSpeed(velocity);
+            setSatelliteOrbitInclination(98.5485);
             int offset_processing = Integer.parseInt(((String) getMetadata("MAIN PROCESSING PARAMS ADS_DS_OFFSET")).replace("<bytes>", "").replace("+", ""));
             fss.seek(offset_processing + 703);
-            setMetadata(PRF, String.valueOf(fss.readFloat()));
+            setPRF(fss.readDouble());
             fss.seek(offset_processing + 987);
             float radarFrequency = fss.readFloat();
-            setMetadata(RADAR_WAVELENGTH, String.valueOf(299792457.9 / radarFrequency));
-            setMetadata(REVOLUTIONS_PERDAY, String.valueOf(14.32247085));
+            setRadarWaveLenght(299792457.9 / radarFrequency);
+            setRevolutionsPerdayDouble(14.32247085);
             fss.seek(offset_processing + 1381);
-            setMetadata(K, String.valueOf(fss.readFloat()));
+            setK(fss.readDouble());
 
         } catch (Exception ex) {
             Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,7 +216,12 @@ public class EnvisatImage extends SarImageReader {
         return true;
     }
 
-
+    public double getRevolutionsPerdayDouble(){
+    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
+    }
+    public void setRevolutionsPerdayDouble(double data){
+    	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
+    }
 
     // </editor-fold>
     public int getMPH() {
@@ -472,7 +498,7 @@ public class EnvisatImage extends SarImageReader {
             month = "12";
         }
         String outdate = date[2] + "-" + month + "-" + date[0];
-        setMetadata(TIMESTAMP_START, Timestamp.valueOf(outdate + " " + time.split(" ")[1]));
+        setTimeStampStart(Timestamp.valueOf(outdate + " " + time.split(" ")[1]).toString());
         time = (String) getMetadata("SENSING_STOP");
         date = time.split(" ")[0].split("-");
         month = "";
@@ -502,7 +528,7 @@ public class EnvisatImage extends SarImageReader {
             month = "12";
         }
         outdate = date[2] + "-" + month + "-" + date[0];
-        setMetadata(TIMESTAMP_STOP, Timestamp.valueOf(outdate + " " + time.split(" ")[1]));
+        setTimeStampStop(Timestamp.valueOf(outdate + " " + time.split(" ")[1]).toString());
     }
 
 
@@ -526,7 +552,7 @@ public class EnvisatImage extends SarImageReader {
         double slant_range = 0;
         int j = 0;
 
-        if (((String) getMetadata(LOOK_DIRECTION)).equalsIgnoreCase("RIGHT")) {
+        if (getLookDirection().equalsIgnoreCase("RIGHT")) {
             j = position;
         } else {
             j = getWidth() - position;
