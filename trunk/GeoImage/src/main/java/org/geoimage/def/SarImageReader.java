@@ -300,7 +300,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
         // estimation of incidence angle based on near and range distance values
-        double nearincidence = Math.toRadians(getIncidenceNear());
+        double nearincidence = Math.toRadians(getIncidenceNear().doubleValue());
         double sataltitude=getSatelliteAltitude();
         
         
