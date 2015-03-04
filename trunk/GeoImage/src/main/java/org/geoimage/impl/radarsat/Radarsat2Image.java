@@ -240,7 +240,7 @@ public class Radarsat2Image extends SarImageReader {
             // sarprocessinginformation
             atts = doc.getRootElement().getChild("imageGenerationParameters", ns).getChild("sarProcessingInformation", ns);
             setMetadataXML(atts, "numberOfAzimuthLooks", ENL, ns,String.class);
-            setMetadataXML(atts, "incidenceAngleNearRange", INCIDENCE_NEAR, ns,Double.class);
+            setMetadataXML(atts, "incidenceAngleNearRange", INCIDENCE_NEAR, ns,Float.class);
             setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns,Double.class);
             double slantRange=(Double)setMetadataXML(atts, "slantRangeNearEdge", SLANT_RANGE_NEAR_EDGE, ns,Double.class);
             double satH=(Double)setMetadataXML(atts, "satelliteHeight", SATELLITE_ALTITUDE, ns,Double.class);
@@ -389,7 +389,7 @@ public class Radarsat2Image extends SarImageReader {
             setMetadataXML(atts, "acquisitionType", MODE, ns,String.class);
             setMetadataXML(atts, "polarizations", POLARISATION, ns,String.class);
             setMetadataXML(atts, "antennaPointing", LOOK_DIRECTION, ns,String.class);
-            setMetadataXML(atts, "pulseRepetitionFrequency", PRF, ns,double.class);
+            setMetadataXML(atts, "pulseRepetitionFrequency", PRF, ns,Double.class);
             setMetadataXML(atts, "radarCenterFrequency", RADAR_WAVELENGTH, ns,Double.class);
             //convert to wavelength
             double radarFrequency = getRadarWaveLenght();
