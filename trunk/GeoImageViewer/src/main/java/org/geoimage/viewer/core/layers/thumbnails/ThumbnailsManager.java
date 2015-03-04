@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -145,7 +146,7 @@ public class ThumbnailsManager {
         Map<String,Object> config = new HashMap<String,Object>();
         config.put(SumoXmlIOOld.CONFIG_FILE, new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml").getAbsolutePath());
         AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-        ((SumoXmlIOOld)csv).save(glayer, "EPSG:4326",gir);
+        ((SumoXmlIOOld)csv).save(glayer, "EPSG:4326",(SarImageReader)gir);
         if (ip != null) {
             ip.setDone(true);
             ip.setMessage(null);

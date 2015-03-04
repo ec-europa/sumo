@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
@@ -107,7 +108,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,GeoImageReader reader) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
         try {
             String file = ((String) config.get(CONFIG_FILE)).replace('\\','/');

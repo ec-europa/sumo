@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -325,7 +326,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
     }
 
     //@Override
-    public void save(GeometricLayer layer, String projection,GeoImageReader reader) {
+    public void save(GeometricLayer layer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
         try {
             layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);

@@ -15,6 +15,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -88,7 +89,7 @@ public class GmlIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
     	GeoTransform transform=gir.getGeoTransform();
     	
         Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
@@ -145,22 +146,22 @@ public class GmlIO extends AbstractVectorIO {
         Element source = new Element("source", sat);
         Element prdID = new Element("productID", sat);
         Element satellite = new Element("satellite", sat);
-        satellite.setText("" + gir.getMetadata(GeoMetadata.SATELLITE));
+        satellite.setText(gir.getSatellite());
         source.addContent(satellite);
         Element direction = new Element("direction", sat);
-        direction.setText("" + gir.getMetadata(GeoMetadata.ORBIT_DIRECTION));
+        direction.setText(gir.getOrbitDirection());
         source.addContent(direction);
         Element resolutionRange = new Element("resolution", sat);
-        resolutionRange.setText("" + gir.getMetadata(gir.RANGE_SPACING));
+        resolutionRange.setText(gir.getRangeSpacing().toString());
         source.addContent(resolutionRange);
         Element time = new Element("startTime", sat);
-        String date = "" +gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+        String date = gir.getTimeStampStart();
         date = date.replace(" ", "T");
         date = date+"Z";
         time.setText(date);
         source.addContent(time);
         time = new Element("stopTime", sat);
-        date = "" +gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
+        date = gir.getTimeStampStop();
         date = date.replace(" ", "T");
         date = date+"Z";
         time.setText(date);

@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geotools.data.DataStore;
@@ -349,7 +350,7 @@ public class PostgisIO extends AbstractVectorIO {
  * @param projection
  */
 //@Override
-    public void save(GeometricLayer layer, String projection,GeoImageReader gir) {
+    public void save(GeometricLayer layer, String projection,SarImageReader gir) {
         try {
         	//Data store to get access to ddbb
             DataStore datastore = (DataStore) DataStoreFinder.getDataStore(config);
@@ -397,7 +398,7 @@ public class PostgisIO extends AbstractVectorIO {
             writeToDB(datastore, features);
             datastore.dispose();
             // store extracted VDS points
-            save(layer,projection,gir);
+            save(layer,projection,(SarImageReader)gir);
         } catch (Exception ex) {
             Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
         }

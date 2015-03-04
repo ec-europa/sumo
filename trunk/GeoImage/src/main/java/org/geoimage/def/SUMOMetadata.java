@@ -47,6 +47,7 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
         if((atts != null) && (o != null)){
         	value=o.getText();
         	if(type==String.class){
+        		val=value;
         		setMetadata(metadata,(String)value);
         	}else if(type==Integer.class){
         		val=Integer.parseInt(value);
@@ -84,7 +85,7 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.NUMBER_BYTES,n);
     }
     
-    public double getHeadingAngle(){
+    public Double getHeadingAngle(){
     	return (Double)getMetadata(GeoMetadata.HEADING_ANGLE);
     }
     public void setHeadingAngle(Double data){
@@ -155,14 +156,14 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.SLANT_RANGE_NEAR_EDGE,data);
     }
 
-    public double getAzimuthSpacing(){
+    public Double getAzimuthSpacing(){
     	return (Double)getMetadata(GeoMetadata.AZIMUTH_SPACING);
     }
     public void setAzimuthSpacing(Double data){
     	setMetadata(GeoMetadata.AZIMUTH_SPACING,data);
     }
 
-    public double getRangeSpacing(){
+    public Double getRangeSpacing(){
     	return (Double)getMetadata(GeoMetadata.RANGE_SPACING);
     }
     public void setRangeSpacing(Double data){
@@ -221,10 +222,10 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     }
     
 
-    public int getRevolutionsPerday(){
-    	return (Integer)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
+    public double getRevolutionsPerday(){
+    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
     }
-    public void setRevolutionsPerday(int data){
+    public void setRevolutionsPerday(double data){
     	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
     }
     

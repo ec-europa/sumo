@@ -272,9 +272,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             double slantRange = getSlantRange(position);
             // already in radian
             double incidenceAngle = getIncidence(position);
-            double satelliteSpeed = getSatelliteSpeed();
+            double satelliteSpeed = calcSatelliteSpeed();
             double radarWavelength = getRadarWaveLenght();
-            double prf = getPRF(position); //Double.parseDouble((String) getMetadata(PRF));
+            double prf = getPRF(position); 
             double orbitInclination = Math.toRadians(getSatelliteOrbitInclination());
             double revolutionsPerDay = getRevolutionsPerday();
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];

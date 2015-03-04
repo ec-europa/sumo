@@ -25,6 +25,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.Attributes;
@@ -590,13 +591,13 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             Map config = new HashMap();
             config.put(GenericCSVIO.CONFIG_FILE, file);
             AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);//AndreaG changed csv(sumo) with genericcsv
-            csv.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+            csv.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
             try {
                 Map config = new HashMap();
                 config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
                 AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                shp.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+                shp.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
             }

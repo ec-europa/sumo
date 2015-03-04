@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
@@ -36,7 +37,7 @@ public class GeoRSSIO extends AbstractVectorIO {
 
     public static String CONFIG_FILE = "file";
 
-    public void save(GeometricLayer glayer, String projection,GeoImageReader reader) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader reader) {
     	GeoTransform geotransform=reader.getGeoTransform();
 
         SyndFeed feed = new SyndFeedImpl();
