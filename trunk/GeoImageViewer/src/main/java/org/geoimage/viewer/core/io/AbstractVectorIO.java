@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
 /**
@@ -56,7 +57,7 @@ public abstract class AbstractVectorIO {
 
     public abstract GeometricLayer read(GeoImageReader reader);
 
-    public abstract void save(GeometricLayer layer, String projection,GeoImageReader gir);
+    public abstract void save(GeometricLayer layer, String projection,SarImageReader gir);
     //public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,String[] thresholds,int buffer,double enl){}
     
     /**

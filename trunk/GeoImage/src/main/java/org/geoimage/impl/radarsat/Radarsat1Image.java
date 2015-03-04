@@ -69,7 +69,7 @@ public class Radarsat1Image extends SarImageReader {
     public Radarsat1Image() {
     }
     
-    
+    /*
     public double getRevolutionsPerdayDouble(){
     	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
     }
@@ -89,7 +89,7 @@ public class Radarsat1Image extends SarImageReader {
     }
     public void setIncidenceFarDouble(double data){
     	setMetadata(GeoMetadata.INCIDENCE_FAR,data);
-    }
+    }*/
     
 
     @Override
@@ -281,7 +281,7 @@ public class Radarsat1Image extends SarImageReader {
             byte[] radarWavelength = new byte[16];
             lea.read(radarWavelength, 0, 16);
             setRadarWaveLenght(Double.parseDouble(new String(radarWavelength)));
-            setRevolutionsPerdayDouble(14.29988851);
+            setRevolutionsPerday(14.29988851);
             // for the constant calibration, with the radarsat we take the
             // middle value of the look up table (line Constant.TILE_SIZE)
             lea.seek(65922 + 88 + 16 * Constant.TILE_SIZE);
@@ -363,8 +363,8 @@ public class Radarsat1Image extends SarImageReader {
             // get incidence angles from gcps and convert them into radians
             double firstIncidenceangle = getIncidence(0);
             double lastIncidenceAngle = getIncidence(getWidth());
-            setIncidenceNearDouble(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            setIncidenceFarDouble(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceNear(new Float(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
+            setIncidenceFar(new Float(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
 
         } catch (Exception ex) {
             Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, null, ex);

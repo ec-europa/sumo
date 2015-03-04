@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,9 +19,14 @@ import javax.imageio.ImageIO;
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.object.Attribute;
 import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.object.h5.H5Group;
 import ncsa.hdf.object.h5.H5ScalarDS;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -85,6 +91,8 @@ public class CosmoSkymedImage extends SarImageReader {
     public String[] getFilesList() {
         return new String[]{h5file.getFilePath()};
     }
+    
+    
 
     @SuppressWarnings("unchecked")
 	public boolean initialise(File file) {
@@ -96,7 +104,6 @@ public class CosmoSkymedImage extends SarImageReader {
         		this.displayName=this.displayName+"_"+group;
         	
         	h5file = new H5File(file.getAbsolutePath(), H5File.READ);
-        	
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
             extractQuickLook();
             List<?> metadata = new ArrayList();
@@ -106,7 +113,7 @@ public class CosmoSkymedImage extends SarImageReader {
             if(imagedata==null)
             	return false;
         	metadata.addAll(imagedata.getMetadata());
-        
+        	
             long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
             selected[0]=1;
             if(selected.length>2)
@@ -124,7 +131,7 @@ public class CosmoSkymedImage extends SarImageReader {
             //
             starts = imagedata.getStartDims();
 
-
+            
             setWidth(xSize);
             setHeight(ySize);
             
@@ -132,6 +139,20 @@ public class CosmoSkymedImage extends SarImageReader {
             
             gcps = new ArrayList<Gcp>();
 
+            
+
+           /* Object oo=CollectionUtils.find(metadata, new Predicate() {
+				
+				@Override
+				public boolean evaluate(Object o) {
+					 
+					return ((Attribute)o).getName().contains("Speed");
+				}
+			});
+            for (Object o : metadata) {
+            	System.out.println(((Attribute)o).getName());
+            }*/
+            
             for (Object o : metadata) {
                 Attribute a = (Attribute) o;
                 //System.out.println(a.getName() + "=" + a.getValue().toString());
@@ -184,11 +205,11 @@ public class CosmoSkymedImage extends SarImageReader {
                     double[] val = (double[]) a.getValue();
                     setRangeSpacing(val[0]);
                 } else if (a.getName().equals("Far Incidence Angle")) {
-                    float[] val = (float[]) a.getValue();
-                    setIncidenceFar(val[0]);
+                    double[] val = (double[]) a.getValue();
+                    setIncidenceFar(new Float(val[0]));
                 } else if (a.getName().equals("Near Incidence Angle")) {
-                    float[] val = (float[]) a.getValue();
-                    setIncidenceNear(val[0]);
+                    double[] val = (double[]) a.getValue();
+                    setIncidenceNear(new Float(val[0]));
                 } else if (a.getName().equals("Line Spacing")) {
                     double[] val = (double[]) a.getValue();
                     setAzimuthSpacing(val[0]);
@@ -219,9 +240,17 @@ public class CosmoSkymedImage extends SarImageReader {
                 } else if (a.getName().equals("Multi-Beam ID")) {
                     String[] val = (String[]) a.getValue();
                     setBeam(val[0]);
+                }else if (a.getName().equals("PRF")) {
+                	double[] val = (double[]) a.getValue();
+                    setPRF(val[0]);
+                }else if (a.getName().equals("")) {
+                	double[] val = (double[]) a.getValue();
+                    setPRF(val[0]);
                 }
-
-
+                
+                setSatelliteOrbitInclination(97.86);
+                setRevolutionsPerday(14.8125);
+                
             }
             setSensor("CS");
             if (getType().startsWith("SCS")) {

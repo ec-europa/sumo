@@ -5,6 +5,7 @@
 package org.geoimage.viewer.widget;
 
 import gov.nasa.worldwind.Model;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -12,7 +13,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
+
 import org.fenggui.Button;
 import org.fenggui.Container;
 import org.fenggui.FengGUI;
@@ -29,6 +32,7 @@ import org.fenggui.render.Binding;
 import org.fenggui.render.ITexture;
 import org.fenggui.render.Pixmap;
 import org.fenggui.util.Color;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
@@ -82,7 +86,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
                         if (il != (IImageLayer) l) {
                             try {
                                 il = (IImageLayer) l;
-                                northAngle = ((il.getImageReader().getImageAzimuth()) / 180) * Math.PI;
+                                northAngle = ((((SarImageReader)il.getImageReader()).getImageAzimuth()) / 180) * Math.PI;
                                 System.out.println(northAngle);
                                 BufferedImage bi = ImageIO.read(this.imageFile);
                                 BufferedImage bi2 = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);

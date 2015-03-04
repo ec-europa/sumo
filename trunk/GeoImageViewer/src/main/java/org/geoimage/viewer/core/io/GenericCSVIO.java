@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -114,7 +115,7 @@ public class GenericCSVIO extends AbstractVectorIO {
      * 
      */
     //TODO: funziona solo con i points , bisogna correggerlo per salvare correttamente anche i poligoni
-    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
     	GeoTransform transform=gir.getGeoTransform();
         try {
            /* if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {

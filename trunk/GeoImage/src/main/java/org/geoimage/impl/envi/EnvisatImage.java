@@ -116,6 +116,9 @@ public class EnvisatImage extends SarImageReader {
                 return false;
             }
 
+            //
+            setSwath("IS1");
+            
             SPH = 0;
             String prefix = "";
             String temp;
@@ -150,6 +153,7 @@ public class EnvisatImage extends SarImageReader {
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
             setSatellite("ENVISAT");
             setSensor("ASAR");
+            setSwath(getSwath());
             setBeam(getSwath());
             setType("ASAR");
             setENL(String.valueOf(org.geoimage.impl.ENL.getFromGeoImageReader(this)));

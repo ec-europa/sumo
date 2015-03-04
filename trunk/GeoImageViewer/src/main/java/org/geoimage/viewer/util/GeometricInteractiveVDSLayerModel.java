@@ -168,7 +168,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             double boatlength = (Double) boatattributes.get(VDSSchema.ESTIMATED_LENGTH) / pixelsize[0];
             Double boatheading = -(Double) boatattributes.get(VDSSchema.ESTIMATED_HEADING);
             //get the image azimuth
-            double imageAz = il.getImageReader().getImageAzimuth();
+            double imageAz = ((SarImageReader)il.getImageReader()).getImageAzimuth();
             boatheading = boatheading + 90 + imageAz;
             Coordinate[] boatcoordinates = new Coordinate[5];
             boatcoordinates[0] = new Coordinate(posX + boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY - boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
@@ -215,7 +215,9 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
                 int posX = (int) geom.getCoordinate().x;
                 int posY = (int) geom.getCoordinate().y;
                 // calculate satellite speed
-                double seconds = (((Timestamp) il.getImageReader().getMetadata(SarImageReader.TIMESTAMP_STOP)).getTime() - ((Timestamp) il.getImageReader().getMetadata(SarImageReader.TIMESTAMP_START)).getTime()) / 1000;
+                String tstart=((SarImageReader)il.getImageReader()).getTimeStampStart();
+                String tstop=((SarImageReader)il.getImageReader()).getTimeStampStop();
+                double seconds = ((Timestamp.valueOf(tstart).getTime() - (Timestamp.valueOf(tstop).getTime()))) / 1000;
                 // calculate satellite speed in azimuth pixels / seconds
                 double azimuthpixelspeed = (double) il.getImageReader().getHeight() / seconds;
                 // calculate the earth angular speed
@@ -225,9 +227,10 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
                 // calculate the range azimuth pixel speed due to the rotation of the earth
                 double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getGeoTransform().getPixelSize()[0];
                 // calculate the pixels delta value
-                double pixeldelta = 1 / (Math.cos(il.getImageReader().getImageAzimuth() * 2 * Math.PI / 360.0) / (azimuthpixelspeed / rangepixelspeed - Math.sin(il.getImageReader().getImageAzimuth() * 2 * Math.PI / 360.0)));
+                double azi=((SarImageReader)il.getImageReader()).getImageAzimuth();
+                double pixeldelta = 1 / (Math.cos(azi * 2 * Math.PI / 360.0) / (azimuthpixelspeed / rangepixelspeed - Math.sin(azi * 2 * Math.PI / 360.0)));
                 // get the mode
-                int direction = Math.abs(il.getImageReader().getImageAzimuth()) > 90 ? -1 : 1;
+                int direction = Math.abs(azi) > 90 ? -1 : 1;
                 // create new geometry
                 GeometryFactory gf = new GeometryFactory();
                 // generate the geometry for the target shape

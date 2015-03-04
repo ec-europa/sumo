@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;  
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
@@ -52,7 +52,7 @@ public class WorldWindLayer extends RenderableLayer implements ITime {
             if (layer instanceof IImageLayer) {
                 GeoImageReader gir = ((IImageLayer) layer).getImageReader();
                 Polyline pol = geoms.get(gir);
-                Timestamp ts = Timestamp.valueOf(gir.getMetadata(GeoMetadata.TIMESTAMP_STOP).toString());
+                Timestamp ts = Timestamp.valueOf(((SarImageReader)gir).getTimeStampStop());
                 if (pol == null) {
                     List<LatLon> ll = new ArrayList<LatLon>();
            /*         for (Coordinate c : GeometryExtractor.getFrame(gir).getCoordinates()) {

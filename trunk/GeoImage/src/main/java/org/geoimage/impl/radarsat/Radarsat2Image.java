@@ -256,7 +256,7 @@ public class Radarsat2Image extends SarImageReader {
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
             double pixSpace=(Double)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Double.class);
-            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,String.class);
+            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Double.class);
             String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns,String.class);
             
             // geolocationgrid
@@ -385,7 +385,7 @@ public class Radarsat2Image extends SarImageReader {
             atts = doc.getRootElement().getChild("sourceAttributes", ns);
             atts = atts.getChild("radarParameters", ns);
             
-            setMetadataXML(atts, "beams", BEAM, ns,Integer.class);
+            setMetadataXML(atts, "beams", BEAM, ns,String.class);
             setMetadataXML(atts, "acquisitionType", MODE, ns,String.class);
             setMetadataXML(atts, "polarizations", POLARISATION, ns,String.class);
             setMetadataXML(atts, "antennaPointing", LOOK_DIRECTION, ns,String.class);

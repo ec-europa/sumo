@@ -302,6 +302,7 @@ public abstract class Sentinel1 extends SarImageReader {
             setAzimuthSpacing(imageInformaiton.getAzimuthPixelSpacing());
             setHeight(imageInformaiton.getNumberOfLines().intValue());
             setWidth(imageInformaiton.getNumberOfSamples().intValue());
+            //setSatelliteSpeed(prodInfo.getProduct);
 			float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL(String.valueOf(enl));
 

@@ -116,7 +116,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 
     @Override
     public String getDescription() {
-        if (activeGir.getMetadata() != null) {
+        if (activeGir.getDescription() != null&&!activeGir.getDescription().equals("")) {
             return activeGir.getDescription();
         } else {
             return activeGir.getDisplayName();

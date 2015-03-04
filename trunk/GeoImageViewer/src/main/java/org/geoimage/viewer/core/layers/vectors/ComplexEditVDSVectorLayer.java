@@ -112,7 +112,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            }
 	            config.put(GmlIO.CONFIG_FILE, file);
 	            AbstractVectorIO gml = VectorIOFactory.createVectorIO(VectorIOFactory.GML, config);
-	            ((GmlIO)gml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	            ((GmlIO)gml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
 	            msgResult[0]="The GML file has been succesfully created";
 	            break;
 	        }
@@ -124,7 +124,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            
 	            config.put(SumoXmlIOOld.CONFIG_FILE, file);
 	            AbstractVectorIO sxml = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-	            ((SumoXmlIOOld)sxml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	            ((SumoXmlIOOld)sxml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            break;
 	        }
@@ -141,7 +141,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            for(int i=0;i<thresholds.length;i++){
 	            	ts[i]=Float.parseFloat(thresholds[i]);
 	            }
-	            ((SumoXMLWriter)sxml).saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),projection,reader,ts,buffer,enl,landMask);
+	            ((SumoXMLWriter)sxml).saveNewXML(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),projection,(SarImageReader)reader,ts,buffer,enl,landMask);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            
 	            break;
@@ -153,7 +153,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	                }
 	                config.put(KmlIO.CONFIG_FILE, file);
 	                AbstractVectorIO kml = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
-	                ((KmlIO)kml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader);
+	                ((KmlIO)kml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
 	                msgResult[0]="The KMZ file is succesfully created";
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(), ex);
@@ -269,7 +269,9 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
                         "String"}); // new String[]{"integer", "time stamp without time zone", "character varying(32)", "character varying(32)", "smallint", "integer", "real", "real", "real", "character varying(12)", "smallint"}
             //tableattributes.set("id", new Integer(270100 + id));
             tableattributes.set("detectime", date);
-            String image_id = (reader.getMetadata(SarImageReader.TIMESTAMP_START) == null ? date : reader.getMetadata(SarImageReader.TIMESTAMP_START)) + "0";
+            SarImageReader sar=(SarImageReader)reader;
+            
+            String image_id = (sar.getTimeStampStart() == null ? date : sar.getTimeStampStart()) + "0";
             image_id.replaceAll(":", "");
             image_id.replaceAll("-", "");
             image_id.replaceAll(" ", "");
@@ -303,7 +305,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         // date object for postgis database
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = dateformat.format(new Date());
-        String detect_time = (reader.getMetadata(SarImageReader.TIMESTAMP_START) == null ? date : reader.getMetadata(SarImageReader.TIMESTAMP_START)) + "";
+        String detect_time = ( ((SarImageReader)reader).getTimeStampStart() == null ? date : ((SarImageReader)reader).getTimeStampStart()) + "";
         String image_id = detect_time;
         image_id = image_id.replaceAll("-", "").replaceAll(" ", "").replaceAll("\\.", "").replaceAll(":", "");
         postgiscommands.add("delete from " + table + " where version = '" + version + "' and image_id = '" + image_id + "'");
