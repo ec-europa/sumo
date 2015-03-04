@@ -165,16 +165,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param enl
 	 * @param landmask
 	 */
-	public void saveNewXML(GeometricLayer gLayer, String projection,GeoImageReader gir,float[] thresholds,int buffer,double enl,String landmask) {
+	public void saveNewXML(GeometricLayer gLayer, String projection,SarImageReader gir,float[] thresholds,int buffer,double enl,String landmask) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 		
-		String start=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_START);
+		String start=gir.getTimeStampStart();
 		Timestamp tStart=Timestamp.valueOf(start);
 		
 		start=start.replace("Z","");
 		start=roundedMillis(start);
 		
-		String stop=(String)gir.getMetadata(GeoMetadata.TIMESTAMP_STOP);
+		String stop=gir.getTimeStampStop();
 		stop=stop.replace("Z","");
 		stop=roundedMillis(stop);
 		
@@ -281,7 +281,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			Timestamp tStop=Timestamp.valueOf(stop);
 			imageMeta.setTimeStop(format.format(tStop));
 			
-			String sensor=(String)gir.getMetadata(GeoMetadata.SENSOR);
+			String sensor=gir.getSensor();
 			format=new SimpleDateFormat("yyyyMMdd_HHmmss");
 			
 			imageMeta.setImId(sensor+"_"+format.format(tStart));
@@ -289,7 +289,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			
 			imageMeta.setSensor(sensor);
 			
-			String pol=(String)gir.getMetadata(SarMetadata.POLARISATION);
+			String pol=gir.getPolarization();
 			imageMeta.setPol(pol.trim());
 			String polNumeric=pol.replace("HH","1");
 			polNumeric=polNumeric.replace("HV","2");
@@ -397,7 +397,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	}
 
 	@Override
-	public void save(GeometricLayer layer, String projection, GeoImageReader gir) {
+	public void save(GeometricLayer layer, String projection, SarImageReader gir) {
 		
 	}
 

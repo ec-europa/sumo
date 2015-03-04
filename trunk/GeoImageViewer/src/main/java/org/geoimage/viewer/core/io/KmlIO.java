@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 
@@ -71,7 +72,7 @@ public class KmlIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
     	GeoTransform gt=gir.getGeoTransform();
         boolean toFlip = false;
         int t = 0; //thumbnails id name
@@ -101,7 +102,7 @@ public class KmlIO extends AbstractVectorIO {
             rootFolder.setName("VDS");
             doc.addFolder(rootFolder);
             TimeStamp time = new TimeStamp();
-            time.setWhen(gir.getMetadata(GeoImageReader.TIMESTAMP_START).toString().replace(" ", "T") + "Z");
+            time.setWhen(gir.getTimeStampStart().replace(" ", "T") + "Z");
             rootFolder.addTimeStamp(time);
 
             //extraction of the corners of the image

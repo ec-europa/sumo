@@ -23,6 +23,7 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
@@ -168,7 +169,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                Map config =new HashMap();
 	                config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
 	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-	                shpio.save(glayer,projection,reader);
+	                shpio.save(glayer,projection,(SarImageReader)reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }
@@ -179,7 +180,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                Map config = new HashMap();
 	                config.put(SumoXmlIOOld.CONFIG_FILE, file);
 	                AbstractVectorIO sio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-	                sio.save(glayer, "",reader);
+	                sio.save(glayer, "",(SarImageReader)reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }
@@ -190,7 +191,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                Map config = new HashMap();
 	                config.put(GenericCSVIO.CONFIG_FILE, file);
 	                AbstractVectorIO sxl = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);
-	                sxl.save(glayer, projection,reader);
+	                sxl.save(glayer, projection,(SarImageReader)reader);
 	            } catch (Exception ex) {
 	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
 	            }

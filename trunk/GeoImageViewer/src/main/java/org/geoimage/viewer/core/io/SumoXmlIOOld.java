@@ -14,6 +14,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.def.SarMetadata;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -116,7 +117,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,GeoImageReader gir) {
+    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
     	GeoTransform transform=gir.getGeoTransform();
     	
         Element root = new Element("analysis");
@@ -130,31 +131,33 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         type.setText(gir.getFormat());
         image.addContent(type);
         Element mode = new Element("mode");
-        mode.setText("" + gir.getMetadata(SarMetadata.MODE));
+        mode.setText(gir.getMode());
         image.addContent(mode);
         Element polarisation = new Element("polarisation");
         polarisation.setText("" + gir.getBandName(gir.getBand()));
         image.addContent(polarisation);
         Element time = new Element("timestampStart");
-        time.setText("" + gir.getMetadata(GeoMetadata.TIMESTAMP_START));
+        time.setText(gir.getTimeStampStart());
         image.addContent(time);
         time = new Element("timestampStop");
-        time.setText("" + gir.getMetadata(GeoMetadata.TIMESTAMP_STOP));
+        time.setText(gir.getTimeStampStop());
         image.addContent(time);
         Element resolutionRange = new Element("resolutionRange");
-        resolutionRange.setText("" + gir.getMetadata(gir.RANGE_SPACING));
+        resolutionRange.setText(gir.getRangeSpacing().toString());
         image.addContent(resolutionRange);
         Element resolutionAzimuth = new Element("resolutionAzimuth");
-        resolutionAzimuth.setText("" + gir.getMetadata(GeoMetadata.AZIMUTH_SPACING));
+        resolutionAzimuth.setText(gir.getAzimuthSpacing().toString());
         image.addContent(resolutionAzimuth);
         Element sizeX = new Element("width");
-        sizeX.setText("" + gir.getMetadata(GeoMetadata.WIDTH));
+        sizeX.setText(""+gir.getWidth());
         image.addContent(sizeX);
         Element sizeY = new Element("height");
-        sizeY.setText("" + gir.getMetadata(GeoMetadata.HEIGHT));
+        sizeY.setText("" + gir.getHeight());
         image.addContent(sizeY);
         Element heading = new Element("heading");
-        heading.setText("" + gir.getMetadata(GeoMetadata.HEADING_ANGLE));
+        Object o=gir.getHeadingAngle();
+        if(o!=null)
+        	heading.setText(gir.getHeadingAngle().toString());
         image.addContent(heading);
         image.addContent(getCorners(gir));
         root.addContent(image);
