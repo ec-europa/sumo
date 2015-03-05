@@ -156,17 +156,17 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.SLANT_RANGE_NEAR_EDGE,data);
     }
 
-    public Double getAzimuthSpacing(){
-    	return (Double)getMetadata(GeoMetadata.AZIMUTH_SPACING);
+    public Float getAzimuthSpacing(){
+    	return (Float)getMetadata(GeoMetadata.AZIMUTH_SPACING);
     }
-    public void setAzimuthSpacing(Double data){
+    public void setAzimuthSpacing(Float data){
     	setMetadata(GeoMetadata.AZIMUTH_SPACING,data);
     }
 
-    public Double getRangeSpacing(){
-    	return (Double)getMetadata(GeoMetadata.RANGE_SPACING);
+    public Float getRangeSpacing(){
+    	return (Float)getMetadata(GeoMetadata.RANGE_SPACING);
     }
-    public void setRangeSpacing(Double data){
+    public void setRangeSpacing(Float data){
     	setMetadata(GeoMetadata.RANGE_SPACING,data);
     }
     

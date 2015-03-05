@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: s1-level-1-noise.xsd 9013 2012-12-12 23:41:57Z cthain@DS.MDA.CA $ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+   <xsd:include schemaLocation="s1-object-types.xsd"/>
+   <xsd:complexType name="noiseVectorType">
+      <xsd:annotation>
+         <xsd:documentation>Annotation record for noise vectors.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="azimuthTime" type="timeType">
+            <xsd:annotation>
+               <xsd:documentation>Zero Doppler azimuth time at which noise vector applies [UTC].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="line" type="uint32">
+            <xsd:annotation>
+               <xsd:documentation>Image line at which the calibration vector applies.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="pixel" type="intArray">
+            <xsd:annotation>
+               <xsd:documentation>Image pixel at which the calibration vector applies. This array contains the count attribute number of integer values (i.e. one value per point in the noise vectors), separated by spaces. The maximum length of this array will be one value for every pixel in an image line, however in general the vectors will be subsampled.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="noiseLut" type="floatArray">
+            <xsd:annotation>
+               <xsd:documentation>Thermal noise correction vector power values. This array contains the count attribute number of floating point values separated by spaces. </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="noiseVectorListType">
+      <xsd:annotation>
+         <xsd:documentation>List of noise vector annotation records.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="noiseVector" type="noiseVectorType" minOccurs="0" maxOccurs="1500">
+            <xsd:annotation>
+               <xsd:documentation>Noise vector. This record contains the thermal noise estimation annotations which can be used to remove or reinstate thermal noise from the image.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="count" type="unsignedInt" use="required">
+         <xsd:annotation>
+            <xsd:documentation>Number of noiseVector records within the list.</xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="l1NoiseVectorType">
+      <xsd:annotation>
+         <xsd:documentation>Annotation record for Sentinel-1 level 1 noise product annotations.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="adsHeader" type="adsHeaderType">
+            <xsd:annotation>
+               <xsd:documentation>ADS header data set record. This DSR contains information that applies to the entire data set.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="noiseVectorList" type="noiseVectorListType">
+            <xsd:annotation>
+               <xsd:documentation>Noise vector list. This element is a list of noiseVector records that contain the thermal noise estimation for the image MDS. The list contains an entry for each update made along azimuth.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="noise" type="l1NoiseVectorType">
+      <xsd:annotation>
+         <xsd:documentation>Sentinel-1 level 1 thermal noise level product annotations.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+</xsd:schema>

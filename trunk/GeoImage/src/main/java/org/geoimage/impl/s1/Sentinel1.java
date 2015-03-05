@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jrc.it.annotation.reader.jaxb.AdsHeader;
-import jrc.it.annotation.reader.jaxb.GeolocationGridPoint;
-import jrc.it.annotation.reader.jaxb.ImageInformation;
-import jrc.it.annotation.reader.jaxb.Orbit;
+import jrc.it.annotation.reader.jaxb.AdsHeaderType;
+import jrc.it.annotation.reader.jaxb.GeolocationGridPointListType;
+import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
+import jrc.it.annotation.reader.jaxb.ImageInformationType;
+import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -65,7 +66,7 @@ public abstract class Sentinel1 extends SarImageReader {
 	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
 	
 	private String files[]=new String[1];
-    private List<GeolocationGridPoint> points=null;
+    private List<GeolocationGridPointType> points=null;
     private List<String> tiffs=null;
     private List<String> polarizations=null;
     private String safeFilePath=null;
@@ -105,19 +106,19 @@ public abstract class Sentinel1 extends SarImageReader {
             gcps = new ArrayList<Gcp>(points.size());
 			
             for(int index=0;index<points.size()-1;index++){
-            	GeolocationGridPoint point=points.get(index);
+            	GeolocationGridPointType point=points.get(index);
             	Gcp gcp=new Gcp();
             	try{
-            		gcp.setAngle(Float.parseFloat((point.getIncidenceAngle().getContent())));
+            		gcp.setAngle(new Float(point.getIncidenceAngle().getValue()));
             	}catch(Exception e){
             		logger.info("Incident Angle not valid for grid point n:"+index);
             	}
-            	gcp.setXgeo(point.getLongitude());
-            	gcp.setYgeo(point.getLatitude());
-            	gcp.setYpix(point.getLine().doubleValue());
-            	gcp.setXpix(point.getPixel().doubleValue());
-            	gcp.setOriginalXpix(point.getPixel().doubleValue());
-            	gcp.setZgeo(point.getHeight());
+            	gcp.setXgeo(point.getLongitude().getValue());
+            	gcp.setYgeo(point.getLatitude().getValue());
+            	gcp.setYpix(point.getLine().getValue().intValue());
+            	gcp.setXpix(point.getPixel().getValue().intValue());
+            	gcp.setOriginalXpix(point.getPixel().getValue().doubleValue());
+            	gcp.setZgeo(point.getHeight().getValue());
             	gcps.add(gcp);
             }
         }    
@@ -178,12 +179,12 @@ public abstract class Sentinel1 extends SarImageReader {
             geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
             //read the first orbit position from the annotation file
-            List<Orbit> orbitList=annotationReader.getOrbits();
+            List<OrbitType> orbitList=annotationReader.getOrbits();
             if(orbitList!=null&&!orbitList.isEmpty()){
-            	Orbit o=orbitList.get(0);
-            	xposition=o.getPosition().getX();
-            	yposition=o.getPosition().getY();
-            	zposition=o.getPosition().getZ();
+            	OrbitType o=orbitList.get(0);
+            	xposition=o.getPosition().getX().getValue();
+            	yposition=o.getPosition().getY().getValue();
+            	zposition=o.getPosition().getZ().getValue();
             }
             
             //set the satellite altitude
@@ -292,22 +293,22 @@ public abstract class Sentinel1 extends SarImageReader {
             setSensor("S1");
             
             //annotation header informations
-            AdsHeader header=annotationReader.getHeader();
-            setProduct(header.getProductType());
+            AdsHeaderType header=annotationReader.getHeader();
+            setProduct(header.getProductType().value());
             
             setOrbitDirection(safeReader.getOrbitDirection());
 
-            ImageInformation imageInformaiton=annotationReader.getImageInformation();
-            setRangeSpacing(imageInformaiton.getRangePixelSpacing());
-            setAzimuthSpacing(imageInformaiton.getAzimuthPixelSpacing());
-            setHeight(imageInformaiton.getNumberOfLines().intValue());
-            setWidth(imageInformaiton.getNumberOfSamples().intValue());
+            ImageInformationType imageInformaiton=annotationReader.getImageInformation();
+            setRangeSpacing(imageInformaiton.getRangePixelSpacing().getValue());
+            setAzimuthSpacing(imageInformaiton.getAzimuthPixelSpacing().getValue());
+            setHeight(imageInformaiton.getNumberOfLines().getValue().intValue());
+            setWidth(imageInformaiton.getNumberOfSamples().getValue().intValue());
             //setSatelliteSpeed(prodInfo.getProduct);
 			float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL(String.valueOf(enl));
 
-            String start=header.getStartTime().replace('T', ' ');	
-            String stop=header.getStopTime().replace('T', ' ');
+            String start=header.getStartTime().toString().replace('T', ' ');	
+            String stop=header.getStopTime().toString().replace('T', ' ');
             setTimeStampStart(start);//Timestamp.valueOf(start));
             setTimeStampStop(stop);//Timestamp.valueOf(stop));
             
@@ -315,7 +316,7 @@ public abstract class Sentinel1 extends SarImageReader {
             int bytes=Integer.parseInt(bytesStr.substring(0,3).trim())/8;
             setNumberOfBytes(bytes);
 
-            Double radarFrequency = new Double(annotationReader.getProductInformation().getRadarFrequency());
+            double radarFrequency = annotationReader.getProductInformation().getRadarFrequency().getValue();
             setRadarWaveLenght(299792457.9 / radarFrequency);
             
 
@@ -324,7 +325,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public int getNumberOfBytes() {
-        return getNumberOfBytes();
+        return super.getNumberOfBytes();
     }
 
     @Override
