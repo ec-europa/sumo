@@ -251,11 +251,11 @@ public class Radarsat1Image extends SarImageReader {
             lea.seek(offset_dataset + 1703 - 1);
             byte[] AzimuthString = new byte[16];
             lea.read(AzimuthString, 0, 16);
-            setAzimuthSpacing(Double.parseDouble(new String(AzimuthString)));
+            setAzimuthSpacing(Float.parseFloat(new String(AzimuthString)));
             lea.seek(offset_dataset + 1687 - 1);
             byte[] RangeString = new byte[16];
             lea.read(RangeString, 0, 16);
-            setRangeSpacing(Double.parseDouble(new String(RangeString)));
+            setRangeSpacing(Float.parseFloat(new String(RangeString)));
             lea.seek(offset_processingparam + 4649 - 1);
             byte[] radialsatString = new byte[16];
             lea.read(radialsatString, 0, 16);

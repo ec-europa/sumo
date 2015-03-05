@@ -255,8 +255,8 @@ public class Radarsat2Image extends SarImageReader {
             if(atts.getChild("bitsPerSample", ns) != null)
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
-            double pixSpace=(Double)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Double.class);
-            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Double.class);
+            float pixSpace=(Float)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Float.class);
+            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Float.class);
             String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns,String.class);
             
             // geolocationgrid

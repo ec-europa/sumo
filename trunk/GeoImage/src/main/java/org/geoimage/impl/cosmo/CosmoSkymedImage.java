@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,14 +18,9 @@ import javax.imageio.ImageIO;
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.object.Attribute;
 import ncsa.hdf.object.h5.H5File;
-import ncsa.hdf.object.h5.H5Group;
 import ncsa.hdf.object.h5.H5ScalarDS;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.PredicateUtils;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -203,7 +197,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     setENL(String.valueOf(val[0]));
                 } else if (a.getName().equals("Column Spacing")) {
                     double[] val = (double[]) a.getValue();
-                    setRangeSpacing(val[0]);
+                    setRangeSpacing(new Float(val[0]));
                 } else if (a.getName().equals("Far Incidence Angle")) {
                     double[] val = (double[]) a.getValue();
                     setIncidenceFar(new Float(val[0]));
@@ -212,7 +206,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     setIncidenceNear(new Float(val[0]));
                 } else if (a.getName().equals("Line Spacing")) {
                     double[] val = (double[]) a.getValue();
-                    setAzimuthSpacing(val[0]);
+                    setAzimuthSpacing(new Float(val[0]));
                 } else if (a.getName().equals("Look Side")) {
                     String[] val = (String[]) a.getValue();
                     setLookDirection(val[0]);

@@ -2,23 +2,23 @@ package jrc.it.safe.reader.xpath.object.wrapper;
 
 import java.util.List;
 
-import jrc.it.annotation.reader.jaxb.Burst;
-import jrc.it.annotation.reader.jaxb.SwathTiming;
+import jrc.it.annotation.reader.jaxb.BurstType;
+import jrc.it.annotation.reader.jaxb.L1SwathType;
 
 public class BurstInformation {
 	private int  linePerBust;
-	private List<Burst> burstList;
+	private List<BurstType> burstList;
 	private int samplePerBust;
-	private int count;
+	private long count;
 	
 	
 
 
-	public BurstInformation(SwathTiming  swat){
-		linePerBust=swat.getLinesPerBurst().intValue();
+	public BurstInformation(L1SwathType  swat){
+		linePerBust=swat.getLinesPerBurst().getValue().intValue();
 		burstList=swat.getBurstList().getBurst();
-		count=swat.getBurstList().getCount().intValue();
-		samplePerBust=swat.getSamplesPerBurst().intValue();
+		count=swat.getBurstList().getCount();
+		samplePerBust=swat.getSamplesPerBurst().getValue().intValue();
 		
 	}
 	
@@ -32,12 +32,12 @@ public class BurstInformation {
 	}
 
 
-	public List<Burst> getBurstList() {
+	public List<BurstType> getBurstList() {
 		return burstList;
 	}
 
 
-	public void setBurstList(List<Burst> burstList) {
+	public void setBurstList(List<BurstType> burstList) {
 		this.burstList = burstList;
 	}
 
@@ -51,11 +51,11 @@ public class BurstInformation {
 		this.samplePerBust = samplePerBust;
 	}
 	
-	public int getCount() {
+	public long getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(long count) {
 		this.count = count;
 	}
 }

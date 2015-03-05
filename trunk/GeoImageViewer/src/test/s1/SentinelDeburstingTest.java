@@ -1,6 +1,5 @@
 package s1;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,7 +19,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageInputStream;
 
-import jrc.it.annotation.reader.jaxb.Burst;
+import jrc.it.annotation.reader.jaxb.BurstType;
 import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -30,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFDirectory;
 import com.sun.media.imageio.plugins.tiff.TIFFField;
-import com.sun.media.imageio.plugins.tiff.TIFFImageWriteParam;
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
@@ -89,14 +87,14 @@ public class SentinelDeburstingTest {
 	 * 
 	 */
 	public void readBurstInformation(){
-		List<Burst> list=burst.getBurstList();
+		List<BurstType> list=burst.getBurstList();
 		support=new BurstSupport[list.size()];
 		int i=0;
-		for(Burst burst:list){
+		for(BurstType burst:list){
 			support[i]=new BurstSupport();
-			support[i].byteOffset=burst.getByteOffset().intValue();
-			support[i].firstValidSamples=burst.getFirstValidSample().getContent();
-			support[i].lastValidSamples=burst.getLastValidSample().getContent();
+			support[i].byteOffset=burst.getByteOffset().getValue().intValue();
+			support[i].firstValidSamples=burst.getFirstValidSample().getValue();
+			support[i].lastValidSamples=burst.getLastValidSample().getValue();
 			//System.out.println(support[i].firstValidSamples);
 			logger.debug(support[i].firstValidSamples);
 			i++;

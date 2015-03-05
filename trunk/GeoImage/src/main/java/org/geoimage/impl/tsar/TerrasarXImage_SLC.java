@@ -233,8 +233,8 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             setTimeStampStop(time.replaceAll("T", " "));
 
             atts = doc.getRootElement().getChild("productSpecific");
-            setRangeSpacing(Double.parseDouble(atts.getChild("complexImageInfo").getChild("projectedSpacingRange").getChild("slantRange").getText()));
-            setAzimuthSpacing(Double.parseDouble(atts.getChild("complexImageInfo").getChild("projectedSpacingAzimuth").getText()));
+            setRangeSpacing(Float.parseFloat(atts.getChild("complexImageInfo").getChild("projectedSpacingRange").getChild("slantRange").getText()));
+            setAzimuthSpacing(Float.parseFloat(atts.getChild("complexImageInfo").getChild("projectedSpacingAzimuth").getText()));
 
 
             // calculate satellite speed using state vectors
