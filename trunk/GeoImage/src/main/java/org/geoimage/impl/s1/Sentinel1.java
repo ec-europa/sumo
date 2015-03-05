@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
-import jrc.it.annotation.reader.jaxb.GeolocationGridPointListType;
 import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
+import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -53,8 +53,6 @@ public abstract class Sentinel1 extends SarImageReader {
     protected Map<String, TIFF> tiffImages;
 
     protected List<String> bands = new ArrayList<String>();
-  //  private SumoJaxbSafeReader safeReader=null;
-  //  private SumoAnnotationReader annotationReader=null;
 
 	protected double xposition = 0;
     protected double yposition = 0;
@@ -83,6 +81,8 @@ public abstract class Sentinel1 extends SarImageReader {
     @Override
 	public abstract File getOverviewFile() ;
     public abstract TIFF getActiveImage();
+    
+    private List<SwathMergeType> swaths=null;
     
     
     @Override
@@ -151,6 +151,7 @@ public abstract class Sentinel1 extends SarImageReader {
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
         	
+        	
 			//set image properties
             tiffImages=getImages();
             String bandName=getBandName(0);
@@ -167,7 +168,9 @@ public abstract class Sentinel1 extends SarImageReader {
 			//read the ground control points
         	points= annotationReader.getGridPoints();
 			
-			//read and set the metadata from the manifest and the annotation
+        	swaths=annotationReader.getSwaths();
+
+        	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData(manifestXML,safeReader,annotationReader);
             
             gcps = getGcps();
@@ -277,6 +280,13 @@ public abstract class Sentinel1 extends SarImageReader {
         tiffImages=null;
     }
 
+    /**
+     * 
+     * @param productxml
+     * @param safeReader
+     * @param annotationReader
+     * @throws TransformException
+     */
     private void setXMLMetaData(File productxml,SumoJaxbSafeReader safeReader,SumoAnnotationReader annotationReader) throws TransformException {
 
         	setSatellite(new String("Sentinel-1"));
@@ -375,22 +385,7 @@ public abstract class Sentinel1 extends SarImageReader {
 	public String getSafeFilePath(){
 		return safeFilePath;
 	}
-	/*
-	public SumoJaxbSafeReader getSafeReader() {
-		return safeReader;
-	}
-
-	public void setSafeReader(SumoJaxbSafeReader safeReader) {
-		this.safeReader = safeReader;
-	}
 	
-	public SumoAnnotationReader getAnnotationReader() {
-		return annotationReader;
-	}
-
-	public void setAnnotationReader(SumoAnnotationReader annotationReader) {
-		this.annotationReader = annotationReader;
-	}*/
 
 	@Override
 	public boolean supportAzimuthAmbiguity() {
