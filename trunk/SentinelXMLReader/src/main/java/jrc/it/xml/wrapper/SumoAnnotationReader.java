@@ -85,7 +85,7 @@ public class SumoAnnotationReader {
 	}
 	
 	
-	public List<SwathMergeType> swaths(){
+	public List<SwathMergeType> getSwaths(){
 		L1SwathMergeType swM=unmarshalledObject.getSwathMerging();
 		SwathMergeListType list=swM.getSwathMergeList();
 		
@@ -97,7 +97,7 @@ public class SumoAnnotationReader {
 	public static void main(String args[]){
 		try {
 			SumoAnnotationReader reader=new SumoAnnotationReader("C://tmp//sumo_images//S1_PRF_SWATH_DEVEL//S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE//annotation//s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
-			List<SwathMergeType> o=reader.swaths();
+			List<SwathMergeType> o=reader.getSwaths();
 			System.out.println(o.toString());
 			
 		} catch (JAXBException e) {
