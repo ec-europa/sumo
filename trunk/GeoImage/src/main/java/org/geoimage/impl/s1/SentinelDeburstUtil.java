@@ -12,7 +12,7 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileImageInputStream;
 
-import jrc.it.annotation.reader.jaxb.Burst;
+import jrc.it.annotation.reader.jaxb.BurstType;
 import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -74,14 +74,14 @@ public class SentinelDeburstUtil {
 	 * 
 	 */
 	public void readBurstInformation(){
-		List<Burst> list=burst.getBurstList();
+		List<BurstType> list=burst.getBurstList();
 		support=new BurstSupport[list.size()];
 		int i=0;
-		for(Burst burst:list){
+		for(BurstType burst:list){
 			support[i]=new BurstSupport();
-			support[i].byteOffset=burst.getByteOffset().intValue();
-			support[i].firstValidSamples=burst.getFirstValidSample().getContent().split(" ");
-			support[i].lastValidSamples=burst.getLastValidSample().getContent().split(" ");
+			support[i].byteOffset=burst.getByteOffset().getValue().intValue();
+			support[i].firstValidSamples=burst.getFirstValidSample().getValue().split(" ");
+			support[i].lastValidSamples=burst.getLastValidSample().getValue().split(" ");
 			linesToRemove=linesToRemove+support[i].firstValidSamples.length+support[i].lastValidSamples.length;
 			System.out.println(support[i].firstValidSamples);
 			//logger.debug(support[i].firstValidSamples);

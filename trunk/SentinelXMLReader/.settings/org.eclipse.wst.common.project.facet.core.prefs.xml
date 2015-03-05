@@ -1,0 +1,27 @@
+<root>
+  <facet id="jpt.jaxb">
+    <node name="classgen">
+      <attribute name="package" value="jrc.it.annotation.reader.jaxb"/>
+    </node>
+    <node name="libprov">
+      <attribute name="provider-id" value="jaxb-jre-library-provider"/>
+    </node>
+    <node name="platform">
+      <attribute name="platform-id" value="generic_2_2"/>
+    </node>
+    <node name="schemas">
+      <node name="schema-1">
+        <attribute name="location" value="platform:/resource/SentinelXMLReader/src/main/resources/annotation/annotation.xsd"/>
+      </node>
+      <node name="schema-2">
+        <attribute name="location" value="platform:/resource/SentinelXMLReader/src/main/resources/annotation/s1-level-1-product.xsd"/>
+      </node>
+      <node name="schema-3">
+        <attribute name="location" value="platform:/resource/SentinelXMLReader/src/main/resources/xsd/s1/s1-level-1-product.xsd"/>
+      </node>
+      <node name="schema-4">
+        <attribute name="location" value="platform:/resource/SentinelXMLReader/src/main/resources/xsd/s1/s1-object-types.xsd"/>
+      </node>
+    </node>
+  </facet>
+</root>

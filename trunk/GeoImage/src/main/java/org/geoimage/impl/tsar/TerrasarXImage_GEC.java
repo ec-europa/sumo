@@ -209,8 +209,8 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             setHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String xSize=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
             setWidth(Integer.parseInt(xSize) );
-            setRangeSpacing(Double.parseDouble(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
-            setAzimuthSpacing(Double.parseDouble(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
+            setRangeSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
+            setAzimuthSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
 
             setNumberOfBytes(new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
             setENL(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());

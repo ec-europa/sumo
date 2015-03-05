@@ -172,11 +172,11 @@ public class EnvisatImage extends SarImageReader {
             //remove the <m> otherwise crashed in detected pixels
             String val=getMetadata("AZIMUTH_SPACING").toString().replace("<m>", "");
             if(val!=null)
-            	setAzimuthSpacing(Double.parseDouble(val));
+            	setAzimuthSpacing(Float.parseFloat(val));
             
             val=getMetadata("RANGE_SPACING").toString().replace("<m>", "");
             if(val!=null)
-            	setRangeSpacing(Double.parseDouble(val));
+            	setRangeSpacing(Float.parseFloat(val));
             
             setMode("");//getMetadata("SPH_DESCRIPTOR"));
             if(getMetadata("SPH_DESCRIPTOR").equals("Image Mode Medium Res Image")){
