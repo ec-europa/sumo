@@ -464,5 +464,12 @@ public class CosmoSkymedImage extends SarImageReader {
 		return displayName;
 	}
 	
+	@Override
+	public double getPRF(int x,int y){
+        //for all the other cases with only one PRF
+        return getPRF();
+
+    }
+
 	
 }

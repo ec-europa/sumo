@@ -290,7 +290,9 @@ public class KDistributionEstimation {
 		
 		
 		
-
+		if(rowTile==19&&colTile==0){
+			System.out.println("");
+		}
 		
 		
 		for (int y = starty; y <endy; y += 2) {

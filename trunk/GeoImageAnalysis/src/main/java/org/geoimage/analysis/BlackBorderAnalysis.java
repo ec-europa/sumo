@@ -509,6 +509,12 @@ public class BlackBorderAnalysis {
 										stop=true;
 								}
 							}
+							if(stop==false){
+								if(normalDirection)
+									viCutOffColTemp[arraySamplesId]=singleRow.length;
+								else
+									viCutOffColTemp[arraySamplesId]=0;
+							}
 						}	
 					}catch(Exception e ){
 						logger.error(e.getMessage());

@@ -285,6 +285,33 @@ public class TerrasarXImage extends SarImageReader {
         }
     }
 
+    public double getPRF(int x,int y){
+        //double prf = 0;
+        //check if is the case of TSX ScanSAR
+        if (getMode().equals("SC")) {
+            int bound1 = getStripBound1();
+            int bound2 = getStripBound2();
+            int bound3 = getStripBound3();
+            //return the different PRF depending by the strip
+            if (x >= 0 && x < bound1) {
+                return getPRF1();
+            }
+            if (x < bound2) {
+            	return getPRF2();
+            }
+            if (x < bound3) {
+            	return getPRF3();
+            }
+
+            return getPRF4();
+        }
+
+        //for all the other cases with only one PRF
+        return getPRF();
+
+
+    }
+    
     public static float arr2float(byte[] arr, int start) {
         int i = 0;
         int len = 4;

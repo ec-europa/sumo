@@ -165,6 +165,13 @@ public class GeotiffImage extends SarImageReader {
         return true;
     }
 
+    public double getPRF(int x,int y){
+        return getPRF();
+
+
+    }
+    
+    
     /** TODO is used??
     private void setFile(File imageFile) {
         files = new String[1];
