@@ -15,7 +15,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_17"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="trunk/libs/AppleJavaExtensions.jar"/>
 	<classpathentry exported="true" kind="lib" path="trunk/libs/asm-debug-all.jar"/>
 	<classpathentry exported="true" kind="lib" path="trunk/libs/commons-beanutils-bean-collections.jar"/>

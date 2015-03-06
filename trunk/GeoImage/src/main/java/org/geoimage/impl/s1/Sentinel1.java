@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
+import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
@@ -69,11 +70,7 @@ public abstract class Sentinel1 extends SarImageReader {
     private List<String> polarizations=null;
     private String safeFilePath=null;
     
-    public Sentinel1(String swath) {
-    	//this.safeReader=safeReader; 
-    	this.swath=swath;
-    }
-
+    
     @Override
     public abstract int[] readTile(int x, int y, int width, int height);
     @Override
@@ -82,8 +79,13 @@ public abstract class Sentinel1 extends SarImageReader {
 	public abstract File getOverviewFile() ;
     public abstract TIFF getActiveImage();
     
-    private List<SwathMergeType> swaths=null;
+    private List<Swath> swaths=null;
     
+    public Sentinel1(String swath) {
+    	//this.safeReader=safeReader; 
+    	this.swath=swath;
+    }
+
     
     @Override
     public int getNBand() {
@@ -168,8 +170,21 @@ public abstract class Sentinel1 extends SarImageReader {
 			//read the ground control points
         	points= annotationReader.getGridPoints();
 			
-        	swaths=annotationReader.getSwaths();
 
+            List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
+            List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
+            swaths=new ArrayList<Swath>();
+            for(int i=0;i<swathMerges.size();i++){
+            	Swath s=new Swath();
+            	s.setBounds(swathMerges.get(i).getSwathBoundsList().getSwathBounds());
+            	DownlinkInformationType info=downInfos.get(i);
+            	s.setAzimuthTime(info.getAzimuthTime().toGregorianCalendar().getTimeInMillis());
+            	s.setFirstLineSensingTime(info.getFirstLineSensingTime().toGregorianCalendar().getTimeInMillis());
+            	s.setName(info.getSwath().name());
+            	s.setLastLineSensingTime(info.getLastLineSensingTime().toGregorianCalendar().getTimeInMillis());
+            	s.setPrf(info.getPrf());
+            }
+            
         	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData(manifestXML,safeReader,annotationReader);
             
