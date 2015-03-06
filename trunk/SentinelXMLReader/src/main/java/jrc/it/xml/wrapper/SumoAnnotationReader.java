@@ -9,12 +9,16 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
+import jrc.it.annotation.reader.jaxb.DownlinkInformationListType;
+import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.L1ProductType;
 import jrc.it.annotation.reader.jaxb.L1SwathMergeType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.annotation.reader.jaxb.ProductInformationType;
+import jrc.it.annotation.reader.jaxb.ReplicaInformationListType;
+import jrc.it.annotation.reader.jaxb.ReplicaInformationType;
 import jrc.it.annotation.reader.jaxb.SwathMergeListType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
@@ -84,12 +88,31 @@ public class SumoAnnotationReader {
 		return new BurstInformation(unmarshalledObject.getSwathTiming());
 	}
 	
-	
-	public List<SwathMergeType> getSwaths(){
+	/**
+	 * 
+	 * @return
+	 */
+	public List<SwathMergeType> getSwathMerges(){
 		L1SwathMergeType swM=unmarshalledObject.getSwathMerging();
 		SwathMergeListType list=swM.getSwathMergeList();
 		
 		return list.getSwathMerge();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<DownlinkInformationType> getDownLinkInformationList(){
+		DownlinkInformationListType downList=unmarshalledObject.getGeneralAnnotation().getDownlinkInformationList();
+		List<DownlinkInformationType> infos= downList.getDownlinkInformation();
+		return infos;
+	}
+	
+	public List<ReplicaInformationType> getReplicaInformationList(){
+		ReplicaInformationListType replicaList=unmarshalledObject.getGeneralAnnotation().getReplicaInformationList();
+		List<ReplicaInformationType> replicas= replicaList.getReplicaInformation();
+		return replicas;
 	}
 	
 	
@@ -97,7 +120,7 @@ public class SumoAnnotationReader {
 	public static void main(String args[]){
 		try {
 			SumoAnnotationReader reader=new SumoAnnotationReader("C://tmp//sumo_images//S1_PRF_SWATH_DEVEL//S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE//annotation//s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
-			List<SwathMergeType> o=reader.getSwaths();
+			List<SwathMergeType> o=reader.getSwathMerges();
 			System.out.println(o.toString());
 			
 		} catch (JAXBException e) {
