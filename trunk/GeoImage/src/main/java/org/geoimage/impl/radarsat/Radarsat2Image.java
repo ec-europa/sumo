@@ -73,6 +73,13 @@ public class Radarsat2Image extends SarImageReader {
         return files;
     }
 
+    public  double getPRF(int x,int y){
+        //for all the other cases with only one PRF
+        return getPRF();
+
+    }
+    
+    
     @Override
     public boolean initialise(File f) {
     	try {

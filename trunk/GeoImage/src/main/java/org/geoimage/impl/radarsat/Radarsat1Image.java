@@ -69,27 +69,10 @@ public class Radarsat1Image extends SarImageReader {
     public Radarsat1Image() {
     }
     
-    /*
-    public double getRevolutionsPerdayDouble(){
-    	return (Double)getMetadata(GeoMetadata.REVOLUTIONS_PERDAY);
+  
+    public  double getPRF(int x,int y){
+        return getPRF();
     }
-    public void setRevolutionsPerdayDouble(double data){
-    	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
-    }
-    
-    public double getIncidenceNearDouble(){
-    	return (Double)getMetadata(GeoMetadata.INCIDENCE_NEAR);
-    }
-    public void setIncidenceNearDouble(double data){
-    	setMetadata(GeoMetadata.INCIDENCE_NEAR,data);
-    }
-    
-    public double getIncidenceFarDouble(){
-    	return (Double)getMetadata(GeoMetadata.INCIDENCE_FAR);
-    }
-    public void setIncidenceFarDouble(double data){
-    	setMetadata(GeoMetadata.INCIDENCE_FAR,data);
-    }*/
     
 
     @Override

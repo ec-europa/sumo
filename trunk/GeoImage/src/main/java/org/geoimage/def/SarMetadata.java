@@ -26,7 +26,6 @@ public interface SarMetadata {
     public static String STRIPBOUND3 = "STRIPBOUND3"; //"TSX SC bound between strips 3-4";
     public static String K = "K value for Beta Nought calculation";
 
-    public int[] getAmbiguityCorrection(int xPos);
 
     public double getBetaNought(int x, double DN);
 

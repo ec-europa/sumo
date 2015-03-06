@@ -329,7 +329,7 @@ public class AzimuthAmbiguity {
             int yPos = (int) myBoat[2];
             int id = (int) myBoat[0];
 
-            deltaAzimuth = image.getAmbiguityCorrection(xPos);
+            deltaAzimuth = image.getAmbiguityCorrection(xPos,yPos);
             windowCoords = this.getSearchWindows(xPos, yPos, deltaAzimuth);
             System.out.println("\nSearch Window: " + xPos + " " + yPos + " " + deltaAzimuth[0]);
 

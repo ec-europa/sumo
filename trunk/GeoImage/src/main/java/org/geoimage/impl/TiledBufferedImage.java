@@ -479,4 +479,10 @@ public class TiledBufferedImage implements GeoImageReader {
         return vals;
     }
 
+	@Override
+	public int[] getAmbiguityCorrection(int xPos, int yPos) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

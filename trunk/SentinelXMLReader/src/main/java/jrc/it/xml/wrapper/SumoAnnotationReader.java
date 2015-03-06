@@ -115,13 +115,20 @@ public class SumoAnnotationReader {
 		return replicas;
 	}
 	
+	/*
+	public Object getTimeOrbit(){
+		List<OrbitType> orbits=unmarshalledObject.getGeneralAnnotation().get
+	}*/
 	
 	
 	public static void main(String args[]){
 		try {
 			SumoAnnotationReader reader=new SumoAnnotationReader("C://tmp//sumo_images//S1_PRF_SWATH_DEVEL//S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE//annotation//s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
-			List<SwathMergeType> o=reader.getSwathMerges();
-			System.out.println(o.toString());
+			List<OrbitType>orbits=reader.getOrbits();
+			
+			
+			//List<SwathMergeType> o=reader.getSwathMerges();
+			System.out.println(orbits.toString());
 			
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
