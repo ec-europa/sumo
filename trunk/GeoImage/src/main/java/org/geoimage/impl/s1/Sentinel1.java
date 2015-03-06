@@ -15,6 +15,7 @@ import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
+import jrc.it.annotation.reader.jaxb.SwathBoundsType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
@@ -236,6 +237,36 @@ public abstract class Sentinel1 extends SarImageReader {
         return false;
     }
 
+    
+    /**
+     * 
+     */
+   @Override
+   public double getPRF(int x,int y){
+	   boolean findPrf=false;
+	   double prf=0;
+	   for (int i=0;i<swaths.size()&&!findPrf;i++){
+		   Swath s=swaths.get(i);
+		   List<SwathBoundsType> bounds=s.getBounds();
+		   for(int iBound=0;iBound<bounds.size()&&!findPrf;iBound++){
+			   SwathBoundsType bound=bounds.get(iBound);
+			   int xMin=bound.getFirstAzimuthLine().getValue().intValue();
+			   int xMax=bound.getLastAzimuthLine().getValue().intValue();
+			   int yMin=bound.getFirstRangeSample().getValue().intValue();
+			   int yMax=bound.getLastRangeSample().getValue().intValue();
+			   
+			   if((x>=xMin && x<xMax)&&(y>=yMin&&y<yMax)){
+				   findPrf=true;
+				   prf=s.getPrf();
+			   }
+		   }
+	   }
+	   return prf;
+   } 
+    
+    
+    
+    
    /**
     * 
     * @return

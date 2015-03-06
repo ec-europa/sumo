@@ -261,20 +261,19 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
     }*/
 
-    public int[] getAmbiguityCorrection(int xPos) {
+    public int[] getAmbiguityCorrection(int xPos,int yPos) {
 
         double temp, deltaAzimuth, deltaRange;
-        int position = xPos;
         int[] output = new int[2];
 
         try {
 
-            double slantRange = getSlantRange(position);
+            double slantRange = getSlantRange(xPos);
             // already in radian
-            double incidenceAngle = getIncidence(position);
+            double incidenceAngle = getIncidence(xPos);
             double satelliteSpeed = calcSatelliteSpeed();
             double radarWavelength = getRadarWaveLenght();
-            double prf = getPRF(position); 
+            double prf = getPRF(xPos,yPos); 
             double orbitInclination = Math.toRadians(getSatelliteOrbitInclination());
             double revolutionsPerDay = getRevolutionsPerday();
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];
@@ -344,33 +343,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return slantrange;
     }
 
-    public double getPRF(int position) {
-        double prf = 0;
-        //check if is the case of TSX ScanSAR
-        if (getSatellite().equals("TerraSAR-X") && getMode().equals("SC")) {
-            int bound1 = getStripBound1();
-            int bound2 = getStripBound2();
-            int bound3 = getStripBound3();
-            //return the different PRF depending by the strip
-            if (position >= 0 && position < bound1) {
-                return getPRF1();
-            }
-            if (position < bound2) {
-            	return getPRF2();
-            }
-            if (position < bound3) {
-            	return getPRF3();
-            }
-
-            return getPRF4();
-        }
-
-        //for all the other cases with only one PRF
-        return getPRF();
-
-
-    }
-
+    public abstract double getPRF(int x,int y); 
+    
     public double getBetaNought(int x, double DN) {
         double Kvalue = getK();
         return Math.pow(DN, 2) / Kvalue;

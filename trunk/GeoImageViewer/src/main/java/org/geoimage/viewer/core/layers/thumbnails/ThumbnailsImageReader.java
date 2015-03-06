@@ -57,6 +57,10 @@ public class ThumbnailsImageReader extends SarImageReader {
         return BufferedImage.TYPE_USHORT_GRAY;
     }
 
+    public  double getPRF(int x,int y){
+        return getPRF();
+    }
+    
     private void parsePTS(File pts) {
         try {
             RandomAccessFile temp = new RandomAccessFile(pts, "r");

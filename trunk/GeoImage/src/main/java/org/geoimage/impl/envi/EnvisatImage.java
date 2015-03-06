@@ -647,6 +647,11 @@ public class EnvisatImage extends SarImageReader {
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+	public double getPRF(int x,int y){
+      
+        return getPRF();
+
+
+    }
 	
 }
