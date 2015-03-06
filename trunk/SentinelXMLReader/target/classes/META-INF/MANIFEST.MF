@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Pietro
+Build-Jdk: 1.8.0_31
+Class-Path: junit-4.11.jar hamcrest-core-1.3.jar jdom2-2.0.5.jar slf4j
+ -api-1.7.7.jar slf4j-log4j12-1.7.7.jar log4j-1.2.17.jar jaxb-impl-2.2
+ .7.jar jaxb-core-2.2.7.jar jaxb-api-2.2.7.jar istack-commons-runtime-
+ 2.16.jar FastInfoset-1.2.12.jar jsr173_api-1.0.jar jaxen-1.1.6.jar
+Main-Class: esa.safe.toolbox.SafeToolboxFrame
+Created-By: Maven Integration for Eclipse
+
