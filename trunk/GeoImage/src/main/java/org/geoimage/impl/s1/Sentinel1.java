@@ -182,7 +182,7 @@ public abstract class Sentinel1 extends SarImageReader {
             	s.setFirstLineSensingTime(info.getFirstLineSensingTime().toGregorianCalendar().getTimeInMillis());
             	s.setName(info.getSwath().name());
             	s.setLastLineSensingTime(info.getLastLineSensingTime().toGregorianCalendar().getTimeInMillis());
-            	s.setPrf(info.getPrf());
+            	s.setPrf(info.getPrf().getValue());
             }
             
         	//read and set the metadata from the manifest and the annotation
