@@ -80,6 +80,7 @@ import com.jogamp.opengl.util.GLReadBufferUtil;
 
 
 
+
 /**
  * The application's main frame.
  */
@@ -128,6 +129,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
 	        }
 	    }
 	}
+	
 	
 	
 	
@@ -757,6 +759,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
     public void setProgressValue(int value) {
         progressBar.setValue(value);
     }
+    
+    public void addStopListener(ActionListener lis){
+    	this.stopThreadButton.addActionListener(lis);
+    }
+    
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -858,13 +865,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         progressBar.setName("progressBar"); // NOI18N
         
         stopThreadButton.setName("Stop Button");
-        stopThreadButton.addActionListener(new ActionListener() {
+      /*  stopThreadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//Platform.stopCurrentThread();
 				
+				
 			}
-		});
+		});*/
         
         positionLabel= new JLabel();
  	    positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);

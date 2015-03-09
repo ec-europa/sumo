@@ -39,6 +39,7 @@ import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
+import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
@@ -471,7 +472,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 DetectedPixels pixels = vds.getPixels();
                 pixels.agglomerate();
                 pixels.computeBoatsAttributes();
-                GeometricLayer gl = VDSAnalysisConsoleAction.createGeometricLayer(gir, pixels);
+                GeometricLayer gl = AnalysisProcess.createGeometricLayer(gir, pixels);
                 gl.setName("VDSAnalysis_" + gir.getBandName(i).replace("/", ""));
                 //Map config2 = new HashMap();
                 new File(output + "/" + f.getParentFile().getName()).mkdirs();

@@ -69,59 +69,7 @@ public class Platform {
 		batchMode = false;
 	}
 
-	/*
 	
-	public static IProgress getProgressBar(){
-        return new IProgress() {
-            private boolean indeterminate=true;
-            private boolean done=false;
-            private String message;
-            private int max=-1, cur=0;
-            public boolean isIndeterminate() {
-                return indeterminate;
-            }
-
-            public boolean isDone() {
-                return done;
-            }
-
-            public int getMaximum() {
-                return max;
-            }
-
-            public int getCurrent() {
-                return cur;
-            }
-
-            public String getMessage() {
-                return message;
-            }
-
-            public void setCurrent(int i) {
-                cur=i;
-                ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressValue(i);
-            }
-
-            public void setMaximum(int size) {
-                max=size;
-                ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(size);
-            }
-
-            public void setMessage(String string) {
-                message=string;
-                ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setInfo(string);
-            }
-
-            public void setIndeterminate(boolean value) {
-                indeterminate=value;
-                ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setProgressMax(value?-1:0);
-            }
-
-            public void setDone(boolean value) {
-                this.done=value;
-            }
-        };
-    }*/
 
     public static ConsoleLayer getConsoleLayer() {
         return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getConsole();
@@ -138,7 +86,12 @@ public class Platform {
     public static GLCanvas getMainCanvas() {
         return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getMainCanvas();
     }
-
+    
+    public static GeoImageViewerView getMain() {
+        return (GeoImageViewerView) GeoImageViewer.getApplication().getMainView();
+    }
+    
+    
     public static void refresh() {
         ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).refresh();
     }
