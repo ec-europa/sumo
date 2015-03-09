@@ -352,6 +352,7 @@ public abstract class Sentinel1 extends SarImageReader {
             AdsHeaderType header=annotationReader.getHeader();
             setProduct(header.getProductType().value());
             
+            setSatelliteOrbitInclination(98.18);
             setOrbitDirection(safeReader.getOrbitDirection());
 
             ImageInformationType imageInformaiton=annotationReader.getImageInformation();
