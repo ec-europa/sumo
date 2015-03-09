@@ -14,6 +14,7 @@ import javax.swing.SwingUtilities;
  */
 public abstract class AbstractAction implements IAction {
 
+
     public void errorWindow(String message)
     {
         final String errorMessage = message;
