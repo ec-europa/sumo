@@ -54,7 +54,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 	//private boolean running = false;
     private GeoImageReader gir = null;
     private List<IMask> mask = null;
-    AnalysisProcess proc=null;
+    private AnalysisProcess proc=null;
+    private boolean stopping=false;
    
     public VDSAnalysisConsoleAction() {
         
@@ -123,8 +124,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
                 //read the land mask
                 mask = new ArrayList<IMask>();
-                //if (args.length > 5) {
-               // for (ILayer l : il.getLayers()) {
                 for (ILayer l : Platform.getLayerManager().getAllLayers()) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                         mask.add((IMask) l);
@@ -154,13 +153,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,useBlackAn);
                 proc.addProcessListener(this);
                 
-                Thread t=new Thread(proc){
-                	@Override
-                	public boolean isInterrupted() {
-                		return super.isInterrupted();
-                	}
-                	
-                };
+                Thread t=new Thread(proc);
                 t.setName("VDS_analysis_"+gir.getDisplayName());
                 t.start();
                 
@@ -207,9 +200,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         GeometryFactory gf = new GeometryFactory();
         int count=0;
         for (double[] boat : pixels.getBoats()) {
-
-           // String[] schema = VDSSchema.getSchema();
-           // String[] types = VDSSchema.getTypes();
 
             Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
             atts.set(VDSSchema.ID, count++);
@@ -260,13 +250,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
         ArrayList<String> vectors = new ArrayList<String>();
         IImageLayer il=Platform.getCurrentImageLayer();
-        /*
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
-            if (l.isActive() && l instanceof IImageLayer) {
-                il = (IImageLayer) l;
-                break;
-            }
-        }*/
 
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
@@ -350,8 +333,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     }
     
     
-    
-    
 
 	@Override
 	public void startAnalysis() {
@@ -361,31 +342,41 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
 	@Override
 	public void startAnalysisBand(String message) {
-		setCurrent(2);
-		this.message=message;
+		if(!stopping){
+			setCurrent(2);
+			this.message=message;
+		}	
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
-		setCurrent(3);
-		this.message=message;
+		if(!stopping){
+			setCurrent(3);
+			this.message=message;
+		}	
 	}
 
 	@Override
 	public void agglomerating(String message) {
-		setCurrent(4);
-		this.message=message;
+		if(!stopping){
+			setCurrent(4);
+			this.message=message;
+		}	
 	}
 
 	@Override
 	public void endAnalysis() {
 		setDone(true);
+		Platform.getMain().removeStopListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(proc!=null)
+		if(proc!=null&&e.getActionCommand().equals("STOP")){
 			this.proc.setStop(true);
-		
+			this.message="stopping";
+			Platform.getMain().removeStopListener(this);
+			this.proc=null;
+		}	
 	}
 }

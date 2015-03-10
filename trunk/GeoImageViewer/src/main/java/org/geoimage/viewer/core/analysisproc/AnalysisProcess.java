@@ -160,7 +160,8 @@ public  class AnalysisProcess implements Runnable {
                          int tilesize=Platform.getPreferences().getTileSize(200);
                          boolean removelandconnectedpixels = (Platform.getPreferences().readRow(PREF_REMOVE_LANDCONNECTEDPIXELS)).equalsIgnoreCase("true");
                          
-                         
+                         if(stop)
+                        	 break;
                          banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize, 
                         		 removelandconnectedpixels, 
                         		 new int[]{band}, 
@@ -243,9 +244,10 @@ public  class AnalysisProcess implements Runnable {
                      resultLayers.add(vdsanalysis);
                  }
              }
-             if(stop)
+             if(stop){
+            	 stop();
             	 return;
-             
+             }	 
              // display merged results if there is more than one band
              if (bands.length > 1) {
                  notifyAgglomerating("VDS: agglomerating detections...");
@@ -267,8 +269,10 @@ public  class AnalysisProcess implements Runnable {
 
                  // look for Azimuth ambiguities in the pixels
                  AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
-                 
-                 
+                 if(stop){
+                     stop();
+                	 return;
+                 }
                  String name="";
                  if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                 	 name=bufferedMask[0].getName();
@@ -311,9 +315,14 @@ public  class AnalysisProcess implements Runnable {
                  
                  Platform.getLayerManager().addLayer(vdsanalysisLayer);
                  resultLayers.add(vdsanalysisLayer);
-                 notifyEndProcessListener();
              }
+             stop();
          }
+		
+		private void stop(){
+           notifyEndProcessListener();
+           removeAllProcessListener();
+		}
 		
 		
 		public static GeometricLayer createGeometricLayer(GeoImageReader gir, DetectedPixels pixels) {
@@ -372,6 +381,10 @@ public  class AnalysisProcess implements Runnable {
 		} 
 		public void removeProcessListener(VDSAnalysisProcessListener listener){
 			this.listeners.remove(listener);
+		}
+		
+		public void removeAllProcessListener(){
+			this.listeners.clear();
 		}
 		
 		public void notifyEndProcessListener(){
