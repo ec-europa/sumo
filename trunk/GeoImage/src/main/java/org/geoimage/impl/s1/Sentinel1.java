@@ -375,7 +375,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
             double radarFrequency = annotationReader.getProductInformation().getRadarFrequency().getValue();
             setRadarWaveLenght(299792457.9 / radarFrequency);
-            
+            setRevolutionsPerday(14.3);
 
             
     }
