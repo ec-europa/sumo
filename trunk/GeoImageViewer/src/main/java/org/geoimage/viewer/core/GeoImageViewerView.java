@@ -47,6 +47,7 @@ import org.fenggui.layout.FormData;
 import org.fenggui.render.jogl.EventBinding;
 import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
@@ -84,7 +85,7 @@ import com.jogamp.opengl.util.GLReadBufferUtil;
 /**
  * The application's main frame.
  */
-public class GeoImageViewerView extends FrameView implements GLEventListener {
+public class GeoImageViewerView extends FrameView implements GLEventListener,VDSAnalysisProcessListener {
 
     private LayerManager lm;
     private GeoContext geoContext;
@@ -762,6 +763,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
     
     public void addStopListener(ActionListener lis){
     	this.stopThreadButton.addActionListener(lis);
+    	this.stopThreadButton.setVisible(true);
+    }
+    
+    public void removeStopListener(ActionListener lis){
+    	this.stopThreadButton.removeActionListener(lis);
+    	this.stopThreadButton.setVisible(false);
     }
     
 
@@ -865,6 +872,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener {
         progressBar.setName("progressBar"); // NOI18N
         
         stopThreadButton.setName("Stop Button");
+        stopThreadButton.setVisible(false);
+        stopThreadButton.setActionCommand("STOP");
       /*  stopThreadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1014,5 +1023,35 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		arg0.destroy();
+	}
+
+	@Override
+	public void startAnalysis() {
+		stopThreadButton.setVisible(true);
+		
+	}
+
+	@Override
+	public void startAnalysisBand(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void calcAzimuthAmbiguity(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void agglomerating(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endAnalysis() {
+		stopThreadButton.setVisible(false);
+		
 	}
 }
