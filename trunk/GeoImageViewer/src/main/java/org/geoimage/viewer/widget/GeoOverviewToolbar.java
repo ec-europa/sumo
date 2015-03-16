@@ -73,12 +73,9 @@ import org.geoimage.viewer.util.Constant;
         if (il != null) {
         	contrast=il.getContrast();
         	brightness=il.getBrightness();
-            //if (ratio < 0) {
-                gir = il.getImageReader();
-                // generate a suitable size image
-                ratio = Math.max(((double) gir.getWidth()) / Constant.OVERVIEW_SIZE_DOUBLE
-                			  , ((double) gir.getHeight()) / Constant.OVERVIEW_SIZE_DOUBLE);
-            //}
+            gir = il.getImageReader();
+            // generate a suitable size image
+            ratio = Math.max(((double) gir.getWidth()) / Constant.OVERVIEW_SIZE_DOUBLE , ((double) gir.getHeight()) / Constant.OVERVIEW_SIZE_DOUBLE);
             if (texture == null) {
                 try {
                 	if (!onbuilding) {
@@ -104,9 +101,12 @@ import org.geoimage.viewer.util.Constant;
                 g.setColor(new Color(0, 255, 0, bar.transparency));
 
                 // draw current view bounding rectangle in image
-                if (Platform.getGeoContext() instanceof GeoContext) {
-                	g.drawWireRectangle(imagePosition.x + (int) (Platform.getGeoContext().getX() / ratio), imagePosition.y + (int) ((gir.getHeight() - Platform.getGeoContext().getY()) / ratio) - (int) (Platform.getGeoContext().getHeight() * Platform.getGeoContext().getZoom() / ratio), (int) (Platform.getGeoContext().getWidth() * Platform.getGeoContext().getZoom() / ratio), (int) (Platform.getGeoContext().getHeight() * Platform.getGeoContext().getZoom() / ratio));
-                }
+                GeoContext ctx=Platform.getGeoContext(); 
+                int xmin=imagePosition.x + (int) (ctx.getX() / ratio);
+                int ymin=imagePosition.y + (int) ((gir.getHeight() - ctx.getY()) / ratio) - (int) (ctx.getHeight() * ctx.getZoom() / ratio);
+                int xmax= (int) (ctx.getWidth() * ctx.getZoom() / ratio);
+                int ymax=(int) (ctx.getHeight() * ctx.getZoom() / ratio);
+              	g.drawWireRectangle(xmin, ymin,xmax, ymax);
             }
 
         }
@@ -119,7 +119,6 @@ import org.geoimage.viewer.util.Constant;
             g.setColor(new Color(255, 255, 255, bar.transparency));
             g.drawWireRectangle(minimizeRectangle.x, minimizeRectangle.y + 2, minimizeRectangle.width, minimizeRectangle.height);
             g.drawFilledRectangle(3, 5, 6, 4);
-            //g.drawLine(4, 2, 4, 2);
         }
     }
 

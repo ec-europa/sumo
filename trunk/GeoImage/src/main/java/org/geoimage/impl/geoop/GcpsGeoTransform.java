@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.impl;
+package org.geoimage.impl.geoop;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.impl.Gcp;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.geotools.referencing.operation.transform.WarpTransform2D;

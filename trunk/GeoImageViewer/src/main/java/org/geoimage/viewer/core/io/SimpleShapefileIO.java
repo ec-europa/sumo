@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.GcpsGeoTransform;
+import org.geoimage.impl.geoop.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;

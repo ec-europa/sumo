@@ -19,7 +19,7 @@ import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
-import org.geoimage.utils.GeoUtils;
+import org.geoimage.impl.geoop.GeoUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -248,7 +248,7 @@ public class Radarsat2Image extends SarImageReader {
             atts = doc.getRootElement().getChild("imageGenerationParameters", ns).getChild("sarProcessingInformation", ns);
             setMetadataXML(atts, "numberOfAzimuthLooks", ENL, ns,String.class);
             setMetadataXML(atts, "incidenceAngleNearRange", INCIDENCE_NEAR, ns,Float.class);
-            setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns,Double.class);
+            setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns,Float.class);
             double slantRange=(Double)setMetadataXML(atts, "slantRangeNearEdge", SLANT_RANGE_NEAR_EDGE, ns,Double.class);
             double satH=(Double)setMetadataXML(atts, "satelliteHeight", SATELLITE_ALTITUDE, ns,Double.class);
             
