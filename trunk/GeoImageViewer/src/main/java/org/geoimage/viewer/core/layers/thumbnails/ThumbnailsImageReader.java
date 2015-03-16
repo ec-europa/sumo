@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.GcpsGeoTransform;
+import org.geoimage.impl.geoop.GcpsGeoTransform;
 
 /**
  *

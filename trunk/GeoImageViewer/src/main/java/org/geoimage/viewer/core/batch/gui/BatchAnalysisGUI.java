@@ -472,7 +472,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 DetectedPixels pixels = vds.getPixels();
                 pixels.agglomerate();
                 pixels.computeBoatsAttributes();
-                GeometricLayer gl = AnalysisProcess.createGeometricLayer(gir, pixels);
+                GeometricLayer gl = AnalysisProcess.createGeometricLayer(((SarImageReader)gir).getTimeStampStart(),((SarImageReader)gir).getAzimuthSpacing(), pixels);
                 gl.setName("VDSAnalysis_" + gir.getBandName(i).replace("/", ""));
                 //Map config2 = new HashMap();
                 new File(output + "/" + f.getParentFile().getName()).mkdirs();

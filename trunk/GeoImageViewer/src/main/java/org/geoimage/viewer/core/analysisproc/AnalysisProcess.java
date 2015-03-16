@@ -91,7 +91,7 @@ public  class AnalysisProcess implements Runnable {
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
-			this.gir=gir;
+			this.gir=gir.clone();
 		}
    
 		
@@ -110,19 +110,16 @@ public  class AnalysisProcess implements Runnable {
             		 blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
             	 blackBorderAnalysis.analyse(5);
              }	 
-
-             
              
              // create K distribution
              KDistributionEstimation kdist = new KDistributionEstimation(ENL);
              DetectedPixels pixels = new DetectedPixels((SarImageReader) gir);
              
-             
              // list of bands
              int numberofbands = gir.getNBand();
              int[] bands = new int[numberofbands];
              
-             
+             AzimuthAmbiguity azimuthAmbiguity =null;
              
              // compute detections for each band separately
              for (int band = 0; band < numberofbands&&!stop; band++) {
@@ -131,6 +128,9 @@ public  class AnalysisProcess implements Runnable {
             	 
                  gir.setBand(band);
                  bands[band] = band;
+                 
+                 String timeStampStart=((SarImageReader)gir).getTimeStampStart();
+                 double azimuth=((SarImageReader)gir).getAzimuthSpacing();
                  
                  notifyAnalysisBand( "VDS: analyzing band "+gir.getBandName(band));
                  
@@ -143,6 +143,7 @@ public  class AnalysisProcess implements Runnable {
                  	pixels.merge(banddetectedpixels);
                  }	
                 
+                 
                  boolean displaybandanalysis = Platform.getPreferences().readRow(PREF_DISPLAY_BANDS).equalsIgnoreCase("true");
                  if (numberofbands < 1 || displaybandanalysis) {
                      
@@ -168,10 +169,13 @@ public  class AnalysisProcess implements Runnable {
                         		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                         
                      }
-                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
                      
-                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
-                     
+                     if (!gir.supportAzimuthAmbiguity()) {
+                         System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
+                     }else{
+                    	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+                         azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
+                     }    
                      
                      String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
                      
@@ -180,9 +184,10 @@ public  class AnalysisProcess implements Runnable {
                      if(bufferedMask!=null && bufferedMask.length>0){
                     	name=bufferedMask[0].getName(); 
                      }
+                     
+                     
                      ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName, 
-                    		 				(SarImageReader) gir, "point", 
-                    		 				createGeometricLayer(gir, banddetectedpixels),
+                    		 				(SarImageReader) gir, "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
                     		 				thresholds,ENL,buffer,name);
                  
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
@@ -195,7 +200,7 @@ public  class AnalysisProcess implements Runnable {
                      if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                          vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                      }
-                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir,analysis.getTileSize()), false);
+                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
                      // set the color and symbol values for the VDS layer
                     
                 	 String colorString = "";
@@ -267,8 +272,13 @@ public  class AnalysisProcess implements Runnable {
                      pixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
                  }
 
-                 // look for Azimuth ambiguities in the pixels
-                 AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
+                 if (!gir.supportAzimuthAmbiguity()) {
+                     System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
+                 }else{
+                	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+                	 azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
+                 }
+                 
                  if(stop){
                      stop();
                 	 return;
@@ -277,8 +287,11 @@ public  class AnalysisProcess implements Runnable {
                  if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                 	 name=bufferedMask[0].getName();
                  }
+                 String t=((SarImageReader)gir).getTimeStampStart();
+                 double azimuth=((SarImageReader)gir).getAzimuthSpacing();
+                 
                  ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
-                		 																	gir, "point", createGeometricLayer(gir, pixels),
+                		 																	gir, "point", createGeometricLayer(t,azimuth, pixels),
                 		 																	thresholds,ENL,buffer,name);
                  boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                  if (!agglomerationMethodology.startsWith("d")) {
@@ -290,7 +303,7 @@ public  class AnalysisProcess implements Runnable {
                  if ((bufferedMask != null) && (bufferedMask.length > 0)) {
                      vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                  }
-                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING,GeometryExtractor.getTiles(gir,analysis.getTileSize()), false);
+                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
                  // set the color and symbol values for the VDS layer
                  try {
                      String widthstring = Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_MERGED);
@@ -325,7 +338,7 @@ public  class AnalysisProcess implements Runnable {
 		}
 		
 		
-		public static GeometricLayer createGeometricLayer(GeoImageReader gir, DetectedPixels pixels) {
+		public static GeometricLayer createGeometricLayer(String timeStampStart,double azimuth, DetectedPixels pixels) {
 	        GeometricLayer out = new GeometricLayer("point");
 	        out.setName("VDS Analysis");
 	        GeometryFactory gf = new GeometryFactory();
@@ -343,13 +356,11 @@ public  class AnalysisProcess implements Runnable {
 	            atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
 	            atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
 	            atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
-	            String t=((SarImageReader)gir).getTimeStampStart();
-	            t=t.replace("Z", "");
-	            atts.set(VDSSchema.DATE, Timestamp.valueOf(t));
+	            timeStampStart=timeStampStart.replace("Z", "");
+	            atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
 	            atts.set(VDSSchema.VS, 0);
 	            //compute the direction of the vessel considering the azimuth of the image
 	            //result is between 0 and 180 degree
-	            double azimuth = ((SarImageReader)gir).getImageAzimuth();
 	            double degree = boat[10] + 90 + azimuth;
 	            if (degree > 180) {
 	                degree = degree - 180;

@@ -8,9 +8,9 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.impl.AffineGeoTransform;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.GcpsGeoTransform;
+import org.geoimage.impl.geoop.AffineGeoTransform;
+import org.geoimage.impl.geoop.GcpsGeoTransform;
 
 /**
  * Simple class that contains factory methods that return the appropriate

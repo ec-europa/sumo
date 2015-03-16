@@ -16,9 +16,7 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseMove;
-import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.widget.PositionDialog;
 import org.geotools.referencing.GeodeticCalculator;
 
