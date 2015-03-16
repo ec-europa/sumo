@@ -14,16 +14,12 @@ import java.awt.image.WritableRaster;
 import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.widget.ZoomDialog;
 
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 /**
@@ -32,7 +28,6 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  */
 public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
 
-    private IImageLayer parent;
     private String name = "";
     private boolean active = true;
     private BufferedImage image;
@@ -162,64 +157,7 @@ public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
         }*/
         return bufferedImage;
     }
-    /*
-    private BufferedImage createImage(GeoImageReader gir, int x, int y, int width, int height, float zoom) {
-    try {
-
-    BufferedImage bufferedImage = new BufferedImage(width, height, gir.getType(bands.length == 1));
-
-    //System.out.println(zoom);
-    WritableRaster raster = bufferedImage.getRaster();
-
-    // Put the pixels on the raster.
-    int bytes = gir.getNumberOfBytes();
-    if (bands.length == 1) {
-    int band = bands[0];
-    gir.setBand(band);
-    int[] nat = gir.readAndDecimateTile(x, y, (int) (width * zoom), (int) (height * zoom), width, height,true);
-    raster.setSamples(0, 0, width, height, 0, nat);
-
-    } else {
-    int b = 0;
-    int div = 1 << (8 * (bytes - 1));
-    for (int band : bands) {
-    if (!(band < raster.getNumBands())) {
-    continue;
-    }
-    gir.setBand(band);
-    int[] nat = gir.readTile(x, y, (int) (width * zoom), (int) (height * zoom));
-    if (zoom == 1) {
-    for (int h = 0; h < height; h++) {
-    int temp = h * width;
-    for (int w = 0; w < width; w++) {
-    raster.setSample(w, h, b, nat[temp + w] / div);
-    }
-    }
-    } else {
-    for (int h = 0; h < height; h++) {
-    int temp = (int) (h * zoom) * (int) (width * zoom);
-    for (int w = 0; w < width; w++) {
-    try {
-    raster.setSample(w, h, b, nat[temp + (int) (w * zoom)] / div);
-    } catch (Exception e) {
-
-    }
-    }
-    }
-    }
-    b++;
-    }
-
-    }
-    return bufferedImage;
-
-    } catch (Exception e) {
-
-    }
-    return null;
-    }
-     * */
-
+    
     public boolean isActive() {
         return this.active;
     }

@@ -44,6 +44,59 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  * @author thoorfr
  */
 public class FastImageLayer extends AbstractLayer implements IImageLayer {
+	
+	class ServiceTile implements  Callable<Object[]> {
+		private String initfile;
+		private int level;
+		private int i;
+		private int j;
+		
+		public ServiceTile(String initfile, int level, int i, int j){
+			super();
+			this.initfile=initfile;
+			this.i=i;
+			this.j=j;
+			this.level=level;
+		}
+		
+		
+        public Object[] call() {
+        	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
+        	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
+            final File f = c.newFile(ff.toString());
+            if (f == null) {
+                return new Object[]{ff.toString(), null};
+            }
+
+            GeoImageReader gir2 = imagePool.get();
+            String next=new StringBuilder().append(level)
+            		.append(" ").append(getBandFolder(activeBand))
+            		.append(" ").append(i)
+            		.append(" ").append(j).toString();
+            if (gir2 == null) {
+                return new Object[]{f.getAbsolutePath(),next, null};
+            }
+            try {
+            	int x=i * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - xpadding;
+            	int y=j * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - ypadding;
+            	float zoom=(1 << level);
+                final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
+                imagePool.release(gir2);
+                
+                //write tile
+                ImageIO.write(out, "png", f);
+                return new Object[]{f.getAbsolutePath(), next, out};
+            } catch (Exception ex) {
+                imagePool.release(gir2);
+                logger.error(ex.getMessage(),ex);
+            }
+            return new Object[]{f.getAbsolutePath(), next, null};
+        }
+    }
+	
+	
+	
+	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FastImageLayer.class);
 
     private GeoImageReader activeGir;
@@ -62,7 +115,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     private RescaleOp rescale = new RescaleOp(1f, brightness, null);
     private boolean disposed = false;
     private int maxCut = 1;
-    private int il = 0;
+    private int increaseLevel = 0;
     private int currentSize = 0;
     private int curlevel;
     private int levels;
@@ -70,7 +123,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     private int maxlevels;
     
     //for cuncurrency reader
-    private ExecutorService pool;
+    private ExecutorService poolExcutorService;
     private int poolSize = 4;
     
     private int arrayReadTilesOrder[][]=null ;
@@ -87,19 +140,17 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
   
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-        pool = Executors.newFixedThreadPool(poolSize);
-        submitedTiles = new Vector<String>();
+        poolExcutorService = Executors.newFixedThreadPool(poolSize);
+        submitedTiles = new ArrayList<String>();
         imagePool = new ImagePool(gir, poolSize);
-        
 
         setName(gir);
         
         activeBand = 0;
-     //   double test=Math.log(Math.max(gir.getWidth() , gir.getHeight()))/Math.log(2);
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;
         maxlevels = (int) (Math.sqrt(Math.max(gir.getWidth() / (Constant.TILE_SIZE_DOUBLE*2), gir.getHeight() / (Constant.TILE_SIZE_DOUBLE*2)))) +1;  //massimo livello di zoom
-     //   test=Math.log(Math.max(gir.getWidth()/256 , gir.getHeight()/256))/Math.log(2);
         curlevel = levels;
+        
         //TODO Understand the meaning of this values for padding
         xpadding = (((1 << levels) << 8) - gir.getWidth()) / 2;  // is equal to(int)((Math.pow(2,levels+8)- gir.getWidth())/2);
         ypadding = (((1 << levels) << 8) - gir.getHeight()) / 2; //			   (int)((Math.pow(2,levels+8)- gir.getHeight())/2);
@@ -165,7 +216,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 	        float zoom = context.getZoom();
 	        int width = context.getWidth();
 	        int height = context.getHeight();
-	        int x = context.getX(), y = context.getY();
+	        int x = context.getX();
+	        int y = context.getY();
 	        
 	        int xx = (int) (x + xpadding);
 	        int yy = (int) (y + ypadding);
@@ -181,32 +233,30 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		        if (zoom >= 1) {
 		            curlevel = (int) Math.sqrt(zoom + 1);
 		            //cycle to avoid the black area when zooming in/out and tiles not in memory
-		            for (int lll = maxlevels; lll > curlevel - 1; lll--) {
-		                //stop when lll=max zoom level
-		            	if (lll > maxlevels) {
-		                    break;
-		                }
-		                lll += il;
+		            //stop when lll=max zoom level
+		            for (int lll = maxlevels; (lll > curlevel - 1)&&(lll<=maxlevels); lll--) {
+		            	//modificato tramite action dalla console layer
+		                lll += increaseLevel;
 		                
 		                if (lll < 0) {
 		                    continue;
 		                }
 		                if (this.mylevel != curlevel) {
 		                    this.mylevel = curlevel;
-		                    pool.shutdown();
-		                    pool = Executors.newFixedThreadPool(poolSize);
+		                    poolExcutorService.shutdown();
+		                    poolExcutorService = Executors.newFixedThreadPool(poolSize);
 		                }
 		                
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
 		                int h0 = yy / ((1 << lll) << 8);
 		                
 		                
-		                final String initfile = new StringBuffer(c.getPath().toString()).append("\\").
+		                final String initfile = new StringBuffer(c.getPath().getName()).append("\\").
 		                		append((int) lll ).
 		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
 		                
 		                //AG loads the different tiles, starting from the center (k=0)
-		                for (int k = 0; k < max; k++) {
+		                for (int k = 0; k < max; k++) {//loop on priority
 		                	
 		                    for (int j = 0; j < max; j++) {
 		                        if (j + h0 < 0) {
@@ -441,15 +491,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     private String getBandFolder(int band) {
         StringBuilder out = new StringBuilder();
         out.append(band);
-        /*if (band.length == 1) {
-            out.append(band[0]);
-        } else if (band.length > 1) {
-            out.append(band[0]);
-            for (int i = 1; i < band.length; i++) {
-                out.append("_").append(band[i]);
-            }
-        }*/
-
         return out.toString();
     }
 
@@ -464,41 +505,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     	String tilesStr=new StringBuffer(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
         if (!submitedTiles.contains(tilesStr)) {
             submitedTiles.add(tilesStr);
-            futures.add(0, pool.submit(new Callable<Object[]>() {
-
-                public Object[] call() {
-                	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
-                	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
-                    final File f = c.newFile(ff.toString());
-                    if (f == null) {
-                        return new Object[]{ff.toString(), null};
-                    }
-
-                    GeoImageReader gir2 = imagePool.get();
-                    String next=new StringBuilder().append(level)
-                    		.append(" ").append(getBandFolder(activeBand))
-                    		.append(" ").append(i)
-                    		.append(" ").append(j).toString();
-                    if (gir2 == null) {
-                        return new Object[]{f.getAbsolutePath(),next, null};
-                    }
-                    try {
-                    	int x=i * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - xpadding;
-                    	int y=j * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - ypadding;
-                    	float zoom=(1 << level);
-                        final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
-                        imagePool.release(gir2);
-                        
-                        //write tile
-                        ImageIO.write(out, "png", f);
-                        return new Object[]{f.getAbsolutePath(), next, out};
-                    } catch (Exception ex) {
-                        imagePool.release(gir2);
-                        logger.error(ex.getMessage(),ex);
-                    }
-                    return new Object[]{f.getAbsolutePath(), next, null};
-                }
-            }));
+            
+            futures.add(0, poolExcutorService.submit(new ServiceTile(initfile, level, i, j)));
         }
     }
     
@@ -561,6 +569,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         if (contrast.get(createBandsString(activeBand)) == null) {
             setInitialContrast();
         } else {
+        	getImageReader().setBand(val);
             rescale = new RescaleOp(contrast.get(createBandsString(activeBand)), brightness, null);
         }
     }
@@ -576,9 +585,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     @Override
     public void dispose() {
         disposed = true;
-        if(pool!=null){
-        	pool.shutdownNow();
-        	pool = null;
+        if(poolExcutorService!=null){
+        	poolExcutorService.shutdownNow();
+        	poolExcutorService = null;
         }	
         if(activeGir!=null){
         	activeGir.dispose();
@@ -601,8 +610,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 
     private void disposeSync() {
 
-        pool.shutdownNow();
-        pool = null;
+        poolExcutorService.shutdownNow();
+        poolExcutorService = null;
         activeGir.dispose();
         activeGir = null;
         tcm.clear();
@@ -627,7 +636,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     }
 
     public void level(int levelIncrease) {
-        this.il = levelIncrease;
+        this.increaseLevel = levelIncrease;
     }
     
     

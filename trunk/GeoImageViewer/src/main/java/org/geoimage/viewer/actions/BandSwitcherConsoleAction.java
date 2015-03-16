@@ -36,8 +36,12 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
             	IImageLayer imL=((IImageLayer) l);
             	
             	//int[] bands=((IImageLayer) l).getBands()[0]+1);
-            	int bb=(imL.getBand()+1) % ((IImageLayer) l).getNumberOfBands();
+            	int bb=imL.getBand()+1;
+            	if(bb==(imL.getNumberOfBands())){
+            		bb=0;
+            	}
             	imL.setBand(bb);
+            	
            		((FastImageLayer)imL).setName(imL.getImageReader());
                 Platform.setInfo(imL.getImageReader().getBandName(((IImageLayer) l).getBand()), 2000);
             }

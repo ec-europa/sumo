@@ -303,12 +303,6 @@ public class AzimuthAmbiguity {
 
         this.sumoImage = image;
 
-        // Get image type
-        if (!image.supportAzimuthAmbiguity()) {
-            System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
-            return;
-        }
-
         //AG commented
         // check a few values before starting
         /*if (Double.parseDouble((String) sumoImage.getMetadata(sumoImage.K)) == 0.0) {
@@ -328,8 +322,8 @@ public class AzimuthAmbiguity {
             int xPos = (int) myBoat[1];
             int yPos = (int) myBoat[2];
             int id = (int) myBoat[0];
-
-            deltaAzimuth = image.getAmbiguityCorrection(xPos,yPos);
+//TODO correct the azimuth ambiguity
+            deltaAzimuth =image.getAmbiguityCorrection(xPos,yPos);
             windowCoords = this.getSearchWindows(xPos, yPos, deltaAzimuth);
             System.out.println("\nSearch Window: " + xPos + " " + yPos + " " + deltaAzimuth[0]);
 

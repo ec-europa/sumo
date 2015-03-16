@@ -60,7 +60,7 @@ public class ViewTilesAction extends AbstractAction{
 	                        		if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
 	                        	}	
 	                    		
-	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader(),tileSize);
+	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader().getWidth(),l.getImageReader().getHeight(),tileSize);
 	                        	SimpleGeometryLayer sgl=new SimpleGeometryLayer(l, "tiles",tiles,SimpleGeometryLayer.LINESTRING);
 	                            addLayerInThread(sgl);
 	                        } catch (Exception ex) {

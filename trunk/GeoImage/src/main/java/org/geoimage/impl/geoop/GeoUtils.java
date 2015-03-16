@@ -1,4 +1,4 @@
-package org.geoimage.utils;
+package org.geoimage.impl.geoop;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -71,7 +71,7 @@ public class GeoUtils {
 	 * 
 	 * @param lon
 	 * @param lat
-	 * @return
+	 * @return the geoid Height for a point (lon,lat)
 	 */
 	public static double  getGeoidH(double lon,double lat){
 		int i=0;
@@ -103,8 +103,8 @@ public class GeoUtils {
 	 * @param lon1
 	 * @param lat1
 	 * @param lon2
-	 * @param lat2
-	 * @return
+	 * @param lat2 
+	 * @return calculate the distance between 2 points
 	 */
 	public static double distance(double lon1, double lat1, double lon2, double lat2){
 		double R=6372.795477598;
@@ -128,7 +128,7 @@ public class GeoUtils {
 	 * @param latitude
 	 * @param ellipseMin 
 	 * @param ellipseMaj
-	 * @return
+	 * @return calculate the heart radius for a latitude
 	 */
 	public static double earthRadiusFromLatitude(double latitude, double ellipseMin,double ellipseMaj ){
 		double d=Math.pow(Math.tan(latitude*Math.PI/180),2);
@@ -234,7 +234,14 @@ public class GeoUtils {
 		return dx;
 	}
 
-	
+	/**
+	 * 
+	 * @param longitude
+	 * @param latitude
+	 * @param dx
+	 * @param rHeart
+	 * @return add meters to a longitude and return the new longitude
+	 */
 	public static double addMetersToLongitude(double longitude,double latitude, double dx,double rHeart){
 		double k=0.000009;
 		double l=dx*k;

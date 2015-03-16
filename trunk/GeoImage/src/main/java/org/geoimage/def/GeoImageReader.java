@@ -79,8 +79,8 @@ public interface GeoImageReader  {
 
     /**
      *  Gets the WKT form of the projection system as defined by OpenGIS
-     * @see org.geoimage.impl.AffineGeoTransform
-     * @see org.geoimage.impl.GcpsGeoTransform
+     * @see org.geoimage.impl.geoop.AffineGeoTransform
+     * @see org.geoimage.impl.geoop.GcpsGeoTransform
      * @return an implementation of Geotransform.
      */
     public GeoTransform getGeoTransform();
