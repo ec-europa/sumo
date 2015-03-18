@@ -3,8 +3,6 @@ package org.geoimage.impl.s1;
 import java.awt.Rectangle;
 import java.io.File;
 
-
-import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,19 +23,19 @@ public class  Sentinel1GRD extends Sentinel1 {
 
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
-        rect = rect.intersection(getActiveImage().bounds);
+        rect = rect.intersection(getImage(band).bounds);
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
         }
 
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
 
-        int yOffset = getActiveImage().xSize;
+        int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -50,17 +48,16 @@ public class  Sentinel1GRD extends Sentinel1 {
     }
     
         @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, getActiveImage().xSize, length);
+        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         TIFFImageReadParam tirp = new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         try {
-        	//TIFFImageReader tr=getActiveImage().reader;
-            preloadedData = getActiveImage().reader.read(0, tirp).getRaster().getSamples(0, 0, getActiveImage().xSize, length, 0, (int[]) null);
+            preloadedData = getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }
@@ -71,27 +68,17 @@ public class  Sentinel1GRD extends Sentinel1 {
         
     
     
-    @Override
-	public int getWidth() {
-		return getActiveImage().xSize;
-	}
-
-
-	@Override
-	public int getHeight() {
-		return getActiveImage().ySize;
-	}
-	
-	public TIFF getActiveImage(){
-		return tiffImages.get(getBandName(getBand()));
-	}
-
 
 	@Override
 	public File getOverviewFile() {
 		return null;
 	}
-	
+
+
+
+
+
+
 	
 	
 	

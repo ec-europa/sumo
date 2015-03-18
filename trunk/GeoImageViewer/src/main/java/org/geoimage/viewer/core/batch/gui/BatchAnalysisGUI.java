@@ -466,9 +466,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 masks[0]=FactoryLayer.createMaskLayer("mask",  mask.getGeometryType(), buffer,gir,mask);
             }
             for (int i = 0; i < gir.getNBand(); i++) {
-                gir.setBand(i);
                 org.geoimage.analysis.VDSAnalysis vds = new org.geoimage.analysis.VDSAnalysis((SarImageReader) gir, masks, ENL.getFromGeoImageReader((SarImageReader) gir), (float) thresh, (float) thresh, (float) thresh, (float) thresh, new progress());
-                vds.run(new KDistributionEstimation(ENL.getFromGeoImageReader((SarImageReader)gir)),null);
+                vds.run(new KDistributionEstimation(ENL.getFromGeoImageReader((SarImageReader)gir)),null,0);
                 DetectedPixels pixels = vds.getPixels();
                 pixels.agglomerate();
                 pixels.computeBoatsAttributes();
@@ -487,7 +486,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 //kmzio.save(gl, "EPSG:4326",gir);
                 if (createThumbs && gl.getGeometries().size() < 200) {
                     ThumbnailsManager tm = new ThumbnailsManager(output + "/" + f.getParentFile().getName() + "/band" + i + "/");
-                    tm.createThumbnailsDir(gl, "id", gir, new progress());
+                    tm.createThumbnailsDir(gl, "id", gir, new progress(),0);
                 } else {
                     Map config2 = new HashMap();
                     config2.put(SumoXmlIOOld.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.xml");

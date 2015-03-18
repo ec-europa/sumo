@@ -79,7 +79,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
      * @return
      * @throws Exception
      */
-    public static FeatureCollection<SimpleFeatureType,SimpleFeature>  createFeatures(SimpleFeatureType ft, GeometricLayer glayer, String projection, GeoTransform gt) throws Exception {
+    public static FeatureCollection<SimpleFeatureType,SimpleFeature>  createFeatures(SimpleFeatureType ft, GeometricLayer glayer, String projection) throws Exception {
     	 DefaultFeatureCollection collection = new DefaultFeatureCollection();        //GeometryFactory gf = new GeometryFactory();
          int id=0;
          for (Geometry geom : glayer.getGeometries()) {
@@ -247,9 +247,6 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             fc=null;
             System.gc();
             GeometricLayer glout = GeometricLayer.createImageProjectedLayer(out, gt,null);
-            ///Utils.createShapeFileFromPolygons("C:\\tmp\\test.shp",glout.getGeometries());
-            //if(logger.isDebugEnabled())
-            	//Utils.writeGeometriesInTmpFile("C:\\tmp\\aa.geom", glout.getGeometries());
             return glout;
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
@@ -325,20 +322,16 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         return out;
     }
 
-    //@Override
+    @Override
     public void save(GeometricLayer layer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
         try {
             layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             String filename = ((URL) config.get(CONFIG_URL)).getPath();
-            //System.out.println(filename);
-            //new File(filename).createNewFile();
             layername = filename.substring(filename.lastIndexOf(File.separator) + 1, filename.lastIndexOf("."));
-            //System.out.println(layername);
             SimpleFeatureType ft = createFeatureType(layername, layer);
-            //build the type
             FileDataStore fileDataStore = createDataStore(filename, ft, projection);
-            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection, transform);
+            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection);
             
             writeToShapefile(fileDataStore, features);
         } catch (Exception ex) {

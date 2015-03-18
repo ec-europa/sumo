@@ -66,16 +66,16 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
 	}
 	 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
         //positioning in file images y=rows image.xSize=cols 4=numero bytes 
-        int tileOffset =  (y * (getActiveImage().xSize * 4 ));
-        preloadedData = new byte[(getActiveImage().xSize * 4) * length];
+        int tileOffset =  (y * (getImage(band).xSize * 4 ));
+        preloadedData = new byte[(getImage(band).xSize * 4) * length];
         try {
-        	File fimg = getActiveImage().getImageFile();
+        	File fimg = getImage(band).getImageFile();
 			fss = new RandomAccessFile(fimg.getAbsolutePath(), "r");
 			fss.seek(tileOffset);
            	fss.read(preloadedData);

@@ -35,11 +35,6 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
     protected List<Gcp> gcps;
     private HashMap<String, Object> metadata = new HashMap<String, Object>();
     protected GeoTransform geotransform;
-    protected int band = 0;
-
-    public int getBand() {
-        return this.band;
-    }
 
     public String getDisplayName() {
         return name;
@@ -73,14 +68,14 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         return geotransform;
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight, boolean filter) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight, boolean filter,int band) {
         if (x + width < 0 || y + height < 0 || x > xSize || y > ySize) {
             return new int[outWidth * outHeight];
         }
 
         if (height < 257) {
             int[] outData = new int[outWidth * outHeight];
-            int[] data = readTile(x, y, width, height);
+            int[] data = readTile(x, y, width, height,band);
             int decX = Math.round(width / (1f * outWidth));
             int decY = Math.round(height / (1f * outHeight));
             if (data != null) {
@@ -116,7 +111,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
             for (int i = 0; i < Math.ceil(incy); i++) {
                 int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -134,7 +129,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         }
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
         System.out.println("readAndDecimateTile(" + x + ", " + y + ", " + width + ", " + height + ")");
         int outWidth = (int) (width * scalingFactor);
         int outHeight = (int) (height * scalingFactor);
@@ -150,7 +145,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
                 //System.out.println(i);
                 for (int j = 0; j < outWidth; j++) {
                     try {
-                        outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1)[0];
+                        outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1,band)[0];
                     } catch (Exception e) {
                     }
                 }
@@ -159,7 +154,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         }
         // load first tile
         int currentY = 0;
-        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight));
+        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
         if (progressbar != null) {
             progressbar.setMaximum(outHeight / 100);
         // start going through the image one Tile at a time
@@ -174,7 +169,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
                 }
             }
             if (posY > (int) Math.ceil(tileHeight)) {
-                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight));
+                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);
                 posY -= (int) Math.ceil(tileHeight);
                 currentY += (int) Math.ceil(tileHeight);
 

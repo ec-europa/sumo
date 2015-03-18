@@ -36,7 +36,6 @@ public class ImageTiler {
     }
 
     public void generateTiles(int band) {
-        gir.setBand(band);
         System.out.println((1 << levels) + ";" + xpadding + "--" + ypadding);
         int powerI = 1;
         int numI = 1 << levels;
@@ -44,10 +43,11 @@ public class ImageTiler {
             for (int h = 0; h < powerI; h++) {
                 for (int w = 0; w < powerI; w++) {
                     String file = cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png";
-                    if (!CacheManager.getCacheInstance(gir.getDisplayName()).contains(file)) {
+                    if (!CacheManager.getCacheInstance(gir.getDisplayName(band)).contains(file)) {
                         try {
-                            int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE_IMG_LAYER - xpadding, h * numI * Constant.TILE_SIZE_IMG_LAYER - ypadding, numI * Constant.TILE_SIZE_IMG_LAYER, numI * Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER,gir.getWidth(),gir.getHeight(), true);
-                            File f = CacheManager.getCacheInstance(gir.getDisplayName()).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
+                            int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE_IMG_LAYER - xpadding, h * numI * Constant.TILE_SIZE_IMG_LAYER - ypadding, 
+                            		numI * Constant.TILE_SIZE_IMG_LAYER, numI * Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER,gir.getWidth(),gir.getHeight(), true,band);
+                            File f = CacheManager.getCacheInstance(gir.getDisplayName(band)).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
                             ImageIO.write(createImage(t, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, gir), "png", f);
 
                         } catch (IOException ex) {
@@ -90,14 +90,13 @@ public class ImageTiler {
     }
 
     public void generateSmartTiles(int band) {
-        gir.setBand(band);
         for (int line = 0; line < gir.getHeight(); line++) {
             readLine(new HashMap<String, int[]>(), line, band);
         }
     }
 
     private void readLine(Map<String, int[]> tiles, int line, int band) {
-        int[] data = gir.readTile(0, line, gir.getWidth(), line + 1);
+        int[] data = gir.readTile(0, line, gir.getWidth(), line + 1,band);
         int L = Integer.numberOfTrailingZeros(line);
         if(L==32) L=levels;
         updateLevels(tiles, line, L, data);

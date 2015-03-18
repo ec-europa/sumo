@@ -73,12 +73,12 @@ public abstract class Sentinel1 extends SarImageReader {
     
     
     @Override
-    public abstract int[] readTile(int x, int y, int width, int height);
+    public abstract int[] readTile(int x, int y, int width, int height,int band);
     @Override
-    public abstract void preloadLineTile(int y, int length);
+    public abstract void preloadLineTile(int y, int length,int band);
     @Override
 	public abstract File getOverviewFile() ;
-    public abstract TIFF getActiveImage();
+    
     
     private List<Swath> swaths=null;
     
@@ -288,7 +288,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
     
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
@@ -307,13 +307,13 @@ public abstract class Sentinel1 extends SarImageReader {
 
     /**
      * set the current band and the associate image 
-     */
+     *
     @Override
     public void setBand(int band) {
         this.band = band;
         if(tiffImages==null)
         	tiffImages=getImages();
-    }
+    }*/
 
    
     @Override
@@ -358,8 +358,8 @@ public abstract class Sentinel1 extends SarImageReader {
             ImageInformationType imageInformaiton=annotationReader.getImageInformation();
             setRangeSpacing(imageInformaiton.getRangePixelSpacing().getValue());
             setAzimuthSpacing(imageInformaiton.getAzimuthPixelSpacing().getValue());
-            setHeight(imageInformaiton.getNumberOfLines().getValue().intValue());
-            setWidth(imageInformaiton.getNumberOfSamples().getValue().intValue());
+            setMetaHeight(imageInformaiton.getNumberOfLines().getValue().intValue());
+            setMetaWidth(imageInformaiton.getNumberOfSamples().getValue().intValue());
             //setSatelliteSpeed(prodInfo.getProduct);
 			float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL(String.valueOf(enl));
@@ -397,7 +397,7 @@ public abstract class Sentinel1 extends SarImageReader {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getDisplayName(int band) {
     	try{
         	return tiffImages.get(getBandName(band)).getImageFile().getName();
     	}catch(Exception e){
@@ -408,13 +408,15 @@ public abstract class Sentinel1 extends SarImageReader {
     @Override
     public String getImgName() {
     	try{
-    		String name=tiffImages.get(getBandName(band)).getImageFile().getParentFile().getParentFile().getName();
+    		String name=tiffImages.get(getBandName(0)).getImageFile().getParentFile().getParentFile().getName();
     		return name;
     	}catch(Exception e ){			
-    		return tiffImages.get(getBandName(band)).getImageFile().getName();
+    		return tiffImages.get(getBandName(0)).getImageFile().getName();
     	}	
     }
 
+        
+    
     public String getInternalImage() {
   		return null;
   	}
@@ -434,6 +436,24 @@ public abstract class Sentinel1 extends SarImageReader {
 	}
 	
 
+    @Override
+	public int getWidth() {
+		return getImage(0).xSize;
+	}
+
+
+	@Override
+	public int getHeight() {
+		return getImage(0).ySize;
+	}
+	
+	
+
+	public TIFF getImage(int band){
+		return tiffImages.get(getBandName(band));
+	}
+
+	
 	@Override
 	public boolean supportAzimuthAmbiguity() {
 		return true;

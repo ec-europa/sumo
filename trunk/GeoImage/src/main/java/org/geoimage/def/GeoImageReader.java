@@ -10,17 +10,7 @@ import org.geoimage.utils.IProgress;
  * Interface to be implemented by all the readers for "geographic" images
  */
 public interface GeoImageReader  {
-    /**
-     * version of the reader
-     */
-    public static final String version = "1.0beta";
-
-    /**
-     *
-     * @return the current displayed image band
-     */
-    public int getBand();
-
+    
     /**
      *
      * @return the image bounding box in lattitude and longitude coordinates
@@ -31,7 +21,7 @@ public interface GeoImageReader  {
      *
      * @return the name of the image
      */
-    public String getDisplayName();
+    public String getDisplayName(int band);
 
     /**
      *
@@ -109,7 +99,7 @@ public interface GeoImageReader  {
     public boolean initialise(File file);
 
 
-    /**
+    /*
      * Reads the data in int[]. Access the pixels value (x,y): data[x+y*width].
      * A call to preloadLineTile can be considered to improve memory management.
      * @param x
@@ -117,9 +107,9 @@ public interface GeoImageReader  {
      * @param width
      * @param height
      * @return
-     */
+     *
     public int[] readTile(int x, int y, int width, int height);
-
+*/
     /**
      * Reads the data in int[]. Access the pixels value (x,y): data[x+y*width].
      * A call to preloadLineTile can be considered to improve memory management.
@@ -142,7 +132,7 @@ public interface GeoImageReader  {
      * @param filter
      * @return
      */
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outLength,int xSize,int ySize, boolean filter);
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outLength,int xSize,int ySize, boolean filter,int band);
 
     /**
      *
@@ -155,7 +145,7 @@ public interface GeoImageReader  {
      * @param progressbar
      * @return
      */
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar);
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band);
 
     /**
      * Reads single pixel value of the curent band.
@@ -163,7 +153,7 @@ public interface GeoImageReader  {
      * @param y
      * @return pixel value
      */
-    public int read(int x, int y);
+    public int read(int x, int y,int band);
 
     /**
      * Return the name of the band number. For instance in RGBA image this would be:
@@ -176,11 +166,6 @@ public interface GeoImageReader  {
      */
     public String getBandName(int band);
 
-    /**
-     * Sets the band to be read (before the call to Read, ReadTile, etc...)
-     * @param band
-     */
-    public void setBand(int band);
 
     /**
      * Method to manage the memory for big images. The data within the interval
@@ -188,7 +173,7 @@ public interface GeoImageReader  {
      * @param y first line of the part of the image to preload.
      * @param height of the part of the image to preload.
      */
-    public void preloadLineTile(int y, int height);
+    public void preloadLineTile(int y, int height,int band);
 
     /**
      * clear all the resources opened to read the image

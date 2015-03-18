@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
  */
 public class Radarsat2Image extends SarImageReader {
 	
-    protected TIFF image;
+    //protected TIFF image;
     protected String[] files;
     protected int[] preloadedInterval = new int[]{0, 0};
     protected int[] preloadedData;
@@ -94,14 +93,14 @@ public class Radarsat2Image extends SarImageReader {
     		tiffImages = getImages();
     		if(tiffImages==null) return false;
     		
-            image = tiffImages.values().iterator().next();
+            TIFF image = tiffImages.values().iterator().next();
             
             this.displayName=super.imgName;//+ "  " +image.getImageFile().getName();
             
             parseProductXML(productxml);
             
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
-            read(0,0);
+            read(0,0,0);
         } catch (Exception ex) {
             dispose();
             Logger.getLogger(Radarsat2Image.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,8 +133,12 @@ public class Radarsat2Image extends SarImageReader {
         
     }
 
+    public TIFF getImage(int band){
+    	return this.tiffImages.get(getBandName(band));
+    }
+    
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         int[] tile= new int[height*width];
@@ -143,9 +146,9 @@ public class Radarsat2Image extends SarImageReader {
             return tile;
         }
         if (rect.y != preloadedInterval[0] | rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
-        int yOffset = image.xSize;
+        int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -159,11 +162,11 @@ public class Radarsat2Image extends SarImageReader {
 
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t=new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
-            return image.reader.read(0, t).getRGB(x, y);
+            return getImage(band).reader.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
             Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -176,7 +179,7 @@ public class Radarsat2Image extends SarImageReader {
         return bands.get(band);
     }
 
-    @Override
+   /* @Override
     public void setBand(int band) {
     	if(bands.size()>=band){
     		this.band=band;
@@ -185,19 +188,19 @@ public class Radarsat2Image extends SarImageReader {
     		this.band=0;
     		this.image=tiffImages.get(bands.get(0));
     	}	
-    }
+    }*/
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, image.xSize, length);
+        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         TIFFImageReadParam tirp=new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         try {
-            preloadedData = image.reader.read(0, tirp).getRaster().getSamples(0, 0, image.xSize, length, 0, (int[]) null);
+            preloadedData = getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
             Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
             System.gc();
@@ -256,9 +259,9 @@ public class Radarsat2Image extends SarImageReader {
             // rasterattributes
             atts = doc.getRootElement().getChild("imageAttributes", ns).getChild("rasterAttributes", ns);
             if(atts.getChild("numberOfLines", ns) != null)
-                setHeight(Integer.parseInt(atts.getChild("numberOfLines", ns).getText()));
+                setMetaHeight(Integer.parseInt(atts.getChild("numberOfLines", ns).getText()));
             if(atts.getChild("numberOfSamplesPerLine", ns) != null)
-                setWidth(Integer.parseInt(atts.getChild("numberOfSamplesPerLine", ns).getText()));
+                setMetaWidth(Integer.parseInt(atts.getChild("numberOfSamplesPerLine", ns).getText()));
             if(atts.getChild("bitsPerSample", ns) != null)
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
@@ -457,12 +460,12 @@ public class Radarsat2Image extends SarImageReader {
 
 	@Override
 	public int getWidth() {
-		return image.xSize;
+		return getImage(0).xSize;
 	}
 
 	@Override
 	public int getHeight() {
-		return image.ySize;
+		return getImage(0).ySize;
 	}
 	
 	@Override
@@ -480,8 +483,10 @@ public class Radarsat2Image extends SarImageReader {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		return displayName;
 	}
+
+
 }
 

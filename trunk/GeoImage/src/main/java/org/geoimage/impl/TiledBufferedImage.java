@@ -60,18 +60,18 @@ public class TiledBufferedImage implements GeoImageReader {
         mapExistingTiles();
     }
 
-    public int[] readTile(int x, int y, int width, int height) {
-        return readTile(x, y, width, height, new int[width * height]);
+    public int[] readTile(int x, int y, int width, int height,int band) {
+        return readTile(x, y, width, height, new int[width * height],band);
     }
 
-    public int[] readTile(int x, int y, int width, int height, int[] tile) {
+    public int[] readTile(int x, int y, int width, int height, int[] tile,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         if (rect.isEmpty()) {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
         int xinit = rect.x - x;
         int yinit = rect.y - y;
@@ -84,18 +84,18 @@ public class TiledBufferedImage implements GeoImageReader {
         return tile;
     }
 
-    private ByteBuffer writeTileFile(int xx, int yy, int[] data) {
+    private ByteBuffer writeTileFile(int xx, int yy, int[] data,int band) {
         FileOutputStream fos = null;
         ByteBuffer out = null;
         try {
-            File f = new File(root, gir.getBand() + "_" + xx + "_" + yy);
+            File f = new File(root, band + "_" + xx + "_" + yy);
             f.createNewFile();
             fos = new FileOutputStream(f);
             out = ByteBuffer.allocate(4 * data.length);
             IntBuffer ib = out.asIntBuffer();
             ib.put(data);
             fos.getChannel().write(out);
-            tiles.put(gir.getBand() + "_" + xx + "_" + yy, f);
+            tiles.put(band + "_" + xx + "_" + yy, f);
         } catch (Exception ex) {
             Logger.getLogger(TiledBufferedImage.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -109,22 +109,22 @@ public class TiledBufferedImage implements GeoImageReader {
         return out;
     }
 
-    public void writeTile(int x, int y, int width, int height, int[] data) throws IOException {
+    public void writeTile(int x, int y, int width, int height, int[] data,int band) throws IOException {
         for (int j = y; j < y + height; j++) {
             for (int i = x; i < x + width; i++) {
-                write(i, j, data[j * width + i]);
+                write(i, j, data[j * width + i],band);
             }
         }
     }
 
-    public void applyScaleFactor(double scale, double offset) {
+    public void applyScaleFactor(double scale, double offset,int band) {
         File f = null;
         RandomAccessFile fis = null;
         MappedByteBuffer tile = null;
         for (int y = 0; y < gir.getHeight() / tilesize; y++) {
             for (int x = 0; x < gir.getHeight() / tilesize; x++) {
                 try {
-                    f = tiles.get(getBand() + "_" + x + "_" + y);
+                    f = tiles.get(band + "_" + x + "_" + y);
                     fis = new RandomAccessFile(writingFile, "rwd");
                     tile = fis.getChannel().map(MapMode.READ_WRITE, 0, writingFile.length()).load();
                     for (int yt = 0; yt < tilesize; yt++) {
@@ -144,18 +144,18 @@ public class TiledBufferedImage implements GeoImageReader {
         }
     }
 
-    public void write(int x, int y, int value) throws IOException {
+    public void write(int x, int y, int value,int band) throws IOException {
         int xx = x / tilesize;
         int yy = y / tilesize;
-        if (writingFile == null || !writingFile.getAbsolutePath().endsWith(getBand() + "_" + xx + "_" + yy)) {
+        if (writingFile == null || !writingFile.getAbsolutePath().endsWith(band + "_" + xx + "_" + yy)) {
             if (writingTile != null) {
                 //writingTile.force();
                 writingFis.close();
             }
-            writingFile = tiles.get(getBand() + "_" + xx + "_" + yy);
+            writingFile = tiles.get(band + "_" + xx + "_" + yy);
             if (writingFile == null) {
-                writeTileFile(xx, yy, gir.readTile(xx * tilesize, yy * tilesize, tilesize, tilesize));
-                writingFile = tiles.get(getBand() + "_" + xx + "_" + yy);
+                writeTileFile(xx, yy, gir.readTile(xx * tilesize, yy * tilesize, tilesize, tilesize, band),band);
+                writingFile = tiles.get(band + "_" + xx + "_" + yy);
                 if (writingFile == null) {
                     throw new IOException("can't write the tile");
                 }
@@ -175,7 +175,7 @@ public class TiledBufferedImage implements GeoImageReader {
         }
     }
 
-    public void preloadLineTile(int y, int height) {
+    public void preloadLineTile(int y, int height,int band) {
         preloadedInterval = new int[]{y, y + height};
         preloadedData = new int[xSize * height];
         int[] tile = new int[tilesize * tilesize];
@@ -187,11 +187,11 @@ public class TiledBufferedImage implements GeoImageReader {
                     continue;
                 }
                 for (int xx = 0; xx < nXTiles; xx++) {
-                    File f = tiles.get(getBand() + "_" + xx + "_" + yy);
+                    File f = tiles.get(band + "_" + xx + "_" + yy);
                     if (f == null) {
-                        int[] data = gir.readTile(xx * tilesize, yy * tilesize, tilesize, tilesize);
-                        writeTileFile(xx, yy, data);
-                        f = tiles.get(getBand() + "_" + xx + "_" + yy);
+                        int[] data = gir.readTile(xx * tilesize, yy * tilesize, tilesize, tilesize,band);
+                        writeTileFile(xx, yy, data,band);
+                        f = tiles.get(band + "_" + xx + "_" + yy);
                     }
 
                     //System.out.println(f.getAbsolutePath());
@@ -261,10 +261,10 @@ public class TiledBufferedImage implements GeoImageReader {
         }
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight, boolean filter) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight, boolean filter,int band) {
         if (height < 257) {
             int[] outData = new int[outWidth * outHeight];
-            int[] data = readTile(x, y, width, height);
+            int[] data = readTile(x, y, width, height,band);
             int decX = Math.round(width / (1f * outWidth));
             int decY = Math.round(height / (1f * outHeight));
             if (data != null) {
@@ -300,7 +300,7 @@ public class TiledBufferedImage implements GeoImageReader {
             for (int i = 0; i < Math.ceil(incy); i++) {
                 int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -316,21 +316,13 @@ public class TiledBufferedImage implements GeoImageReader {
         }
     }
 
-    public void setBand(int band) {
-        gir.setBand(band);
-        preloadedInterval = new int[]{-1, -1};
-    }
-
-    public int getBand() {
-        return gir.getBand();
-    }
 
     public List<double[]> getFrameLatLon() {
         return gir.getFrameLatLon(xSize,ySize);
     }
 
     public String getDisplayName() {
-        return gir.getDisplayName();
+        return gir.getDisplayName(0);
     }
 
     public int getWidth() {
@@ -382,8 +374,8 @@ public class TiledBufferedImage implements GeoImageReader {
     }
 
 
-    public int read(int x, int y) {
-        return readTile(x, y, 1, 1)[0];
+    public int read(int x, int y,int band) {
+        return readTile(x, y, 1, 1,band)[0];
     }
 
     public String getBandName(int band) {
@@ -395,37 +387,9 @@ public class TiledBufferedImage implements GeoImageReader {
         gir = null;
         root.delete();
     }
-/*
-    public HashMap<String, Object> getMetadata() {
-        return gir.getMetadata();
-    }
 
-    public void setMetadata(String key, Object value) {
-        gir.setMetadata(key, value);
-    }
-
-    public Object getMetadata(String key) {
-        return gir.getMetadata(key);
-    }
-
-    public double getImageAzimuth() {
-        return gir.getImageAzimuth();
-    }
-
-    public double getIncidence(int position) {
-        return gir.getIncidence(position);
-    }
-
-    public double getSlantRange(int position) {
-        return gir.getSlantRange(position);
-    }
-*/
-    public void geoCorrect() {
-        //gir.geoCorrect();
-    }
-
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar) {
-        return gir.readAndDecimateTile(x, y, width, height, scalingFactor, filter, progressbar);
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
+        return gir.readAndDecimateTile(x, y, width, height, scalingFactor, filter, progressbar,band);
     }
 
     @Override
@@ -437,17 +401,6 @@ public class TiledBufferedImage implements GeoImageReader {
   		return null;
   	}
     
-    
-    
-    //test main
-    public static void main(String[] args) {
-        GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
-        TiledBufferedImage tbi = new TiledBufferedImage(new File("/home/thoorfr/cache/test/" + gir.getFilesList()[0]), gir);
-        for (int i = 0; i < 8000; i += Constant.TILE_SIZE) {
-            tbi.preloadLineTile(i, Constant.TILE_SIZE);
-        }
-    }
-
 	@Override
 	public List<double[]> getFrameLatLon(int xSize, int ySize) {
 		// TODO Auto-generated method stub
@@ -456,7 +409,7 @@ public class TiledBufferedImage implements GeoImageReader {
 
 	@Override
 	public int[] readAndDecimateTile(int x, int y, int width, int height,
-			int outWidth, int outLength, int xSize, int ySize, boolean filter) {
+			int outWidth, int outLength, int xSize, int ySize, boolean filter,int band) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -470,19 +423,30 @@ public class TiledBufferedImage implements GeoImageReader {
 	public boolean supportAzimuthAmbiguity() {
 		return false;
 	}
-    public int[] readTile(int x, int y, int width, int height,int band) {
-    	int oldBand=getBand();
-    	setBand(band);
-    	int[] vals=readTile(x, y, width, height);
-    	setBand(oldBand);
-    	
-        return vals;
-    }
+   
 
 	@Override
 	public int[] getAmbiguityCorrection(int xPos, int yPos) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	
+	
+ 
+    
+    //test main
+    public static void main(String[] args) {
+        GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
+        TiledBufferedImage tbi = new TiledBufferedImage(new File("/home/thoorfr/cache/test/" + gir.getFilesList()[0]), gir);
+        for (int i = 0; i < 8000; i += Constant.TILE_SIZE) {
+            tbi.preloadLineTile(i, Constant.TILE_SIZE,0);
+        }
+    }
+
+	@Override
+	public String getDisplayName(int band) {
+		return "";
 	}
 
 }

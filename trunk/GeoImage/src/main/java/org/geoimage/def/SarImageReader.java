@@ -32,7 +32,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected List<Gcp> gcps;
     
     protected GeoTransform geotransform;
-    protected int band = 0;
+
     protected boolean containsMultipleImage=false;
     protected Corners originalCorners=null;
     BufferedImage overViewImage;
@@ -43,12 +43,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
      * used for XML
      */
 	public abstract String getImgName();
-    
-    
-	public abstract String getDisplayName(); 
-
+	@Override
+	public abstract String getDisplayName(int band); 
+	@Override
     public abstract int getWidth();
 
+    @Override
     public abstract int getHeight();
 
   
@@ -60,15 +60,16 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     public GeoTransform getGeoTransform() {
         return geotransform;
     }
-
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter) {
+    
+    @Override
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter,int band) {
         if (x + width < 0 || y + height < 0 || x > xSize || y > ySize) {
             return new int[outWidth * outHeight];
         }
 
         if (height < 257) {
             int[] outData = new int[outWidth * outHeight];
-            int[] data = readTile(x, y, width, height);
+            int[] data = readTile(x, y, width, height,band);
             int decX = Math.round(width / (1f * outWidth));
             int decY = Math.round(height / (1f * outHeight));
             if (data != null) {
@@ -104,7 +105,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             for (int i = 0; i < Math.ceil(incy); i++) {
                 int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -121,7 +122,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
         int outWidth = (int) (width * scalingFactor);
         int outHeight = (int) (height * scalingFactor);
         double deltaPixelsX = (double) width / outWidth;
@@ -134,7 +135,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             for (int i = 0; i < outHeight; i++) {
                 for (int j = 0; j < outWidth; j++) {
                     try {
-                        outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1)[0];
+                        outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1,band)[0];
                     } catch (Exception e) {
                     }
                 }
@@ -143,7 +144,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
         // load first tile
         int currentY = 0;
-        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight));
+        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
         if (progressbar != null) {
             progressbar.setMaximum(outHeight / 100);
         // start going through the image one Tile at a time
@@ -158,7 +159,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
                 }
             }
             if (posY > (int) Math.ceil(tileHeight)) {
-                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight));
+                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);
                 posY -= (int) Math.ceil(tileHeight);
                 currentY += (int) Math.ceil(tileHeight);
 
@@ -234,32 +235,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     }
     
     
-    
-/*
-    public void geoCorrect() {
-        String imagepath = this.getFilesList()[0];
-        try {
-            FileReader stream = new FileReader(imagepath + "sumoXML.xml");
-            char[] filestream = new char[500];
-            stream.read(filestream);
-            String filestring = new String(filestream);
-            // look for the sumo xml header
-            if (filestring.contains("<!-- XML document for SUMO purposes -->")) {
-                // look for the offset fields
-                double longitudeshift = 0.0;
-                double latitudeshift = 0.0;
-                longitudeshift = Double.parseDouble(filestring.substring(filestring.indexOf("<longitude>") + 11, filestring.indexOf("</longitude>")));
-                latitudeshift = Double.parseDouble(filestring.substring(filestring.indexOf("<latitude>") + 10, filestring.indexOf("</latitude>")));
-                // translate the image with the file values converted back into pixels
-                double[] originlatlon = getGeoTransform().getGeoFromPixel(0.0, 0.0, "EPSG:4326");
-                double[] pixelshift = getGeoTransform().getPixelFromGeo(originlatlon[0] + latitudeshift, originlatlon[1] + longitudeshift, "EPSG:4326");
-                System.out.println(pixelshift[0]);
-                getGeoTransform().setTransformTranslation((int) pixelshift[0], (int) pixelshift[1]);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(SarImageReader.class.getName()).log(Level.WARNING, "GeoCorrection file not found");
-        }
-    }*/
 
     public int[] getAmbiguityCorrection(int xPos,int yPos) {
 
@@ -442,9 +417,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return GeoImageReaderFactory.cloneReader(this);
     }
 
-	public int getBand() {
-        return this.band;
-    }
 
 	public boolean isContainsMultipleImage() {
 		return containsMultipleImage;
@@ -453,45 +425,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setContainsMultipleImage(boolean containsMultipleImage) {
 		this.containsMultipleImage = containsMultipleImage;
 	}
-	/*
-	private Corners findOriginalCorners(){
-		Corners corners=new Corners();
-		corners.setTopLeft(gcps.get(0));
-		corners.setTopRight(gcps.get(0));
-		corners.setBottomLeft(gcps.get(0));
-		corners.setBottomRight(gcps.get(0));
-		
-		
-		for(Gcp gcp:gcps){
-			double origX=0;
-			if(gcp.getOriginalXpix()!=null)
-				origX=gcp.getOriginalXpix();
-			else
-				origX=gcp.getXpix();
-			
-			
-			//top left
-			if((origX<corners.getTopLeft().getOriginalXpix()&&gcp.getYpix()<corners.getTopLeft().getYpix()))
-				corners.setTopLeft(gcp);
-			//top right
-			if((origX>=corners.getTopRight().getOriginalXpix()&&gcp.getYpix()<=corners.getTopRight().getYpix()))
-				corners.setTopRight(gcp);
-			//bottom left
-			if((origX<=corners.getBottomLeft().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomLeft().getYpix()))
-				corners.setBottomLeft(gcp);
-			//bottom right
-			if((origX>=corners.getBottomRight().getOriginalXpix()&&gcp.getYpix()>=corners.getBottomRight().getYpix()))
-				corners.setBottomRight(gcp);
-		}
-		return corners;
-	}*/
 	
-	/*public Corners getOriginalCorners(){
-		originalCorners=null;
-		if(originalCorners==null)
-			originalCorners=findOriginalCorners();
-		return originalCorners;
-	}*/
 
 	@Override
 	public abstract File getOverviewFile();
@@ -504,21 +438,5 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setOverViewImage(BufferedImage overViewImage) {
 		this.overViewImage = overViewImage;
 	}
-	
-    public int[] readTile(int x, int y, int width, int height,int band) {
-    	int oldBand=getBand();
-    	setBand(band);
-    	int[] vals=readTile(x, y, width, height);
-    	setBand(oldBand);
-    	
-        return vals;
-    }
-    
-    
-    
-    
-    
-    
-    
 
 }

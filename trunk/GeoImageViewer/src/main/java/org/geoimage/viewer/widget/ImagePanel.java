@@ -7,10 +7,10 @@ package org.geoimage.viewer.widget;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.geoimage.viewer.core.layers.CaretLayer;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.layers.CaretLayer;
 import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.PositionLayer;
 import org.geoimage.viewer.core.layers.ThumbnailsLayer;
@@ -39,7 +39,7 @@ public class ImagePanel extends javax.swing.JPanel {
 
      private void setBands() {
         String bands = "";
-        int bs = layer.getBand();
+        int bs = layer.getActiveBand();
         //for (int i = 0; i < bs.length; i++) {
             bands += bs + " ";
         //}
@@ -54,7 +54,7 @@ public class ImagePanel extends javax.swing.JPanel {
         for(int i=0;i<bs.length;i++){
             bs[i]=Integer.parseInt(bands[i]);
         }
-        layer.setBand(bs[0]);
+        layer.setActiveBand(bs[0]);
         jSlider1.setValue((int) (10 * layer.getContrast()));
         jSlider2.setValue((int) layer.getBrightness());
     }
@@ -287,7 +287,10 @@ public class ImagePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    	Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),jTextField2.getText(), layer.getImageReader(), (String)jComboBox1.getSelectedItem(), new GeometricLayer((String)jComboBox1.getSelectedItem())));
+    	Platform.getLayerManager().addLayer(
+    			new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),
+    					jTextField2.getText(),(String)jComboBox1.getSelectedItem(), 
+    			new GeometricLayer((String)jComboBox1.getSelectedItem())));
         Platform.refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 

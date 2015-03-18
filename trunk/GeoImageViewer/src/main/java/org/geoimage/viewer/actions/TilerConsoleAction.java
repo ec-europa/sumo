@@ -37,7 +37,7 @@ public class TilerConsoleAction extends AbstractAction {
                     public void run() {
                         GeoImageReader gir =GeoImageReaderFactory.createReaderForName(((IImageLayer)l).getImageReader().getFilesList()[0]).get(0);
                         ImageTiler it = new ImageTiler(gir);
-                        it.generateTiles(((IImageLayer)l).getBand());
+                        it.generateTiles(((IImageLayer)l).getActiveBand());
                         gir.dispose();
                     }
                 }).start();

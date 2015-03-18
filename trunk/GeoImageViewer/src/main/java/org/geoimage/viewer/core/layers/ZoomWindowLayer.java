@@ -44,7 +44,7 @@ public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
         init(parent);
         this.gir=parent.getImageReader();
         //this.gir = GeoImageReaderFactory.create(parent.getImageReader().getFilesList()[0]).get(0);
-        this.band = parent.getBand();
+        this.band = parent.getActiveBand();
         //for (int b : parent.getBand()) {
         this.name += gir.getBandName(band) + " ";
         //}
@@ -116,8 +116,7 @@ public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
         // Put the pixels on the raster.
         //if (bands.length == 1) {
            // int band = band;
-            gir.setBand(band);
-            nat = gir.readTile(x, y, width, height);
+            nat = gir.readTile(x, y, width, height,band);
             raster.setPixels(0, 0, width, height, nat);
 
        /* } else {
