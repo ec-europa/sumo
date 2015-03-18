@@ -25,7 +25,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
  
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
 
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
@@ -34,9 +34,9 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
             return tile;
         }
         if (rect.y != preloadedInterval[0] | rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
-        int yOffset = image.xSize;
+        int yOffset =  getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -51,12 +51,12 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     }
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {            
-            int img = image.reader.read(0, t).getRaster().getSample(x, y, 1);
-            int real = image.reader.read(0, t).getRaster().getSample(x, y, 0);
+            int img =  getImage(band).reader.read(0, t).getRaster().getSample(x, y, 1);
+            int real =  getImage(band).reader.read(0, t).getRaster().getSample(x, y, 0);
             return (int) Math.sqrt(real * real + img * img);
 
         } catch (IOException ex) {
@@ -71,18 +71,18 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     }
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, image.xSize, length);
+        Rectangle rect = new Rectangle(0, y,  getImage(band).xSize, length);
         TIFFImageReadParam tirp = new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
        
         try {
-            preloadedDataReal = image.reader.read(0, tirp).getRaster().getSamples(0, 0, image.xSize, length, 0, (int[]) null);
-            preloadedDataImg = image.reader.read(0, tirp).getRaster().getSamples(0, 0, image.xSize, length, 1, (int[]) null);
+            preloadedDataReal =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
+            preloadedDataImg =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }

@@ -126,8 +126,8 @@ public class CosmoSkymedImage extends SarImageReader {
             starts = imagedata.getStartDims();
 
             
-            setWidth(xSize);
-            setHeight(ySize);
+            setMetaWidth(xSize);
+            setMetaHeight(ySize);
             
             bounds = new Rectangle(0, 0, xSize, ySize);
             
@@ -263,7 +263,7 @@ public class CosmoSkymedImage extends SarImageReader {
         h5file = new H5File(imageFile.getAbsolutePath(), H5File.READ);
     }
 
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         int[] tile = new int[height * width];
@@ -271,7 +271,7 @@ public class CosmoSkymedImage extends SarImageReader {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
 
         if (complex) {
@@ -315,7 +315,7 @@ public class CosmoSkymedImage extends SarImageReader {
     }
    
 
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         if (x < 0 || y < 0 || x > xSize || y > ySize) {
             return -1;
         }
@@ -338,11 +338,8 @@ public class CosmoSkymedImage extends SarImageReader {
         return getPolarization();
     }
 
-    public void setBand(int band) {
-    	this.band=band;
-    }
 
-    public void preloadLineTile(int y, int height) {
+    public void preloadLineTile(int y, int height,int band) {
         if (y < 0) {
             return;
         }
@@ -400,11 +397,11 @@ public class CosmoSkymedImage extends SarImageReader {
 	public String getInternalImage() {
 		return internalImage;
 	}
-
+	
+	
 	@Override
 	public GeoImageReader clone(){
 		CosmoSkymedImage geo=new CosmoSkymedImage(this.internalImage, group);
-		geo.setBand(getBand());
 		geo.imagedata=imagedata;
 		//geo.preloadedData=preloadedData;
 		geo.bounds=bounds;
@@ -459,7 +456,7 @@ public class CosmoSkymedImage extends SarImageReader {
 
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		
 		return displayName;
 	}

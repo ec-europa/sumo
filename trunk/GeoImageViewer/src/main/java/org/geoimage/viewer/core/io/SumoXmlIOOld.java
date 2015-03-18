@@ -16,6 +16,7 @@ import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.def.SarMetadata;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -134,7 +135,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         mode.setText(gir.getMode());
         image.addContent(mode);
         Element polarisation = new Element("polarisation");
-        polarisation.setText("" + gir.getBandName(gir.getBand()));
+        polarisation.setText("" + gir.getBandName(0));
         image.addContent(polarisation);
         Element time = new Element("timestampStart");
         time.setText(gir.getTimeStampStart());

@@ -80,6 +80,7 @@ public class KDistributionEstimation {
 	private BlackBorderAnalysis borderAnalysis;
 	private int rowTile;
 	private int colTile;
+	private int band=0;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
 	
@@ -173,7 +174,7 @@ public class KDistributionEstimation {
 	 */
 	public void setImageData(SarImageReader gir, int sizeX, int sizeY,
 			int numTileX, int numTileY, int sizeTileX, int sizeTileY,
-			int row,int col,BlackBorderAnalysis blackBorderAnalysis) {
+			int row,int col,int band,BlackBorderAnalysis blackBorderAnalysis) {
 		this.gir = gir;
 		nTileX = numTileX;
 		nTileY = numTileY;
@@ -185,6 +186,7 @@ public class KDistributionEstimation {
 		this.borderAnalysis=blackBorderAnalysis;
 		this.rowTile=row;
 		this.colTile=col;
+		this.band=band;
 	}
 
 	/**
@@ -239,7 +241,7 @@ public class KDistributionEstimation {
 
 				int iniX = startTile[0] + i * sizeTileX;
 				int iniY = startTile[1] + j * sizeTileY;
-				int[] data = gir.readTile(iniX, iniY, sizeTileX, sizeTileY);
+				int[] data = gir.readTile(iniX, iniY, sizeTileX, sizeTileY,band);
 				double[] result = computeStat(256 * 256, i, j, mask, data);
 
 				for (int k = 0; k < 5; k++) {

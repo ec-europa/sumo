@@ -69,7 +69,6 @@ public class TerrasarXImage extends SarImageReader {
     protected double zposition = 0;
     protected int[] stripBounds = {0, 0, 0};
     protected Map<String, TIFF> tiffImages;
-    protected TIFF image;
     protected String overview;
     
     protected Vector<String> bands = new Vector<String>();
@@ -261,7 +260,7 @@ public class TerrasarXImage extends SarImageReader {
                         Gcp gcp = new Gcp();
 
                         counter++;
-                        if (pixel >= 0 && pixel < image.xSize && line >= 0 && line < image.ySize) {
+                        if (pixel >= 0 && pixel < getImage(0).xSize && line >= 0 && line < getImage(0).ySize) {
                             gcp.setXpix(pixel);
                         	gcp.setOriginalXpix(new Double(pixel));
                             gcp.setYpix(new Double(line));
@@ -353,7 +352,7 @@ public class TerrasarXImage extends SarImageReader {
 	        if(tiffImages==null) return false;
        
             //System.out.println(reader.getNumImages(false));
-            image = tiffImages.values().iterator().next();
+            TIFF image = tiffImages.values().iterator().next();
             this.displayName= this.imgName;//image.getImageFile().getName();
             
             image.xSize = getWidth();
@@ -465,7 +464,7 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         int[] tile = new int[height * width];
@@ -474,10 +473,10 @@ public class TerrasarXImage extends SarImageReader {
         }
 
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
 
-        int yOffset = image.xSize;
+        int yOffset =  getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -491,11 +490,11 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
-            return image.reader.read(0, t).getRGB(x, y);
+            return  getImage(band).reader.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
             Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -507,23 +506,23 @@ public class TerrasarXImage extends SarImageReader {
         return bands.get(band);
     }
 
-    @Override
+  /*  @Override
     public void setBand(int band) {
         this.band = band;
         this.image=tiffImages.get(bands.get(band));
-    }
+    }*/
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, image.xSize, length);
+        Rectangle rect = new Rectangle(0, y,  getImage(band).xSize, length);
         TIFFImageReadParam tirp = new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         try {
-            preloadedData = image.reader.read(0, tirp).getRaster().getSamples(0, 0, image.xSize, length, 0, (int[]) null);
+            preloadedData =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
             Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -561,9 +560,9 @@ public class TerrasarXImage extends SarImageReader {
 
             setProduct(atts.getChild("productVariantInfo").getChild("productType").getText());
             setOrbitDirection(atts.getChild("missionInfo").getChild("orbitDirection").getText());
-            setHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
+            setMetaHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String w=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
-            setWidth(Integer.parseInt(w) );
+            setMetaWidth(Integer.parseInt(w) );
             setRangeSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
             setAzimuthSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
 
@@ -691,7 +690,7 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getDisplayName(int band) {
         return displayName;
     }
 
@@ -701,12 +700,12 @@ public class TerrasarXImage extends SarImageReader {
 
 	@Override
 	public int getWidth() {
-		return image.xSize;
+		return  getImage(0).xSize;
 	}
 
 	@Override
 	public int getHeight() {
-		return image.ySize;
+		return getImage(0).ySize;
 	}
 
 	@Override
@@ -723,4 +722,9 @@ public class TerrasarXImage extends SarImageReader {
 	public String getImgName() {
 		return imgName;
 	}
+	
+	public TIFF getImage(int band){
+		return tiffImages.get(getBandName(band));
+	}
+
 }

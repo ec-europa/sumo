@@ -59,7 +59,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         this.scale=gir.getWidth()/(1f*gir.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
-        Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(this,"analysis", this.getImageReader(), this.glayer.getGeometryType(), this.glayer));
+        Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
         setName("Thumbnails Image");
         super.init(parent);
     }

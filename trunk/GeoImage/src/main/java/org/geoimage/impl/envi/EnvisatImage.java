@@ -145,9 +145,9 @@ public class EnvisatImage extends SarImageReader {
             displayName = getFilesList()[0]; //String) getMetadata("PRODUCT");
             extractGcps(fss);
             getWidth();
-            setWidth(xSize);
+            setMetaWidth(xSize);
             getHeight();
-            setHeight(ySize);
+            setMetaHeight(ySize);
             getTimestamp();
             bounds = new Rectangle(0, 0, xSize, ySize);
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
@@ -310,7 +310,6 @@ public class EnvisatImage extends SarImageReader {
             for (int i = 0; i < gcps2.length; i++) {
                 gcps.add(gcps2[i]);
             }
-            setBand(0);
 
             // take the sample number, slant range time and incidence angle for
             // the middle azimuth line : the 5th
@@ -332,7 +331,7 @@ public class EnvisatImage extends SarImageReader {
 
     // </editor-fold>
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y, int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[2];
@@ -355,7 +354,7 @@ public class EnvisatImage extends SarImageReader {
     }
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length, int band) {
         if (y < 0) {
             return;
         }
@@ -379,7 +378,7 @@ public class EnvisatImage extends SarImageReader {
         }
     }
 
-    @Override
+ /*   @Override
     public void setBand(int band) {
         if (!(band < getNBand())) {
             return;
@@ -390,25 +389,25 @@ public class EnvisatImage extends SarImageReader {
         }
         preloadedInterval = new int[]{0, 0};
         this.band = band;
-    }
+    }*/
 
     public int getXOffset() {
         return xOffset;
     }
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
-        return readTile(x, y, width, height, new int[width * height]);
+    public int[] readTile(int x, int y, int width, int height, int band) {
+        return readTile(x, y, width, height, new int[width * height], band);
     }
 
-    public int[] readTile(int x, int y, int width, int height, int[] tile) {
+    public int[] readTile(int x, int y, int width, int height, int[] tile, int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         if (rect.isEmpty()) {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
         int yOffset = xOffset + 2 * xSize;
         int xinit = rect.x - x;
@@ -423,11 +422,11 @@ public class EnvisatImage extends SarImageReader {
     }
 
     @Override
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter, int band) {
         if (height < 257) {
             //System.out.printf("readAndDecimateTile(%d, %d, %d, %d, %d, %d)", x, y, width, height, outWidth, outHeight);
             int[] outData = new int[outWidth * outHeight];
-            int[] data = readTile(x, y, width, height);
+            int[] data = readTile(x, y, width, height,band);
             int decX = Math.round(width / (1f * outWidth));
             int decY = Math.round(height / (1f * outHeight));
             int index = 0;
@@ -461,7 +460,8 @@ public class EnvisatImage extends SarImageReader {
             for (int i = 0; i < Math.ceil(incy); i++) {
                 int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), xSize, ySize,  filter);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, 
+                    		tileHeight, outWidth, Math.round(tileHeight / decY), xSize, ySize,  filter,band);
                     int min = Math.min(temp.length, outData.length - index);
                     for (int j = 0; j < min; j++) {
                         outData[index++] = temp[j];
@@ -644,7 +644,7 @@ public class EnvisatImage extends SarImageReader {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		return displayName;
 	}
 	public double getPRF(int x,int y){

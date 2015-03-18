@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.utils.Corners;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -94,8 +93,8 @@ public class GeotiffImage extends SarImageReader {
             System.out.println(reader.getNumImages(false));
             xSize = reader.getWidth(0);
             ySize = reader.getHeight(0);
-            setHeight(ySize);
-            setWidth(xSize);
+            setMetaHeight(ySize);
+            setMetaWidth(xSize);
             String epsg = null;
             if (gcps != null) {
                 epsg = "EPSG:4326";
@@ -170,80 +169,20 @@ public class GeotiffImage extends SarImageReader {
 
 
     }
-    
-    
-    /** TODO is used??
-    private void setFile(File imageFile) {
-        files = new String[1];
-        files[0] = imageFile.getAbsolutePath();
-        name = files[0];
-        try {
-            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("tiff");
-            reader=null;
-            while(readers.hasNext()){
-            	Object r=readers.next();
-            	if(r instanceof TIFFImageReader){
-            		reader = (TIFFImageReader) r;
-            		break;
-            	}
-            }
-            if(reader==null)
-            	throw new IOException("No Tiff reader avalaible");
-            ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
-            reader.setInput(iis);
-
-            td = TIFFDirectory.createFromMetadata(reader.getImageMetadata(0));
-
-            //save the raster for further access during read(x,y)
-            ImageReadParam param=new ImageReadParam();
-            tiffRaster = reader.readRaster(0, param);//(0).getData();
-
-
-            String mm = imageFile.getAbsolutePath();
-            tfw = new File(mm.substring(0, mm.lastIndexOf(".")) + ".tfw");
-            if (!tfw.exists()) {
-                tfw = new File(mm.substring(0, mm.lastIndexOf(File.separator)) + File.separator + "metadata.dim");
-                if (!tfw.exists()) {
-                    tfw = new File(mm.substring(0, mm.lastIndexOf(File.separator)) + File.separator + "METADATA.DIM");
-                } else {
-                    parseDIM();
-                    return;
-                }
-                if (!tfw.exists()) {
-                    tfw = null;
-                } else {
-                    parseDIM();
-                    return;
-                }
-            } else {
-                parseTFW();
-            }
-            File pts = new File(mm.substring(0, mm.lastIndexOf(".")) + ".pts");
-            //System.out.println(tfw.getAbsolutePath());
-            if (!pts.exists()) {
-                pts = null;
-            } else {
-                parsePTS(pts);
-            }
-        } catch (IOException ex) {
-            //dispose();
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, "Not GeoTiff Format\n", ex);
-        }
-    }
-**/
+  
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
-        return readTile(x, y, width, height, new int[width * height]);
+    public int[] readTile(int x, int y, int width, int height,int band) {
+        return readTile(x, y, width, height, new int[width * height],band);
     }
 
-    public int[] readTile(int x, int y, int width, int height, int[] tile) {
+    public int[] readTile(int x, int y, int width, int height, int[] tile,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         if (rect.isEmpty()) {
             return tile;
         }
         if (rect.y != preloadedInterval[0] | rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height, band);
         }
         int[] data = new int[height * width];
         int yOffset = xSize;
@@ -259,7 +198,7 @@ public class GeotiffImage extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         int[] pix = new int[1];
@@ -271,15 +210,15 @@ public class GeotiffImage extends SarImageReader {
     public String getBandName(int band) {
         return "" + band;
     }
-
+/*
     @Override
     public void setBand(int band) {
         this.band = band;
         preloadedInterval = new int[]{0, 0};
-    }
+    }*/
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
@@ -494,8 +433,9 @@ public class GeotiffImage extends SarImageReader {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		return displayName;
 	}
+
 }
 

@@ -25,7 +25,6 @@ public class ThumbnailsImageReader extends SarImageReader {
 	protected int ySize = -1;
 	
     private ThumbnailsManager tm;
-    private GcpsGeoTransform transform;
     private BufferedImage overview=null;
     private int[] size=null;
     private float[] ratio=null;
@@ -101,17 +100,17 @@ public class ThumbnailsImageReader extends SarImageReader {
 
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         return null;
     }
 
     @Override
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outLength, int xSize, int ySize,boolean filter) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outLength, int xSize, int ySize,boolean filter,int band) {
         return null;
     }
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         return overview.getRaster().getSample((int)(x*ratio[0]), (int)(y*ratio[1]), 0);
     }
 
@@ -121,11 +120,7 @@ public class ThumbnailsImageReader extends SarImageReader {
     }
 
     @Override
-    public void setBand(int band) {
-    }
-
-    @Override
-    public void preloadLineTile(int y, int height) {
+    public void preloadLineTile(int y, int height,int band) {
     }
 
     @Override
@@ -176,7 +171,7 @@ public class ThumbnailsImageReader extends SarImageReader {
 		return displayName;
 	}
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		return displayName;
 	}
 }

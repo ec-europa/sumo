@@ -10,7 +10,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -75,10 +74,6 @@ public class Radarsat1Image extends SarImageReader {
     }
     
 
-    @Override
-    public int getNBand() {
-        return 1;
-    }
 
     /**
      *  Gets the access rights:<br>&quot;r&quot; = read only<br>&quot;rw&quot; = read/write
@@ -121,14 +116,13 @@ public class Radarsat1Image extends SarImageReader {
             }
             xSize = getIntegerValue(dat, 251, 5);
             ySize = getIntegerValue(dat, 239, 5);
-            setWidth(xSize);
-            setHeight(ySize);
+            setMetaWidth(xSize);
+            setMetaHeight(ySize);
             if (!extractGcps()) {
                 return false;
             }
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
             bounds = new Rectangle(0, 0, xSize, ySize);
-            setBand(1);
             return extractMetadata();
         } catch (IOException ex) {
             dispose();
@@ -369,7 +363,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[2];
@@ -405,13 +399,9 @@ public class Radarsat1Image extends SarImageReader {
         return "H/H";
     }
 
-    @Override
-    public void setBand(int band) {
-        //do nothing since there is one single band
-    }
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         preloadedInterval = new int[]{y, y + length};
         if (numberOfBytes == 2) {
             int tileOffset = offsetImage + (y * (xSize * 2 + xOffset));
@@ -436,7 +426,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         int[] tile = new int[height * width];
@@ -444,7 +434,7 @@ public class Radarsat1Image extends SarImageReader {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height, band);
         }
         if (numberOfBytes == 2) {
             int yOffset = xOffset + 2 * xSize;
@@ -516,10 +506,10 @@ public class Radarsat1Image extends SarImageReader {
      */
 
     @Override
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize, int ySize, boolean filter) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize, int ySize, boolean filter,int band) {
         if (height < 257) {
             int[] outData = new int[outWidth * outHeight];
-            int[] data = readTile(x, y, width, height);
+            int[] data = readTile(x, y, width, height, band);
             int decX = Math.round(width / (1f * outWidth));
             int decY = Math.round(height / (1f * outHeight));
             if (data != null) {
@@ -555,7 +545,7 @@ public class Radarsat1Image extends SarImageReader {
             for (int i = 0; i < Math.ceil(incy); i++) {
                 int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -803,8 +793,16 @@ public class Radarsat1Image extends SarImageReader {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName(int band) {
 		return displayName;
 	}
+
+
+	@Override
+	public int getNBand() {
+		return 1;
+	}
+
+	
 }
 

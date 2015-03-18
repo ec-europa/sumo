@@ -23,7 +23,7 @@ public class EnvisatImage_SLC extends EnvisatImage {
     
 
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[4];
@@ -48,7 +48,7 @@ public class EnvisatImage_SLC extends EnvisatImage {
     }
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
@@ -65,14 +65,14 @@ public class EnvisatImage_SLC extends EnvisatImage {
 
     
     @Override
-    public int[] readTile(int x, int y, int width, int height, int[] tile) {
+    public int[] readTile(int x, int y, int width, int height, int[] tile,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         if (rect.isEmpty()) {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
         int yOffset = xOffset + 4 * xSize;
         int xinit = rect.x - x;

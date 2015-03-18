@@ -81,7 +81,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
 
                 public void run() {
                    // il.addLayer(new SimpleEditVectorLayer(layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
-                    Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), il.getImageReader(), layer.getGeometryType(), layer));
+                    Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer));
                     done = true;
                 }
             }).start();

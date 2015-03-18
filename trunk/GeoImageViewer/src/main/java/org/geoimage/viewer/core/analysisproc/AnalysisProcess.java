@@ -38,6 +38,7 @@ import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 
@@ -56,7 +57,7 @@ public  class AnalysisProcess implements Runnable {
 		private String[] thresholds;
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
-		private boolean useBlackBorderAnalysis;
+		private BlackBorderAnalysis blackBorderAnalysis=null;
 		private GeoImageReader gir;
 		private boolean stop=false;
 		
@@ -79,14 +80,11 @@ public  class AnalysisProcess implements Runnable {
 			this.resultLayers = resultLayers;
 		}
 
-		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,boolean useBlackBorderAnalysis) {
+		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,BlackBorderAnalysis blackBorderAnalysis) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 			this.bufferedMask=bufferedMask;
-			/*if(bufferedMask==null){
-				this.bufferedMask=new IMask[1];
-			}*/
-			this.useBlackBorderAnalysis=useBlackBorderAnalysis;
+			this.blackBorderAnalysis=blackBorderAnalysis;
 			this.thresholds=thresholds;
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
@@ -99,15 +97,7 @@ public  class AnalysisProcess implements Runnable {
 			notifyStartProcessListener();
 			
 			//run the black border analysis 
-             BlackBorderAnalysis blackBorderAnalysis=null;
-             if(useBlackBorderAnalysis){
-            	 MaskVectorLayer mv=null;
-            	 if(bufferedMask!=null&&bufferedMask.length>0)
-            		 mv=(MaskVectorLayer)bufferedMask[0];
-            	 if(mv!=null)
-            		 blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
-            	 else 
-            		 blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+             if(blackBorderAnalysis!=null){
             	 blackBorderAnalysis.analyse(5);
              }	 
              
@@ -125,8 +115,6 @@ public  class AnalysisProcess implements Runnable {
              for (int band = 0; band < numberofbands&&!stop; band++) {
             	 
             	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
-            	 
-                 gir.setBand(band);
                  bands[band] = band;
                  
                  String timeStampStart=((SarImageReader)gir).getTimeStampStart();
@@ -134,7 +122,7 @@ public  class AnalysisProcess implements Runnable {
                  
                  notifyAnalysisBand( "VDS: analyzing band "+gir.getBandName(band));
                  
-                 analysis.run(kdist,blackBorderAnalysis);
+                 analysis.run(kdist,blackBorderAnalysis,band);
                  DetectedPixels banddetectedpixels = analysis.getPixels();
                  
                  if (pixels == null) {
@@ -187,7 +175,7 @@ public  class AnalysisProcess implements Runnable {
                      
                      
                      ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName, 
-                    		 				(SarImageReader) gir, "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
+                    		 				"point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
                     		 				thresholds,ENL,buffer,name);
                  
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
@@ -244,8 +232,9 @@ public  class AnalysisProcess implements Runnable {
                      } catch (EnumConstantNotPresentException e) {
                          vdsanalysis.setDisplaysymbol(MaskVectorLayer.symbol.square);
                      }
-
-                     Platform.getLayerManager().addLayer(vdsanalysis);
+                     //if(!Platform.isBatchMode())
+                    	 //Platform.getLayerManager().addLayer(vdsanalysis);
+                     notifyLayerReady(vdsanalysis); 
                      resultLayers.add(vdsanalysis);
                  }
              }
@@ -291,7 +280,7 @@ public  class AnalysisProcess implements Runnable {
                  double azimuth=((SarImageReader)gir).getAzimuthSpacing();
                  
                  ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
-                		 																	gir, "point", createGeometricLayer(t,azimuth, pixels),
+                		 																	"point", createGeometricLayer(t,azimuth, pixels),
                 		 																	thresholds,ENL,buffer,name);
                  boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
                  if (!agglomerationMethodology.startsWith("d")) {
@@ -325,8 +314,10 @@ public  class AnalysisProcess implements Runnable {
                  } catch (EnumConstantNotPresentException e) {
                      vdsanalysisLayer.setDisplaysymbol(MaskVectorLayer.symbol.square);
                  }
-                 
-                 Platform.getLayerManager().addLayer(vdsanalysisLayer);
+
+                 //if(!Platform.isBatchMode())
+                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
+                 notifyLayerReady(vdsanalysisLayer);
                  resultLayers.add(vdsanalysisLayer);
              }
              stop();
@@ -413,6 +404,12 @@ public  class AnalysisProcess implements Runnable {
 		public void notifyAgglomerating(String message){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.agglomerating(message);
+			}
+		}
+		
+		public void notifyLayerReady(ILayer layer){
+			for(VDSAnalysisProcessListener listener:listeners){
+				listener.layerReady(layer);
 			}
 		}
 		

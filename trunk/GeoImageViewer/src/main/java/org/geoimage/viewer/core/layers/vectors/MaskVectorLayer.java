@@ -28,6 +28,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
+import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -66,8 +67,6 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     public final static String LINESTRING = GeometricLayer.LINESTRING;
     public final static String MIXED = GeometricLayer.MIXED;
     protected boolean active = true;
-    protected GeoImageReader reader;
-    protected GeoTransform geotransform;
     protected GeometricLayer glayer;
     
    	
@@ -90,11 +89,9 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     
     
     
-    public MaskVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer) {
+    public MaskVectorLayer(ILayer parent,String layername,String type, GeometricLayer layer) {
     	super.parent=parent;
         this.name = layername;
-        this.reader = reader;
-        this.geotransform=reader.getGeoTransform();
         this.type = type;
         if (layer == null) {
             return;
@@ -584,6 +581,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     }
 
     public void save(String file, int formattype, String projection) {
+    	GeoImageReader reader=Platform.getCurrentImageLayer().getImageReader();
         if (formattype==ISave.OPT_EXPORT_CSV) {
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");

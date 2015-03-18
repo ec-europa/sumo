@@ -19,7 +19,7 @@ public interface IImageLayer extends ILayer{
     public void setBrightness(float value);
     public void setMaximumCut(float value);
     public float getMaximumCut();
-    public void setBand(int val);
+    public void setActiveBand(int val);
     
     /**
      * return the number of bands for the images
@@ -31,7 +31,8 @@ public interface IImageLayer extends ILayer{
      * return the array with the ids of the bands
      * @return
      */
-    public int getBand();
+    public int getActiveBand();
+
     public GeoImageReader getImageReader();
     
     //debug

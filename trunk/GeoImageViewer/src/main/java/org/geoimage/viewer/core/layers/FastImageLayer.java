@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,7 +60,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		
 		
         public Object[] call() {
-        	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
+        	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
         	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
             final File f = c.newFile(ff.toString());
             if (f == null) {
@@ -170,7 +169,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         if (activeGir.getDescription() != null&&!activeGir.getDescription().equals("")) {
             return activeGir.getDescription();
         } else {
-            return activeGir.getDisplayName();
+            return activeGir.getDisplayName(activeBand);
         }
     }
     
@@ -226,7 +225,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
         
         
-	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName());
+	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
 	        
 	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 	        
@@ -371,10 +370,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     }
 
     private void setInitialContrast() {
-        activeGir.setBand(activeBand);
-
         // very rough calculation of a possible suitable contrast value
-        int[] data = activeGir.readTile(activeGir.getWidth() / 2 - 100, activeGir.getHeight() / 2 - 100, 200, 200);
+        int[] data = activeGir.readTile(activeGir.getWidth() / 2 - 100, activeGir.getHeight() / 2 - 100, 200, 200,activeBand);
         float average = 0;
         for (int i = 0; i < data.length; i++) {
             average = average + data[i];
@@ -396,7 +393,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
     	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
-    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName());
+    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
             try {
             	BufferedImage temp =null;
@@ -476,13 +473,11 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         WritableRaster raster = bufferedImage.getRaster();
 
         // Put the pixels on the raster.
-        int band = activeBand;
-        gir.setBand(band);
         nat = gir.readAndDecimateTile(x, y, 
         		(int) (width * zoom), 
         		(int) (height * zoom), 
         		width, height,((SarImageReader)gir).getWidth(),
-        		((SarImageReader)gir).getHeight() ,true);
+        		((SarImageReader)gir).getHeight() ,true,activeBand);
         
         raster.setPixels(0, 0, width, height, nat);
         return bufferedImage;
@@ -561,7 +556,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         return brightness;
     }
 
-    public void setBand(int val) {
+    public void setActiveBand(int val) {
         if (futures.size() > 0) {
             return;
         }
@@ -569,7 +564,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         if (contrast.get(createBandsString(activeBand)) == null) {
             setInitialContrast();
         } else {
-        	getImageReader().setBand(val);
             rescale = new RescaleOp(contrast.get(createBandsString(activeBand)), brightness, null);
         }
     }
@@ -578,7 +572,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         return activeGir.getNBand();
     }
 
-    public int getBand() {
+    public int getActiveBand() {
         return activeBand;
     }
 
@@ -641,8 +635,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     
     
     public void setName(GeoImageReader gir){
-    	if(gir.getDisplayName()!=null&&!gir.getDisplayName().equals(""))
-        	setName(gir.getDisplayName());
+    	if(gir.getDisplayName(activeBand)!=null&&!gir.getDisplayName(activeBand).equals(""))
+        	setName(gir.getDisplayName(activeBand));
         else{
         	String temp = gir.getFilesList()[0].replace("\\", "/");
         	String name=temp.substring(temp.lastIndexOf("/") + 1);
