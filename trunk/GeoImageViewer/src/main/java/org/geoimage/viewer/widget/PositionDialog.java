@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.PositionLayer;
 import org.geotools.referencing.CRS;
 
@@ -78,7 +79,8 @@ public class PositionDialog extends javax.swing.JDialog{
         double[] geo= gt.getGeoFromPixel(imagePosition.x,imagePosition.y, "EPSG:"+epsg);
         this.jLabel5.setText(""+geo[0]);
         this.jLabel6.setText(""+geo[1]);
-        this.jLabel8.setText(""+((IImageLayer)layer.getParent()).getImageReader().read(imagePosition.x, imagePosition.y));
+        FastImageLayer parent=(FastImageLayer)layer.getParent();
+        this.jLabel8.setText(""+parent.getImageReader().read(imagePosition.x, imagePosition.y,parent.getActiveBand()));
     }
     
     public void setDistance(final String distance){

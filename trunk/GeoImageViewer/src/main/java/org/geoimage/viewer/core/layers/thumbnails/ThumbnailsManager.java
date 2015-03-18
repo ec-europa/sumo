@@ -87,7 +87,7 @@ public class ThumbnailsManager {
         return null;
     }
 
-    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir, IProgress ip) {
+    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir, IProgress ip,int band) {
         try {
             if (ip != null) {
                 ip.setCurrent(0);
@@ -102,7 +102,8 @@ public class ThumbnailsManager {
                     }
                     if (!new File(path, glayer.getAttributes(geom).get(idColumnName).toString() + ".png").exists()) {
                         Coordinate p = geom.getCoordinate();
-                        BufferedImage image = ImageTiler.createImage(gir.readTile((int) p.x - (Constant.OVERVIEW_SIZE/2), (int) p.y - (Constant.OVERVIEW_SIZE/2), Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE), Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE, gir);
+                        BufferedImage image = ImageTiler.createImage(gir.readTile((int) p.x - (Constant.OVERVIEW_SIZE/2), (int) p.y - (Constant.OVERVIEW_SIZE/2), 
+                        		Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE,band), Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE, gir);
                         ImageIO.write(image, "png", new File(path, glayer.getAttributes(geom).get(idColumnName).toString() + ".png"));
                     }
                 } catch (IOException ex) {
@@ -121,7 +122,8 @@ public class ThumbnailsManager {
                     scale=gir.getWidth()/1024.;
                 }
                 BufferedImage overview = new BufferedImage((int)(gir.getWidth()*(1.0/scale)), (int)(gir.getHeight()*(1.0/scale)), gir.getType(true));
-                overview.getRaster().setSamples(0, 0, overview.getWidth(), overview.getHeight(), 0, gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(),1/scale, false, null));
+                overview.getRaster().setSamples(0, 0, overview.getWidth(), overview.getHeight(), 0, 
+                		gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(),1/scale, false, null,band));
                 ImageIO.write(overview, "png", new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png"));
             }
         } catch (IOException ex) {

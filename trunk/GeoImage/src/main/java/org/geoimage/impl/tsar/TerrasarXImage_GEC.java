@@ -169,7 +169,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
 // #[regen=yes,id=DCE.091BEB3C-7DA3-1625-A9FA-3CED510139EC]
 // </editor-fold>
     @Override
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
@@ -206,9 +206,9 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
 
             setProduct(atts.getChild("productVariantInfo").getChild("productType").getText());
             setOrbitDirection(atts.getChild("missionInfo").getChild("orbitDirection").getText());
-            setHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
+            setMetaHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String xSize=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
-            setWidth(Integer.parseInt(xSize) );
+            setMetaWidth(Integer.parseInt(xSize) );
             setRangeSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
             setAzimuthSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
 

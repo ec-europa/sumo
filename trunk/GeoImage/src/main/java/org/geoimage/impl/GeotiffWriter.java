@@ -35,7 +35,7 @@ import org.geoimage.utils.IProgress;
  */
 public class GeotiffWriter {
 
-    public static void create(final GeoImageReader gir, String filepath) throws FileNotFoundException, IOException {
+    public static void create(final GeoImageReader gir, String filepath,int band) throws FileNotFoundException, IOException {
       //  GeoImageReader mygir = gir.clone();
         ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_GRAY), false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT);
         SampleModel sm = cm.createCompatibleSampleModel(Constant.TILE_SIZE, Constant.TILE_SIZE);
@@ -47,7 +47,7 @@ public class GeotiffWriter {
                 System.out.println(i + "-" + j);
                 WritableRaster r = ti.getWritableTile(i, j);
                 Rectangle bounds = r.getBounds();
-                r.setPixels(bounds.x, bounds.y, bounds.width, bounds.height, gir.readTile(bounds.x, bounds.y, bounds.width, bounds.height));
+                r.setPixels(bounds.x, bounds.y, bounds.width, bounds.height, gir.readTile(bounds.x, bounds.y, bounds.width, bounds.height,band));
                 ti.releaseWritableTile(i, j);
 
             }
@@ -76,7 +76,7 @@ public class GeotiffWriter {
       //  mygir.dispose();
     }
 
-    public static void create(final GeoImageReader gir, String filepath, IProgress progress) throws FileNotFoundException, IOException {
+    public static void create(final GeoImageReader gir, int band,String filepath, IProgress progress) throws FileNotFoundException, IOException {
         progress.setIndeterminate(true);
         progress.setMessage("Starting export...");
        // GeoImageReader mygir = gir.clone();
@@ -94,7 +94,7 @@ public class GeotiffWriter {
             for (int i = 0; i < ti.getNumXTiles(); i++) {
                 WritableRaster r = ti.getWritableTile(i, j);
                 Rectangle bounds = r.getBounds();
-                r.setPixels(bounds.x, bounds.y, bounds.width, bounds.height, gir.readTile(bounds.x, bounds.y, bounds.width, bounds.height));
+                r.setPixels(bounds.x, bounds.y, bounds.width, bounds.height, gir.readTile(bounds.x, bounds.y, bounds.width, bounds.height,band));
                 ti.releaseWritableTile(i, j);
                 progress.setCurrent(cur++);
             }

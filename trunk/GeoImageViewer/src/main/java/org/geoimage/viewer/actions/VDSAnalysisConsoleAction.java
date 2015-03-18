@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.analysis.VDSSchema;
@@ -84,9 +85,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         } else {
 
             if (args[0].equals("k-dist")) {
-
                 done = false;
-
                 
                 IImageLayer cl=Platform.getCurrentImageLayer();
                 GeoImageReader reader = ((IImageLayer) cl).getImageReader();
@@ -146,15 +145,22 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
-                boolean useBlackAn=false;
-                if(gir instanceof Sentinel1)
-                	useBlackAn=true;
-
-                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,useBlackAn);
+                BlackBorderAnalysis blackBorderAnalysis=null;
+                if(gir instanceof Sentinel1){
+	                MaskVectorLayer mv=null;
+	           	 	if(bufferedMask!=null&&bufferedMask.length>0)
+	           	 		mv=(MaskVectorLayer)bufferedMask[0];
+	           	 	if(mv!=null)
+	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+	           	 	else 
+	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+                } 	
+                
+                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,blackBorderAnalysis);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);
-                t.setName("VDS_analysis_"+gir.getDisplayName());
+                t.setName("VDS_analysis_"+gir.getInternalImage());
                 t.start();
                 
             }
@@ -176,10 +182,19 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
      */
     public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
     	this.gir=reader;
-    	boolean useBlackAn=false;
-        if(gir instanceof Sentinel1)
-        	useBlackAn=true;
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,useBlackAn);
+        
+        BlackBorderAnalysis blackBorderAnalysis=null;
+        if(gir instanceof Sentinel1){
+            MaskVectorLayer mv=null;
+       	 	if(bufferedMask!=null&&bufferedMask.length>0)
+       	 		mv=(MaskVectorLayer)bufferedMask[0];
+       	 	if(mv!=null)
+       	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+       	 	else 
+       		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+        } 	
+        
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis);
         ap.run();
         return ap.getResultLayers();
     }
@@ -378,5 +393,13 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 			Platform.getMain().removeStopListener(this);
 			this.proc=null;
 		}	
+	}
+
+	@Override
+	public void layerReady(ILayer layer) {
+		if(!Platform.isBatchMode()){
+			Platform.getLayerManager().addLayer(layer);
+		}
+		
 	}
 }

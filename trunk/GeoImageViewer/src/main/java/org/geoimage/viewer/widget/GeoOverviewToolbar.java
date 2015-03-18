@@ -157,7 +157,7 @@ import org.geoimage.viewer.util.Constant;
             onbuilding = true;
             
             //search file in cache
-            File f=CacheManager.getCacheInstance(gir.getDisplayName()).getOverviewFile();
+            File f=CacheManager.getCacheInstance(gir.getDisplayName(0)).getOverviewFile();
             
             //if we have found the overview in cache we use it
             if (f.exists()) {
@@ -173,7 +173,7 @@ import org.geoimage.viewer.util.Constant;
                 BufferedImage temp = new BufferedImage((int) (gir.getWidth() * (1.0 / ratio)), (int) (gir.getHeight() * (1.0 / ratio)), BufferedImage.TYPE_USHORT_GRAY);
                 // get a handle on the raster data
                 WritableRaster raster = temp.getRaster();
-                int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, null);
+                int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, null,0);
                 raster.setSamples(0, 0, temp.getWidth(), temp.getHeight(), 0, data);
                 RescaleOp rescale = new RescaleOp(contrast,brightness, null);
                 rescale.filter(temp, temp);

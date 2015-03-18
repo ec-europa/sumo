@@ -1054,4 +1054,10 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 		stopThreadButton.setVisible(false);
 		
 	}
+
+	@Override
+	public void layerReady(ILayer layer) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -240,17 +240,17 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.SATELLITE_SPEED,data);
     }
     
-    public int getWidth(){
+    public int getMetaWidth(){
     	return (Integer)getMetadata(GeoMetadata.WIDTH);
     }
-    public void setWidth(Integer data){
+    public void setMetaWidth(Integer data){
     	setMetadata(GeoMetadata.WIDTH,data);
     }
     
-    public int getHeight(){
+    public int getMetaHeight(){
     	return (Integer)getMetadata(GeoMetadata.HEIGHT);
     }
-    public void setHeight(Integer data){
+    public void setMetaHeight(Integer data){
     	setMetadata(GeoMetadata.HEIGHT,data);
     }
     

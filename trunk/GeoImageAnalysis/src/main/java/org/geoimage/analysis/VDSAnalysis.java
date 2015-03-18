@@ -28,7 +28,6 @@ public class VDSAnalysis implements Runnable{
     private IMask[] mask;
     private int tileSize;
     
-    
 
 	// batch mode flag
     private boolean isBatch = false;
@@ -45,9 +44,8 @@ public class VDSAnalysis implements Runnable{
      * @param progressBar
      */
     public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf,  float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV , boolean batch){
-        this(gir,mask, enlf, thresholdHH, thresholdHV, thresholdVH, thresholdVV, null);
+        this(gir,mask, enlf, thresholdHH, thresholdHV, thresholdVH, thresholdVV,null);
         this.isBatch = batch;
-        
     }
 
     /**
@@ -61,7 +59,7 @@ public class VDSAnalysis implements Runnable{
      * @param thresholdVV
      * @param progressBar
      */
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV, IProgress progressBar) {
+    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV,IProgress progressBar) {
         this.enl = "" + (int) (enlf * 10);
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
@@ -77,7 +75,6 @@ public class VDSAnalysis implements Runnable{
         
         // progress bar for progress monitoring
         this.progressBar = progressBar;
-        
     }
 
     public DetectedPixels getPixels() {
@@ -88,17 +85,17 @@ public class VDSAnalysis implements Runnable{
      * 
      * 
      */
-    public void run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis) {
-        if(gir.getBandName(gir.getBand()).equals("HH")||gir.getBandName(gir.getBand()).equals("H/H")){
-            pixels = analyse(kdist, thresholdHH,blackBorderAnalysis);
-        }else if(gir.getBandName(gir.getBand()).equals("HV")||gir.getBandName(gir.getBand()).equals("H/V")){
-            pixels = analyse(kdist, thresholdHV,blackBorderAnalysis);
-        }else if(gir.getBandName(gir.getBand()).equals("VH")||gir.getBandName(gir.getBand()).equals("V/H")){
-            pixels = analyse(kdist, thresholdVH,blackBorderAnalysis);
-        }else if(gir.getBandName(gir.getBand()).equals("VV")||gir.getBandName(gir.getBand()).equals("V/V")){
-            pixels = analyse(kdist, thresholdVV,blackBorderAnalysis);
+    public void run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) {
+        if(gir.getBandName(band).equals("HH")||gir.getBandName(band).equals("H/H")){
+            pixels = analyse(kdist, thresholdHH,band,blackBorderAnalysis);
+        }else if(gir.getBandName(band).equals("HV")||gir.getBandName(band).equals("H/V")){
+            pixels = analyse(kdist, thresholdHV,band,blackBorderAnalysis);
+        }else if(gir.getBandName(band).equals("VH")||gir.getBandName(band).equals("V/H")){
+            pixels = analyse(kdist, thresholdVH,band,blackBorderAnalysis);
+        }else if(gir.getBandName(band).equals("VV")||gir.getBandName(band).equals("V/V")){
+            pixels = analyse(kdist, thresholdVV,band,blackBorderAnalysis);
         }else{
-            pixels = analyse(kdist, threshold,blackBorderAnalysis);
+            pixels = analyse(kdist, threshold,band,blackBorderAnalysis);
         }
         
     }
@@ -109,7 +106,7 @@ public class VDSAnalysis implements Runnable{
      * @param significance
      * @return
      */
-    private DetectedPixels analyse(KDistributionEstimation kdist, float significance, BlackBorderAnalysis blackBorderAnalysis ) {
+    private DetectedPixels analyse(KDistributionEstimation kdist, float significance,int band, BlackBorderAnalysis blackBorderAnalysis ) {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
         
@@ -128,9 +125,6 @@ public class VDSAnalysis implements Runnable{
         
         
         double[][][] tileStat = new double[verTiles][horTiles][5];
-
-        // get band name
-        int bandname = gir.getBand();
 
         // set values for progress bar
         if(!this.isBatch )
@@ -171,14 +165,14 @@ public class VDSAnalysis implements Runnable{
                 xLeftTile = colIndex * sizeX;   //x start tile 
                 xRightTile = xLeftTile + sizeX+dx; //dx is always 0 except on the last tile
                 if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
-                	kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, sizeX+dx, sizeY+dy,rowIndex,colIndex,blackBorderAnalysis);
+                	kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                 	kdist.estimate(null);
 
                 	double[][][] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex] = kdist.getTileStat()[0];
                     
                     
-                    int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy);
+                    int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     
                     double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
 
@@ -201,7 +195,7 @@ public class VDSAnalysis implements Runnable{
                             int pix = data[k * (sizeX+dx) + h];
                             // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                             if (pix >threshWindowsVals[subwindow-1] ) {
-                                dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], bandname);
+                                dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
                             }
 
                         }
@@ -223,14 +217,14 @@ public class VDSAnalysis implements Runnable{
                     if(((double)pixelcount / maskdata.length) < 0.7)
                     {
                         // if there are pixels to estimate, calculate statistics using the mask
-                        kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, sizeX+dx, sizeY+dy,rowIndex,colIndex,blackBorderAnalysis);
+                        kdist.setImageData(gir, xLeftTile, yTopTile, 1, 1, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                         kdist.estimate(rastermask);
                         double[][][] thresh = kdist.getDetectThresh();
                         tileStat[rowIndex] = kdist.getTileStat()[0];
                         
                         double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
                         
-                        int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy);
+                        int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
 
                         for (int k = 0; k < (sizeY+dy); k++) {
                             for (int h = 0; h < (sizeX+dx); h++) {
@@ -255,7 +249,7 @@ public class VDSAnalysis implements Runnable{
                                     // if (pix > thresh[i][0][subwindow] * (significance - (significance - 1.)	/ thresh[i][0][5])) {
                                     // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                                     if (pix > threshWindowsVals[subwindow-1]) {
-                                        dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], bandname);
+                                        dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
                                     }
                                 }
 

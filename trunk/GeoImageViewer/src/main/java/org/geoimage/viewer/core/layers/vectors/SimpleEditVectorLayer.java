@@ -52,8 +52,8 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
     protected boolean undo=false;
     
     
-    public SimpleEditVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer) {
-        super(parent,layername, reader, type, layer);
+    public SimpleEditVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+        super(parent,layername, type, layer);
         gf = new GeometryFactory();
     }
 

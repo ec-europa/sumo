@@ -36,8 +36,8 @@ public class TimeVectorLayer extends MaskVectorLayer implements ITime {
     private Hashtable<Geometry,Date> datesOfgeoms=new Hashtable<Geometry, Date>();
     private boolean onWork;
 
-    public TimeVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer, String timeColumn) {
-        super(parent,layername, reader, type, layer);
+    public TimeVectorLayer(ILayer parent,String layername,  String type, GeometricLayer layer, String timeColumn) {
+        super(parent,layername,  type, layer);
         this.timeColumn = timeColumn;
         renderedLayer.addAll(layer.getGeometries());
         for(Geometry geom:renderedLayer){

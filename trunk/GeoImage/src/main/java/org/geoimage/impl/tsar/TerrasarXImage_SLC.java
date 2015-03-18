@@ -53,9 +53,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
         	parseProductXML(productxml);
         	
         	tiffImages = getImages();
-        	image = tiffImages.values().iterator().next();
-        	image.xSize = getWidth();
-            image.ySize = getHeight();
+        	TIFF image = tiffImages.values().iterator().next();
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
             
             gcps = getGcps();
@@ -114,7 +112,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
     }
 
     @Override
-    public int[] readTile(int x, int y, int width, int height) {
+    public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(bounds);
         int[] tile = new int[height * width];
@@ -122,11 +120,11 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             return tile;
         }
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
-            preloadLineTile(rect.y, rect.height);
+            preloadLineTile(rect.y, rect.height,band);
         }
 
         try{
-	        int yOffset = xOffset + 4 * image.xSize;
+	        int yOffset = xOffset + 4 *  getImage(band).xSize;
 	        int xinit = rect.x - x;
 	        int yinit = rect.y - y;
 	        for (int i = 0; i < rect.height; i++) {
@@ -154,13 +152,13 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
 
     @Override
     //used by the position dialog to link pixel(x,y) to pixel value
-    public int read(int x, int y) {
+    public int read(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[4];
-        if (x >= 0 & y >= 0 & x < image.xSize & y < image.ySize) {
+        if (x >= 0 & y >= 0 & x <  getImage(band).xSize & y <  getImage(band).ySize) {
             try {
-                temp = ((y+4) * (xOffset + image.xSize * 4) + xOffset + x * 4);
+                temp = ((y+4) * (xOffset +  getImage(band).xSize * 4) + xOffset + x * 4);
                 fss.seek(temp);
                 fss.read(pixelByte, 0, 4);
                 byte interm0 = pixelByte[0];
@@ -178,15 +176,15 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
     }
 
     @Override
-    public void preloadLineTile(int y, int length) {
+    public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         //if(preloadedDataSLC==null){
 	        preloadedInterval = new int[]{y, y + length};
 	        //y+4 skips the first 4 lines of offset
-	        int tileOffset = (y+4) * (image.xSize * 4 + xOffset);
-	        preloadedDataSLC = new byte[(image.xSize * 4 + xOffset) * length];
+	        int tileOffset = (y+4) * ( getImage(band).xSize * 4 + xOffset);
+	        preloadedDataSLC = new byte[( getImage(band).xSize * 4 + xOffset) * length];
 	        //preloadedDataSLC = new byte[getWidth()*getHeight()];
 	        try {
 	            File fimg=tiffImages.get("HH").getImageFile();
@@ -215,9 +213,9 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             setProduct(atts.getChild("productVariantInfo").getChild("productType").getText());
             setOrbitDirection(atts.getChild("missionInfo").getChild("orbitDirection").getText());
             String h=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText();
-            setHeight(Integer.parseInt(h));
+            setMetaHeight(Integer.parseInt(h));
             String w=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
-            setWidth(Integer.parseInt(w) );
+            setMetaWidth(Integer.parseInt(w) );
 
             setNumberOfBytes(new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
             setENL(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());
@@ -284,7 +282,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
                     double stop_range_time = new Double(elem.getChild("scanSARBeamOverlap").getChild("rangeTimeStop").getText());
                     double aver_range_time = start_range_time + (stop_range_time - start_range_time) / 2;
 
-                    int stripBound = new Double(((aver_range_time - rangeTimeStart) * image.xSize) / (rangeTimeStop - rangeTimeStart)).intValue();
+                    int stripBound = new Double(((aver_range_time - rangeTimeStart) *  getImage(0).xSize) / (rangeTimeStop - rangeTimeStart)).intValue();
                     //setMetadata("STRIPBOUND" + b++, new Integer(stripBound).toString());
                     strip[b]=new Integer(stripBound);
                     b++;
@@ -305,10 +303,10 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    @Override
+   /* @Override
     public void setBand(int band) {
         this.band = band;
-    }
+    }*/
     @Override
     //in the SLC mode, the georef.xml file contains directly the link between pixel position (x,y) and (lon, lat)
     public List<Gcp> getGcps() {

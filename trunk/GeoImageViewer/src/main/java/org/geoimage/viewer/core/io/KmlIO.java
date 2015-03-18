@@ -381,7 +381,7 @@ public class KmlIO extends AbstractVectorIO {
         BufferedImage temp = new BufferedImage((int) (gir.getWidth() * (1.0 / ratio)), (int) (gir.getHeight() * (1.0 / ratio)), gir.getType(true));
         // get a handle on the raster data
         WritableRaster raster = temp.getRaster();
-        int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, null);
+        int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, null,0);
         raster.setSamples(0, 0, temp.getWidth(), temp.getHeight(), 0, data);
 
         float average = 0;

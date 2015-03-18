@@ -23,6 +23,7 @@ import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
+import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -47,22 +48,20 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements IComplexVDSVectorLayer {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ComplexEditVDSVectorLayer.class);
-	GeoImageReader reader;
 	private String[] thresholds={};
 	private double enl=0;
 	private int buffer=0;
 	private String landMask;
-
 	
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer,String landMask) {
-        super(parent,layername, reader, type, layer);
-        this.reader=reader;
+	
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String landMask) {
+        super(parent,layername, type, layer);
         this.landMask=landMask;
+        
     }
 	
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, GeoImageReader reader, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
-        super(parent,layername, reader, type, layer);
-        this.reader=reader;
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
+        super(parent,layername, type, layer);
         this.thresholds=thresholds;
         this.enl=enl;
         this.buffer=buffer;
@@ -75,6 +74,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         
     @Override
     public void save(String file, int formattype, String projection) {
+    	GeoImageReader reader=((IImageLayer)super.parent).getImageReader();
+    	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
         Map <String,Object>config = new HashMap<String,Object>();
         
@@ -93,7 +94,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	                String version = versiondialog.getVersion();
 	
 	                // generate SQL commands
-	                ArrayList<String> postgiscommands = postgisCommands(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), table, version, geotransform, projection);
+	                ArrayList<String> postgiscommands = postgisCommands(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), table, version, 
+	                		sar.getGeoTransform(), projection,sar.getTimeStampStart(),sar.getDisplayName(0));
 	                // save the new layer in database
 	                AbstractVectorIO vio = VectorIOFactory.createVectorIO(VectorIOFactory.POSTGIS, config);
 	                vio.setLayerName(table);
@@ -153,7 +155,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	                }
 	                config.put(KmlIO.CONFIG_FILE, file);
 	                AbstractVectorIO kml = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
-	                ((KmlIO)kml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
+	                ((KmlIO)kml).save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,((SarImageReader)reader));
 	                msgResult[0]="The KMZ file is succesfully created";
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(), ex);
@@ -164,7 +166,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	        }
 	        case ISave.OPT_EXPORT_THUMBS:{
 	            ThumbnailsManager tm = new ThumbnailsManager(file);
-	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id", reader, null);
+	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, null,((IImageLayer)super.parent).getActiveBand());
 	            msgResult[0]="The thumnails have been successfully saved";
 	            break;
 	        }
@@ -214,7 +216,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         return opts; 
     }
 
-    private GeometricLayer postgisLayer(GeometricLayer glayer) {
+    private GeometricLayer postgisLayer(GeometricLayer glayer,String timeStampStart) {
         // id counter for the postgis database
         int id = 0;
         // date object for postgis database
@@ -269,9 +271,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
                         "String"}); // new String[]{"integer", "time stamp without time zone", "character varying(32)", "character varying(32)", "smallint", "integer", "real", "real", "real", "character varying(12)", "smallint"}
             //tableattributes.set("id", new Integer(270100 + id));
             tableattributes.set("detectime", date);
-            SarImageReader sar=(SarImageReader)reader;
             
-            String image_id = (sar.getTimeStampStart() == null ? date : sar.getTimeStampStart()) + "0";
+            String image_id = timeStampStart + "0";
             image_id.replaceAll(":", "");
             image_id.replaceAll("-", "");
             image_id.replaceAll(" ", "");
@@ -296,7 +297,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 
     
     
-    private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection) {
+    private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) {
         // id counter for the postgis database
         int id = 0;
         // list of postgis commands for database
@@ -305,7 +306,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         // date object for postgis database
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = dateformat.format(new Date());
-        String detect_time = ( ((SarImageReader)reader).getTimeStampStart() == null ? date : ((SarImageReader)reader).getTimeStampStart()) + "";
+        String detect_time = timeStampStart;
         String image_id = detect_time;
         image_id = image_id.replaceAll("-", "").replaceAll(" ", "").replaceAll("\\.", "").replaceAll(":", "");
         postgiscommands.add("delete from " + table + " where version = '" + version + "' and image_id = '" + image_id + "'");
@@ -334,7 +335,6 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
             values.append("null,");
             values.append((Double) attributes.get(VDSSchema.ESTIMATED_LENGTH) < 15 ? "'small'" : ((Double) attributes.get(VDSSchema.ESTIMATED_LENGTH) > 150 ? "'large'" : "'medium'")).append(",");
             values.append("0,");
-            String name = reader.getDisplayName();
             name = name.substring(name.lastIndexOf("/") + 1);
             values.append("'").append(glayer.getName()).append("')");
             postgiscommands.add(values.toString());

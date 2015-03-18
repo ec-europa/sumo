@@ -12,7 +12,6 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -90,8 +89,8 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
 
     private List<additionalgeometries> additionalGeometries = new ArrayList<additionalgeometries>();
 
-    public ComplexEditVectorLayer(ILayer parent,String layername,  GeoImageReader reader , String type, GeometricLayer layer) {
-        super(parent,layername, reader, type, layer);
+    public ComplexEditVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+        super(parent,layername, type, layer);
     }
 
     @Override
