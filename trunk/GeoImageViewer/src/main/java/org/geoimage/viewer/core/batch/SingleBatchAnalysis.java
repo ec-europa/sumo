@@ -25,6 +25,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg);
 		
 		for(GeoImageReader r:readers){
+			currentReader=r;
 			SarImageReader reader=(SarImageReader) r;
 			String enl=reader.getENL();
 			params.enl=Float.parseFloat(enl);

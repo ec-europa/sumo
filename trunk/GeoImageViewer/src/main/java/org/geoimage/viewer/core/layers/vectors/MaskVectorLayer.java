@@ -581,7 +581,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     }
 
     public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=Platform.getCurrentImageLayer().getImageReader();
+    	GeoImageReader reader=Platform.getCurrentImageReader();
         if (formattype==ISave.OPT_EXPORT_CSV) {
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");

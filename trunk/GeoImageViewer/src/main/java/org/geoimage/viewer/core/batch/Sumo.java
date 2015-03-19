@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class Sumo {
 	
 	private AnalysisParams params;
 	private ConfigurationFile conf;
-	
+	private static AbstractBatchAnalysis batch=null;
 	private Date startDate;
 	
 	
@@ -63,11 +64,16 @@ public class Sumo {
 		startDate=new Date();
 		params.startDate=startDate;
 	}
+	
+	public static GeoImageReader getCurrentReader(){
+		return batch.getCurrentReader();
+	}
+	
 	/**
 	 * 
 	 */
 	public void execAnalysis(){
-		AbstractBatchAnalysis batch=null;
+		
 		if(status==SINGLE_IMG_ANALYSIS){
 			batch=new SingleBatchAnalysis(params);
 			

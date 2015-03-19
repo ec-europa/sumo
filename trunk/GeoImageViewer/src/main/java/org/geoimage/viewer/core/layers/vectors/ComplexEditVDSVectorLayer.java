@@ -74,7 +74,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         
     @Override
     public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=((IImageLayer)super.parent).getImageReader();
+    	GeoImageReader reader=Platform.getCurrentImageReader();//((IImageLayer)super.parent).getImageReader();
     	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
         Map <String,Object>config = new HashMap<String,Object>();
