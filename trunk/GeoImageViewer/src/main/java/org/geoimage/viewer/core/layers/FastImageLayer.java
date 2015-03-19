@@ -8,8 +8,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
@@ -18,6 +21,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -86,8 +92,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                 ImageIO.write(out, "png", f);
                 return new Object[]{f.getAbsolutePath(), next, out};
             } catch (Exception ex) {
-                imagePool.release(gir2);
                 logger.error(ex.getMessage(),ex);
+            }finally{
+            	imagePool.release(gir2);
             }
             return new Object[]{f.getAbsolutePath(), next, null};
         }
@@ -129,6 +136,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     
     private int maxnumberoftiles = 7;
     static String MaxNumberOfTiles = "Max Number Of Tiles";
+    
+    Iterator<ImageReader> iReader=null;
+	ImageReader pngReader=null;
 
     static {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
@@ -136,6 +146,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     }
 
     public FastImageLayer(GeoImageReader gir) {
+    	iReader=ImageIO.getImageReadersByFormatName("png");
+		pngReader=(ImageReader)iReader.next();
   
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
@@ -390,18 +402,34 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         setContrast(contrastLevel);
     }
 
+
+    
+    
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
     	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
-            try {
             	BufferedImage temp =null;
+            	
+        		FileInputStream input=null;
             	try {
-            		temp = ImageIO.read(cacheInstance.newFile(file));
+            		input=new FileInputStream(cacheInstance.newFile(file));
+            		ImageInputStream iis=ImageIO.createImageInputStream(input);
+            		pngReader.setInput(iis,true);
+            		temp=pngReader.read(0);
             	} catch (Exception ex) {
             		logger.warn(ex.getMessage());
-                }	
+                }	finally{
+            		pngReader.dispose();
+            		if(input!=null)
+						try {
+							input.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+                }
                 if (temp == null) {
                     return false;
                 }
@@ -413,9 +441,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                 tcm.add(file, t);
                 bindTexture(gl, t, xmin, xmax, ymin, ymax);
                 return true;
-            } catch (Exception ex) {
-            	logger.error(ex.getMessage(),ex);
-            }
         }
 
         return false;

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.analysis.VDSAnalysis;
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
@@ -41,7 +42,7 @@ public abstract class AbstractBatchAnalysis {
 	private  List<ComplexEditVDSVectorLayer>layerResults=null;
 	private SimpleDateFormat dFormat=new SimpleDateFormat("ddMMyy_hhmmss");//"dd-MM-yy hh-mm-ss");
 	private VDSAnalysis analysis;
-	
+	protected GeoImageReader currentReader;
 	
 	public AbstractBatchAnalysis(AnalysisParams analysisParams){
 		params= analysisParams;
@@ -50,7 +51,9 @@ public abstract class AbstractBatchAnalysis {
 	
 		
 	protected abstract void startAnalysis();
-	
+	protected GeoImageReader getCurrentReader(){
+		return currentReader;
+	}
 	
 	/**
 	 * 

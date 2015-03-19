@@ -69,6 +69,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						//crate the reader
 						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath());
 						for(GeoImageReader r:readers){
+							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
 						
 							String enl=reader.getENL();

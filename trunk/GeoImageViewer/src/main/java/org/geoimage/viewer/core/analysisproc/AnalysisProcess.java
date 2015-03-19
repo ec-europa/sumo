@@ -89,7 +89,7 @@ public  class AnalysisProcess implements Runnable {
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
-			this.gir=gir.clone();
+			this.gir=gir;//.clone();
 		}
    
 		
