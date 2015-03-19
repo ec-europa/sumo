@@ -9,9 +9,11 @@ import java.util.logging.Logger;
 
 import javax.media.opengl.awt.GLCanvas;
 
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
@@ -163,6 +165,15 @@ public class Platform {
 	        }
     	}    
         return null;
+    }
+    
+    public static GeoImageReader getCurrentImageReader(){
+    	if(isBatchMode()){
+    		return Sumo.getCurrentReader();
+    	}else{
+    		return getCurrentImageLayer().getImageReader();
+    	}
+    	
     }
     
  

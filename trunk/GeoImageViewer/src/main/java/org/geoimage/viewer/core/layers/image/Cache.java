@@ -114,6 +114,7 @@ public class Cache {
 	        if (this.getPath() != null) {
 	            String fullPath = this.getPath().getAbsolutePath() + "/" + fileName;
 	            java.io.File file = new java.io.File(fullPath);
+	           // System.out.println("file:"+file.getAbsolutePath()+"  "+file.exists());
 	            if (file.getParentFile().exists()) {
 	                return file;
 	            } else if (file.getParentFile().mkdirs()) {
