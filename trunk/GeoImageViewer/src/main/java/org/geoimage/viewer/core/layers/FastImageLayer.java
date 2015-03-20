@@ -21,9 +21,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.media.jai.JAI;
+import javax.media.jai.PlanarImage;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -88,9 +89,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
                 imagePool.release(gir2);
                 
-                //write tile
-                ImageIO.write(out, "png", f);
-                return new Object[]{f.getAbsolutePath(), next, out};
+                PlanarImage create=JAI.create("filestore", out, f.getAbsolutePath(),"png"); 
+                BufferedImage out2=create.getAsBufferedImage();
+                return new Object[]{f.getAbsolutePath(), next, out2};
             } catch (Exception ex) {
                 logger.error(ex.getMessage(),ex);
             }finally{
@@ -412,14 +413,20 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
             	BufferedImage temp =null;
             	
-        		FileInputStream input=null;
+      		FileInputStream input=null;
             	try {
-            		input=new FileInputStream(cacheInstance.newFile(file));
+            		File f=cacheInstance.newFile(file);
+            		input=new FileInputStream(f);
             		ImageInputStream iis=ImageIO.createImageInputStream(input);
             		pngReader.setInput(iis,true);
-            		temp=pngReader.read(0);
+           			temp=pngReader.read(0);
+            		
+            		
+            		//RenderedOp  inputfile = JAI.create("fileload", f.getAbsolutePath()); 
+           			//temp=inputfile.getAsBufferedImage();
+           			
             	} catch (Exception ex) {
-            		logger.warn(ex.getMessage());
+            		logger.warn("Problem reading tile:"+file+" : "+ex.getMessage());
                 }	finally{
             		pngReader.dispose();
             		if(input!=null)
@@ -428,8 +435,10 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-
                 }
+            	
+            		
+            	
                 if (temp == null) {
                     return false;
                 }
@@ -494,6 +503,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
      */
     private BufferedImage createImage(GeoImageReader gir, int x, int y, int width, int height, float zoom) {
         BufferedImage bufferedImage = new BufferedImage(width, height, gir.getType(true));
+
         int[] nat;
         WritableRaster raster = bufferedImage.getRaster();
 
@@ -527,6 +537,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
             submitedTiles.add(tilesStr);
             
             futures.add(0, poolExcutorService.submit(new ServiceTile(initfile, level, i, j)));
+            
         }
     }
     
