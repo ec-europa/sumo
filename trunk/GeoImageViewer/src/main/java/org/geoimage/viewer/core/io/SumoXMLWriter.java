@@ -9,20 +9,14 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.def.SarMetadata;
-import org.geoimage.utils.Corners;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -141,7 +135,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		if(millis!=null&&millis.length()>0){
 			double val=Double.parseDouble("0."+millis);
 			double finalValue = Math.round( val * 1000.0 ) / 1000.0;
-			String milli=(""+finalValue).substring(2,5);
+			String strFinalVal=""+finalValue;
+			String milli=strFinalVal.length()>5?(""+finalValue).substring(2,5):strFinalVal.substring(2);
 			
 			date=date.substring(0, date.indexOf(".")+1)+milli;
 			

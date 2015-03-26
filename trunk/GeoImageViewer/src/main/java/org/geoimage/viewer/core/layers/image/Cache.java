@@ -12,7 +12,7 @@ public class Cache {
 		private String id;    
 		
 	    public Cache(String id) {
-	    	this.path = new File(Platform.getCachePath()+"/"+id);
+	    	this.path = new File(new StringBuilder(Platform.getCachePath()).append("/").append(id).toString());
 	    	this.id=id;
 	    }
 		
@@ -68,7 +68,7 @@ public class Cache {
 	        if (fileName.startsWith(getPath().getAbsolutePath())) {
 	            file = new java.io.File(fileName);
 	        } else {
-	            file = new File(getPath().getAbsolutePath() + "/" + fileName);
+	            file = new File(new StringBuilder(getPath().getAbsolutePath()).append("/").append(fileName).toString());
 	        }
 
 	        if (file.exists()) {
@@ -112,7 +112,7 @@ public class Cache {
 	        }
 	        fileName = clean(fileName);
 	        if (this.getPath() != null) {
-	            String fullPath = this.getPath().getAbsolutePath() + "/" + fileName;
+	            String fullPath = new StringBuilder(this.getPath().getAbsolutePath()).append("/").append( fileName).toString();
 	            java.io.File file = new java.io.File(fullPath);
 	           // System.out.println("file:"+file.getAbsolutePath()+"  "+file.exists());
 	            if (file.getParentFile().exists()) {
@@ -123,7 +123,7 @@ public class Cache {
 	        }
 	        return null;
 	    }
-
+/*
 	    public java.io.File newTile(String fileName, int level, int x, int y) {
 	        if (fileName == null) {
 	            return null;
@@ -140,7 +140,7 @@ public class Cache {
 	            }
 	        }
 	        return null;
-	    }
+	    }*/
 
 	    public java.net.URL findFile(String fileName, boolean checkClassPath) {
 	        if (fileName == null) {
@@ -171,7 +171,7 @@ public class Cache {
 
 	        return null;
 	    }
-
+/*
 	    public java.net.URL findTile(String fileName, int level, int x, int y, boolean checkClassPath) {
 	        if (fileName == null) {
 	            return null;
@@ -200,7 +200,7 @@ public class Cache {
 	        }
 
 	        return null;
-	    }
+	    }*/
 /*
 	    public String getOverviewURL(String fileName){
 	       String f=new File( getPath(), clean(fileName + "/overview.png")).getAbsolutePath();
