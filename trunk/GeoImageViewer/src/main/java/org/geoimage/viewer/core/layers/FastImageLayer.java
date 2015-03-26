@@ -89,9 +89,10 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
                 imagePool.release(gir2);
                 
-                PlanarImage create=JAI.create("filestore", out, f.getAbsolutePath(),"png"); 
-                BufferedImage out2=create.getAsBufferedImage();
-                return new Object[]{f.getAbsolutePath(), next, out2};
+                //PlanarImage create=JAI.create("filestore", out, f.getAbsolutePath(),"png"); 
+                //BufferedImage out2=create.getAsBufferedImage();
+                ImageIO.write(out, "png", f);
+                return new Object[]{f.getAbsolutePath(), next, out};
             } catch (Exception ex) {
                 logger.error(ex.getMessage(),ex);
             }finally{
@@ -263,7 +264,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		                int h0 = yy / ((1 << lll) << 8);
 		                
 		                
-		                final String initfile = new StringBuffer(c.getPath().getName()).append("\\").
+		                final String initfile = new StringBuffer("\\").//c.getPath().getName()).append("\\").
 		                		append((int) lll ).
 		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
 		                
@@ -413,13 +414,22 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
             	BufferedImage temp =null;
             	
-      		FileInputStream input=null;
+      		//FileInputStream input=null;
             	try {
             		File f=cacheInstance.newFile(file);
-            		input=new FileInputStream(f);
+            		/*input=new FileInputStream(f);
             		ImageInputStream iis=ImageIO.createImageInputStream(input);
             		pngReader.setInput(iis,true);
-           			temp=pngReader.read(0);
+           			temp=pngReader.read(0);*/
+            		
+                	try {
+                		temp = ImageIO.read(cacheInstance.newFile(file));
+                	} catch (Exception ex) {
+                		logger.warn(ex.getMessage());
+                    }	
+                    if (temp == null) {
+                        return false;
+                    }
             		
             		
             		//RenderedOp  inputfile = JAI.create("fileload", f.getAbsolutePath()); 
@@ -429,12 +439,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
             		logger.warn("Problem reading tile:"+file+" : "+ex.getMessage());
                 }	finally{
             		pngReader.dispose();
-            		if(input!=null)
-						try {
-							input.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+            		
                 }
             	
             		
