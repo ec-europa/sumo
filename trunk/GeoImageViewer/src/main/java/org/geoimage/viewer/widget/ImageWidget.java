@@ -7,8 +7,6 @@ package org.geoimage.viewer.widget;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.fenggui.ObservableLabelWidget;
 import org.fenggui.event.mouse.MousePressedEvent;
@@ -16,12 +14,14 @@ import org.fenggui.render.Binding;
 import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.util.Constant;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author leforth
  */
 public class ImageWidget extends TransparentWidget {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageWidget.class);
 
     private Overview overview = null;
     
@@ -81,7 +81,7 @@ public class ImageWidget extends TransparentWidget {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(ImageWidget.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
                 setTransparent(true);
             }

@@ -10,15 +10,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
+import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.BaselineTIFFTagSet;
 import com.sun.media.imageio.plugins.tiff.GeoTIFFTagSet;
@@ -28,6 +28,9 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 public class GeotiffImage extends SarImageReader {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeotiffImage.class);
+
+	
 	protected int xSize = -1;
 	protected int ySize = -1;
 	
@@ -154,7 +157,7 @@ public class GeotiffImage extends SarImageReader {
             }
         } catch (Exception ex) {
             dispose();
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return false;
         }
 
@@ -229,7 +232,7 @@ public class GeotiffImage extends SarImageReader {
         try {
             preloadedData = reader.read(0, tirp).getRaster().getSamples(0, 0, xSize, length, band, (int[]) null);
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -268,7 +271,7 @@ public class GeotiffImage extends SarImageReader {
             reader = null;
             tfw = null;
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
    
@@ -291,7 +294,7 @@ public class GeotiffImage extends SarImageReader {
             }
             temp.close();
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -307,7 +310,7 @@ public class GeotiffImage extends SarImageReader {
             matrix = new AffineTransform(m00, m10, m01, m11, m02, m12);
             temp.close();
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
     }
@@ -345,7 +348,7 @@ public class GeotiffImage extends SarImageReader {
             gcps.add(gcp);
 
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
     }

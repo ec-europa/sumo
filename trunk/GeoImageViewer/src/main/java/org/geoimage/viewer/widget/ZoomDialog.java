@@ -7,8 +7,6 @@ package org.geoimage.viewer.widget;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -17,8 +15,10 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
+import org.geoimage.impl.GeotiffImage;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.layers.ZoomWindowLayer;
+import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
@@ -28,6 +28,7 @@ import com.jogamp.opengl.util.texture.TextureCoords;
  * @author  thoorfr
  */
 public class ZoomDialog extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ZoomDialog.class);
 
     private ZoomWindowLayer layer;
     private Texture texture;
@@ -92,7 +93,7 @@ public class ZoomDialog extends javax.swing.JDialog {
                         Thread.sleep(25);
                         gLCanvas1.repaint();
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                 }
             }

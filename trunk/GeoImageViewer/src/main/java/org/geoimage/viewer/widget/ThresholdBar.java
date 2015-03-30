@@ -8,8 +8,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -26,12 +24,14 @@ import org.fenggui.util.Color;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.util.Constant;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class ThresholdBar extends TransparentWidget {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ThresholdBar.class);
 
     private final Slider slider;
     private int[] histogram = null;
@@ -99,7 +99,7 @@ public class ThresholdBar extends TransparentWidget {
             System.out.println(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
             buf = ImageIO.read(new URL(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
         } catch (IOException ex) {
-            Logger.getLogger(ThresholdBar.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         addWidget(new ImageWidget(buf));
     }

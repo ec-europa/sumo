@@ -4,18 +4,19 @@
  */
 package org.geoimage.viewer.core;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.core.layers.image.Cache;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class GeoImageBatchMode {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageBatchMode.class);
 
     private static GeoImageBatchMode instance;
     private LayerManager lm;
@@ -41,7 +42,7 @@ public class GeoImageBatchMode {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(GeoImageBatchMode.class.getName()).log(Level.SEVERE, null, ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                     gc.setDirty(false);
                     lm.render(gc);
@@ -62,7 +63,7 @@ public class GeoImageBatchMode {
                     try {
                         cl.runScript(args[i + 1]);
                     } catch (Exception ex) {
-                        Logger.getLogger(GeoImageViewer.class.getName()).log(Level.SEVERE, "Error while running script file " + args[i + 1], ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                     i++;
                 }
@@ -76,7 +77,7 @@ public class GeoImageBatchMode {
             return;
         }
         this.info = info;
-        Logger.getLogger(GeoImageBatchMode.class.getName()).log(Level.INFO, info);
+        logger.info(info);
     }
 
     public void setInfo(String information, final long timeout) {

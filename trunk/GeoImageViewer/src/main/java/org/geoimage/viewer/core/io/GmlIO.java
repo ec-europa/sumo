@@ -8,12 +8,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
@@ -26,6 +23,7 @@ import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -36,6 +34,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @author thoorfr
  */
 public class GmlIO extends AbstractVectorIO {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GmlIO.class);
+
+	
     public static String CONFIG_FILE = "file";
 
     public GmlIO(){
@@ -84,7 +85,7 @@ public class GmlIO extends AbstractVectorIO {
             }
             return layer;
         } catch (Exception ex) {
-            Logger.getLogger(SumoXmlIOOld.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }

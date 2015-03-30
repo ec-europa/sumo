@@ -6,11 +6,10 @@ package org.geoimage.impl.geoop;
 
 import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.tsar.TerrasarXImage_GEC;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.geotools.referencing.operation.transform.WarpTransform2D;
@@ -19,6 +18,7 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.NoninvertibleTransformException;
+import org.slf4j.LoggerFactory;
 
 /**
  *  Class that provides the GeoTransform based on a set of Ground Control Points.
@@ -26,6 +26,8 @@ import org.opengis.referencing.operation.NoninvertibleTransformException;
  * @author thoorfr
  */
 public class GcpsGeoTransform implements GeoTransform {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GcpsGeoTransform.class);
+
 
   //  private List<Gcp> gcps;
     private CoordinateReferenceSystem sourceCRS;
@@ -48,7 +50,7 @@ public class GcpsGeoTransform implements GeoTransform {
             defaultCrs = CRS.decode(defaultEpsgProjection);
             defaultMath = CRS.findMathTransform(defaultCrs, sourceCRS);
         } catch (Exception ex) {
-            Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         Point2D[] src = new Point2D[gcps.size()];
         Point2D[] dst = new Point2D[gcps.size()];
@@ -91,8 +93,8 @@ public class GcpsGeoTransform implements GeoTransform {
 		        out[0] = temp[0];
 		        out[1] = temp[1];
 		    } catch (Exception ex) {
-		        Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
-		    }
+	        	logger.error(ex.getMessage(),ex);
+	        }
         }    
         geo2pix.transform(out, 0, out, 0, 1);
         out[0] = out[0];
@@ -110,7 +112,7 @@ public class GcpsGeoTransform implements GeoTransform {
 	            out[0] = temp[0];
 	            out[1] = temp[1];
 	        } catch (Exception ex) {
-	            Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+	        	logger.error(ex.getMessage(),ex);
 	        }
 		}    
         return out;
@@ -131,7 +133,7 @@ public class GcpsGeoTransform implements GeoTransform {
                 out[0] = temp[0];
                 out[1] = temp[1];
             } catch (Exception ex) {
-                Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         geo2pix.transform(out, 0, out, 0, 1);
@@ -156,7 +158,7 @@ public class GcpsGeoTransform implements GeoTransform {
                 out[0] = temp[0];
                 out[1] = temp[1];
             } catch (Exception ex) {
-                Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         return out;
@@ -177,7 +179,7 @@ public class GcpsGeoTransform implements GeoTransform {
                     dest[destOffset+i++] = temp[0];
                     dest[destOffset+i++] = temp[1];
                 } catch (Exception ex) {
-                    Logger.getLogger(GcpsGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -210,7 +212,7 @@ public class GcpsGeoTransform implements GeoTransform {
                     dest[destOffset + i++] = temp[0];
                     dest[destOffset + i++] = temp[1];
                 } catch (Exception ex) {
-                    Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }

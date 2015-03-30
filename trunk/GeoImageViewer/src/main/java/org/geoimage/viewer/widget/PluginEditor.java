@@ -17,8 +17,6 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -29,12 +27,14 @@ import javax.swing.filechooser.FileFilter;
 import org.geoimage.viewer.core.Plugins;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.util.ClassPathHacker;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class PluginEditor extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PluginEditor.class);
 
     private Plugins plugin;
     private final DefaultListModel pluginmodel;
@@ -58,12 +58,12 @@ public class PluginEditor extends javax.swing.JDialog {
         try {
             jarTextField.setText(new File(new URI(p.getJarUrl())).getAbsolutePath());
         } catch (URISyntaxException ex) {
-            Logger.getLogger(PluginEditor.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         try {
             parseJarFile();
         } catch (Exception ex) {
-            Logger.getLogger(PluginEditor.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         pluginList.setSelectedValue(p.getClassName(), true);
     }
@@ -226,7 +226,7 @@ public class PluginEditor extends javax.swing.JDialog {
         try {
             plugin.setJarUrl(new File(jarTextField.getText()).toURI().toURL().toString());
         } catch (MalformedURLException ex) {
-            Logger.getLogger(PluginEditor.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         setVisible(false);
         dispose();
@@ -241,7 +241,7 @@ public class PluginEditor extends javax.swing.JDialog {
         try {
             parseJarFile();
         } catch (Exception ex) {
-            Logger.getLogger(PluginEditor.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }//GEN-LAST:event_parseButtonActionPerformed
 

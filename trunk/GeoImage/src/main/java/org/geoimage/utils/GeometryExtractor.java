@@ -5,26 +5,26 @@
 
 package org.geoimage.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
+import org.slf4j.LoggerFactory;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoTransform;
-
 /**
  * Usefull tools to extract geometry of the image boundaries
  * @author thoorfr
  */
 public class GeometryExtractor {
-    
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometryExtractor.class);
+
     public static Geometry getFrame(GeoImageReader gir){
         try {
             GeoTransform gt = gir.getGeoTransform();
@@ -38,7 +38,7 @@ public class GeometryExtractor {
             x1 = gt.getGeoFromPixel(-50, 50 + gir.getHeight(), "EPSG:4326");
             return new WKTReader().read("POLYGON((" + x0[0] + " " + x0[1] + "," + x1[0] + " " + x1[1] + "," + x2[0] + " " + x2[1] + "," + x3[0] + " " + x3[1] + "," + x0[0] + " " + x0[1] + "" + "))");
         } catch (ParseException ex) {
-            Logger.getLogger(GeometryExtractor.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }

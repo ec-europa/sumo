@@ -11,8 +11,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -37,6 +35,7 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IImageLayer;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -44,7 +43,9 @@ import org.geoimage.viewer.core.api.IImageLayer;
  */
 
 public class GeoNavigationToolbar extends TransparentWidget {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoNavigationToolbar.class);
 
+	
     private class Compass extends ObservableLabelWidget {
 
         private double northAngle = 0.0;
@@ -97,7 +98,8 @@ public class GeoNavigationToolbar extends TransparentWidget {
                                 if(texture!=null)texture.dispose();
                                 texture = Binding.getInstance().getTexture(bi2);
                             } catch (Exception ex) {
-                                Logger.getLogger(GeoNavigationToolbar.class.getName()).log(Level.SEVERE, null, ex);
+                            	logger.error(ex.getMessage(),ex);
+
                             }
                         }
                         found=true;

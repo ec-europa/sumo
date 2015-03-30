@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +25,7 @@ import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.util.ImageTiler;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -39,6 +38,7 @@ import org.geoimage.utils.KSATVessel;
  * @author thoorfr
  */
 public class ThumbnailsManager {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ThumbnailsManager.class);
 
     private File path;
 
@@ -53,7 +53,7 @@ public class ThumbnailsManager {
             try {
                 return ImageIO.read(f);
             } catch (IOException ex) {
-                Logger.getLogger(ThumbnailsManager.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         return null;
@@ -65,7 +65,7 @@ public class ThumbnailsManager {
                 try {
                     return ImageIO.read(f);
                 } catch (IOException ex) {
-                    Logger.getLogger(ThumbnailsManager.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -107,7 +107,7 @@ public class ThumbnailsManager {
                         ImageIO.write(image, "png", new File(path, glayer.getAttributes(geom).get(idColumnName).toString() + ".png"));
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(ThumbnailsManager.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
             if (!new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png").exists()) {
@@ -127,7 +127,7 @@ public class ThumbnailsManager {
                 ImageIO.write(overview, "png", new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png"));
             }
         } catch (IOException ex) {
-            Logger.getLogger(ThumbnailsManager.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         try {
             RandomAccessFile temp = new RandomAccessFile(new File(path, "gcps.pts"), "rw");
@@ -143,7 +143,7 @@ public class ThumbnailsManager {
             }
             temp.close();
         } catch (Exception ex) {
-            Logger.getLogger(ThumbnailsManager.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         Map<String,Object> config = new HashMap<String,Object>();
         config.put(SumoXmlIOOld.CONFIG_FILE, new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml").getAbsolutePath());

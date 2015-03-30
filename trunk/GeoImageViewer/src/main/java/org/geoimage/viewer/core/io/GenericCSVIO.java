@@ -16,8 +16,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -34,12 +32,12 @@ import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geoimage.viewer.widget.SelectParametersJDialog;
 import org.h2.tools.Csv;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
 
 /**
  *
@@ -50,6 +48,7 @@ import com.vividsolutions.jts.io.WKTReader;
  *
  */
 public class GenericCSVIO extends AbstractVectorIO {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GenericCSVIO.class);
 
     public static String CONFIG_FILE = "file";
 
@@ -105,7 +104,7 @@ public class GenericCSVIO extends AbstractVectorIO {
             return out;
 
         } catch (Exception ex) {
-            Logger.getLogger(GenericCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
 
         return null;
@@ -157,7 +156,7 @@ public class GenericCSVIO extends AbstractVectorIO {
             fis.flush();
             fis.close();
         } catch (IOException ex) {
-            Logger.getLogger(GenericCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
 
 
@@ -224,7 +223,7 @@ public class GenericCSVIO extends AbstractVectorIO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(GenericCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
     }
 

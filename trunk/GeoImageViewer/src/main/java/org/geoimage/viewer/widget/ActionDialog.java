@@ -10,11 +10,8 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,16 +21,18 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.core.api.iactions.IConsoleAction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author  thoorfr
  */
 public class ActionDialog extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ActionDialog.class);
 
     private IAction action;
     private List<JComponent> components = new Vector<JComponent>();
@@ -86,7 +85,7 @@ public class ActionDialog extends javax.swing.JDialog {
                                 try {
                                     tf.setText(fc.getSelectedFile().getCanonicalPath());
                                 } catch (IOException ex) {
-                                    Logger.getLogger(ActionDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                	logger.error(ex.getMessage(),ex);
                                 }
                             }
                         }
@@ -112,8 +111,7 @@ public class ActionDialog extends javax.swing.JDialog {
                                 try {
                                     tf.setText(fc.getSelectedFile().getCanonicalPath());
                                 } catch (IOException ex) {
-                                    Logger.getLogger(ActionDialog.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                	logger.error(ex.getMessage(),ex);                                }
                             }
                         }
                     });
@@ -218,8 +216,8 @@ public class ActionDialog extends javax.swing.JDialog {
                 }*/
             }
             Platform.getConsoleLayer().execute(args);
-        } catch (Exception e) {
-            Logger.getLogger(ActionDialog.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);      
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -15,22 +15,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.PickedData;
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
@@ -39,6 +35,7 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.AbstractLayer;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -51,6 +48,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author thoorfr
  */
 public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IClickable {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(InterpolatedVectorLayer.class);
 
     protected boolean active = true;
     protected  GeoImageReader reader;
@@ -171,7 +169,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
 	                shpio.save(glayer,projection,(SarImageReader)reader);
 	            } catch (Exception ex) {
-	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+	            	logger.error(ex.getMessage(),ex);
 	            }
 	            break;
 	        }
@@ -182,7 +180,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                AbstractVectorIO sio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
 	                sio.save(glayer, "",(SarImageReader)reader);
 	            } catch (Exception ex) {
-	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+	            	logger.error(ex.getMessage(),ex);
 	            }
 	            break;
 	        }
@@ -193,7 +191,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	                AbstractVectorIO sxl = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);
 	                sxl.save(glayer, projection,(SarImageReader)reader);
 	            } catch (Exception ex) {
-	                Logger.getLogger(InterpolatedVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+	            	logger.error(ex.getMessage(),ex);
 	            }
 	            break;
 	        }
