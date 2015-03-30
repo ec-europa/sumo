@@ -18,14 +18,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.geoimage.analysis.BlackBorderAnalysis;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -35,6 +35,9 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class ImagePlanning {
 
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImagePlanning.class);
+
+	
     private URL remoteLocation;
     private Timestamp acquisitionTime;
     private String localPath;
@@ -129,8 +132,8 @@ public class ImagePlanning {
                 ftpthread = new Thread(new Runnable() {
 
                     public void run() {
-                        //ftpclient.
-                        Logger.getLogger(ImagePlanning.class.getName()).log(Level.INFO, "\nFTP " + getRemoteLocation());
+                        logger.info("\nFTP " + getRemoteLocation());
+                    	
                         processingmessage = "Starting Download";
                         try {
                             URLConnection con = null;
@@ -230,7 +233,7 @@ public class ImagePlanning {
 
 
                         } catch (Exception e) {
-                            Logger.getLogger(ImagePlanning.class.getName()).log(Level.SEVERE, null, e);
+                        	logger.error(e.getMessage(),e);
                             processingmessage = "Error during download";
                         }
 
@@ -255,7 +258,7 @@ public class ImagePlanning {
                             try {
                                 ioresult = in.read(bytesIn);
                             } catch (IOException e) {
-                                Logger.getLogger(ImagePlanning.class.getName()).log(Level.INFO, "IO problem while downloading image");
+                            	logger.error(e.getMessage(),"IO problem while downloading image");
                             }
                             if (ioresult != -1) {
                                 out.write(bytesIn, 0, ioresult);
@@ -369,9 +372,8 @@ public class ImagePlanning {
                                     e.printStackTrace();
                                 }
                             }
-
                             // execute action script
-                            Logger.getLogger(ImagePlanning.class.getName()).log(Level.INFO, "\naction\n" + action);
+                            logger.info("\naction\n" + action);
                             processingmessage = "Processing Image in SUMO";
                             Platform.getConsoleLayer().runScriptString(action);
                             processingmessage = "Processed";
@@ -383,7 +385,7 @@ public class ImagePlanning {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(ImagePlanning.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
         return processingmessage;

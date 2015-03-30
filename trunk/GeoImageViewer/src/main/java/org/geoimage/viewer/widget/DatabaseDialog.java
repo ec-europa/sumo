@@ -8,9 +8,8 @@ package org.geoimage.viewer.widget;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
@@ -18,12 +17,14 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author  thoorfr
  */
 public class DatabaseDialog extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(DatabaseDialog.class);
 
     private GeometricLayer layer;
     private IImageLayer ilayer;
@@ -126,7 +127,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
                     });
                     dialog.setVisible(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(DatabaseDialog.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         });
@@ -151,7 +152,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
                     layer = GeometricLayer.createImageProjectedLayer(layer, ilayer.getImageReader().getGeoTransform(), "EPSG:4326");
                 }
             } catch (Exception ex) {
-                Logger.getLogger(DatabaseDialog.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
             return layer;
         }

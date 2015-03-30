@@ -6,15 +6,12 @@
 
 package org.geoimage.viewer.widget;
 
-import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -24,6 +21,7 @@ import javax.swing.text.DefaultFormatterFactory;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.TimeComponent;
 import org.jdesktop.application.Action;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -40,6 +38,8 @@ public class CatalogPanel extends javax.swing.JPanel {
     int inc = +1;
     int slideval = 0;
     private int refreshRate=100;
+
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(CatalogPanel.class);
 
     private class imagetypeModel extends javax.swing.table.DefaultTableModel {
 
@@ -125,7 +125,7 @@ public class CatalogPanel extends javax.swing.JPanel {
                             updateComponents();
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(CatalogPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                 }
             }

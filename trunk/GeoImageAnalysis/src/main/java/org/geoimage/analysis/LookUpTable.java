@@ -20,8 +20,8 @@ package org.geoimage.analysis;
  */
 import java.sql.*;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.LoggerFactory;
 
 /** the client to access to look up tables through a web-service */
 public class LookUpTable {
@@ -52,6 +52,10 @@ public class LookUpTable {
     static String dbhost = "localhost";
     static String dbport = "5432";
 
+    
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(LookUpTable.class);
+
+    
     // The binary LUT
     private byte[] lut = null;
 
@@ -155,7 +159,7 @@ public class LookUpTable {
             lutFile.readFully(this.lut);
 
         } catch (IOException ex) {
-            Logger.getLogger(LookUpTable.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

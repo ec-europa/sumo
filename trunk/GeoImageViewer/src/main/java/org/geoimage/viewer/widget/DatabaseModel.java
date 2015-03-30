@@ -7,16 +7,19 @@ package org.geoimage.viewer.widget;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 class DatabaseModel implements TableModel{
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(DatabaseModel.class);
+
     private ResultSet rs;
     private String[] cname=new String[0];
     private int nrow=0;
@@ -32,7 +35,7 @@ class DatabaseModel implements TableModel{
             rs.last();
             nrow=rs.getRow();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -52,7 +55,7 @@ class DatabaseModel implements TableModel{
         try {
             return Class.forName(rs.getMetaData().getColumnClassName(columnIndex+1));
         } catch (Exception ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }
@@ -67,7 +70,7 @@ class DatabaseModel implements TableModel{
             rs.relative(rowIndex);
             return rs.getObject(columnIndex+1);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseModel.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }

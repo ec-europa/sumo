@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -141,12 +139,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                         }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(AddInterpolatedConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
-                    return;
+                	logger.error(ex.getMessage(), ex);
                 }
-            } else {
-                return;
             }
+            return;
         }
     }
 
@@ -194,7 +190,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                     return;
                 } catch (Exception ex) {
                     done = true;
-                    Logger.getLogger(AddInterpolatedConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex.getMessage(), ex);
                 }
             }
         }
@@ -213,7 +209,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(AddInterpolatedConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
     }
 

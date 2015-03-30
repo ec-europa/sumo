@@ -7,13 +7,12 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
@@ -21,10 +20,13 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.LoggerFactory;
 
 
 public class ReadTest {
 	private static final String file="G:\\sat\\TSX1_SAR__SSC______SM_S_SRA_20130311T070032_20130311T070040\\TSX1_SAR__SSC______SM_S_SRA_20130311T070032_20130311T070040.xml";
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ReadTest.class);
+
 	byte[]preloadedDataSLC;
 	private int xOffset = 8;
 	GeoImageReader reader;
@@ -45,10 +47,8 @@ public class ReadTest {
             doc = builder.build(productxml);
             Element atts = doc.getRootElement().getChild("productInfo");
 
-        } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JDOMException|IOException ex) {
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -98,8 +98,8 @@ public class ReadTest {
 
 	            fss.read(preloadedDataSLC);
 	            fss.close();
-	        } catch (Exception e) {
-	            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+	        } catch (Exception ex) {
+	        	logger.error(ex.getMessage(),ex);
 	        }
 
 	        /*gdal.AllRegister();

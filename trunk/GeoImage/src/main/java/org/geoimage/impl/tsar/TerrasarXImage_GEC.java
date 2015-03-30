@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -26,6 +24,7 @@ import org.jdom.input.SAXBuilder;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
@@ -35,6 +34,9 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
  * @author thoorfr, gabbaan
  */
 public class TerrasarXImage_GEC extends TerrasarXImage {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TerrasarXImage_GEC.class);
+	
+	
     protected int[] preloadedInterval = new int[]{0, 0};
     protected int[] preloadedData;
     protected File tfw;
@@ -136,13 +138,11 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
 
-        } catch (TransformException ex) {
-            Logger.getLogger(TerrasarXImage_GEC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FactoryException ex) {
-            Logger.getLogger(TerrasarXImage_GEC.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformException|FactoryException ex) {
+        	logger.error(ex.getMessage(),ex); 
         } catch (Exception ex) {
             dispose();
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
 
             return false;
         }
@@ -175,7 +175,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
         try {
             return image.reader.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return -1;
     }
@@ -329,9 +329,9 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
             gcps.add(g1);gcps.add(g2);gcps.add(g3);gcps.add(g4);
 
         } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage_GEC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage_GEC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

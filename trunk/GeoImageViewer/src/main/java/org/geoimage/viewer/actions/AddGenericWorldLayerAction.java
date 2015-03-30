@@ -9,8 +9,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -23,6 +21,7 @@ import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -31,7 +30,9 @@ import org.geoimage.viewer.core.io.AbstractVectorIO;
  * 
  */
 public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
-    private String name="";
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddGenericWorldLayerAction.class);
+	
+	private String name="";
     private File worldFile;
 
     public AddGenericWorldLayerAction(String actionName,File worldFile) {
@@ -60,7 +61,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                             GeometricLayer gl = shpio.read(l.getImageReader());
                             addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
                         } catch (Exception ex) {
-                            Logger.getLogger(AddGenericWorldLayerAction.class.getName()).log(Level.SEVERE, null, ex);
+                           logger.error(ex.getMessage(), ex);
                         }
                 	}   
                 } catch (Exception e) {

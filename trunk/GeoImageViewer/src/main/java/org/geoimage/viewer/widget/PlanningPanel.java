@@ -6,32 +6,28 @@
 
 package org.geoimage.viewer.widget;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.JFileChooser;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.geoimage.viewer.core.wwj.H2Fetcher;
+
 import org.geoimage.viewer.core.ImagePlanning;
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.Utilities;
+import org.geoimage.viewer.core.wwj.H2Fetcher;
 import org.jdesktop.application.Action;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,6 +35,9 @@ import org.jdom.input.SAXBuilder;
  * @author  leforth
  */
 public class PlanningPanel extends javax.swing.JPanel {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PlanningPanel.class);
+
+	
     private WWJPanel wwjPanel;
     private List<ImagePlanning> listImageplanning = null;
     private static String START_LABEL = "Start Scanning";
@@ -59,7 +58,7 @@ public class PlanningPanel extends javax.swing.JPanel {
                         jLabel1.setText(new Date().toString());
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(PlanningPanel.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }).start();
@@ -426,7 +425,7 @@ public class PlanningPanel extends javax.swing.JPanel {
                                                             foundnode = new DefaultMutableTreeNode("Status - " + imagePlanning.startDownloadImage());
                                                             node.add(foundnode);
                                                         } catch (MalformedURLException ex) {
-                                                            Logger.getLogger(PlanningPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                                        	logger.error(ex.getMessage(),ex);
                                                             foundnode = new DefaultMutableTreeNode("Problem with URL");
                                                             node.add(foundnode);
                                                         }
@@ -447,7 +446,7 @@ public class PlanningPanel extends javax.swing.JPanel {
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(ImagePlanning.class.getName()).log(Level.SEVERE, null, ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                }
             }});

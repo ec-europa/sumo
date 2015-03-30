@@ -7,24 +7,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.envi.EnvisatImage;
+import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.utils.Constant;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.referencing.operation.MathTransform;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that read Radarsat1 Images (CEOS format). Most level1 formats are supported
  * @author thoorfr
  */
 public class Radarsat1Image extends SarImageReader {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(Radarsat1Image.class);
+
+	
 	protected int xSize = -1;
 	protected int ySize = -1;
 	
@@ -126,7 +129,7 @@ public class Radarsat1Image extends SarImageReader {
             return extractMetadata();
         } catch (IOException ex) {
             dispose();
-            Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Can't read properly the file as Radarsat1", ex);
+            logger.error("Can't read properly the file as Radarsat1",ex);
         }
         return false;
 
@@ -139,7 +142,7 @@ public class Radarsat1Image extends SarImageReader {
             directory = imageFile.getParent();
         } catch (Exception ex) {
             dispose();
-            Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Cannot access the file " + imageFile.getName(), ex);
+            logger.error("Cannot access the file ",ex);
         }
     }
 
@@ -184,7 +187,8 @@ public class Radarsat1Image extends SarImageReader {
 
                 pointer += 24 + xrest + yJump;
             } catch (IOException ex) {
-                Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Cannot get the gcps", ex);
+            	logger.error("Cannot get the gcps",ex);
+                
                 return false;
             }
         }
@@ -344,7 +348,7 @@ public class Radarsat1Image extends SarImageReader {
             setIncidenceFar(new Float(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle));
 
         } catch (Exception ex) {
-            Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return false;
         }
 
@@ -377,7 +381,7 @@ public class Radarsat1Image extends SarImageReader {
                     int interm2 = pixelByte[1];
                     result = ((interm1 & 0xff) << 8 | interm2 & 0xff);
                 } catch (IOException e) {
-                    Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+                	logger.error( "cannot read pixel (" + x + "," + y + ")",e);
                 }
             } else {
                 try {
@@ -386,7 +390,7 @@ public class Radarsat1Image extends SarImageReader {
                     dat.read(pixelByte, 0, 1);
                     result = pixelByte[0];
                 } catch (IOException e) {
-                    Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+                	logger.error( "cannot read pixel (" + x + "," + y + ")",e);
                 }
             }
         }
@@ -410,7 +414,7 @@ public class Radarsat1Image extends SarImageReader {
                 dat.seek(tileOffset);
                 dat.read(preloadedData);
             } catch (IOException e) {
-                Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+            	logger.error(e.getMessage(),e);
             }
         } else {
             int tileOffset = offsetImage + (y * (xSize + xOffset));
@@ -419,7 +423,7 @@ public class Radarsat1Image extends SarImageReader {
                 dat.seek(tileOffset);
                 dat.read(preloadedData);
             } catch (IOException e) {
-                Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+            	logger.error(e.getMessage()+"  cannot preload the line tile",e);
             }
         }
 
@@ -605,7 +609,7 @@ public class Radarsat1Image extends SarImageReader {
             tra = null;
             dat = null;
         } catch (IOException ex) {
-            Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Can't close al the files", ex);
+        	logger.error("Can't close al the files",ex);
         }
     }
 
@@ -627,14 +631,14 @@ public class Radarsat1Image extends SarImageReader {
                 try {
                     lea = new RandomAccessFile(check.getAbsolutePath(), "r");
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Cannot open lea file " + check.getName(), ex);
+                	logger.error("Cannot open lea file " +check.getName(),ex);
                 }
             }
             if (fileLength == 720 || fileLength == 83658) { //tra file
                 try {
                     tra = new RandomAccessFile(check.getAbsolutePath(), "r");
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Radarsat1Image.class.getName()).log(Level.SEVERE, "Cannot open tra file " + check.getName(), ex);
+                	logger.error("Cannot open tra file " +check.getName(),ex);
                 }
             }
             if (allFiles[i].equalsIgnoreCase("flaglogscaling")) {

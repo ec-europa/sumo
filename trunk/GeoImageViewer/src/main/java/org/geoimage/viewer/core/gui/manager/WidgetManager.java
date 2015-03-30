@@ -6,10 +6,9 @@
 package org.geoimage.viewer.core.gui.manager;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.widget.TransparentWidget;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -18,7 +17,8 @@ import org.geoimage.viewer.widget.TransparentWidget;
 public class WidgetManager {
     private static WidgetManager instance;
     static HashMap<String, Class<? extends TransparentWidget>> widgets=null;
-    
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(WidgetManager.class);
+
     
     private WidgetManager(){
     	widgets=new HashMap<String, Class<? extends TransparentWidget>>();
@@ -43,7 +43,7 @@ public class WidgetManager {
             out = widgets.get(name).newInstance();
             out.setName(name);
         } catch (Exception ex) {
-            Logger.getLogger(WidgetManager.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return out;
     }

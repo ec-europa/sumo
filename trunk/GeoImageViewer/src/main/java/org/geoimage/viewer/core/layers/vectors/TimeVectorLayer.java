@@ -7,18 +7,17 @@ package org.geoimage.viewer.core.layers.vectors;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.def.GeoImageReader;
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -28,6 +27,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author thoorfr
  */
 public class TimeVectorLayer extends MaskVectorLayer implements ITime {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TimeVectorLayer.class);
 
     private String timeColumn;
     private Date minimumDate=new Date(Long.MAX_VALUE);
@@ -159,7 +159,7 @@ public class TimeVectorLayer extends MaskVectorLayer implements ITime {
             try {
                 Thread.sleep(25);
             } catch (InterruptedException ex) {
-                Logger.getLogger(TimeVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getMessage(),ex);
             }
         }
         onWork=true;

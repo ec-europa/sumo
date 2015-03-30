@@ -9,18 +9,19 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class ThumbnailsImageReader extends SarImageReader {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ThumbnailsImageReader.class);
+
 	protected int xSize = -1;
 	protected int ySize = -1;
 	
@@ -78,7 +79,7 @@ public class ThumbnailsImageReader extends SarImageReader {
             }
             temp.close();
         } catch (Exception ex) {
-            Logger.getLogger(ThumbnailsImageReader.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

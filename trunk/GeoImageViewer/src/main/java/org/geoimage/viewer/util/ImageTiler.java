@@ -1,25 +1,25 @@
 package org.geoimage.viewer.util;
 
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.layers.image.CacheManager;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class ImageTiler {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageTiler.class);
+
     private GeoImageReader gir;
     
     private String cachePath;
@@ -51,7 +51,7 @@ public class ImageTiler {
                             ImageIO.write(createImage(t, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, gir), "png", f);
 
                         } catch (IOException ex) {
-                            Logger.getLogger(ImageTiler.class.getName()).log(Level.SEVERE, null, ex);
+                        	logger.error(ex.getMessage(),ex);
                         }
                     }
                 }
@@ -117,7 +117,7 @@ public class ImageTiler {
                 try {
                     ImageIO.write(bi, "png", f);
                 } catch (IOException ex) {
-                    Logger.getLogger(ImageTiler.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }

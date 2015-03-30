@@ -5,20 +5,19 @@
 
 package org.geoimage.viewer.actions;
 
-import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
 import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class BatchAnalysisAction extends AbstractConsoleAction{
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BatchAnalysisAction.class);
 
     public String getName() {
         return "batch";
@@ -39,7 +38,7 @@ public class BatchAnalysisAction extends AbstractConsoleAction{
         try {
             BatchAnalysisGUI.main(null);
         } catch (Exception ex) {
-            Logger.getLogger(BatchAnalysisAction.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getLocalizedMessage(),ex);
         }
         return true;
     }

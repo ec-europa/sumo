@@ -15,13 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
@@ -36,12 +33,14 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.layers.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.widget.DatabaseDialog;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class AddInterpolatedConsoleAction extends AbstractAction implements IProgress {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
 
     private JFileChooser fd;
     private static String lastDirectory;
@@ -108,7 +107,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                         GeometricLayer gl = pio.read(l.getImageReader());
                         addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
                     } catch (Exception ex) {
-                        Logger.getLogger(AddVectorConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.error(ex.getMessage(), ex);
                     }
 
             }
@@ -128,7 +127,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(AddVectorConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -157,7 +156,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                     lastDirectory = fd.getSelectedFile().getAbsolutePath();
                     file = fd.getSelectedFile().getCanonicalPath();
                 } catch (IOException ex) {
-                    Logger.getLogger(AddVectorConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(), ex);
                 }
             } else {
                 return;
@@ -176,7 +175,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                     GeometricLayer gl = shpio.read(l.getImageReader());
                     addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
                 } catch (Exception ex) {
-                    Logger.getLogger(AddVectorConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(), ex);
                 }
         }
     }
@@ -215,12 +214,10 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                             }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(AddVectorConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
-                    return;
+                	logger.error(ex.getMessage(), ex);
                 }
-            } else {
-                return;
-            }
+            } 
+            return;
         }
     }
 

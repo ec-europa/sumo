@@ -14,20 +14,21 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class SimpleCSVIO extends AbstractVectorIO {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SimpleCSVIO.class);
 
     public static String CONFIG_FILE = "file";
 
@@ -97,12 +98,12 @@ public class SimpleCSVIO extends AbstractVectorIO {
             }
             return out;
         } catch (Exception ex) {
-            Logger.getLogger(SimpleCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         } finally {
             try {
                 fss.close();
             } catch (IOException ex) {
-                Logger.getLogger(SimpleCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(), ex);
             }
         }
         return null;
@@ -149,7 +150,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
             fis.flush();
             fis.close();
         } catch (IOException ex) {
-            Logger.getLogger(SimpleCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
 
 

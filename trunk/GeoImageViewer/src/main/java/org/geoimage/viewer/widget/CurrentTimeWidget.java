@@ -5,17 +5,18 @@
 package org.geoimage.viewer.widget;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.fenggui.render.DirectTextRenderer;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.widget.fenggui.Label;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class CurrentTimeWidget extends TransparentWidget {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(CurrentTimeWidget.class);
 
     public CurrentTimeWidget() {
         super("Time");
@@ -31,7 +32,7 @@ public class CurrentTimeWidget extends TransparentWidget {
                         l.setText(new Date().toString());
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(CurrentTimeWidget.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }).start();

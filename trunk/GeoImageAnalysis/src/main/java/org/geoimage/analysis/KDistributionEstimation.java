@@ -7,8 +7,6 @@ package org.geoimage.analysis;
 import java.awt.image.Raster;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.def.SarImageReader;
@@ -117,8 +115,7 @@ public class KDistributionEstimation {
 		try {
 			lookUpTable = new LookUpTable(filePath.openStream());
 		} catch (IOException ex) {
-			Logger.getLogger(KDistributionEstimation.class.getName()).log(
-					Level.SEVERE, null, ex);
+			logger.error(ex.getMessage(),ex);
 		}
 	}
 

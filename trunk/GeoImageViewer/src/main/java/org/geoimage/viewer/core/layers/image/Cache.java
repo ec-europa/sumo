@@ -2,14 +2,15 @@ package org.geoimage.viewer.core.layers.image;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.Platform;
+import org.slf4j.LoggerFactory;
 
 public class Cache {
 		private File path;
 		private String id;    
+		private static org.slf4j.Logger logger=LoggerFactory.getLogger(Cache.class);
+
 		
 	    public Cache(String id) {
 	    	this.path = new File(new StringBuilder(Platform.getCachePath()).append("/").append(id).toString());
@@ -164,7 +165,7 @@ public class Cache {
 	                try {
 	                    return file.toURI().toURL();
 	                } catch (MalformedURLException e) {
-	                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+	                	logger.error(e.getMessage(),e);
 	                }
 	            }
 	        }
@@ -236,7 +237,7 @@ public class Cache {
 	                file.delete();
 	            }
 	        } catch (java.net.URISyntaxException e) {
-	            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+	        	logger.error(e.getMessage(),e);
 	        }
 	    }
 

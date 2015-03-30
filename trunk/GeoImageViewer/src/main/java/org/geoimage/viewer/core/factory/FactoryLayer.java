@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
@@ -15,15 +13,20 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.TimeVectorLayer;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class FactoryLayer {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FactoryLayer.class);
+
+	
 	public final static String TYPE_COMPLEX="complexvds";
 	
 	//TODO utilizzare queste costanti : in questo momento viene utilizzata solo TYPE_COMPLEX
@@ -89,7 +92,7 @@ public class FactoryLayer {
             //if(bufferingDistance!=0)
             	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
-            Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         }
         return mask;
     }

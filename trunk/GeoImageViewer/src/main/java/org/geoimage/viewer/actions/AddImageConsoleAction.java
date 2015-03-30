@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 
@@ -32,6 +30,7 @@ import org.geoimage.viewer.core.layers.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.util.Constant;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -40,6 +39,7 @@ import org.geoimage.viewer.util.Constant;
  * thumbnails part need to be revised
  */
 public class AddImageConsoleAction extends AbstractAction implements IProgress {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageConsoleAction.class);
 
     private JFileChooser fileChooser;
     private String lastDirectory;
@@ -147,13 +147,13 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	                try {
 	                    Thread.sleep(5000);
 	                } catch (InterruptedException ex) {
-	                    Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+	                	logger.error(ex.getMessage(),ex);
 	                }
             	}
             	try {
                     Platform.refresh();
                 } catch (Exception ex) {
-                    Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             	Platform.getConsoleLayer().execute("home");
             }
@@ -202,14 +202,14 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	                try {
 	                    Thread.sleep(1000);
 	                } catch (InterruptedException ex) {
-	                    Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+	                	logger.error(ex.getMessage(),ex);
 	                }
 	                Platform.getConsoleLayer().execute("home");
 
 	                try {
 	                    Platform.refresh();
 	                } catch (Exception ex) {
-	                    Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+	                	logger.error(ex.getMessage(),ex);
 	                }
                 }
             } else {
@@ -291,7 +291,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
         try {
             Platform.refresh();
         } catch (Exception ex) {
-            Logger.getLogger(AddImageConsoleAction.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
     }

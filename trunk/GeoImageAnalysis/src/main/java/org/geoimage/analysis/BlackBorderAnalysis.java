@@ -227,7 +227,7 @@ public class BlackBorderAnalysis {
 	            		}
         			}else{
         				stop=true;
-        				System.out.println("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        				logger.info("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
         			}	
         		}
         		
@@ -244,7 +244,7 @@ public class BlackBorderAnalysis {
         	}
         	startYPixelTile=startYPixelTile+sizeY;
         }
-        System.out.println("Tiles Analized H:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
+        logger.info("Tiles Analized H:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	
@@ -306,7 +306,7 @@ public class BlackBorderAnalysis {
 	            		}
         			}else{
         				stop=true;
-        				System.out.println("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        				logger.info("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
         			}	
         		}
         		if(top){
@@ -322,7 +322,7 @@ public class BlackBorderAnalysis {
         	}
         	startXPixelTile=startXPixelTile+sizeX;
         }
-        System.out.println("Tiles Analized V:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
+        logger.info("Tiles Analized V:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	public void putAnalysisTile(int row,int col,TileAnalysis result){
