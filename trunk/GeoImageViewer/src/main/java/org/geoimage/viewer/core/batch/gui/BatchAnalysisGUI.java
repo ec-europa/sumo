@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,7 +36,6 @@ import org.geoimage.impl.ENL;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -49,6 +46,7 @@ import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.slf4j.LoggerFactory;
 
 import com.keithpower.gekmlib.Document;
 import com.keithpower.gekmlib.Folder;
@@ -64,6 +62,7 @@ import com.vividsolutions.jts.io.WKTWriter;
  * @author  thoorfr
  */
 public class BatchAnalysisGUI extends javax.swing.JFrame {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BatchAnalysisGUI.class);
 
     /** Creates new form NURCAnalysis */
     public BatchAnalysisGUI() {
@@ -71,7 +70,7 @@ public class BatchAnalysisGUI extends javax.swing.JFrame {
         try {
             tryCatalog();
         } catch (Exception ex) {
-            Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.WARNING, "No Image in Catalog");
+        	logger.warn("No Image in Catalog "+ex.getMessage());
         }
     }
 
@@ -287,7 +286,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 try {
                     new BatchAnalysisGUI().setVisible(true);
                 } catch (Exception ex) {
-                    Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex.getMessage(), ex);
                 }
             }
         });
@@ -554,7 +553,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             fis.flush();
             fis.close();
         } catch (Exception ex) {
-            Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
     }
@@ -599,7 +598,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 try {
                     Desktop.getDesktop().open(new File(output + "/master.kml"));
                 } catch (IOException ex) {
-                    Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -673,7 +672,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             String sql = "CREATE TABLE CATALOGUE(IMAGENAME VARCHAR PRIMARY KEY, REPOSITORY VARCHAR, IMAGETYPE VARCHAR,GEOM VARCHAR, DATE_CREATION TIMESTAMP)";
             stat.execute(sql);
         } catch (Exception ex) {
-            Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.WARNING, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return;
         }
 
@@ -722,7 +721,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         try {
             conn.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BatchAnalysisGUI.class.getName()).log(Level.WARNING, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
 
         SwingUtilities.invokeLater(new Runnable() {

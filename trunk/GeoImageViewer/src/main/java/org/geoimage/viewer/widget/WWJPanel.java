@@ -24,8 +24,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
@@ -38,6 +36,7 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.wwj.H2Fetcher;
 import org.geoimage.viewer.core.wwj.TimeRenderableLayer;
 import org.geoimage.viewer.core.wwj.WWGeoImage;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -47,6 +46,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author  leforth
  */
 public class WWJPanel extends javax.swing.JPanel {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(WWJPanel.class);
 
     private TimeRenderableLayer catalogLayer;
     private TimeRenderableLayer acquisitionLayer;
@@ -171,7 +171,7 @@ public class WWJPanel extends javax.swing.JPanel {
                     }
                 });
             } catch (Exception ex) {
-                Logger.getLogger(WWJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
             catalogLayer.setEnabled(true);
             date = catalogLayer.calculateMinMaxDates();

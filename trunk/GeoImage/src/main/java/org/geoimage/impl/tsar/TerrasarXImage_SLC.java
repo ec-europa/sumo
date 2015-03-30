@@ -10,14 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
 import org.geoimage.impl.envi.EnvisatImage;
 import org.geoimage.utils.ByteUtils;
+import org.geoimage.viewer.widget.CurrentTimeWidget;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -28,12 +27,15 @@ import org.jdom.input.SAXBuilder;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class that reads Terrasar-X SLC images
  * @author gabbaan
  */
 public class TerrasarXImage_SLC extends TerrasarXImage {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TerrasarXImage_SLC.class);
+
     private int xOffset = 8; //each row has 8 bytes of offset at the beginning
     //private int offsetBand; //to consider images with more than one band, NOT YET IMPLEMENTED!!!
     private byte[] preloadedDataSLC;
@@ -80,9 +82,9 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
         } catch (TransformException ex) {
-            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (FactoryException ex) {
-            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return true;
     }
@@ -144,7 +146,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
 	            }
 	        }
         }catch(Exception e){
-            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+        	logger.error(e.getMessage()+" cannot read pixel (" + x + "," + y + ")",e);
         }
         return tile;
     }
@@ -169,7 +171,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
                 long img = ((interm2) << 8) | (interm3 & 0xFF);
                 result = (int) Math.sqrt(real * real + img * img);
             } catch (Exception e) {
-                Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+            	logger.error(e.getMessage()+" cannot read pixel (" + x + "," + y + ")",e);
             }
         }
         return result;
@@ -193,7 +195,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
 	            fss.read(preloadedDataSLC);
 	            fss.close();
 	        } catch (IOException e) {
-	            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+	        	logger.error(e.getMessage()+ "  cannot preload the line tile",e);
 	        }
     }
 
@@ -298,9 +300,9 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             setK(Double.parseDouble(val));
 
         } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
    /* @Override
@@ -337,10 +339,10 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             }
             return gcps;
         } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return null;
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage_SLC.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return null;
         }
     }

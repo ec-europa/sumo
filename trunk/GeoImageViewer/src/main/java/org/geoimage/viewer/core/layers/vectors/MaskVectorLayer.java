@@ -15,16 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
@@ -61,6 +59,7 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
  * @author thoorfr
  */
 public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IMask, IClickable, IThreshable {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
 
     public final static String POINT = GeometricLayer.POINT;
     public final static String POLYGON = GeometricLayer.POLYGON;
@@ -81,7 +80,6 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     private double maxThresh = 0;
     protected double currentThresh = 0;
     
-    private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
     
     //Pietro: for testing layer intersaction / union
     //public static ArrayList <Geometry>intersections=null;
@@ -597,7 +595,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                 AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
                 shp.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
             } catch (MalformedURLException ex) {
-                Logger.getLogger(MaskVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
 

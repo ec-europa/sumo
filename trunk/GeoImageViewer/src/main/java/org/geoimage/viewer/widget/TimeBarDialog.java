@@ -8,16 +8,18 @@ package org.geoimage.viewer.widget;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.SwingWorker;
+
 import org.geoimage.viewer.core.TimeComponent;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author  thoorfr
  */
 public class TimeBarDialog extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TimeBarDialog.class);
 
     private Date max = Timestamp.valueOf("2999-01-01 23:59:59"),  min = new Date(0);
     private Date[] dates = new Date[2];
@@ -68,7 +70,7 @@ public class TimeBarDialog extends javax.swing.JDialog {
                                 updateUI();
                             }
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(TimeBarDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        	logger.error(ex.getMessage(),ex);
                         }
                     }
                 }
@@ -280,7 +282,7 @@ private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     try {
                         Thread.sleep(refreshRate);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(TimeBarDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    	logger.error(ex.getMessage(),ex);
                     }
                     if (jSlider3.getValue() == jSlider3.getMaximum()) {
                         inc = -inc;

@@ -6,21 +6,23 @@ package org.geoimage.impl.geoop;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoTransform;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class AffineGeoTransform implements GeoTransform {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AffineGeoTransform.class);
 
+	
+	
     CoordinateReferenceSystem sourceCRS;
     AffineTransform pix2geo;
     AffineTransform geo2pix;
@@ -35,8 +37,7 @@ public class AffineGeoTransform implements GeoTransform {
             geo2pix = pix2geo.createInverse();
             sourceCRS = CRS.decode(epsgGeoProj);
         } catch (Exception ex) {
-            Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
-
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -51,7 +52,7 @@ public class AffineGeoTransform implements GeoTransform {
                 out[0] = temp[0];
                 out[1] = temp[1];
             } catch (Exception ex) {
-                Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         geo2pix.transform(out, 0, out, 0, 1);
@@ -70,7 +71,7 @@ public class AffineGeoTransform implements GeoTransform {
                 out[0] = temp[0];
                 out[1] = temp[1];
             } catch (Exception ex) {
-                Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         return out;
@@ -90,7 +91,7 @@ public class AffineGeoTransform implements GeoTransform {
                     dest[destOffset+i++] = temp[0];
                     dest[destOffset+i++] = temp[1];
                 } catch (Exception ex) {
-                    Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -113,7 +114,7 @@ public class AffineGeoTransform implements GeoTransform {
                     out[destOffset+i++] = temp[0];
                     out[destOffset+i++] = temp[1];
                 } catch (Exception ex) {
-                    Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -132,7 +133,7 @@ public class AffineGeoTransform implements GeoTransform {
             m_translationX = -x;
             m_translationY = -y;
         } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(AffineGeoTransform.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

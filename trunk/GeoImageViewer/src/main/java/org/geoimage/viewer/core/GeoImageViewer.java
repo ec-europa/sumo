@@ -3,19 +3,19 @@
  */
 package org.geoimage.viewer.core;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JPopupMenu;
 
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main class of the application. Note that the static method can work ONLY
  * AFTER the complete startup of the application
  */
 public class GeoImageViewer extends SingleFrameApplication {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewer.class);
 
    
     /**
@@ -26,7 +26,7 @@ public class GeoImageViewer extends SingleFrameApplication {
         try {
             show(new GeoImageViewerView(this));
         } catch (Throwable ex) {
-        	Logger.getLogger(GeoImageViewer.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(), ex);
         }
     }
 

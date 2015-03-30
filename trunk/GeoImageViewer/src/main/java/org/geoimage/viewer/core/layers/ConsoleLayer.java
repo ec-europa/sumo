@@ -17,8 +17,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.io.FilenameUtils;
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
@@ -46,6 +45,7 @@ import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.ActionDialog;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -60,7 +60,9 @@ public class ConsoleLayer extends AbstractLayer {
     private String[] commands;
     private IProgress currentAction = null;
     private final EntityManagerFactory emf;
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ConsoleLayer.class);
 
+    
     public ConsoleLayer(ILayer parent) {
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
         
@@ -331,7 +333,7 @@ public class ConsoleLayer extends AbstractLayer {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
             return (IAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
-            Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
         return null;
     }
@@ -370,7 +372,7 @@ public class ConsoleLayer extends AbstractLayer {
         try {
             Platform.refresh();
         } catch (Exception ex) {
-            Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -580,7 +582,7 @@ public class ConsoleLayer extends AbstractLayer {
                     JPanel panel = (JPanel) Class.forName(classname).newInstance();
                     jTabbedPane1.addTab(act.getName(), panel);
                 } catch (Exception ex) {
-                    Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex.getMessage(),ex);
                 }
             }
         }

@@ -10,8 +10,6 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -24,6 +22,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to read Cosmo Skymed Images in hdf5 format.
@@ -31,7 +30,6 @@ import org.geoimage.impl.Gcp;
  * @author thoorfr
  */
 public class CosmoSkymedImage extends SarImageReader {
-
 	private String group=null;
 	protected int xSize = -1;
 	protected int ySize = -1;
@@ -47,6 +45,8 @@ public class CosmoSkymedImage extends SarImageReader {
     private boolean complex = false;
     protected String internalImage;
     protected String overview ;
+
+    private static org.slf4j.Logger logger=LoggerFactory.getLogger(CosmoSkymedImage.class);
     
     public CosmoSkymedImage(String pathImg,String group){
     	super();
@@ -100,7 +100,7 @@ public class CosmoSkymedImage extends SarImageReader {
         	h5file = new H5File(file.getAbsolutePath(), H5File.READ);
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
             extractQuickLook();
-            List<?> metadata = new ArrayList();
+            List<Object> metadata = new ArrayList<Object>();
             metadata.addAll(h5file.get("/").getMetadata());
             metadata.addAll(h5file.get(internalImage.substring(0, 3)).getMetadata());
 
@@ -253,7 +253,7 @@ public class CosmoSkymedImage extends SarImageReader {
             geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
 
         } catch (Exception ex) {
-            Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(null, ex);
             return false;
         }
         return true;
@@ -293,7 +293,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     }
                 }
             } catch (Exception ex) {
-            	Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(null, ex);
             }finally{
             }
         } else {
@@ -308,7 +308,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     }
                 }
             } catch (Exception ex) {
-            	Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(null, ex);
             }
         }
         return tile;
@@ -329,7 +329,7 @@ public class CosmoSkymedImage extends SarImageReader {
             Object o2 = imagedata.read();
             return Array.getInt(o2, 0) & 0xFFFF;
         } catch (HDF5Exception ex) {
-            Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(null, ex);
             return 0;
         }
     }
@@ -359,7 +359,7 @@ public class CosmoSkymedImage extends SarImageReader {
         try {
             preloadedData = (short[]) imagedata.read();
         } catch (Exception ex) {
-            Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(null, ex);
         }
     }
 
@@ -388,7 +388,7 @@ public class CosmoSkymedImage extends SarImageReader {
 	            bi.getRaster().setDataElements(0, 0, bi.getWidth(), bi.getHeight(), data);
 	            ImageIO.write(bi, "jpg", new File(overview));
 	        } catch (Exception ex) {
-	            Logger.getLogger(CosmoSkymedImage.class.getName()).log(Level.SEVERE, null, ex);
+	        	logger.error(null, ex);
 	        }
     	}
     }

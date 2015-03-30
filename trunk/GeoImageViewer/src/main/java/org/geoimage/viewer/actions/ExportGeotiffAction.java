@@ -7,20 +7,21 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.impl.GeotiffWriter;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class ExportGeotiffAction extends AbstractAction{
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ExportGeotiffAction.class);
 
+	
     public String getName() {
         return "exportGeotiff";
     }
@@ -40,9 +41,9 @@ public class ExportGeotiffAction extends AbstractAction{
                 try {
                     Platform.setInfo("Exporting file...", -1);
                     f.createNewFile();
-                    GeotiffWriter.create(Platform.getCurrentImageLayer().getImageReader(), 0,f.getAbsolutePath(),null);// Platform.getProgressBar());
+                    GeotiffWriter.create(Platform.getCurrentImageLayer().getImageReader(), 0,f.getAbsolutePath(),null);
                 } catch (Exception ex) {
-                    Logger.getLogger(ExportGeotiffAction.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getLocalizedMessage(),ex);
                 }
                 Platform.setInfo("");
             }

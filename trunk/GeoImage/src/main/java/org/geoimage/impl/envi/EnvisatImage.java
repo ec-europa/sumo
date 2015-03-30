@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
@@ -18,6 +16,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.referencing.operation.MathTransform;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to read Envisat Image. Most Formats level1 are supported
@@ -43,6 +42,11 @@ public class EnvisatImage extends SarImageReader {
     public static final String LINE_LENGHT="LINE_LENGTH";
     public static final String MDS1_NUM_DSR="MDS1_NUM_DSR";
     public static final String MDS2_TX_RX_POLAR="MDS1_NUM_DSR";
+    
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SarImageReader.class);
+
+    
+    
     
     public EnvisatImage() {
     }
@@ -93,7 +97,7 @@ public class EnvisatImage extends SarImageReader {
         try {
             out = file.getCanonicalPath();
         } catch (IOException ex) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(null, ex);
         }
         return new String[]{out};
     }
@@ -105,9 +109,6 @@ public class EnvisatImage extends SarImageReader {
     	this.file=file;
         fss = null;
         try {
-            if (file == null) {
-                return false;
-            }
             fss = new RandomAccessFile(file, "r");
             byte[] magicb = new byte[8];
             fss.read(magicb);
@@ -211,7 +212,7 @@ public class EnvisatImage extends SarImageReader {
             setK(fss.readDouble());
 
         } catch (Exception ex) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(null, ex);
             dispose();
             return false;
         } finally {
@@ -324,7 +325,7 @@ public class EnvisatImage extends SarImageReader {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot read gcps", ex);
+        	logger.error("cannot read gcps", ex);
         }
 
     }
@@ -345,7 +346,7 @@ public class EnvisatImage extends SarImageReader {
                 int interm2 = pixelByte[1];
                 result = ((interm1) << 8 | interm2 & 0xff);
             } catch (IOException e) {
-                Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+            	logger.error("cannot read pixel (" + x + "," + y + ")", e);
             }
 
         }
@@ -365,7 +366,7 @@ public class EnvisatImage extends SarImageReader {
             fss.seek(tileOffset);
             fss.read(preloadedData);
         } catch (IOException e) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+        	logger.error("cannot preload the line tile", e);
         }
     }
 
@@ -545,7 +546,7 @@ public class EnvisatImage extends SarImageReader {
             }
             fss = null;
         } catch (IOException ex) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "Can't close the file", ex);
+        	logger.error("Can't close the file", ex);
         }
     }
 

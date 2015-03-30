@@ -10,19 +10,18 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 
 import org.geoimage.common.OptionMenu;
-import org.geoimage.viewer.core.api.ISave;
-import org.geotools.referencing.CRS;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geotools.referencing.CRS;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -34,6 +33,7 @@ import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
  * @author  thoorfr
  */
 public class SavePanel extends javax.swing.JPanel {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SavePanel.class);
 
     private ISave layer;
     private String epsg="4326";
@@ -200,7 +200,7 @@ public class SavePanel extends javax.swing.JPanel {
             try {
                 jTextField1.setText(fd.getSelectedFile().getCanonicalPath());
             } catch (IOException ex) {
-                Logger.getLogger(SavePanel.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

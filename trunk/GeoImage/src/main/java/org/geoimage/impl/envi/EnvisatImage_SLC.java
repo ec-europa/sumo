@@ -2,8 +2,9 @@ package org.geoimage.impl.envi;
 
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.geoimage.analysis.BlackBorderAnalysis;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,7 +20,8 @@ public class EnvisatImage_SLC extends EnvisatImage {
     public EnvisatImage_SLC() {
     }
 
-   
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(EnvisatImage.class);
+
     
 
     @Override
@@ -41,7 +43,7 @@ public class EnvisatImage_SLC extends EnvisatImage {
                 long img=((interm2) << 8) | (interm3&0xFF);
                 result = (int)Math.sqrt(real*real+img*img);
             } catch (IOException e) {
-                Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot read pixel (" + x + "," + y + ")", e);
+            	logger.error("cannot read pixel (" + x + "," + y + ")", e);
             }
         }
         return result;
@@ -59,7 +61,7 @@ public class EnvisatImage_SLC extends EnvisatImage {
             fss.seek(tileOffset);
             fss.read(preloadedData);
         } catch (IOException e) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+        	logger.error("cannot preload the line tile", e);
         }
     }
 

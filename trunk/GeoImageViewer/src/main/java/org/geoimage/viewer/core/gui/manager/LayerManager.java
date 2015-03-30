@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
@@ -27,6 +25,7 @@ import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -36,20 +35,14 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
     //Each Listener list all layers
 	protected List<ILayerListener> listeners = new ArrayList<ILayerListener>();	    
-    
 	protected HashMap<ILayer,List<ILayer>> layers = new HashMap<ILayer,List<ILayer>>();
-	
 	private  ConsoleLayer consoleLayer=null;
-	
-
-
 	private  BaseLayer baseLayer=null;
-	
-	
     protected List<ILayer> remove = new ArrayList<ILayer>();
     protected List<ILayer> add = new ArrayList<ILayer>();
     private static LayerManager manager=null;
     
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(LayerManager.class);
     
 
     private LayerManager() {
@@ -87,7 +80,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
             try {
                 Platform.refresh();
             } catch (Exception ex) {
-                Logger.getLogger(LayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getMessage(), ex);
             }
         }
         if (this.remove.size() > 0) {
@@ -107,7 +100,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
             try {
                 Platform.refresh();
             } catch (Exception ex) {
-                Logger.getLogger(LayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getMessage(), ex);
             }
         }
         for (ILayer lkey : getAllLayers()){//layers.keySet()) {

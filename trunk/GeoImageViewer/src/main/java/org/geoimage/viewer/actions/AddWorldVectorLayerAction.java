@@ -8,8 +8,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -24,6 +22,7 @@ import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.util.Constant;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -32,6 +31,8 @@ import org.geoimage.viewer.util.Constant;
  * 
  */
 public class AddWorldVectorLayerAction extends AbstractAction implements IProgress {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
+
     protected boolean done = false;
 
     public AddWorldVectorLayerAction() {
@@ -63,7 +64,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                             GeometricLayer gl = shpio.read(l.getImageReader());
                             addLayerInThread(gl, (IImageLayer) l);
                         } catch (Exception ex) {
-                            Logger.getLogger(AddWorldVectorLayerAction.class.getName()).log(Level.SEVERE, null, ex);
+                            logger.error(ex.getMessage(), ex);
                         }
                 	}   
                 } catch (Exception e) {

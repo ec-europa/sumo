@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -23,12 +21,14 @@ import javax.mail.internet.MimeMultipart;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author leforth
  */
 public class SendMailAction extends AbstractAction implements IProgress {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SendMailAction.class);
 
     boolean done = false;
     private final String message = "Sending email. Please wait...";
@@ -63,7 +63,7 @@ public class SendMailAction extends AbstractAction implements IProgress {
                     message.setContent(mp);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(SendMailAction.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getMessage(),ex);
             }
             String protocol = "smtp";
             Transport t = session.getTransport(protocol);

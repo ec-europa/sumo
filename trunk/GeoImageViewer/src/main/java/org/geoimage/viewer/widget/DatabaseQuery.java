@@ -15,20 +15,20 @@ import com.vividsolutions.jts.io.WKTReader;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author  thoorfr
  */
 public class DatabaseQuery extends javax.swing.JPanel {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(DatabaseQuery.class);
 
     private Connection connection;
     private ResultSet rs = null;
@@ -209,7 +209,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 rs= connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(sql);
                 return rs;
             } catch (Exception ex) {
-                Logger.getLogger(DatabaseQuery.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
                 return null;
             }
         }

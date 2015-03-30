@@ -5,13 +5,15 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.LoggerFactory;
+
 
 public class ScaleTransformation {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ScaleTransformation.class);
+	
 	public ScaleTransformation(){
 	}
 	
@@ -25,7 +27,7 @@ public class ScaleTransformation {
             temp = op.filter(temp, null);
             
         } catch (IOException ex) {
-            Logger.getLogger(Class.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
 		return temp;
 	}

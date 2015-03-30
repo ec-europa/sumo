@@ -8,12 +8,13 @@ import java.awt.Rectangle;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+
+import org.geoimage.analysis.BlackBorderAnalysis;
+import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFDirectory;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
@@ -24,6 +25,7 @@ import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
  * @author thoorfr
  */
 public class TIFF {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TIFF.class);
 
 
     public TIFFImageReader reader;
@@ -64,13 +66,13 @@ public class TIFF {
             	}
             }
             if(!worked){
-            	Logger.getLogger(TIFF.class.getName()).log(Level.WARNING,"No reader avalaible for this image");
+            	logger.warn("No reader avalaible for this image");
             }
         } catch (Exception ex) {
-            Logger.getLogger(TIFF.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);        
         }
-    }
-
+	}
+	
     public int getxSize() {
 		return xSize;
 	}
@@ -104,7 +106,7 @@ public class TIFF {
             td=null;
             reader.dispose();
         } catch (Exception ex) {
-            Logger.getLogger(TIFF.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
     public File getImageFile() {

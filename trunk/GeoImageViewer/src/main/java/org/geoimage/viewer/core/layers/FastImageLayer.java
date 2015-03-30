@@ -22,9 +22,6 @@ import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.media.jai.JAI;
-import javax.media.jai.PlanarImage;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 

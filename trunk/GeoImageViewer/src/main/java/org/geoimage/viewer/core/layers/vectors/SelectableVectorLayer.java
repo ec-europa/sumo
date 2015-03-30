@@ -9,15 +9,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.util.GeometricLayerIO;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
@@ -27,6 +27,7 @@ import com.vividsolutions.jts.io.WKTReader;
  * @author thoorfr
  */
 public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SelectableVectorLayer.class);
 
     private String whereClause = null;
 
@@ -65,7 +66,7 @@ public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
                     glayer.put(geom, att);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(SelectableVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getMessage(),ex);
             }
             whereClause = null;
         }
@@ -84,7 +85,7 @@ public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
             stat.close();
             conn.close();
         } catch (Exception ex) {
-            Logger.getLogger(SelectableVectorLayer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
     }
 }

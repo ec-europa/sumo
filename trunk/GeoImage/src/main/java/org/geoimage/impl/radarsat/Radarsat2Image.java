@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
@@ -18,11 +16,13 @@ import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
+import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GeoUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
@@ -31,7 +31,8 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
  * @author thoorfr
  */
 public class Radarsat2Image extends SarImageReader {
-	
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(Radarsat2Image.class);
+
     //protected TIFF image;
     protected String[] files;
     protected int[] preloadedInterval = new int[]{0, 0};
@@ -103,7 +104,7 @@ public class Radarsat2Image extends SarImageReader {
             read(0,0,0);
         } catch (Exception ex) {
             dispose();
-            Logger.getLogger(Radarsat2Image.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
             return false;
         }
         return true;
@@ -168,7 +169,7 @@ public class Radarsat2Image extends SarImageReader {
         try {
             return getImage(band).reader.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return -1;
 
@@ -202,7 +203,7 @@ public class Radarsat2Image extends SarImageReader {
         try {
             preloadedData = getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             System.gc();
         }
     }
@@ -357,7 +358,7 @@ public class Radarsat2Image extends SarImageReader {
 	                else
 	                	gcp.setXpix(pixel-dx);
                 }catch(Exception e){
-                    Logger.getLogger(Radarsat2Image.class.getName()).log(Level.WARNING, "Error during geocorrection",e);
+                	logger.warn( "Error during geocorrection");
                     gcp.setXpix(pixel);
                 }   
                 
@@ -426,7 +427,7 @@ public class Radarsat2Image extends SarImageReader {
             setK(0.0);
         
         } catch (Exception ex) {
-            Logger.getLogger(Radarsat2Image.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

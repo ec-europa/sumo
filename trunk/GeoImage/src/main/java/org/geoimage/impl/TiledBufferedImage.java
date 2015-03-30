@@ -16,21 +16,22 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.envi.EnvisatImage;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.IProgress;
+import org.slf4j.LoggerFactory;
 
 /**
  * In order to save RAM, this Object manage the raster you may change or do whatever with it
  * @author thoorfr
  */
 public class TiledBufferedImage implements GeoImageReader {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TiledBufferedImage.class);
 
     private int[] preloadedInterval;
     private final int xSize;
@@ -97,12 +98,12 @@ public class TiledBufferedImage implements GeoImageReader {
             fos.getChannel().write(out);
             tiles.put(band + "_" + xx + "_" + yy, f);
         } catch (Exception ex) {
-            Logger.getLogger(TiledBufferedImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } finally {
             try {
                 fos.close();
             } catch (IOException ex) {
-                Logger.getLogger(TiledBufferedImage.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         out.rewind();
@@ -138,7 +139,7 @@ public class TiledBufferedImage implements GeoImageReader {
                     tile.force();
                     fis.close();
                 } catch (Exception ex) {
-                    Logger.getLogger(TiledBufferedImage.class.getName()).log(Level.SEVERE, null, ex);
+                	logger.error(ex.getMessage(),ex);                
                 }
             }
         }
@@ -243,7 +244,7 @@ public class TiledBufferedImage implements GeoImageReader {
                 col += tilesize;
             }
         } catch (IOException e) {
-            Logger.getLogger(EnvisatImage.class.getName()).log(Level.SEVERE, "cannot preload the line tile", e);
+        	logger.error("cannot preload the line tile: ",e);
         }
 
     }

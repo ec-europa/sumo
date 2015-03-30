@@ -20,8 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -32,6 +30,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
+import org.slf4j.LoggerFactory;
 
 import com.keithpower.gekmlib.Document;
 import com.keithpower.gekmlib.Folder;
@@ -62,7 +61,8 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  */
 public class KmlIO extends AbstractVectorIO {
-	
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KmlIO.class);
+
     public static String CONFIG_FILE = "file";
 
     public KmlIO(){
@@ -369,7 +369,7 @@ public class KmlIO extends AbstractVectorIO {
             out.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(GenericCSVIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getLocalizedMessage(),ex);
         }
     }
 

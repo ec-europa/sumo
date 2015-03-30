@@ -7,12 +7,13 @@ package org.geoimage.viewer.core;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsImageReader;
 import org.jdesktop.application.Action;
+import org.slf4j.LoggerFactory;
 
 public class GeoImageViewerAboutBox extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerAboutBox.class);
 
     public GeoImageViewerAboutBox(java.awt.Frame parent) {
         super(parent);
@@ -150,7 +151,7 @@ public class GeoImageViewerAboutBox extends javax.swing.JDialog {
         try {
             Desktop.getDesktop().browse(new URI(appHomepageLabel.getText()));//GEN-LAST:event_appHomepageLabelMouseClicked
         } catch (Exception ex) {
-            Logger.getLogger(GeoImageViewerAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
     

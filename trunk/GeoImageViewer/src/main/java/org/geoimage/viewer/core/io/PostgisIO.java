@@ -4,18 +4,13 @@
  */
 package org.geoimage.viewer.core.io;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
-
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -36,31 +31,32 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
+import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  *
  * @author thoorfr
  */
 public class PostgisIO extends AbstractVectorIO {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PostgisIO.class);
 
     public static String CONFIG_DBTYPE = "dbtype";    //must be postgis
     public static String CONFIG_HOST = "host";        //the name or ip address of the machine running PostGIS
@@ -149,7 +145,7 @@ public class PostgisIO extends AbstractVectorIO {
             dataStore.dispose();
             return GeometricLayer.createImageProjectedLayer(out, gt, "EPSG:4326");
         } catch (Exception ex) {
-            Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }
@@ -289,7 +285,7 @@ public class PostgisIO extends AbstractVectorIO {
 
 
         } catch (SchemaException ex) {
-            Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return null;
     }
@@ -374,8 +370,7 @@ public class PostgisIO extends AbstractVectorIO {
 
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -400,7 +395,7 @@ public class PostgisIO extends AbstractVectorIO {
             // store extracted VDS points
             save(layer,projection,(SarImageReader)gir);
         } catch (Exception ex) {
-            Logger.getLogger(PostgisIO.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 

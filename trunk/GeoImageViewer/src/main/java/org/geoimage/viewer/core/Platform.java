@@ -4,8 +4,6 @@
  */
 package org.geoimage.viewer.core;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.media.opengl.awt.GLCanvas;
 
@@ -19,12 +17,14 @@ import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.TransparentWidget;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class Platform {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(Platform.class);
 
     private static boolean batchMode=false;
     /*private static Thread currentThreadRunning=null;
@@ -159,7 +159,7 @@ public class Platform {
 	                try {
 	                    return (IImageLayer) l;
 	                } catch (Exception ex) {
-	                    Logger.getLogger(Platform.class.getName()).log(Level.SEVERE, null, ex);
+	                	logger.error(ex.getMessage(),ex);
 	                }
 	            }
 	        }

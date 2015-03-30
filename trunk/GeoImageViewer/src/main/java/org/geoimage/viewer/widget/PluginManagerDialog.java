@@ -11,8 +11,6 @@
 package org.geoimage.viewer.widget;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -23,12 +21,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import org.geoimage.viewer.core.Plugins;
+import org.slf4j.LoggerFactory;
 
-/**
+/**O
  *
  * @author thoorfr
  */
 public class PluginManagerDialog extends javax.swing.JDialog {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PluginManagerDialog.class);
 
     private final EntityManagerFactory emf;
     private final List<Plugins> plugins;
@@ -231,7 +231,7 @@ public class PluginManagerDialog extends javax.swing.JDialog {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(PluginManagerDialog.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         if(dialog.getPlugin()==null) return;
@@ -258,7 +258,7 @@ public class PluginManagerDialog extends javax.swing.JDialog {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(PluginManagerDialog.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error(ex.getMessage(),ex);
             }
         }
         EntityManager em = emf.createEntityManager();

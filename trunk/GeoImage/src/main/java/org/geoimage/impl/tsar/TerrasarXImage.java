@@ -14,14 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
+import org.geoimage.viewer.widget.CurrentTimeWidget;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -32,6 +31,7 @@ import org.jdom.input.SAXBuilder;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
@@ -41,7 +41,8 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
  * @author thoorfr, gabbaan
  */
 public class TerrasarXImage extends SarImageReader {
-	
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TerrasarXImage.class);
+
     protected String[] files;
     protected int[] preloadedInterval = new int[]{0, 0};
     protected int[] preloadedData;
@@ -276,10 +277,10 @@ public class TerrasarXImage extends SarImageReader {
             return gcps;
 
         } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return null;
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
             return null;
         }
     }
@@ -385,13 +386,12 @@ public class TerrasarXImage extends SarImageReader {
 
 
         } catch (TransformException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (FactoryException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (Exception ex) {
             dispose();
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
-
+            logger.error(ex.getMessage(),ex);
             return false;
         }
         return true;
@@ -496,7 +496,7 @@ public class TerrasarXImage extends SarImageReader {
         try {
             return  getImage(band).reader.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
         return -1;
     }
@@ -524,7 +524,7 @@ public class TerrasarXImage extends SarImageReader {
         try {
             preloadedData =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
-            Logger.getLogger(GeotiffImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
@@ -655,9 +655,9 @@ public class TerrasarXImage extends SarImageReader {
 
 
         } catch (JDOMException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         } catch (IOException ex) {
-            Logger.getLogger(TerrasarXImage.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error(ex.getMessage(),ex);
         }
     }
 
