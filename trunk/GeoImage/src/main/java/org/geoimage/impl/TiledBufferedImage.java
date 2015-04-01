@@ -17,7 +17,6 @@ import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
 import java.util.List;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.factory.GeoImageReaderFactory;

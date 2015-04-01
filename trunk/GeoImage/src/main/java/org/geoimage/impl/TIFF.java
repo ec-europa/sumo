@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFDirectory;
