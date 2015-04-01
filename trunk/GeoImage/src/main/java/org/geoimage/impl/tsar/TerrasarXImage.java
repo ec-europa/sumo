@@ -20,7 +20,6 @@ import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
-import org.geoimage.viewer.widget.CurrentTimeWidget;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;

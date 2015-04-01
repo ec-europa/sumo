@@ -3,7 +3,6 @@ package org.geoimage.impl.envi;
 import java.awt.Rectangle;
 import java.io.IOException;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.slf4j.LoggerFactory;
 
 
