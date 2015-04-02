@@ -5,7 +5,7 @@
 
 package org.geoimage.viewer.core.api;
 
-import org.geoimage.common.OptionMenu;
+import org.geoimage.viewer.common.OptionMenu;
 
 /**
  *

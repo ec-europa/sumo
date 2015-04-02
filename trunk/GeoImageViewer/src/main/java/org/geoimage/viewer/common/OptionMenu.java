@@ -1,4 +1,4 @@
-package org.geoimage.common;
+package org.geoimage.viewer.common;
 
 public class OptionMenu {
 	private int optionId;

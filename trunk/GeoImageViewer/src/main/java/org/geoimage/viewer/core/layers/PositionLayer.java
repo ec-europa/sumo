@@ -11,12 +11,12 @@ import java.awt.Point;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.java2d.util.Positioning;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.java2d.util.Positioning;
 import org.geoimage.viewer.widget.PositionDialog;
 import org.geotools.referencing.GeodeticCalculator;
 

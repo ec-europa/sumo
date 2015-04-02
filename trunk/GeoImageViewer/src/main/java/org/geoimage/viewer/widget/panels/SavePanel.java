@@ -14,7 +14,7 @@ import java.io.IOException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 
-import org.geoimage.common.OptionMenu;
+import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
