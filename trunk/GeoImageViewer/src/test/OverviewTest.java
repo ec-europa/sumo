@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.geoimage.java2d.util.ScaleTransformation;
+import org.geoimage.viewer.java2d.util.ScaleTransformation;
 import org.geoimage.viewer.util.Constant;
 
 

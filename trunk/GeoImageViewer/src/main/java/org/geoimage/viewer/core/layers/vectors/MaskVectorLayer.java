@@ -21,10 +21,10 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
+import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
