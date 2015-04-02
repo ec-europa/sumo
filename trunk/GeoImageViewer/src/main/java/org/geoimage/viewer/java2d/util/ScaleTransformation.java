@@ -1,4 +1,4 @@
-package org.geoimage.java2d.util;
+package org.geoimage.viewer.java2d.util;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -36,7 +36,7 @@ public class ScaleTransformation {
 	/**
 	 * Calcola il rapporto di scala sulla base della dimensione maggiore (tenuto conto
 	 * del rapporto finale desiderato).
-	 * Il fattore di scala restituito non sarà comunque superiore ad 1.
+	 * Il fattore di scala restituito non sarï¿½ comunque superiore ad 1.
 	 * @param width Dimensione attuale dell'immagine
 	 * @param height Dimensione attuale dell'immagine
 	 * @param finalWidth Dimensione finale dell'immagine

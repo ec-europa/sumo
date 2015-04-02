@@ -14,10 +14,10 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.common.OptionMenu;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;

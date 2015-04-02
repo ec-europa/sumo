@@ -1,4 +1,4 @@
-package org.geoimage.java2d.util;
+package org.geoimage.viewer.java2d.util;
 
 import java.awt.Point;
 

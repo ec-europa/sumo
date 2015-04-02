@@ -21,12 +21,12 @@ import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.java2d.util.ScaleTransformation;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.java2d.util.ScaleTransformation;
 import org.geoimage.viewer.util.Constant;
 
 
