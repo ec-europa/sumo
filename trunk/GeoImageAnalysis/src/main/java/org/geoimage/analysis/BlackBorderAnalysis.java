@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
@@ -227,7 +228,7 @@ public class BlackBorderAnalysis {
 	            		}
         			}else{
         				stop=true;
-        				logger.info("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        				logger.debug("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
         			}	
         		}
         		
@@ -244,7 +245,7 @@ public class BlackBorderAnalysis {
         	}
         	startYPixelTile=startYPixelTile+sizeY;
         }
-        logger.info("Tiles Analized H:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
+        logger.debug("Tiles Analized H:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	
@@ -306,7 +307,7 @@ public class BlackBorderAnalysis {
 	            		}
         			}else{
         				stop=true;
-        				logger.info("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
+        				logger.debug("Tile is On Land  X:"+startXPixelTile+"  Y:"+startYPixelTile);
         			}	
         		}
         		if(top){
@@ -322,7 +323,7 @@ public class BlackBorderAnalysis {
         	}
         	startXPixelTile=startXPixelTile+sizeX;
         }
-        logger.info("Tiles Analized V:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
+        logger.debug("Tiles Analized V:"+countTilesAnalyzed + "Full Analyzed:"+countFullTilesAnalyzed);
 	}  
 	
 	public void putAnalysisTile(int row,int col,TileAnalysis result){
@@ -502,10 +503,11 @@ public class BlackBorderAnalysis {
 								if((singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_VALUE_SAFE||
 										(singleRow[idCutOffElement]>thres&&singleRow[idCutOffElement]>=ConstantVDSAnalysis.THRESH_IS_BORDER))||
 										(idCutOffElement==singleRow.length)){
-										if(normalDirection)
+										if(normalDirection){
 											viCutOffColTemp[arraySamplesId]=idCutOffElement;
-										else
+										}else{
 											viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
+										}	
 										stop=true;
 								}
 							}
@@ -567,6 +569,11 @@ public class BlackBorderAnalysis {
 			}
 		}
 		result.bIsBorder=bIsBorder;
+		String direction=normalDirection==true?"L":"R";
+		if(logger.isDebugEnabled()){
+			logger.debug("X:"+iniX+"  Y:"+iniY+"  bIsBorder:"+bIsBorder+"  horizontalAnalysis:"+horizontalAnalysis+"  Direction:"+direction);
+			logger.debug(Arrays.toString(viCutOffColTemp));
+		}
 		
 		return result;
 	}
