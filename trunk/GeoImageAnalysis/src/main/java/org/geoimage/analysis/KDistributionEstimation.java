@@ -295,12 +295,12 @@ public class KDistributionEstimation {
 		
 		
 		for (int y = starty; y <endy; y += 2) {
-			if(blackAn!=null&&blackAn.verTopCutOffArray!=null&&endy<blackAn.verTopCutOffArray[0]){
+			if(blackAn!=null&&blackAn.verTopCutOffArray!=null&&endy>blackAn.verTopCutOffArray[0]){
 				int cutOffY=blackAn.verTopCutOffArray[0];
 				if(y<=cutOffY)
 					continue;
 			}	
-			if(blackAn!=null&&blackAn.verBottomOffArray!=null&&endy>blackAn.verBottomOffArray[0]){
+			if(blackAn!=null&&blackAn.verBottomOffArray!=null&&starty<blackAn.verBottomOffArray[0]){
 				int cutOffY=blackAn.verBottomOffArray[0];
 				if(y>cutOffY)
 					break;
