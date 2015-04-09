@@ -5,6 +5,8 @@
 package org.geoimage.viewer.core;
 
 
+import java.io.File;
+
 import javax.media.opengl.awt.GLCanvas;
 
 import org.geoimage.def.GeoImageReader;
@@ -187,6 +189,7 @@ public class Platform {
         	cache = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache");
             Platform.getPreferences().updateRow(Constant.PREF_CACHE, cache);
         }
+       
         return cache;
     }
     

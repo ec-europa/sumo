@@ -15,10 +15,14 @@ public class Cache {
 	    public Cache(String id) {
 	    	this.path = new File(new StringBuilder(Platform.getCachePath()).append("/").append(id).toString());
 	    	this.id=id;
+	    	if(!path.exists())
+	        	 path.mkdirs();
 	    }
 		
 	    public Cache() {
 	    	this.path = new File(Platform.getCachePath());
+	        if(!path.exists())
+	        	 path.mkdirs();
 	    }
 	    
 	    public long getAge(String fileName) {

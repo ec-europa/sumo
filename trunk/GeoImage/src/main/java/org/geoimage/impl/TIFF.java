@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.event.IIOReadProgressListener;
 import javax.imageio.stream.ImageInputStream;
 
 import org.slf4j.LoggerFactory;
@@ -115,4 +116,7 @@ public class TIFF {
 	public void setImageFile(File imageFile) {
 		this.imageFile = imageFile;
 	}
+	
+		
+
 }
