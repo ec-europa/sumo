@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,8 +84,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
                 imagePool.release(gir2);
                 
-                //PlanarImage create=JAI.create("filestore", out, f.getAbsolutePath(),"png"); 
-                //BufferedImage out2=create.getAsBufferedImage();
                 ImageIO.write(out, "png", f);
                 return new Object[]{f.getAbsolutePath(), next, out};
             } catch (Exception ex) {
@@ -408,53 +404,43 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
     	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
+    	boolean ok=true;
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
             	BufferedImage temp =null;
-            	
-      		//FileInputStream input=null;
             	try {
-            		File f=cacheInstance.newFile(file);
-            		/*input=new FileInputStream(f);
-            		ImageInputStream iis=ImageIO.createImageInputStream(input);
-            		pngReader.setInput(iis,true);
-           			temp=pngReader.read(0);*/
-            		
-                	try {
-                		temp = ImageIO.read(cacheInstance.newFile(file));
-                	} catch (Exception ex) {
-                		logger.warn(ex.getMessage());
-                    }	
+            		try {
+            			temp = ImageIO.read(cacheInstance.newFile(file));
+            		} catch (Exception ex) {
+            			try {
+            			    Thread.sleep(100);                 
+            			} catch(InterruptedException e) {
+            			    Thread.currentThread().interrupt();
+            			}
+            			temp = ImageIO.read(cacheInstance.newFile(file));
+            		}
                     if (temp == null) {
-                        return false;
+                        ok=false;
                     }
-            		
-            		
-            		//RenderedOp  inputfile = JAI.create("fileload", f.getAbsolutePath()); 
-           			//temp=inputfile.getAsBufferedImage();
-           			
             	} catch (Exception ex) {
-            		logger.warn("Problem reading tile:"+file+" : "+ex.getMessage());
+            		ok=false;
+            		logger.warn("Problem reading tile:"+file+":   "+ex.getMessage());
                 }	finally{
             		pngReader.dispose();
-            		
                 }
             	
-            		
-            	
-                if (temp == null) {
-                    return false;
-                }
-
-                if (temp.getColorModel().getNumComponents() == 1) {
-                    temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
-                }
-                Texture t = AWTTextureIO.newTexture(gl.getGLProfile(),temp, false);
-                tcm.add(file, t);
-                bindTexture(gl, t, xmin, xmax, ymin, ymax);
-                return true;
+            	if(ok){
+	                if (temp.getColorModel().getNumComponents() == 1) {
+	                    temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
+	                }
+	                
+	                Texture t = AWTTextureIO.newTexture(gl.getGLProfile(),temp, false);
+	                tcm.add(file, t);
+	                bindTexture(gl, t, xmin, xmax, ymin, ymax);
+            	}    
+        }else{
+        	ok=false;
         }
-
-        return false;
+        return ok;
     }
 
     //search for the tiles on memory
