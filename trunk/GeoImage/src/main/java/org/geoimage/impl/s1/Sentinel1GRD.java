@@ -1,13 +1,15 @@
 package org.geoimage.impl.s1;
 
+
+import gov.nasa.worldwind.formats.tiff.GeotiffImageReader;
+
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.util.Iterator;
 
-
-
-
+import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
 
@@ -16,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
+
+
 
 
 
@@ -72,16 +77,25 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
         }
         preloadedInterval = new int[]{y, y + length};
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
-        TIFFImageReadParam tirp = new TIFFImageReadParam();
-        tirp.setSourceRegion(rect);
+
         TIFF tiff=getImage(band);
         try {
         	tiff.reader.addIIOReadProgressListener(this);
-        	BufferedImage bi=tiff.reader.read(0, tirp);
-        	while(readComplete==false&&readAborted==false){
-        		logger.info("reading");
-        	}
-
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+            tirp.setSourceRegion(rect);
+        	BufferedImage bi=null;
+        	TIFFImageReader reader=tiff.reader;
+        	try{
+        		bi=reader.read(0, tirp);
+        	}catch(Exception e){
+        		logger.warn(e.getMessage()+" --  try to read again");
+        		try {
+    			    Thread.sleep(100);                 
+    			} catch(InterruptedException exx) {
+    			    Thread.currentThread().interrupt();
+    			}
+        		bi=reader.read(0, tirp);
+        	}	
         	WritableRaster raster=bi.getRaster();
             preloadedData = raster.getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
@@ -122,12 +136,12 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
 	
 	@Override
 	public void sequenceStarted(ImageReader source, int minIndex) {
-		logger.info("Operation Start");
+		//logger.info("Operation Start");
 	}
 	
 	@Override
 	public void sequenceComplete(ImageReader source) {
-		logger.info("Operation Complete");
+		//logger.info("Operation Complete");
 	}
 	
 	@Override
@@ -148,6 +162,7 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
 	
 	@Override
 	public void imageComplete(ImageReader source) {
+		//logger.info("Read tile complete");
 		readComplete=true;
 	}
 	
