@@ -110,9 +110,10 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
     public void preloadLineTile(int y,int length,int band){
     	gdal.AllRegister();
     	TIFF tiff=getImage(band);
-    	Dataset data=gdal.Open(tiff.getImageFile().getAbsolutePath(),gdalconstConstants.GA_ReadOnly);
+    	String imgpath=tiff.getImageFile().getAbsolutePath();
+    	Dataset data=gdal.Open(imgpath,gdalconstConstants.GA_ReadOnly);
     		
-		Band b=data.GetRasterBand(band+ 1);
+		Band b=data.GetRasterBand(1);
 
 		int ok=b.ReadRaster(0, 0, getImage(band).xSize, length, preloadedData);
 		
