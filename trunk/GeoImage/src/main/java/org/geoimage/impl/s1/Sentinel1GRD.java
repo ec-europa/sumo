@@ -1,18 +1,18 @@
 package org.geoimage.impl.s1;
 
 
-import gov.nasa.worldwind.formats.tiff.GeotiffImageReader;
-
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.util.Iterator;
 
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
 
+import org.gdal.gdal.Band;
+import org.gdal.gdal.Dataset;
+import org.gdal.gdal.gdal;
+import org.gdal.gdalconst.gdalconstConstants;
 import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
             }
         return tile;
     }
-    
+    /*
         @Override
     public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
@@ -104,10 +104,23 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
         	tiff.reader.addIIOReadProgressListener(this);
         	readComplete=false;
         }
+    }*/
+       
+    @Override
+    public void preloadLineTile(int y,int length,int band){
+    	gdal.AllRegister();
+    	TIFF tiff=getImage(band);
+    	Dataset data=gdal.Open(tiff.getImageFile().getAbsolutePath(),gdalconstConstants.GA_ReadOnly);
+    		
+		Band b=data.GetRasterBand(band+ 1);
+
+		int ok=b.ReadRaster(0, 0, getImage(band).xSize, length, preloadedData);
+		
+		System.out.println(""+ok);
     }
         
-   
-    
+        
+        
         
     
     
