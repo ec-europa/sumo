@@ -11,6 +11,7 @@ import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.geoimage.impl.TIFF;
+import org.geoimage.utils.IProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,36 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
             preloadLineTile(rect.y, rect.height,band);
+        }
+
+        int yOffset = getImage(band).xSize;
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+                int temp = i * yOffset + j + rect.x;
+                try{
+                	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                }catch(ArrayIndexOutOfBoundsException e ){
+                	logger.warn(e.getMessage());
+                }	
+            }
+            }
+        return tile;
+    }
+    
+
+    
+    public int[] readTileScaling(int x, int y, int width, int height,int band) {
+        Rectangle rect = new Rectangle(x, y, width, height);
+        rect = rect.intersection(getImage(band).bounds);
+        int[] tile = new int[height * width];
+        if (rect.isEmpty()) {
+            return tile;
+        }
+
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
+            preloadLineTileScaling(rect.y, rect.height,band);
         }
 
         int yOffset = getImage(band).xSize;
@@ -111,7 +142,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 		
 		int buf_type = b.getDataType();
 		int pixels=getImage(band).xSize*length;
-        int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 8;
+        int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 16;
 		
 		ByteBuffer buffer = ByteBuffer.allocateDirect(buf_size);
         buffer.order(ByteOrder.nativeOrder());
@@ -125,9 +156,86 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 		data.FlushCache();
 		data.delete();
     }
+    public void preloadLineTileScaling(int y,int length,int band){
+   	 if (y < 0) {
+            return;
+        }
+	   	TIFF tiff=getImage(band);
+	   	String imgpath=tiff.getImageFile().getAbsolutePath();
+	   	Dataset data=gdal.Open(imgpath,gdalconstConstants.GA_ReadOnly);
+		Band b=data.GetRasterBand(1);
+			
+		int buf_type = b.getDataType();
+		int pixels=getImage(band).xSize*length;
+	    int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 16;
+			
+		ByteBuffer buffer = ByteBuffer.allocateDirect(buf_size);
+      buffer.order(ByteOrder.nativeOrder());
+		
+		
+		preloadedData=new short[getImage(band).xSize* length];
+		int ok=b.ReadRaster(0, y, getImage(band).xSize, length, gdalconstConstants.GDT_UInt16,preloadedData);
+		if(ok!=0){
+			System.out.println("Error reading tile:"+ok);
+		}
+		data.FlushCache();
+		data.delete();
+   }
         
-        
-        
+    @Override    
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
+        int outWidth = (int) (width * scalingFactor);
+        int outHeight = (int) (height * scalingFactor);
+        double deltaPixelsX = (double) width / outWidth;
+        double deltaPixelsY = (double) height / outHeight;
+        double tileHeight = height / (((double) (width * height) / MAXTILESIZE));
+        int[] outData = new int[outWidth * outHeight];
+        if (height / outHeight > 4) {
+            double a = width*1.0 / outWidth;  //moltiplico per 1.0 per avere un risultato con i decimali
+            double b = height*1.0 / outHeight;
+            for (int i = 0; i < outHeight; i++) {
+                for (int j = 0; j < outWidth; j++) {
+                    try {
+                        outData[i * outWidth + j] = readTileScaling((int) (x + j * a), (int) (y + i * b), 1, 1,band)[0];
+                    } catch (Exception e) {
+                    }
+                }
+            }
+            return outData;
+        }
+        // load first tile
+        int currentY = 0;
+        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
+        if (progressbar != null) {
+            progressbar.setMaximum(outHeight / 100);
+        // start going through the image one Tile at a time
+        }
+        double posY = 0.0;
+        for (int j = 0; j < outHeight; j++, posY += deltaPixelsY) {
+            // update progress bar
+            if (j / 100 - Math.floor(j / 100) == 0) {
+                if (progressbar != null) {
+                    progressbar.setCurrent(j / 100);
+                // check if Tile needs loading
+                }
+            }
+            if (posY > (int) Math.ceil(tileHeight)) {
+                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);
+                posY -= (int) Math.ceil(tileHeight);
+                currentY += (int) Math.ceil(tileHeight);
+
+            }
+
+            double posX = 0.0;
+            for (int i = 0; i < outWidth; i++, posX += deltaPixelsX) {
+                //System.out.println("i = " + i + ", j = " + j + ", posX = " + posX + ", posY = " + posY);
+                outData[i + j * outWidth] = tile[(int) posX * (int) posY];
+            }
+            //System.gc();
+        }
+
+        return outData;
+    }     
         
     
     
