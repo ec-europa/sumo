@@ -7,9 +7,11 @@ package org.geoimage.impl.geoop;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import org.gdal.osr.CoordinateTransformation;
+import org.gdal.osr.SpatialReference;
+import org.gdal.osr.osr;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.tsar.TerrasarXImage_GEC;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.geotools.referencing.operation.transform.WarpTransform2D;

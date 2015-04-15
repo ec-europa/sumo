@@ -450,7 +450,13 @@ public abstract class Sentinel1 extends SarImageReader {
 	
 
 	public TIFF getImage(int band){
-		return tiffImages.get(getBandName(band));
+		TIFF img=null;
+		try{
+			img = tiffImages.get(getBandName(band));
+		}catch(Exception e){ 
+			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
+		}
+		return img;
 	}
 
 	

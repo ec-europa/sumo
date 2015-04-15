@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author argenpo
  *
  */
-public class OverviewTest {
+public class OverviewTest  {
 	public static final String safe="C:/tmp/sumo_images/S1/IW/S1A_IW_SLC__1SDH_20140502T170314_20140502T170344_000421_0004CC_1A90.SAFE/manifest.safe";
 	/**
 	 * @throws java.lang.Exception

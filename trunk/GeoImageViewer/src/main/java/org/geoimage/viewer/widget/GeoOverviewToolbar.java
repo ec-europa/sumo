@@ -143,7 +143,7 @@ import org.geoimage.viewer.util.Constant;
     /**
      * 
      */
-    protected synchronized void buildOverview() {
+    protected void buildOverview() {
         try {
             if (onbuilding) {
             	logger.debug( "Building overview............");
@@ -179,7 +179,7 @@ import org.geoimage.viewer.util.Constant;
                 rescale.filter(temp, temp);
                 ImageIO.write(temp, "png", f);
                 ((SarImageReader)gir).setOverViewImage(temp);
-                logger.info("Overview image:"+f.getAbsolutePath());
+                logger.debug("Overview image:"+f.getAbsolutePath());
             }
 
         } catch (Exception ex) {
