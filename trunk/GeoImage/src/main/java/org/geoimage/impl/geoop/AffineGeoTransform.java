@@ -40,7 +40,10 @@ public class AffineGeoTransform implements GeoTransform {
         	logger.error(ex.getMessage(),ex);
         }
     }
-
+    
+    /**
+     * 
+     */
     public double[] getPixelFromGeo(double xgeo, double ygeo, String inputEpsgProjection) {
         double[] out = new double[]{xgeo, ygeo};
         if (inputEpsgProjection != null) {
