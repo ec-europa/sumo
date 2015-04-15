@@ -2,12 +2,9 @@ package org.geoimage.impl.s1;
 
 
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.File;
-
-import javax.imageio.ImageReader;
-import javax.imageio.event.IIOReadProgressListener;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
@@ -16,9 +13,6 @@ import org.gdal.gdalconst.gdalconstConstants;
 import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 
 
@@ -29,15 +23,16 @@ import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
  * 
  * @author 
  */
-public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener {
+public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListener {
 	private Logger logger= LoggerFactory.getLogger(Sentinel1GRD.class);
-	private boolean readComplete=false;
-	private boolean readAborted=false;
+	//private boolean readComplete=false;
+	//private boolean readAborted=false;
 	
-	protected int[] preloadedData;
+	protected short[] preloadedData;
     
     public Sentinel1GRD(String swath) {
     	super(swath);
+    	gdal.AllRegister();
     }
 
 
@@ -69,9 +64,8 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
             }
         return tile;
     }
-    /*
-        @Override
-    public void preloadLineTile(int y, int length,int band) {
+    
+   /* public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
@@ -97,7 +91,7 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
         		bi=reader.read(0, tirp);
         	}	
         	WritableRaster raster=bi.getRaster();
-            preloadedData = raster.getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
+        	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }finally{
@@ -105,19 +99,31 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
         	readComplete=false;
         }
     }*/
-       
-    @Override
+      
     public void preloadLineTile(int y,int length,int band){
-    	gdal.AllRegister();
+    	 if (y < 0) {
+             return;
+         }
     	TIFF tiff=getImage(band);
     	String imgpath=tiff.getImageFile().getAbsolutePath();
     	Dataset data=gdal.Open(imgpath,gdalconstConstants.GA_ReadOnly);
-    		
 		Band b=data.GetRasterBand(1);
-
-		int ok=b.ReadRaster(0, 0, getImage(band).xSize, length, preloadedData);
 		
-		System.out.println(""+ok);
+		int buf_type = b.getDataType();
+		int pixels=getImage(band).xSize*length;
+        int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 8;
+		
+		ByteBuffer buffer = ByteBuffer.allocateDirect(buf_size);
+        buffer.order(ByteOrder.nativeOrder());
+		
+		
+		preloadedData=new short[getImage(band).xSize* length];
+		int ok=b.ReadRaster(0, y, getImage(band).xSize, length, gdalconstConstants.GDT_UInt16,preloadedData);
+		if(ok!=0){
+			System.out.println("Error reading tile:"+ok);
+		}
+		data.FlushCache();
+		data.delete();
     }
         
         
@@ -130,7 +136,7 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
 	public File getOverviewFile() {
 		return null;
 	}
-
+/*
 
 	@Override
 	public void thumbnailStarted(ImageReader source, int imageIndex,
@@ -178,7 +184,7 @@ public class  Sentinel1GRD extends Sentinel1 implements IIOReadProgressListener 
 	public void imageComplete(ImageReader source) {
 		//logger.info("Read tile complete");
 		readComplete=true;
-	}
+	}*/
 	
 	
 }
