@@ -105,11 +105,11 @@ public class GeoImageReaderFactory {
         		
         		Sentinel1 sentinel=null;
         		for(String sw:swath){
-        			if(parent.contains("SLC_"))
+        			if(parent.contains("SLC_")){
         				sentinel=new Sentinel1SLC(sw);
-        			else
+        			}else{
         				sentinel=new Sentinel1GRD(sw);
-        			
+        			}
         			sentinel.setContainsMultipleImage(multipleImages);
         			if (sentinel.initialise(f)) {
 	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,sentinel.getClass()});

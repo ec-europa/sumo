@@ -23,6 +23,7 @@ import javax.imageio.ImageReader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.gdal.gdal.gdal;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
@@ -82,7 +83,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
             	int y=j * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - ypadding;
             	float zoom=(1 << level);
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
-                imagePool.release(gir2);
                 
                 ImageIO.write(out, "png", f);
                 return new Object[]{f.getAbsolutePath(), next, out};
@@ -240,7 +240,10 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		            curlevel = (int) Math.sqrt(zoom + 1);
 		            //cycle to avoid the black area when zooming in/out and tiles not in memory
 		            //stop when lll=max zoom level
-		            for (int lll = maxlevels; (lll > curlevel - 1)&&(lll<=maxlevels); lll--) {
+		            for (int lll = maxlevels; (lll > curlevel - 1); lll--) {
+		            	if (lll > maxlevels) {
+		                    break;
+		                }
 		            	//modificato tramite action dalla console layer
 		                lll += increaseLevel;
 		                
@@ -412,7 +415,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
             			temp = ImageIO.read(cacheInstance.newFile(file));
             		} catch (Exception ex) {
             			try {
-            			    Thread.sleep(100);                 
+            			    Thread.sleep(200);                 
             			} catch(InterruptedException e) {
             			    Thread.currentThread().interrupt();
             			}

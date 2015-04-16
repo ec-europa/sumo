@@ -173,9 +173,11 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
-            return image.reader.read(0, t).getRGB(x, y);
+            return image.getReader().read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
+        	
+        }finally{
         }
         return -1;
     }

@@ -14,9 +14,7 @@ import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
-import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GeoUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -166,8 +164,9 @@ public class Radarsat2Image extends SarImageReader {
     public int read(int x, int y,int band) {
         TIFFImageReadParam t=new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
+        TIFF tiff=getImage(band);
         try {
-            return getImage(band).reader.read(0, t).getRGB(x, y);
+            return tiff.getReader().read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -200,8 +199,9 @@ public class Radarsat2Image extends SarImageReader {
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         TIFFImageReadParam tirp=new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
+        TIFF tiff=getImage(band);
         try {
-            preloadedData = getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
+            preloadedData = tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
             System.gc();

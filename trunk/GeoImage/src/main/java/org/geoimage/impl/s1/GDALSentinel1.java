@@ -23,6 +23,7 @@ import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
+import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
 import org.geotools.referencing.CRS;
@@ -42,7 +43,7 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
  * 
  * @author 
  */
-public abstract class Sentinel1 extends SarImageReader {
+public abstract class GDALSentinel1 extends SarImageReader {
 	protected int[] preloadedInterval = new int[]{0, 0};
 
     protected AffineTransform matrix;
@@ -52,7 +53,7 @@ public abstract class Sentinel1 extends SarImageReader {
     protected double MGtTime = 0;
     protected double MGtauTime = 0;
     
-    protected Map<String, TIFF> tiffImages;
+    protected Map<String, GDALTIFF> tiffImages;
 
     protected List<String> bands = new ArrayList<String>();
 
@@ -63,7 +64,7 @@ public abstract class Sentinel1 extends SarImageReader {
     protected File mainFolder;
     private String swath=null;
     
-	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
+	private Logger logger= LoggerFactory.getLogger(GDALSentinel1.class);
 	
 	private String files[]=new String[1];
     private List<GeolocationGridPointType> points=null;
@@ -82,7 +83,7 @@ public abstract class Sentinel1 extends SarImageReader {
     
     private List<Swath> swaths=null;
     
-    public Sentinel1(String swath) {
+    public GDALSentinel1(String swath) {
     	//this.safeReader=safeReader; 
     	this.swath=swath;
     }
@@ -271,12 +272,12 @@ public abstract class Sentinel1 extends SarImageReader {
     * 
     * @return
     */
-    private Map<String, TIFF> getImages() {
-        Map<String, TIFF> tiffsMap = new HashMap<String, TIFF>();
+    private Map<String, GDALTIFF> getImages() {
+        Map<String, GDALTIFF> tiffsMap = new HashMap<String, GDALTIFF>();
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
-    				tiffsMap.put(pol,new TIFF(new File(tiff),0));
+    				tiffsMap.put(pol,new GDALTIFF(new File(tiff),0));
     			}
     		}
     	}
@@ -289,14 +290,12 @@ public abstract class Sentinel1 extends SarImageReader {
     
     @Override
     public int read(int x, int y,int band) {
-        TIFFImageReadParam t = new TIFFImageReadParam();
-        t.setSourceRegion(new Rectangle(x, y, 1, 1));
-        TIFF tiff=null;
+        GDALTIFF tiff=null;
         try {
         	String b=getBandName(band);
         	tiff=tiffImages.get(b);
-            return tiff.getReader().read(0, t).getRGB(x, y);
-        } catch (IOException ex) {
+            return tiff.readShortValues(x, y,1,1)[0];
+        } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }finally{
         }
@@ -324,7 +323,7 @@ public abstract class Sentinel1 extends SarImageReader {
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(TIFF t:tiffImages.values()){
+        for(GDALTIFF t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;
@@ -453,8 +452,8 @@ public abstract class Sentinel1 extends SarImageReader {
 	
 	
 
-	public TIFF getImage(int band){
-		TIFF img=null;
+	public GDALTIFF getImage(int band){
+		GDALTIFF img=null;
 		try{
 			img = tiffImages.get(getBandName(band));
 		}catch(Exception e){ 
