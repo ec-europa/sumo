@@ -137,7 +137,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 
     static {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
-        Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "128");
+        Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "512");
     }
 
     public FastImageLayer(GeoImageReader gir) {
