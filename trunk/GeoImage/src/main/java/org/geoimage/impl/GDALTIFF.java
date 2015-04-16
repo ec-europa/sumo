@@ -6,12 +6,18 @@ package org.geoimage.impl;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
+import org.gdal.gdal.Band;
+import org.gdal.gdal.Dataset;
+import org.gdal.gdal.gdal;
+import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
@@ -21,31 +27,29 @@ import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
  * of one geotiff per band (like radarsat 2 images)
  * @author thoorfr
  */
-public class TIFF {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TIFF.class);
+public class GDALTIFF {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GDALTIFF.class);
 
 
     private File imageFile;
-    public TIFFImageReader reader;
+    private Dataset data;
+    private Band b;
 	public int xSize = -1;
     public int ySize = -1;
     public Rectangle bounds;
-   
-
-    public TIFFImageReader getReader() {
-		return reader;
-	}
-
-	public void setReader(TIFFImageReader reader) {
-		this.reader = reader;
-	}
+    private int buf_type ; 
     
+    public Dataset getDataSet() {
+		return data;
+	}
+
+
     /**
      * 
      * @param imageFile
      * @param band form files with multiple band
      */
-	public TIFF(File imageFile,int band) {
+	public GDALTIFF(File imageFile,int band) {
     	this.imageFile=imageFile;
         try {
             Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("tiff");
@@ -53,11 +57,15 @@ public class TIFF {
             while(readers.hasNext()&&!worked){
             	Object obj=readers.next();
             	if( obj instanceof TIFFImageReader){
-            		reader = (TIFFImageReader)obj;
-            		ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
-            		reader.setInput(iis);
-            		xSize=reader.getWidth(band);
-            		ySize=reader.getHeight(band);
+            		
+            		//ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
+            		
+            		data = gdal.Open(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
+            		b = data.GetRasterBand(band+1);
+            		buf_type=b.getDataType();
+            		
+            		xSize=b.getXSize();
+            		ySize=b.getYSize();
             		bounds=new Rectangle(0,0,xSize,ySize);
             		worked=true;
             	}else{
@@ -79,6 +87,21 @@ public class TIFF {
 //				}
 //        }
 	}
+	
+	
+	public short[] readShortValues(int x,int y,int offsetx,int offsety){
+		int pixels = xSize * offsetx;
+		int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 8;
+
+		ByteBuffer buffer = ByteBuffer.allocateDirect(buf_size);
+		buffer.order(ByteOrder.nativeOrder());
+
+		short[] dd = new short[buf_size];
+		int ok = b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
+		buffer.clear();
+		return dd;
+	}
+	
 	
 	
     public int getxSize() {
@@ -109,7 +132,6 @@ public class TIFF {
 	}
 	
 	public void dispose(){
-		reader.dispose();
      
     }
     public File getImageFile() {

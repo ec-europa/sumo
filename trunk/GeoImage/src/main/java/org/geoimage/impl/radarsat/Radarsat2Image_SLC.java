@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +55,10 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     public int read(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
+        TIFF tiff=getImage(band);
         try {            
-            int img =  getImage(band).reader.read(0, t).getRaster().getSample(x, y, 1);
-            int real =  getImage(band).reader.read(0, t).getRaster().getSample(x, y, 0);
+            int img =  tiff.getReader().read(0, t).getRaster().getSample(x, y, 1);
+            int real =  tiff.getReader().read(0, t).getRaster().getSample(x, y, 0);
             return (int) Math.sqrt(real * real + img * img);
 
         } catch (IOException ex) {
@@ -65,6 +67,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         	logger.warn(ex.getMessage());
         }catch(IllegalArgumentException iae){
         	logger.warn(iae.getMessage());
+        }finally{
         }
         return -1;
 
@@ -79,10 +82,10 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         Rectangle rect = new Rectangle(0, y,  getImage(band).xSize, length);
         TIFFImageReadParam tirp = new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
-       
+        TIFF tiff=getImage(band);
         try {
-            preloadedDataReal =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
-            preloadedDataImg =  getImage(band).reader.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
+            preloadedDataReal =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
+            preloadedDataImg =   tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
