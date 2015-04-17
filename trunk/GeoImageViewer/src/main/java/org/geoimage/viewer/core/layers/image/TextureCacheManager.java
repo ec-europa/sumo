@@ -4,9 +4,10 @@
  */
 package org.geoimage.viewer.core.layers.image;
 
-import com.jogamp.opengl.util.texture.Texture;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.jogamp.opengl.util.texture.Texture;
 
 /**
  *
@@ -18,11 +19,11 @@ public class TextureCacheManager {
     private int count = 0;
     private String[] paths;
     private int index = 0;
-    private HashMap<String, Texture> map;
+    private ConcurrentHashMap<String, Texture> map;
 
     public TextureCacheManager(int max) {
         this.max = max;
-        map = new HashMap<String, Texture>(max,1);
+        map = new ConcurrentHashMap <String, Texture>(max,1);
         paths = new String[max];
     }
 
