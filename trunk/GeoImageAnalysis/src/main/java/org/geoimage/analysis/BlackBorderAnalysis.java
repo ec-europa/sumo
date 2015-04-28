@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +98,7 @@ public class BlackBorderAnalysis {
 	 * @param row
 	 * @param col
 	 */
-	public void analyse(int col,int row,boolean horizontalAnalysis) {
+	public void analyse(int row,int col,boolean horizontalAnalysis) {
 		int iniX = (col-1) * sizeX;
 		int iniY = (row-1) * sizeY;
 		boolean normalDirection=true; //from left to right or from top to bottom

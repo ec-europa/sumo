@@ -7,7 +7,11 @@ package org.geoimage.analysis;
 import java.awt.image.Raster;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.LoggerFactory;
@@ -272,38 +276,72 @@ public class KDistributionEstimation {
 
 	
 	/**
+	 * the tile is divided in 4 parts, this function analize each part
 	 * 
+	 * @param startx  origin x in tile
+	 * @param starty  origin y in tile
+	 * @param endx    end x pos of the part of the tile that we want analize
+	 * @param endy    end y of the part of the tile that we want analize
 	 * @param mask
-	 * @param iniX
-	 * @param iniY
-	 * @param data
-	 * @param thresholdpixels
+	 * @param data    pixels values
+	 * @param thresholdpixels      threshold 
 	 * @param clipx
+	 * @param blackAn              result of the black border analysis (null if the bb analysis is not used)
 	 * @return
 	 */
-	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,Raster mask,int iniX, int iniY,int[] data,int thresholdpixels,double clipx,TileAnalysis blackAn){
+	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,Raster mask,int sizeTileX, int sizeTileY,int[] data,int thresholdpixels,double clipx,TileAnalysis blackAn){
 		double val = 0.;
 		double std = 0.0;
 		double tempN=0.0;
 		double mux=0.0;
 		
 		
-		
-		if(rowTile==19&&colTile==0){
-			System.out.println("");
-		}
-		
-		
 		for (int y = starty; y <endy; y += 2) {
-			if(blackAn!=null&&blackAn.verTopCutOffArray!=null&&endy>blackAn.verTopCutOffArray[0]){
-				int cutOffY=blackAn.verTopCutOffArray[0];
-				if(y<=cutOffY)
-					continue;
+			if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
+				if(starty==0){ //we are in the first or second part of the tile
+					int firstCutOffY=blackAn.verTopCutOffArray[0];
+				
+					if(firstCutOffY>endy){//verify if the first cutoff is > of the endy
+						int count=0;
+						for(int v:blackAn.verTopCutOffArray){
+							if(v==firstCutOffY)
+								count++;
+						}
+						if (count==blackAn.verTopCutOffArray.length){//tutte le soglie sono uguali
+							if(endy<=firstCutOffY)
+								continue; //tutte le soglie sono maggiori di endy
+						}else{
+							if(endy<=blackAn.verTopCutOffArray[y])
+								//jump the row
+								continue;
+
+						}
+					}
+					
+				}
+					
 			}	
-			if(blackAn!=null&&blackAn.verBottomOffArray!=null&&starty<blackAn.verBottomOffArray[0]){
-				int cutOffY=blackAn.verBottomOffArray[0];
-				if(y>cutOffY)
-					break;
+			if(blackAn!=null&&blackAn.verBottomOffArray!=null){
+				if(starty>0){
+					int firstCutOffY=blackAn.verBottomOffArray[0];
+					
+					if(firstCutOffY<=starty){//verify if the first cutoff is <= of the starty
+						int count=0;
+						for(int v:blackAn.verBottomOffArray){
+							if(v==firstCutOffY)
+								count++;
+						}
+						if (count==blackAn.verBottomOffArray.length){//tutte le soglie sono uguali
+							if(starty>=firstCutOffY)
+								continue; //tutte le soglie sono maggiori di endy e quindi non serve analizzare questa parte
+						}else{
+							if(starty>=blackAn.verBottomOffArray[y])
+								//jump the row
+								continue;
+
+						}
+					}
+				}
 			}
 			
 			int newStart=startx;
@@ -375,7 +413,7 @@ public class KDistributionEstimation {
 				double tempTileN = 0.;
 				SupportStats[] result=new SupportStats[4];
 				
-				result[0]=calcStatValues(0,0,sizeTileX/2,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip1,black);
+				result[0]=calcStatValues(0,0,sizeTileX/2,sizeTileY/2,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip1,black);
 				// make sure we have enough points
 				if (result[0].tempN > thresholdpixels) {
 					result[0].mu /= result[0].tempN;
