@@ -358,46 +358,43 @@ public class BlackBorderAnalysis {
 	 * @return
 	 */
 	public int[] traspone(int lineMatrix[],int numberOfCols,int numberOfRows){
-	    int trasposta[]=new int[lineMatrix.length];
-		
+	    int matrix[][]=new int[numberOfRows][numberOfCols];
 	    
-	    for(int idr=0;idr<lineMatrix.length;idr++){
-			int idTrasposta=(idr*numberOfCols)%lineMatrix.length;
-			trasposta[idr]=lineMatrix[idTrasposta];
-		}
-	    int trasposta2[][]=new int[numberOfRows][numberOfCols];
-	    
-	    
+	    // da array a matrice
 	    int col=0;
 	    int row=0;
-	    try{
-		    for(int id=0;id<lineMatrix.length&&row<numberOfRows;id++){
-		    	int value = lineMatrix[id];
-		    	
-		    	trasposta2[row][col]= value;
-		    	
-		    	if(id%(numberOfCols-1)==0){
-		    		row++;
-		    		col=0;
-		    	}
-		    	col++;
-		    	
-		    	System.out.println("row:"+row+"  col:"+col);
-		    }	
-	    }catch(Exception e){
-	    	e.printStackTrace();
-	    }    
-        int[][] temp = new int[numberOfCols][numberOfRows];
+	    for(int id=0;id<lineMatrix.length&&row<numberOfRows;id++){
+	    	int value = lineMatrix[id];
+	    	
+	    	matrix[row][col]= value;
+	    	
+	    	if(id%(numberOfCols-1)==0){
+	    		row++;
+	    		col=0;
+	    	}
+	    	col++;
+	    	
+	    	System.out.println("row:"+row+"  col:"+col);
+	    }	
+	    //trasposta della matrice
+		int[][] trasposta = new int[numberOfCols][numberOfRows];
         for (int i = 0; i < numberOfRows; i++)
             for (int j = 0; j < numberOfCols; j++)
-                temp[j][i] = trasposta2[i][j];
+            	trasposta[j][i] = matrix[i][j];
+        
+        //serializzo la matrice
+        int traspostaInline[]=new int[lineMatrix.length];
+        int x=0;
+        for(col=0;col<numberOfCols;col++){
+          for(row=0;row<numberOfRows;row++){
+        	  traspostaInline[x]=trasposta[col][row];
+	    	x++;	
+	    	//System.out.println("x:"+x);
+          }	
+        }
         
         
-        int tt2[]=new int[lineMatrix.length];
-        for(int)
-        
-        
-		return trasposta;
+		return traspostaInline;
 	} 
 	
 	/**
