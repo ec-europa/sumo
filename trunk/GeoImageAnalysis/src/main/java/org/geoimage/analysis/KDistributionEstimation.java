@@ -295,78 +295,74 @@ public class KDistributionEstimation {
 		double tempN=0.0;
 		double mux=0.0;
 		
+		boolean exit=false;
 		
-		for (int y = starty; y <endy; y += 2) {
-			if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
-				if(starty==0){ //we are in the first or second part of the tile
-					int firstCutOffY=blackAn.verTopCutOffArray[0];
-				
-					if(firstCutOffY>endy){//verify if the first cutoff is > of the endy
-						int count=0;
-						for(int v:blackAn.verTopCutOffArray){
-							if(v==firstCutOffY)
-								count++;
-						}
-						if (count==blackAn.verTopCutOffArray.length){//tutte le soglie sono uguali
-							if(endy<=firstCutOffY)
-								continue; //tutte le soglie sono maggiori di endy
-						}else{
-							if(endy<=blackAn.verTopCutOffArray[y])
-								//jump the row
-								continue;
-
-						}
+		if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
+			if(starty==0){ //we are in the first or second part of the tile
+				int firstCutOffY=blackAn.verTopCutOffArray[0];
+			
+				if(firstCutOffY>endy){//verify if the first cutoff is > of the endy
+					int count=0;
+					for(int v:blackAn.verTopCutOffArray){
+						if(v==firstCutOffY)
+							count++;
 					}
-					
-				}
-					
-			}	
-			if(blackAn!=null&&blackAn.verBottomOffArray!=null){
-				if(starty>0){
-					int firstCutOffY=blackAn.verBottomOffArray[0];
-					
-					if(firstCutOffY<=starty){//verify if the first cutoff is <= of the starty
-						int count=0;
-						for(int v:blackAn.verBottomOffArray){
-							if(v==firstCutOffY)
-								count++;
-						}
-						if (count==blackAn.verBottomOffArray.length){//tutte le soglie sono uguali
-							if(starty>=firstCutOffY)
-								continue; //tutte le soglie sono maggiori di endy e quindi non serve analizzare questa parte
-						}else{
-							if(starty>=blackAn.verBottomOffArray[y])
-								//jump the row
-								continue;
-
-						}
+					if (count==blackAn.verTopCutOffArray.length){//tutte le soglie sono uguali
+						if(endy<=firstCutOffY)
+							exit=true; //tutte le soglie sono maggiori di endy
 					}
 				}
 			}
-			
-			int newStart=startx;
-			int newEnd=endx;
-			
-			if(blackAn!=null){
-				if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y])
-					newStart=startx+blackAn.horizLeftCutOffArray[y];
-				if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y])
-					newEnd=blackAn.horizRightCutOffArray[y];
-			}	
-			for (int x = newStart; x < newEnd ; x += 2) {
+		}	
+		if(blackAn!=null&&blackAn.verBottomOffArray!=null){
+			if(starty>0){
+				int firstCutOffY=blackAn.verBottomOffArray[0];
 				
-				if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-					val = data[y * sizeTileX + x];
-
-					if (val > 0 && val < clipx) {
-						mux += val;
-						std += val * val;
-						tempN++;
+				if(firstCutOffY<=starty){//verify if the first cutoff is <= of the starty
+					int count=0;
+					for(int v:blackAn.verBottomOffArray){
+						if(v==firstCutOffY)
+							count++;
+					}
+					if (count==blackAn.verBottomOffArray.length){//tutte le soglie sono uguali
+						if(starty>=firstCutOffY)
+							exit=true; //tutte le soglie sono maggiori di endy e quindi non serve analizzare questa parte
 					}
 				}
-				//} 
 			}
 		}
+		if(!exit){
+			for (int y = starty; y <endy; y += 2) {
+				if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
+						if(y==blackAn.verTopCutOffArray.length||y<=blackAn.verTopCutOffArray[y])continue;//use the mean
+				}	
+				if(blackAn!=null&&blackAn.verBottomOffArray!=null){
+						if(y==blackAn.verBottomOffArray.length||y>=blackAn.verBottomOffArray[y])continue;//use the mean
+				}
+				
+				int newStart=startx;
+				int newEnd=endx;
+				
+				if(blackAn!=null){
+					if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y])
+						newStart=startx+blackAn.horizLeftCutOffArray[y];
+					if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y])
+						newEnd=blackAn.horizRightCutOffArray[y];
+				}	
+				for (int x = newStart; x < newEnd ; x += 2) {
+					
+					if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
+						val = data[y * sizeTileX + x];
+	
+						if (val > 0 && val < clipx) {
+							mux += val;
+							std += val * val;
+							tempN++;
+						}
+					}
+				}
+			}
+		}	
 		SupportStats result=new SupportStats();
 		result.mu=mux;
 		result.tempN=tempN;
@@ -423,7 +419,7 @@ public class KDistributionEstimation {
 					meancounter++;
 				}
 				
-				result[1]=calcStatValues(sizeTileX/2,0,sizeTileX,sizeTileY/2,mask,iniX,iniY,data,thresholdpixels,clip2,black);
+				result[1]=calcStatValues(sizeTileX/2,0,sizeTileX,sizeTileY/2,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip2,black);
 				// make sure we have enough points
 				if (result[1].tempN > thresholdpixels) {
 					result[1].mu /= result[1].tempN;
@@ -432,7 +428,7 @@ public class KDistributionEstimation {
 					mean += result[1].mu;
 					meancounter++;
 				}
-				result[2]=calcStatValues(0,sizeTileY/2,sizeTileX/2,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip3,black);
+				result[2]=calcStatValues(0,sizeTileY/2,sizeTileX/2,sizeTileY,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip3,black);
 				// make sure we have enough points
 				if (result[2].tempN > thresholdpixels) {
 					result[2].mu /= result[2].tempN;
@@ -441,7 +437,7 @@ public class KDistributionEstimation {
 					mean += result[2].mu;
 					meancounter++;
 				}
-				result[3]=calcStatValues(sizeTileX/2,sizeTileY/2,sizeTileX,sizeTileY,mask,iniX,iniY,data,thresholdpixels,clip4,black);
+				result[3]=calcStatValues(sizeTileX/2,sizeTileY/2,sizeTileX,sizeTileY,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip4,black);
 				// make sure we have enough points
 				if (result[3].tempN > thresholdpixels) {
 					result[3].mu /= result[3].tempN;
@@ -487,7 +483,7 @@ public class KDistributionEstimation {
 					statData[4] = 100000;
 			}	
 		}catch(Exception e){
-			logger.error("Error computing statistics for iniX:"+iniX+"   iniY:"+iniY);
+			logger.error("Error computing statistics for iniX:"+iniX+"   iniY:"+iniY,e);
 			statData[0] = 0.001;
 			statData[1] = 100000;
 			statData[2] = 100000;

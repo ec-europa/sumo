@@ -365,6 +365,38 @@ public class BlackBorderAnalysis {
 			int idTrasposta=(idr*numberOfCols)%lineMatrix.length;
 			trasposta[idr]=lineMatrix[idTrasposta];
 		}
+	    int trasposta2[][]=new int[numberOfRows][numberOfCols];
+	    
+	    
+	    int col=0;
+	    int row=0;
+	    try{
+		    for(int id=0;id<lineMatrix.length&&row<numberOfRows;id++){
+		    	int value = lineMatrix[id];
+		    	
+		    	trasposta2[row][col]= value;
+		    	
+		    	if(id%(numberOfCols-1)==0){
+		    		row++;
+		    		col=0;
+		    	}
+		    	col++;
+		    	
+		    	System.out.println("row:"+row+"  col:"+col);
+		    }	
+	    }catch(Exception e){
+	    	e.printStackTrace();
+	    }    
+        int[][] temp = new int[numberOfCols][numberOfRows];
+        for (int i = 0; i < numberOfRows; i++)
+            for (int j = 0; j < numberOfCols; j++)
+                temp[j][i] = trasposta2[i][j];
+        
+        
+        int tt2[]=new int[lineMatrix.length];
+        for(int)
+        
+        
 		return trasposta;
 	} 
 	
@@ -481,6 +513,7 @@ public class BlackBorderAnalysis {
 				//loop on each element of the data readed if stop is false
 				for(int arraySamplesId=0;arraySamplesId<vCutOffSize;arraySamplesId++){
 					try{
+						//calcolo la posizione sul vettore come se fosse una matrice
 						int posStart=arraySamplesId*tileWidth;
 						//leggo la riga del tile (il tile e' mem come array)
 						int[] singleRow=ArrayUtils.subarray(dataTile,posStart,posStart+tileWidth);
