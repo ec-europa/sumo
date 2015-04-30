@@ -374,7 +374,7 @@ public class BlackBorderAnalysis {
 	    	}
 	    	col++;
 	    	
-	    	System.out.println("row:"+row+"  col:"+col);
+	    	//System.out.println("row:"+row+"  col:"+col);
 	    }	
 	    //trasposta della matrice
 		int[][] trasposta = new int[numberOfCols][numberOfRows];
