@@ -334,10 +334,10 @@ public class KDistributionEstimation {
 		if(!exit){
 			for (int y = starty; y <endy; y += 2) {
 				if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
-						if(y==blackAn.verTopCutOffArray.length||y<=blackAn.verTopCutOffArray[y])continue;//use the mean
+						if(y==blackAn.verTopCutOffArray.length||y<=meanThresh(blackAn.verTopCutOffArray))continue;//use the mean
 				}	
 				if(blackAn!=null&&blackAn.verBottomOffArray!=null){
-						if(y==blackAn.verBottomOffArray.length||y>=blackAn.verBottomOffArray[y])continue;//use the mean
+						if(y==blackAn.verBottomOffArray.length||y>=meanThresh(blackAn.verBottomOffArray))continue;//use the mean
 				}
 				
 				int newStart=startx;
@@ -369,7 +369,17 @@ public class KDistributionEstimation {
 		result.std=std;
 		return result;
 	}
-	
+	/**
+	 * 
+	 * @param thres
+	 * @return
+	 */
+	private int meanThresh(int[]thres){
+		int tot=0;
+		for(int t:thres)
+			tot=tot+t;
+		return tot/thres.length;
+	}
 	
 	/**
 	 * compute the stats of thesubtiles
