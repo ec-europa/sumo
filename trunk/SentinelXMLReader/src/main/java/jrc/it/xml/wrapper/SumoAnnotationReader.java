@@ -9,10 +9,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
+import jrc.it.annotation.reader.jaxb.CoordinateConversionListType;
+import jrc.it.annotation.reader.jaxb.CoordinateConversionType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationListType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
+import jrc.it.annotation.reader.jaxb.L1CoordinateConversionType;
 import jrc.it.annotation.reader.jaxb.L1ProductType;
 import jrc.it.annotation.reader.jaxb.L1SwathMergeType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
@@ -114,6 +117,13 @@ public class SumoAnnotationReader {
 		List<ReplicaInformationType> replicas= replicaList.getReplicaInformation();
 		return replicas;
 	}
+	
+	public List<CoordinateConversionType> getCoordinateConversionData(){
+		L1CoordinateConversionType l1ccList=unmarshalledObject.getCoordinateConversion();
+		List<CoordinateConversionType> ccList=l1ccList.getCoordinateConversionList().getCoordinateConversion();
+		return ccList;
+	}
+	
 	
 	/*
 	public Object getTimeOrbit(){
