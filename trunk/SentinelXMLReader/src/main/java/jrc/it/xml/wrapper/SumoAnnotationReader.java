@@ -1,6 +1,7 @@
 package jrc.it.xml.wrapper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -8,8 +9,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.slf4j.LoggerFactory;
+
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
-import jrc.it.annotation.reader.jaxb.CoordinateConversionListType;
 import jrc.it.annotation.reader.jaxb.CoordinateConversionType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationListType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
@@ -30,6 +32,9 @@ public class SumoAnnotationReader {
 	private JAXBContext jaxbContext =null;
 	private Unmarshaller unmarshaller =null;
 	private L1ProductType unmarshalledObject = null;
+	
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoAnnotationReader.class);
+
 	
 	public SumoAnnotationReader(String annotationFile) throws JAXBException{
 		//create JAXContext instance
@@ -118,17 +123,23 @@ public class SumoAnnotationReader {
 		return replicas;
 	}
 	
+	
+	/**
+	 * read the coordinateConversion information
+	 * @return
+	 */
 	public List<CoordinateConversionType> getCoordinateConversionData(){
-		L1CoordinateConversionType l1ccList=unmarshalledObject.getCoordinateConversion();
-		List<CoordinateConversionType> ccList=l1ccList.getCoordinateConversionList().getCoordinateConversion();
+		List<CoordinateConversionType> ccList=new ArrayList<CoordinateConversionType>();
+		try{
+			L1CoordinateConversionType l1ccList=unmarshalledObject.getCoordinateConversion();
+			ccList=l1ccList.getCoordinateConversionList().getCoordinateConversion();
+		}catch(Exception e){
+			logger.info("CoordinateConversion Array is empty");
+		}	
 		return ccList;
 	}
 	
 	
-	/*
-	public Object getTimeOrbit(){
-		List<OrbitType> orbits=unmarshalledObject.getGeneralAnnotation().get
-	}*/
 	
 	
 	public static void main(String args[]){
