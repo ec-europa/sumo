@@ -32,7 +32,8 @@ public class SumoAnnotationReader {
 	private JAXBContext jaxbContext =null;
 	private Unmarshaller unmarshaller =null;
 	private L1ProductType unmarshalledObject = null;
-	
+	private File annotation=null;
+
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoAnnotationReader.class);
 
 	
@@ -41,8 +42,10 @@ public class SumoAnnotationReader {
 	    jaxbContext = JAXBContext.newInstance(jrc.it.annotation.reader.jaxb.ObjectFactory.class);
 	    //Unmarshaller
 	    unmarshaller = jaxbContext.createUnmarshaller();
+	    
+	    annotation=new File(annotationFile);
 		//unmarshal the XML document to get an instance of JAXBElement.
-	    JAXBElement<L1ProductType> elemant=(JAXBElement<L1ProductType>) unmarshaller.unmarshal(new File(annotationFile));
+	    JAXBElement<L1ProductType> elemant=(JAXBElement<L1ProductType>) unmarshaller.unmarshal(annotation);
 	    
 	    unmarshalledObject = elemant.getValue();
 	    
