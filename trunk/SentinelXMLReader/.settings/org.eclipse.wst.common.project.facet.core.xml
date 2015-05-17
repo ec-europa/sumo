@@ -3,5 +3,4 @@
   <runtime name="jdk1.7.0_75"/>
   <installed facet="java" version="1.7"/>
   <installed facet="jpt.jaxb" version="2.2"/>
-  <installed facet="jpt.jpa" version="2.1"/>
 </faceted-project>
