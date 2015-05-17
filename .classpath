@@ -286,7 +286,7 @@
 			<attribute name="owner.project.facets" value="jpt.jpa"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="/libs/commons-math3-3.3.jar"/>
-	<classpathentry kind="lib" path="/libs/appframework-1.0.3.jar"/>
+	<classpathentry kind="lib" path="trunk/libs/commons-math3-3.3.jar"/>
+	<classpathentry kind="lib" path="trunk/libs/appframework-1.0.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
