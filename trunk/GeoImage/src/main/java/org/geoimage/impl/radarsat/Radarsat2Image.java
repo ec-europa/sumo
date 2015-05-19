@@ -15,7 +15,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
-import org.geoimage.impl.geoop.GeoUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -23,6 +22,7 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+import common.GeoUtils;
 
 /**
  * A class that reads Radarsat 2 images (geotiffs + xml). simple to quadri polarisation are supported
@@ -334,11 +334,11 @@ public class Radarsat2Image extends SarImageReader {
 		                //geocorrection
 		                if(productxml.getParent().contains("_SLC")){
 		                	//complex image
-		                	ia=GeoUtils.gcpSlantRangeAndIncidenceAngleForComplex(slantRange,sixeXPixel,pixSpace,gcp,satH,earthRad,pixelTimeOrd);
+		                	ia=GeoUtils.gcpSlantRangeAndIncidenceAngleForComplex(slantRange,sixeXPixel,pixSpace,gcp.getXpix(),satH,earthRad,pixelTimeOrd);
 		                	dx=GeoUtils.gcpComplexGeoCorrectionMeters(ia,geoH,geoidHeight);
 		                	iaValues.put(pixel, ia);
 		                }else{
-		                	ia=GeoUtils.gcpIncidenceAngleForGRD(slantRange,sixeXPixel,pixSpace,gcp,satH,earthRad,pixelTimeOrd);
+		                	ia=GeoUtils.gcpIncidenceAngleForGRD(slantRange,sixeXPixel,pixSpace,gcp.getXpix(),satH,earthRad,pixelTimeOrd);
 		                	dx=GeoUtils.gcpGrdGeoCorrectionMeters(ia,geoH,geoidHeight);
 		                	iaValues.put(pixel, ia);
 		                }
