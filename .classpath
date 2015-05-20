@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="trunk/GeoImageViewer/src/main/resources"/>
+	<classpathentry kind="src" path="trunk/GeoLocation/src/main/java"/>
+	<classpathentry kind="src" path="trunk/GeoLocation/src/main/resources"/>
 	<classpathentry kind="src" path="trunk/SentinelXMLReader/src/main/resources"/>
 	<classpathentry kind="src" path="trunk/SentinelXMLReader/src/main/java"/>
 	<classpathentry kind="src" path="trunk/GeoImageViewer/src/test"/>
@@ -288,5 +290,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="trunk/libs/commons-math3-3.3.jar"/>
 	<classpathentry kind="lib" path="trunk/libs/appframework-1.0.3.jar"/>
+	<classpathentry kind="lib" path="/libs/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
