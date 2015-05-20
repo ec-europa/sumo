@@ -23,6 +23,7 @@ public class S1Metadata extends AbstractMetadata {
 	private double samplingf=0;
 	private int nLines=0;
 	
+	
 	public int getNlines() {
 		return nLines;
 	}
@@ -81,6 +82,14 @@ public class S1Metadata extends AbstractMetadata {
 	}
 	
 	
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
 	/**
 	 * 
 	 */
@@ -90,13 +99,14 @@ public class S1Metadata extends AbstractMetadata {
 			super.pixelTimeOrdering="Increasing";//annotationReader.getProductInformation().getPass();
 			super.antennaPointing="Right";
 			
+			
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
 			ImageInformationType imgInformation =annotationReader.getImageInformation();
 			XMLGregorianCalendar  firstLineUtc=imgInformation.getProductFirstLineUtcTime();
 			XMLGregorianCalendar  lastLineUtc=imgInformation.getProductLastLineUtcTime();
 			
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
-			
+			super.mode=annotationReader.getHeader().getMode().name();
 			
 			zeroDopplerTimeFirstLineSeconds=firstLineUtc.toGregorianCalendar();
 			zeroDopplerTimeLastLineSeconds=lastLineUtc.toGregorianCalendar();
