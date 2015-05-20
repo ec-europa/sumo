@@ -49,7 +49,7 @@ public class GeometricLayer implements Cloneable{
        // positions.projection=null;
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
-                double[] temp=geoTransform.getPixelFromGeo(pos.x, pos.y, projection);
+                double[] temp=geoTransform.getPixelFromGeo(pos.x, pos.y);
                 pos.x=temp[0];
                 pos.y=temp[1];
             }
@@ -84,7 +84,7 @@ public class GeometricLayer implements Cloneable{
         positions.projection=projection;
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
-                double[] temp=geoTransform.getGeoFromPixel(pos.x, pos.y, projection);
+                double[] temp=geoTransform.getGeoFromPixel(pos.x, pos.y);
                 pos.x=temp[0];
                 pos.y=temp[1];
             }

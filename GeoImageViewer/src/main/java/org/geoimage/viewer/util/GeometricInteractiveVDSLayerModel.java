@@ -223,7 +223,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
                 // calculate the earth angular speed
                 double earthangularSpeed = 2 * Math.PI / 24 / 3600;
                 // calculate earth radius at target point lattitude
-                double radius = 6400 * 1000 * Math.cos(2 * Math.PI * il.getImageReader().getGeoTransform().getGeoFromPixel(posX, posY, "EPSG:4326")[1] / 360.0);
+                double radius = 6400 * 1000 * Math.cos(2 * Math.PI * il.getImageReader().getGeoTransform().getGeoFromPixel(posX, posY)[1] / 360.0);
                 // calculate the range azimuth pixel speed due to the rotation of the earth
                 double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getGeoTransform().getPixelSize()[0];
                 // calculate the pixels delta value

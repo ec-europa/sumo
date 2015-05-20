@@ -201,25 +201,25 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             double[] x23; //image center coords
             double[] x31; //image center coords
 
-            x0 = gt.getGeoFromPixelWithDefaultEps(-margin, -margin,false);
+            x0 = gt.getGeoFromPixel(-margin, -margin);
 
-            x01 = gt.getGeoFromPixelWithDefaultEps(-margin, gir.getHeight()/3,false);
-            x02 = gt.getGeoFromPixelWithDefaultEps(-margin, gir.getHeight()/2,false);
-            x03 = gt.getGeoFromPixelWithDefaultEps(-margin, gir.getHeight()*2/3,false);
+            x01 = gt.getGeoFromPixel(-margin, gir.getHeight()/3);
+            x02 = gt.getGeoFromPixel(-margin, gir.getHeight()/2);
+            x03 = gt.getGeoFromPixel(-margin, gir.getHeight()*2/3);
 
-            x1 = gt.getGeoFromPixelWithDefaultEps(-margin, margin + gir.getHeight(),false);
+            x1 = gt.getGeoFromPixel(-margin, margin + gir.getHeight());
 
-            x12 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth()/2, margin +gir.getHeight(),false);
+            x12 = gt.getGeoFromPixel(margin + gir.getWidth()/2, margin +gir.getHeight());
 
-            x2 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth(), margin + gir.getHeight(),false);
+            x2 = gt.getGeoFromPixel(margin + gir.getWidth(), margin + gir.getHeight());
 
-            x21 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth(), gir.getHeight()*2/3,false);
-            x22 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth(), gir.getHeight()/2,false);
-            x23 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth(), gir.getHeight()/3,false);
+            x21 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()*2/3);
+            x22 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/2);
+            x23 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/3);
 
-            x3 = gt.getGeoFromPixelWithDefaultEps(margin + gir.getWidth(), -margin,false);
+            x3 = gt.getGeoFromPixel(margin + gir.getWidth(), -margin);
 
-            x31 = gt.getGeoFromPixelWithDefaultEps(margin+gir.getWidth()/2, -margin,false);
+            x31 = gt.getGeoFromPixel(margin+gir.getWidth()/2, -margin);
 
             double minx = Math.min(x0[0], Math.min(x01[0], Math.min(x02[0], Math.min(x03[0], Math.min(x1[0], Math.min(x12[0], Math.min(x2[0], Math.min(x21[0], Math.min(x22[0], Math.min(x23[0], Math.min(x3[0], x31[0])))))))))));
             double maxx = Math.max(x0[0], Math.max(x01[0], Math.max(x02[0], Math.max(x03[0], Math.max(x1[0], Math.max(x12[0], Math.max(x2[0], Math.max(x21[0], Math.max(x22[0], Math.max(x23[0], Math.max(x3[0], x31[0])))))))))));

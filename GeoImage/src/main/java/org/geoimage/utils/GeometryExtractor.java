@@ -32,10 +32,10 @@ public class GeometryExtractor {
             double[] x1;
             double[] x2;
             double[] x3;
-            x0 = gt.getGeoFromPixel(-50, -50, "EPSG:4326");
-            x2 = gt.getGeoFromPixel(50 + gir.getWidth(), 50 + gir.getHeight(), "EPSG:4326");
-            x3 = gt.getGeoFromPixel(50 + gir.getWidth(), -50, "EPSG:4326");
-            x1 = gt.getGeoFromPixel(-50, 50 + gir.getHeight(), "EPSG:4326");
+            x0 = gt.getGeoFromPixel(-50, -50);
+            x2 = gt.getGeoFromPixel(50 + gir.getWidth(), 50 + gir.getHeight());
+            x3 = gt.getGeoFromPixel(50 + gir.getWidth(), -50);
+            x1 = gt.getGeoFromPixel(-50, 50 + gir.getHeight());
             return new WKTReader().read("POLYGON((" + x0[0] + " " + x0[1] + "," + x1[0] + " " + x1[1] + "," + x2[0] + " " + x2[1] + "," + x3[0] + " " + x3[1] + "," + x0[0] + " " + x0[1] + "" + "))");
         } catch (ParseException ex) {
         	logger.error(ex.getMessage(),ex);

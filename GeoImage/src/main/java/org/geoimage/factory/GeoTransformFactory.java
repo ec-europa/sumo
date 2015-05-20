@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.IGcpsGeoTransform;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
@@ -23,7 +24,7 @@ public class GeoTransformFactory {
         return new AffineGeoTransform(atpix2geo, wktGeoProj);
     }
     
-    public static GeoTransform createFromGcps(List<Gcp> gcps, String wktGeoProj) {
+    public static IGcpsGeoTransform createFromGcps(List<Gcp> gcps, String wktGeoProj) {
         return new GcpsGeoTransform(gcps, wktGeoProj);
     }
 }

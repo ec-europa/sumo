@@ -242,7 +242,7 @@ public class Radarsat1Image extends SarImageReader {
             lea.read(radialsatString, 0, 16);
             double radialsat = Double.parseDouble(new String(radialsatString));
             MathTransform convert;
-            double[] latlon = getGeoTransform().getGeoFromPixel(0.0, 0.0, "EPSG:4326");
+            double[] latlon = getGeoTransform().getGeoFromPixel(0.0, 0.0);
             double[] position = new double[3];
             convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);

@@ -76,7 +76,7 @@ public class PositionDialog extends javax.swing.JDialog{
     public void setImagePosition(Point imagePosition) {
         this.jLabel2.setText(""+imagePosition.x);
         this.jLabel3.setText(""+imagePosition.y);
-        double[] geo= gt.getGeoFromPixel(imagePosition.x,imagePosition.y, "EPSG:"+epsg);
+        double[] geo= gt.getGeoFromPixel(imagePosition.x,imagePosition.y);
         this.jLabel5.setText(""+geo[0]);
         this.jLabel6.setText(""+geo[1]);
         FastImageLayer parent=(FastImageLayer)layer.getParent();

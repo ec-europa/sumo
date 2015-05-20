@@ -112,7 +112,7 @@ public class GmlIO extends AbstractVectorIO {
             Attributes att = glayer.getAttributes(geom);
             String[] atts = att.getSchema();
             Element featureMember = new Element("featureMember", gml);
-            double[] posA = transform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+            double[] posA = transform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
             Element feature = new Element("feature", vd);
             Element name = new Element("name", gml);
             name.addContent(c+"");
@@ -169,10 +169,10 @@ public class GmlIO extends AbstractVectorIO {
         source.addContent(time);
         Element coorners = new Element("cornerPoint", sat);
         coorners.setAttribute("srsName", "EPSG:4326");
-        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
-        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
-        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight(), "EPSG:4326");
-        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
+        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
+        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
+        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
+        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
         Element pos = new Element("pos", gml);
         pos.addContent(topLeft[1] +" "+topLeft[0]);
         coorners.addContent(pos);
