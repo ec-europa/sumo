@@ -319,7 +319,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
             StringBuilder values = new StringBuilder(qryString.toString());
             values.append("('").append(detect_time).append("',");
             // convert pixel values to projected values
-            double[] temp = geotransform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, projection);
+            double[] temp = geotransform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
             values.append("setsrid(geometryfromtext('POINT(").append(temp[0]).append(" ").append(temp[1]).append(")'),4326)" + ",");
             values.append("'").append(image_id).append("',");
             values.append("'").append((String) attributes.get(VDSSchema.RUN_ID)).append("',");

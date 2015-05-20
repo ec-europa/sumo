@@ -208,7 +208,7 @@ public abstract class Sentinel1 extends SarImageReader {
             
             //set the satellite altitude
             double radialdist = Math.pow(xposition * xposition + yposition * yposition + zposition * zposition, 0.5);
-            double[] latlon = getGeoTransform().getGeoFromPixel(0, 0, epsg);
+            double[] latlon = getGeoTransform().getGeoFromPixel(0, 0);
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);

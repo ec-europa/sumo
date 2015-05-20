@@ -181,8 +181,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
         //compute the azimuth considering the two left corners of the image
         //azimuth angle in degrees between 0 and +180
-        double[] endingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, 0, "EPSG:4326");
-        double[] startingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, getHeight() - 1, "EPSG:4326");
+        double[] endingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, 0);//, "EPSG:4326");
+        double[] startingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, getHeight() - 1);//, "EPSG:4326");
         GeodeticCalculator gc = new GeodeticCalculator();
         gc.setStartingGeographicPoint(startingPoint[0], startingPoint[1]);
         gc.setDestinationGeographicPoint(endingPoint[0], endingPoint[1]);
@@ -401,17 +401,18 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             ArrayList<double[]> latlonframe = new ArrayList<double[]>();
 
             // use the four image corners to define the image frame
-            latlonframe.add(geotransform.getGeoFromPixel(0, 0, "EPSG:4326"));
-            latlonframe.add(geotransform.getGeoFromPixel(xSize, 0, "EPSG:4326"));
-            latlonframe.add(geotransform.getGeoFromPixel(xSize, ySize, "EPSG:4326"));
-            latlonframe.add(geotransform.getGeoFromPixel(0, ySize, "EPSG:4326"));
+            latlonframe.add(geotransform.getGeoFromPixel(0, 0));//, "EPSG:4326"));
+            latlonframe.add(geotransform.getGeoFromPixel(xSize, 0));//, "EPSG:4326"));
+            latlonframe.add(geotransform.getGeoFromPixel(xSize, ySize));//, "EPSG:4326"));
+            latlonframe.add(geotransform.getGeoFromPixel(0, ySize));//, "EPSG:4326"));
 
             return latlonframe;
         }
 
         return null;
     }
-//TODO check the clone object
+
+    //TODO check the clone object
     @Override
     public GeoImageReader clone(){
         return GeoImageReaderFactory.cloneReader(this);

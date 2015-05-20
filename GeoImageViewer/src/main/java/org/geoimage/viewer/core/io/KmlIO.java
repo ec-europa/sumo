@@ -106,10 +106,10 @@ public class KmlIO extends AbstractVectorIO {
             rootFolder.addTimeStamp(time);
 
             //extraction of the corners of the image
-            double[] a = gt.getGeoFromPixel((double) 0, (double) 0, "EPSG:4326");
-            double[] b = gt.getGeoFromPixel((double) gir.getWidth(), (double) 0, "EPSG:4326");
-            double[] c = gt.getGeoFromPixel((double) gir.getWidth(), (double) gir.getHeight(), "EPSG:4326");
-            double[] d = gt.getGeoFromPixel((double) 0, (double) gir.getHeight(), "EPSG:4326");
+            double[] a = gt.getGeoFromPixel((double) 0, (double) 0);
+            double[] b = gt.getGeoFromPixel((double) gir.getWidth(), (double) 0);
+            double[] c = gt.getGeoFromPixel((double) gir.getWidth(), (double) gir.getHeight());
+            double[] d = gt.getGeoFromPixel((double) 0, (double) gir.getHeight());
 
             //create folder for the image border
             Folder border = new Folder();
@@ -255,7 +255,7 @@ public class KmlIO extends AbstractVectorIO {
 
                 
                 Coordinate pos = geom.getCoordinate();
-                double[] temp = gt.getGeoFromPixel(pos.x, pos.y, projection);
+                double[] temp = gt.getGeoFromPixel(pos.x, pos.y);
                 Point pt = new Point();
                 //pt.setId(schema[0]);
                 pt.setNumericalCoordinates(temp);

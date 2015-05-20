@@ -159,8 +159,8 @@ public class ConsoleLayer extends AbstractLayer {
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
                     if (l instanceof IImageLayer) {
                         GeoImageReader gir = ((IImageLayer) l).getImageReader();
-                        double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
-                        double[] x1 = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
+                        double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0);
+                        double[] x1 = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
                         Desktop.getDesktop().browse(new URI("http://maps.google.com/?ie=UTF8&ll=" + (x1[1] + x0[1]) / 2 + "," + (x0[0] + x1[0]) / 2 + "&spn=0.009676,0.020084&t=h&z=9"));
                         return;
                     }
