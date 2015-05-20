@@ -211,26 +211,34 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double t0=0;
 		int idxStartT0=0;
 		//TODO blocco da inserire solo per immagini complesse
-		/*if(strcmp(meta.ImTyp,'S1') && strcmp(meta.productType,'SLC') && (strcmp(meta.mode,'IW') || strcmp(meta.mode,'EW'))){
-		    % Need to take the bursts into account 
-		    timeRef = meta.timeStampInitSeconds(1) - timeStampInitSecondsRef(1);
-		    az0TimBSeconds = meta.az0TimBSeconds - timeRef;
-		    azLTimBSeconds = az0TimBSeconds + meta.linesPerBurst*meta.azimuthTimeInterval;
+		//if(strcmp(meta.ImTyp,'S1') && strcmp(meta.productType,'SLC') && (strcmp(meta.mode,'IW') || 
+		if(meta.getMode().equalsIgnoreCase("EW")){
+		    // Need to take the bursts into account 
+			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
 		    
-		    idxBurst = ceil(l / meta.linesPerBurst) - 1;
-		    lBurst = l - idxBurst * meta.linesPerBurst;
+			//TODO COMPLETE THIS PART FOR THE EW
+		  /*  double az0TimBSeconds = meta.az0TimBSeconds - timeRef;
+		    double azLTimBSeconds = az0TimBSeconds + meta.linesPerBurst*meta.azimuthTimeInterval;
+		    
+		    double idxBurst = ceil(l / meta.linesPerBurst) - 1;
+		    double lBurst = l - idxBurst * meta.linesPerBurst;
 		    
 		    t0 = az0TimBSeconds(idxBurst+1) + lBurst * meta.azimuthTimeInterval;
-		    idx_t0 = find(timeStampInterpSecondsRef >= t0, 1, 'first');     
-		*/
-		//}else{
+		    
+		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
+		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>=t0){
+		    		break;
+		    	}
+		    }     */
+		
+		}else{
 		    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeFirstRef()*l) / (meta.getNlines()-1); //In seconds
 		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
 		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
 		    		break;
 		    	}
 		    }
-		//}
+		}
 		//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
 		//TODO check the arrays!!!
 		double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
