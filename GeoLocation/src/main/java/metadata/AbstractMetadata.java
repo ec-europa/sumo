@@ -11,7 +11,7 @@ public abstract class AbstractMetadata implements IMetadata{
     protected double groundRangeOrigin=0; 
     protected double numberOfSamplesPerLine=0;
     protected String antennaPointing;
-    
+    protected String mode="";
     
     public abstract String getAntennaPointing();
 
@@ -27,6 +27,18 @@ public abstract class AbstractMetadata implements IMetadata{
 
 	public void setType(String type) {
 		this.type=type;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public void setAntennaPointing(String antennaPointing) {
+		this.antennaPointing = antennaPointing;
 	}
 
 	public String getPixelTimeOrdering() {
