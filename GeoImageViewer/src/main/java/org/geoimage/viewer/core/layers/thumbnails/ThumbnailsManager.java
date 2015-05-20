@@ -185,7 +185,7 @@ public class ThumbnailsManager {
                 Gcp gcp = new Gcp();
                 gcp.setXpix(i * stepx);
                 gcp.setYpix(j * stepy);
-                double[] geo = gir.getGeoTransform().getGeoFromPixel(gcp.getXpix(), gcp.getYpix(), "EPSG:4326");
+                double[] geo = gir.getGeoTransform().getGeoFromPixel(gcp.getXpix(), gcp.getYpix());
                 gcp.setXgeo(geo[0]);
                 gcp.setYgeo(geo[1]);
                 out.add(gcp);

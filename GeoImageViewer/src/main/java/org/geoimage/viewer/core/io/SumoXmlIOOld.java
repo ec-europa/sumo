@@ -177,7 +177,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
             Element yPixel = new Element("yPixel");
             yPixel.setText(Math.floor(geom.getCoordinate().y) + "");
             boat.addContent(yPixel);
-            double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+            double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
             Element lon = new Element("lon");
             lon.setText(pos[0] + "");
             boat.addContent(lon);
@@ -330,7 +330,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     subObjs.setText(att.get("num pixels").toString());
     boat.addContent(subObjs);
 
-    double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+    double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
 
     Element lon = new Element("lon");
     lon.setText(pos[0] + "");
@@ -374,10 +374,10 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     }*/
     public Element getCorners(GeoImageReader gir) {
         Element gcps = new Element("gcps");
-        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
-        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
-        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight(), "EPSG:4326");
-        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
+        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
+        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
+        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
+        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
         gcps.addContent(createGcp(topLeft[0], topLeft[1], 0, 0));
         gcps.addContent(createGcp(topRight[0], topRight[1], gir.getWidth(), 0));
         gcps.addContent(createGcp(bottomLeft[0], bottomLeft[1], 0, gir.getHeight()));

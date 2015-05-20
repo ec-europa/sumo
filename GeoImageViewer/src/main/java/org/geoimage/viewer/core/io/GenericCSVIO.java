@@ -135,7 +135,7 @@ public class GenericCSVIO extends AbstractVectorIO {
                     fis.write(pos.x + "," + pos.y);
                 } else {
                     Coordinate pos = geom.getCoordinate();
-                    double[] temp = transform.getGeoFromPixel(pos.x, pos.y, projection);
+                    double[] temp = transform.getGeoFromPixel(pos.x, pos.y);
                     fis.write(temp[1] + "," + temp[0]);
 
                 }
@@ -265,10 +265,10 @@ public class GenericCSVIO extends AbstractVectorIO {
             double[] x2;
             double[] x3;
             int margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
-            x0 = gt.getGeoFromPixel(-margin, -margin, "EPSG:4326");
-            x2 = gt.getGeoFromPixel(margin + width, margin + height, "EPSG:4326");
-            x3 = gt.getGeoFromPixel(margin + width, -margin, "EPSG:4326");
-            x1 = gt.getGeoFromPixel(-margin, margin + height, "EPSG:4326");
+            x0 = gt.getGeoFromPixel(-margin, -margin);
+            x2 = gt.getGeoFromPixel(margin + width, margin + height);
+            x3 = gt.getGeoFromPixel(margin + width, -margin);
+            x1 = gt.getGeoFromPixel(-margin, margin + height);
             
             Polygon imageP=PolygonOp.createPolygon(x0,x1,x2,x3,x0);
             

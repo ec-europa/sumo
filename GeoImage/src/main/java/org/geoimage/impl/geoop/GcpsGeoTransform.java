@@ -7,10 +7,7 @@ package org.geoimage.impl.geoop;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.gdal.osr.CoordinateTransformation;
-import org.gdal.osr.SpatialReference;
-import org.gdal.osr.osr;
-import org.geoimage.def.GeoTransform;
+import org.geoimage.def.IGcpsGeoTransform;
 import org.geoimage.impl.Gcp;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
@@ -27,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *  A polynomial transformation of degree 2 is computed that fits the best those points
  * @author thoorfr
  */
-public class GcpsGeoTransform implements GeoTransform {
+public class GcpsGeoTransform implements IGcpsGeoTransform {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GcpsGeoTransform.class);
 
 
@@ -35,7 +32,7 @@ public class GcpsGeoTransform implements GeoTransform {
     private CoordinateReferenceSystem sourceCRS;
     private WarpTransform2D pix2geo;
     private WarpTransform2D geo2pix;
-    private String defaultEpsgProjection;
+    private String defaultEpsgProjection="EPSG:4326";
     private MathTransform defaultMath;
     private CoordinateReferenceSystem defaultCrs;
     
@@ -46,14 +43,8 @@ public class GcpsGeoTransform implements GeoTransform {
      *  for instance "EPSG:4326". The list of possible values are the one from Geotools library
      */
     public GcpsGeoTransform(List<Gcp> gcps, String epsgGeoProj) {
-    	this.defaultEpsgProjection=epsgGeoProj;
-        try {
-            sourceCRS = CRS.decode(epsgGeoProj);
-            defaultCrs = CRS.decode(defaultEpsgProjection);
-            defaultMath = CRS.findMathTransform(defaultCrs, sourceCRS);
-        } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
+    	setDefaultProjection(epsgGeoProj);
+    	
         Point2D[] src = new Point2D[gcps.size()];
         Point2D[] dst = new Point2D[gcps.size()];
         int i = 0;
@@ -86,46 +77,72 @@ public class GcpsGeoTransform implements GeoTransform {
 		}
     }
     
-    public double[] getPixelFromGeoWithDefaultEps(double xgeo, double ygeo,boolean changeProjection) {
-        double[] out = new double[]{xgeo, ygeo};
-        if(changeProjection){
-		    try {
-		        double[] temp = new double[]{xgeo, ygeo, 0};
-		        defaultMath.transform(temp, 0, temp, 0, 1);
-		        out[0] = temp[0];
-		        out[1] = temp[1];
-		    } catch (Exception ex) {
-	        	logger.error(ex.getMessage(),ex);
-	        }
-        }    
-        geo2pix.transform(out, 0, out, 0, 1);
-        out[0] = out[0];
-        out[1] = out[1];
+    public void setDefaultProjection(String epsgGeoProj){
+    	this.defaultEpsgProjection=epsgGeoProj;
+        try {
+            sourceCRS = CRS.decode(epsgGeoProj);
+            defaultCrs = CRS.decode(defaultEpsgProjection);
+            defaultMath = CRS.findMathTransform(defaultCrs, sourceCRS);
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
+    }
+    
+    /**
+     * Computes the map coordinates given the pixel location in the image reference
+     * @param xpix the pixel location in x
+     * @param ypix the pixel location in y
+
+     * @return [longitude, latitude]
+     * 
+     * 
+     */
+    public double[] getGeoFromPixel(double xpix, double ypix) {
+    	double[] out = new double[2];
+		pix2geo.transform(new double[]{xpix , ypix }, 0, out, 0, 1);
+        try {
+            double[] temp = new double[3];
+            this.defaultMath.transform(new double[]{out[0], out[1], 0}, 0, temp, 0, 1);
+            out[0] = temp[0];
+            out[1] = temp[1];
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
         return out;
     }
-
-    public double[] getGeoFromPixelWithDefaultEps(double xpix, double ypix,boolean changeProjection) {
-        double[] out = new double[2];
-		pix2geo.transform(new double[]{xpix , ypix }, 0, out, 0, 1);
-		if(changeProjection){
-	        try {
-	            double[] temp = new double[3];
-	            defaultMath.transform(new double[]{out[0], out[1], 0}, 0, temp, 0, 1);
-	            out[0] = temp[0];
-	            out[1] = temp[1];
-	        } catch (Exception ex) {
-	        	logger.error(ex.getMessage(),ex);
-	        }
-		}    
-        return out;
+    
+    /**
+     * Computes the subpixel (i.e. precision greater than integer) location of a map coordinates
+     * @param xgeo is the longitude
+     * @param ygeo is the latitude
+     *  @return [xpixel, ypixel]
+     */
+    public double[] getPixelFromGeo(double xgeo, double ygeo) {	
+    	double[] out = new double[]{xgeo, ygeo};
+    	try {
+            double[] temp = new double[]{xgeo, ygeo, 0};
+            defaultMath.transform(temp, 0, temp, 0, 1);
+            out[0] = temp[0];
+            out[1] = temp[1];
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
+	    geo2pix.transform(out, 0, out, 0, 1);
+	    out[0] = out[0];
+	    out[1] = out[1];
+	    return out;
     }
 
     /**
-     * @param inputEpsgProjection if null use the original projection
+     * Computes the subpixel (i.e. precision greater than integer) location of a map coordinates
+     * @param xgeo is the longitude
+     * @param ygeo is the latitude
+     * @param inputEpsgProjection is the projection system of (xgeo, ygeo) (for instance "EPSG:4326"). if null use the original projection
+     * @return [xpixel, ypixel]
+     *
      */
-    @Override
     public double[] getPixelFromGeo(double xgeo, double ygeo, String inputEpsgProjection) {
-        double[] out = new double[]{xgeo, ygeo};
+    	double[] out = new double[]{xgeo, ygeo};
         if (inputEpsgProjection != null) {
             try {
                 double[] temp = new double[]{xgeo, ygeo, 0};
@@ -142,13 +159,19 @@ public class GcpsGeoTransform implements GeoTransform {
         out[0] = out[0];
         out[1] = out[1];
         return out;
-    }
+    }	
 
     /**
-     * @param outputEpsgProjection if null use the original projection
+     * Computes the map coordinates given the pixel location in the image reference
+     * @param xpix the pixel location in x
+     * @param ypix the pixel location in y
+     * @param outputEpsgProjection is the projection system of the result (for instance "EPSG:4326")  if null use the original projection
+     * @return [longitude, latitude]
+     * 
+     * 
      */
     public double[] getGeoFromPixel(double xpix, double ypix, String outputEpsgProjection) {
-        double[] out = new double[2];
+    	double[] out = new double[2];
 		pix2geo.transform(new double[]{xpix , ypix }, 0, out, 0, 1);
         //pix2geo.transform(new double[]{xpix + m_translationX, ypix + m_translationY}, 0, out, 0, 1);
         if (outputEpsgProjection != null) {
@@ -165,7 +188,21 @@ public class GcpsGeoTransform implements GeoTransform {
         }
         return out;
     }
-
+    
+    
+    
+    
+    /**
+     * Computes the associated list of subpixel (i.e. precision greater than integer)
+     * locations of a list of map coordinates
+     * @param src is the list in the form of [lon1, lat1, lon2, lat2, ...., lonN, latN]
+     * @param srcOffset is the offset of the src list to start the transformation (often 0)
+     * @param dest is the list of outputs the size shoud be at least "new double[numPoints - srcOfsset + destOffset]"
+     * @param destOffset the offset where the dest should receive the computed points
+     * @param numPoints the number of points to be computed (numpoints < src.lenght-srcOffset)
+     * @param inputWktProjection the projection of the map coordinates (example: "EPSG:4326")
+     * @return the exact list  given in arguments as dest with the computesd points in the form [x1,y1,....,xN, yN]
+     */
     public double[] getPixelFromGeo(double[] src, int srcOffset, double[] dest, int destOffset, int numPoints, String inputEpsgProjection) throws NoSuchAuthorityCodeException, FactoryException {
         if (dest == null) {
             dest = new double[src.length];
@@ -193,7 +230,17 @@ public class GcpsGeoTransform implements GeoTransform {
 
         return dest;
     }
-
+    
+    /**
+     * Computes the associated list of map coordinates locations from of a list of pixel coordinates
+     * @param src is the list in the form of [x1,y1,....,xN, yN]
+     * @param srcOffset is the offset of the src list to start the transformation (often 0)
+     * @param dest is the list of outputs the size shoud be at least "new double[numPoints - srcOfsset + destOffset]"
+     * @param destOffset the offset where the dest should receive the computed points
+     * @param numPoints the number of points to be computed (numpoints < src.lenght-srcOffset)
+     * @param inputWktProjection the projection of the map coordinates (example: "EPSG:4326")
+     * @return the exact list  given in arguments as dest with the computesd points in the form[lon1, lat1, lon2, lat2, ...., lonN, latN]
+     */
     public double[] getGeoFromPixel(double[] src, int srcOffset, double[] dest, int destOffset, int numPoints, String outputEpsgProjection) throws NoSuchAuthorityCodeException, FactoryException {
         double[] srctranslated = new double[src.length];
         for (int i = 0; i < numPoints * 2;) {
@@ -221,30 +268,28 @@ public class GcpsGeoTransform implements GeoTransform {
         return dest;
     }
 
-    public void setTransformTranslation(int x, int y) {
-    }
-
-    public int[] getTransformTranslation() {
-        return new int[]{};
-    }
-
-    // get pixel size, returns the pixel size in both directions
+    /**
+     *  get pixel size, returns the pixel size in both directions
+     *  @return return the pixelsize in metres in the range and azimuth direction [x,y]
+     */
     public double[] getPixelSize()
     {
         double[] pixelsize = {0.0, 0.0};
         // should be in the image reader class
         // get pixel size
-        double[] latlonorigin = getGeoFromPixelWithDefaultEps(0, 0,false);
-        double[] latlon = getGeoFromPixelWithDefaultEps(100, 0,false);
+        double[] latlonorigin = getGeoFromPixel(0, 0);
+        double[] latlon = getGeoFromPixel(100, 0);
         // use the geodetic calculator class to calculate distances in meters
         GeodeticCalculator gc = new GeodeticCalculator();
         gc.setStartingGeographicPoint(latlonorigin[0], latlonorigin[1]);
         gc.setDestinationGeographicPoint(latlon[0], latlon[1]);
         pixelsize[0] = gc.getOrthodromicDistance() / 100;
-        latlon = getGeoFromPixelWithDefaultEps(0, 100,false);
+        latlon = getGeoFromPixel(0, 100);
         gc.setDestinationGeographicPoint(latlon[0], latlon[1]);
         pixelsize[1] = gc.getOrthodromicDistance() / 100;
         
         return pixelsize;
     }
+
+	
 }

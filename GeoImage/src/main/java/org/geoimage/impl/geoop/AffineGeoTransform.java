@@ -166,12 +166,12 @@ public class AffineGeoTransform implements GeoTransform {
 
 
 	@Override
-	public double[] getPixelFromGeoWithDefaultEps(double xgeo, double ygeo,boolean changeProjection) {
+	public double[] getPixelFromGeo(double xgeo, double ygeo) {
 		return getPixelFromGeo(xgeo, ygeo, "EPSG:4326");
 	}
 
 	@Override
-	public double[] getGeoFromPixelWithDefaultEps(double xpix, double ypix,boolean changeProjection) {
+	public double[] getGeoFromPixel(double xpix, double ypix) {
 		return getGeoFromPixel(xpix, ypix, "EPSG:4326");
 	}
 }

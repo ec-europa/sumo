@@ -81,10 +81,10 @@ public class PostgisIO extends AbstractVectorIO {
             double[] x1;
             double[] x2;
             double[] x3;
-            x0 = gt.getGeoFromPixel(0, 0, "EPSG:4326");
-            x1 = gt.getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
-            x2 = gt.getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
-            x3 = gt.getGeoFromPixel(0, gir.getHeight(), "EPSG:4326");
+            x0 = gt.getGeoFromPixel(0, 0);
+            x1 = gt.getGeoFromPixel(gir.getWidth(), gir.getHeight());
+            x2 = gt.getGeoFromPixel(gir.getWidth(), 0);
+            x3 = gt.getGeoFromPixel(0, gir.getHeight());
             double minx = x0[0];
             double maxx = Math.max(x0[0], Math.max(x1[0], Math.max(x2[0], x3[0])));
             double miny = Math.min(x0[1], Math.min(x1[1], Math.min(x2[1], x3[1])));
@@ -216,7 +216,7 @@ public class PostgisIO extends AbstractVectorIO {
                 //collection.add(simplefeature);
                 System.arraycopy(glayer.getAttributes(geom).getValues(), 0, data, 0, data.length-1);
                 // geocodification of boats
-                double[] pos = gt.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, "EPSG:4326");
+                double[] pos = gt.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
                 // update of x,y pixel coordinates to geocoded lon,lat
                 Geometry geomgr = gf.createPoint(new Coordinate(pos[0], pos[1]));
                 data[data.length-1] = geomgr;

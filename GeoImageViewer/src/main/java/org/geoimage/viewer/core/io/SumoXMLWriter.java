@@ -225,7 +225,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			targetNumber++;
 			b.setTargetNumber(targetNumber);
 			// position pos[0]=lon pos[1] =lat
-			double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x,geom.getCoordinate().y, "EPSG:4326");
+			double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x,geom.getCoordinate().y);
 			
 			//lat and lon with 6 decimals
 			b.setLat(Precision.round(pos[1],6));
@@ -330,16 +330,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 */
 	public Gcps getCorners(GeoImageReader gir) {
 		//Corners corners=((SarImageReader)gir).getOriginalCorners();
-        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0, "EPSG:4326");
-        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
-        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight(), "EPSG:4326");
-        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
+        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
+        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
+        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
+        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
 		
 		
 		/*double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0,"EPSG:4326");
-		double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0, "EPSG:4326");
-		double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0,gir.getHeight(), "EPSG:4326");
-		double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight(), "EPSG:4326");
+		double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
+		double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0,gir.getHeight());
+		double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
 		*/
 		Gcp gcpTopL = new Gcp();
 		gcpTopL.setColumn(0);

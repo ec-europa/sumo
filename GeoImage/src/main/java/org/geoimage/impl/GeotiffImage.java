@@ -396,10 +396,10 @@ public class GeotiffImage extends SarImageReader {
         double[] x1;
         double[] x2;
         double[] x3;
-        x0 = geotransform.getGeoFromPixelWithDefaultEps(0, 0,false);
-        x2 = geotransform.getGeoFromPixelWithDefaultEps(getWidth(), getHeight(),false);
-        x3 = geotransform.getGeoFromPixelWithDefaultEps(getWidth(), 0,false);
-        x1 = geotransform.getGeoFromPixelWithDefaultEps(0, getHeight(),false);
+        x0 = geotransform.getGeoFromPixel(0, 0);
+        x2 = geotransform.getGeoFromPixel(getWidth(), getHeight());
+        x3 = geotransform.getGeoFromPixel(getWidth(), 0);
+        x1 = geotransform.getGeoFromPixel(0, getHeight());
         gcps = new Vector<Gcp>();
         gcps.add(new Gcp(0, 0, x0[0], x0[1]));
         gcps.add(new Gcp(0, getHeight(), x1[0], x1[1]));

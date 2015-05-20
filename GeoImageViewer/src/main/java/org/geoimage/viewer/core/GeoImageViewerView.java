@@ -326,7 +326,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                       IImageLayer imgL=Platform.getCurrentImageLayer();
 	                       if(imgL!=null){
 	                    	   GeoImageReader gir=imgL.getImageReader();
-	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y, "EPSG:4326");
+	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y);
 	                    	   double lon=Math.floor(geo[0]*100000)/100000;
 	                    	   double lat=Math.floor(geo[1]*100000)/100000;
 	                    	   

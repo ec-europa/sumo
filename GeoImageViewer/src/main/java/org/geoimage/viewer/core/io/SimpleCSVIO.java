@@ -129,7 +129,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
                     }
                 } else {
                     for (Coordinate pos : geom.getCoordinates()) {
-                        double[] temp = transform.getGeoFromPixel(pos.x, pos.y, projection);
+                        double[] temp = transform.getGeoFromPixel(pos.x, pos.y);
                         fis.write(temp[0] + " " + temp[1] + ";");
                     }
                 }

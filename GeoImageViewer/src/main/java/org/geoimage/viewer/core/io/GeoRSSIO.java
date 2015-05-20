@@ -65,7 +65,7 @@ public class GeoRSSIO extends AbstractVectorIO {
             if (projection == null) {
                 geoRSSModule.setPosition(new Position(geom.getCoordinate().y, geom.getCoordinate().x));
             } else {
-                double[] newPos = geotransform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y, projection);
+                double[] newPos = geotransform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
                 geoRSSModule.setPosition(new Position(newPos[1], newPos[0]));
             }
             entry.getModules().add(geoRSSModule);
