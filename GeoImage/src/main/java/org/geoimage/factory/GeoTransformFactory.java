@@ -27,6 +27,10 @@ public class GeoTransformFactory {
     public static IGcpsGeoTransform createFromGcps(List<Gcp> gcps, String wktGeoProj) {
         return new GcpsGeoTransform(gcps, wktGeoProj);
     }
+    
+    public static GeoTransform createFromOrbitVector(String annotationFile) {
+        return new GcpsGeoTransform(gcps, wktGeoProj);
+    }
 }
 
 
