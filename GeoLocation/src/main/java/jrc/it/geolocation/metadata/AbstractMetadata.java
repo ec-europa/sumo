@@ -1,4 +1,5 @@
-package metadata;
+package jrc.it.geolocation.metadata;
+
 
 public abstract class AbstractMetadata implements IMetadata{
 	//for S1 always Increasing

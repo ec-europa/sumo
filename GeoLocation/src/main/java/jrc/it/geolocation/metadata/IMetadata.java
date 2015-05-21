@@ -1,4 +1,4 @@
-package metadata;
+package jrc.it.geolocation.metadata;
 
 public interface IMetadata {
 	public class OrbitStatePosVelox{
