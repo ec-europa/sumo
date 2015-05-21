@@ -21,6 +21,7 @@ import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -195,7 +196,14 @@ public abstract class Sentinel1 extends SarImageReader {
                 return false;
             }
             String epsg = "EPSG:4326";
-            geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            GeoTransform geotransform2 = GeoTransformFactory.createFromGcps(gcps, epsg);
+            geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
+            
+            double[] a=geotransform.getGeoFromPixel(10,15);
+            double[] c=geotransform.getPixelFromGeo(a[0],a[1]);
+            
+            double[] b=geotransform2.getGeoFromPixel(10,15);
+            double[] d=geotransform2.getPixelFromGeo(b[0],b[1]);
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
@@ -208,7 +216,7 @@ public abstract class Sentinel1 extends SarImageReader {
             
             //set the satellite altitude
             double radialdist = Math.pow(xposition * xposition + yposition * yposition + zposition * zposition, 0.5);
-            double[] latlon = getGeoTransform().getGeoFromPixel(0, 0);
+            double[] latlon = geotransform.getGeoFromPixel(0, 0);
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);

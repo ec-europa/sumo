@@ -22,7 +22,8 @@ public class S1Metadata extends AbstractMetadata {
 	private List<CoordinateConversion> coordinateConversion=null;
 	private double samplingf=0;
 	private int nLines=0;
-	
+	private double linesPerBurst=0;
+	private double azimuthTimeInterval=0;
 	
 	public int getNlines() {
 		return nLines;
@@ -65,6 +66,18 @@ public class S1Metadata extends AbstractMetadata {
 	
 	
 	
+	public double getLinesPerBurst() {
+		return linesPerBurst;
+	}
+
+	public void setLinesPerBurst(double linesPerBurst) {
+		this.linesPerBurst = linesPerBurst;
+	}
+
+	public int getnLines() {
+		return nLines;
+	}
+
 	public S1Metadata() {
 	}
 	
@@ -90,6 +103,16 @@ public class S1Metadata extends AbstractMetadata {
 		this.mode = mode;
 	}
 
+	
+	
+	public double getAzimuthTimeInterval() {
+		return azimuthTimeInterval;
+	}
+
+	public void setAzimuthTimeInterval(double azimuthTimeInterval) {
+		this.azimuthTimeInterval = azimuthTimeInterval;
+	}
+
 	/**
 	 * 
 	 */
@@ -107,6 +130,8 @@ public class S1Metadata extends AbstractMetadata {
 			
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
 			super.mode=annotationReader.getHeader().getMode().name();
+			linesPerBurst=annotationReader.getBurstInformation().getLinePerBust();
+			azimuthTimeInterval= annotationReader.getImageInformation().getAzimuthTimeInterval().getValue();
 			
 			zeroDopplerTimeFirstLineSeconds=firstLineUtc.toGregorianCalendar();
 			zeroDopplerTimeLastLineSeconds=lastLineUtc.toGregorianCalendar();

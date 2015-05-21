@@ -3,17 +3,10 @@ package org.geoimage.impl.s1;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
-import org.gdal.gdal.Band;
-import org.gdal.gdal.Dataset;
-import org.gdal.gdal.gdal;
-import org.gdal.gdalconst.gdalconstConstants;
 import org.geoimage.impl.TIFF;
 import org.geoimage.utils.IProgress;
 import org.slf4j.Logger;
