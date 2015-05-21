@@ -16,6 +16,10 @@ public class GeoUtils {
 	 * @return
 	 */
 	public static double[] convertFromGeoToEarthCentred(double lat, double lon){
+		/*	pX = (a^2/denomTmp + pH) * cosdpLat * cosdpLon;
+			pY = (a^2/denomTmp + pH) * cosdpLat * sindpLon;
+			pZ = (b^2/denomTmp + pH) * sindpLat;
+			pXYZ = [pX pY pZ];*/
 		
 		double pH=GeoUtils.getGeoidH(lon, lat);
 		

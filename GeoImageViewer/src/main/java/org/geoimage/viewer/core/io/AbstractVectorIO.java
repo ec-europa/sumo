@@ -21,15 +21,6 @@ public abstract class AbstractVectorIO {
     protected String layername;
     
     
-/*    
-    public GeoImageReader getGir() {
-		return gir;
-	}
-
-	public void setGir(GeoImageReader gir) {
-		this.gir = gir;
-	}*/
-
 	public Map<String,Object>  getConfig() {
 		return config;
 	}

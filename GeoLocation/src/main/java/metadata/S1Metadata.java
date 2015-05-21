@@ -153,9 +153,9 @@ public class S1Metadata extends AbstractMetadata {
 				pv.vz=ot.getVelocity().getZ().getValue();
 				
 				GregorianCalendar gc=ot.getTime().toGregorianCalendar();
-				pv.time=gc.getTimeInMillis()/1000;
+				pv.time=gc.getTimeInMillis()/1000.0;
 				
-				pv.timeStampInitSeconds=gc.get(GregorianCalendar.MINUTE)*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000);
+				pv.timeStampInitSeconds=gc.get(GregorianCalendar.MINUTE)*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000.0);
 				orbitStatePosVelox.add(pv);
 			}
 			
@@ -173,7 +173,7 @@ public class S1Metadata extends AbstractMetadata {
 				coordinateConversion.add(cc);
 				XMLGregorianCalendar xmlGc=ccType.getAzimuthTime();
 				cc.azimuthTime=xmlGc.toGregorianCalendar().getTimeInMillis();
-				cc.groundToSlantRangePolyTimesSeconds=xmlGc.getMinute()*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000);
+				cc.groundToSlantRangePolyTimesSeconds=xmlGc.getMinute()*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
 			}
 			
 			//PRF and PRF mean
