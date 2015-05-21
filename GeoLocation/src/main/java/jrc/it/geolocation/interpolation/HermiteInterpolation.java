@@ -1,17 +1,16 @@
-package interpolation;
+package jrc.it.geolocation.interpolation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import metadata.IMetadata.OrbitStatePosVelox;
-import metadata.S1Metadata;
+import jrc.it.geolocation.metadata.S1Metadata;
+import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import api.IInterpolation;
-
 import common.MathUtil;
 
 
