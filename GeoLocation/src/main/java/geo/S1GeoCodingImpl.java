@@ -22,8 +22,11 @@ public class S1GeoCodingImpl implements GeoCoding {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
 	
 	
-	
-	S1GeoCodingImpl(String metaFile){
+	/**
+	 * 
+	 * @param metaFile
+	 */
+	public S1GeoCodingImpl(String metaFile){
 		meta =new S1Metadata();
 		meta.initMetaData(metaFile);
 		
@@ -41,7 +44,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @see geo.GeoCoding#reverse(double, double)
 	 */
 	@Override
-	public double[] reverse(double lat,double lon){
+	public double[] reverse(double lon,double lat){
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -66,14 +69,22 @@ public class S1GeoCodingImpl implements GeoCoding {
 		logger.debug("l:"+l);
 
 		//******************* this part is only Sentinel 1 'SLC 'IW' and 'EW'
-		    // Need to take the bursts into account 
-		/*    timeRef = meta.timeStampInitSeconds(1) - timeStampInitSecondsRef(1);
-		    az0TimBSeconds = meta.az0TimBSeconds - timeRef;
-		    azLTimBSeconds = az0TimBSeconds + meta.linesPerBurst*meta.azimuthTimeInterval;
+		    // Need to take the bursts into account
+		if(meta.getMode().equalsIgnoreCase("IW")||meta.getMode().equalsIgnoreCase("EW")){
+			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
+			double[] az0TimBSeconds = meta.az0TimBSeconds - timeRef;
+		    double azLTimBSeconds = az0TimBSeconds + meta.getLinesPerBurst()*meta.getAzimuthTimeInterval();
 		    
-		    idx = find(az0TimBSeconds < zeroDopplerTime & azLTimBSeconds > zeroDopplerTime);
+		    int idx=0;
+		    do{
+		    	idx++;
+		    }while(az0TimBSeconds<zeroDopplerTime&&azLTimBSeconds > zeroDopplerTime);
+			    
+		    
+		 /*   idx = find(az0TimBSeconds < zeroDopplerTime & azLTimBSeconds > zeroDopplerTime);
 		    l = meta.linesPerBurst * (idx-1) + (zeroDopplerTime - az0TimBSeconds(idx))/meta.azimuthTimeInterval;
 		*/
+		}	
 		//******************* End part only for Sentinel 1 'SLC 'IW' and 'EW'
 		
 		
@@ -393,8 +404,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 			}
 		}
 		logger.debug("lat:"+lat+ "  lon:"+lon);
-		results[0]=lat;
-		results[1]=lon;
+		results[0]=lon;
+		results[1]=lat;
 		return results;
 		
 	}

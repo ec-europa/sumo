@@ -12,6 +12,7 @@ import org.geoimage.def.IGcpsGeoTransform;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
+import org.geoimage.impl.geoop.GeoTransformOrbitState;
 
 /**
  * Simple class that contains factory methods that return the appropriate
@@ -29,7 +30,7 @@ public class GeoTransformFactory {
     }
     
     public static GeoTransform createFromOrbitVector(String annotationFile) {
-        return new GcpsGeoTransform(gcps, wktGeoProj);
+        return new GeoTransformOrbitState(annotationFile);
     }
 }
 

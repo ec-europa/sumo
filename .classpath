@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
+	<classpathentry kind="src" path="GeoLocation/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/java"/>
 	<classpathentry kind="src" path="GeoImageViewer/src/main/fengui"/>
 	<classpathentry kind="src" path="GeoImage/src/main/java"/>
-	<classpathentry kind="src" path="GeoImageViewer/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageViewer/src/main/java"/>
 	<classpathentry kind="src" path="SentinelXMLReader/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageViewer/src/test"/>
