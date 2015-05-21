@@ -1,10 +1,10 @@
-package interpolation;
+package jrc.it.geolocation.interpolation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import metadata.IMetadata;
-import metadata.S1Metadata;
+import jrc.it.geolocation.metadata.IMetadata;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.LoggerFactory;

@@ -1,10 +1,9 @@
 package api;
 
-import interpolation.HermiteInterpolation;
-
 import java.util.List;
 
-import metadata.S1Metadata;
+import jrc.it.geolocation.interpolation.HermiteInterpolation;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 public interface IInterpolation {
 	public HermiteInterpolation.InterpolationResult interpolation(double[] subTimesDiffRef, 

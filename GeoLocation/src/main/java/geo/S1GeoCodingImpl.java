@@ -3,9 +3,9 @@ package geo;
 import java.util.Arrays;
 import java.util.List;
 
-import interpolation.OrbitInterpolation;
-import metadata.IMetadata;
-import metadata.S1Metadata;
+import jrc.it.geolocation.interpolation.OrbitInterpolation;
+import jrc.it.geolocation.metadata.IMetadata;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;

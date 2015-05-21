@@ -281,15 +281,13 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
 	                        //buffer(0) is used to avoid intersection errors 
-	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP.buffer(0));
+	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
 	                        if(!p2.isEmpty()){
 		                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 		                            if (!p2.getGeometryN(i).isEmpty()) {
 		                                out.put(p2.getGeometryN(i), at);
 		                            }
 		                        }
-	                        }else{
-	                        	out.put(g.buffer(0));
 	                        }	
 	                            
 	                    } catch (Exception ex) {
