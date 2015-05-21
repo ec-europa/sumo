@@ -34,7 +34,6 @@ public class SimpleGeometryLayer extends AbstractLayer implements IVectorLayer{
     public final static String LINESTRING = GeometricLayer.LINESTRING;
     public final static String MIXED = GeometricLayer.MIXED;
     protected boolean active = true;
-    protected GeoTransform geotransform;
     
    	
 	protected String type;

@@ -24,22 +24,14 @@ public class OrbitInterpolation {
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
 	
-	public double[] getSecondsDiffFromRefTime() {
-		return secondsDiffFromRefTime;
-	}
 
 
 	public OrbitInterpolation() {
 	}
 
-	
-	public void H(){
-		//HermiteInterpolator interp=new HermiteInterpolator();
-	}
-	
 	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
-			long zeroDopplerTimeFirstLineSeconds,
-			long zeroDopplerTimeLastLineSeconds,
+			double zeroDopplerTimeFirstLineSeconds,
+			double zeroDopplerTimeLastLineSeconds,
 			double samplingf){
 			
 		
@@ -144,6 +136,10 @@ public class OrbitInterpolation {
 					idxEndTime=i;
 				}
 			}
+			
+			logger.debug("idxInitTime:"+idxInitTime+"	idxEndTime:"+idxEndTime);
+			
+			
 			double[] t0=ArrayUtils.toPrimitive((Double[])timeStampInitSecondsRefPointsInterp.toArray());
 			
 			 if (idxInitTime!=-1 && idxEndTime!=-1 && initTime < endTime){
@@ -159,28 +155,28 @@ public class OrbitInterpolation {
 			 }
 		}
 		//start from 2 because we need 2 points to start interpolation
-		for(int orbPoint=1;orbPoint<nPoints-2;orbPoint++){
+		for(int orbPoint=1;orbPoint<nPoints;orbPoint++){
 		//Interpolation is to be done in this section					//in carlos code secondsDiffFromRefTime=timeStampInitSecondsRef
 		    if(secondsDiffFromRefTime[orbPoint-1]<zeroDopplerTimeEndRef||secondsDiffFromRefTime[orbPoint]>zeroDopplerTimeEndRef){
+		    	
 		    	//Find the orbit points that will be used for the interpolation
 		    	int idxStart=0;
 		    	int idxEnd=0;
 	            if( N_ORB_POINT_INTERP > nPoints){
 	            	idxEnd = nPoints;// in matlab array da 1-31 con step =1
 	            }else{
-	                idxStart=orbPoint - new Double(Math.floor(N_ORB_POINT_INTERP/2)).intValue()+1;
+	                idxStart=orbPoint - new Double(Math.floor(N_ORB_POINT_INTERP/2)).intValue();
 	                idxEnd=idxStart + N_ORB_POINT_INTERP -1;
 	                
 	                //vOrbPoints = (idxStart:idxEnd);// in matlab array da idxstart a idxEnd con step =1
-	                if( idxStart <= 0){
-	                    // in matlab vOrbPoints = (1:nOrbPointsInterp);
+	                if( idxStart<1){
+	                	//0-1-2-3..  N_ORB_POINT_INTERP-1
 	                	idxStart=0;
 	                	idxEnd=N_ORB_POINT_INTERP-1;
 	                }
-	                if( idxEnd > nPoints){ 
-	                    //vOrbPoints = ((nPoints-nOrbPointsInterp+1):nPoints);
-	                    idxStart=nPoints-N_ORB_POINT_INTERP+1;
-	                	idxEnd=nPoints;
+	                if( idxEnd>=nPoints){//27-28-29-30 
+	                    idxStart=nPoints-N_ORB_POINT_INTERP;
+	                	idxEnd=nPoints-1;
 	                }
 	            }
 	            
@@ -190,14 +186,8 @@ public class OrbitInterpolation {
 	            
 	            List<Double> timeStampInitSecondsRefPointsInterp = new ArrayList<Double>();
 
-	            int idx1=idxStart;
-	            int idx2=idxEnd;
-	            if(idxStart>0){
-	            	idx1=idxStart-1;
-	            	idx2=idxEnd-1;
-	            }	
 	            for(int i=0;i<timeStampInterpSecondsRef.length;i++){
-	            	if(timeStampInterpSecondsRef[i]>=secondsDiffFromRefTime[idx1]&& timeStampInterpSecondsRef[i] < secondsDiffFromRefTime[idx2]){
+	            	if(timeStampInterpSecondsRef[i]>=secondsDiffFromRefTime[idxStart]&& timeStampInterpSecondsRef[i] < secondsDiffFromRefTime[idxEnd]){
 	            		timeStampInitSecondsRefPointsInterp.add(timeStampInterpSecondsRef[i]);
 	            	}
 	            }				
@@ -228,10 +218,11 @@ public class OrbitInterpolation {
 	            	}
 	            }
 	            
-	            logger.debug("initTime:"+ initTime+ "  endTime:"+ endTime);
-	            logger.debug("idxInitTime:"+ idxInitTime+ "  idxEndTime:"+ idxEndTime);
-	            logger.debug("timeStampInitSecondsRefPointsInterp(idxInitTime):"+ timeStampInitSecondsRefPointsInterp.get(idxInitTime));
-	            logger.debug("timeStampInitSecondsRefPointsInterp(idxEndTime):"+ timeStampInitSecondsRefPointsInterp.get(idxEndTime));
+	            //logger.debug("initTime:"+ initTime+ "  endTime:"+ endTime);
+	            logger.debug("idxstart:"+ idxStart+ "  idxend:"+ idxEnd);
+	           // logger.debug("idxInitTime:"+ idxInitTime+ "  idxEndTime:"+ idxEndTime);
+	           // logger.debug("timeStampInitSecondsRefPointsInterp(idxInitTime):"+ timeStampInitSecondsRefPointsInterp.get(idxInitTime));
+	           // logger.debug("timeStampInitSecondsRefPointsInterp(idxEndTime):"+ timeStampInitSecondsRefPointsInterp.get(idxEndTime));
 	            
 	            double timeRef = timeStampInitSecondsRefPointsInterp.get(0);
 	            double[] timeStampInitSecondsRefPointsInterp0 =new double[timeStampInitSecondsRefPointsInterp.size()];
@@ -352,6 +343,10 @@ public class OrbitInterpolation {
 
 	public double getZeroDopplerTimeLastRef() {
 		return zeroDopplerTimeLastRef;
+	}
+	
+	public double[] getSecondsDiffFromRefTime() {
+		return secondsDiffFromRefTime;
 	}
 
 
