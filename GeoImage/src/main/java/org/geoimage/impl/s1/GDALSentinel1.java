@@ -196,7 +196,9 @@ public abstract class GDALSentinel1 extends SarImageReader {
                 return false;
             }
             String epsg = "EPSG:4326";
-            geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
+            
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
