@@ -12,7 +12,6 @@ import java.util.Collection;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.geoop.GcpsGeoTransform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -186,7 +185,8 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             //retrieve a FeatureSource to work with the feature data
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             String geomName = featureSource.getSchema().getGeometryDescriptor().getLocalName();
-            GcpsGeoTransform gt =(GcpsGeoTransform) gir.getGeoTransform();
+            //GcpsGeoTransform gt =(GcpsGeoTransform) gir.getGeoTransform();
+            GeoTransform gt = gir.getGeoTransform();
             //FilterFactory ff = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
             double[] x0;
             double[] x1;
@@ -202,23 +202,19 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             double[] x31; //image center coords
 
             x0 = gt.getGeoFromPixel(-margin, -margin);
-
             x01 = gt.getGeoFromPixel(-margin, gir.getHeight()/3);
             x02 = gt.getGeoFromPixel(-margin, gir.getHeight()/2);
             x03 = gt.getGeoFromPixel(-margin, gir.getHeight()*2/3);
 
             x1 = gt.getGeoFromPixel(-margin, margin + gir.getHeight());
-
             x12 = gt.getGeoFromPixel(margin + gir.getWidth()/2, margin +gir.getHeight());
-
+           
             x2 = gt.getGeoFromPixel(margin + gir.getWidth(), margin + gir.getHeight());
-
             x21 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()*2/3);
             x22 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/2);
             x23 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/3);
-
+            
             x3 = gt.getGeoFromPixel(margin + gir.getWidth(), -margin);
-
             x31 = gt.getGeoFromPixel(margin+gir.getWidth()/2, -margin);
 
             double minx = Math.min(x0[0], Math.min(x01[0], Math.min(x02[0], Math.min(x03[0], Math.min(x1[0], Math.min(x12[0], Math.min(x2[0], Math.min(x21[0], Math.min(x22[0], Math.min(x23[0], Math.min(x3[0], x31[0])))))))))));
@@ -226,6 +222,8 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             double miny = Math.min(x0[1], Math.min(x01[1], Math.min(x02[1], Math.min(x03[1], Math.min(x1[1], Math.min(x12[1], Math.min(x2[1], Math.min(x21[1], Math.min(x22[1], Math.min(x23[1], Math.min(x3[1], x31[1])))))))))));
             double maxy = Math.max(x0[1], Math.max(x01[1], Math.max(x02[1], Math.max(x03[1], Math.max(x1[1], Math.max(x12[1], Math.max(x2[1], Math.max(x21[1], Math.max(x22[1], Math.max(x23[1], Math.max(x3[1], x31[1])))))))))));
 
+            logger.debug("minx:"+minx+"  maxx:"+maxx+"   miny:"+miny+   "maxy:"+ maxy);
+            
             String f=new StringBuilder("BBOX(").append(geomName).append(",").append(minx).append(",").append(miny).append(",").append(maxx).append(",").append(maxy+")").toString();
             
             Filter filter=CQL.toFilter(f);
@@ -258,9 +256,9 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	 *  
 	 * 
 	 * 
-	 * @param imageP
+	 * @param imageP poligono creato con i punti di riferimento dell'immagine
 	 * @param geoName
-	 * @param dataStore
+	 * @param dataStore  shape file
 	 * @param fc
 	 * @param schema
 	 * @param types
@@ -283,12 +281,16 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
 	                        //buffer(0) is used to avoid intersection errors 
-	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
-                        	for (int i = 0; i < p2.getNumGeometries(); i++) {
-	                            if (!p2.getGeometryN(i).isEmpty()) {
-	                                out.put(p2.getGeometryN(i), at);
-	                            }
-	                        }
+	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP.buffer(0));
+	                        if(!p2.isEmpty()){
+		                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
+		                            if (!p2.getGeometryN(i).isEmpty()) {
+		                                out.put(p2.getGeometryN(i), at);
+		                            }
+		                        }
+	                        }else{
+	                        	out.put(g.buffer(0));
+	                        }	
 	                            
 	                    } catch (Exception ex) {
 	                    	logger.error(ex.getMessage(),ex);

@@ -30,8 +30,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 		meta =new S1Metadata();
 		meta.initMetaData(metaFile);
 		
-		long zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000;
-		long zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000;
+		double zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000.0;
+		double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
 		
 		orbitInterpolation=new OrbitInterpolation();
 		orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),
@@ -44,7 +44,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @see geo.GeoCoding#reverse(double, double)
 	 */
 	@Override
-	public double[] reverse(double lon,double lat){
+	public double[] reverse(double lat,double lon){
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -70,7 +70,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 
 		//******************* this part is only Sentinel 1 'SLC 'IW' and 'EW'
 		    // Need to take the bursts into account
-		if(meta.getMode().equalsIgnoreCase("IW")||meta.getMode().equalsIgnoreCase("EW")){
+		/*if(meta.getMode().equalsIgnoreCase("IW")||meta.getMode().equalsIgnoreCase("EW")){
 			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
 			double[] az0TimBSeconds = meta.az0TimBSeconds - timeRef;
 		    double azLTimBSeconds = az0TimBSeconds + meta.getLinesPerBurst()*meta.getAzimuthTimeInterval();
@@ -81,10 +81,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    }while(az0TimBSeconds<zeroDopplerTime&&azLTimBSeconds > zeroDopplerTime);
 			    
 		    
-		 /*   idx = find(az0TimBSeconds < zeroDopplerTime & azLTimBSeconds > zeroDopplerTime);
+		    idx = find(az0TimBSeconds < zeroDopplerTime & azLTimBSeconds > zeroDopplerTime);
 		    l = meta.linesPerBurst * (idx-1) + (zeroDopplerTime - az0TimBSeconds(idx))/meta.azimuthTimeInterval;
-		*/
-		}	
+		
+		}	*/
 		//******************* End part only for Sentinel 1 'SLC 'IW' and 'EW'
 		
 		
@@ -192,15 +192,15 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    logger.debug("D:"+newD);
 			// Convert slant range distance to image pixel (column)
 			double p= (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
-			logger.debug("image pixel result:"+p);
 			
 			//----------- for the moment not used  --------//
-			/*if (meta.getPixelTimeOrdering().equalsIgnoreCase("Ascending")){//TODO move Ascending in the constant class
-			    p = (newD + meta.groundRangeOrigin)/meta.sampledPixelSpacing;
+			if (meta.getPixelTimeOrdering().equalsIgnoreCase("Increasing")){//TODO move Ascending in the constant class
+			    p = (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
 			
 			 }else{
-			    p = meta.nSamplesPerLine - 1 - (D + meta.groundRangeOrigin)/meta.sampledPixelSpacing;
-			}*/
+			    p = meta.getNumberOfSamplesPerLine() - 1 - (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
+			}
+			logger.debug("image pixel result:"+p);
 			resultReverse[0]=l;
 			resultReverse[1]=p;
 		}
@@ -507,8 +507,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double lon = 4.78491;
 		
 		GeoCoding gc=new S1GeoCodingImpl(metaF);
-		//gc.reverse(lat, lon);
-		gc.forward(4518.5, 21948.5);
+		double r[]=gc.reverse(lat, lon);
+		logger.debug("R:"+r[0]+"---"+r[1]);
+		//gc.forward(4518.5, 21948.5);
 	}
 	
 	

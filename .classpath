@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="GeoLocation/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/java"/>
 	<classpathentry kind="src" path="GeoImageViewer/src/main/fengui"/>
@@ -62,6 +63,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/pop3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/postgresql-8.4-701.jdbc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/rome-0.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/slf4j-log4j12-1.6.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/slf4j-api-1.7.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/slf4j-nop-1.7.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/smtp.jar"/>
@@ -236,7 +238,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/org.w3.xlink-12.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/picocontainer-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/postgresql-8.4-701.jdbc3.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/slf4j-log4j12-1.6.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/spatialite-jdbc-3.7.2-2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/swt.gtk.linux.x86-3.6.1.v3655c.jar"/>
@@ -290,6 +291,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/hdf5/jarhdfobj.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/hdf5/jarnc2obj.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/hdf5/jhdfview.jar"/>
-	<classpathentry kind="lib" path="libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

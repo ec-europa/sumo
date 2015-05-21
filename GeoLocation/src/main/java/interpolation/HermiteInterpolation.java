@@ -44,7 +44,6 @@ public class HermiteInterpolation implements IInterpolation{
 			double deltaT) {
 
 		int nPoints=subTimesDiffRef.length;
-
 		
 //		Interpolate the state vectors, using a Hermite interpolation
 //		Based on: Beaulne2005 - A Simple and Precise Approach to Position and Velocity Estimation of Low Earth Orbit Satellites

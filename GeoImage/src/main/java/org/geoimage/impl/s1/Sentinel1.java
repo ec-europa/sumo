@@ -21,7 +21,6 @@ import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
-import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -155,14 +154,11 @@ public abstract class Sentinel1 extends SarImageReader {
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
         	
-        	
 			//set image properties
             tiffImages=getImages();
             String bandName=getBandName(0);
             
-			//activeImage = tiffImages.values().iterator().next();
-
-            String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();//new File(safeReader.getHrefsTiff()[0]).getName();
+            String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();
             nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
 			//load the correct annotation file for the current images (per swath) 
 			mainFolder=manifestXML.getParentFile();
@@ -172,7 +168,6 @@ public abstract class Sentinel1 extends SarImageReader {
 			//read the ground control points
         	points= annotationReader.getGridPoints();
 			
-
             List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
             List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
             swaths=new ArrayList<Swath>();
@@ -195,15 +190,9 @@ public abstract class Sentinel1 extends SarImageReader {
                 dispose();
                 return false;
             }
-            String epsg = "EPSG:4326";
-            GeoTransform geotransform2 = GeoTransformFactory.createFromGcps(gcps, epsg);
             geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
-            
-            double[] a=geotransform.getGeoFromPixel(10,15);
-            double[] c=geotransform.getPixelFromGeo(a[0],a[1]);
-            
-            double[] b=geotransform2.getGeoFromPixel(10,15);
-            double[] d=geotransform2.getPixelFromGeo(b[0],b[1]);
+            //String epsg = "EPSG:4326";
+            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
