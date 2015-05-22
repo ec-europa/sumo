@@ -1,4 +1,4 @@
-package geo;
+package jrc.it.geolocation.geo;
 
 public interface GeoCoding {
 
@@ -8,7 +8,6 @@ public interface GeoCoding {
 	 * @param lon
 	 */
 	public abstract double[] reverse(double lat, double lon);
-
 	public abstract double[] forward(double l, double p);
 
 }

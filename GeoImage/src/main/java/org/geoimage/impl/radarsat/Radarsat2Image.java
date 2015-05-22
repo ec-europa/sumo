@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import jrc.it.geolocation.common.GeoUtils;
+
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
@@ -22,7 +24,6 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import common.GeoUtils;
 
 /**
  * A class that reads Radarsat 2 images (geotiffs + xml). simple to quadri polarisation are supported

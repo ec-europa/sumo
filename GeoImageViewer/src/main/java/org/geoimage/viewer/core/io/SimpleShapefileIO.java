@@ -231,6 +231,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 
             //poligono con punti di riferimento dell'immagine
             Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
+            logger.debug("Polygon imageP isvalid:"+imageP.isValid());
             //filtro prendendo solo le 'features' nell'area di interesse
             FeatureCollection<?, ?> fc=featureSource.getFeatures(filter);
             if (fc.isEmpty()) {
@@ -280,6 +281,10 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+	                        
+	                        logger.debug("Geometry shape file isvalid:"+g.isValid());
+	                        
+	                        
 	                        //buffer(0) is used to avoid intersection errors 
 	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
 	                        if(!p2.isEmpty()){
