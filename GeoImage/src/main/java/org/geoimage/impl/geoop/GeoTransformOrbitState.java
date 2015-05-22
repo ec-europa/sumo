@@ -1,6 +1,6 @@
 package org.geoimage.impl.geoop;
 
-import geo.S1GeoCodingImpl;
+import jrc.it.geolocation.geo.S1GeoCodingImpl;
 
 import org.geoimage.def.GeoTransform;
 import org.geotools.referencing.GeodeticCalculator;

@@ -119,7 +119,6 @@ public class S1Metadata extends AbstractMetadata {
 	public void initMetaData(String annotationFilePath){
 		try {
 			super.type="S1";
-			super.pixelTimeOrdering="Increasing";//annotationReader.getProductInformation().getPass();
 			super.antennaPointing="Right";
 			
 			
@@ -127,7 +126,13 @@ public class S1Metadata extends AbstractMetadata {
 			ImageInformationType imgInformation =annotationReader.getImageInformation();
 			XMLGregorianCalendar  firstLineUtc=imgInformation.getProductFirstLineUtcTime();
 			XMLGregorianCalendar  lastLineUtc=imgInformation.getProductLastLineUtcTime();
-			
+
+			if(annotationReader.getProductInformation().getPass().equalsIgnoreCase("ascending")){
+				super.setPixelTimeOrderingAscending(true);
+			}else{
+				super.setPixelTimeOrderingAscending(false);
+			}
+				
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
 			super.mode=annotationReader.getHeader().getMode().name();
 			linesPerBurst=annotationReader.getBurstInformation().getLinePerBust();
