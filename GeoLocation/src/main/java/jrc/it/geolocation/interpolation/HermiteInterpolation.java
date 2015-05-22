@@ -3,6 +3,8 @@ package jrc.it.geolocation.interpolation;
 import java.util.ArrayList;
 import java.util.List;
 
+import jrc.it.geolocation.api.IInterpolation;
+import jrc.it.geolocation.common.MathUtil;
 import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 
@@ -10,11 +12,9 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
-import api.IInterpolation;
-import common.MathUtil;
-
 
 public class HermiteInterpolation implements IInterpolation{
+	MathUtil mathUtil=null;
 	
 	public class InterpolationResult{
 		double [][] interpPpoints=null;
@@ -26,10 +26,11 @@ public class HermiteInterpolation implements IInterpolation{
 			this.interpVpoints=interpVpoints;
 			this.timeStampInterpSecondsRef=timeStampInterpSecondsRef;
 		}
-		
-
 	}
 	
+	public HermiteInterpolation (){
+		mathUtil=new MathUtil();
+	}
 	
 	
 	/**
@@ -81,7 +82,7 @@ public class HermiteInterpolation implements IInterpolation{
 // Create descending powers array pk=(2*m-1):-1:0;
 		int powerMax=2*m-1;
 		
-		double [][] vTmpPos = MathUtil.multiplyMatrix(hermiteMatrix,state);
+		double [][] vTmpPos = mathUtil.multiplyMatrix(hermiteMatrix,state);
 		double[][] vTmpVel=new double[2*m][n];
 		for(int i=0;i<2*m;i++){
 			for(int j=0;j<n;j++){
@@ -102,8 +103,8 @@ public class HermiteInterpolation implements IInterpolation{
 				ptvec[0][powerMax-i]=Math.pow(interTime[idx],i);
 				vtvec[0][powerMax-i]=Math.pow(i*(interTime[idx]),Math.abs(i-1));
 			}	
-			ppoints[idx-idxInitTime]=MathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
-			vpoints[idx-idxInitTime]=MathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
+			ppoints[idx-idxInitTime]=mathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
+			vpoints[idx-idxInitTime]=mathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
 			timeStampInterpSecondsRef[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
 		
 		}

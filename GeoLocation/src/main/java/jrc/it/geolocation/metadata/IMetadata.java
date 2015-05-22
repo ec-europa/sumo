@@ -27,10 +27,9 @@ public interface IMetadata {
 
 	public abstract void setType(String type);
 
-	
-	public String getPixelTimeOrdering();
+	public boolean isPixelTimeOrderingAscending() ;
 
-	public void setPixelTimeOrdering(String pixelTimeOrdering);
+	public void setPixelTimeOrderingAscending(boolean pixelTimeOrderingAscending);
 	
 	public double getNumberOfSamplesPerLine();
 

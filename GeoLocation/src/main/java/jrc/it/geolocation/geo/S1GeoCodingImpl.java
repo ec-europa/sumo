@@ -1,8 +1,10 @@
-package geo;
+package jrc.it.geolocation.geo;
 
 import java.util.Arrays;
 import java.util.List;
 
+import jrc.it.geolocation.common.GeoUtils;
+import jrc.it.geolocation.common.MathUtil;
 import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
@@ -11,16 +13,13 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.slf4j.LoggerFactory;
 
-import common.GeoUtils;
-import common.MathUtil;
-
 public class S1GeoCodingImpl implements GeoCoding {
 	
 	
 	private S1Metadata meta=null;
 	private OrbitInterpolation orbitInterpolation=null;
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
-	
+	private MathUtil mathUtil;
 	
 	/**
 	 * 
@@ -34,10 +33,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
 		
 		orbitInterpolation=new OrbitInterpolation();
-		orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),
-				zTimeFirstInSeconds,
-				zTimeLastInSeconds,
-				meta.getSamplingf());
+		orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),zTimeFirstInSeconds,zTimeLastInSeconds,meta.getSamplingf());
+		mathUtil=new MathUtil();
 	}
 	
 	/* (non-Javadoc)
@@ -193,10 +190,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 			// Convert slant range distance to image pixel (column)
 			double p= (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
 			
-			//----------- for the moment not used  --------//
-			if (meta.getPixelTimeOrdering().equalsIgnoreCase("Increasing")){//TODO move Ascending in the constant class
+			if (meta.isPixelTimeOrderingAscending()){
 			    p = (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
-			
 			 }else{
 			    p = meta.getNumberOfSamplesPerLine() - 1 - (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
 			}
@@ -209,7 +204,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	
 	@Override
-	public double[] forward(double l, double p){
+	public double[] forward(double p, double l){
 		double[] results=new double[2];
 		
 		double lon=0;
@@ -223,7 +218,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		int idxStartT0=0;
 		//TODO blocco da inserire solo per immagini complesse
 		//if(strcmp(meta.ImTyp,'S1') && strcmp(meta.productType,'SLC') && (strcmp(meta.mode,'IW') || 
-		if(meta.getMode().equalsIgnoreCase("EW")){
+		/*if(meta.getMode().equalsIgnoreCase("EW")){
 		    // Need to take the bursts into account 
 			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
 		    
@@ -242,23 +237,24 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    	}
 		    }     */
 		
-		}else{
-		    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeFirstRef()*l) / (meta.getNlines()-1); //In seconds
+		//}else{
+		    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeLastRef()*l) / (meta.getNlines()-1); //In seconds
 		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
 		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
 		    		break;
 		    	}
 		    }
-		}
+		    if(idxStartT0==orbitInterpolation.getStatepVecInterp().length)
+		    	idxStartT0--;
+		//}
 		//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
-		//TODO check the arrays!!!
 		double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
 		double[] vT0 = orbitInterpolation.getStatevVecInterp()[idxStartT0];
 
 
 		double distance=0;  //D
 		// Convert the pixel number into a distance from the near-range edge of the image
-		if(meta.getPixelTimeOrdering().equalsIgnoreCase("Increasing")){
+		if(meta.isPixelTimeOrderingAscending()){
 		    distance = p * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
 		}else{
 		    distance = (meta.getNumberOfSamplesPerLine() - 1 - p) * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
@@ -316,32 +312,30 @@ public class S1GeoCodingImpl implements GeoCoding {
 			for(int i=0;i<nCoeffs;i++){
 		     	   vExps[i]=i;
 		    }
-			
 		    double tmpD = distance - meta.getGroundRangeOrigin();
-		    
-		    double[] pows=MathUtil.powValue2Coeffs(tmpD,vExps);
-		    double sRdist = MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
+		    double[] pows=mathUtil.powValue2Coeffs(tmpD,vExps);
+		    double sRdist = mathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
 		    logger.debug("sRdist:"+sRdist);
 
 		    //norma for pt0 vector
-		    double normPt0=MathUtil.norm(pT0);
+		    double normPt0=mathUtil.norm(pT0);
 		    
 			// Find the tangent of the angle ? between the zero Doppler plane and the vertical direction, which is the same as the ratio between the radial and tangential components of the sensor velocity
-			double vRadial = MathUtil.vectorProd1XN(vT0, pT0) / normPt0;
+			double vRadial = mathUtil.vectorProd1XN(vT0, pT0) / normPt0;
 			logger.debug("vRadial:"+vRadial);
-			double vTangential = Math.sqrt(Math.pow(MathUtil.norm(vT0),2) - Math.pow(vRadial,2));
+			double vTangential = Math.sqrt(Math.pow(mathUtil.norm(vT0),2) - Math.pow(vRadial,2));
 			logger.debug("vTangential:"+vTangential);
 			double tanPsi = vRadial/vTangential;
 
 
 			// Define a satellite coordinate system centred on the sensor position, where the Z axis points towards the Earth centre, the X axis points along the tangential component of the sensor velocity, and the Y axis completes the right-handed coordinate system
-			double[] zsUnit =MathUtil.divVectByVal(pT0,-normPt0);
+			double[] zsUnit =mathUtil.divVectByVal(pT0,-normPt0);
 			logger.debug("zsUnit[0]:"+zsUnit[0]);
 			
-			double[] vTmp =MathUtil.crossProd3x3(zsUnit,vT0);// cross(zs_unit,v_t0);
+			double[] vTmp =mathUtil.crossProd3x3(zsUnit,vT0);// cross(zs_unit,v_t0);
 			
-			double[] ysUnit = MathUtil.divVectByVal(vTmp, MathUtil.norm(vTmp));
-			double[] xsUnit = MathUtil.crossProd3x3(ysUnit,zsUnit);
+			double[] ysUnit = mathUtil.divVectByVal(vTmp, mathUtil.norm(vTmp));
+			double[] xsUnit = mathUtil.crossProd3x3(ysUnit,zsUnit);
 
 			
 			double pH=0;
@@ -357,7 +351,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 				
 				for(;rEarthChange > 0.1;){
 				    // Form a triangle whose sides are the distance from the centre of the earth to the sensor, the slant range and the local earth radius and using the cosine law find the intersection point between the slant range vector and the Earth surface in the satellite coordinate system
-				    double Rz = (normPt0*normPt0 + sRdist*sRdist - rEarth*rEarth) / (2*normPt0);//Rz = (norm(p_t0)^2 + SRdist^2 - rEarth^2) / (2*norm(p_t0));
+				    double Rz = (normPt0*normPt0 + sRdist*sRdist - rEarth*rEarth) / (2*normPt0);
 				    double Rx = Rz * tanPsi;
 				    double Ry = Math.sqrt(sRdist*sRdist - Rz*Rz - Rx*Rx);
 				    logger.debug("Rx:"+Rx+ "  Rz:"+Rz+"  Ry:"+Ry);
@@ -379,14 +373,14 @@ public class S1GeoCodingImpl implements GeoCoding {
 				    RealMatrix m=MatrixUtils.createRealMatrix(qbig);
 				    qbig=m.transpose().getData();
 				    
-				    double[][] qmat =MathUtil.multiplyMatrix(qbig,sRvect);
+				    double[][] qmat =mathUtil.multiplyMatrix(qbig,sRvect);
 				    q[0]=qmat[0][0];
 				    q[1]=qmat[1][0];
 				    q[2]=qmat[2][0];
 					logger.debug("q:["+q[0]+ "  "+q[1]+"  "+q[2]+"  ]");
 	
 				    // Find the Earth radius at a point directly below the intersection point (this approximation becomes more and more precise as the intersection point becomes closer to the surface)
-				    rEarth = MathUtil.norm(q) / Math.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
+				    rEarth = mathUtil.norm(q) / Math.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
 				    
 				    rEarthChange = Math.abs(rEarth-rEarthOld);
 				    rEarthOld = rEarth;
@@ -420,7 +414,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @param timeStampInterp
 	 * @return double array with 2 elements [0]=zeroDopplerTimeSmooth  [1]=sRdistSmooth
 	 */
-	public static double[] findZeroDoppler(double[][] statepVecInterp,double[] pXYZ,double[] timeStampInterp){
+	public double[] findZeroDoppler(double[][] statepVecInterp,double[] pXYZ,double[] timeStampInterp){
 			int iOptFactor = 10;
 		    int nPointsAroundMin = 100;//100;//50;
 		    int nWindowLength = 7;//5;
@@ -479,7 +473,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double w[]=new double[nWindowLength];
 		    Arrays.fill(w,1.0/nWindowLength);
 
-		    double[] vdistSmooth=MathUtil.linearConvolutionMatlabValid(vDistOptimization, w);//MathArrays.convolve(vDistOptimization, w);
+		    double[] vdistSmooth=mathUtil.linearConvolutionMatlabValid(vDistOptimization, w);//MathArrays.convolve(vDistOptimization, w);
 		    double distMinSmooth=vdistSmooth[0];
 		    int idxMinSmoothW=0;
 		    for(int i=0;i<vdistSmooth.length;i++){
@@ -501,15 +495,19 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		String metaF="C:/tmp/sumo_images/test_interpolation/S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE/annotation/s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml";
+		String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		GeoCoding gc=new S1GeoCodingImpl(metaF);
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		double lat = 52.96606;
+		/*double lat = 52.96606;
 		double lon = 4.78491;
 		
-		GeoCoding gc=new S1GeoCodingImpl(metaF);
+		
 		double r[]=gc.reverse(lat, lon);
-		logger.debug("R:"+r[0]+"---"+r[1]);
-		//gc.forward(4518.5, 21948.5);
+		logger.debug("R:"+r[0]+"---"+r[1]);*/
+		
+		
+		double r[]=gc.forward(25637.0,5573.0);
+		logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 	}
 	
 	

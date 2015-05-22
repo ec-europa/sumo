@@ -1,4 +1,4 @@
-package api;
+package jrc.it.geolocation.api;
 
 import java.util.List;
 
