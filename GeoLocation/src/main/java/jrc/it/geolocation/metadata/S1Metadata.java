@@ -24,6 +24,7 @@ public class S1Metadata extends AbstractMetadata {
 	private int nLines=0;
 	private double linesPerBurst=0;
 	private double azimuthTimeInterval=0;
+	private String productType;
 	
 	public int getNlines() {
 		return nLines;
@@ -76,6 +77,16 @@ public class S1Metadata extends AbstractMetadata {
 
 	public int getnLines() {
 		return nLines;
+	}
+	
+	
+
+	public String getProductType() {
+		return productType;
+	}
+
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
 	public S1Metadata() {
@@ -132,7 +143,8 @@ public class S1Metadata extends AbstractMetadata {
 			}else{
 				super.setPixelTimeOrderingAscending(false);
 			}
-				
+			
+			this.productType=annotationReader.getHeader().getProductType().name();
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
 			super.mode=annotationReader.getHeader().getMode().name();
 			linesPerBurst=annotationReader.getBurstInformation().getLinePerBust();

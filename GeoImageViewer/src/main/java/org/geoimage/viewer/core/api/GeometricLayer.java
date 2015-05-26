@@ -4,9 +4,6 @@
  */
 package org.geoimage.viewer.core.api;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -14,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This is THE class model for all Vector Data
@@ -36,6 +38,7 @@ public class GeometricLayer implements Cloneable{
      * 
      */
     public final static String MIXED = "mixed";
+    private static Logger logger= LoggerFactory.getLogger(GeometricLayer.class);
     
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).

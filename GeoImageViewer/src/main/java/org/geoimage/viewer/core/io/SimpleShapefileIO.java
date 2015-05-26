@@ -6,8 +6,11 @@ package org.geoimage.viewer.core.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
@@ -22,6 +25,7 @@ import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -44,6 +48,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 /**
  *
@@ -89,9 +94,10 @@ public class SimpleShapefileIO extends AbstractVectorIO {
                  SimpleFeature simplefeature = SimpleFeatureBuilder.build(ft, data, ""+id++);
                  collection.add(simplefeature);
              } else if (geom instanceof Polygon) {
-                 Object[] data = new Object[glayer.getSchema().length + 1];
-                 data[0] = geom;
-                 System.arraycopy(glayer.getAttributes(geom).getValues(), 0, data, 1, data.length - 1);
+                 //Object[] data = new Object[glayer.getSchema().length + 1];
+                 //data[0] = geom;
+                 Object[] data = new Object[glayer.getSchema().length];
+                 System.arraycopy(glayer.getAttributes(geom).getValues(), 0, data, 0, data.length );
                  SimpleFeature simplefeature = SimpleFeatureBuilder.build(ft, data, ""+id++);
                  collection.add(simplefeature);
                  data = null;
@@ -129,7 +135,8 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             if (glayer.getGeometries().get(0) instanceof Point) {
                 geomType = "Point";
             }
-            SimpleFeatureType featureType = DataUtilities.createType(name, "geom:" + geomType + ":srid=" + glayer.getProjection().replace("EPSG:", "") + sch);
+            // "geom:" + geomType + ":srid=" +
+            SimpleFeatureType featureType = DataUtilities.createType(geomType, sch);
 
             //to create other fields you can use a string like :
             // "geom:MultiLineString,FieldName:java.lang.Integer"
@@ -281,13 +288,12 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-	                        
-	                        logger.debug("Geometry shape file isvalid:"+g.isValid());
-	                        
-	                        
+	                        g=TopologyPreservingSimplifier.simplify(g,0.01);
+
 	                        //buffer(0) is used to avoid intersection errors 
 	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
 	                        if(!p2.isEmpty()){
+		                        p2=TopologyPreservingSimplifier.simplify(p2,0.01);
 		                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 		                            if (!p2.getGeometryN(i).isEmpty()) {
 		                                out.put(p2.getGeometryN(i), at);
@@ -326,7 +332,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             }
         return out;
     }
-
+/*
     @Override
     public void save(GeometricLayer layer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
@@ -339,6 +345,31 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection);
             
             writeToShapefile(fileDataStore, features);
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
+    }*/
+    @Override
+    public void save(GeometricLayer layer, String projection,SarImageReader reader) {
+    	GeoTransform transform=reader.getGeoTransform();
+        try {
+            layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
+            String filename = ((URL) config.get(CONFIG_URL)).getPath();
+            layername = filename.substring(filename.lastIndexOf(File.separator) + 1, filename.lastIndexOf("."));
+            
+            File newFile = new File(filename);
+            ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
+            Map<String, Serializable> params = new HashMap<String, Serializable>();
+            params.put("url", newFile.toURI().toURL());
+            params.put("create spatial index", Boolean.TRUE);
+
+            SimpleFeatureType ft = createFeatureType(layername, layer);
+            ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
+            newDataStore.createSchema(ft);
+            
+            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection);
+            
+            writeToShapefile(newDataStore, features);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -357,7 +388,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         String[] out = new String[attributeTypes.size()];
         int i = 0;
         for (PropertyDescriptor at : attributeTypes) {
-            out[i++] = at.getType().getBinding().getSimpleName();
+            out[i++] = at.getType().getBinding().getName();
         }
         return out;
     }
