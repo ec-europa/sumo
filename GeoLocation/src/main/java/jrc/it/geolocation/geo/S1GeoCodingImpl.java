@@ -218,8 +218,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double t0=0;
 		int idxStartT0=0;
 		//TODO blocco da inserire solo per immagini complesse
-		//if(strcmp(meta.ImTyp,'S1') && strcmp(meta.productType,'SLC') && (strcmp(meta.mode,'IW') || 
-		/*if(meta.getMode().equalsIgnoreCase("EW")){
+		if(meta.getType().equalsIgnoreCase("S1") && meta.getProductType().equalsIgnoreCase("SLC") && (meta.getMode().equalsIgnoreCase("IW") ||meta.getMode().equalsIgnoreCase("EW"))){
 		    // Need to take the bursts into account 
 			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
 		    
@@ -238,7 +237,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    	}
 		    }     */
 		
-		//}else{
+		}else{
 		    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeLastRef()*l) / (meta.getNlines()-1); //In seconds
 		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
 		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
@@ -247,7 +246,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    }
 		    if(idxStartT0==orbitInterpolation.getStatepVecInterp().length)
 		    	idxStartT0--;
-		//}
+		}
 		//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
 		double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
 		double[] vT0 = orbitInterpolation.getStatevVecInterp()[idxStartT0];
