@@ -9,6 +9,7 @@ import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
 		logger.debug(pXYZ[0]+"   "+pXYZ[1]+"   "+pXYZ[2]);
 		
-		double[][] statepVecInterp=orbitInterpolation.getStatepVecInterp();
+		final double[][] statepVecInterp=orbitInterpolation.getStatepVecInterp();
 		
 		double[] results=findZeroDoppler(statepVecInterp, pXYZ,orbitInterpolation.getTimeStampInterp() );
 		//double last=orbitInterpolation.getTimeStampInterp()[orbitInterpolation.getTimeStampInterp().length-1 ]; 
@@ -116,15 +117,15 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
-		    double[]groundToSlantRangeCoefficientsInterp=coordConv.get(idx).groundToSlantRangeCoefficients;
-		    double[]groundToSlantRangeCoefficientsInterp2=coordConv.get(idx+1).groundToSlantRangeCoefficients;
+		    double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv.get(idx).groundToSlantRangeCoefficients);
+		    double[]groundToSlantRangeCoefficientsInterp2=ArrayUtils.clone(coordConv.get(idx+1).groundToSlantRangeCoefficients);
 	    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
 	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
 	    	}
 	    	
 
-		    double[]slantToGroundRangeCoefficientsInterp=coordConv.get(idx).slantToGroundRangeCoefficients;
-		    double[]slantToGroundRangeCoefficientsInterp2=coordConv.get(idx+1).slantToGroundRangeCoefficients;
+		    double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv.get(idx).slantToGroundRangeCoefficients);
+		    double[]slantToGroundRangeCoefficientsInterp2=ArrayUtils.clone(coordConv.get(idx+1).slantToGroundRangeCoefficients);
 	    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
 	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
 	    	}
@@ -287,15 +288,15 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
-		    double[]groundToSlantRangeCoefficientsInterp=coordConv.get(idx).groundToSlantRangeCoefficients;
-		    double[]groundToSlantRangeCoefficientsInterp2=coordConv.get(idx+1).groundToSlantRangeCoefficients;
+		    final double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv.get(idx).groundToSlantRangeCoefficients);
+		    final double[]groundToSlantRangeCoefficientsInterp2=ArrayUtils.clone(coordConv.get(idx+1).groundToSlantRangeCoefficients);
 	    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
 	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
 	    	}
 	    	
 
-		    double[]slantToGroundRangeCoefficientsInterp=coordConv.get(idx).slantToGroundRangeCoefficients;
-		    double[]slantToGroundRangeCoefficientsInterp2=coordConv.get(idx+1).slantToGroundRangeCoefficients;
+		    final double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv.get(idx).slantToGroundRangeCoefficients);
+		    final double[]slantToGroundRangeCoefficientsInterp2=ArrayUtils.clone(coordConv.get(idx+1).slantToGroundRangeCoefficients);
 	    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
 	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
 	    	}
@@ -495,9 +496,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
+
 		GeoCoding gc=new S1GeoCodingImpl(metaF);
-		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
 		/*double lat = 52.96606;
 		double lon = 4.78491;
 		
@@ -506,7 +508,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		logger.debug("R:"+r[0]+"---"+r[1]);*/
 		
 		
-		double r[]=gc.forward(25637.0,5573.0);
+		double r[]=gc.forward(-100.0,11104.0);
 		logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 	}
 	

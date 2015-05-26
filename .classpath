@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
-	<classpathentry kind="src" path="GeoImageViewer/src/main/resources"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="GeoLocation/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/java"/>
