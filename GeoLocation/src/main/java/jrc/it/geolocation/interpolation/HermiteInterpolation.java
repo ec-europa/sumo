@@ -100,9 +100,13 @@ public class HermiteInterpolation implements IInterpolation{
 			double[][] ptvec=new double[1][powerMax+1];
 			double[][] vtvec=new double[1][powerMax+1];
 			for(int i=0;i<=powerMax;i++){
-				ptvec[0][powerMax-i]=Math.pow(interTime[idx],i);
-				vtvec[0][powerMax-i]=Math.pow(i*(interTime[idx]),Math.abs(i-1));
+				ptvec[0][i]=Math.pow(interTime[idx],powerMax-i);
+				vtvec[0][i]=Math.pow((interTime[idx]),Math.abs(i-1));//Math.pow(i*(interTime[idx]),Math.abs(i-1));
+			
 			}	
+			for(int i=0;i<=powerMax;i++){
+				vtvec[0][powerMax-i]=i*vtvec[0][i];
+			}
 			ppoints[idx-idxInitTime]=mathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
 			vpoints[idx-idxInitTime]=mathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
 			timeStampInterpSecondsRef[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
