@@ -42,7 +42,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @see geo.GeoCoding#reverse(double, double)
 	 */
 	@Override
-	public double[] reverse(double lat,double lon){
+	public double[] reverse(double lon,double lat){
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -197,8 +197,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 			    p = meta.getNumberOfSamplesPerLine() - 1 - (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
 			}
 			logger.debug("image pixel result:"+p);
-			resultReverse[0]=l;
-			resultReverse[1]=p;
+			resultReverse[0]=p;
+			resultReverse[1]=l;
 		}
 		return resultReverse;
 	}
@@ -496,18 +496,20 @@ public class S1GeoCodingImpl implements GeoCoding {
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
 		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
-		String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-
+		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
+		String metaF="C:\\tmp\\sumo_images\\carlos tests\\geoloc\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\annotation\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		
+		
 		GeoCoding gc=new S1GeoCodingImpl(metaF);
-		/*double lat = 52.96606;
-		double lon = 4.78491;
+		double lat = 43.13935;//42.81202;
+		double lon = 3.35876;//10.32972;
 		
 		
 		double r[]=gc.reverse(lat, lon);
-		logger.debug("R:"+r[0]+"---"+r[1]);*/
+		logger.debug("R:"+r[0]+"---"+r[1]);
 		
 		
-		double r[]=gc.forward(-100.0,11104.0);
+		//double r[]=gc.forward(-100.0,11104.0);
 		logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 	}
 	

@@ -19,7 +19,6 @@ import java.util.Map;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
@@ -315,7 +314,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         		LineString line2=polygon.getInteriorRingN(i);
                         		drawPoly(gl,line2.getCoordinates(),width,height,x,y,rWidth);
                         	}
-                        }else{
+                       }else{
                         	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
                         }
                         
