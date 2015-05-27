@@ -21,6 +21,7 @@ import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -81,6 +82,15 @@ public abstract class Sentinel1 extends SarImageReader {
     
     
     private List<Swath> swaths=null;
+    
+    
+    
+    //per test
+    //public GeoTransform testTransform=null;
+    
+    
+    
+    
     
     public Sentinel1(String swath) {
     	//this.safeReader=safeReader; 
@@ -192,7 +202,7 @@ public abstract class Sentinel1 extends SarImageReader {
             }
             geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
             //String epsg = "EPSG:4326";
-            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            //testTransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
