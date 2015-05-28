@@ -15,7 +15,6 @@ import java.util.Map;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -289,7 +288,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-	                        g=TopologyPreservingSimplifier.simplify(g,0.005);
+	                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
 
 	                        //buffer(0) is used to avoid intersection errors 
 	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);

@@ -6,7 +6,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class MathUtil {
 
-	public double[] powArray(double a[],double pow){
+	public static double[] powArray(double a[],double pow){
 		double[]  apow=new double[a.length];
 		for(int i=0;i<a.length;i++){
 			apow[i]=Math.pow(a[i], pow);
@@ -20,7 +20,7 @@ public class MathUtil {
 	 * @param pows
 	 * @return
 	 */
-	public double[] powValue2Coeffs(double val,int pows[]){
+	public static double[] powValue2Coeffs(double val,int pows[]){
 		double[]  apow=new double[pows.length];
 		for(int i=0;i<pows.length;i++){
 			apow[i]=Math.pow(val, pows[i]);
@@ -35,7 +35,7 @@ public class MathUtil {
 	 * @param val
 	 * @return
 	 */
-	public double[] divVectByVal(double[] vector,double val){
+	public static double[] divVectByVal(double[] vector,double val){
 		double[]  r=new double[vector.length];
 		for(int i=0;i<vector.length;i++){
 			r[i]=vector[i]/val;
@@ -49,7 +49,7 @@ public class MathUtil {
 	 * @param b   Nx1 array
 	 * @return
 	 */
-	public double vectorProd1XN(double a[],double b[] ){
+	public static double vectorProd1XN(double a[],double b[] ){
 		double  prod=0;
 		for(int i=0;i<a.length;i++){
 			prod=prod+a[i]*b[i];
@@ -61,7 +61,7 @@ public class MathUtil {
 	  *  return the Euclidean norm of this Vector
 	  * @return
 	  */
-    public double norm(double[] v) {
+    public static double norm(double[] v) {
         return Math.sqrt(dot(v,v));
     }
     
@@ -70,7 +70,7 @@ public class MathUtil {
      * @param v1,v2 should have the same length
      * @return
      */
-    public double dot(double[] v1,double[] v2) {
+    public static double dot(double[] v1,double[] v2) {
         double sum = 0.0;
         for (int i = 0; i < v1.length; i++)
             sum = sum + (v1[i] * v2[i]);
@@ -82,7 +82,7 @@ public class MathUtil {
      * @param v1,v2 should have the same length
      * @return
      */
-    public double[] crossProd3x3(double[] a,double[] b) {
+    public static double[] crossProd3x3(double[] a,double[] b) {
         double p[] = new double[a.length];
         //for (int i = 0; i < v1.length; i++)
         //    p[i] = v1[i] * v2[i];
@@ -100,16 +100,12 @@ public class MathUtil {
      * @param b
      * @return
      */
-    public double[][] multiplyMatrix(double[][] a,double[][] b){
+    public static double[][] multiplyMatrix(double[][] a,double[][] b){
 		RealMatrix matA = MatrixUtils.createRealMatrix(a);
 		RealMatrix matB = MatrixUtils.createRealMatrix(b);
 		
 		return matA.multiply(matB).getData();
 	}
-	
-	
-	
-	
 	
 	/**
 	 * Convolution U(m)=Sum( H(m)X(n-m) )    0<=m=<(size(H)-1) n=size(H)
@@ -120,7 +116,7 @@ public class MathUtil {
 	 * @param b
 	 * @return
 	 */
-	public double[] linearConvolutionMatlabValid(double a[],double b[]){
+	public static double[] linearConvolutionMatlabValid(double a[],double b[]){
 		//size of the array result without zero padd values
 		int sizeResult=a.length+b.length-1;
 		int matlabSizeResult=a.length-b.length+1;
