@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +175,7 @@ public class DetectedPixels {
 
         public boatPixels(int x, int y, int id, int value, double[][] thresholdvalues) {
             // add initial pixel, clipped value is always set to 1
-            connectedpixels.put(x + " " + y, new int[]{x, y, value, 1});
+            connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, 1});
        //     this.thresholdvalues = thresholdvalues;
             this.boatposition = new double[]{x, y};
             this.boatmaximumvalue = value;
@@ -184,17 +183,17 @@ public class DetectedPixels {
         }
 
         public void addConnectedPixel(int x, int y, int value, boolean clipped) {
-            connectedpixels.put(x + " " + y, new int[]{x, y, value, clipped ? 1 : 0});
+            connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, clipped ? 1 : 0});
         }
 
         public boolean containsPixel(int x, int y) {
-            return connectedpixels.get(x + " " + y) != null;
+            return connectedpixels.get(new StringBuilder().append(x).append(" ").append(y).toString()) != null;
         }
 
         public void computeValues() {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
-            Collection<int[]> pixels = connectedpixels.values();
+            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
             for (int[] pixel: pixels) {
                 if (pixel[3] == 1) {
                     clust.add(pixel);
@@ -269,7 +268,7 @@ public class DetectedPixels {
         private List<int[]> getThresholdclipPixels() {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
-            Collection<int[]> pixels = connectedpixels.values();
+            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
             for (int[] pixel:pixels) {
                 if (pixel[3] == 1) {
                 	clust.add(pixel);
@@ -282,7 +281,7 @@ public class DetectedPixels {
         private List<int[]> getThresholdaggregatePixels() {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
-            Collection<int[]> pixels = connectedpixels.values();
+            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
             for (int[] pixel:pixels) {
                 clust.add(pixel);
             }
@@ -313,7 +312,7 @@ public class DetectedPixels {
             int yy = p.y;
             
             if((count % 100)==0)
-            	System.out.println("Aggregating pixel Num:"+count + "  x:"+xx+"   y:"+yy );
+            	System.out.println(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
             
             // check pixels is not aggregated
             boolean checked = false;
@@ -518,8 +517,7 @@ public class DetectedPixels {
     }
 
     public void agglomerate() {
-        
-    	Collection<Pixel> boats = allDetectedPixels.values();
+    	Pixel[] boats = allDetectedPixels.values().toArray(new Pixel[0]);
         int id = -1;
         for (Pixel boat:boats) {
             List<int[]> agBoat = new ArrayList<int[]>();
@@ -555,13 +553,13 @@ public class DetectedPixels {
             double[] boatvalues = fLenWidHead(agBoat, this.pixsam, this.pixrec);
 
             // look for maximum brightness point in cluster
-            Iterator<int[]> it = agBoat.iterator();
+            int[][] it = agBoat.toArray(new int[0][]);
         
             // get teh first boat in teh aggregate
             
             int[] pixel = null;
-            if (it.hasNext()) {
-                pixel = it.next();
+            if (it.length>0) {
+                pixel = it[0];
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
                 String id=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                 Pixel pixelValue = aggregatedPixels.get(id);
@@ -582,8 +580,8 @@ public class DetectedPixels {
                 boatValue[10] = boatvalues[5];
 
                 // look for maximum value in agglomerate
-                while (it.hasNext()) {
-                    pixel = it.next();
+                for (int i=1;i<it.length;i++) {
+                    pixel = it[i];
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                     Pixel boat = aggregatedPixels.get(key);
                     if (boat.value > boatValue[3]) {
@@ -661,8 +659,8 @@ public class DetectedPixels {
         for (boatPixels boat : list) {
             boat.computeValues();
             if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
-            double[] boatvalues = new double[]{boat.getId(), boat.getBoatposition()[0], boat.getBoatposition()[1], boat.getMaximumValue(), boat.getMeanValue(), boat.getStdValue(), boat.getThresholdValue(), boat.getBoatnumberofpixels(), boat.getBoatlength(), boat.getBoatwidth(), boat.getBoatheading()};
-            boatsTemp.add(boatvalues);
+            	double[] boatvalues = new double[]{boat.getId(), boat.getBoatposition()[0], boat.getBoatposition()[1], boat.getMaximumValue(), boat.getMeanValue(), boat.getStdValue(), boat.getThresholdValue(), boat.getBoatnumberofpixels(), boat.getBoatlength(), boat.getBoatwidth(), boat.getBoatheading()};
+            	boatsTemp.add(boatvalues);
             }
         }
 
@@ -1097,7 +1095,7 @@ public class DetectedPixels {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         
-        Collection<Pixel> enumeration = allDetectedPixels.values();
+        Pixel[] enumeration = allDetectedPixels.values().toArray(new Pixel[0]);
         for (Pixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
         }

@@ -6,7 +6,6 @@ package org.geoimage.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.geoimage.def.SarImageReader;
 
@@ -325,7 +324,7 @@ public class AzimuthAmbiguity {
 //TODO correct the azimuth ambiguity
             deltaAzimuth =image.getAmbiguityCorrection(xPos,yPos);
             windowCoords = this.getSearchWindows(xPos, yPos, deltaAzimuth);
-            System.out.println("\nSearch Window: " + xPos + " " + yPos + " " + deltaAzimuth[0]);
+            System.out.println(new StringBuffer().append("\nSearch Window: ").append(xPos).append(" ").append(yPos).append(" ").append(deltaAzimuth[0]).toString());
 
             // Only vessels with a minimum number of pixel can generate an ambiguity
             if (myBoat[7] < minSize) {
@@ -346,7 +345,6 @@ public class AzimuthAmbiguity {
                 }
                 double[] testBoat = boatArray[j];
 
-                int test_id = (int) testBoat[0];
 
                 // If the test vessel has already been classified as echo then continue
                 if (ambiguityboatlist.contains(testBoat)) {

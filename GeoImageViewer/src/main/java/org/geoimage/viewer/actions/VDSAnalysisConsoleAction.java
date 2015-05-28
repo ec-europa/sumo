@@ -123,7 +123,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
                 //read the land mask
                 mask = new ArrayList<IMask>();
-                for (ILayer l : Platform.getLayerManager().getAllLayers()) {
+                for (ILayer l : Platform.getLayerManager().getChilds(cl)) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                         mask.add((IMask) l);
                     }

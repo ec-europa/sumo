@@ -7,11 +7,7 @@ package org.geoimage.analysis;
 import java.awt.image.Raster;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.LoggerFactory;

@@ -19,7 +19,7 @@ public class S1Metadata extends AbstractMetadata {
 	private GregorianCalendar zeroDopplerTimeFirstLineSeconds=null; //S1=productFirstLineUtcTime
 	private GregorianCalendar zeroDopplerTimeLastLineSeconds=null;	//S1=productLastLineUtcTime
 	private List<OrbitStatePosVelox> orbitStatePosVelox=null;
-	private List<CoordinateConversion> coordinateConversion=null;
+	private CoordinateConversion[] coordinateConversion=null;
 	private double samplingf=0;
 	private int nLines=0;
 	private double linesPerBurst=0;
@@ -61,7 +61,7 @@ public class S1Metadata extends AbstractMetadata {
 	}
 
 	
-	public List<CoordinateConversion> getCoordinateConversion(){
+	public CoordinateConversion[] getCoordinateConversion(){
 		return this.coordinateConversion;
 	}
 	
@@ -131,6 +131,7 @@ public class S1Metadata extends AbstractMetadata {
 		try {
 			super.type="S1";
 			super.antennaPointing="Right";
+			super.setPixelTimeOrderingAscending(true);//IS K in the matlab code!!
 			
 			
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
@@ -138,11 +139,6 @@ public class S1Metadata extends AbstractMetadata {
 			XMLGregorianCalendar  firstLineUtc=imgInformation.getProductFirstLineUtcTime();
 			XMLGregorianCalendar  lastLineUtc=imgInformation.getProductLastLineUtcTime();
 
-			if(annotationReader.getProductInformation().getPass().equalsIgnoreCase("ascending")){
-				super.setPixelTimeOrderingAscending(true);
-			}else{
-				super.setPixelTimeOrderingAscending(false);
-			}
 			
 			this.productType=annotationReader.getHeader().getProductType().name();
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
@@ -177,7 +173,8 @@ public class S1Metadata extends AbstractMetadata {
 			}
 			
 			List<CoordinateConversionType> cConversion=annotationReader.getCoordinateConversionData();
-			coordinateConversion=new ArrayList<S1Metadata.CoordinateConversion>();
+			coordinateConversion=new S1Metadata.CoordinateConversion[cConversion.size()];
+			int i=0; 
 			for(CoordinateConversionType ccType:cConversion){
 				CoordinateConversion cc=new CoordinateConversion();
 				String[] vals=ccType.getGrsrCoefficients().getValue().split(" ");
@@ -187,10 +184,11 @@ public class S1Metadata extends AbstractMetadata {
 				vals=ccType.getSrgrCoefficients().getValue().split(" ");
 				cc.slantToGroundRangeCoefficients=convertFromStringArray(vals);
 				cc.groundToSlantRangeOrigin=ccType.getSr0().getValue();
-				coordinateConversion.add(cc);
+				coordinateConversion[i]=cc;
 				XMLGregorianCalendar xmlGc=ccType.getAzimuthTime();
 				cc.azimuthTime=xmlGc.toGregorianCalendar().getTimeInMillis();
 				cc.groundToSlantRangePolyTimesSeconds=xmlGc.getMinute()*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
+				i++;
 			}
 			
 			//PRF and PRF mean
