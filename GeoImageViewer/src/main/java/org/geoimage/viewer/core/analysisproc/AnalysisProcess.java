@@ -120,7 +120,7 @@ public  class AnalysisProcess implements Runnable {
                  String timeStampStart=((SarImageReader)gir).getTimeStampStart();
                  double azimuth=((SarImageReader)gir).getAzimuthSpacing();
                  
-                 notifyAnalysisBand( "VDS: analyzing band "+gir.getBandName(band));
+                 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
                  
                  analysis.run(kdist,blackBorderAnalysis,band);
                  DetectedPixels banddetectedpixels = analysis.getPixels();
@@ -135,7 +135,7 @@ public  class AnalysisProcess implements Runnable {
                  boolean displaybandanalysis = Platform.getPreferences().readRow(PREF_DISPLAY_BANDS).equalsIgnoreCase("true");
                  if (numberofbands < 1 || displaybandanalysis) {
                      
-                     notifyAgglomerating( "VDS: agglomerating detections for band "+gir.getBandName(band));
+                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
 
                      
                      String agglomerationMethodology = (Platform.getPreferences()).readRow(PREF_AGGLOMERATION_METHODOLOGY);

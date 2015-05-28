@@ -35,6 +35,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
     //Each Listener list all layers
 	protected List<ILayerListener> listeners = new ArrayList<ILayerListener>();	    
+	
+	/**
+	 * each Main Layer-> List of childs layers
+	 */
 	protected HashMap<ILayer,List<ILayer>> layers = new HashMap<ILayer,List<ILayer>>();
 	private  ConsoleLayer consoleLayer=null;
 	private  BaseLayer baseLayer=null;
@@ -118,31 +122,6 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         consoleLayer.render(context);
     }
 
-    
-    /*
-    public void setActive(ILayer layer) {
-        for (ILayer l : layers.keySet()) {
-            if (l == layer) {
-            	if(l.getParent()==null){
-            		
-            	}else{
-            		l.setActive(true);
-            	}	
-            } else {
-            	if(l.getParent()==null){
-            		
-            	}else{
-            		l.setActive(false);
-            	}	
-            }
-        }
-        
-        for (ILayerListener l : listeners) {
-            l.layerClicked(layer);
-        }
-    }*/
-
-    
 
     public void setActiveRadioLayer(ILayer layer) {
         for (ILayer l : layers.keySet()) {
@@ -166,16 +145,6 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
-   /* public void removeAll() {
-        for (ILayer l : layers.keySet()) {
-        	l.setActive(false);
-            layers.remove(l);
-        }
-        layers.clear();
-    }*/
-    
-  
-
     public void mouseMoved(Point imagePosition, GeoContext context) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
@@ -186,6 +155,9 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
+    /** 
+     * add a layer	
+     */
     public void addLayer(ILayer layer) {
         // if we are adding an image layer turn off all the other image active layers
         if (layer instanceof FastImageLayer) {
@@ -206,6 +178,11 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
+    /**
+     * 
+     * @param layer
+     * @param needActive
+     */
     public void addLayer(ILayer layer,boolean needActive) {
         if (needActive && layer instanceof FastImageLayer) {
             // look for other image layers active
@@ -295,6 +272,15 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     	return all;		
     	
     }
+    
+    /**
+     * return the list of childs layers for a layer
+     * @param l
+     * @return
+     */
+    public List<ILayer> getChilds(ILayer l){
+    	return layers.get(l);		
+    }
 
 
 	@Override
@@ -331,7 +317,6 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 		}
 	}
 
-	
 	
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;

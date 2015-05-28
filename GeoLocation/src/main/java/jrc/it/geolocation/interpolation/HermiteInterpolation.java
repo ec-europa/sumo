@@ -14,7 +14,6 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 
 public class HermiteInterpolation implements IInterpolation{
-	MathUtil mathUtil=null;
 	
 	public class InterpolationResult{
 		double [][] interpPpoints=null;
@@ -29,7 +28,7 @@ public class HermiteInterpolation implements IInterpolation{
 	}
 	
 	public HermiteInterpolation (){
-		mathUtil=new MathUtil();
+
 	}
 	
 	
@@ -82,7 +81,7 @@ public class HermiteInterpolation implements IInterpolation{
 // Create descending powers array pk=(2*m-1):-1:0;
 		int powerMax=2*m-1;
 		
-		double [][] vTmpPos = mathUtil.multiplyMatrix(hermiteMatrix,state);
+		double [][] vTmpPos = MathUtil.multiplyMatrix(hermiteMatrix,state);
 		double[][] vTmpVel=new double[2*m][n];
 		for(int i=0;i<2*m;i++){
 			for(int j=0;j<n;j++){
@@ -107,8 +106,8 @@ public class HermiteInterpolation implements IInterpolation{
 			for(int i=0;i<=powerMax;i++){
 				vtvec[0][powerMax-i]=i*vtvec[0][i];
 			}
-			ppoints[idx-idxInitTime]=mathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
-			vpoints[idx-idxInitTime]=mathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
+			ppoints[idx-idxInitTime]=MathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
+			vpoints[idx-idxInitTime]=MathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
 			timeStampInterpSecondsRef[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
 		
 		}
