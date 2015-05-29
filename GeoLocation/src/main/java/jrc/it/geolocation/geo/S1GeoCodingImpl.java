@@ -94,29 +94,34 @@ public class S1GeoCodingImpl implements GeoCoding {
 			
 		    int idx=0;
 		    if(zeroDopplerTime < groundToSlantRangePolyTimesSeconds[0]){
-		        idx = 1;
+		        idx = 0;
 			}else if (zeroDopplerTime > groundToSlantRangePolyTimesSeconds[groundToSlantRangePolyTimesSeconds.length-1]){
 		        idx = groundToSlantRangePolyTimesSeconds.length - 2;
 			}else{
 				for(idx=0;idx<groundToSlantRangePolyTimesSeconds.length;idx++){
-					if(groundToSlantRangePolyTimesSeconds[idx] < zeroDopplerTime)
+					if(groundToSlantRangePolyTimesSeconds[idx] > zeroDopplerTime)
 						break;
 				}
+				if(idx==groundToSlantRangePolyTimesSeconds.length-1){
+					idx=idx-1;
+				}
+				if(idx==groundToSlantRangePolyTimesSeconds.length){
+					idx=idx-2;
+				}
 		    }
+		    
+		    
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
-		    double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].groundToSlantRangeCoefficients);
-		    double[]groundToSlantRangeCoefficientsInterp2=coordConv[idx+1].groundToSlantRangeCoefficients;
+		    double[]groundToSlantRangeCoefficientsInterp=new double[coordConv[idx].groundToSlantRangeCoefficients.length];
 	    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
-	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
+	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*coordConv[idx].groundToSlantRangeCoefficients[idCoeff]+factor2*coordConv[idx+1].groundToSlantRangeCoefficients[idCoeff];
 	    	}
 	    	
-
-		    double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].slantToGroundRangeCoefficients);
-		    double[]slantToGroundRangeCoefficientsInterp2=coordConv[idx+1].slantToGroundRangeCoefficients;
+		    double[]slantToGroundRangeCoefficientsInterp=new double[coordConv[idx].slantToGroundRangeCoefficients.length];
 	    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
-	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
+	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*coordConv[idx].slantToGroundRangeCoefficients[idCoeff]+factor2*coordConv[idx+1].slantToGroundRangeCoefficients[idCoeff];
 	    	}
 
 	    	//TODO ADDING THIS PART FOR SLC 
@@ -483,16 +488,36 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
 		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		String metaF="C:\\tmp\\sumo_images\\carlos tests\\geoloc\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\annotation\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\geoloc\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\annotation\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		
+		/*
+		 * The geographic coordinates of this point are:
+			- Google Earth: lat=41.31735  lon=2.17263
+			- OSM 0m buffer: 41.31744 2.17258
+			
+			So, Google Earth and OSM very closely agree (the fifth decimal number in lat lon in degrees roughly represents meters).
+			
+			In the Sentinel-1 image, the coordinates of the point are:
+			- S1 image:  x=14165  y=15766
+			
+			
+			When running reverse geocoding using orbit SVs for that point (lat=41.31735  lon=2.17263), I am getting:
+			- Matlab code:  x=14167.6  y=15764.7
+			- SUMO (orbit SVs geocoding):  x=14054  y=15763
+			
+			So a big discrepancy in the x direction (113 pixes = 2825 meters) .  Matlab gives the correct results.*/
 		
 		
 		GeoCoding gc=new S1GeoCodingImpl(metaF);
-		double lat = 43.13935;//42.81202;
-		double lon = 3.35876;//10.32972;
+		double lat = 41.31735;//43.13935;//42.81202;
+		double lon = 2.17263;//3.35876;//10.32972;
+		
+		
 		
 		
 		double r[]=gc.reverse(lon, lat);
-		logger.debug("Line:"+r[0]+"--- Col:"+r[1]);
+		logger.debug("Line:"+r[1]+"--- Col:"+r[0]);
 		
 		
 		//double r[]=gc.forward(-100.0,11104.0);

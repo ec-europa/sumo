@@ -90,11 +90,11 @@ public class HermiteInterpolation implements IInterpolation{
 		}
 
 		
-		double[][] ppoints=new double[idxEndTime-idxInitTime][];
-		double[][] vpoints=new double[idxEndTime-idxInitTime][];
-		double[]timeStampInterpSecondsRef=new double[idxEndTime-idxInitTime];
+		double[][] ppoints=new double[idxEndTime-idxInitTime+1][];
+		double[][] vpoints=new double[idxEndTime-idxInitTime+1][];
+		double[]timeStampInterpSecondsRef=new double[idxEndTime-idxInitTime+1];
 //Loop through desired time points and interpolate
-		for(int idx=idxInitTime;idx<idxEndTime;idx++){
+		for(int idx=idxInitTime;idx<=idxEndTime;idx++){
    // Create polynomial powers in time for interpolation
 			double[][] ptvec=new double[1][powerMax+1];
 			double[][] vtvec=new double[1][powerMax+1];
