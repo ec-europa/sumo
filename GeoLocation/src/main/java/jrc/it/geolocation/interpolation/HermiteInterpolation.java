@@ -15,7 +15,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class HermiteInterpolation implements IInterpolation{
 	
-	public class InterpolationResult{
+	/*public class InterpolationResult{
 		double [][] interpPpoints=null;
 		double [][] interpVpoints=null;
 		double [] timeStampInterpSecondsRef=null;
@@ -25,7 +25,7 @@ public class HermiteInterpolation implements IInterpolation{
 			this.interpVpoints=interpVpoints;
 			this.timeStampInterpSecondsRef=timeStampInterpSecondsRef;
 		}
-	}
+	}*/
 	
 	public HermiteInterpolation (){
 
@@ -37,10 +37,13 @@ public class HermiteInterpolation implements IInterpolation{
 	 * 
 	 * 	
 	 */
-	public InterpolationResult interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
+	public void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
 			double timeStampInitSecondsRefPointsInterp[],
 			int idxInitTime, int idxEndTime,
-			double deltaT) {
+			double deltaT,
+			double [][] interpPpointsOutput,
+			double [][] interpVpointsOutput,
+			double [] timeStampInterpSecondsRefOutput) {
 
 		int nPoints=subTimesDiffRef.length;
 		
@@ -111,8 +114,11 @@ public class HermiteInterpolation implements IInterpolation{
 			timeStampInterpSecondsRef[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
 		
 		}
-		InterpolationResult res=new InterpolationResult(ppoints,vpoints,timeStampInterpSecondsRef);
-		return res;
+		//InterpolationResult res=new InterpolationResult(ppoints,vpoints,timeStampInterpSecondsRef);
+		
+		interpPpointsOutput=ppoints;
+		interpVpointsOutput=vpoints;
+		timeStampInterpSecondsRefOutput=timeStampInterpSecondsRef;
 	}
 	
 	
