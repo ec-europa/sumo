@@ -11,6 +11,7 @@ import jrc.it.geolocation.metadata.S1Metadata;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
 public class S1GeoCodingImpl implements GeoCoding {
@@ -43,7 +44,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
-		final double[][] statepVecInterp=orbitInterpolation.getStatepVecInterp();
+		double[][] statepVecInterp=orbitInterpolation.getStatepVecInterp();
 		double[] results=findZeroDoppler(statepVecInterp, pXYZ,orbitInterpolation.getTimeStampInterp() );
 		
 		double zeroDopplerTime=results[0];
@@ -130,7 +131,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			    D = SRdist - meta.slantRangeNearEdge;
 			else*/
 		
-	    	double newD=0;
+	       double newD=0;
            // Using the groundToSlantRangeCoefficients
            double oldD = 0;
            int nCoeffs = groundToSlantRangeCoefficientsInterp.length;
@@ -153,31 +154,27 @@ public class S1GeoCodingImpl implements GeoCoding {
            double deltaD=0;
            do{
         	 //calcolo dExp e denommExp come prodotti vettoriali => il risultato è uno scalare
-	           double[] dExp=new double[nCoeffs];
-        	   double[] denomExp=new double[nCoeffs];
-        	   for(int i=0;i<groundToSlantRangeCoefficientsInterp.length;i++){
-        		   dExp[i]=Math.pow(oldD,numExps[i]);
-        		   denomExp[i]=Math.pow(oldD,denomExps[i]);
-        	   }
         	   double numCoeffsXGround[]=new double[nCoeffs];
         	   double denomCoeffsXGround[]=new double[nCoeffs];
-        	   for(int i=0;i<groundToSlantRangeCoefficientsInterp.length;i++){
-        		   numCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*numCoeffs[i];
-        		   denomCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*denomCoeffs[i];
-        	   }
-        	   
         	   double scalNum=0;
         	   double scalDen=0;
-        	  //calcolo lo scalare risultante dal prodotto di 2 matrici (1xn)x(nx1) 
+
         	   for(int i=0;i<groundToSlantRangeCoefficientsInterp.length;i++){
-        		   scalNum=scalNum+dExp[i]*numCoeffsXGround[i];
-        		   scalDen=scalDen+denomExp[i]*denomCoeffsXGround[i];
+        		   double dExp=FastMath.pow(oldD,numExps[i]);
+        		   double denomExp=FastMath.pow(oldD,denomExps[i]);
+        		   
+        		   numCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*numCoeffs[i];
+        		   denomCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*denomCoeffs[i];
+        		   
+             	  //calcolo lo scalare risultante dal prodotto di 2 matrici (1xn)x(nx1) 
+        		   scalNum=scalNum+dExp*numCoeffsXGround[i];
+        		   scalDen=scalDen+denomExp*denomCoeffsXGround[i];
         	   }
         	   
         	   double num=srdist+scalNum;
         	   newD = num/scalDen;
                
-               deltaD = Math.abs(newD-oldD);
+               deltaD = FastMath.abs(newD-oldD);
                oldD=newD;
                
            }while(deltaD > 1);
@@ -281,15 +278,15 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
-		    final double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].groundToSlantRangeCoefficients);
-		    final double[]groundToSlantRangeCoefficientsInterp2=coordConv[idx+1].groundToSlantRangeCoefficients;
+		    double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].groundToSlantRangeCoefficients);
+		    double[]groundToSlantRangeCoefficientsInterp2=coordConv[idx+1].groundToSlantRangeCoefficients;
 	    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
 	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
 	    	}
 	    	
 
-		    final double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].slantToGroundRangeCoefficients);
-		    final double[]slantToGroundRangeCoefficientsInterp2=coordConv[idx+1].slantToGroundRangeCoefficients;
+		    double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].slantToGroundRangeCoefficients);
+		    double[]slantToGroundRangeCoefficientsInterp2=coordConv[idx+1].slantToGroundRangeCoefficients;
 	    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
 	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
 	    	}
@@ -317,16 +314,13 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    
 			// Find the tangent of the angle ? between the zero Doppler plane and the vertical direction, which is the same as the ratio between the radial and tangential components of the sensor velocity
 			double vRadial = MathUtil.vectorProd1XN(vT0, pT0) / normPt0;
-			double vTangential = Math.sqrt(Math.pow(MathUtil.norm(vT0),2) - Math.pow(vRadial,2));
+			double vTangential = FastMath.sqrt(FastMath.pow(MathUtil.norm(vT0),2) - FastMath.pow(vRadial,2));
 			double tanPsi = vRadial/vTangential;
 
 
 			// Define a satellite coordinate system centred on the sensor position, where the Z axis points towards the Earth centre, the X axis points along the tangential component of the sensor velocity, and the Y axis completes the right-handed coordinate system
 			double[] zsUnit =MathUtil.divVectByVal(pT0,-normPt0);
-			logger.debug("zsUnit[0]:"+zsUnit[0]);
-			
 			double[] vTmp =MathUtil.crossProd3x3(zsUnit,vT0);// cross(zs_unit,v_t0);
-			
 			double[] ysUnit = MathUtil.divVectByVal(vTmp, MathUtil.norm(vTmp));
 			double[] xsUnit = MathUtil.crossProd3x3(ysUnit,zsUnit);
 
@@ -334,7 +328,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			double pH=0;
 			for(int iidx=0; iidx<2;iidx++){ //First iteration with a default pH, second with a more accurate pH
 				// Find the approximate Earth radius at a point directly below the sensor position.
-				double rEarth = normPt0/Math.sqrt((pT0[0]*pT0[0] + pT0[1]*pT0[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (pT0[2]*pT0[2])/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis)) + pH;
+				double rEarth = normPt0/FastMath.sqrt((pT0[0]*pT0[0] + pT0[1]*pT0[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (pT0[2]*pT0[2])/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis)) + pH;
 	
 				//iteration
 				double rEarthOld = rEarth;
@@ -346,7 +340,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 				    // Form a triangle whose sides are the distance from the centre of the earth to the sensor, the slant range and the local earth radius and using the cosine law find the intersection point between the slant range vector and the Earth surface in the satellite coordinate system
 				    double Rz = (normPt0*normPt0 + sRdist*sRdist - rEarth*rEarth) / (2*normPt0);
 				    double Rx = Rz * tanPsi;
-				    double Ry = Math.sqrt(sRdist*sRdist - Rz*Rz - Rx*Rx);
+				    double Ry = FastMath.sqrt(sRdist*sRdist - Rz*Rz - Rx*Rx);
 				    
 				    if (!meta.getAntennaPointing().equalsIgnoreCase("Right")){
 				        Ry = -Ry;
@@ -371,9 +365,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 				    q[2]=qmat[2][0];
 	
 				    // Find the Earth radius at a point directly below the intersection point (this approximation becomes more and more precise as the intersection point becomes closer to the surface)
-				    rEarth = MathUtil.norm(q) / Math.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
+				    rEarth = MathUtil.norm(q) / FastMath.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
 				    
-				    rEarthChange = Math.abs(rEarth-rEarthOld);
+				    rEarthChange = FastMath.abs(rEarth-rEarthOld);
 				    rEarthOld = rEarth;
 				}
 
@@ -382,9 +376,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 				double y = q[1]; 
 				double z = q[2];
 				
-				lon = Math.atan2(y,x) * 180/Math.PI;
-				double lattmp = Math.asin(z/Math.sqrt(x*x+y*y+z*z));
-				lat=Math.atan(Math.tan(lattmp) * Math.pow((GeoUtils.semiMajorAxis+pH),2)/Math.pow((GeoUtils.semiMinorAxis+pH),2)) * 180/Math.PI;
+				lon = FastMath.atan2(y,x) * 180/FastMath.PI;
+				double lattmp = FastMath.asin(z/FastMath.sqrt(x*x+y*y+z*z));
+				lat=FastMath.atan(FastMath.tan(lattmp) * FastMath.pow((GeoUtils.semiMajorAxis+pH),2)/FastMath.pow((GeoUtils.semiMinorAxis+pH),2)) * 180/FastMath.PI;
 				pH = GeoUtils.getGeoidH(lon,lat);
 			}
 		}
@@ -409,16 +403,16 @@ public class S1GeoCodingImpl implements GeoCoding {
 			int iOptFactor = 10;
 		    int nPointsAroundMin = 100;//100;//50;
 		    int nWindowLength = 7;//5;
-		    double nWindowLengthSize = Math.floor(nWindowLength/2);
+		    double nWindowLengthSize = FastMath.floor(nWindowLength/2);
 
 		///**********Optimization************    
 		    double [][]diffSubsample = new double[statepVecInterp.length/iOptFactor][statepVecInterp[0].length];
 		    double []vDistSubsample = new double[statepVecInterp.length/iOptFactor];
 		    
 		    for(int i=0;i<statepVecInterp.length/iOptFactor;i++){
-		    	diffSubsample[i][0]=Math.pow(statepVecInterp[i*10][0]-pXYZ[0],2);
-		    	diffSubsample[i][1]=Math.pow(statepVecInterp[i*10][1]-pXYZ[1],2);
-		    	diffSubsample[i][2]=Math.pow(statepVecInterp[i*10][2]-pXYZ[2],2);
+		    	diffSubsample[i][0]=FastMath.pow(statepVecInterp[i*10][0]-pXYZ[0],2);
+		    	diffSubsample[i][1]=FastMath.pow(statepVecInterp[i*10][1]-pXYZ[1],2);
+		    	diffSubsample[i][2]=FastMath.pow(statepVecInterp[i*10][2]-pXYZ[2],2);
 		    	vDistSubsample[i]=diffSubsample[i][0]+diffSubsample[i][1]+diffSubsample[i][2];
 		    }
 		    int idxMinSubsample=0;
@@ -455,9 +449,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    int start=((Double)iDistWInit).intValue();
 		    double[] vDistOptimization=new double[((Double)iDistWEnd).intValue()-start];
 		    for(int i=start;i<iDistWEnd;i++){
-		    	double v1=Math.pow(statepVecInterp[i][0]-pXYZ[0],2);
-		    	double v2=Math.pow(statepVecInterp[i][1]-pXYZ[1],2);
-		    	double v3=Math.pow(statepVecInterp[i][2]-pXYZ[2],2);
+		    	double v1=FastMath.pow(statepVecInterp[i][0]-pXYZ[0],2);
+		    	double v2=FastMath.pow(statepVecInterp[i][1]-pXYZ[1],2);
+		    	double v3=FastMath.pow(statepVecInterp[i][2]-pXYZ[2],2);
 		    	vDistOptimization[i-start]=v1+v2+v3;
 		    }
 		    //matlab code w = ones(1,nWindowLength) / nWindowLength;
@@ -475,7 +469,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    }
 		    int idxMinSmooth=new Double(idxMinSmoothW+iDistWInit+nWindowLengthSize-1).intValue();
 
-		    double sRdistSmooth = Math.sqrt(distMinSmooth);
+		    double sRdistSmooth = FastMath.sqrt(distMinSmooth);
 		    double zeroDopplerTimeSmooth = timeStampInterp[idxMinSmooth];
 		    
 		    double res[]={zeroDopplerTimeSmooth,sRdistSmooth};

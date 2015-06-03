@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.util.FastMath;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
@@ -70,8 +71,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         if (height < 257) {
             int[] outData = new int[outWidth * outHeight];
             int[] data = readTile(x, y, width, height,band);
-            int decX = Math.round(width / (1f * outWidth));
-            int decY = Math.round(height / (1f * outHeight));
+            int decX = FastMath.round(width / (1f * outWidth));
+            int decY = FastMath.round(height / (1f * outHeight));
             if (data != null) {
                 int index = 0;
                 for (int j = 0; j < outHeight; j++) {
@@ -102,10 +103,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             int[] outData = new int[outWidth * outHeight];
             float decY = height / (1f * outHeight);
             int index = 0;
-            for (int i = 0; i < Math.ceil(incy); i++) {
-                int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
+            for (int i = 0; i < FastMath.ceil(incy); i++) {
+                int tileHeight = (int) FastMath.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter,band);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, FastMath.round(tileHeight / decY),xSize,ySize, filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -144,7 +145,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
         // load first tile
         int currentY = 0;
-        int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
+        int[] tile = readTile(0, currentY, width, (int) FastMath.ceil(tileHeight),band);
         if (progressbar != null) {
             progressbar.setMaximum(outHeight / 100);
         // start going through the image one Tile at a time
@@ -152,16 +153,16 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         double posY = 0.0;
         for (int j = 0; j < outHeight; j++, posY += deltaPixelsY) {
             // update progress bar
-            if (j / 100 - Math.floor(j / 100) == 0) {
+            if (j / 100 - FastMath.floor(j / 100) == 0) {
                 if (progressbar != null) {
                     progressbar.setCurrent(j / 100);
                 // check if Tile needs loading
                 }
             }
-            if (posY > (int) Math.ceil(tileHeight)) {
-                tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);
-                posY -= (int) Math.ceil(tileHeight);
-                currentY += (int) Math.ceil(tileHeight);
+            if (posY > (int) FastMath.ceil(tileHeight)) {
+                tile = readTile(0, currentY + (int) FastMath.ceil(tileHeight), width, (int) FastMath.ceil(tileHeight),band);
+                posY -= (int) FastMath.ceil(tileHeight);
+                currentY += (int) FastMath.ceil(tileHeight);
 
             }
 

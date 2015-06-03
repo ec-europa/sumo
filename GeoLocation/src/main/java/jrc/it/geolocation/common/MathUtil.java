@@ -3,13 +3,14 @@ package jrc.it.geolocation.common;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.FastMath;
 
 public class MathUtil {
 
 	public static double[] powArray(double a[],double pow){
 		double[]  apow=new double[a.length];
 		for(int i=0;i<a.length;i++){
-			apow[i]=Math.pow(a[i], pow);
+			apow[i]=FastMath.pow(a[i], pow);
 		}
 		return apow;
 	}
@@ -23,7 +24,7 @@ public class MathUtil {
 	public static double[] powValue2Coeffs(double val,int pows[]){
 		double[]  apow=new double[pows.length];
 		for(int i=0;i<pows.length;i++){
-			apow[i]=Math.pow(val, pows[i]);
+			apow[i]=FastMath.pow(val, pows[i]);
 		}
 		return apow;
 	}
@@ -62,7 +63,7 @@ public class MathUtil {
 	  * @return
 	  */
     public static double norm(double[] v) {
-        return Math.sqrt(dot(v,v));
+        return FastMath.sqrt(dot(v,v));
     }
     
     /**
