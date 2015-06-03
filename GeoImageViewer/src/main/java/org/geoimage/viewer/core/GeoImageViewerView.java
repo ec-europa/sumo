@@ -242,7 +242,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
             public void run() {
                 while (true) {
-                    System.gc();
+                    //System.gc();
 
                     try {
                         Thread.sleep(20000);
