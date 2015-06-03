@@ -251,7 +251,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             out=createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
             dataStore.dispose();
             fc=null;
-            System.gc();
+           // System.gc();
             GeometricLayer glout = GeometricLayer.createImageProjectedLayer(out, gt,null);
             return glout;
         } catch (Exception ex) {
