@@ -3,6 +3,8 @@ package jrc.it.geolocation.common;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.commons.math3.util.FastMath;
+
 public class GeoUtils {
 	// Reference ellipsoid axes
 	public final static double semiMajorAxis = 6.378137000000000e+06; //KeywVal.semiMajorAxis;
@@ -24,18 +26,18 @@ public class GeoUtils {
 		double pH=GeoUtils.getGeoidH(lon, lat);
 		
 		// Convert from geographic coordinates to Earth centred Earth fixed coordinates
-		double cosLat=Math.cos(Math.toRadians(lat));
-		double sinLat = Math.sin(Math.toRadians(lat));
-		double cosLon =Math.cos(Math.toRadians(lon));
-		double sinLon = Math.sin(Math.toRadians(lon));
+		double cosLat=FastMath.cos(FastMath.toRadians(lat));
+		double sinLat = FastMath.sin(FastMath.toRadians(lat));
+		double cosLon =FastMath.cos(FastMath.toRadians(lon));
+		double sinLon = FastMath.sin(FastMath.toRadians(lon));
 
 		
-		double denomTmp = Math.sqrt((semiMajorAxis*semiMajorAxis) *(cosLat*cosLat) + (semiMinorAxis*semiMinorAxis)*(sinLat*sinLat));
+		double denomTmp = FastMath.sqrt((semiMajorAxis*semiMajorAxis) *(cosLat*cosLat) + (semiMinorAxis*semiMinorAxis)*(sinLat*sinLat));
 		
 		
-		double pX = (Math.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * cosLon;
-		double pY = (Math.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * sinLon;
-		double pZ = (Math.pow(semiMinorAxis,2)/denomTmp + pH) * sinLat;
+		double pX = (FastMath.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * cosLon;
+		double pY = (FastMath.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * sinLon;
+		double pZ = (FastMath.pow(semiMinorAxis,2)/denomTmp + pH) * sinLat;
 		
 		double[] pXYZ = {pX ,pY, pZ};
 		
@@ -148,14 +150,14 @@ public class GeoUtils {
 	public static double distance(double lon1, double lat1, double lon2, double lat2){
 		double R=6372.795477598;
 		
-		lon1=(lon1*Math.PI)/180;
-		lon2=(lon2*Math.PI)/180;
-		lat1=(lat1*Math.PI)/180;
-		lat2=(lat2*Math.PI)/180;
+		lon1=(lon1*FastMath.PI)/180;
+		lon2=(lon2*FastMath.PI)/180;
+		lat1=(lat1*FastMath.PI)/180;
+		lat2=(lat2*FastMath.PI)/180;
 		
 	    
-		double dlon = Math.abs(lon1 - lon2);
-		double p=Math.acos(Math.sin(lat2)*Math.sin(lat1)+Math.cos(lat2) * Math.cos(lat1) * Math.cos(dlon));
+		double dlon = FastMath.abs(lon1 - lon2);
+		double p=FastMath.acos(FastMath.sin(lat2)*FastMath.sin(lat1)+FastMath.cos(lat2) * FastMath.cos(lat1) * FastMath.cos(dlon));
 		double d = R * p ;
 		
 		return d;
@@ -170,8 +172,8 @@ public class GeoUtils {
 	 * @return calculate the heart radius for a latitude
 	 */
 	public static double earthRadiusFromLatitude(double latitude, double ellipseMin,double ellipseMaj ){
-		double d=Math.pow(Math.tan(latitude*Math.PI/180),2);
-		double reEarth=ellipseMin*Math.sqrt((1+d)/(Math.pow((ellipseMin/ellipseMaj),2)+d));
+		double d=FastMath.pow(FastMath.tan(latitude*FastMath.PI/180),2);
+		double reEarth=ellipseMin*FastMath.sqrt((1+d)/(FastMath.pow((ellipseMin/ellipseMaj),2)+d));
 		
 		return reEarth;
 		
@@ -203,7 +205,7 @@ public class GeoUtils {
 		}
 		
 		//incidence angle
-		slantAndIA=Math.acos(hsat*(1+hsat/(2*earthRad))/slntRangePixel-slntRangePixel/(2*earthRad));
+		slantAndIA=FastMath.acos(hsat*(1+hsat/(2*earthRad))/slntRangePixel-slntRangePixel/(2*earthRad));
 		
 		return slantAndIA;
 	}
@@ -223,7 +225,7 @@ public class GeoUtils {
 		
 
 		//convert slant range into grnd range 
-		double gndRangeAtNearRange=earthRad*Math.acos(1-(slntRangeInNearRange*slntRangeInNearRange-hsat*hsat)/(2*earthRad*(earthRad+hsat))  );
+		double gndRangeAtNearRange=earthRad*FastMath.acos(1-(slntRangeInNearRange*slntRangeInNearRange-hsat*hsat)/(2*earthRad*(earthRad+hsat))  );
 		double gndRangePixel=0;
 		
 		double gndRangeAtFarRange=gndRangeAtNearRange+sizeXPixel*samplePixelSpacing;
@@ -235,10 +237,10 @@ public class GeoUtils {
 			gndRangePixel=gndRangeAtFarRange-xPix*samplePixelSpacing;
 		}
 		//slant range
-		double finalSlantRange=Math.sqrt(hsat*hsat + (2*earthRad*(earthRad+hsat))*(1-Math.cos(gndRangePixel/earthRad)));
+		double finalSlantRange=FastMath.sqrt(hsat*hsat + (2*earthRad*(earthRad+hsat))*(1-FastMath.cos(gndRangePixel/earthRad)));
 
 		//incidence angle
-		srAndIA=Math.acos((hsat*(1+hsat/(2*earthRad))/finalSlantRange) - (finalSlantRange/(2*earthRad)));			
+		srAndIA=FastMath.acos((hsat*(1+hsat/(2*earthRad))/finalSlantRange) - (finalSlantRange/(2*earthRad)));			
 		
 		//double conv=srAndIA*180/Math.PI;
 		//System.out.println(conv);
@@ -255,7 +257,7 @@ public class GeoUtils {
 	 */
 	public static double gcpComplexGeoCorrectionMeters(double incidenceAngle,double dHeight,double geoidHeight){
 		
-		double dx=Math.cos(incidenceAngle)*(dHeight-geoidHeight);
+		double dx=FastMath.cos(incidenceAngle)*(dHeight-geoidHeight);
 		return dx;
 	}
 	
@@ -269,7 +271,7 @@ public class GeoUtils {
 	 */
 	public static double gcpGrdGeoCorrectionMeters(double incidenceAngle,double height,double geoidHeight){
 		
-		double dx=(height-geoidHeight)/Math.tan(incidenceAngle);
+		double dx=(height-geoidHeight)/FastMath.tan(incidenceAngle);
 		return dx;
 	}
 

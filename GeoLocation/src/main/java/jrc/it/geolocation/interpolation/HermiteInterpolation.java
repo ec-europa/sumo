@@ -11,21 +11,14 @@ import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.FastMath;
 
 
 public class HermiteInterpolation implements IInterpolation{
 	
-	/*public class InterpolationResult{
-		double [][] interpPpoints=null;
-		double [][] interpVpoints=null;
-		double [] timeStampInterpSecondsRef=null;
-		
-		InterpolationResult(double [][] interpPpoints,double [][] interpVpoints,double [] timeStampInterpSecondsRef){
-			this.interpPpoints=interpPpoints;
-			this.interpVpoints=interpVpoints;
-			this.timeStampInterpSecondsRef=timeStampInterpSecondsRef;
-		}
-	}*/
+	double [][] interpPpointsOutput=null;
+	double [][] interpVpointsOutput=null;
+	double [] timeStampInterpSecondsRefOutput=null;
 	
 	public HermiteInterpolation (){
 
@@ -40,10 +33,7 @@ public class HermiteInterpolation implements IInterpolation{
 	public void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
 			double timeStampInitSecondsRefPointsInterp[],
 			int idxInitTime, int idxEndTime,
-			double deltaT,
-			double [][] interpPpointsOutput,
-			double [][] interpVpointsOutput,
-			double [] timeStampInterpSecondsRefOutput) {
+			double deltaT) {
 
 		int nPoints=subTimesDiffRef.length;
 		
@@ -92,33 +82,28 @@ public class HermiteInterpolation implements IInterpolation{
 			}
 		}
 
+		interpPpointsOutput=new double[idxEndTime-idxInitTime+1][];
+		interpVpointsOutput=new double[idxEndTime-idxInitTime+1][];
+		timeStampInterpSecondsRefOutput=new double[idxEndTime-idxInitTime+1];
 		
-		double[][] ppoints=new double[idxEndTime-idxInitTime+1][];
-		double[][] vpoints=new double[idxEndTime-idxInitTime+1][];
-		double[]timeStampInterpSecondsRef=new double[idxEndTime-idxInitTime+1];
 //Loop through desired time points and interpolate
 		for(int idx=idxInitTime;idx<=idxEndTime;idx++){
    // Create polynomial powers in time for interpolation
 			double[][] ptvec=new double[1][powerMax+1];
 			double[][] vtvec=new double[1][powerMax+1];
 			for(int i=0;i<=powerMax;i++){
-				ptvec[0][i]=Math.pow(interTime[idx],powerMax-i);
-				vtvec[0][i]=Math.pow((interTime[idx]),Math.abs(i-1));//Math.pow(i*(interTime[idx]),Math.abs(i-1));
+				ptvec[0][i]=FastMath.pow(interTime[idx],powerMax-i);
+				vtvec[0][i]=FastMath.pow((interTime[idx]),FastMath.abs(i-1));//Math.pow(i*(interTime[idx]),Math.abs(i-1));
 			
 			}	
 			for(int i=0;i<=powerMax;i++){
 				vtvec[0][powerMax-i]=i*vtvec[0][i];
 			}
-			ppoints[idx-idxInitTime]=MathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
-			vpoints[idx-idxInitTime]=MathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
-			timeStampInterpSecondsRef[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
+			interpPpointsOutput[idx-idxInitTime]=MathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
+			interpVpointsOutput[idx-idxInitTime]=MathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
+			timeStampInterpSecondsRefOutput[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
 		
 		}
-		//InterpolationResult res=new InterpolationResult(ppoints,vpoints,timeStampInterpSecondsRef);
-		
-		interpPpointsOutput=ppoints;
-		interpVpointsOutput=vpoints;
-		timeStampInterpSecondsRefOutput=timeStampInterpSecondsRef;
 	}
 	
 	
@@ -170,14 +155,14 @@ public class HermiteInterpolation implements IInterpolation{
 			for(int val=np;val>=0;val--){
 			  //first two rows contains 1 where we have 0^0
 				if(idx==0){
-					row1[np-val]=Math.pow(0,val);
-					row2[np-val]=Math.pow(0,Math.abs(val-1));
+					row1[np-val]=FastMath.pow(0,val);
+					row2[np-val]=FastMath.pow(0,FastMath.abs(val-1));
 				}
 				//
 				else{
 					int k=idx/2;
-					row1[np-val]=Math.pow(k,val);
-					row2[np-val]=val*Math.pow(k,val-1);
+					row1[np-val]=FastMath.pow(k,val);
+					row2[np-val]=val*FastMath.pow(k,val-1);
 				}	
 			}
 			matrix.add(row1);
@@ -191,7 +176,21 @@ public class HermiteInterpolation implements IInterpolation{
 	}
 	
 	
-	
+	public double[][] getInterpPpointsOutput() {
+		return interpPpointsOutput;
+	}
+
+
+	public double[][] getInterpVpointsOutput() {
+		return interpVpointsOutput;
+	}
+
+
+	public double[] getTimeStampInterpSecondsRefOutput() {
+		return timeStampInterpSecondsRefOutput;
+	}
+
+
 	
 	
 }

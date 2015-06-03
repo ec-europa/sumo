@@ -142,16 +142,20 @@ public class OrbitInterpolation {
 			
 			double[] t0=ArrayUtils.toPrimitive((Double[])timeStampInitSecondsRefPointsInterp.toArray());
 			
+			
 			 if (idxInitTime!=-1 && idxEndTime!=-1 && initTime < endTime){
+
 				 HermiteInterpolation hermite=new HermiteInterpolation();
-				 HermiteInterpolation.InterpolationResult result=hermite.interpolation(
+				 hermite.interpolation(
 						 subTimesDiffRef,subList, t0, 
 						 idxInitTime, idxEndTime, deltaTinv);
-				 addPointsToResult(result.interpVpoints,result.interpPpoints);
+				 
+				 addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());
+				 
 				 if(timeStampInterp==null)
-					 timeStampInterp=result.timeStampInterpSecondsRef;
+					 timeStampInterp=hermite.getTimeStampInterpSecondsRefOutput();
 				 else
-					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, result.timeStampInterpSecondsRef);
+					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, hermite.getTimeStampInterpSecondsRefOutput());
 			 }
 		}
 		//start from 2 because we need 2 points to start interpolation
@@ -217,13 +221,7 @@ public class OrbitInterpolation {
 	            		findIdxEndTime=true;
 	            	}
 	            }
-	            
-	            //logger.debug("initTime:"+ initTime+ "  endTime:"+ endTime);
-	            logger.debug("idxstart:"+ idxStart+ "  idxend:"+ idxEnd);
-	           // logger.debug("idxInitTime:"+ idxInitTime+ "  idxEndTime:"+ idxEndTime);
-	           // logger.debug("timeStampInitSecondsRefPointsInterp(idxInitTime):"+ timeStampInitSecondsRefPointsInterp.get(idxInitTime));
-	           // logger.debug("timeStampInitSecondsRefPointsInterp(idxEndTime):"+ timeStampInitSecondsRefPointsInterp.get(idxEndTime));
-	            
+	            	            
 	            double timeRef = timeStampInitSecondsRefPointsInterp.get(0);
 	            double[] timeStampInitSecondsRefPointsInterp0 =new double[timeStampInitSecondsRefPointsInterp.size()];
 	            for(int i=0;i<timeStampInitSecondsRefPointsInterp.size();i++){
@@ -232,19 +230,20 @@ public class OrbitInterpolation {
 	            
 	            
 	            if (findIdxEndTime && findIdxInitTime && initTime < endTime && idxInitTime < idxEndTime){
-	            	HermiteInterpolation hermite=new HermiteInterpolation();
-	            	HermiteInterpolation.InterpolationResult result=hermite.interpolation(
+					HermiteInterpolation hermite=new HermiteInterpolation();
+	            	hermite.interpolation(
 	            			timeStampInitSecondsRefPoints,stateVecPoints, timeStampInitSecondsRefPointsInterp0, 
 	            			idxInitTime, idxEndTime, deltaTinv);
-	            	addPointsToResult(result.interpVpoints,result.interpPpoints);					
+	            	addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());					
 					
-	            	for(int i=0;i<result.timeStampInterpSecondsRef.length;i++){
-	            		result.timeStampInterpSecondsRef[i]=result.timeStampInterpSecondsRef[i]+timeRef;
+	            	double[] timeStampInterpSecondsRefOutput=hermite.getTimeStampInterpSecondsRefOutput();
+	            	for(int i=0;i<timeStampInterpSecondsRefOutput.length;i++){
+	            		timeStampInterpSecondsRefOutput[i]=timeStampInterpSecondsRefOutput[i]+timeRef;
 	            	}
 	            	if(timeStampInterp==null)
-						 timeStampInterp=result.timeStampInterpSecondsRef;
+						 timeStampInterp=timeStampInterpSecondsRefOutput;
 					 else
-						 timeStampInterp=ArrayUtils.addAll(timeStampInterp, result.timeStampInterpSecondsRef);
+						 timeStampInterp=ArrayUtils.addAll(timeStampInterp, timeStampInterpSecondsRefOutput);
 	            }
 		    }
 		}
@@ -299,17 +298,19 @@ public class OrbitInterpolation {
 
 	        if(findIdxEndTime && findIdxInitTime && initTime < endTime){
 	        	HermiteInterpolation hermite=new HermiteInterpolation();
-	        	HermiteInterpolation.InterpolationResult result=hermite.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, 
+	        	hermite.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, 
 	        			timeStampInitSecondsRefPointsInterp0, idxInitTime, idxEndTime, deltaTinv);
-				addPointsToResult(result.interpVpoints,result.interpPpoints);
 	        	
-	        	for(int i=0;i<result.timeStampInterpSecondsRef.length;i++){
-            		result.timeStampInterpSecondsRef[i]=result.timeStampInterpSecondsRef[i]+timeRef;
+				 addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());
+
+				double [] timeStampInterpSecondsRefOutput=hermite.getTimeStampInterpSecondsRefOutput();
+	        	for(int i=0;i<timeStampInterpSecondsRefOutput.length;i++){
+	        		timeStampInterpSecondsRefOutput[i]=timeStampInterpSecondsRefOutput[i]+timeRef;
             	}
 	        	if(timeStampInterp==null)
-					 timeStampInterp=result.timeStampInterpSecondsRef;
+					 timeStampInterp=timeStampInterpSecondsRefOutput;
 				 else
-					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, result.timeStampInterpSecondsRef);
+					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, timeStampInterpSecondsRefOutput);
 	        }
 		 }   
 		
@@ -331,7 +332,6 @@ public class OrbitInterpolation {
 		}else{
 			statepVecInterp=ArrayUtils.addAll(statepVecInterp, resultP);
 		}
-		logger.debug("-->statepVecInterp Length:"+statepVecInterp.length);
 	}
 	
 		
