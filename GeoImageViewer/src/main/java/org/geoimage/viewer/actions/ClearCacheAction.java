@@ -40,7 +40,7 @@ public class ClearCacheAction extends AbstractAction implements IProgress{
 	@Override
 	public boolean execute(String[] args) {
 		File folder=CacheManager.getRootCacheInstance().getPath();
-		System.gc();
+		//System.gc();
 		try {
 			Files.walkFileTree(folder.toPath(), new SimpleFileVisitor<Path>() {
 				   @Override
