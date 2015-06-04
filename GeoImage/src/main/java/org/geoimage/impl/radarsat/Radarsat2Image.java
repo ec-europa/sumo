@@ -46,7 +46,8 @@ public class Radarsat2Image extends SarImageReader {
     protected String timestampStop;
     private String overviewImage;
     	
-    public Radarsat2Image() {
+    public Radarsat2Image(File f) {
+    	super(f);
     }
 
     @Override
@@ -80,12 +81,12 @@ public class Radarsat2Image extends SarImageReader {
     
     
     @Override
-    public boolean initialise(File f) {
+    public boolean initialise() {
     	try {
-    		super.imgName=f.getParentFile().getName();
+    		super.imgName=manifestFile.getParentFile().getName();
     		
     		SAXBuilder builder = new SAXBuilder();
-    		setFile(f);
+    		setFile(manifestFile);
     		doc = builder.build(productxml);
     	
     		

@@ -38,8 +38,27 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected Corners originalCorners=null;
     BufferedImage overViewImage;
 
-   
+    protected File manifestFile=null;
 
+	double satelliteSpeed;
+    double radarWavelength;
+    double orbitInclination;
+    double revolutionsPerDay;
+
+    
+    
+    public SarImageReader(File manifest){
+    	manifestFile=manifest;
+    }
+    
+    public File getManifestFile() {
+		return manifestFile;
+	}
+
+	public void setManifestFile(File manifestFile) {
+		this.manifestFile = manifestFile;
+	}
+    
     /**
      * used for XML
      */
@@ -236,8 +255,16 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     }
     
     
+    
 
     public int[] getAmbiguityCorrection(int xPos,int yPos) {
+    	if(satelliteSpeed!=0){
+	    	satelliteSpeed = calcSatelliteSpeed();
+	        radarWavelength = getRadarWaveLenght();
+	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+	        revolutionsPerDay = getRevolutionsPerday();
+    	}    
+
 
         double temp, deltaAzimuth, deltaRange;
         int[] output = new int[2];
@@ -247,40 +274,40 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             double slantRange = getSlantRange(xPos);
             // already in radian
             double incidenceAngle = getIncidence(xPos);
-            double satelliteSpeed = calcSatelliteSpeed();
-            double radarWavelength = getRadarWaveLenght();
-            double prf = getPRF(xPos,yPos); 
-            double orbitInclination = Math.toRadians(getSatelliteOrbitInclination());
-            double revolutionsPerDay = getRevolutionsPerday();
+            double prf = getPRF(xPos,yPos);
+            
+            
+
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];
             double sampleDistRange = getGeoTransform().getPixelSize()[1];
 
             temp = (radarWavelength * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - Math.cos(orbitInclination) / revolutionsPerDay));
+                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / revolutionsPerDay));
 
             //azimuth and delta in number of pixels
             deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * Math.sin(incidenceAngle));
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
 
-            output[0] = (int) Math.floor(deltaAzimuth);
-            output[1] = (int) Math.floor(deltaRange);
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
 
         } catch (Exception ex) {
         	ex.printStackTrace();
         }
         return output;
-
     }
 
+    
+    
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
         // estimation of incidence angle based on near and range distance values
-        double nearincidence = Math.toRadians(getIncidenceNear().doubleValue());
+        double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
         double sataltitude=getSatelliteAltitude();
         
         
-        double distancerange = sataltitude * Math.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
-        incidenceangle = Math.atan(distancerange / sataltitude);
+        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
+        incidenceangle = FastMath.atan(distancerange / sataltitude);
         return incidenceangle;
     }
 

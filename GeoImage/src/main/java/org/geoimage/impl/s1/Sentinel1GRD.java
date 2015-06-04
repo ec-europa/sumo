@@ -31,8 +31,8 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 	
 	protected short[] preloadedData;
     
-    public Sentinel1GRD(String swath) {
-    	super(swath);
+    public Sentinel1GRD(String swath,File manifest) {
+    	super(swath,manifest);
     	//gdal.AllRegister();
     }
 

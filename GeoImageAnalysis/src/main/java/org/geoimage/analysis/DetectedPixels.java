@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
+import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -46,6 +48,9 @@ public class DetectedPixels {
 
     
     ArrayList<boatPixels> listboatneighbours = new ArrayList<boatPixels>();
+
+    private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
+
 
     public DetectedPixels(SarImageReader gir) {
         this.gir = gir;
@@ -312,7 +317,7 @@ public class DetectedPixels {
             int yy = p.y;
             
             if((count % 100)==0)
-            	System.out.println(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
+            	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
             
             // check pixels is not aggregated
             boolean checked = false;

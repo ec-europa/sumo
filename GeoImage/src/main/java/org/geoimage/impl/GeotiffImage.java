@@ -35,7 +35,6 @@ public class GeotiffImage extends SarImageReader {
 	protected int ySize = -1;
 	
     private TIFFDirectory td;
-    private File tfw;
     private String[] files;
     private AffineTransform matrix;
     private int[] preloadedInterval = new int[]{0, 0};
@@ -51,7 +50,8 @@ public class GeotiffImage extends SarImageReader {
      * It is completed with possibility to read external dim files or tfw files
      * TODO: create a special class that handle geotiff with DIM files
      */
-    public GeotiffImage() {
+    public GeotiffImage(File f) {
+    	super(f);
     }
 
     @Override
@@ -87,11 +87,10 @@ public class GeotiffImage extends SarImageReader {
     }
 
     @Override
-    public boolean initialise(File f) {
+    public boolean initialise() {
         try {
-           this.displayName=f.getName();
+           this.displayName=manifestFile.getName();
         	
-           this.tfw=f;
            
             System.out.println(reader.getNumImages(false));
             xSize = reader.getWidth(0);
@@ -104,7 +103,7 @@ public class GeotiffImage extends SarImageReader {
             }
             getTimestamp();
             bounds = new Rectangle(0, 0, xSize, ySize);
-            if (tfw == null && td.getTIFFField(GeoTIFFTagSet.TAG_MODEL_TRANSFORMATION) != null) {
+            if (manifestFile == null && td.getTIFFField(GeoTIFFTagSet.TAG_MODEL_TRANSFORMATION) != null) {
                 double[] m = td.getTIFFField(GeoTIFFTagSet.TAG_MODEL_TRANSFORMATION).getAsDoubles();
                 if (m[3] > 180) {
                     m[3] = m[3] - 360;
@@ -269,7 +268,7 @@ public class GeotiffImage extends SarImageReader {
         try {
             reader.dispose();
             reader = null;
-            tfw = null;
+            manifestFile = null;
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -300,7 +299,7 @@ public class GeotiffImage extends SarImageReader {
 
     private void parseTFW() {
         try {
-            RandomAccessFile temp = new RandomAccessFile(tfw, "r");
+            RandomAccessFile temp = new RandomAccessFile(manifestFile, "r");
             double m00 = Double.parseDouble(temp.readLine());
             double m10 = Double.parseDouble(temp.readLine());
             double m01 = Double.parseDouble(temp.readLine());
@@ -321,7 +320,7 @@ public class GeotiffImage extends SarImageReader {
 
             SAXBuilder builder = new SAXBuilder();
             Document doc;
-            doc = builder.build(tfw);
+            doc = builder.build(manifestFile);
 
             Element atts = doc.getRootElement().getChild("Dataset_Frame");
             for (Object o : atts.getChildren("Vertex")) {

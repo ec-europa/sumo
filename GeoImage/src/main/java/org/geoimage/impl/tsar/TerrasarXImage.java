@@ -73,7 +73,8 @@ public class TerrasarXImage extends SarImageReader {
     
     protected Vector<String> bands = new Vector<String>();
 
-    public TerrasarXImage() {
+    public TerrasarXImage(File f) {
+    	super(f);
     }
 
     @Override
@@ -340,12 +341,12 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public boolean initialise(File file) {
+    public boolean initialise() {
     	 try {
     		 
-    		 this.imgName=file.getParentFile().getName();
+    		 this.imgName=manifestFile.getParentFile().getName();
     		 
-	    	setFile(file);
+	    	setFile(manifestFile);
 	    	parseProductXML(productxml);
 	    	tiffImages = getImages();
 	    	

@@ -1,6 +1,7 @@
 package org.geoimage.impl.envi;
 
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
 
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,8 @@ public class EnvisatImage_SLC extends EnvisatImage {
 	protected int xSize = -1;
 	protected int ySize = -1;
 	
-    public EnvisatImage_SLC() {
+    public EnvisatImage_SLC(File mainFile) {
+    	super(mainFile);
     }
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(EnvisatImage.class);

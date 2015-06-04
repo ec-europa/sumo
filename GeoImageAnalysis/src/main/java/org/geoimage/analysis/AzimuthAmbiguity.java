@@ -97,13 +97,17 @@ public class AzimuthAmbiguity {
 
     }
 
+    public AzimuthAmbiguity(double[][] boatList, SarImageReader image) {
+    	init(boatList,image);
+    }
+    
     public AzimuthAmbiguity(double[][] boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold) {
 
         setRCSThreshold(rcsThreshold);
         setSizeSearchWindow(windowSize);
         setNumSteps(numSteps);
 
-        new AzimuthAmbiguity(boatList, image);
+        init(boatList, image);
 
     }
 
@@ -288,8 +292,9 @@ public class AzimuthAmbiguity {
         return false;
 
     }
-
-    public AzimuthAmbiguity(double[][] boatList, SarImageReader image) {
+    
+    
+    private void init(double[][] boatList, SarImageReader image) {
 
         int echo = 4;
         int[] windowCoords, deltaAzimuth;

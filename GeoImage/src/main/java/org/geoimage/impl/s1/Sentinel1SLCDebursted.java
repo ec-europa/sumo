@@ -20,14 +20,13 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
     protected SentinelDeburstUtil util;
     int lines=0;
 
-	public Sentinel1SLCDebursted(String swath) {
-		super(swath);
-	}
-	
+	public Sentinel1SLCDebursted(String swath,File manifest) {
+    	super(swath,manifest);
+    }
 	
 	@Override
-	public boolean initialise(File manifestXML) {
-		boolean init = super.initialise(manifestXML);
+	public boolean initialise() {
+		boolean init = super.initialise();
 		/*try {
 			SumoJaxbSafeReader safeReader;
 			

@@ -21,7 +21,6 @@ import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
-import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -90,10 +89,13 @@ public abstract class Sentinel1 extends SarImageReader {
     
     
     
+    public Sentinel1(String swath,String manifestXMLPath) {
+    	super(new File(manifestXMLPath)); 
+    	this.swath=swath;
+    }
     
-    
-    public Sentinel1(String swath) {
-    	//this.safeReader=safeReader; 
+    public Sentinel1(String swath,File manifestXML) {
+    	super(manifestXML); 
     	this.swath=swath;
     }
 
@@ -150,14 +152,11 @@ public abstract class Sentinel1 extends SarImageReader {
         return files;
     }
 
-    public boolean initialise(String manifestXML) {
-    	return initialise(new File(manifestXML));
-    }
     
     @Override
-    public boolean initialise(File manifestXML) {
+    public boolean initialise() {
         try {
-        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(manifestXML);
+        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(super.manifestFile);
 
         	files[0]=safeReader.getSafefile().getAbsolutePath();
         	tiffs=safeReader.getTiffsBySwath(this.swath);
@@ -171,7 +170,7 @@ public abstract class Sentinel1 extends SarImageReader {
             String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();
             nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
 			//load the correct annotation file for the current images (per swath) 
-			mainFolder=manifestXML.getParentFile();
+			mainFolder=manifestFile.getParentFile();
 			String annotationFilePath=new StringBuilder(mainFolder.getAbsolutePath()).append("/annotation/").append(nameFirstFile).toString();
 			
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
@@ -193,7 +192,7 @@ public abstract class Sentinel1 extends SarImageReader {
             }
             
         	//read and set the metadata from the manifest and the annotation
-			setXMLMetaData(manifestXML,safeReader,annotationReader);
+			setXMLMetaData(manifestFile,safeReader,annotationReader);
             
             gcps = getGcps();
             if (gcps == null) {
@@ -219,6 +218,7 @@ public abstract class Sentinel1 extends SarImageReader {
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
+            
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
             setSatelliteAltitude(radialdist - earthradial);
 
