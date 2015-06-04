@@ -369,8 +369,8 @@ public class TiledBufferedImage implements GeoImageReader {
         return gir.getFilesList();
     }
 
-    public boolean initialise(File file) {
-        return gir.initialise(file);
+    public boolean initialise() {
+        return gir.initialise();
     }
 
 

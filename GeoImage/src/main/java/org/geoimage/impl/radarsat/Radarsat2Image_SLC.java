@@ -2,6 +2,7 @@ package org.geoimage.impl.radarsat;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import org.geoimage.impl.TIFF;
@@ -20,7 +21,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     private int[] preloadedDataImg;
 	private Logger logger= LoggerFactory.getLogger(Radarsat2Image_SLC.class);
 
-    public Radarsat2Image_SLC() {
+    public Radarsat2Image_SLC(File f) {
+    	super(f);
     }
 
  

@@ -31,6 +31,7 @@ public class ThumbnailsImageReader extends SarImageReader {
     private float[] ratio=null;
 
     public ThumbnailsImageReader(ThumbnailsManager tm) {
+    	super(null);
         this.tm = tm;
         parsePTS(tm.getPTS());
         geotransform = new GcpsGeoTransform(gcps, "EPSG:4326");
@@ -94,8 +95,7 @@ public class ThumbnailsImageReader extends SarImageReader {
     }
 
     @Override
-    public boolean initialise(File f) {
-
+    public boolean initialise() {
         return true;
     }
 

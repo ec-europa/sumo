@@ -160,7 +160,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);
-                t.setName("VDS_analysis_"+gir.getInternalImage());
+                t.setName("VDS_analysis_"+gir.getDisplayName(0));
                 t.start();
                 
             }

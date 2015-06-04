@@ -15,12 +15,15 @@ import org.geoimage.impl.envi.EnvisatImage;
  * @author leforth
  */
 public class ERS2Image extends EnvisatImage {
-
+	public ERS2Image(File f){
+		super(f);
+	}
+	
     @Override
-    public boolean initialise(File f) {
-    	this.displayName=f.getName();
+    public boolean initialise() {
+    	this.displayName=manifestFile.getName();
         
-    	boolean result = super.initialise(f);
+    	boolean result = super.initialise();
         
         // change name of satellite and instrument
         setSatellite("ERS2");

@@ -39,15 +39,15 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
    // protected Map<String, File> images;
     RandomAccessFile fss;
 
-    public TerrasarXImage_SLC() {
-
+    public TerrasarXImage_SLC(File file) {
+    	super(file);
     }
 
     @Override
-    public boolean initialise(File file) {
+    public boolean initialise() {
     	try {
-    		this.displayName=file.getName();
-    		setFile(file);
+    		this.displayName=manifestFile.getName();
+    		setFile(manifestFile);
         	
         	parseProductXML(productxml);
         	

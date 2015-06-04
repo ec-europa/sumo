@@ -96,7 +96,7 @@ public interface GeoImageReader  {
      * Initialises the image
      * @return whether the image has been properly initialised, thus readable
      */
-    public boolean initialise(File file);
+    public boolean initialise();
 
 
     /*

@@ -49,9 +49,9 @@ public class GeoImageReaderFactory {
     public static GeoImageReader cloneReader(GeoImageReader gir){
     	//TODO : add "if" for other reader with multiple images (cosmoskymed)
     	GeoImageReader clone=null;
-    	if(gir instanceof Sentinel1SLC){
-			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath());
-			clone.initialise(new File(((Sentinel1SLC)gir).getSafeFilePath()));
+    	if(gir instanceof Sentinel1){
+			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile());
+			clone.initialise();
     	}else {
     		clone=createReaderForName(gir.getFilesList()[0]).get(0);
     	}
@@ -81,11 +81,11 @@ public class GeoImageReaderFactory {
 	        		HObject obj=it.next();
 	        		CosmoSkymedImage cosmo;
 	        		if(obj.getName().equals("MBI"))
-	        			cosmo=new CosmoSkymedImage(obj.getName(),null);
+	        			cosmo=new CosmoSkymedImage(f,obj.getName(),null);
 	        		else
-	        			cosmo=new CosmoSkymedImage(obj.getName()+"/SBI",obj.getName());
+	        			cosmo=new CosmoSkymedImage(f,obj.getName()+"/SBI",obj.getName());
 
-	                if (cosmo.initialise(f)) {
+	                if (cosmo.initialise()) {
 	                	girList.add(cosmo);
 	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,cosmo.getClass()});
 	                }
@@ -106,12 +106,12 @@ public class GeoImageReaderFactory {
         		Sentinel1 sentinel=null;
         		for(String sw:swath){
         			if(parent.contains("SLC_")){
-        				sentinel=new Sentinel1SLC(sw);
+        				sentinel=new Sentinel1SLC(sw,f);
         			}else{
-        				sentinel=new Sentinel1GRD(sw);
+        				sentinel=new Sentinel1GRD(sw,f);
         			}
         			sentinel.setContainsMultipleImage(multipleImages);
-        			if (sentinel.initialise(f)) {
+        			if (sentinel.initialise()) {
 	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,sentinel.getClass()});
 	                }else{
 	                	logger.warn("Problem reading {0} as {1}...", new Object[]{file,sentinel.getClass()});
@@ -121,23 +121,23 @@ public class GeoImageReaderFactory {
         	}else{
         		GeoImageReader gir=null;
         		if(parent.contains("TDX1_SAR__MGD")){
-        			gir= new TerrasarXImage();
+        			gir= new TerrasarXImage(f);
         		}else if(parent.contains("TSX1_SAR__MGD")){
-	        		gir= new TerrasarXImage();
+	        		gir= new TerrasarXImage(f);
 	        	}else if(parent.contains("TSX1_SAR__SSC")||parent.contains("TDX1_SAR__SSC")){
-	        		gir=new TerrasarXImage_SLC();
+	        		gir=new TerrasarXImage_SLC(f);
 	        	}else if(parent.contains("RS2")&& parent.contains("SLC")){
-	        		gir=new Radarsat2Image_SLC();
+	        		gir=new Radarsat2Image_SLC(f);
 	        	}else if(parent.contains("RS2")&& !parent.contains("SLC")){
-	        		gir=new Radarsat2Image();
+	        		gir=new Radarsat2Image(f);
 	        	}else if(parent.contains("RS1")){
-	        		gir=new Radarsat1Image();
+	        		gir=new Radarsat1Image(f);
 	        	}else if(parent.contains("ASA_")){
-	        		gir=new EnvisatImage_SLC();
+	        		gir=new EnvisatImage_SLC(f);
 	        	}else{
 	        		return null;
 	        	}
-	            if (gir.initialise(f)) {
+	            if (gir.initialise()) {
 	               logger.info("Successfully reading {0} as {1}...", new Object[]{file, gir.getClass()});
 	                girList.add(gir);
 	            }else{

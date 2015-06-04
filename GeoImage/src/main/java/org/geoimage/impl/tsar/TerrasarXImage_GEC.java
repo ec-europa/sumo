@@ -66,7 +66,8 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
 
     protected List<String> bands = new ArrayList<String>();
 
-    public TerrasarXImage_GEC() {
+    public TerrasarXImage_GEC(File f) {
+    	super(f);
     }
 
     public static float arr2float(byte[] arr, int start) {
@@ -93,10 +94,10 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
     }
 
     @Override
-    public boolean initialise(File file) {
+    public boolean initialise() {
     	try {
-    		this.displayName=file.getName();
-	    	setFile(file);
+    		this.displayName=manifestFile.getName();
+	    	setFile(manifestFile);
 	    	parseProductXML(productxml);
 	    	tiffImages = getImages();
 	    	

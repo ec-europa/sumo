@@ -34,8 +34,8 @@ public class ReadTest {
 	Document doc;
 
 	public ReadTest() {
-		reader=new TerrasarXImage_SLC();
-		reader.initialise(new File(file));
+		reader=new TerrasarXImage_SLC(new File(file));
+		reader.initialise();
 		parseProductXML(new File(file));
 		image=getImages(new File(file));
 	}
