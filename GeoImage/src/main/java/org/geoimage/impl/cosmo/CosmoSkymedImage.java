@@ -48,8 +48,8 @@ public class CosmoSkymedImage extends SarImageReader {
 
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(CosmoSkymedImage.class);
     
-    public CosmoSkymedImage(String pathImg,String group){
-    	super();
+    public CosmoSkymedImage(File file,String pathImg,String group){
+    	super(file);
     	internalImage=pathImg;
     	this.group=group;
     }
@@ -89,15 +89,15 @@ public class CosmoSkymedImage extends SarImageReader {
     
 
     @SuppressWarnings("unchecked")
-	public boolean initialise(File file) {
+	public boolean initialise() {
         try {
-        	this.imgName=file.getName();
+        	this.imgName=super.manifestFile.getName();
         	this.imgName=this.imgName.substring(0, this.imgName.lastIndexOf("."));
-        	this.displayName=file.getName();
+        	this.displayName=super.manifestFile.getName();
         	if(group!=null&&!group.equalsIgnoreCase(""))
         		this.displayName=this.displayName+"_"+group;
         	
-        	h5file = new H5File(file.getAbsolutePath(), H5File.READ);
+        	h5file = new H5File(super.manifestFile.getAbsolutePath(), H5File.READ);
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
             extractQuickLook();
             List<Object> metadata = new ArrayList<Object>();
@@ -401,7 +401,7 @@ public class CosmoSkymedImage extends SarImageReader {
 	
 	@Override
 	public GeoImageReader clone(){
-		CosmoSkymedImage geo=new CosmoSkymedImage(this.internalImage, group);
+		CosmoSkymedImage geo=new CosmoSkymedImage(super.manifestFile,this.internalImage, group);
 		geo.imagedata=imagedata;
 		//geo.preloadedData=preloadedData;
 		geo.bounds=bounds;
@@ -411,7 +411,7 @@ public class CosmoSkymedImage extends SarImageReader {
 		geo.starts=starts;
 		geo.complex=complex;
 		geo.internalImage=internalImage;
-		geo.initialise(getH5file());
+		geo.initialise();
 
 		return geo;
 	}

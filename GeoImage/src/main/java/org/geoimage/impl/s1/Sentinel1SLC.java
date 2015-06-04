@@ -19,10 +19,9 @@ public class Sentinel1SLC extends Sentinel1 {
 	protected RandomAccessFile fss;
     protected byte[] preloadedData;
 
-	public Sentinel1SLC(String swath) {
-		super(swath);
-	}
-	
+	public Sentinel1SLC(String swath,File manifest) {
+    	super(swath,manifest);
+    }
 
     @Override
     public int read(int x, int y,int band) {

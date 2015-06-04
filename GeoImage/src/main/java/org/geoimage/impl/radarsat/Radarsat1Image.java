@@ -68,7 +68,8 @@ public class Radarsat1Image extends SarImageReader {
     private int srgrCoefLine;
     private double earthradial;
 
-    public Radarsat1Image() {
+    public Radarsat1Image(File f) {
+    	super(f);
     }
     
   
@@ -96,11 +97,11 @@ public class Radarsat1Image extends SarImageReader {
      *  @return true if correctly initialised, false if not
      */
     @Override
-    public boolean initialise(File f) {
+    public boolean initialise() {
         try {
-        	super.imgName=f.getParentFile().getName();
-        	this.displayName=f.getName();
-        	setFile(f);
+        	super.imgName=super.manifestFile.getParentFile().getName();
+        	this.displayName=super.manifestFile.getName();
+        	setFile(super.manifestFile);
             if (dat == null) {
                 return false;
             }

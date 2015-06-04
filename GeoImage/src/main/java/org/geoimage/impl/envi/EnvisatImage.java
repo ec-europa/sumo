@@ -48,7 +48,8 @@ public class EnvisatImage extends SarImageReader {
     
     
     
-    public EnvisatImage() {
+    public EnvisatImage(File mainfile) {
+    	super(mainfile);
     }
 
     
@@ -103,8 +104,8 @@ public class EnvisatImage extends SarImageReader {
     }
 
     @Override
-    public boolean initialise(File file) {
-    	super.imgName=file.getParentFile().getName();
+    public boolean initialise() {
+    	super.imgName=manifestFile.getParentFile().getName();
     	this.displayName=file.getName();
     	this.file=file;
         fss = null;

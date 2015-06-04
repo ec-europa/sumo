@@ -83,8 +83,8 @@ public abstract class GDALSentinel1 extends SarImageReader {
     
     private List<Swath> swaths=null;
     
-    public GDALSentinel1(String swath) {
-    	//this.safeReader=safeReader; 
+    public GDALSentinel1(File f,String swath) {
+    	super(f);
     	this.swath=swath;
     }
 
@@ -141,14 +141,11 @@ public abstract class GDALSentinel1 extends SarImageReader {
         return files;
     }
 
-    public boolean initialise(String manifestXML) {
-    	return initialise(new File(manifestXML));
-    }
     
     @Override
-    public boolean initialise(File manifestXML) {
+    public boolean initialise() {
         try {
-        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(manifestXML);
+        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(super.manifestFile);
 
         	files[0]=safeReader.getSafefile().getAbsolutePath();
         	tiffs=safeReader.getTiffsBySwath(this.swath);
@@ -165,7 +162,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
             String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();//new File(safeReader.getHrefsTiff()[0]).getName();
             nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
 			//load the correct annotation file for the current images (per swath) 
-			mainFolder=manifestXML.getParentFile();
+			mainFolder=manifestFile.getParentFile();
 			String annotationFilePath=new StringBuilder(mainFolder.getAbsolutePath()).append("/annotation/").append(nameFirstFile).toString();
 			
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
@@ -188,7 +185,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
             }
             
         	//read and set the metadata from the manifest and the annotation
-			setXMLMetaData(manifestXML,safeReader,annotationReader);
+			setXMLMetaData(manifestFile,safeReader,annotationReader);
             
             gcps = getGcps();
             if (gcps == null) {
