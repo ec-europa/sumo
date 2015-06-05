@@ -418,9 +418,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double []vDistSubsample = new double[statepVecInterp.length/iOptFactor];
 		    
 		    for(int i=0;i<statepVecInterp.length/iOptFactor;i++){
-		    	diffSubsample[i][0]=FastMath.pow(statepVecInterp[i*10][0]-pXYZ[0],2);
-		    	diffSubsample[i][1]=FastMath.pow(statepVecInterp[i*10][1]-pXYZ[1],2);
-		    	diffSubsample[i][2]=FastMath.pow(statepVecInterp[i*10][2]-pXYZ[2],2);
+		    	int pos=i*10;
+		    	diffSubsample[i][0]=(statepVecInterp[pos][0]-pXYZ[0])*(statepVecInterp[pos][0]-pXYZ[0]);
+		    	diffSubsample[i][1]=(statepVecInterp[pos][1]-pXYZ[1])*(statepVecInterp[pos][1]-pXYZ[1]);
+		    	diffSubsample[i][2]=(statepVecInterp[pos][2]-pXYZ[2])*(statepVecInterp[pos][2]-pXYZ[2]);
 		    	vDistSubsample[i]=diffSubsample[i][0]+diffSubsample[i][1]+diffSubsample[i][2];
 		    }
 		    int idxMinSubsample=0;
@@ -457,9 +458,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    int start=((Double)iDistWInit).intValue();
 		    double[] vDistOptimization=new double[((Double)iDistWEnd).intValue()-start];
 		    for(int i=start;i<iDistWEnd;i++){
-		    	double v1=FastMath.pow(statepVecInterp[i][0]-pXYZ[0],2);
-		    	double v2=FastMath.pow(statepVecInterp[i][1]-pXYZ[1],2);
-		    	double v3=FastMath.pow(statepVecInterp[i][2]-pXYZ[2],2);
+		    	double v1=(statepVecInterp[i][0]-pXYZ[0])*(statepVecInterp[i][0]-pXYZ[0]);
+		    	double v2=(statepVecInterp[i][1]-pXYZ[1])*(statepVecInterp[i][1]-pXYZ[1]);
+		    	double v3=(statepVecInterp[i][2]-pXYZ[2])*(statepVecInterp[i][2]-pXYZ[2]);
 		    	vDistOptimization[i-start]=v1+v2+v3;
 		    }
 		    //matlab code w = ones(1,nWindowLength) / nWindowLength;
