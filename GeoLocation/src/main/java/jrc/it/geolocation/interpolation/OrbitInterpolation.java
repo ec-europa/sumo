@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
 
@@ -32,7 +33,7 @@ public class OrbitInterpolation {
 	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
 			double zeroDopplerTimeLastLineSeconds,
-			double samplingf){
+			double samplingf) throws MathException{
 			
 		
 		double deltaT = 1/samplingf;
@@ -376,10 +377,15 @@ public class OrbitInterpolation {
 		
 		
 		OrbitInterpolation orbitInterpolation=new OrbitInterpolation();
-		orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),
-				meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis(),
-				meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis(),
-				meta.getSamplingf());
+		try {
+			orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),
+					meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis(),
+					meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis(),
+					meta.getSamplingf());
+		} catch (MathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

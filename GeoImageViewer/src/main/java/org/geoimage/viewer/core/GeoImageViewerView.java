@@ -40,6 +40,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.math3.util.FastMath;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.layout.FormAttachment;
@@ -237,23 +238,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             }
         });
 
-        //Launch a GC every XX sec
-        new Thread(new Runnable() {
-
-            public void run() {
-                while (true) {
-                    //System.gc();
-
-                    try {
-                        Thread.sleep(20000);
-                    } catch (InterruptedException ex) {
-                    	logger.error(ex.getMessage(),ex);
-                    }
-                }
-            }
-        }).start();
-
-
 
         /**
          * Real Stuff
@@ -287,7 +271,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             public Void doInBackground() {
                 while (true) {
                     try {
-                        Thread.sleep(25);
+                        Thread.sleep(10);
                         dxx /= 1.2;
                         dyy /= 1.2;
                         if (!geoContext.isDirty()) {
@@ -327,8 +311,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                       if(imgL!=null){
 	                    	   GeoImageReader gir=imgL.getImageReader();
 	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y);
-	                    	   double lon=Math.floor(geo[0]*100000)/100000;
-	                    	   double lat=Math.floor(geo[1]*100000)/100000;
+	                    	   double lon=FastMath.floor(geo[0]*100000)/100000;
+	                    	   double lat=FastMath.floor(geo[1]*100000)/100000;
 	                    	   
 	                    	   StringBuilder infopos=new StringBuilder("  Lon:")
 	                    	   		.append(lon).append("  Lat:")

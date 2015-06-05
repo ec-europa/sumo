@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -25,7 +26,7 @@ import com.vividsolutions.jts.io.WKTReader;
 public class GeometryExtractor {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometryExtractor.class);
 
-    public static Geometry getFrame(GeoImageReader gir){
+    public static Geometry getFrame(GeoImageReader gir) throws GeoTransformException{
         try {
             GeoTransform gt = gir.getGeoTransform();
             double[] x0;

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
@@ -115,8 +116,12 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                 if (positions.getProjection() == null) {
                     addLayerInThread("complexvds", positions, (IImageLayer) l);
                 } else {
-                    positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                    addLayerInThread("complexvds", positions, (IImageLayer) l);
+                	try{
+                    	positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                			addLayerInThread("complexvds", positions, (IImageLayer) l);
+                	}catch(Exception e){
+                		logger.error(e.getMessage(),e);
+                	}		
                 }
             }
         } else {
@@ -138,7 +143,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                             addLayerInThread("complexvds", positions, (IImageLayer) l);
                         }
                     }
-                } catch (IOException ex) {
+                } catch (IOException |GeoTransformException ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
             }
@@ -289,46 +294,48 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
      * @param args
      */
     private void addSimpleCSV(String[] args) {
-        if (args.length == 2) {
-            Map config = new HashMap();
-            config.put(GenericCSVIO.CONFIG_FILE, args[1].split("=")[1]);
-            IImageLayer l=Platform.getCurrentImageLayer();
-            if(l!=null){
-                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
-                    GeometricLayer positions = csv.read(l.getImageReader());
-                    if (positions.getProjection() == null) {
-                        addLayerInThread("complexvds", positions, (IImageLayer) l);
-                    } else {
-                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-                        addLayerInThread("complexvds", positions, l);
-                    }
-            }
-        } else {
-            int returnVal = fd.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    lastDirectory = fd.getSelectedFile().getParent();
-                    Map config = new HashMap();
-                    config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
-                    IImageLayer l=Platform.getCurrentImageLayer();
-                    if(l!=null){
-                            AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
-                            GeometricLayer positions = csv.read(l.getImageReader());
-                            if (positions.getProjection() == null) {
-                                addLayerInThread("complexvds", positions,  l);
-                            } else {
-                                positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-                                addLayerInThread("complexvds", positions,  l);
-                            }
-                    }
-                } catch (IOException ex) {
-                    logger.error(ex.getMessage(), ex);
-                    return;
-                }
-            } else {
-                return;
-            }
-        }
+    	try {
+	        if (args.length == 2) {
+	            Map config = new HashMap();
+	            config.put(GenericCSVIO.CONFIG_FILE, args[1].split("=")[1]);
+	            IImageLayer l=Platform.getCurrentImageLayer();
+	            if(l!=null){
+	                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
+	                    GeometricLayer positions = csv.read(l.getImageReader());
+	                    if (positions.getProjection() == null) {
+	                        addLayerInThread("complexvds", positions, (IImageLayer) l);
+	                    } else {
+	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
+	                        addLayerInThread("complexvds", positions, l);
+	                    }
+	            }
+	        } else {
+	            int returnVal = fd.showOpenDialog(null);
+	            if (returnVal == JFileChooser.APPROVE_OPTION) {
+	                
+	                    lastDirectory = fd.getSelectedFile().getParent();
+	                    Map config = new HashMap();
+	                    config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
+	                    IImageLayer l=Platform.getCurrentImageLayer();
+	                    if(l!=null){
+	                            AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
+	                            GeometricLayer positions = csv.read(l.getImageReader());
+	                            if (positions.getProjection() == null) {
+	                                addLayerInThread("complexvds", positions,  l);
+	                            } else {
+	                                positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
+	                                addLayerInThread("complexvds", positions,  l);
+	                            }
+	                    }
+	                
+	            } else {
+	                return;
+	            }
+	        }
+    	} catch (IOException |GeoTransformException ex) {
+            logger.error(ex.getMessage(), ex);
+            return;
+        }  
     }
 
     /**
@@ -336,46 +343,51 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
      * @param args
      */
     private void addSumo(String[] args) {
-        if (args.length == 2) {
-            Map config = new HashMap();
-            config.put(SumoXmlIOOld.CONFIG_FILE, args[2].split("=")[3]);
-            IImageLayer l=Platform.getCurrentImageLayer();
-            if(l!=null){
-                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-                    GeometricLayer positions = csv.read(l.getImageReader());
-                    if (positions.getProjection() == null) {
-                        addLayerInThread("noncomplexlayer", positions, l);
-                    } else {
-                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-                        addLayerInThread("noncomplexlayer", positions, l);
-                    }
-            }
-        } else {
-            int returnVal = fd.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    lastDirectory = fd.getSelectedFile().getParent();
-                    Map config = new HashMap();
-                    config.put(SumoXmlIOOld.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
-                    IImageLayer l=Platform.getCurrentImageLayer();
-                    if(l!=null){
+    	try{
+	        if (args.length == 2) {
+	            Map config = new HashMap();
+	            config.put(SumoXmlIOOld.CONFIG_FILE, args[2].split("=")[3]);
+	            IImageLayer l=Platform.getCurrentImageLayer();
+	            if(l!=null){
 	                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
 	                    GeometricLayer positions = csv.read(l.getImageReader());
 	                    if (positions.getProjection() == null) {
-	                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                        addLayerInThread("noncomplexlayer", positions, l);
 	                    } else {
-	                        positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-	                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
+	                        addLayerInThread("noncomplexlayer", positions, l);
 	                    }
-                    }    
-                } catch (IOException ex) {
-                	logger.error(ex.getMessage(), ex);
-                    return;
-                }
-            } else {
-                return;
-            }
-        }
+	            }
+	        } else {
+	            int returnVal = fd.showOpenDialog(null);
+	            if (returnVal == JFileChooser.APPROVE_OPTION) {
+	                try {
+	                    lastDirectory = fd.getSelectedFile().getParent();
+	                    Map config = new HashMap();
+	                    config.put(SumoXmlIOOld.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
+	                    IImageLayer l=Platform.getCurrentImageLayer();
+	                    if(l!=null){
+		                    AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
+		                    GeometricLayer positions = csv.read(l.getImageReader());
+		                    if (positions.getProjection() == null) {
+		                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+		                    } else {
+		                        positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+		                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+		                    }
+	                    }    
+	                } catch (IOException ex) {
+	                	logger.error(ex.getMessage(), ex);
+	                    return;
+	                }
+	            } else {
+	                return;
+	            }
+	        }
+    	} catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return;
+        }   
     }
 
     /**
@@ -383,32 +395,35 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
      * @param args
      */
     private void addGml(String[] args) {
-
-        int returnVal = fd.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                lastDirectory = fd.getSelectedFile().getParent();
-                Map config = new HashMap();
-                config.put(SumoXmlIOOld.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
-                IImageLayer l=Platform.getCurrentImageLayer();
-                if(l!=null){
-                        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GML, config);
-                        GeometricLayer positions = csv.read(l.getImageReader());
-                        if (positions.getProjection() == null) {
-                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
-                        } else {
-                            positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
-                        }
-                }
-            } catch (IOException ex) {
-            	logger.error(ex.getMessage(), ex);
-                return;
-            }
-        } else {
-            return;
-        }
-
+    	try{
+	        int returnVal = fd.showOpenDialog(null);
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            try {
+	                lastDirectory = fd.getSelectedFile().getParent();
+	                Map config = new HashMap();
+	                config.put(SumoXmlIOOld.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
+	                IImageLayer l=Platform.getCurrentImageLayer();
+	                if(l!=null){
+	                        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GML, config);
+	                        GeometricLayer positions = csv.read(l.getImageReader());
+	                        if (positions.getProjection() == null) {
+	                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                        } else {
+	                            positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+	                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                        }
+	                }
+	            } catch (IOException ex) {
+	            	logger.error(ex.getMessage(), ex);
+	                return;
+	            }
+	        } else {
+	            return;
+	        }
+	    } catch (Exception ex) {
+	        logger.error(ex.getMessage(), ex);
+	        return;
+	    }   
     }
 
     

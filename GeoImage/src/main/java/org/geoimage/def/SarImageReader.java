@@ -12,12 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
+import org.geoimage.analysis.DetectedPixels;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
 import org.geotools.referencing.GeodeticCalculator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * this is a class that implememts default method to access raster data.
@@ -71,9 +75,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     @Override
     public abstract int getHeight();
 
-  
+    private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
 
-    public List<Gcp> getGcps() {
+    public List<Gcp> getGcps()throws GeoTransformException {
         return gcps;
     }
 
@@ -196,17 +200,20 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return outData;
     }
 
-    public double getImageAzimuth() {
+    public double getImageAzimuth(){
         double az = 0;
-
-        //compute the azimuth considering the two left corners of the image
-        //azimuth angle in degrees between 0 and +180
-        double[] endingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, 0);//, "EPSG:4326");
-        double[] startingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, getHeight() - 1);//, "EPSG:4326");
-        GeodeticCalculator gc = new GeodeticCalculator();
-        gc.setStartingGeographicPoint(startingPoint[0], startingPoint[1]);
-        gc.setDestinationGeographicPoint(endingPoint[0], endingPoint[1]);
-        az = gc.getAzimuth();
+        try{
+	        //compute the azimuth considering the two left corners of the image
+	        //azimuth angle in degrees between 0 and +180
+	        double[] endingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, 0);//, "EPSG:4326");
+	        double[] startingPoint = getGeoTransform().getGeoFromPixel(getWidth() / 2, getHeight() - 1);//, "EPSG:4326");
+	        GeodeticCalculator gc = new GeodeticCalculator();
+	        gc.setStartingGeographicPoint(startingPoint[0], startingPoint[1]);
+	        gc.setDestinationGeographicPoint(endingPoint[0], endingPoint[1]);
+	        az = gc.getAzimuth();
+        }catch(GeoTransformException ge){
+        	logger.warn(ge.getLocalizedMessage());
+        }    
         return az;
     }
 
@@ -258,7 +265,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     
 
     public int[] getAmbiguityCorrection(int xPos,int yPos) {
-    	if(satelliteSpeed!=0){
+    	if(satelliteSpeed==0){
 	    	satelliteSpeed = calcSatelliteSpeed();
 	        radarWavelength = getRadarWaveLenght();
 	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
@@ -424,7 +431,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return (char) file.readByte();
     }
 
-    public List<double[]> getFrameLatLon(int xSize,int ySize) {
+    public List<double[]> getFrameLatLon(int xSize,int ySize)throws GeoTransformException{
         if (geotransform != null) {
             ArrayList<double[]> latlonframe = new ArrayList<double[]>();
 

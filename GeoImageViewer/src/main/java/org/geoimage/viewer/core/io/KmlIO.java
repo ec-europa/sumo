@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.slf4j.LoggerFactory;
@@ -368,7 +369,7 @@ public class KmlIO extends AbstractVectorIO {
             f.delete();
             out.close();
 
-        } catch (IOException ex) {
+        } catch (IOException |GeoTransformException ex) {
         	logger.error(ex.getLocalizedMessage(),ex);
         }
     }

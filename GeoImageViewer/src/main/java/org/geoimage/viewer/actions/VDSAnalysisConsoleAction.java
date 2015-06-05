@@ -19,6 +19,7 @@ import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.impl.s1.Sentinel1;
@@ -208,8 +209,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
  * @param pixels
  * @param runid
  * @return
+     * @throws GeoTransformException 
  */
-    public static GeometricLayer createGeometricLayer(GeoImageReader gir, DetectedPixels pixels, long runid) {
+    public static GeometricLayer createGeometricLayer(GeoImageReader gir, DetectedPixels pixels, long runid) throws GeoTransformException {
         GeometricLayer out = new GeometricLayer("point");
         out.setName("VDS Analysis");
         GeometryFactory gf = new GeometryFactory();
