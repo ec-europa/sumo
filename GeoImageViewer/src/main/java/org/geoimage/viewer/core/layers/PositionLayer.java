@@ -19,6 +19,7 @@ import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.java2d.util.Positioning;
 import org.geoimage.viewer.widget.PositionDialog;
 import org.geotools.referencing.GeodeticCalculator;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,6 +34,8 @@ public class PositionLayer extends AbstractLayer implements  IMouseMove, IClicka
     private Point initPosition = null;
     private Point endPosition = null;
 
+    private static org.slf4j.Logger logger=LoggerFactory.getLogger(PositionLayer.class);
+    
     public PositionLayer(IImageLayer layer) {
         this.pd = new PositionDialog(Frame.getFrames()[0], false, this);
         this.pd.setVisible(true);
@@ -94,13 +97,17 @@ public class PositionLayer extends AbstractLayer implements  IMouseMove, IClicka
     public void mouseMoved(Point imagePosition, GeoContext context) {
         this.imagePosition = imagePosition;
         if (active) {
-            if (initPosition != null) {
-            	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
-    	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
-    	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
-
-            }
-            pd.setImagePosition(imagePosition);
+        	try{
+	            if (initPosition != null) {
+	            	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+	    	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
+	    	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
+	
+	            }
+	            pd.setImagePosition(imagePosition);
+        	}catch(Exception e){
+        		logger.warn(e.getMessage());
+        	}    
         }
     }
 
@@ -110,11 +117,12 @@ public class PositionLayer extends AbstractLayer implements  IMouseMove, IClicka
                 initPosition = imagePosition;
             } else if (endPosition == null) {
                 endPosition = imagePosition;
-
-                GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
-    	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
-    	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
-
+                try{
+                	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+                	pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
+                }catch(Exception e){
+            		logger.warn(e.getMessage());
+            	}	
             } else {
                 initPosition = null;
                 endPosition = null;

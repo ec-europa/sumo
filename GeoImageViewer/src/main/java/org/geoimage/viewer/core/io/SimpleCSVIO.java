@@ -4,10 +4,6 @@
  */
 package org.geoimage.viewer.core.io;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,10 +14,14 @@ import java.util.Vector;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  *
@@ -149,7 +149,7 @@ public class SimpleCSVIO extends AbstractVectorIO {
             }
             fis.flush();
             fis.close();
-        } catch (IOException ex) {
+        } catch (IOException |GeoTransformException ex) {
         	logger.error(ex.getMessage(), ex);
         }
 

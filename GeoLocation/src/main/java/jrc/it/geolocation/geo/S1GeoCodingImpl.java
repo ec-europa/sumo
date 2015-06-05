@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import jrc.it.geolocation.common.GeoUtils;
 import jrc.it.geolocation.common.MathUtil;
+import jrc.it.geolocation.exception.GeoLocationException;
+import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
@@ -19,13 +21,15 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	private S1Metadata meta=null;
 	private OrbitInterpolation orbitInterpolation=null;
+	private IMetadata.CoordinateConversion[] coordConv=null;
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
 	
 	/**
 	 * 
 	 * @param metaFile
+	 * @throws MathException 
 	 */
-	public S1GeoCodingImpl(String metaFile){
+	public S1GeoCodingImpl(String metaFile) throws MathException{
 		meta =new S1Metadata();
 		meta.initMetaData(metaFile);
 		
@@ -34,13 +38,14 @@ public class S1GeoCodingImpl implements GeoCoding {
 		
 		orbitInterpolation=new OrbitInterpolation();
 		orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),zTimeFirstInSeconds,zTimeLastInSeconds,meta.getSamplingf());
+		coordConv=meta.getCoordinateConversion();
 	}
 	
 	/* (non-Javadoc)
 	 * @see geo.GeoCoding#reverse(double, double)
 	 */
 	@Override
-	public double[] reverse(double lon,double lat){
+	public double[] reverse(double lon,double lat)throws GeoLocationException{
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -80,7 +85,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		// Interpolate the GR to SR coefficients at the zero Doppler time.  This is only needed in non-SLC with multiple GR to SR polynomials
 
 		if (meta.getCoordinateConversion()!=null&&meta.getCoordinateConversion().length>0){
-			S1Metadata.CoordinateConversion[] coordConv=meta.getCoordinateConversion();
+			
 			
 			//TODO check if the time ref is correct and if the 2 values are calculated in the correct way
 																			//getSecondsDiffFromRefTime is timeStampInitSecondsRef in Matlab
@@ -196,196 +201,199 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	
 	@Override
-	public double[] forward(double p, double l){
-		double[] results=new double[2];
-		
-		double lon=0;
-		double lat=0;
-		//Convert the line number into zero Doppler time
-		/*if strcmp(meta.ImTyp,'TX') && ~strncmp(meta.productType,'SSC',3) && strcmp(meta.pass,'ASCENDING') //This is to make it compatible with SUMO
-		    l = meta.nLines - l;
-		end*/ 
-
-		double t0=0;
-		int idxStartT0=0;
-		//TODO blocco da inserire solo per immagini complesse
-		if(meta.getType().equalsIgnoreCase("S1") && meta.getProductType().equalsIgnoreCase("SLC") && (meta.getMode().equalsIgnoreCase("IW") ||meta.getMode().equalsIgnoreCase("EW"))){
-		    // Need to take the bursts into account 
-			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
-		    
-			//TODO COMPLETE THIS PART FOR THE EW
-		  /*  double az0TimBSeconds = meta.az0TimBSeconds - timeRef;
-		    double azLTimBSeconds = az0TimBSeconds + meta.linesPerBurst*meta.azimuthTimeInterval;
-		    
-		    double idxBurst = ceil(l / meta.linesPerBurst) - 1;
-		    double lBurst = l - idxBurst * meta.linesPerBurst;
-		    
-		    t0 = az0TimBSeconds(idxBurst+1) + lBurst * meta.azimuthTimeInterval;
-		    
-		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
-		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>=t0){
-		    		break;
-		    	}
-		    }     */
-		
-		}else{
-		    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeLastRef()*l) / (meta.getNlines()-1); //In seconds
-		    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
-		    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
-		    		break;
-		    	}
-		    }
-		    if(idxStartT0==orbitInterpolation.getStatepVecInterp().length)
-		    	idxStartT0--;
-		}
-		//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
-		double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
-		double[] vT0 = orbitInterpolation.getStatevVecInterp()[idxStartT0];
-
-
-		double distance=0;  //D
-		// Convert the pixel number into a distance from the near-range edge of the image
-		if(meta.isPixelTimeOrderingAscending()){
-		    distance = p * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
-		}else{
-		    distance = (meta.getNumberOfSamplesPerLine() - 1 - p) * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
-		}
-
-		// Interpolate the GR to SR coefficients at the zero Doppler time.  This is only needed in non-SLC with multiple GR to SR polynomials
-		IMetadata.CoordinateConversion[] coordConv=meta.getCoordinateConversion();
-		if (coordConv!=null){
-		    double zeroDopplerTime = t0;
-		    double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
-		    
-		    double[]groundToSlantRangePolyTimesSeconds=new double[coordConv.length];
-			int index=0;
-			for(S1Metadata.CoordinateConversion cc:coordConv){
-				groundToSlantRangePolyTimesSeconds[index] = cc.groundToSlantRangePolyTimesSeconds - timeRef;
-				index++;
-			}
+	public double[] forward(double p, double l) throws GeoLocationException{
+		try{
+			double[] results=new double[2];
 			
-			int idx=0;
-		    if(zeroDopplerTime < groundToSlantRangePolyTimesSeconds[0]){
-		        idx = 1;
-			}else if (zeroDopplerTime > groundToSlantRangePolyTimesSeconds[groundToSlantRangePolyTimesSeconds.length-1]){
-		        idx = groundToSlantRangePolyTimesSeconds.length - 2;
+			double lon=0;
+			double lat=0;
+			//Convert the line number into zero Doppler time
+			/*if strcmp(meta.ImTyp,'TX') && ~strncmp(meta.productType,'SSC',3) && strcmp(meta.pass,'ASCENDING') //This is to make it compatible with SUMO
+			    l = meta.nLines - l;
+			end*/ 
+	
+			double t0=0;
+			int idxStartT0=0;
+			//TODO blocco da inserire solo per immagini complesse
+			if(meta.getType().equalsIgnoreCase("S1") && meta.getProductType().equalsIgnoreCase("SLC") && (meta.getMode().equalsIgnoreCase("IW") ||meta.getMode().equalsIgnoreCase("EW"))){
+			    // Need to take the bursts into account 
+				double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
+			    
+				//TODO COMPLETE THIS PART FOR THE EW
+			  /*  double az0TimBSeconds = meta.az0TimBSeconds - timeRef;
+			    double azLTimBSeconds = az0TimBSeconds + meta.linesPerBurst*meta.azimuthTimeInterval;
+			    
+			    double idxBurst = ceil(l / meta.linesPerBurst) - 1;
+			    double lBurst = l - idxBurst * meta.linesPerBurst;
+			    
+			    t0 = az0TimBSeconds(idxBurst+1) + lBurst * meta.azimuthTimeInterval;
+			    
+			    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
+			    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>=t0){
+			    		break;
+			    	}
+			    }     */
+			
 			}else{
-				for(idx=0;idx<groundToSlantRangePolyTimesSeconds.length;idx++){
-					if(groundToSlantRangePolyTimesSeconds[idx] < zeroDopplerTime)
-						break;
-				}
-		    }
-		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
-		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
-
-		    double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].groundToSlantRangeCoefficients);
-		    double[]groundToSlantRangeCoefficientsInterp2=coordConv[idx+1].groundToSlantRangeCoefficients;
-	    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
-	    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
-	    	}
-	    	
-
-		    double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].slantToGroundRangeCoefficients);
-		    double[]slantToGroundRangeCoefficientsInterp2=coordConv[idx+1].slantToGroundRangeCoefficients;
-	    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
-	    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
-	    	}
-	    	
-	    	
-	        
-			// Convert the distance from the near-range edge of the image into zero Doppler slant range
-			/*TODO ADDING THIS PART FOR COMPLEX IMAGE
-				//(strncmp(meta.productType,'SLC',3) || strncmp(meta.productType,'SCS',3) || strncmp(meta.productType,'SSC',3)){
-			    //SRdist = D + meta.slantRangeNearEdge;
-			}else{*/
-			int nCoeffs = groundToSlantRangeCoefficientsInterp.length;
-			int[] vExps =new int[nCoeffs];
-			//create the Array with the coefficients
-			for(int i=0;i<nCoeffs;i++){
-		     	   vExps[i]=i;
-		    }
-		    double tmpD = distance - meta.getGroundRangeOrigin();
-		    double[] pows=MathUtil.powValue2Coeffs(tmpD,vExps);
-		    double sRdist = MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
-		    logger.debug("sRdist:"+sRdist);
-
-		    //norma for pt0 vector
-		    double normPt0=MathUtil.norm(pT0);
-		    
-			// Find the tangent of the angle ? between the zero Doppler plane and the vertical direction, which is the same as the ratio between the radial and tangential components of the sensor velocity
-			double vRadial = MathUtil.vectorProd1XN(vT0, pT0) / normPt0;
-			double vTangential = FastMath.sqrt(FastMath.pow(MathUtil.norm(vT0),2) - FastMath.pow(vRadial,2));
-			double tanPsi = vRadial/vTangential;
-
-
-			// Define a satellite coordinate system centred on the sensor position, where the Z axis points towards the Earth centre, the X axis points along the tangential component of the sensor velocity, and the Y axis completes the right-handed coordinate system
-			double[] zsUnit =MathUtil.divVectByVal(pT0,-normPt0);
-			double[] vTmp =MathUtil.crossProd3x3(zsUnit,vT0);// cross(zs_unit,v_t0);
-			double[] ysUnit = MathUtil.divVectByVal(vTmp, MathUtil.norm(vTmp));
-			double[] xsUnit = MathUtil.crossProd3x3(ysUnit,zsUnit);
-
-			
-			double pH=0;
-			for(int iidx=0; iidx<2;iidx++){ //First iteration with a default pH, second with a more accurate pH
-				// Find the approximate Earth radius at a point directly below the sensor position.
-				double rEarth = normPt0/FastMath.sqrt((pT0[0]*pT0[0] + pT0[1]*pT0[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (pT0[2]*pT0[2])/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis)) + pH;
-	
-				//iteration
-				double rEarthOld = rEarth;
-				double rEarthChange = 100000;
-				
-				double[]q=new double[3];
-				
-				for(;rEarthChange > 0.1;){
-				    // Form a triangle whose sides are the distance from the centre of the earth to the sensor, the slant range and the local earth radius and using the cosine law find the intersection point between the slant range vector and the Earth surface in the satellite coordinate system
-				    double Rz = (normPt0*normPt0 + sRdist*sRdist - rEarth*rEarth) / (2*normPt0);
-				    double Rx = Rz * tanPsi;
-				    double Ry = FastMath.sqrt(sRdist*sRdist - Rz*Rz - Rx*Rx);
-				    
-				    if (!meta.getAntennaPointing().equalsIgnoreCase("Right")){
-				        Ry = -Ry;
-				    }
-	
-				    // Transform the coordinates of the intersection point from satellite to target ECR coordinates
-				    double[][] sRvect = new double[3][];
-				    sRvect[0]=new double[]{Rx};
-				    sRvect[1]=new double[]{Ry};
-				    sRvect[2]=new double[]{Rz-normPt0};
-				    
-				    double[][] qbig = new double[3][];
-				    qbig[0]=xsUnit;
-				    qbig[1]=ysUnit;
-				    qbig[2]=zsUnit;
-				    RealMatrix m=MatrixUtils.createRealMatrix(qbig);
-				    qbig=m.transpose().getData();
-				    
-				    double[][] qmat =MathUtil.multiplyMatrix(qbig,sRvect);
-				    q[0]=qmat[0][0];
-				    q[1]=qmat[1][0];
-				    q[2]=qmat[2][0];
-	
-				    // Find the Earth radius at a point directly below the intersection point (this approximation becomes more and more precise as the intersection point becomes closer to the surface)
-				    rEarth = MathUtil.norm(q) / FastMath.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
-				    
-				    rEarthChange = FastMath.abs(rEarth-rEarthOld);
-				    rEarthOld = rEarth;
-				}
-
-				// Convert the target ECR coordinates (x,y,z) into geographic coordinates (lat,lon,h) based on the WGS84 ellipsoid Earth model
-				double x = q[0]; 
-				double y = q[1]; 
-				double z = q[2];
-				
-				lon = FastMath.atan2(y,x) * 180/FastMath.PI;
-				double lattmp = FastMath.asin(z/FastMath.sqrt(x*x+y*y+z*z));
-				lat=FastMath.atan(FastMath.tan(lattmp) * FastMath.pow((GeoUtils.semiMajorAxis+pH),2)/FastMath.pow((GeoUtils.semiMinorAxis+pH),2)) * 180/FastMath.PI;
-				pH = GeoUtils.getGeoidH(lon,lat);
+			    t0 = (orbitInterpolation.getZeroDopplerTimeFirstRef() * (meta.getNlines()-1-l) + orbitInterpolation.getZeroDopplerTimeLastRef()*l) / (meta.getNlines()-1); //In seconds
+			    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
+			    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
+			    		break;
+			    	}
+			    }
+			    if(idxStartT0==orbitInterpolation.getStatepVecInterp().length)
+			    	idxStartT0--;
 			}
-		}
-		logger.debug("lat:"+lat+ "  lon:"+lon);
-		results[0]=lon;
-		results[1]=lat;
-		return results;
+			//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
+			double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
+			double[] vT0 = orbitInterpolation.getStatevVecInterp()[idxStartT0];
+	
+	
+			double distance=0;  //D
+			// Convert the pixel number into a distance from the near-range edge of the image
+			if(meta.isPixelTimeOrderingAscending()){
+			    distance = p * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
+			}else{
+			    distance = (meta.getNumberOfSamplesPerLine() - 1 - p) * meta.getSamplePixelSpacing() - meta.getGroundRangeOrigin();
+			}
+	
+			// Interpolate the GR to SR coefficients at the zero Doppler time.  This is only needed in non-SLC with multiple GR to SR polynomials
+			if (coordConv!=null){
+			    double zeroDopplerTime = t0;
+			    double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
+			    
+			    double[]groundToSlantRangePolyTimesSeconds=new double[coordConv.length];
+				int index=0;
+				for(S1Metadata.CoordinateConversion cc:coordConv){
+					groundToSlantRangePolyTimesSeconds[index] = cc.groundToSlantRangePolyTimesSeconds - timeRef;
+					index++;
+				}
+				
+				int idx=0;
+			    if(zeroDopplerTime < groundToSlantRangePolyTimesSeconds[0]){
+			        idx = 1;
+				}else if (zeroDopplerTime > groundToSlantRangePolyTimesSeconds[groundToSlantRangePolyTimesSeconds.length-1]){
+			        idx = groundToSlantRangePolyTimesSeconds.length - 2;
+				}else{
+					for(idx=0;idx<groundToSlantRangePolyTimesSeconds.length;idx++){
+						if(groundToSlantRangePolyTimesSeconds[idx] < zeroDopplerTime)
+							break;
+					}
+			    }
+			    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
+			    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
+	
+			    double[]groundToSlantRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].groundToSlantRangeCoefficients);
+			    double[]groundToSlantRangeCoefficientsInterp2=coordConv[idx+1].groundToSlantRangeCoefficients;
+		    	for(int idCoeff=0;idCoeff<groundToSlantRangeCoefficientsInterp.length;idCoeff++){
+		    		groundToSlantRangeCoefficientsInterp[idCoeff]=factor1*groundToSlantRangeCoefficientsInterp[idCoeff]+factor2*groundToSlantRangeCoefficientsInterp2[idCoeff];
+		    	}
+		    	
+	
+			    double[]slantToGroundRangeCoefficientsInterp=ArrayUtils.clone(coordConv[idx].slantToGroundRangeCoefficients);
+			    double[]slantToGroundRangeCoefficientsInterp2=coordConv[idx+1].slantToGroundRangeCoefficients;
+		    	for(int idCoeff=0;idCoeff<slantToGroundRangeCoefficientsInterp.length;idCoeff++){
+		    		slantToGroundRangeCoefficientsInterp[idCoeff]=factor1*slantToGroundRangeCoefficientsInterp[idCoeff]+factor2*slantToGroundRangeCoefficientsInterp2[idCoeff];
+		    	}
+		    	
+		    	
+		        
+				// Convert the distance from the near-range edge of the image into zero Doppler slant range
+				/*TODO ADDING THIS PART FOR COMPLEX IMAGE
+					//(strncmp(meta.productType,'SLC',3) || strncmp(meta.productType,'SCS',3) || strncmp(meta.productType,'SSC',3)){
+				    //SRdist = D + meta.slantRangeNearEdge;
+				}else{*/
+				int nCoeffs = groundToSlantRangeCoefficientsInterp.length;
+				int[] vExps =new int[nCoeffs];
+				//create the Array with the coefficients
+				for(int i=0;i<nCoeffs;i++){
+			     	   vExps[i]=i;
+			    }
+			    double tmpD = distance - meta.getGroundRangeOrigin();
+			    double[] pows=MathUtil.powValue2Coeffs(tmpD,vExps);
+			    double sRdist = MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
+			    logger.debug("sRdist:"+sRdist);
+	
+			    //norma for pt0 vector
+			    double normPt0=MathUtil.norm(pT0);
+			    
+				// Find the tangent of the angle ? between the zero Doppler plane and the vertical direction, which is the same as the ratio between the radial and tangential components of the sensor velocity
+				double vRadial = MathUtil.vectorProd1XN(vT0, pT0) / normPt0;
+				double vTangential = FastMath.sqrt(FastMath.pow(MathUtil.norm(vT0),2) - FastMath.pow(vRadial,2));
+				double tanPsi = vRadial/vTangential;
+	
+	
+				// Define a satellite coordinate system centred on the sensor position, where the Z axis points towards the Earth centre, the X axis points along the tangential component of the sensor velocity, and the Y axis completes the right-handed coordinate system
+				double[] zsUnit =MathUtil.divVectByVal(pT0,-normPt0);
+				double[] vTmp =MathUtil.crossProd3x3(zsUnit,vT0);// cross(zs_unit,v_t0);
+				double[] ysUnit = MathUtil.divVectByVal(vTmp, MathUtil.norm(vTmp));
+				double[] xsUnit = MathUtil.crossProd3x3(ysUnit,zsUnit);
+	
+				
+				double pH=0;
+				for(int iidx=0; iidx<2;iidx++){ //First iteration with a default pH, second with a more accurate pH
+					// Find the approximate Earth radius at a point directly below the sensor position.
+					double rEarth = normPt0/FastMath.sqrt((pT0[0]*pT0[0] + pT0[1]*pT0[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (pT0[2]*pT0[2])/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis)) + pH;
+		
+					//iteration
+					double rEarthOld = rEarth;
+					double rEarthChange = 100000;
+					
+					double[]q=new double[3];
+					
+					for(;rEarthChange > 0.1;){
+					    // Form a triangle whose sides are the distance from the centre of the earth to the sensor, the slant range and the local earth radius and using the cosine law find the intersection point between the slant range vector and the Earth surface in the satellite coordinate system
+					    double Rz = (normPt0*normPt0 + sRdist*sRdist - rEarth*rEarth) / (2*normPt0);
+					    double Rx = Rz * tanPsi;
+					    double Ry = FastMath.sqrt(sRdist*sRdist - Rz*Rz - Rx*Rx);
+					    
+					    if (!meta.getAntennaPointing().equalsIgnoreCase("Right")){
+					        Ry = -Ry;
+					    }
+		
+					    // Transform the coordinates of the intersection point from satellite to target ECR coordinates
+					    double[][] sRvect = new double[3][];
+					    sRvect[0]=new double[]{Rx};
+					    sRvect[1]=new double[]{Ry};
+					    sRvect[2]=new double[]{Rz-normPt0};
+					    
+					    double[][] qbig = new double[3][];
+					    qbig[0]=xsUnit;
+					    qbig[1]=ysUnit;
+					    qbig[2]=zsUnit;
+					    RealMatrix m=MatrixUtils.createRealMatrix(qbig);
+					    qbig=m.transpose().getData();
+					    
+					    double[][] qmat =MathUtil.multiplyMatrix(qbig,sRvect);
+					    q[0]=qmat[0][0];
+					    q[1]=qmat[1][0];
+					    q[2]=qmat[2][0];
+		
+					    // Find the Earth radius at a point directly below the intersection point (this approximation becomes more and more precise as the intersection point becomes closer to the surface)
+					    rEarth = MathUtil.norm(q) / FastMath.sqrt((q[0]*q[0]+q[1]*q[1])/(GeoUtils.semiMajorAxis*GeoUtils.semiMajorAxis) + (q[2]*q[2]/(GeoUtils.semiMinorAxis*GeoUtils.semiMinorAxis))) + pH;
+					    
+					    rEarthChange = FastMath.abs(rEarth-rEarthOld);
+					    rEarthOld = rEarth;
+					}
+	
+					// Convert the target ECR coordinates (x,y,z) into geographic coordinates (lat,lon,h) based on the WGS84 ellipsoid Earth model
+					double x = q[0]; 
+					double y = q[1]; 
+					double z = q[2];
+					
+					lon = FastMath.atan2(y,x) * 180/FastMath.PI;
+					double lattmp = FastMath.asin(z/FastMath.sqrt(x*x+y*y+z*z));
+					lat=FastMath.atan(FastMath.tan(lattmp) * FastMath.pow((GeoUtils.semiMajorAxis+pH),2)/FastMath.pow((GeoUtils.semiMinorAxis+pH),2)) * 180/FastMath.PI;
+					pH = GeoUtils.getGeoidH(lon,lat);
+				}
+			}
+			logger.debug("lat:"+lat+ "  lon:"+lon);
+			results[0]=lon;
+			results[1]=lat;
+			return results;
+		}catch(MathException me){
+			throw new GeoLocationException(GeoLocationException.MSG_CONV_FROM_PIXEL_TO_GEO + "  " +me.getMessage());
+		}	
 		
 	}
 	
@@ -503,19 +511,29 @@ public class S1GeoCodingImpl implements GeoCoding {
 			So a big discrepancy in the x direction (113 pixes = 2825 meters) .  Matlab gives the correct results.*/
 		
 		
-		GeoCoding gc=new S1GeoCodingImpl(metaF);
-		double lat = 41.31735;//43.13935;//42.81202;
-		double lon = 2.17263;//3.35876;//10.32972;
+		GeoCoding gc;
+		try {
+			gc = new S1GeoCodingImpl(metaF);
+			double lat = 41.31735;//43.13935;//42.81202;
+			double lon = 2.17263;//3.35876;//10.32972;
+			double r[];
+			try {
+				r = gc.reverse(lon, lat);
+				logger.debug("Line:"+r[1]+"--- Col:"+r[0]);
+			} catch (GeoLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			//double r[]=gc.forward(-100.0,11104.0);
+			//logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
+		} catch (MathException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		
-		
-		
-		double r[]=gc.reverse(lon, lat);
-		logger.debug("Line:"+r[1]+"--- Col:"+r[0]);
-		
-		
-		//double r[]=gc.forward(-100.0,11104.0);
-		//logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 	}
 	
 	

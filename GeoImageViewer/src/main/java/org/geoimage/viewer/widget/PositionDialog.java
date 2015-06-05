@@ -16,6 +16,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingUtilities;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.layers.FastImageLayer;
@@ -76,9 +77,15 @@ public class PositionDialog extends javax.swing.JDialog{
     public void setImagePosition(Point imagePosition) {
         this.jLabel2.setText(""+imagePosition.x);
         this.jLabel3.setText(""+imagePosition.y);
-        double[] geo= gt.getGeoFromPixel(imagePosition.x,imagePosition.y);
-        this.jLabel5.setText(""+geo[0]);
-        this.jLabel6.setText(""+geo[1]);
+        double[] geo;
+		try {
+			geo = gt.getGeoFromPixel(imagePosition.x,imagePosition.y);
+	        this.jLabel5.setText(""+geo[0]);
+	        this.jLabel6.setText(""+geo[1]);
+		} catch (GeoTransformException e) {
+			this.jLabel5.setText("-1");
+	        this.jLabel6.setText("-1");
+		}
         FastImageLayer parent=(FastImageLayer)layer.getParent();
         this.jLabel8.setText(""+parent.getImageReader().read(imagePosition.x, imagePosition.y,parent.getActiveBand()));
     }

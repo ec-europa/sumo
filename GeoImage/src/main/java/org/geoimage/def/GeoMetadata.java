@@ -5,7 +5,8 @@
 
 package org.geoimage.def;
 
-import java.util.HashMap;
+import org.geoimage.exception.GeoTransformException;
+
 
 /**
  * Interface dealing with geographic metadata (ie data to geolocatlise the raster)
@@ -82,7 +83,7 @@ public interface GeoMetadata {
     
     
     //return the rotation of azimuth angle 0-180degree 
-    public double getImageAzimuth();
+    public double getImageAzimuth() throws GeoTransformException;
     
     public double getIncidence(int position);
 

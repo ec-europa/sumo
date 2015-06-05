@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
@@ -78,9 +79,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
             setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
-        } catch (TransformException ex) {
-        	logger.error(ex.getMessage(),ex);
-        } catch (FactoryException ex) {
+        } catch (TransformException | FactoryException | GeoTransformException ex) {
         	logger.error(ex.getMessage(),ex);
         }
         return true;

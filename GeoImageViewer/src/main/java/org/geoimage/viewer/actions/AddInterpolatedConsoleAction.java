@@ -20,6 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
@@ -191,8 +192,12 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                     if (positions.getProjection() == null) {
                         addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
                     } else {
-                        positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                        addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                    	try{
+                        	positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                    			addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                    	}catch(Exception e){
+                    		logger.error(e.getMessage(),e);
+                    	}		
                     }
             }
         } else {
@@ -213,7 +218,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                                 addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
                             }
                     }
-                } catch (IOException ex) {
+                } catch (IOException | GeoTransformException ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
             } 

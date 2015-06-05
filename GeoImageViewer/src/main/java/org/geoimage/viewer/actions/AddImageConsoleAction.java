@@ -280,13 +280,18 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             }
         }
         if(csv!=null){
-	        GeometricLayer positions = csv.read(null);
-	        if (positions.getProjection() == null) {
-	            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
-	        } else {
-	            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
-	            Platform.getLayerManager().addLayer(tm);
-	        }
+        	try{
+		        GeometricLayer positions = csv.read(null);
+		        if (positions.getProjection() == null) {
+		            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
+		        } else {
+		            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
+		            Platform.getLayerManager().addLayer(tm);
+		        }
+        	}catch(Exception e){
+        		logger.error(e.getMessage());
+        	}
+        	
         }    
         try {
             Platform.refresh();

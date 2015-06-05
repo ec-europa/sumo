@@ -14,6 +14,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.OpticalMetadata;
 import org.geoimage.def.SUMOMetadata;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.IProgress;
 import org.geotools.referencing.GeodeticCalculator;
@@ -186,7 +187,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         return outData;
     }
 
-    public double getImageAzimuth() {
+    public double getImageAzimuth() throws GeoTransformException {
         double az = 0;
 
         //compute the azimuth considering the two left corners of the image
@@ -339,7 +340,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         return (char) file.readByte();
     }
 
-    public List<double[]> getFrameLatLon() {
+    public List<double[]> getFrameLatLon() throws GeoTransformException {
         if (geotransform != null) {
             ArrayList<double[]> latlonframe = new ArrayList<double[]>();
 

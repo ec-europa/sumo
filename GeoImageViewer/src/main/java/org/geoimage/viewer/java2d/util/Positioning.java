@@ -3,15 +3,14 @@ package org.geoimage.viewer.java2d.util;
 import java.awt.Point;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geotools.referencing.GeodeticCalculator;
 
 public class Positioning {
 
-		public static GeodeticCalculator computeDistance(GeoTransform gt,Point initPosition,Point endPosition,Point imagePosition) {
-	        //String epsg = "EPSG:3395";
+		public static GeodeticCalculator computeDistance(GeoTransform gt,Point initPosition,Point endPosition,Point imagePosition) throws GeoTransformException {
 	        double[] init = gt.getGeoFromPixel(initPosition.x, initPosition.y);
 	        double[] end = null;
-	        double dist = 0;
 	        GeodeticCalculator gc = new GeodeticCalculator();
 	        //Point2D initPoint = new Point2D.Double(init[1], init[0]);
 	        gc.setStartingGeographicPoint(init[0], init[1]);

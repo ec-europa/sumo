@@ -4,13 +4,6 @@
  */
 package org.geoimage.impl;
 
-import com.sun.media.imageio.plugins.tiff.GeoTIFFTagSet;
-import com.sun.media.jai.codec.TIFFEncodeParam;
-import com.sun.media.jai.codec.TIFFField;
-import com.sun.media.jai.codecimpl.TIFFImageEncoder;
-
-import org.jaitools.tiledimage.DiskMemImage;
-
 import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.color.ColorSpace;
@@ -19,15 +12,21 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.IProgress;
+import org.jaitools.tiledimage.DiskMemImage;
+
+import com.sun.media.imageio.plugins.tiff.GeoTIFFTagSet;
+import com.sun.media.jai.codec.TIFFEncodeParam;
+import com.sun.media.jai.codec.TIFFField;
+import com.sun.media.jai.codecimpl.TIFFImageEncoder;
 
 /**
  *
@@ -35,7 +34,7 @@ import org.geoimage.utils.IProgress;
  */
 public class GeotiffWriter {
 
-    public static void create(final GeoImageReader gir, String filepath,int band) throws FileNotFoundException, IOException {
+    public static void create(final GeoImageReader gir, String filepath,int band) throws FileNotFoundException, IOException, GeoTransformException {
       //  GeoImageReader mygir = gir.clone();
         ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_GRAY), false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT);
         SampleModel sm = cm.createCompatibleSampleModel(Constant.TILE_SIZE, Constant.TILE_SIZE);
@@ -76,7 +75,7 @@ public class GeotiffWriter {
       //  mygir.dispose();
     }
 
-    public static void create(final GeoImageReader gir, int band,String filepath, IProgress progress) throws FileNotFoundException, IOException {
+    public static void create(final GeoImageReader gir, int band,String filepath, IProgress progress) throws FileNotFoundException, IOException, GeoTransformException {
         progress.setIndeterminate(true);
         progress.setMessage("Starting export...");
        // GeoImageReader mygir = gir.clone();

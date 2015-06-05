@@ -13,6 +13,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -46,7 +47,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
     private GeoImageReader gir;
     private float scale;
 
-    public ThumbnailsLayer(ILayer parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) {
+    public ThumbnailsLayer(ILayer parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) throws GeoTransformException {
         gir = new ThumbnailsImageReader(tmanager);
         if (projection == null) {
             this.glayer = glayer;

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
@@ -62,7 +63,8 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         super();
     }
 
-    private static FileDataStore createDataStore(String filename, SimpleFeatureType ft, String projection) throws Exception {
+    @SuppressWarnings("unused")
+	private static FileDataStore createDataStore(String filename, SimpleFeatureType ft, String projection) throws Exception {
        	File file = new File(filename);
         FileDataStore dataStore = FileDataStoreFinder.getDataStore(file);
      // Tell the DataStore what type of Coordinate Reference System (CRS) to use
@@ -224,17 +226,16 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             x3 = gt.getGeoFromPixel(margin + gir.getWidth(), -margin);
             x31 = gt.getGeoFromPixel(margin+gir.getWidth()/2, -margin);
 
-            double minx = Math.min(x0[0], Math.min(x01[0], Math.min(x02[0], Math.min(x03[0], Math.min(x1[0], Math.min(x12[0], Math.min(x2[0], Math.min(x21[0], Math.min(x22[0], Math.min(x23[0], Math.min(x3[0], x31[0])))))))))));
-            double maxx = Math.max(x0[0], Math.max(x01[0], Math.max(x02[0], Math.max(x03[0], Math.max(x1[0], Math.max(x12[0], Math.max(x2[0], Math.max(x21[0], Math.max(x22[0], Math.max(x23[0], Math.max(x3[0], x31[0])))))))))));
-            double miny = Math.min(x0[1], Math.min(x01[1], Math.min(x02[1], Math.min(x03[1], Math.min(x1[1], Math.min(x12[1], Math.min(x2[1], Math.min(x21[1], Math.min(x22[1], Math.min(x23[1], Math.min(x3[1], x31[1])))))))))));
-            double maxy = Math.max(x0[1], Math.max(x01[1], Math.max(x02[1], Math.max(x03[1], Math.max(x1[1], Math.max(x12[1], Math.max(x2[1], Math.max(x21[1], Math.max(x22[1], Math.max(x23[1], Math.max(x3[1], x31[1])))))))))));
+            double minx = FastMath.min(x0[0], FastMath.min(x01[0], FastMath.min(x02[0], FastMath.min(x03[0], FastMath.min(x1[0], FastMath.min(x12[0], FastMath.min(x2[0], FastMath.min(x21[0], FastMath.min(x22[0], FastMath.min(x23[0], FastMath.min(x3[0], x31[0])))))))))));
+            double maxx = FastMath.max(x0[0], FastMath.max(x01[0], FastMath.max(x02[0], FastMath.max(x03[0], FastMath.max(x1[0], FastMath.max(x12[0], FastMath.max(x2[0], FastMath.max(x21[0], FastMath.max(x22[0], FastMath.max(x23[0], FastMath.max(x3[0], x31[0])))))))))));
+            double miny = FastMath.min(x0[1], FastMath.min(x01[1], FastMath.min(x02[1], FastMath.min(x03[1], FastMath.min(x1[1], FastMath.min(x12[1], FastMath.min(x2[1], FastMath.min(x21[1], FastMath.min(x22[1], FastMath.min(x23[1], FastMath.min(x3[1], x31[1])))))))))));
+            double maxy = FastMath.max(x0[1], FastMath.max(x01[1], FastMath.max(x02[1], FastMath.max(x03[1], FastMath.max(x1[1], FastMath.max(x12[1], FastMath.max(x2[1], FastMath.max(x21[1], FastMath.max(x22[1], FastMath.max(x23[1], FastMath.max(x3[1], x31[1])))))))))));
 
             logger.debug("minx:"+minx+"  maxx:"+maxx+"   miny:"+miny+   "maxy:"+ maxy);
             
             String f=new StringBuilder("BBOX(").append(geomName).append(",").append(minx).append(",").append(miny).append(",").append(maxx).append(",").append(maxy+")").toString();
             
             Filter filter=CQL.toFilter(f);
-            System.out.println(filter);
 
             //poligono con punti di riferimento dell'immagine
             Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);

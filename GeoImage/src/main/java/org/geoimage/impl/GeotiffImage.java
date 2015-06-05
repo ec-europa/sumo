@@ -13,8 +13,8 @@ import java.util.Vector;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -60,7 +60,7 @@ public class GeotiffImage extends SarImageReader {
     }
 
     @Override
-    public List<Gcp> getGcps() {
+    public List<Gcp> getGcps() throws GeoTransformException {
         if (gcps != null) {
             return gcps;
         }
@@ -390,7 +390,7 @@ public class GeotiffImage extends SarImageReader {
         return getClass().getCanonicalName();
     }
 
-    private void createGcpsFromCornerPoints() {
+    private void createGcpsFromCornerPoints() throws GeoTransformException {
         double[] x0;
         double[] x1;
         double[] x2;

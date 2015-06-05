@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.impl.s1.Sentinel1;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.exception.GeoTransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +47,9 @@ public class GeometricLayer implements Cloneable{
      * @param geoTransform
      * @param projection if null use the original projection
      * @return
+     * @throws GeoTransformException 
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) {
+    public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
     	GeometricLayer positionsClone=positions.clone();
        // positions.projection=null;
         for(Geometry geom:positionsClone.geoms){
@@ -84,8 +84,9 @@ public class GeometricLayer implements Cloneable{
     
     /**
      * Modify the GeometricLayer so the layer coordinates system matches the world coordinate system (EPSG projection).
+     * @throws GeoTransformException 
      */
-    public static GeometricLayer createWorldProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) {
+    public static GeometricLayer createWorldProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
         //positions=positions.clone();
         positions.projection=projection;
         for(Geometry geom:positions.geoms){
