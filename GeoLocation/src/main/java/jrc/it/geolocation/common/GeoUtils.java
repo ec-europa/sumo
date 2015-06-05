@@ -172,8 +172,10 @@ public class GeoUtils {
 	 * @return calculate the heart radius for a latitude
 	 */
 	public static double earthRadiusFromLatitude(double latitude, double ellipseMin,double ellipseMaj ){
-		double d=FastMath.pow(FastMath.tan(latitude*FastMath.PI/180),2);
-		double reEarth=ellipseMin*FastMath.sqrt((1+d)/(FastMath.pow((ellipseMin/ellipseMaj),2)+d));
+		double tan=FastMath.tan(latitude*FastMath.PI/180);
+		double ellipseRapp=(ellipseMin/ellipseMaj)*(ellipseMin/ellipseMaj);
+		double d=tan*tan;//FastMath.pow(FastMath.tan(latitude*FastMath.PI/180),2);
+		double reEarth=ellipseMin*FastMath.sqrt((1+d)/((ellipseRapp*ellipseRapp)+d));
 		
 		return reEarth;
 		

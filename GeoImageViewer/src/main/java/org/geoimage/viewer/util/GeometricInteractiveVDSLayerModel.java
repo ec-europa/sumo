@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.actions.AddImageConsoleAction;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.PreferencesDB;
 import org.geoimage.viewer.core.api.Attributes;
@@ -24,6 +26,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.AttributesEditor;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -42,6 +45,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     private Color azimuthGeometrycolor = null;
     private int azimuthGeometrylinewidth;
 
+    private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometricInteractiveVDSLayerModel.class);
+    
     public GeometricInteractiveVDSLayerModel(ILayer layer) {
         this.gl = ((SimpleEditVectorLayer) layer).getGeometriclayer();
         this.il = null;
@@ -210,40 +215,47 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             if (vdslayer.tagExists(Constant.PREF_AZIMUTH_GEOMETRYTAG)) {
                 vdslayer.removeGeometriesByTag(Constant.PREF_AZIMUTH_GEOMETRYTAG);
             } else {
-                // get the position of the boat
-                Geometry geom = gl.getGeometries().get(selectionLine);
-                int posX = (int) geom.getCoordinate().x;
-                int posY = (int) geom.getCoordinate().y;
-                // calculate satellite speed
-                String tstart=((SarImageReader)il.getImageReader()).getTimeStampStart();
-                String tstop=((SarImageReader)il.getImageReader()).getTimeStampStop();
-                double seconds = ((Timestamp.valueOf(tstart).getTime() - (Timestamp.valueOf(tstop).getTime()))) / 1000;
-                // calculate satellite speed in azimuth pixels / seconds
-                double azimuthpixelspeed = (double) il.getImageReader().getHeight() / seconds;
-                // calculate the earth angular speed
-                double earthangularSpeed = 2 * Math.PI / 24 / 3600;
-                // calculate earth radius at target point lattitude
-                double radius = 6400 * 1000 * Math.cos(2 * Math.PI * il.getImageReader().getGeoTransform().getGeoFromPixel(posX, posY)[1] / 360.0);
-                // calculate the range azimuth pixel speed due to the rotation of the earth
-                double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getGeoTransform().getPixelSize()[0];
-                // calculate the pixels delta value
-                double azi=((SarImageReader)il.getImageReader()).getImageAzimuth();
-                double pixeldelta = 1 / (Math.cos(azi * 2 * Math.PI / 360.0) / (azimuthpixelspeed / rangepixelspeed - Math.sin(azi * 2 * Math.PI / 360.0)));
-                // get the mode
-                int direction = Math.abs(azi) > 90 ? -1 : 1;
-                // create new geometry
-                GeometryFactory gf = new GeometryFactory();
-                // generate the geometry for the target shape
-                Vector<Geometry> winGeom = new Vector<Geometry>();
-                Coordinate[] coordinatesvertical = new Coordinate[2];
-                coordinatesvertical[0] = new Coordinate(posX + direction * (0 - posY) / pixeldelta, 0);
-                coordinatesvertical[1] = new Coordinate(posX + direction * (il.getImageReader().getHeight() - posY) / pixeldelta, il.getImageReader().getHeight());
-                winGeom.add(gf.createLineString(coordinatesvertical));
-                Coordinate[] coordinateshorizontal = new Coordinate[2];
-                coordinateshorizontal[0] = new Coordinate(0, posY);
-                coordinateshorizontal[1] = new Coordinate(il.getImageReader().getWidth(), posY);
-                winGeom.add(gf.createLineString(coordinateshorizontal));
-                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, SimpleEditVectorLayer.LINESTRING, winGeom, true);
+            	try {
+	                // get the position of the boat
+	                Geometry geom = gl.getGeometries().get(selectionLine);
+	                int posX = (int) geom.getCoordinate().x;
+	                int posY = (int) geom.getCoordinate().y;
+	                // calculate satellite speed
+	                String tstart=((SarImageReader)il.getImageReader()).getTimeStampStart();
+	                String tstop=((SarImageReader)il.getImageReader()).getTimeStampStop();
+	                double seconds = ((Timestamp.valueOf(tstart).getTime() - (Timestamp.valueOf(tstop).getTime()))) / 1000;
+	                // calculate satellite speed in azimuth pixels / seconds
+	                double azimuthpixelspeed = (double) il.getImageReader().getHeight() / seconds;
+	                // calculate the earth angular speed
+	                double earthangularSpeed = 2 * Math.PI / 24 / 3600;
+	                // calculate earth radius at target point lattitude
+	                double radius;
+				
+					radius = 6400 * 1000 * Math.cos(2 * Math.PI * il.getImageReader().getGeoTransform().getGeoFromPixel(posX, posY)[1] / 360.0);
+	                // calculate the range azimuth pixel speed due to the rotation of the earth
+	                double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getGeoTransform().getPixelSize()[0];
+	                // calculate the pixels delta value
+	                double azi=((SarImageReader)il.getImageReader()).getImageAzimuth();
+	                double pixeldelta = 1 / (Math.cos(azi * 2 * Math.PI / 360.0) / (azimuthpixelspeed / rangepixelspeed - Math.sin(azi * 2 * Math.PI / 360.0)));
+	
+	                // get the mode
+	                int direction = Math.abs(azi) > 90 ? -1 : 1;
+	                // create new geometry
+	                GeometryFactory gf = new GeometryFactory();
+	                // generate the geometry for the target shape
+	                Vector<Geometry> winGeom = new Vector<Geometry>();
+	                Coordinate[] coordinatesvertical = new Coordinate[2];
+	                coordinatesvertical[0] = new Coordinate(posX + direction * (0 - posY) / pixeldelta, 0);
+	                coordinatesvertical[1] = new Coordinate(posX + direction * (il.getImageReader().getHeight() - posY) / pixeldelta, il.getImageReader().getHeight());
+	                winGeom.add(gf.createLineString(coordinatesvertical));
+	                Coordinate[] coordinateshorizontal = new Coordinate[2];
+	                coordinateshorizontal[0] = new Coordinate(0, posY);
+	                coordinateshorizontal[1] = new Coordinate(il.getImageReader().getWidth(), posY);
+	                winGeom.add(gf.createLineString(coordinateshorizontal));
+	                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, SimpleEditVectorLayer.LINESTRING, winGeom, true);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}   
             }
         }
         Platform.getGeoContext().setDirty(true);

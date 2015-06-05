@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -224,12 +225,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			// set boat target number
 			targetNumber++;
 			b.setTargetNumber(targetNumber);
-			// position pos[0]=lon pos[1] =lat
-			double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x,geom.getCoordinate().y);
+
+			try{
+				double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x,geom.getCoordinate().y);
+				//lat and lon with 6 decimals
+				b.setLat(Precision.round(pos[1],6));
+				b.setLon(Precision.round(pos[0],6));
+			}catch(GeoTransformException e){
+				logger.warn(e);
+			}		
 			
-			//lat and lon with 6 decimals
-			b.setLat(Precision.round(pos[1],6));
-			b.setLon(Precision.round(pos[0],6));
 			//x,y without decimal
 			b.setXpixel(Precision.round(geom.getCoordinate().x,0));
 			b.setYpixel(Precision.round(geom.getCoordinate().y,0));
@@ -263,14 +268,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		/**** IMAGE METADATA ***********/
 		SatImageMetadata imageMeta = new SatImageMetadata();
-		imageMeta.setGcps(getCorners(gir));
+		
 		
 		try {
-			
-			
-			
+			imageMeta.setGcps(getCorners(gir));
 			imageMeta.setTimestampStart(tStart.toString());
-			
 			imageMeta.setTimeStart(format.format(tStart));
 			
 			Timestamp tStop=Timestamp.valueOf(stop);
@@ -295,15 +297,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			polNumeric=polNumeric.replace(" ",",").trim();
 			imageMeta.setPolnumeric(polNumeric);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		
-		/**** SAVING ***********/
+		
 		Analysis an = new Analysis();
 		an.setSatImageMetadata(imageMeta);
 		an.setVdsAnalysis(vdsA);
 		an.setVdsTarget(target);
 		
+		/**** SAVING ***********/
 		try {            
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
@@ -327,8 +330,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	/**
 	 * Get Gpcs for corners
 	 * @return
+	 * @throws GeoTransformException 
 	 */
-	public Gcps getCorners(GeoImageReader gir) {
+	public Gcps getCorners(GeoImageReader gir) throws GeoTransformException {
 		//Corners corners=((SarImageReader)gir).getOriginalCorners();
         double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);

@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.impl.envi.EnvisatImage;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.IProgress;
 import org.slf4j.LoggerFactory;
@@ -317,7 +317,7 @@ public class TiledBufferedImage implements GeoImageReader {
     }
 
 
-    public List<double[]> getFrameLatLon() {
+    public List<double[]> getFrameLatLon() throws GeoTransformException {
         return gir.getFrameLatLon(xSize,ySize);
     }
 
@@ -357,7 +357,7 @@ public class TiledBufferedImage implements GeoImageReader {
         return gir.getGeoTransform();
     }
 
-    public List<Gcp> getGcps() {
+    public List<Gcp> getGcps() throws GeoTransformException {
         return gir.getGcps();
     }
 

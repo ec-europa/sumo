@@ -17,6 +17,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
@@ -297,7 +298,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 
     
     
-    private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) {
+    private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) throws GeoTransformException {
         // id counter for the postgis database
         int id = 0;
         // list of postgis commands for database

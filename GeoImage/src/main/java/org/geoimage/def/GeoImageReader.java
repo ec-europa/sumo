@@ -3,6 +3,7 @@ package org.geoimage.def;
 import java.io.File;
 import java.util.List;
 
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.IProgress;
 
@@ -15,7 +16,7 @@ public interface GeoImageReader  {
      *
      * @return the image bounding box in lattitude and longitude coordinates
      */
-    public List<double[]> getFrameLatLon(int xSize,int ySize);
+    public List<double[]> getFrameLatLon(int xSize,int ySize)throws GeoTransformException;
 
     /**
      *
@@ -78,7 +79,7 @@ public interface GeoImageReader  {
     /**
      *  @return the tie points (or gcps) of the image.
      */
-    public List<Gcp> getGcps();
+    public List<Gcp> getGcps()throws GeoTransformException;
 
     /**
      *  Gets the access rights:<br>&quot;r&quot; = read only<br>&quot;rw&quot; = read/write

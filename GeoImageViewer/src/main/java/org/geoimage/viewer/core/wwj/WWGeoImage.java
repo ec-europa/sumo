@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 
 /**
  *
@@ -33,7 +34,7 @@ public class WWGeoImage implements Renderable, Locatable{
     private Object owner;
 
 
-    public static WWGeoImage create(GeoImageReader gir){
+    public static WWGeoImage create(GeoImageReader gir) throws GeoTransformException{
         List<double[]> imageframe = gir.getFrameLatLon(((SarImageReader)gir).getWidth(),((SarImageReader)gir).getHeight());
         if (imageframe != null) {
             List<LatLon> ll = new ArrayList<LatLon>();

@@ -12,11 +12,9 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.def.SarMetadata;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.VDSFields;
@@ -119,128 +117,129 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     }
 
     public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
-    	GeoTransform transform=gir.getGeoTransform();
-    	
-        Element root = new Element("analysis");
-        Element image = new Element("image_information");
-        Element name = new Element("name");
-        String filename = gir.getFilesList()[0].replaceAll("\\\\", "/");
-        filename = filename.substring(filename.lastIndexOf("/") + 1);
-        name.setText(filename);
-        image.addContent(name);
-        Element type = new Element("type");
-        type.setText(gir.getFormat());
-        image.addContent(type);
-        Element mode = new Element("mode");
-        mode.setText(gir.getMode());
-        image.addContent(mode);
-        Element polarisation = new Element("polarisation");
-        polarisation.setText("" + gir.getBandName(0));
-        image.addContent(polarisation);
-        Element time = new Element("timestampStart");
-        time.setText(gir.getTimeStampStart());
-        image.addContent(time);
-        time = new Element("timestampStop");
-        time.setText(gir.getTimeStampStop());
-        image.addContent(time);
-        Element resolutionRange = new Element("resolutionRange");
-        resolutionRange.setText(gir.getRangeSpacing().toString());
-        image.addContent(resolutionRange);
-        Element resolutionAzimuth = new Element("resolutionAzimuth");
-        resolutionAzimuth.setText(gir.getAzimuthSpacing().toString());
-        image.addContent(resolutionAzimuth);
-        Element sizeX = new Element("width");
-        sizeX.setText(""+gir.getWidth());
-        image.addContent(sizeX);
-        Element sizeY = new Element("height");
-        sizeY.setText("" + gir.getHeight());
-        image.addContent(sizeY);
-        Element heading = new Element("heading");
-        Object o=gir.getHeadingAngle();
-        if(o!=null)
-        	heading.setText(gir.getHeadingAngle().toString());
-        image.addContent(heading);
-        image.addContent(getCorners(gir));
-        root.addContent(image);
-
-
-        Element boatlist = new Element("boatlist");
-        int number=0;
-        for (Geometry geom : glayer.getGeometries()) {
-
-            Attributes att = glayer.getAttributes(geom);
-            String[] atts = att.getSchema();
-            Element boat = new Element("boat");
-            Element xPixel = new Element("xPixel");
-            xPixel.setText(Math.floor(geom.getCoordinate().x) + "");
-            boat.addContent(xPixel);
-            Element yPixel = new Element("yPixel");
-            yPixel.setText(Math.floor(geom.getCoordinate().y) + "");
-            boat.addContent(yPixel);
-            double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
-            Element lon = new Element("lon");
-            lon.setText(pos[0] + "");
-            boat.addContent(lon);
-            Element lat = new Element("lat");
-            lat.setText(pos[1] + "");
-            boat.addContent(lat);
-            Element id = new Element("id");
-            id.setText(""+number++);
-            boat.addContent(id);
-            Element runid = new Element("runid");
-            runid.setText(""+att.get(VDSSchema.RUN_ID));
-            boat.addContent(runid);
-
-            Element typeAnalysis = new Element("type");
-            typeAnalysis.setText("VDS");
-            boat.addContent(typeAnalysis);
-
-            Element maxValue = new Element("maxValue");
-            maxValue.setText(""+att.get(VDSSchema.MAXIMUM_VALUE));
-            boat.addContent(maxValue);
-
-            Element averageTile = new Element("averageTile");
-            averageTile.setText(""+att.get(VDSSchema.TILE_AVERAGE));
-            boat.addContent(averageTile);
-
-            Element tileSTD = new Element("tileSTD");
-            tileSTD.setText(""+att.get(VDSSchema.TILE_STANDARD_DEVIATION));
-            boat.addContent(tileSTD);
-
-            Element subObjs = new Element("subObjs");
-            subObjs.setText(""+att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS));
-            boat.addContent(subObjs);
-
-
-            Element lenght = new Element("length");
-            lenght.setText(att.get(VDSSchema.ESTIMATED_LENGTH) + "");
-            boat.addContent(lenght);
-
-            Element width = new Element("width");
-            width.setText(att.get(VDSSchema.ESTIMATED_WIDTH) + "");
-            boat.addContent(width);
-
-            Element course = new Element("heading");
-            course.setText(att.get(VDSSchema.ESTIMATED_HEADING) + "");
-            boat.addContent(course);
-
-            Element mySize = new Element("sizeClassification");
-            mySize.setText(att.get(VDSSchema.ESTIMATED_LENGTH) + "");
-            boat.addContent(mySize);
-            boatlist.addContent(boat);
-        }
-        root.addContent(boatlist);
-
-
-        org.jdom.Document doc = new org.jdom.Document(root);
-        XMLOutputter serializer = new XMLOutputter();
-        serializer.setFormat(Format.getPrettyFormat());
-        // System.out.println(serializer.outputString(doc));
-        try {
+    	 try {
+	    	GeoTransform transform=gir.getGeoTransform();
+	    	
+	        Element root = new Element("analysis");
+	        Element image = new Element("image_information");
+	        Element name = new Element("name");
+	        String filename = gir.getFilesList()[0].replaceAll("\\\\", "/");
+	        filename = filename.substring(filename.lastIndexOf("/") + 1);
+	        name.setText(filename);
+	        image.addContent(name);
+	        Element type = new Element("type");
+	        type.setText(gir.getFormat());
+	        image.addContent(type);
+	        Element mode = new Element("mode");
+	        mode.setText(gir.getMode());
+	        image.addContent(mode);
+	        Element polarisation = new Element("polarisation");
+	        polarisation.setText("" + gir.getBandName(0));
+	        image.addContent(polarisation);
+	        Element time = new Element("timestampStart");
+	        time.setText(gir.getTimeStampStart());
+	        image.addContent(time);
+	        time = new Element("timestampStop");
+	        time.setText(gir.getTimeStampStop());
+	        image.addContent(time);
+	        Element resolutionRange = new Element("resolutionRange");
+	        resolutionRange.setText(gir.getRangeSpacing().toString());
+	        image.addContent(resolutionRange);
+	        Element resolutionAzimuth = new Element("resolutionAzimuth");
+	        resolutionAzimuth.setText(gir.getAzimuthSpacing().toString());
+	        image.addContent(resolutionAzimuth);
+	        Element sizeX = new Element("width");
+	        sizeX.setText(""+gir.getWidth());
+	        image.addContent(sizeX);
+	        Element sizeY = new Element("height");
+	        sizeY.setText("" + gir.getHeight());
+	        image.addContent(sizeY);
+	        Element heading = new Element("heading");
+	        Object o=gir.getHeadingAngle();
+	        if(o!=null)
+	        	heading.setText(gir.getHeadingAngle().toString());
+	        image.addContent(heading);
+	        image.addContent(getCorners(gir));
+	        root.addContent(image);
+	
+	
+	        Element boatlist = new Element("boatlist");
+	        int number=0;
+	        for (Geometry geom : glayer.getGeometries()) {
+	
+	            Attributes att = glayer.getAttributes(geom);
+	            String[] atts = att.getSchema();
+	            Element boat = new Element("boat");
+	            Element xPixel = new Element("xPixel");
+	            xPixel.setText(Math.floor(geom.getCoordinate().x) + "");
+	            boat.addContent(xPixel);
+	            Element yPixel = new Element("yPixel");
+	            yPixel.setText(Math.floor(geom.getCoordinate().y) + "");
+	            boat.addContent(yPixel);
+	            double[] pos = gir.getGeoTransform().getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);
+	            Element lon = new Element("lon");
+	            lon.setText(pos[0] + "");
+	            boat.addContent(lon);
+	            Element lat = new Element("lat");
+	            lat.setText(pos[1] + "");
+	            boat.addContent(lat);
+	            Element id = new Element("id");
+	            id.setText(""+number++);
+	            boat.addContent(id);
+	            Element runid = new Element("runid");
+	            runid.setText(""+att.get(VDSSchema.RUN_ID));
+	            boat.addContent(runid);
+	
+	            Element typeAnalysis = new Element("type");
+	            typeAnalysis.setText("VDS");
+	            boat.addContent(typeAnalysis);
+	
+	            Element maxValue = new Element("maxValue");
+	            maxValue.setText(""+att.get(VDSSchema.MAXIMUM_VALUE));
+	            boat.addContent(maxValue);
+	
+	            Element averageTile = new Element("averageTile");
+	            averageTile.setText(""+att.get(VDSSchema.TILE_AVERAGE));
+	            boat.addContent(averageTile);
+	
+	            Element tileSTD = new Element("tileSTD");
+	            tileSTD.setText(""+att.get(VDSSchema.TILE_STANDARD_DEVIATION));
+	            boat.addContent(tileSTD);
+	
+	            Element subObjs = new Element("subObjs");
+	            subObjs.setText(""+att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS));
+	            boat.addContent(subObjs);
+	
+	
+	            Element lenght = new Element("length");
+	            lenght.setText(att.get(VDSSchema.ESTIMATED_LENGTH) + "");
+	            boat.addContent(lenght);
+	
+	            Element width = new Element("width");
+	            width.setText(att.get(VDSSchema.ESTIMATED_WIDTH) + "");
+	            boat.addContent(width);
+	
+	            Element course = new Element("heading");
+	            course.setText(att.get(VDSSchema.ESTIMATED_HEADING) + "");
+	            boat.addContent(course);
+	
+	            Element mySize = new Element("sizeClassification");
+	            mySize.setText(att.get(VDSSchema.ESTIMATED_LENGTH) + "");
+	            boat.addContent(mySize);
+	            boatlist.addContent(boat);
+	        }
+	        root.addContent(boatlist);
+	
+	
+	        org.jdom.Document doc = new org.jdom.Document(root);
+	        XMLOutputter serializer = new XMLOutputter();
+	        serializer.setFormat(Format.getPrettyFormat());
+	        // System.out.println(serializer.outputString(doc));
+       
             BufferedWriter out = new BufferedWriter(new FileWriter((String) config.get(CONFIG_FILE)));
             out.write(serializer.outputString(doc));
             out.close();
-        } catch (IOException e) {
+        } catch (IOException |GeoTransformException e) {
         }
     }
 
@@ -372,7 +371,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     } catch (IOException e) {
     }
     }*/
-    public Element getCorners(GeoImageReader gir) {
+    public Element getCorners(GeoImageReader gir) throws GeoTransformException {
         Element gcps = new Element("gcps");
         double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);

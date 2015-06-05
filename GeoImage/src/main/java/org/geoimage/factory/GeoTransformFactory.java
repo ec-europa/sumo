@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.IGcpsGeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
@@ -29,7 +30,7 @@ public class GeoTransformFactory {
         return new GcpsGeoTransform(gcps, wktGeoProj);
     }
     
-    public static GeoTransform createFromOrbitVector(String annotationFile) {
+    public static GeoTransform createFromOrbitVector(String annotationFile) throws GeoTransformException {
         return new GeoTransformOrbitState(annotationFile);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import jrc.it.geolocation.api.IInterpolation;
 import jrc.it.geolocation.common.MathUtil;
+import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 
@@ -27,13 +28,14 @@ public class HermiteInterpolation implements IInterpolation{
 	
 	/**
 	 * @param subTimesDiffRef : valori delle differenze tra i tempi e il timeref per i punti che mi interessano . Li uso per calcolare l'incremento medio (periodo di campionamento)
+	 * @throws MathException 
 	 * 
 	 * 	
 	 */
 	public void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
 			double timeStampInitSecondsRefPointsInterp[],
 			int idxInitTime, int idxEndTime,
-			double deltaT) {
+			double deltaT) throws MathException {
 
 		int nPoints=subTimesDiffRef.length;
 		

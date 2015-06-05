@@ -23,6 +23,7 @@ import javax.swing.SwingUtilities;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -135,8 +136,14 @@ public class GenericCSVIO extends AbstractVectorIO {
                     fis.write(pos.x + "," + pos.y);
                 } else {
                     Coordinate pos = geom.getCoordinate();
-                    double[] temp = transform.getGeoFromPixel(pos.x, pos.y);
-                    fis.write(temp[1] + "," + temp[0]);
+                    double[] temp;
+					try {
+						temp = transform.getGeoFromPixel(pos.x, pos.y);
+						fis.write(temp[1] + "," + temp[0]);
+					} catch (GeoTransformException e) {
+						logger.warn("Can't write coordinates:"+e.getMessage());
+					}
+                    
 
                 }
                 if (schema.length != 0) {
@@ -222,7 +229,7 @@ public class GenericCSVIO extends AbstractVectorIO {
 
             }
 
-        } catch (SQLException ex) {
+        } catch (SQLException |GeoTransformException ex) {
         	logger.error(ex.getMessage(), ex);
         }
     }

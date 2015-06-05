@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.GeometricLayer;
@@ -176,7 +177,7 @@ public class ThumbnailsManager {
     public static void main(String[] args) {
     }
 
-    private List<Gcp> createGcps(GeoImageReader gir, int nRows, int nCols) {
+    private List<Gcp> createGcps(GeoImageReader gir, int nRows, int nCols) throws GeoTransformException {
         Vector<Gcp> out = new Vector<Gcp>();
         int stepx = gir.getWidth() / nCols;
         int stepy = gir.getHeight() / nRows;

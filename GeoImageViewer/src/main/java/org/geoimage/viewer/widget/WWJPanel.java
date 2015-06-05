@@ -28,6 +28,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.GeoImageViewer;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
@@ -76,19 +77,23 @@ public class WWJPanel extends javax.swing.JPanel {
     }
 
     public void add(IImageLayer layer) {
-        if(layer==null) return;
-        GeoImageReader reader=layer.getImageReader();
-        List<double[]> imageframe = layer.getImageReader().getFrameLatLon(reader.getWidth(),reader.getHeight());
-        if (imageframe != null) {
-            List<LatLon> ll = new ArrayList<LatLon>();
-            for (double[] c : imageframe) {
-                ll.add(new LatLon(Angle.fromDegreesLatitude(c[1]), Angle.fromDegreesLongitude(c[0])));
-            }
-            WWGeoImage gi = new WWGeoImage(new Polyline(ll, 1000), new GlobeAnnotation(layer.getName() + " opened", new Position(new LatLon(Angle.fromDegreesLatitude(imageframe.get(0)[1]), Angle.fromDegreesLongitude(imageframe.get(0)[0])), 2000)), layer.isActive() ? Color.CYAN : Color.BLUE, layer.isActive() ? Color.CYAN : Color.BLUE);
-            gi.setAnnotationVisible(layer.isActive());
-            gi.setDelegateOwner(layer);
-            imageLayer.addRenderable(gi);
-        }
+    	try{
+	        if(layer==null) return;
+	        GeoImageReader reader=layer.getImageReader();
+	        List<double[]> imageframe = layer.getImageReader().getFrameLatLon(reader.getWidth(),reader.getHeight());
+	        if (imageframe != null) {
+	            List<LatLon> ll = new ArrayList<LatLon>();
+	            for (double[] c : imageframe) {
+	                ll.add(new LatLon(Angle.fromDegreesLatitude(c[1]), Angle.fromDegreesLongitude(c[0])));
+	            }
+	            WWGeoImage gi = new WWGeoImage(new Polyline(ll, 1000), new GlobeAnnotation(layer.getName() + " opened", new Position(new LatLon(Angle.fromDegreesLatitude(imageframe.get(0)[1]), Angle.fromDegreesLongitude(imageframe.get(0)[0])), 2000)), layer.isActive() ? Color.CYAN : Color.BLUE, layer.isActive() ? Color.CYAN : Color.BLUE);
+	            gi.setAnnotationVisible(layer.isActive());
+	            gi.setDelegateOwner(layer);
+	            imageLayer.addRenderable(gi);
+	        }
+    	}catch(Exception e){
+    		logger.error(e.getMessage(),e);
+    	}  
     }
 
     public void triggerState(IImageLayer layer){
