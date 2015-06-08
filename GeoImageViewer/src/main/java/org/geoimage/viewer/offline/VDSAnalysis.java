@@ -14,11 +14,11 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;

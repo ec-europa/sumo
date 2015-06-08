@@ -6,9 +6,11 @@ package org.geoimage.viewer.util;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+
 import java.io.FileWriter;
+
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 
 /**
  *

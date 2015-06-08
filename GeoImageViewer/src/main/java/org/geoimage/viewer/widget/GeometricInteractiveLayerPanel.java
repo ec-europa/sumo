@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 
-import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.GeometricLayerModel;
 
 /**

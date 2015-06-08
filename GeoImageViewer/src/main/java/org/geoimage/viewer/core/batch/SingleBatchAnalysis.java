@@ -6,8 +6,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 
 
 public class SingleBatchAnalysis extends AbstractBatchAnalysis {

@@ -27,7 +27,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	/**
 	 * 
 	 * @param metaFile
-	 * @throws MathException 
+	 * @throws MathException
 	 */
 	public S1GeoCodingImpl(String metaFile) throws MathException{
 		meta =new S1Metadata();
@@ -41,11 +41,11 @@ public class S1GeoCodingImpl implements GeoCoding {
 		coordConv=meta.getCoordinateConversion();
 	}
 	
-	/* (non-Javadoc)
-	 * @see geo.GeoCoding#reverse(double, double)
+	/**
+	 * 
 	 */
 	@Override
-	public double[] reverse(double lon,double lat)throws GeoLocationException{
+	public double[] pixelFromGeo(double lon,double lat)throws GeoLocationException{
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -199,9 +199,11 @@ public class S1GeoCodingImpl implements GeoCoding {
 		return resultReverse;
 	}
 	
-	
+	/**
+	 * 
+	 */
 	@Override
-	public double[] forward(double p, double l) throws GeoLocationException{
+	public double[] geoFromPixel(double p, double l) throws GeoLocationException{
 		try{
 			double[] results=new double[2];
 			
@@ -519,7 +521,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			double lon = 2.17263;//3.35876;//10.32972;
 			double r[];
 			try {
-				r = gc.reverse(lon, lat);
+				r = gc.pixelFromGeo(lon, lat);
 				logger.debug("Line:"+r[1]+"--- Col:"+r[0]);
 			} catch (GeoLocationException e) {
 				// TODO Auto-generated catch block

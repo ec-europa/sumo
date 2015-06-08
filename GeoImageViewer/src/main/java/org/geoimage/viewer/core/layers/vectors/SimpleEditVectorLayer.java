@@ -16,13 +16,13 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.widget.AttributesEditor;
 
 import com.vividsolutions.jts.geom.Coordinate;

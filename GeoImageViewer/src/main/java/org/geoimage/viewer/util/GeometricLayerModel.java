@@ -5,10 +5,13 @@
 package org.geoimage.viewer.util;
 
 import com.vividsolutions.jts.geom.Geometry;
+
 import java.util.Date;
+
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import org.geoimage.viewer.core.api.GeometricLayer;
+
+import org.geoimage.viewer.core.layers.GeometricLayer;
 
 /**
  *

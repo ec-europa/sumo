@@ -23,7 +23,6 @@ import javax.imageio.ImageReader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.gdal.gdal.gdal;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
