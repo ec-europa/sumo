@@ -17,7 +17,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;

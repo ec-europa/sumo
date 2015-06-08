@@ -11,10 +11,10 @@ import java.sql.SQLException;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.slf4j.LoggerFactory;

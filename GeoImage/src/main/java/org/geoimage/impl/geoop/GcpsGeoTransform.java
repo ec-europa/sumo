@@ -5,9 +5,12 @@
 package org.geoimage.impl.geoop;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.geoimage.def.IGcpsGeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
@@ -18,6 +21,9 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.NoninvertibleTransformException;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *  Class that provides the GeoTransform based on a set of Ground Control Points.
@@ -189,9 +195,6 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
         return out;
     }
     
-    
-    
-    
     /**
      * Computes the associated list of subpixel (i.e. precision greater than integer)
      * locations of a list of map coordinates
@@ -291,5 +294,40 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
         return pixelsize;
     }
 
+	@Override
+	public List<double[]> getPixelFromGeo(Coordinate[] coords)
+			throws GeoTransformException {
+
+		List<double[]>results=new ArrayList<>();
+		for(Coordinate pos:coords){
+            double[] temp=getPixelFromGeo(pos.x, pos.y);
+            results.add(temp);
+        }
+		return results;
+	}
+	
+	@Override
+	public Geometry transformGeometryPixelFromGeo(Geometry geom)throws GeoTransformException {
+		try{
+            for(Coordinate pos:geom.getCoordinates()){
+                double[] temp=getPixelFromGeo(pos.x, pos.y);
+                pos.x=temp[0];
+                pos.y=temp[1];
+            }
+            return geom;
+		}catch(Exception ge){
+			throw new GeoTransformException(ge.getMessage());
+		} 
+	}
+
+	@Override
+	public Geometry transformGeometryGeoFromPixel(Geometry geo)
+			throws GeoTransformException {
+		return null;
+	}
+
+	
+	
+    
 	
 }

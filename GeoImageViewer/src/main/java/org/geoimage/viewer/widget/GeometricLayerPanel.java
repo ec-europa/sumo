@@ -6,7 +6,7 @@
 
 package org.geoimage.viewer.widget;
 
-import org.geoimage.viewer.core.api.GeometricLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.GeometricLayerModel;
 
 /**

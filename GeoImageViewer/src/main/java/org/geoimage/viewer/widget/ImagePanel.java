@@ -8,10 +8,10 @@ package org.geoimage.viewer.widget;
 import javax.swing.DefaultComboBoxModel;
 
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.layers.CaretLayer;
 import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.PositionLayer;
 import org.geoimage.viewer.core.layers.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.ThumbnailsSmallLayer;
