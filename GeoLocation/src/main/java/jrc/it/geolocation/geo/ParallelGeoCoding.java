@@ -5,22 +5,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import jrc.it.geolocation.exception.MathException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class ParallelGeoCoding {
-	private ExecutorService executor = null;
+	
 	private GeoCoding geoCoding;
 	
 	
 	public ParallelGeoCoding(GeoCoding geoc){
 		this.geoCoding=geoc;
-		executor=Executors.newFixedThreadPool(3);
 	}
 
 	class ParallelReverse implements Callable<double[]>{
@@ -54,32 +53,41 @@ public class ParallelGeoCoding {
 		}
 	}
 	
-	public List<double[]>parallelReverse(Coordinate[] coords) throws InterruptedException, ExecutionException {
-		/*List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
-		for(Coordinate c:coords){
-			tasks.add(new ParallelReverse(c.x,c.y));
-		}	
-		List <Future<double[]>> results = executor.invokeAll(tasks);
-		executor.shutdown();*/
-		
-		List<Future<double[]>> tasks=new ArrayList<Future<double[]>>();
-		for(Coordinate c:coords){
-			tasks.add(executor.submit(new ParallelReverse(c.x,c.y)));
-		}	
-		//List <Future<double[]>> results = executor.invokeAll(tasks);
-		executor.shutdown();
-
+	public List<double[]>parallelPixelFromGeo(Coordinate[] coords) throws InterruptedException, ExecutionException {
+		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(4);
+		try{
+			List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
+			for(Coordinate c:coords){
+				tasks.add(new ParallelReverse(c.x,c.y));
+			}	
+			List <Future<double[]>> results = executor.invokeAll(tasks);
+			executor.shutdown();
+			/*
+			List<Future<double[]>> tasks=new ArrayList<Future<double[]>>();
+			for(Coordinate c:coords){
+				tasks.add(executor.submit(new ParallelReverse(c.x,c.y)));
+			}	
+			//List <Future<double[]>> results = executor.invokeAll(tasks);
+			executor.shutdown();
+			*/
         
-        List<double[]> points=new ArrayList<double[]>();
-        for (Future<double[]> result : tasks) {
-        	List<double[]> l=Arrays.asList(result.get());
-            points.addAll(l);
-        }               
-        
-        return points;
+	        List<double[]> points=new ArrayList<double[]>();
+	        for (Future<double[]> result : results) {
+	        	List<double[]> l=Arrays.asList(result.get());
+	            points.addAll(l);
+	        }               
+	        return points;
+		}catch(Exception e){
+			if(!executor.isShutdown())
+				executor.shutdown();
+			throw e;
+		}
+       
     }    
 	
-	public List<double[]>parallelForward(Coordinate[] coords) throws InterruptedException, ExecutionException  {
+	public List<double[]>parallelGeoFromPixel(Coordinate[] coords) throws InterruptedException, ExecutionException  {
+		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(3);
+
 		List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
 		for(Coordinate c:coords){
 			tasks.add(new ParallelForward(c.x,c.y));
