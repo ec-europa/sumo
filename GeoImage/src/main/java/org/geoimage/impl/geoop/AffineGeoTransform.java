@@ -6,13 +6,18 @@ package org.geoimage.impl.geoop;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.util.List;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.exception.GeoTransformException;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *
@@ -173,5 +178,32 @@ public class AffineGeoTransform implements GeoTransform {
 	@Override
 	public double[] getGeoFromPixel(double xpix, double ypix) {
 		return getGeoFromPixel(xpix, ypix, "EPSG:4326");
+	}
+
+	@Override
+	public List<double[]> getPixelFromGeo(Coordinate[] coords)
+			throws GeoTransformException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Geometry transformGeometryPixelFromGeo(Geometry geom)throws GeoTransformException {
+		try{
+            for(Coordinate pos:geom.getCoordinates()){
+                double[] temp=getPixelFromGeo(pos.x, pos.y);
+                pos.x=temp[0];
+                pos.y=temp[1];
+            }
+            return geom;
+		}catch(Exception ge){
+			throw new GeoTransformException(ge.getMessage());
+		} 
+	}
+
+	@Override
+	public Geometry transformGeometryGeoFromPixel(Geometry geo)
+			throws GeoTransformException {
+		return null;
 	}
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.api;
+package org.geoimage.viewer.core.layers;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -12,11 +12,13 @@ import java.util.List;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.core.api.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * This is THE class model for all Vector Data
@@ -50,18 +52,17 @@ public class GeometricLayer implements Cloneable{
      * @throws GeoTransformException 
      */
     public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
-    	GeometricLayer positionsClone=positions.clone();
-       // positions.projection=null;
-        for(Geometry geom:positionsClone.geoms){
-            for(Coordinate pos:geom.getCoordinates()){
+    	for(Geometry geom:positions.geoms){
+            /*for(Coordinate pos:geom.getCoordinates()){
                 double[] temp=geoTransform.getPixelFromGeo(pos.x, pos.y);
-   //             double[] temp2=((Sentinel1)Platform.getCurrentImageReader()).testTransform.getPixelFromGeo(pos.x, pos.y);
                 pos.x=temp[0];
                 pos.y=temp[1];
-            }
+            }*/
+            geom=geoTransform.transformGeometryPixelFromGeo(geom);
         }
-        return positionsClone;
+        return positions;
     }
+    
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */

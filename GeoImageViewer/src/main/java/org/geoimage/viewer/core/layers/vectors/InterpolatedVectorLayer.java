@@ -25,7 +25,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IVectorLayer;
@@ -35,6 +34,7 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.AbstractLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;

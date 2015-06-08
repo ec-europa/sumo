@@ -30,11 +30,11 @@ import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 

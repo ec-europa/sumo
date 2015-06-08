@@ -14,8 +14,8 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;

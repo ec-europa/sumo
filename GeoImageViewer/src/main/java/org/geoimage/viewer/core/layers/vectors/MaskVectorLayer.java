@@ -28,7 +28,6 @@ import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
@@ -40,6 +39,7 @@ import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.layers.AbstractLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.slf4j.LoggerFactory;
 

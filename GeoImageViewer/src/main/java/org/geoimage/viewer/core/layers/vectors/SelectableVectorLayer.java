@@ -12,9 +12,9 @@ import java.sql.Statement;
 
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.GeometricLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.GeometricLayerIO;
 import org.slf4j.LoggerFactory;
 
