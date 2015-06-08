@@ -55,7 +55,7 @@ public class GeoTransformOrbitState implements GeoTransform{
 	
 	public List<double[]> getPixelFromGeo(Coordinate[]coords)throws GeoTransformException {
 		try{
-			List<double[]> coo=pGeo.parallelReverse(coords);
+			List<double[]> coo=pGeo.parallelPixelFromGeo(coords);
 			return coo;
 		}catch(InterruptedException|ExecutionException ge){
 			throw new GeoTransformException(ge.getMessage());
@@ -65,7 +65,7 @@ public class GeoTransformOrbitState implements GeoTransform{
 	public Geometry transformGeometryPixelFromGeo(Geometry geom)throws GeoTransformException {
 		try{
             Coordinate[] coords=geom.getCoordinates();
-            List<double[]> coordsConv=pGeo.parallelReverse(coords);
+            List<double[]> coordsConv=pGeo.parallelPixelFromGeo(coords);
             for(int i=0;i<coords.length;i++){
                 coords[i].x=coordsConv.get(i)[0];
                 coords[i].y=coordsConv.get(i)[1];
