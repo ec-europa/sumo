@@ -7,7 +7,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import jrc.it.geolocation.exception.MathException;
 
@@ -54,25 +56,19 @@ public class ParallelGeoCoding {
 	}
 	
 	public List<double[]>parallelPixelFromGeo(Coordinate[] coords) throws InterruptedException, ExecutionException {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(4);
-		try{
-			List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
-			for(Coordinate c:coords){
-				tasks.add(new ParallelReverse(c.x,c.y));
-			}	
-			List <Future<double[]>> results = executor.invokeAll(tasks);
-			executor.shutdown();
-			/*
+		int processors = Runtime.getRuntime().availableProcessors();
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(2,4,5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//(ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
+		try{			
 			List<Future<double[]>> tasks=new ArrayList<Future<double[]>>();
 			for(Coordinate c:coords){
 				tasks.add(executor.submit(new ParallelReverse(c.x,c.y)));
 			}	
 			//List <Future<double[]>> results = executor.invokeAll(tasks);
 			executor.shutdown();
-			*/
+			
         
 	        List<double[]> points=new ArrayList<double[]>();
-	        for (Future<double[]> result : results) {
+	        for (Future<double[]> result : tasks) {
 	        	List<double[]> l=Arrays.asList(result.get());
 	            points.addAll(l);
 	        }               
@@ -85,8 +81,9 @@ public class ParallelGeoCoding {
        
     }    
 	
-	public List<double[]>parallelForward(Coordinate[] coords) throws InterruptedException, ExecutionException  {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(3);
+	public List<double[]>parallelGeoFromPixel(Coordinate[] coords) throws InterruptedException, ExecutionException  {
+		int processors = Runtime.getRuntime().availableProcessors();
+		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
 
 		List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
 		for(Coordinate c:coords){

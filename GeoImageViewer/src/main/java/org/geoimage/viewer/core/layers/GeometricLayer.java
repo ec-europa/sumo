@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * This is THE class model for all Vector Data
@@ -52,14 +51,13 @@ public class GeometricLayer implements Cloneable{
      * @throws GeoTransformException 
      */
     public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    	long startTime = System.currentTimeMillis();
     	for(Geometry geom:positions.geoms){
-            /*for(Coordinate pos:geom.getCoordinates()){
-                double[] temp=geoTransform.getPixelFromGeo(pos.x, pos.y);
-                pos.x=temp[0];
-                pos.y=temp[1];
-            }*/
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
         }
+    	long endTime = System.currentTimeMillis();
+    	 
+        System.out.println("createImageProjectedLayer  " + (endTime - startTime) +  " milliseconds.");
         return positions;
     }
     
