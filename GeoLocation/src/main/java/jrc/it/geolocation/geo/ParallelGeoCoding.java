@@ -7,7 +7,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import jrc.it.geolocation.exception.MathException;
 
@@ -54,7 +56,16 @@ public class ParallelGeoCoding {
 	}
 	
 	public List<double[]>parallelPixelFromGeo(Coordinate[] coords) throws InterruptedException, ExecutionException {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(4);
+		int  corePoolSize  =    4;
+		int  maxPoolSize   =   10;
+		long keepAliveTime = 5000;
+		ThreadPoolExecutor executor = 		        new ThreadPoolExecutor(
+		                corePoolSize,
+		                maxPoolSize,
+		                keepAliveTime,
+		                TimeUnit.MILLISECONDS,
+		                new LinkedBlockingQueue<Runnable>()
+		                );//(ThreadPoolExecutor)Executors.newFixedThreadPool(4);
 		try{
 			List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
 			for(Coordinate c:coords){
