@@ -58,8 +58,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
-		double[][] statepVecInterp=orbitInterpolation.getStatepVecInterp().clone();
-		double[] results=findZeroDoppler(statepVecInterp, pXYZ,orbitInterpolation.getTimeStampInterp() );
+		List<double[]> statepVecInterp=new ArrayList<>(orbitInterpolation.getStatepVecInterp());
+		double dd[][]=(double[][])statepVecInterp.toArray(new double[0][]);
+		Double dd2[]=(Double[])orbitInterpolation.getTimeStampInterp().toArray(new Double[0]);
+		double[] results=findZeroDoppler(dd, pXYZ, ArrayUtils.toPrimitive(dd2));
 		
 		double zeroDopplerTime=results[0];
 		logger.debug("Zero Doppler Time:"+zeroDopplerTime);
@@ -251,17 +253,17 @@ public class S1GeoCodingImpl implements GeoCoding {
 				double t01=(orbitInterpolation.getZeroDopplerTimeFirstRef()+ iSafetyBufferAz / meta.getSamplingf()) * (meta.getNlines()-1-l);
 				double t02=(orbitInterpolation.getZeroDopplerTimeLastRef()- iSafetyBufferAz / meta.getSamplingf())*l;
 				t0 =  (t01+t02) / (meta.getNlines()-1); //In seconds
-			    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().length;idxStartT0++){
-			    	if(orbitInterpolation.getTimeStampInterp()[idxStartT0]>t0){
+			    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().size();idxStartT0++){
+			    	if(orbitInterpolation.getTimeStampInterp().get(idxStartT0)>t0){
 			    		break;
 			    	}
 			    }
-			    if(idxStartT0==orbitInterpolation.getStatepVecInterp().length)//MATLAB if isempty(idx_t0) idx_t0 = length(timeStampInterpSecondsRef); end  %20150608
+			    if(idxStartT0==orbitInterpolation.getStatepVecInterp().size())//MATLAB if isempty(idx_t0) idx_t0 = length(timeStampInterpSecondsRef); end  %20150608
 			    	idxStartT0--;
 			}
 			//Using the orbit propagation model, find the sensor position p(t0) and sensor velocity v(t0) at zero Doppler time
-			double[] pT0 = orbitInterpolation.getStatepVecInterp()[idxStartT0];
-			double[] vT0 = orbitInterpolation.getStatevVecInterp()[idxStartT0];
+			double[] pT0 = orbitInterpolation.getStatepVecInterp().get(idxStartT0);
+			double[] vT0 = orbitInterpolation.getStatevVecInterp().get(idxStartT0);
 	
 	
 			double distance=0;  //D
