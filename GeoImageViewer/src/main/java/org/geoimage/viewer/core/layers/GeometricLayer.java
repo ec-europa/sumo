@@ -56,7 +56,6 @@ public class GeometricLayer implements Cloneable{
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
         }
     	long endTime = System.currentTimeMillis();
-    	 
         System.out.println("createImageProjectedLayer  " + (endTime - startTime) +  " milliseconds.");
         return positions;
     }

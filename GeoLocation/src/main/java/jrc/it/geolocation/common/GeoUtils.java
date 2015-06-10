@@ -9,6 +9,8 @@ public class GeoUtils {
 	// Reference ellipsoid axes
 	public final static double semiMajorAxis = 6.378137000000000e+06; //KeywVal.semiMajorAxis;
 	public final static double semiMinorAxis = 6.356752314245179e+06; 						//KeywVal.semiMinorAxis;
+	public final static double semiMajorAxis2=semiMajorAxis*semiMajorAxis;
+	public final static double semiMinorAxis2=semiMinorAxis*semiMinorAxis;
 	public final static double cc = 299792458; //Speed of light
 	
 	/**
@@ -32,12 +34,12 @@ public class GeoUtils {
 		double sinLon = FastMath.sin(FastMath.toRadians(lon));
 
 		
-		double denomTmp = FastMath.sqrt((semiMajorAxis*semiMajorAxis) *(cosLat*cosLat) + (semiMinorAxis*semiMinorAxis)*(sinLat*sinLat));
+		double denomTmp = FastMath.sqrt((semiMajorAxis2) *(cosLat*cosLat) + (semiMinorAxis2)*(sinLat*sinLat));
 		
 		
-		double pX = (FastMath.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * cosLon;
-		double pY = (FastMath.pow(semiMajorAxis,2)/denomTmp + pH) * cosLat * sinLon;
-		double pZ = (FastMath.pow(semiMinorAxis,2)/denomTmp + pH) * sinLat;
+		double pX = (semiMajorAxis2/denomTmp + pH) * cosLat * cosLon;
+		double pY = (semiMajorAxis2/denomTmp + pH) * cosLat * sinLon;
+		double pZ = (semiMinorAxis2/denomTmp + pH) * sinLat;
 		
 		double[] pXYZ = {pX ,pY, pZ};
 		
