@@ -8,6 +8,7 @@ import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
  
 
@@ -18,16 +19,13 @@ public class OrbitInterpolation {
 	private final int N_ORB_POINT_INTERP=4;
 	private double zeroDopplerTimeFirstRef=0;
 	private double zeroDopplerTimeLastRef=0;
-	double[][] statevVecInterp;
-	double[][] statepVecInterp;
-	double[] timeStampInterp;
+	List<double[]> statevVecInterp;
+	List<double[]> statepVecInterp;
+	List<Double> timeStampInterp;
 	double[] secondsDiffFromRefTime;
 	double iSafetyBufferAz=0;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
-	
-
-
 
 	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
@@ -68,15 +66,15 @@ public class OrbitInterpolation {
 		double maxT=0;
 		
 		if(zeroDopplerTimeFirstRef<zeroDopplerTimeLastRef){
-			minT=Math.min(0, zeroDopplerTimeFirstRef);
-			maxT=Math.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeLastRef);
+			minT=FastMath.min(0, zeroDopplerTimeFirstRef);
+			maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeLastRef);
 		}else{
 			if(firstTime<(lastTime)){
-				minT=Math.min(secondsDiffFromRefTime[0], zeroDopplerTimeLastRef);
-				maxT=Math.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeFirstRef);
+				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeLastRef);
+				maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeFirstRef);
 			}else{
-				minT=Math.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastRef);
-				maxT=Math.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstRef);
+				minT=FastMath.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastRef);
+				maxT=FastMath.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstRef);
 			}	
 		}
 		int limit=((Double)((maxT-minT)/deltaT)).intValue();
@@ -89,13 +87,10 @@ public class OrbitInterpolation {
 			nextVal=deltaT+nextVal;
 		}
 		
-		double zeroDopplerTimeInitRef=0;
-		double zeroDopplerTimeEndRef=0;
+		double zeroDopplerTimeInitRef=zeroDopplerTimeFirstRef;
+		double zeroDopplerTimeEndRef=zeroDopplerTimeLastRef;
 		
-		if( zeroDopplerTimeFirstRef < zeroDopplerTimeLastRef){
-				zeroDopplerTimeInitRef = zeroDopplerTimeFirstRef;
-				zeroDopplerTimeEndRef = zeroDopplerTimeLastRef;
-		}else{
+		if( zeroDopplerTimeFirstRef > zeroDopplerTimeLastRef){
 				zeroDopplerTimeInitRef = zeroDopplerTimeLastRef;
 				zeroDopplerTimeEndRef = zeroDopplerTimeFirstRef;
 		}
@@ -107,7 +102,6 @@ public class OrbitInterpolation {
 			int size=Math.min(nPoints,N_ORB_POINT_INTERP);
 			
 			double[] subTimesDiffRef= Arrays.copyOfRange(secondsDiffFromRefTime, 0, nPoints);
-			
 			
 			//Prepare the state vectors that will be used in the interpolation
 			List<Double> timeStampInitSecondsRefPointsInterp=new ArrayList<Double>();
@@ -141,23 +135,23 @@ public class OrbitInterpolation {
 			logger.debug("idxInitTime:"+idxInitTime+"	idxEndTime:"+idxEndTime);
 			
 			
-			double[] t0=ArrayUtils.toPrimitive((Double[])timeStampInitSecondsRefPointsInterp.toArray());
-			
-			
-			 if (idxInitTime!=-1 && idxEndTime!=-1 && initTime < endTime){
-
-				 HermiteInterpolation hermite=new HermiteInterpolation();
-				 hermite.interpolation(
+			Double[] t0=(Double[])timeStampInitSecondsRefPointsInterp.toArray();
+			if (idxInitTime!=-1 && idxEndTime!=-1 && initTime < endTime){
+				 List<double[]>vPoints=new ArrayList<double[]>();
+				 List<double[]>pPoints=new ArrayList<double[]>();
+				 List<Double>timeStampOutput=new ArrayList<Double>();
+				 HermiteInterpolation.interpolation(
 						 subTimesDiffRef,subList, t0, 
-						 idxInitTime, idxEndTime, deltaTinv);
+						 idxInitTime, idxEndTime, deltaTinv,
+						 vPoints,pPoints,timeStampOutput);
 				 
-				 addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());
+				 addPointsToResult(vPoints,pPoints);
 				 
 				 if(timeStampInterp==null)
-					 timeStampInterp=hermite.getTimeStampInterpSecondsRefOutput();
+					 timeStampInterp=new ArrayList<>(timeStampOutput);
 				 else
-					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, hermite.getTimeStampInterpSecondsRefOutput());
-			 }
+					 timeStampInterp.addAll(timeStampOutput);
+			}
 		}
 		//start from 2 because we need 2 points to start interpolation
 		for(int orbPoint=1;orbPoint<nPoints;orbPoint++){
@@ -224,25 +218,30 @@ public class OrbitInterpolation {
 	            }
 	            	            
 	            double timeRef = timeStampInitSecondsRefPointsInterp.get(0);
-	            double[] timeStampInitSecondsRefPointsInterp0 =new double[timeStampInitSecondsRefPointsInterp.size()];
+	            Double[] timeStampInitSecondsRefPointsInterp0 =new Double[timeStampInitSecondsRefPointsInterp.size()];
 	            for(int i=0;i<timeStampInitSecondsRefPointsInterp.size();i++){
 	            	timeStampInitSecondsRefPointsInterp0[i]= timeStampInitSecondsRefPointsInterp.get(i)- timeRef;        
 	            }		
 	            
 	            
 	            if (findIdxEndTime && findIdxInitTime && initTime < endTime && idxInitTime < idxEndTime){
-					HermiteInterpolation hermite=new HermiteInterpolation();
-	            	hermite.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, timeStampInitSecondsRefPointsInterp0,idxInitTime, idxEndTime, deltaTinv);
-	            	addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());					
+					//HermiteInterpolation hermite=new HermiteInterpolation();
+					List<double[]>vPoints=new ArrayList<double[]>();
+					List<double[]>pPoints=new ArrayList<double[]>();
+					List<Double>timeStampOutput=new ArrayList<Double>();
+					HermiteInterpolation.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, 
+							timeStampInitSecondsRefPointsInterp0,idxInitTime, idxEndTime, deltaTinv,
+							pPoints,vPoints,timeStampOutput);
+	            	addPointsToResult(vPoints,pPoints);					
 					
-	            	double[] timeStampInterpSecondsRefOutput=hermite.getTimeStampInterpSecondsRefOutput();
+	            	double[] timeStampInterpSecondsRefOutput=new double[timeStampOutput.size()];//hermite.getTimeStampInterpSecondsRefOutput();
 	            	for(int i=0;i<timeStampInterpSecondsRefOutput.length;i++){
-	            		timeStampInterpSecondsRefOutput[i]=timeStampInterpSecondsRefOutput[i]+timeRef;
+	            		timeStampInterpSecondsRefOutput[i]=timeStampOutput.get(i)+timeRef;
 	            	}
 	            	if(timeStampInterp==null)
-						 timeStampInterp=timeStampInterpSecondsRefOutput;
+						 timeStampInterp=new ArrayList<>(timeStampOutput);
 					 else
-						 timeStampInterp=ArrayUtils.addAll(timeStampInterp, timeStampInterpSecondsRefOutput);
+						 timeStampInterp.addAll(timeStampOutput);
 	            }
 		    }
 		}
@@ -294,26 +293,29 @@ public class OrbitInterpolation {
             }
 
             double timeRef = timeStampInitSecondsRefPointsInterp.get(0);
-            double[] timeStampInitSecondsRefPointsInterp0 =new double[timeStampInitSecondsRefPointsInterp.size()];
+            Double[] timeStampInitSecondsRefPointsInterp0 =new Double[timeStampInitSecondsRefPointsInterp.size()];
             for(int i=0;i<timeStampInitSecondsRefPointsInterp.size();i++){
             	timeStampInitSecondsRefPointsInterp0[i]= timeStampInitSecondsRefPointsInterp.get(i)- timeRef;        
             }	
 
 	        if(findIdxEndTime && findIdxInitTime && initTime < endTime){
-	        	HermiteInterpolation hermite=new HermiteInterpolation();
-	        	hermite.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, 
-	        			timeStampInitSecondsRefPointsInterp0, idxInitTime, idxEndTime, deltaTinv);
+	        	List<double[]>vPoints=new ArrayList<double[]>();
+				List<double[]>pPoints=new ArrayList<double[]>();
+				List<Double>timeStampOutput=new ArrayList<Double>();
+	        	HermiteInterpolation.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, 
+	        			timeStampInitSecondsRefPointsInterp0, idxInitTime, idxEndTime, deltaTinv,
+	        			pPoints,vPoints,timeStampOutput);
 	        	
-				 addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());
-
-				double [] timeStampInterpSecondsRefOutput=hermite.getTimeStampInterpSecondsRefOutput();
+	        	addPointsToResult(vPoints,pPoints);
+	        	
+				double [] timeStampInterpSecondsRefOutput=new double[timeStampOutput.size()];;
 	        	for(int i=0;i<timeStampInterpSecondsRefOutput.length;i++){
-	        		timeStampInterpSecondsRefOutput[i]=timeStampInterpSecondsRefOutput[i]+timeRef;
+	        		timeStampInterpSecondsRefOutput[i]=timeStampOutput.get(i)+timeRef;
             	}
 	        	if(timeStampInterp==null)
-					 timeStampInterp=timeStampInterpSecondsRefOutput;
+					 timeStampInterp=new ArrayList<>(timeStampOutput);
 				 else
-					 timeStampInterp=ArrayUtils.addAll(timeStampInterp, timeStampInterpSecondsRefOutput);
+					 timeStampInterp.addAll(timeStampOutput);
 	        }
 		 }   
 		
@@ -324,20 +326,18 @@ public class OrbitInterpolation {
 	 * @param resultV
 	 * @param resultP
 	 */
-	private void addPointsToResult(double[][] resultV,double[][] resultP){
+	private void addPointsToResult(List<double[]> resultV,List<double[]> resultP){
 		if(this.statevVecInterp==null){
-			statevVecInterp=resultV;
+			statevVecInterp=new ArrayList<>(resultV);
 		}else{
-			statevVecInterp=ArrayUtils.addAll(resultV,statevVecInterp);
+			statevVecInterp.addAll(resultV);
 		}
 		if(statepVecInterp==null){
-			statepVecInterp=resultP;
+			statepVecInterp=new ArrayList<>(resultP);
 		}else{
-			statepVecInterp=ArrayUtils.addAll(resultP,statepVecInterp);
+			statepVecInterp.addAll(resultP);
 		}
 	}
-	
-		
 		
 	public double getZeroDopplerTimeFirstRef() {
 		return zeroDopplerTimeFirstRef;
@@ -352,20 +352,17 @@ public class OrbitInterpolation {
 		return secondsDiffFromRefTime;
 	}
 
-
-
-	
-	public double[][] getStatevVecInterp() {
+	public List<double[]> getStatevVecInterp() {
 		return statevVecInterp;
 	}
 
 
-	public double[][] getStatepVecInterp() {
+	public List<double[]> getStatepVecInterp() {
 		return statepVecInterp;
 	}
 
 
-	public double[] getTimeStampInterp() {
+	public List<Double> getTimeStampInterp() {
 		return timeStampInterp;
 	}
 

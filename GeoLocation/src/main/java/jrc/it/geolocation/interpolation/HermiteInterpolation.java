@@ -3,11 +3,10 @@ package jrc.it.geolocation.interpolation;
 import java.util.ArrayList;
 import java.util.List;
 
-import jrc.it.geolocation.api.IInterpolation;
 import jrc.it.geolocation.common.MathUtil;
 import jrc.it.geolocation.exception.MathException;
-import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -33,7 +32,7 @@ public class HermiteInterpolation {//implements IInterpolation{
 	 * 	
 	 */
 	public static void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
-			double timeStampInitSecondsRefPointsInterp[],
+			Double timeStampInitSecondsRefPointsInterp[],
 			int idxInitTime, int idxEndTime,
 			double deltaT,List<double[]>interpPpointsOutput,List<double[]>interpVpointsOutput,List<Double>timeStampInterpSecondsRefOutput) throws MathException {
 
@@ -101,9 +100,9 @@ public class HermiteInterpolation {//implements IInterpolation{
 			for(int i=0;i<=powerMax;i++){
 				vtvec[0][powerMax-i]=i*vtvec[0][i];
 			}
-			interpPpointsOutput.set(idx-idxInitTime,MathUtil.multiplyMatrix(ptvec, vTmpPos)[0]);
-			interpVpointsOutput.set(idx-idxInitTime,MathUtil.multiplyMatrix(vtvec, vTmpVel)[0]);
-			timeStampInterpSecondsRefOutput.set(idx-idxInitTime,timeStampInitSecondsRefPointsInterp[idx]);
+			interpPpointsOutput.add(idx-idxInitTime,MathUtil.multiplyMatrix(ptvec, vTmpPos)[0]);
+			interpVpointsOutput.add(idx-idxInitTime,MathUtil.multiplyMatrix(vtvec, vTmpVel)[0]);
+			timeStampInterpSecondsRefOutput.add(idx-idxInitTime,timeStampInitSecondsRefPointsInterp[idx]);
 		
 		}
 	}
