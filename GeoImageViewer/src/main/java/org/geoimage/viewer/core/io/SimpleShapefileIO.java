@@ -289,7 +289,12 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                        }
 	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+	                        
+//	                        long startTime = System.currentTimeMillis();
 	                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
+//	                        long endTime = System.currentTimeMillis();
+//	                        System.out.println("simplify  " + (endTime - startTime) +  " milliseconds.");
+	                        
 
 	                        //buffer(0) is used to avoid intersection errors 
 	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
