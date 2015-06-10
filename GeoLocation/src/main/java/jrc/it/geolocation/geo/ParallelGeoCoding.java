@@ -81,8 +81,9 @@ public class ParallelGeoCoding {
        
     }    
 	
-	public List<double[]>parallelForward(Coordinate[] coords) throws InterruptedException, ExecutionException  {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(3);
+	public List<double[]>parallelGeoFromPixel(Coordinate[] coords) throws InterruptedException, ExecutionException  {
+		int processors = Runtime.getRuntime().availableProcessors();
+		ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
 
 		List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
 		for(Coordinate c:coords){
