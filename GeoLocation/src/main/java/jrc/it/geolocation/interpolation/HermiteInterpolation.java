@@ -15,12 +15,12 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.FastMath;
 
 
-public class HermiteInterpolation implements IInterpolation{
+public class HermiteInterpolation {//implements IInterpolation{
 	
-	double [][] interpPpointsOutput=null;
+	/*double [][] interpPpointsOutput=null;
 	double [][] interpVpointsOutput=null;
 	double [] timeStampInterpSecondsRefOutput=null;
-	
+	*/
 	public HermiteInterpolation (){
 
 	}
@@ -32,10 +32,10 @@ public class HermiteInterpolation implements IInterpolation{
 	 * 
 	 * 	
 	 */
-	public void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
+	public static void interpolation(double[] subTimesDiffRef,List<S1Metadata.OrbitStatePosVelox> vpList,
 			double timeStampInitSecondsRefPointsInterp[],
 			int idxInitTime, int idxEndTime,
-			double deltaT) throws MathException {
+			double deltaT,List<double[]>interpPpointsOutput,List<double[]>interpVpointsOutput,List<Double>timeStampInterpSecondsRefOutput) throws MathException {
 
 		int nPoints=subTimesDiffRef.length;
 		
@@ -84,9 +84,9 @@ public class HermiteInterpolation implements IInterpolation{
 			}
 		}
 
-		interpPpointsOutput=new double[idxEndTime-idxInitTime+1][];
-		interpVpointsOutput=new double[idxEndTime-idxInitTime+1][];
-		timeStampInterpSecondsRefOutput=new double[idxEndTime-idxInitTime+1];
+		//interpPpointsOutput=new double[idxEndTime-idxInitTime+1][];
+		//interpVpointsOutput=new double[idxEndTime-idxInitTime+1][];
+		//timeStampInterpSecondsRefOutput=new double[idxEndTime-idxInitTime+1];
 		
 //Loop through desired time points and interpolate
 		for(int idx=idxInitTime;idx<=idxEndTime;idx++){
@@ -101,9 +101,9 @@ public class HermiteInterpolation implements IInterpolation{
 			for(int i=0;i<=powerMax;i++){
 				vtvec[0][powerMax-i]=i*vtvec[0][i];
 			}
-			interpPpointsOutput[idx-idxInitTime]=MathUtil.multiplyMatrix(ptvec, vTmpPos)[0];
-			interpVpointsOutput[idx-idxInitTime]=MathUtil.multiplyMatrix(vtvec, vTmpVel)[0];
-			timeStampInterpSecondsRefOutput[idx-idxInitTime]=timeStampInitSecondsRefPointsInterp[idx];
+			interpPpointsOutput.set(idx-idxInitTime,MathUtil.multiplyMatrix(ptvec, vTmpPos)[0]);
+			interpVpointsOutput.set(idx-idxInitTime,MathUtil.multiplyMatrix(vtvec, vTmpVel)[0]);
+			timeStampInterpSecondsRefOutput.set(idx-idxInitTime,timeStampInitSecondsRefPointsInterp[idx]);
 		
 		}
 	}
@@ -130,7 +130,7 @@ public class HermiteInterpolation implements IInterpolation{
 	 * @param matrix
 	 * @return
 	 */
-	public double[][] invertMatrix(double[][] matrix){
+	public static double[][] invertMatrix(double[][] matrix){
 		Array2DRowRealMatrix rMatrix=new Array2DRowRealMatrix(matrix);
 		RealMatrix inv=MatrixUtils.inverse(rMatrix);
 		double[][]invHermite=inv.getData();
@@ -143,7 +143,7 @@ public class HermiteInterpolation implements IInterpolation{
 	 * @param nPoint
 	 * @return
 	 */
-	public double[][] hermiteMatrix(int nPoint){
+	public static double[][] hermiteMatrix(int nPoint){
 		int np=2*nPoint-1;
 		
 		List<double[]>matrix=new ArrayList<double[]>();
@@ -177,7 +177,7 @@ public class HermiteInterpolation implements IInterpolation{
 		
 	}
 	
-	
+	/*
 	public double[][] getInterpPpointsOutput() {
 		return interpPpointsOutput;
 	}
@@ -190,7 +190,7 @@ public class HermiteInterpolation implements IInterpolation{
 
 	public double[] getTimeStampInterpSecondsRefOutput() {
 		return timeStampInterpSecondsRefOutput;
-	}
+	}*/
 
 
 	
