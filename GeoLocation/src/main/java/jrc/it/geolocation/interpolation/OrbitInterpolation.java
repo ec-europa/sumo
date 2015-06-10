@@ -22,19 +22,19 @@ public class OrbitInterpolation {
 	double[][] statepVecInterp;
 	double[] timeStampInterp;
 	double[] secondsDiffFromRefTime;
+	double iSafetyBufferAz=0;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
 	
 
 
-	public OrbitInterpolation() {
-	}
 
 	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
 			double zeroDopplerTimeLastLineSeconds,
-			double samplingf) throws MathException{
+			double samplingf,double iSafetyBufferAz) throws MathException{
 			
+		this.iSafetyBufferAz=iSafetyBufferAz;
 		
 		double deltaT = 1/samplingf;
 		double deltaTinv = 1/deltaT;
@@ -60,8 +60,8 @@ public class OrbitInterpolation {
 			secondsDiffFromRefTime[idx]= (vp.time-reftime);
 			idx++;
 		}
-		zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime);
-		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime);
+		zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime)-iSafetyBufferAz*deltaT;
+		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime)+iSafetyBufferAz*deltaT;
 		//
 		
 		double minT=0;
@@ -232,9 +232,7 @@ public class OrbitInterpolation {
 	            
 	            if (findIdxEndTime && findIdxInitTime && initTime < endTime && idxInitTime < idxEndTime){
 					HermiteInterpolation hermite=new HermiteInterpolation();
-	            	hermite.interpolation(
-	            			timeStampInitSecondsRefPoints,stateVecPoints, timeStampInitSecondsRefPointsInterp0, 
-	            			idxInitTime, idxEndTime, deltaTinv);
+	            	hermite.interpolation(timeStampInitSecondsRefPoints,stateVecPoints, timeStampInitSecondsRefPointsInterp0,idxInitTime, idxEndTime, deltaTinv);
 	            	addPointsToResult(hermite.getInterpVpointsOutput(),hermite.getInterpPpointsOutput());					
 					
 	            	double[] timeStampInterpSecondsRefOutput=hermite.getTimeStampInterpSecondsRefOutput();
@@ -250,11 +248,11 @@ public class OrbitInterpolation {
 		}
 		
 		 if( zeroDopplerTimeEndRef > secondsDiffFromRefTime[secondsDiffFromRefTime.length-1]){
-	        int vOrbPointsInit = (nPoints - Math.min(nPoints,N_ORB_POINT_INTERP)+1);
-	        int vOrbPointsEnd=nPoints;
+	        int vOrbPointsInit = (nPoints - Math.min(nPoints,N_ORB_POINT_INTERP));
+	        int vOrbPointsEnd=nPoints-1;
 
 	        //Prepare the state vectors that will be used in the interpolation
-            double[] timeStampInitSecondsRefPoints = Arrays.copyOfRange(secondsDiffFromRefTime, vOrbPointsInit, vOrbPointsEnd);
+            double[] timeStampInitSecondsRefPoints = Arrays.copyOfRange(secondsDiffFromRefTime, vOrbPointsInit, vOrbPointsEnd+1);
 	        
 	        List<Double> timeStampInitSecondsRefPointsInterp = new ArrayList<Double>();
             for(int i=0;i<timeStampInterpSecondsRef.length;i++){
@@ -263,6 +261,10 @@ public class OrbitInterpolation {
             	}
             }				
             
+            /*if(vOrbPointsEnd>=vpList.size()){
+            	vOrbPointsEnd=vpList.size()-1;
+            	vOrbPointsInit=vOrbPointsEnd-3;
+            }*/
             List<S1Metadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(vOrbPointsInit,vOrbPointsEnd+1);
 	        
 
@@ -326,12 +328,12 @@ public class OrbitInterpolation {
 		if(this.statevVecInterp==null){
 			statevVecInterp=resultV;
 		}else{
-			statevVecInterp=ArrayUtils.addAll(statevVecInterp, resultV);
+			statevVecInterp=ArrayUtils.addAll(resultV,statevVecInterp);
 		}
 		if(statepVecInterp==null){
 			statepVecInterp=resultP;
 		}else{
-			statepVecInterp=ArrayUtils.addAll(statepVecInterp, resultP);
+			statepVecInterp=ArrayUtils.addAll(resultP,statepVecInterp);
 		}
 	}
 	
@@ -370,20 +372,23 @@ public class OrbitInterpolation {
 
 	public static void main(String args[]){
 		S1Metadata meta =new S1Metadata();
-		//meta.initMetaData("C:\\tmp\\sumo_images\\S1_PRF_SWATH_DEVEL\\S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE\\annotation\\s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
-		meta.initMetaData("C:\\tmp\\sumo_images\\test_interpolation\\S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE\\annotation\\s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml");
-		//meta.initMetaData("G:\\sat\\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE\\annotation\\s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml");
-
+		//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\S1_PRF_SWATH_DEVEL\\\\S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
+		//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\test_interpolation\\\\S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml");
+		//meta.initMetaData("G:\\\\sat\\\\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE\\\\annotation\\\\s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml");
+		meta.initMetaData("F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml");
 		
 		
 		OrbitInterpolation orbitInterpolation=new OrbitInterpolation();
 		try {
+			
+			double zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000.0;
+			double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
+			
 			orbitInterpolation.orbitInterpolation(meta.getOrbitStatePosVelox(),
-					meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis(),
-					meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis(),
-					meta.getSamplingf());
+					zTimeFirstInSeconds,
+					zTimeLastInSeconds,
+					meta.getSamplingf(),500);
 		} catch (MathException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
