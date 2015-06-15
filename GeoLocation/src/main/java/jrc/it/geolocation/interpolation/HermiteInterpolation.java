@@ -16,10 +16,6 @@ import org.apache.commons.math3.util.FastMath;
 
 public class HermiteInterpolation {//implements IInterpolation{
 	
-	/*double [][] interpPpointsOutput=null;
-	double [][] interpVpointsOutput=null;
-	double [] timeStampInterpSecondsRefOutput=null;
-	*/
 	public HermiteInterpolation (){
 
 	}
@@ -83,9 +79,6 @@ public class HermiteInterpolation {//implements IInterpolation{
 			}
 		}
 
-		//interpPpointsOutput=new double[idxEndTime-idxInitTime+1][];
-		//interpVpointsOutput=new double[idxEndTime-idxInitTime+1][];
-		//timeStampInterpSecondsRefOutput=new double[idxEndTime-idxInitTime+1];
 		
 //Loop through desired time points and interpolate
 		for(int idx=idxInitTime;idx<=idxEndTime;idx++){
@@ -94,7 +87,7 @@ public class HermiteInterpolation {//implements IInterpolation{
 			double[][] vtvec=new double[1][powerMax+1];
 			for(int i=0;i<=powerMax;i++){
 				ptvec[0][i]=FastMath.pow(interTime[idx],powerMax-i);
-				vtvec[0][i]=FastMath.pow((interTime[idx]),FastMath.abs(i-1));//Math.pow(i*(interTime[idx]),Math.abs(i-1));
+				vtvec[0][i]=FastMath.pow((interTime[idx]),FastMath.abs(i-1));
 			
 			}	
 			for(int i=0;i<=powerMax;i++){
