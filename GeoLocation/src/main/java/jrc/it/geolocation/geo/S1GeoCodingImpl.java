@@ -2,7 +2,6 @@ package jrc.it.geolocation.geo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import jrc.it.geolocation.common.GeoUtils;
@@ -11,8 +10,8 @@ import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
-import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.linear.MatrixUtils;

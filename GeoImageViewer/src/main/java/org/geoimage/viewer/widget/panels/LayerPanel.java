@@ -7,6 +7,7 @@
 package org.geoimage.viewer.widget.panels;
 
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
@@ -16,7 +17,7 @@ import org.geoimage.viewer.widget.LayerDialog;
  *
  * @author  thoorfr
  */
-public class LayerPanel extends javax.swing.JPanel {
+public class LayerPanel extends JPanel {
     private ILayer layer;
     
     /** Creates new form LayerPanel */
