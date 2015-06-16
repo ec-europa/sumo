@@ -9,6 +9,7 @@ public aspect Geolocation {
 	pointcut callPixFromGeo(): call(double[] pixelFromGeo(double,double));
 	pointcut callGeoFromPix(): call(double[] geoFromPixel(double,double));
 	pointcut findZero(): call(double[] findZeroDoppler(List<double[]> ,double[] ,double[] ));
+	pointcut convol(): call(double[] linearConvolutionMatlabValid(double [],double []));
 	
 	before(): callPixFromGeo(){
 		startTime=System.currentTimeMillis();
@@ -16,7 +17,9 @@ public aspect Geolocation {
 	
 	after(): callPixFromGeo(){
 		long endTime=System.currentTimeMillis();
-		System.out.println("pixel from geo:"+(endTime-startTime));
+		long diff=endTime-startTime;
+		if(diff>5)
+			System.out.println("Long pixel from geo:"+(endTime-startTime));
 	}
 	
 	before(): findZero(){
@@ -25,6 +28,19 @@ public aspect Geolocation {
 	
 	after(): findZero(){
 		long endTime=System.currentTimeMillis();
-		System.out.println("findZeroDoppler:"+(endTime-startTime));
+		long diff=endTime-startTime;
+		if(diff>=10)
+			System.out.println("Long findZeroDoppler:"+(endTime-startTime));
+	}
+	
+	before(): convol(){
+		startTime=System.currentTimeMillis();
+	}
+	
+	after(): convol(){
+		long endTime=System.currentTimeMillis();
+		long diff=endTime-startTime;
+		if(diff>=5)
+			System.out.println("Convolution:"+(endTime-startTime));
 	}
 }
