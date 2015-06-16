@@ -10,7 +10,7 @@
 	<classpathentry kind="src" path="GeoImageViewer/src/test"/>
 	<classpathentry kind="src" path="GeoImage/src/main/resources"/>
 	<classpathentry kind="src" path="SentinelXMLReader/src/main/java"/>
-	<classpathentry kind="src" path="GeoLocation/src/main/java"/>
+	<classpathentry excluding="jrc/it/geolocation/aspect/Geolocation.aj|jrc/it/geolocation/aspect/SimpleShapefile.aj|jrc/it/geolocation/aspect/HermiteAspect.aj" kind="src" path="GeoLocation/src/main/java"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -290,7 +290,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/swing-worker-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/swing-layout-1.0.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

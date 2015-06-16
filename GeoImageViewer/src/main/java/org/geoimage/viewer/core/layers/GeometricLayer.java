@@ -7,17 +7,32 @@ package org.geoimage.viewer.core.layers;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
+import org.geotools.data.DataStore;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
+import org.opengis.feature.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.org.mozilla.javascript.internal.ObjArray;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 /**
  * This is THE class model for all Vector Data
@@ -96,6 +111,100 @@ public class GeometricLayer implements Cloneable{
         }
         return positions;
     }
+    
+    /**
+	 *  
+	 * 
+	 * 
+	 * @param imageP poligono creato con i punti di riferimento dell'immagine
+	 * @param geoName
+	 * @param dataStore  shape file
+	 * @param fc
+	 * @param schema
+	 * @param types
+	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
+	 * @throws IOException
+	 */
+    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP, String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
+        GeometricLayer out=null;
+        if (geoName.contains("Polygon") || geoName.contains("Line")) {
+                out = new GeometricLayer(GeometricLayer.POLYGON);
+                out.setName(dataStore.getTypeNames()[0]);
+                FeatureIterator<?> fi = fc.features();
+                try{
+                	ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                	List<Future<Object[]>> tasks=new ArrayList<Future<Object[]>>();
+                	
+	                while (fi.hasNext()) {
+	                		final Feature f = fi.next();
+	                    	Callable<Object[]> run=new Callable<Object[]>() {
+								@Override
+								public Object[] call() {
+									Object[] result=new Object[2];
+									try {
+										Attributes at = Attributes.createAttributes(schema, types);
+				                        for (int i = 0; i < f.getProperties().size(); i++) {
+				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
+				                        }
+				                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+				                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
+	
+				                        //buffer(0) is used to avoid intersection errors 
+				                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
+				                        if(!p2.isEmpty()){
+					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
+					                            if (!p2.getGeometryN(i).isEmpty()) {
+					                                result[0]=p2.getGeometryN(i);
+					                                result[1]=at;
+					                            	//out.put(p2.getGeometryN(i), at);
+					                            }
+					                        }
+				                        }	
+				                    } catch (Exception ex) {
+				                    	logger.error(ex.getMessage(),ex);
+				                    }
+									return result;
+								}
+							};
+							tasks.add(executor.submit(run));
+	                }
+	                executor.shutdown();
+	                for(Future<Object[]> f:tasks){
+	                	Object o[]=f.get();
+	                	if(o[0]!=null)
+	                		out.put((Geometry)o[0],(Attributes)o[1]);
+	                }
+	                
+                }catch(Exception e){
+                	logger.error(e.getMessage(),e);
+                }finally{
+                	fi.close();
+                }   
+                //out.put(imageP, Attributes.createAttributes(schema, types));
+            } else if (geoName.contains("Point")) {
+                out = new GeometricLayer(GeometricLayer.POINT);
+                FeatureIterator<?> fi = fc.features();
+                try{
+	                out.setName(dataStore.getTypeNames()[0]);
+	                while (fi.hasNext()) {
+	                    Feature f = fi.next();
+	                    Attributes at = Attributes.createAttributes(schema, types);
+	                    for (int i = 0; i < f.getProperties().size(); i++) {
+	                        at.set(schema[i],f.getProperty(schema[i]).getValue());
+	                    }
+	                    Geometry p2 = ((Geometry) (f.getDefaultGeometryProperty().getValue())).intersection(imageP);
+	                    if (!p2.isEmpty()) {
+	                        out.put(p2, at);
+	                    }
+	
+	                }
+	            }finally{
+	            	fi.close();
+	            }  
+            }
+        return out;
+    }
+    
 
     public GeometricLayer(String type) {
         geoms = new ArrayList<Geometry>();

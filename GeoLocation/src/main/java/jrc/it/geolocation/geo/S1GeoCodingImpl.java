@@ -417,7 +417,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @return double array with 2 elements [0]=zeroDopplerTimeSmooth  [1]=sRdistSmooth
 	 */
 	public double[] findZeroDoppler(List<double[]> statepVecInterp,double[] pXYZ,double[] timeStampInterp){
-			int iOptFactor = 10; //100 to improve speed
+		try{
+			int iOptFactor = 100;// to improve speed
 		    int nPointsAroundMin = 100;//100;//50;
 		    int nWindowLength = 7;//5;
 		    double nWindowLengthSize = FastMath.floor(nWindowLength/2);
@@ -425,26 +426,29 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    int size=statepVecInterp.size();
 
 		///**********Optimization************    
-		    double [][]diffSubsample = new double[size/iOptFactor][statepVecInterp.get(0).length];
-		    double []vDistSubsample = new double[size/iOptFactor];
+		    int sizeFactor=size/iOptFactor;
+		    double [][]diffSubsample = new double[sizeFactor][statepVecInterp.get(0).length];
+		    double []vDistSubsample = new double[sizeFactor];
 		    
-		    for(int i=0;i<size/iOptFactor;i++){
-		    	int pos=i*10;
+		    for(int i=0;i<sizeFactor;i++){
+		    	int pos=i*iOptFactor;
 		    	diffSubsample[i][0]=(statepVecInterp.get(pos)[0]-pXYZ[0])*(statepVecInterp.get(pos)[0]-pXYZ[0]);
 		    	diffSubsample[i][1]=(statepVecInterp.get(pos)[1]-pXYZ[1])*(statepVecInterp.get(pos)[1]-pXYZ[1]);
 		    	diffSubsample[i][2]=(statepVecInterp.get(pos)[2]-pXYZ[2])*(statepVecInterp.get(pos)[2]-pXYZ[2]);
 		    	vDistSubsample[i]=diffSubsample[i][0]+diffSubsample[i][1]+diffSubsample[i][2];
 		    }
+		    
+		    
 		    int idxMinSubsample=0;
 		    double distMinSubsample=vDistSubsample[0];
-		    for(int i=0;i<vDistSubsample.length;i++){
+		    for(int i=1;i<vDistSubsample.length;i++){
 		    	if(distMinSubsample>vDistSubsample[i]){
 		    		distMinSubsample=vDistSubsample[i];
 		    		idxMinSubsample=i;
 		    	}
 		    }
-		    double idxMin = idxMinSubsample * iOptFactor;
-		    // double idxMin =  (idxMinSubsample - 1) * iOptFactor + 1; Carlo to improve speed
+		  //  double idxMinold = idxMinSubsample * iOptFactor;
+		    double idxMin =  (idxMinSubsample ) * iOptFactor ; //Carlos to improve speed
 		    
 		    double[] vDist=new double[size];
 		    for(int i=0;i<vDistSubsample.length;i++){
@@ -489,12 +493,13 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    	}
 		    }
 		    int idxMinSmooth=new Double(idxMinSmoothW+iDistWInit+nWindowLengthSize-1).intValue();
-
-		    double sRdistSmooth = FastMath.sqrt(distMinSmooth);
-		    double zeroDopplerTimeSmooth = timeStampInterp[idxMinSmooth];
 		    
-		    double res[]={zeroDopplerTimeSmooth,sRdistSmooth};
+		    double res[]={timeStampInterp[idxMinSmooth],FastMath.sqrt(distMinSmooth)};
 		    return res; 
+		}catch(Exception e){
+			logger.error(e.getMessage(),e);
+			throw e;
+		}    
 	}
 	
 	
