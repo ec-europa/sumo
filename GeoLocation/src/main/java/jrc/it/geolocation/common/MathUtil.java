@@ -141,10 +141,8 @@ public class MathUtil {
 		int idU=0;
 		for(int n=0;n<sizeResult;n++){
 			double val=0;
-			
-			
+
 			for(int m=0;m<=n;m++){
-				
 				int idx1=m;
 				int idx2=n-m;
 				
@@ -152,7 +150,6 @@ public class MathUtil {
 					val=val+a[idx1]*b[idx2];
 				}	
 			}
-
 			u[idU]=val;
 			idU++;
 		}

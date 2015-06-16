@@ -16,6 +16,7 @@ import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -35,6 +36,7 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.text.cql2.CQL;
+import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
@@ -44,10 +46,12 @@ import org.opengis.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
@@ -58,9 +62,11 @@ import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 public class SimpleShapefileIO extends AbstractVectorIO {
 	private static Logger logger= LoggerFactory.getLogger(SimpleShapefileIO.class);
     public static String CONFIG_URL = "url";
-
+    private int margin=0;
+    
     public SimpleShapefileIO() {
         super();
+        margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
     }
 
     @SuppressWarnings("unused")
@@ -148,8 +154,6 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             // java.lang.Double, java.lang.String or java.util.Date
 
             return featureType;
-
-
         } catch (SchemaException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -183,63 +187,58 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             }
         }
     }
+	
+	private Polygon buildPolygon(GeoImageReader gir) throws ParseException, GeoTransformException, CQLException{
+		   double h=gir.getHeight();
+		   double w=gir.getWidth();
+		
+	       GeoTransform gt = gir.getGeoTransform();
+           
+           double[] x0 = gt.getGeoFromPixel(-margin, -margin);
+           double[] x01 = gt.getGeoFromPixel(-margin, h/3); //image center coords
+           double[] x02 = gt.getGeoFromPixel(-margin, h/2); //image center coords
+           double[] x03 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
+           double[] x1 = gt.getGeoFromPixel(-margin, margin + h);
+           double[] x12 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
+           double[] x2 = gt.getGeoFromPixel(margin + w, margin + h);
+           double[] x21 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords
+           double[] x22 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
+           double[] x23 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
+           double[] x3 = gt.getGeoFromPixel(margin + w, -margin);
+           double[] x31 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
+
+           //poligono con punti di riferimento dell'immagine
+           Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
+           
+           logger.debug("Polygon imageP isvalid:"+imageP.isValid());
+           
+           return imageP;
+	}
+	
 
     public GeometricLayer read(GeoImageReader gir) {
+    	GeometricLayer glout=null;
         try {
-            GeometricLayer out = null;
-            int margin = Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
-            //margin=0;
+        	
             //create a DataStore object to connect to the physical source 
             DataStore dataStore = DataStoreFinder.getDataStore(config);
             //retrieve a FeatureSource to work with the feature data
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             String geomName = featureSource.getSchema().getGeometryDescriptor().getLocalName();
-            //GcpsGeoTransform gt =(GcpsGeoTransform) gir.getGeoTransform();
-            GeoTransform gt = gir.getGeoTransform();
-            //FilterFactory ff = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
-            double[] x0;
-            double[] x1;
-            double[] x2;
-            double[] x3;
-            double[] x01; //image center coords
-            double[] x02; //image center coords
-            double[] x03; //image center coords
-            double[] x12; //image center coords
-            double[] x21; //image center coords
-            double[] x22; //image center coords
-            double[] x23; //image center coords
-            double[] x31; //image center coords
-
-            x0 = gt.getGeoFromPixel(-margin, -margin);
-            x01 = gt.getGeoFromPixel(-margin, gir.getHeight()/3);
-            x02 = gt.getGeoFromPixel(-margin, gir.getHeight()/2);
-            x03 = gt.getGeoFromPixel(-margin, gir.getHeight()*2/3);
-
-            x1 = gt.getGeoFromPixel(-margin, margin + gir.getHeight());
-            x12 = gt.getGeoFromPixel(margin + gir.getWidth()/2, margin +gir.getHeight());
-           
-            x2 = gt.getGeoFromPixel(margin + gir.getWidth(), margin + gir.getHeight());
-            x21 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()*2/3);
-            x22 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/2);
-            x23 = gt.getGeoFromPixel(margin + gir.getWidth(), gir.getHeight()/3);
             
-            x3 = gt.getGeoFromPixel(margin + gir.getWidth(), -margin);
-            x31 = gt.getGeoFromPixel(margin+gir.getWidth()/2, -margin);
-
-            double minx = FastMath.min(x0[0], FastMath.min(x01[0], FastMath.min(x02[0], FastMath.min(x03[0], FastMath.min(x1[0], FastMath.min(x12[0], FastMath.min(x2[0], FastMath.min(x21[0], FastMath.min(x22[0], FastMath.min(x23[0], FastMath.min(x3[0], x31[0])))))))))));
-            double maxx = FastMath.max(x0[0], FastMath.max(x01[0], FastMath.max(x02[0], FastMath.max(x03[0], FastMath.max(x1[0], FastMath.max(x12[0], FastMath.max(x2[0], FastMath.max(x21[0], FastMath.max(x22[0], FastMath.max(x23[0], FastMath.max(x3[0], x31[0])))))))))));
-            double miny = FastMath.min(x0[1], FastMath.min(x01[1], FastMath.min(x02[1], FastMath.min(x03[1], FastMath.min(x1[1], FastMath.min(x12[1], FastMath.min(x2[1], FastMath.min(x21[1], FastMath.min(x22[1], FastMath.min(x23[1], FastMath.min(x3[1], x31[1])))))))))));
-            double maxy = FastMath.max(x0[1], FastMath.max(x01[1], FastMath.max(x02[1], FastMath.max(x03[1], FastMath.max(x1[1], FastMath.max(x12[1], FastMath.max(x2[1], FastMath.max(x21[1], FastMath.max(x22[1], FastMath.max(x23[1], FastMath.max(x3[1], x31[1])))))))))));
-
-            logger.debug("minx:"+minx+"  maxx:"+maxx+"   miny:"+miny+   "maxy:"+ maxy);
+            Polygon imageP=buildPolygon(gir);
             
-            String f=new StringBuilder("BBOX(").append(geomName).append(",").append(minx).append(",").append(miny).append(",").append(maxx).append(",").append(maxy+")").toString();
+            Envelope e=imageP.getBoundary().getEnvelopeInternal();
+            String f=new StringBuilder("BBOX(").append(geomName).append(",")
+            		.append(e.getMinX()).append(",")
+            		.append(e.getMinY()).append(",")
+            		.append(e.getMaxX()).append(",")
+            		.append(e.getMaxY())
+            		.append(")").toString();
+            
             
             Filter filter=CQL.toFilter(f);
-
-            //poligono con punti di riferimento dell'immagine
-            Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
-            logger.debug("Polygon imageP isvalid:"+imageP.isValid());
+            
             //filtro prendendo solo le 'features' nell'area di interesse
             FeatureCollection<?, ?> fc=featureSource.getFeatures(filter);
             if (fc.isEmpty()) {
@@ -249,94 +248,19 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             String[] types = createTypes(fc.getSchema().getDescriptors());
 
             String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
-            out=createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
+            GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
             dataStore.dispose();
             fc=null;
-           // System.gc();
-            GeometricLayer glout = GeometricLayer.createImageProjectedLayer(out, gt,null);
-            return glout;
+
+            glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
+            
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
-        return null;
+        return glout;
 
     }
-	/**
-	 *  
-	 * 
-	 * 
-	 * @param imageP poligono creato con i punti di riferimento dell'immagine
-	 * @param geoName
-	 * @param dataStore  shape file
-	 * @param fc
-	 * @param schema
-	 * @param types
-	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
-	 * @throws IOException
-	 */
-    private GeometricLayer createFromSimpleGeometry(Polygon imageP, String geoName, DataStore dataStore, FeatureCollection fc, String[] schema, String[] types) throws IOException{
-        GeometricLayer out=null;
-        if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometricLayer(GeometricLayer.POLYGON);
-                out.setName(dataStore.getTypeNames()[0]);
-                FeatureIterator<?> fi = fc.features();
-                try{
-	                while (fi.hasNext()) {
-	                    Feature f = fi.next();
-	                    try {
-	                        Attributes at = Attributes.createAttributes(schema, types);
-	                        for (int i = 0; i < f.getProperties().size(); i++) {
-	                            at.set(schema[i], f.getProperty(schema[i]).getValue());
-	                        }
-	                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-	                        
-//	                        long startTime = System.currentTimeMillis();
-	                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
-//	                        long endTime = System.currentTimeMillis();
-//	                        System.out.println("simplify  " + (endTime - startTime) +  " milliseconds.");
-	                        
-
-	                        //buffer(0) is used to avoid intersection errors 
-	                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
-	                        if(!p2.isEmpty()){
-		                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
-		                            if (!p2.getGeometryN(i).isEmpty()) {
-		                                out.put(p2.getGeometryN(i), at);
-		                            }
-		                        }
-	                        }	
-	                            
-	                    } catch (Exception ex) {
-	                    	logger.error(ex.getMessage(),ex);
-	                    }
-	                }
-                }finally{
-                	fi.close();
-                }   
-                //out.put(imageP, Attributes.createAttributes(schema, types));
-            } else if (geoName.contains("Point")) {
-                out = new GeometricLayer(GeometricLayer.POINT);
-                FeatureIterator<?> fi = fc.features();
-                try{
-	                out.setName(dataStore.getTypeNames()[0]);
-	                while (fi.hasNext()) {
-	                    Feature f = fi.next();
-	                    Attributes at = Attributes.createAttributes(schema, types);
-	                    for (int i = 0; i < f.getProperties().size(); i++) {
-	                        at.set(schema[i],f.getProperty(schema[i]).getValue());
-	                    }
-	                    Geometry p2 = ((Geometry) (f.getDefaultGeometryProperty().getValue())).intersection(imageP);
-	                    if (!p2.isEmpty()) {
-	                        out.put(p2, at);
-	                    }
 	
-	                }
-	            }finally{
-	            	fi.close();
-	            }  
-            }
-        return out;
-    }
 /*
     @Override
     public void save(GeometricLayer layer, String projection,SarImageReader reader) {
