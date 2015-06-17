@@ -3,7 +3,7 @@ package jrc.it.geolocation.metadata;
 
 public abstract class AbstractMetadata implements IMetadata{
 	//for S1 always Increasing
-	protected boolean PixelTimeOrderingAscending;
+	protected boolean pixelTimeOrderingAscending;
 	protected String type="";
 	
 	//for S1 is rangePixelSpacing
@@ -44,11 +44,11 @@ public abstract class AbstractMetadata implements IMetadata{
 
 	
 	public boolean isPixelTimeOrderingAscending() {
-		return PixelTimeOrderingAscending;
+		return pixelTimeOrderingAscending;
 	}
 
 	public void setPixelTimeOrderingAscending(boolean pixelTimeOrderingAscending) {
-		PixelTimeOrderingAscending = pixelTimeOrderingAscending;
+		this.pixelTimeOrderingAscending = pixelTimeOrderingAscending;
 	}
 
 	public double getSamplePixelSpacing() {

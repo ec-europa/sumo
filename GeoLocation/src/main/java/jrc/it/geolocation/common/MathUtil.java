@@ -94,6 +94,18 @@ public class MathUtil {
         return p;
     }
     
+    public static double[][] transpose(double[][] m) {
+        // returns the transpose of this matrix object
+        double[][] t = new double[m[0].length][m.length];
+        int i, j;
+        for (i = 0; i<m.length; i++) {
+          for (j = 0; j<m[0].length; j++) {
+        	  t[j][i] = m[i][j];
+          }
+        }
+        return t;
+      }
+    
     
     /**
      * 

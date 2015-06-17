@@ -2,7 +2,6 @@ package jrc.it.geolocation.geo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,10 +15,7 @@ import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.FastMath;
-import org.lwjgl.Sys;
 import org.slf4j.LoggerFactory;
 
 public class S1GeoCodingImpl implements GeoCoding {
@@ -30,7 +26,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	private IMetadata.CoordinateConversion[] coordConv=null;
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
 	
-	private final int  iSafetyBufferAz=500;
+	private final int  iSafetyBufferAz=1000;
 	private List<double[]> statepVecInterp=null;
 	private List<double[]> statevVecInterp=null;
 	
@@ -59,7 +55,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * 
 	 */
 	@Override
-	public double[] pixelFromGeo(double lon,double lat)throws GeoLocationException{
+	public double[] pixelFromGeo(final double lon,final double lat)throws GeoLocationException{
 		double[] resultReverse=new double[2];
 		
 		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
@@ -217,7 +213,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * In Matlab forwardgeolocation
 	 */
 	@Override
-	public double[] geoFromPixel(double p, double l) throws GeoLocationException{
+	public double[] geoFromPixel(final double p, final double l) throws GeoLocationException{
 		try{
 			double[] results=new double[2];
 			
@@ -373,9 +369,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 					    double[][] sRvect = new double[][]{{Rx},{Ry},{Rz-normPt0}};
 					    
 					    double[][] qbig = new double[][]{xsUnit,ysUnit,zsUnit};
-
-					    RealMatrix m=MatrixUtils.createRealMatrix(qbig);
-					    qbig=m.transpose().getData();
+					    //RealMatrix m=MatrixUtils.createRealMatrix(qbig);
+					    //qbig=m.transpose().getData();
+					    qbig=MathUtil.transpose(qbig);
 					    
 					    double[][] qmat =MathUtil.multiplyMatrix(qbig,sRvect);
 					    q[0]=qmat[0][0]; //x
@@ -393,6 +389,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 					lon = FastMath.atan2(q[1],q[0]) * 180/FastMath.PI;
 					double lattmp = FastMath.asin(q[2]/FastMath.sqrt(q[0]*q[0]+q[1]*q[1]+q[2]*q[2])); //x^2+y^2+z^2
 					lat=FastMath.atan(FastMath.tan(lattmp) * FastMath.pow((GeoUtils.semiMajorAxis+pH),2)/FastMath.pow((GeoUtils.semiMinorAxis+pH),2)) * 180/FastMath.PI;
+					
 					pH = GeoUtils.getGeoidH(lon,lat);
 				}
 			}
