@@ -141,10 +141,12 @@ public class GeometricLayer implements Cloneable{
                 	ThreadPoolExecutor executor = new ThreadPoolExecutor(2,Runtime.getRuntime().availableProcessors(),2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());
                 	List<Callable<Object[]>> tasks=new ArrayList<Callable<Object[]>>();
                 	
+                	int total=0;
                 	for(int idx=0;idx<ff.length;idx++){
 	                //while (fi.hasNext()) {
 	                		final Feature f = (Feature)ff[idx];
-
+	                		final Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+	                		total=total+g.getCoordinates().length;
 	                    	Callable<Object[]> run=new Callable<Object[]>() {
 								@Override
 								public Object[] call() {
@@ -154,12 +156,11 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
-				                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+				                        
 				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
 	
 				                        //buffer(0) is used to avoid intersection errors 
 				                        Geometry p2 =g.buffer(0).intersection(imageP); 
-				                        		//EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
 				                        if(!p2.isEmpty()){
 					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 					                            if (!p2.getGeometryN(i).isEmpty()) {
@@ -177,18 +178,18 @@ public class GeometricLayer implements Cloneable{
 							};
 							tasks.add(run);//executor.submit(run));
 	                }
+                	System.out.println("POINTS:"+total);
                 	List<Future<Object[]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
 	                
-	                int total=0;
+	                
 	                for(Future<Object[]> f:results){
 	                	Object o[]=f.get();
 	                	if(o[0]!=null){
 	                		out.put((Geometry)o[0],(Attributes)o[1]);
-                            total=total+((Geometry)o[0]).getCoordinates().length;
 	                	}	
 	                }
-	                System.out.println("POINTS:"+total);
+	                
                 }catch(Exception e){
                 	logger.error(e.getMessage(),e);
                 }finally{
