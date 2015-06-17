@@ -1,6 +1,5 @@
 package jrc.it.geolocation.common;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.apache.commons.math3.util.FastMath;
@@ -19,23 +18,19 @@ public class GeoUtils {
 	 * @param lon
 	 * @return
 	 */
-	public static double[] convertFromGeoToEarthCentred(double lat, double lon){
-		/*	pX = (a^2/denomTmp + pH) * cosdpLat * cosdpLon;
-			pY = (a^2/denomTmp + pH) * cosdpLat * sindpLon;
-			pZ = (b^2/denomTmp + pH) * sindpLat;
-			pXYZ = [pX pY pZ];*/
-		
+	public static double[] convertFromGeoToEarthCentred(final double lat, final double lon){
 		double pH=GeoUtils.getGeoidH(lon, lat);
 		
+		double radLat=FastMath.toRadians(lat);
+		double radLon=FastMath.toRadians(lon);
+		
 		// Convert from geographic coordinates to Earth centred Earth fixed coordinates
-		double cosLat=FastMath.cos(FastMath.toRadians(lat));
-		double sinLat = FastMath.sin(FastMath.toRadians(lat));
-		double cosLon =FastMath.cos(FastMath.toRadians(lon));
-		double sinLon = FastMath.sin(FastMath.toRadians(lon));
-
+		double cosLat=FastMath.cos(radLat);
+		double sinLat = FastMath.sin(radLat);
+		double cosLon =FastMath.cos(radLon);
+		double sinLon = FastMath.sin(radLon);
 		
 		double denomTmp = FastMath.sqrt((semiMajorAxis2) *(cosLat*cosLat) + (semiMinorAxis2)*(sinLat*sinLat));
-		
 		
 		double pX = (semiMajorAxis2/denomTmp + pH) * cosLat * cosLon;
 		double pY = (semiMajorAxis2/denomTmp + pH) * cosLat * sinLon;
@@ -49,16 +44,20 @@ public class GeoUtils {
 		
 	
 	
-	public static class Geoid{
-		private double lat;
-		private double lon;
-		private double h;
+	public final static class Geoid{
+		private double lat=0;
+		private double lon=0;
+		private double latRad=0;
+		private double lonRad=0;
+		private double h=0;
 		
 		public Geoid(){}
 		
 		public Geoid(double lat,double lon,double h){
 			this.lat=lat;
 			this.lon=lon;
+			this.latRad=lat*FastMath.PI/180;
+			this.lonRad=lon*FastMath.PI/180;
 			this.h=h;
 		}
 		
@@ -74,6 +73,22 @@ public class GeoUtils {
 		public void setLon(double lon) {
 			this.lon = lon;
 		}
+		public double getLatRad() {
+			return latRad;
+		}
+
+		public void setLatRad(double latRad) {
+			this.latRad = latRad;
+		}
+
+		public double getLonRad() {
+			return lonRad;
+		}
+
+		public void setLonRad(double lonRad) {
+			this.lonRad = lonRad;
+		}
+
 		public double getH() {
 			return h;
 		}
@@ -83,14 +98,17 @@ public class GeoUtils {
 	}
 
 	
-	private static  Geoid[] geoidPoints=null;
+	private static  Geoid[][] geoidPoints=new Geoid[360][180];
 	
 	static{
 		Scanner inputStream=null;
 		try{
-			ArrayList<GeoUtils.Geoid> geoids=new ArrayList<GeoUtils.Geoid>();
+			//ArrayList<GeoUtils.Geoid> geoids=new ArrayList<GeoUtils.Geoid>();
+			Geoid[] points=new Geoid[180];
 			inputStream = new Scanner(GeoUtils.class.getClassLoader().getResourceAsStream("egm96.csv"));
 			inputStream.next();
+			int col=0;
+			int row=0;
 			while(inputStream.hasNext()){
                 //read single line, put in string
                 String data = inputStream.next();
@@ -99,11 +117,16 @@ public class GeoUtils {
                 double lat=Double.parseDouble(vals[1]);
                 double h=Double.parseDouble(vals[2]);
                 GeoUtils.Geoid g=new GeoUtils.Geoid(lat,lon,h);
-                geoids.add(g);
+                points[col]=g;
+                col++;
+                if(col==180){
+                	geoidPoints[row]=points;//geoids.toArray(new Geoid[0]);
+                	points=new Geoid[180];
+                	col=0;
+                	row++;
+                }
             }
 			inputStream.close();
-			
-			geoidPoints=geoids.toArray(new Geoid[0]);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(inputStream!=null)
@@ -115,19 +138,15 @@ public class GeoUtils {
 	 * @param lon
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
-	 */
-	public static double  getGeoidH(double lon,double lat){
-		int i=0;
-
+	 *
+	public static double  getGeoidH_old(double lon,double lat){
 		//first value
-		Geoid g=geoidPoints[i];
+		Geoid g=geoidPoints[0];
 		double minDist = distance(lon,lat,g.lon,g.lat);
 	    
 	    double h=g.h;
-		i++;
-		for(;i<geoidPoints.length&&minDist>110;i++){
-			if(minDist>5000)
-				i=i+25;
+		for(int i=1;i<geoidPoints.length&&minDist>115;){//i++){
+			i=i+(new Double(minDist).intValue()/115);
 			g=geoidPoints[i];
 			//geoidPoints
 		    double dist =distance(lon,lat,g.lon,g.lat);
@@ -137,9 +156,67 @@ public class GeoUtils {
 		    }	
 		    
 		}
+		 System.out.println("-->H:"+h);
 		return h;
 		
-	}	
+	}*/
+	
+	
+	/**
+	 * 
+	 * @param lon
+	 * @param lat
+	 * @return the geoid Height for a point (lon,lat)
+	 */
+	public static double  getGeoidH(final double lon,final double lat){
+		double h=0;
+		
+		double lonRad=lon*FastMath.PI/180;
+		double latRad=lat*FastMath.PI/180;
+		
+		boolean finded=false;
+		
+		for(int row=0;row<geoidPoints.length&&!finded;row++){
+			int middle=geoidPoints[0].length/2;
+			Geoid geoRow[]=geoidPoints[row];
+			//first value
+			Geoid g=geoRow[middle];
+			double middleDist = distance(lonRad,lat,g.lonRad,g.latRad);
+		    if(middleDist<110){
+		    	h= g.h;
+		    }else{
+		    	int left=0;
+				int right=geoidPoints[0].length;
+				
+				for(;right-left>1;){
+					int middleLeft=(left+middle)/2;
+					int middleRight=middle+(right-middle)/2;
+					
+					double middleDistL = distance(lonRad,latRad,geoRow[middleLeft].lonRad,geoRow[middleLeft].latRad);
+					double middleDistR = distance(lonRad,latRad,geoRow[middleRight].lonRad,geoRow[middleRight].latRad);
+					if(middleDistL<middleDistR){
+						right=middle;
+						middle=left+(right-left)/2;
+						middleDist=middleDistL;
+					}else{
+						left=middle;
+						middle=left+(right-left)/2;
+						middleDist=middleDistR;
+					}
+					if(middleDist<110){
+				    	h=geoRow[middle].h;
+				    	finded=true;
+				    	break;
+				    }
+					
+					
+				}
+		    }
+		}    
+	    //System.out.println("H:"+h);
+		return h;
+		
+	}
 	
 	/**
 	 * 
@@ -150,16 +227,29 @@ public class GeoUtils {
 	 * @return calculate the distance between 2 points
 	 */
 	public static double distance(double lon1, double lat1, double lon2, double lat2){
+		lon1=(lon1*FastMath.PI)/180;
+		lat1=(lat1*FastMath.PI)/180;
+		
+		lon2=(lon2*FastMath.PI)/180;
+		lat2=(lat2*FastMath.PI)/180;
+	    
+		return distanceRad(lon1,lat1,lon2,lat2);
+		
+	}
+	
+	/**
+	 * 
+	 * @param lon1 in radians
+	 * @param lat1 in radians
+	 * @param lon2 in radians
+	 * @param lat2 in radians
+	 * @return calculate the distance between 2 points
+	 */
+	public static double distanceRad(double lonRad1, double latRad1, double lonRad2, double latRad2){
 		double R=6372.795477598;
 		
-		lon1=(lon1*FastMath.PI)/180;
-		lon2=(lon2*FastMath.PI)/180;
-		lat1=(lat1*FastMath.PI)/180;
-		lat2=(lat2*FastMath.PI)/180;
-		
-	    
-		double dlon = FastMath.abs(lon1 - lon2);
-		double p=FastMath.acos(FastMath.sin(lat2)*FastMath.sin(lat1)+FastMath.cos(lat2) * FastMath.cos(lat1) * FastMath.cos(dlon));
+		double dlon = FastMath.abs(lonRad1 - lonRad2);
+		double p=FastMath.acos(FastMath.sin(latRad2)*FastMath.sin(latRad1)+FastMath.cos(latRad2) * FastMath.cos(latRad1) * FastMath.cos(dlon));
 		double d = R * p ;
 		
 		return d;

@@ -15,6 +15,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
@@ -130,13 +133,18 @@ public class GeometricLayer implements Cloneable{
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);
                 out.setName(dataStore.getTypeNames()[0]);
-                FeatureIterator<?> fi = fc.features();
+                //FeatureIterator<?> fi = fc.features();
+                Object[]ff=fc.toArray();
+                
                 try{
-                	ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-                	List<Future<Object[]>> tasks=new ArrayList<Future<Object[]>>();
+                	//ExecutorService executor = Executors.newFixedThreadPool();
+                	ThreadPoolExecutor executor = new ThreadPoolExecutor(2,Runtime.getRuntime().availableProcessors(),2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());
+                	List<Callable<Object[]>> tasks=new ArrayList<Callable<Object[]>>();
                 	
-	                while (fi.hasNext()) {
-	                		final Feature f = fi.next();
+                	for(int idx=0;idx<ff.length;idx++){
+	                //while (fi.hasNext()) {
+	                		final Feature f = (Feature)ff[idx];
+
 	                    	Callable<Object[]> run=new Callable<Object[]>() {
 								@Override
 								public Object[] call() {
@@ -147,10 +155,11 @@ public class GeometricLayer implements Cloneable{
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
 				                        Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-				                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
+				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
 	
 				                        //buffer(0) is used to avoid intersection errors 
-				                        Geometry p2 = EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
+				                        Geometry p2 =g.buffer(0).intersection(imageP); 
+				                        		//EnhancedPrecisionOp.intersection(g.buffer(0),imageP);
 				                        if(!p2.isEmpty()){
 					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 					                            if (!p2.getGeometryN(i).isEmpty()) {
@@ -166,19 +175,24 @@ public class GeometricLayer implements Cloneable{
 									return result;
 								}
 							};
-							tasks.add(executor.submit(run));
+							tasks.add(run);//executor.submit(run));
 	                }
+                	List<Future<Object[]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
-	                for(Future<Object[]> f:tasks){
-	                	Object o[]=f.get();
-	                	if(o[0]!=null)
-	                		out.put((Geometry)o[0],(Attributes)o[1]);
-	                }
 	                
+	                int total=0;
+	                for(Future<Object[]> f:results){
+	                	Object o[]=f.get();
+	                	if(o[0]!=null){
+	                		out.put((Geometry)o[0],(Attributes)o[1]);
+                            total=total+((Geometry)o[0]).getCoordinates().length;
+	                	}	
+	                }
+	                System.out.println("POINTS:"+total);
                 }catch(Exception e){
                 	logger.error(e.getMessage(),e);
                 }finally{
-                	fi.close();
+                	//fi.close();
                 }   
                 //out.put(imageP, Attributes.createAttributes(schema, types));
             } else if (geoName.contains("Point")) {

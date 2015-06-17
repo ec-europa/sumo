@@ -55,24 +55,30 @@ public class ParallelGeoCoding {
 	}
 	
 	
-	
-	public List<double[]>parallelPixelFromGeo(Coordinate[] coords) throws InterruptedException, ExecutionException {
+	/**
+	 * 
+	 * @param coords
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public List<double[]>parallelPixelFromGeo(final Coordinate[] coords) throws InterruptedException, ExecutionException {
 		int processors = Runtime.getRuntime().availableProcessors();
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(2,processors,5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//(ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(2,processors,2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());//(ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
 		try{			
-			List<Future<double[]>> tasks=new ArrayList<Future<double[]>>();
-			for(Coordinate c:coords){
-				tasks.add(executor.submit(new ParallelReverse(c.x,c.y)));
+			final List<Future<double[]>> tasks=new ArrayList<Future<double[]>>();
+			for(int i=0;i<coords.length;i++){
+				tasks.add(executor.submit(new ParallelReverse(coords[i].x,coords[i].y)));
 			}	
-			//List <Future<double[]>> results = executor.invokeAll(tasks);
 			executor.shutdown();
 			
         
-	        List<double[]> points=new ArrayList<double[]>();
+	        final List<double[]> points=new ArrayList<double[]>();
 	        for (Future<double[]> result : tasks) {
 	        	List<double[]> l=Arrays.asList(result.get());
 	            points.addAll(l);
 	        }               
+	        
 	        return points;
 		}catch(Exception e){
 			if(!executor.isShutdown())
@@ -81,12 +87,12 @@ public class ParallelGeoCoding {
 		}
     }    
 
-	public List<double[]>parallelGeoFromPixel(Coordinate[] coords) throws InterruptedException, ExecutionException  {
+	public List<double[]>parallelGeoFromPixel(final Coordinate[] coords) throws InterruptedException, ExecutionException  {
 		int processors = Runtime.getRuntime().availableProcessors();
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(2,processors,5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//(ThreadPoolExecutor)Executors.newFixedThreadPool(processors);
 
 		List<Callable<double[]>> tasks=new ArrayList<Callable<double[]>>();
-		for(Coordinate c:coords){
+		for(final Coordinate c:coords){
 			tasks.add(new ParallelForward(c.x,c.y));
 		}	
 		List <Future<double[]>> results = executor.invokeAll(tasks);

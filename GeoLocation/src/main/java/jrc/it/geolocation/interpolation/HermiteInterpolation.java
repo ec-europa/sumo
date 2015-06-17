@@ -103,22 +103,6 @@ public class HermiteInterpolation {//implements IInterpolation{
 	
 	/**
 	 * 
-	 * @param timeDiff
-	 * @return
-	 */
-	private double mean(double[] timeDiff){
-		double mean=0;
-		for(int i=0;i<timeDiff.length;i++){
-			mean=mean+timeDiff[i];
-		}
-		mean=mean/timeDiff.length;
-		
-		return mean;
-	}
-	
-	
-	/**
-	 * 
 	 * @param matrix
 	 * @return
 	 */
@@ -162,29 +146,24 @@ public class HermiteInterpolation {//implements IInterpolation{
 			matrix.add(row1);
 			matrix.add(row2);
 		}	
-		
-			
-
 		return  (double[][])matrix.toArray(new double[0][]);
+	}
+
+
+	/**
+	 * 
+	 * @param timeDiff
+	 * @return
+	 */
+	private double mean(double[] timeDiff){
+		double mean=0;
+		for(int i=0;i<timeDiff.length;i++){
+			mean=mean+timeDiff[i];
+		}
+		mean=mean/timeDiff.length;
 		
+		return mean;
 	}
-	
-	/*
-	public double[][] getInterpPpointsOutput() {
-		return interpPpointsOutput;
-	}
-
-
-	public double[][] getInterpVpointsOutput() {
-		return interpVpointsOutput;
-	}
-
-
-	public double[] getTimeStampInterpSecondsRefOutput() {
-		return timeStampInterpSecondsRefOutput;
-	}*/
-
-
 	
 	
 }
