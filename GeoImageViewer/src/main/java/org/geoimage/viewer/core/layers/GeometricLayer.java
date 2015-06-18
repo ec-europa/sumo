@@ -10,10 +10,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,8 +25,6 @@ import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.org.mozilla.javascript.internal.ObjArray;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -133,21 +128,15 @@ public class GeometricLayer implements Cloneable{
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);
                 out.setName(dataStore.getTypeNames()[0]);
-                //FeatureIterator<?> fi = fc.features();
-                Object[]ff=fc.toArray();
-                
+                FeatureIterator<?> fi = fc.features();
                 try{
-                	//ExecutorService executor = Executors.newFixedThreadPool();
                 	ThreadPoolExecutor executor = new ThreadPoolExecutor(2,Runtime.getRuntime().availableProcessors(),2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());
                 	List<Callable<Object[]>> tasks=new ArrayList<Callable<Object[]>>();
                 	
-                	int total=0;
-                	for(int idx=0;idx<ff.length;idx++){
-	                //while (fi.hasNext()) {
-	                		final Feature f = (Feature)ff[idx];
-	                		final Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-	                		total=total+g.getCoordinates().length;
+	                while (fi.hasNext()) {
+	                		final Feature f = fi.next();//(Feature)ff[idx];
 	                    	Callable<Object[]> run=new Callable<Object[]>() {
+	                    		Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
 								@Override
 								public Object[] call() {
 									Object[] result=new Object[2];
@@ -156,17 +145,16 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
+				                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
 				                        
-				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
-	
 				                        //buffer(0) is used to avoid intersection errors 
-				                        Geometry p2 =g.buffer(0).intersection(imageP); 
+				                        Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
+				                        
 				                        if(!p2.isEmpty()){
 					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 					                            if (!p2.getGeometryN(i).isEmpty()) {
 					                                result[0]=p2.getGeometryN(i);
 					                                result[1]=at;
-					                            	//out.put(p2.getGeometryN(i), at);
 					                            }
 					                        }
 				                        }	
@@ -176,9 +164,9 @@ public class GeometricLayer implements Cloneable{
 									return result;
 								}
 							};
-							tasks.add(run);//executor.submit(run));
+							tasks.add(run);
 	                }
-                	System.out.println("POINTS:"+total);
+                	
                 	List<Future<Object[]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
 	                
@@ -193,7 +181,7 @@ public class GeometricLayer implements Cloneable{
                 }catch(Exception e){
                 	logger.error(e.getMessage(),e);
                 }finally{
-                	//fi.close();
+                	fi.close();
                 }   
                 //out.put(imageP, Attributes.createAttributes(schema, types));
             } else if (geoName.contains("Point")) {

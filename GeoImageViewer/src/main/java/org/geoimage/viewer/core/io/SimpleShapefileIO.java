@@ -10,14 +10,13 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
@@ -26,6 +25,7 @@ import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
+import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureSource;
@@ -38,11 +38,13 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
+import org.opengis.filter.identity.FeatureId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +54,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 /**
  *
@@ -62,7 +62,7 @@ import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 public class SimpleShapefileIO extends AbstractVectorIO {
 	private static Logger logger= LoggerFactory.getLogger(SimpleShapefileIO.class);
     public static String CONFIG_URL = "url";
-    private int margin=0;
+    private int margin=100;
     
     public SimpleShapefileIO() {
         super();
@@ -159,8 +159,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         }
         return null;
     }
-    
-	private static void writeToShapefile(DataStore data, FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
+    private static void writeToShapefile(DataStore data, FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
     	SimpleFeatureStore store = null;
     	
         DefaultTransaction transaction = new DefaultTransaction();
@@ -187,6 +186,45 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             }
         }
     }
+	private static void writeToShapefile2(ShapefileDataStore newDataStore, final FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
+    	/*
+         * Write the features to the shapefile
+         */
+		try {
+	        String typeName = newDataStore.getTypeNames()[0];
+	        SimpleFeatureSource featureSource = newDataStore.getFeatureSource(typeName);
+	        DefaultTransaction transaction =null;
+	        
+	        if (featureSource instanceof SimpleFeatureStore) {
+	        	try {
+	        		transaction = new DefaultTransaction();
+		            SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
+		            try {
+		            	featureStore.addFeatures(collection);
+		            } catch (Exception problem) {
+		            	problem.printStackTrace();
+		            }	
+		            SimpleFeatureType featureType = featureStore.getSchema();
+		            featureStore.setTransaction(transaction);
+		            transaction.commit();
+	
+	            } catch (Exception problem) {
+	                problem.printStackTrace();
+                    transaction.rollback();
+	            } finally {
+	                transaction.close();
+	            }
+	        }   
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+	
+	
+	
+	
+	
 	
 	private Polygon buildPolygon(GeoImageReader gir) throws ParseException, GeoTransformException, CQLException{
 		   double h=gir.getHeight();
@@ -236,6 +274,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             		.append(e.getMaxY())
             		.append(")").toString();
             
+           // String f2=new StringBuilder("CROSSES(").append(geomName).append(",").append(imageP.toText()).append(")").toString();
             
             Filter filter=CQL.toFilter(f);
             
@@ -250,9 +289,13 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
             GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
             dataStore.dispose();
+           
+            
             fc=null;
-
+            
             glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
+            
+         //   save("F://SumoImgs//test_geo_loc//test.shp",glout, "EPSG:4326");
             
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
@@ -261,23 +304,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 
     }
 	
-/*
-    @Override
-    public void save(GeometricLayer layer, String projection,SarImageReader reader) {
-    	GeoTransform transform=reader.getGeoTransform();
-        try {
-            layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
-            String filename = ((URL) config.get(CONFIG_URL)).getPath();
-            layername = filename.substring(filename.lastIndexOf(File.separator) + 1, filename.lastIndexOf("."));
-            SimpleFeatureType ft = createFeatureType(layername, layer);
-            FileDataStore fileDataStore = createDataStore(filename, ft, projection);
-            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection);
-            
-            writeToShapefile(fileDataStore, features);
-        } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
-    }*/
+
     @Override
     public void save(GeometricLayer layer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
@@ -303,6 +330,30 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         	logger.error(ex.getMessage(),ex);
         }
     }
+    
+    public void save(String filePath,GeometricLayer projectedLayer, String projection) {
+        try {
+            File newFile = new File(filePath);
+            ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
+            Map<String, Serializable> params = new HashMap<String, Serializable>();
+            params.put("url", newFile.toURI().toURL());
+            params.put("create spatial index", Boolean.TRUE);
+
+            SimpleFeatureType ft = createFeatureType(layername, projectedLayer);
+            ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
+            newDataStore.createSchema(ft);
+            
+            newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
+            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, projectedLayer, projection);
+
+            
+            writeToShapefile(newDataStore,features);
+            
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
+    }
+
 
     private static String[] createSchema(Collection<PropertyDescriptor> attributeTypes) {
         String[] out = new String[attributeTypes.size()];

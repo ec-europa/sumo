@@ -133,8 +133,6 @@ public abstract class AbstractBatchAnalysis {
 					outfile=outfile.append("_").append(((CosmoSkymedImage)reader).getGroup());
 				}
 
-    		   
-    		   System.out.println("Writing:"+outfile.toString());
     		   l.save(outfile.toString(),ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
     		   
     		   

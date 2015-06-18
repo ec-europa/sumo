@@ -201,7 +201,7 @@ public abstract class Sentinel1 extends SarImageReader {
             }
             geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
             //String epsg = "EPSG:4326";
-            //testTransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
