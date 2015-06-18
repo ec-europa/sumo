@@ -145,18 +145,20 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
-				                        g=TopologyPreservingSimplifier.simplify(g,0.0005);
+				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
 				                        
 				                        //buffer(0) is used to avoid intersection errors 
 				                        Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
 				                        
 				                        if(!p2.isEmpty()){
+				                        	result[0]=p2;
+			                                result[1]=at;/*
 					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
 					                            if (!p2.getGeometryN(i).isEmpty()) {
 					                                result[0]=p2.getGeometryN(i);
 					                                result[1]=at;
 					                            }
-					                        }
+					                        }*/
 				                        }	
 				                    } catch (Exception ex) {
 				                    	logger.error(ex.getMessage(),ex);
