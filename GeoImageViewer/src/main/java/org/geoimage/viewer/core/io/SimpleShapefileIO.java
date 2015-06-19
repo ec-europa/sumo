@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
@@ -24,27 +23,25 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FileDataStore;
+import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
-import org.opengis.filter.identity.FeatureId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,72 +156,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
         }
         return null;
     }
-    private static void writeToShapefile(DataStore data, FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
-    	SimpleFeatureStore store = null;
-    	
-        DefaultTransaction transaction = new DefaultTransaction();
-        try {
-            String featureName = data.getTypeNames()[0];
-            // Tell it the name of the shapefile it should look for in our DataStore
-            store = (SimpleFeatureStore) (data.getFeatureSource(featureName));
-            // Then set the transaction for that FeatureStore
-            store.setTransaction(transaction);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            store.addFeatures(collection);
-            transaction.commit();
-            transaction.close();
-        } catch (Exception ex) {
-            try {
-                transaction.rollback();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-	private static void writeToShapefile2(ShapefileDataStore newDataStore, final FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
-    	/*
-         * Write the features to the shapefile
-         */
-		try {
-	        String typeName = newDataStore.getTypeNames()[0];
-	        SimpleFeatureSource featureSource = newDataStore.getFeatureSource(typeName);
-	        DefaultTransaction transaction =null;
-	        
-	        if (featureSource instanceof SimpleFeatureStore) {
-	        	try {
-	        		transaction = new DefaultTransaction();
-		            SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
-		            try {
-		            	featureStore.addFeatures(collection);
-		            } catch (Exception problem) {
-		            	problem.printStackTrace();
-		            }	
-		            SimpleFeatureType featureType = featureStore.getSchema();
-		            featureStore.setTransaction(transaction);
-		            transaction.commit();
-	
-	            } catch (Exception problem) {
-	                problem.printStackTrace();
-                    transaction.rollback();
-	            } finally {
-	                transaction.close();
-	            }
-	        }   
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }
-	
-	
-	
-	
-	
+    
 	
 	private Polygon buildPolygon(GeoImageReader gir) throws ParseException, GeoTransformException, CQLException{
 		   double h=gir.getHeight();
@@ -274,7 +206,7 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             		.append(e.getMaxY())
             		.append(")").toString();
             
-           // String f2=new StringBuilder("CROSSES(").append(geomName).append(",").append(imageP.toText()).append(")").toString();
+            //String f2=new StringBuilder("CROSSES(").append(geomName).append(",").append(imageP.toText()).append(")").toString();
             
             Filter filter=CQL.toFilter(f);
             
@@ -295,8 +227,6 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             
             glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
             
-         //   save("F://SumoImgs//test_geo_loc//test.shp",glout, "EPSG:4326");
-            
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -304,7 +234,8 @@ public class SimpleShapefileIO extends AbstractVectorIO {
 
     }
 	
-
+    
+    
     @Override
     public void save(GeometricLayer layer, String projection,SarImageReader reader) {
     	GeoTransform transform=reader.getGeoTransform();
@@ -325,35 +256,82 @@ public class SimpleShapefileIO extends AbstractVectorIO {
             
             FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, layer, projection);
             
-            writeToShapefile(newDataStore, features);
+            //writeToShapefile(newDataStore, features);
+            exportToShapefile(ft, features, newFile.getName(), newFile.getParentFile());
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
     }
     
-    public void save(String filePath,GeometricLayer projectedLayer, String projection) {
+    private static void writeToShapefile(DataStore data, FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
+    	SimpleFeatureStore store = null;
+    	
+        DefaultTransaction transaction = new DefaultTransaction();
         try {
-            File newFile = new File(filePath);
-            ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
-            Map<String, Serializable> params = new HashMap<String, Serializable>();
-            params.put("url", newFile.toURI().toURL());
-            params.put("create spatial index", Boolean.TRUE);
+            String featureName = data.getTypeNames()[0];
+            // Tell it the name of the shapefile it should look for in our DataStore
+            store = (SimpleFeatureStore) (data.getFeatureSource(featureName));
+            // Then set the transaction for that FeatureStore
+            store.setTransaction(transaction);
 
-            SimpleFeatureType ft = createFeatureType(layername, projectedLayer);
-            ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
-            newDataStore.createSchema(ft);
-            
-            newDataStore.forceSchemaCRS(DefaultGeographicCRS.WGS84);
-            FeatureCollection<SimpleFeatureType,SimpleFeature>  features = createFeatures(ft, projectedLayer, projection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            
-            writeToShapefile(newDataStore,features);
-            
+        try {
+            store.addFeatures(collection);
+            transaction.commit();
+            transaction.close();
         } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
+            try {
+                transaction.rollback();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+ // exportToShapefile start
+    public DataStore exportToShapefile(SimpleFeatureType ft,FeatureCollection<SimpleFeatureType,SimpleFeature> collection, String typeName, File directory)
+            throws IOException {
+        // existing feature source from MemoryDataStore
+        //SimpleFeatureSource featureSource = memory.getFeatureSource(typeName);
+        //SimpleFeatureType ft = featureSource.getSchema();
+        
+        String fileName = typeName;//ft.getTypeName();
+        File file = new File(directory, fileName);
+        
+        Map<String, java.io.Serializable> creationParams = new HashMap<String, java.io.Serializable>();
+        creationParams.put("url", DataUtilities.fileToURL(file));
+        
+        FileDataStoreFactorySpi factory = FileDataStoreFinder.getDataStoreFactory("shp");
+        DataStore dataStore = factory.createNewDataStore(creationParams);
+        
+        dataStore.createSchema(ft);
+        
+        // The following workaround to write out the prj is no longer needed
+        // ((ShapefileDataStore)dataStore).forceSchemaCRS(ft.getCoordinateReferenceSystem());
+        
+        SimpleFeatureStore featureStore = (SimpleFeatureStore) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
+        
+        Transaction t = new DefaultTransaction();
+        try {
+            //SimpleFeatureCollection collection = featureSource.getFeatures(); // grab all features
+            featureStore.addFeatures(collection);
+            t.commit(); // write it out
+        } catch (IOException eek) {
+            eek.printStackTrace();
+            try {
+                t.rollback();
+            } catch (IOException doubleEeek) {
+                // rollback failed?
+            	doubleEeek.printStackTrace();
+            }
+        } finally {
+            t.close();
+        }
+        return dataStore;
+    }
 
     private static String[] createSchema(Collection<PropertyDescriptor> attributeTypes) {
         String[] out = new String[attributeTypes.size()];

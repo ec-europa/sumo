@@ -111,8 +111,6 @@ public class GeometricLayer implements Cloneable{
     }
     
     /**
-	 *  
-	 * 
 	 * 
 	 * @param imageP poligono creato con i punti di riferimento dell'immagine
 	 * @param geoName
@@ -151,14 +149,17 @@ public class GeometricLayer implements Cloneable{
 				                        Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
 				                        
 				                        if(!p2.isEmpty()){
-				                        	result[0]=p2;
-			                                result[1]=at;/*
-					                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
-					                            if (!p2.getGeometryN(i).isEmpty()) {
-					                                result[0]=p2.getGeometryN(i);
-					                                result[1]=at;
-					                            }
-					                        }*/
+			                                if(p2.getGeometryType().equalsIgnoreCase("MULTIPOLYGON")){
+						                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
+						                            if (!p2.getGeometryN(i).isEmpty()) {
+						                                result[0]=p2.getGeometryN(i);
+						                                result[1]=at;
+						                            }
+						                        }
+			                                }else{
+					                        	result[0]=p2;
+				                                result[1]=at;
+			                                }	
 				                        }	
 				                    } catch (Exception ex) {
 				                    	logger.error(ex.getMessage(),ex);
