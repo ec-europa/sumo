@@ -142,7 +142,7 @@ public class GeometricLayer implements Cloneable{
         final GeometryFactory geometryFactory=new GeometryFactory();
         
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometricLayer(GeometricLayer.POLYGON);
+                out = new GeometricLayer(GeometricLayer.LINESTRING);//POLYGON);
                 out.setName(dataStore.getTypeNames()[0]);
                 out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
                 
