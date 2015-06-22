@@ -20,17 +20,23 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geotools.data.DataStore;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.GeometryClipper;
 import org.opengis.feature.Feature;
+import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
+
 
 /**
  * This is THE class model for all Vector Data
@@ -48,6 +54,10 @@ public class GeometricLayer implements Cloneable{
     private String type;
     private String name;
     private String projection;
+    private SimpleFeatureSource featureSource =null;
+    
+    
+    private GeometricLayer(){}
     
     /**
      * 
@@ -63,7 +73,9 @@ public class GeometricLayer implements Cloneable{
      * @return
      * @throws GeoTransformException 
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    public static GeometricLayer createImageProjectedLayer(GeometricLayer oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    	GeometricLayer positions=oldPositions.clone();
+    	
     	long startTime = System.currentTimeMillis();
     	for(Geometry geom:positions.geoms){
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
@@ -76,8 +88,9 @@ public class GeometricLayer implements Cloneable{
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer positions, AffineTransform geoTransform) {
-        //positions=positions.clone();
+    public static GeometricLayer createImageProjectedLayer(GeometricLayer oldPositions, AffineTransform geoTransform) {
+    	GeometricLayer positions=oldPositions.clone();
+    	
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
                 Point2D.Double temp=new Point2D.Double();
@@ -97,8 +110,9 @@ public class GeometricLayer implements Cloneable{
      * Modify the GeometricLayer so the layer coordinates system matches the world coordinate system (EPSG projection).
      * @throws GeoTransformException 
      */
-    public static GeometricLayer createWorldProjectedLayer(GeometricLayer positions, GeoTransform geoTransform, String projection) throws GeoTransformException {
-        //positions=positions.clone();
+    public static GeometricLayer createWorldProjectedLayer(GeometricLayer oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    	GeometricLayer positions=oldPositions.clone();
+        
         positions.projection=projection;
         for(Geometry geom:positions.geoms){
             for(Coordinate pos:geom.getCoordinates()){
@@ -110,6 +124,8 @@ public class GeometricLayer implements Cloneable{
         return positions;
     }
     
+    
+
     /**
 	 * 
 	 * @param imageP poligono creato con i punti di riferimento dell'immagine
@@ -123,16 +139,20 @@ public class GeometricLayer implements Cloneable{
 	 */
     public static GeometricLayer createFromSimpleGeometry(final Polygon imageP, String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
         GeometricLayer out=null;
+        final GeometryFactory geometryFactory=new GeometryFactory();
+        
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);
                 out.setName(dataStore.getTypeNames()[0]);
+                out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
+                
                 FeatureIterator<?> fi = fc.features();
                 try{
                 	ThreadPoolExecutor executor = new ThreadPoolExecutor(2,Runtime.getRuntime().availableProcessors(),2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());
                 	List<Callable<Object[]>> tasks=new ArrayList<Callable<Object[]>>();
                 	
 	                while (fi.hasNext()) {
-	                		final Feature f = fi.next();//(Feature)ff[idx];
+	                		final Feature f = fi.next();
 	                    	Callable<Object[]> run=new Callable<Object[]>() {
 	                    		Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
 								@Override
@@ -143,10 +163,24 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
-				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
+				                        Coordinate[] coords=g.getCoordinates();
+				                        List<Coordinate>listCoords=new ArrayList<>();
+				                        for(int i=0;i<coords.length;i++){
+				                        	Point point = geometryFactory.createPoint(coords[i]);
+				                            if (imageP.contains(point)) {
+				                            	listCoords.add(coords[i]);
+				                            }
+				                        }
+
+				                        Geometry p2=geometryFactory.createLineString(listCoords.toArray(new Coordinate[0]));
+				                        result[0]=p2;
+		                                result[1]=at;
+				                        
+				              /*         // g=TopologyPreservingSimplifier.simplify(g,0.0005);
 				                        
 				                        //buffer(0) is used to avoid intersection errors 
 				                        Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
+				                        //Geometry p2 =clipper.clip(g, true);
 				                        
 				                        if(!p2.isEmpty()){
 			                                if(p2.getGeometryType().equalsIgnoreCase("MULTIPOLYGON")){
@@ -159,8 +193,12 @@ public class GeometricLayer implements Cloneable{
 			                                }else{
 					                        	result[0]=p2;
 				                                result[1]=at;
-			                                }	
-				                        }	
+			                                }
+			                                
+			                                
+			                                
+				                        }	*/
+				                        
 				                    } catch (Exception ex) {
 				                    	logger.error(ex.getMessage(),ex);
 				                    }
@@ -226,6 +264,9 @@ public class GeometricLayer implements Cloneable{
     public GeometricLayer clone(){
         GeometricLayer out=new GeometricLayer(type);
         out.name=name;
+        out.projection=projection;
+        out.featureSource=featureSource;
+        
         for(int i=0;i<geoms.size();i++){
             out.geoms.add(i,(Geometry)geoms.get(i).clone());
             out.atts.add(i,atts.get(i).clone());
@@ -413,4 +454,12 @@ public class GeometricLayer implements Cloneable{
     public void setProjection(String projection) {
         this.projection = projection;
     }
+
+	public SimpleFeatureSource getFeatureSource() {
+		return featureSource;
+	}
+
+	public void setFeatureSource(SimpleFeatureSource featureSource) {
+		this.featureSource = featureSource;
+	}
 }
