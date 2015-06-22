@@ -35,10 +35,6 @@ public class VectorIOFactory {
     public static AbstractVectorIO createVectorIO(int type, Map<String, Object> config) {
     	AbstractVectorIO vio=null;
     	switch(type){
-	    	case SIMPLE_SHAPEFILE: {
-	            vio = new SimpleShapefileIO();
-	            break;
-	        } 
 	    	case POSTGIS: {
 	            vio = new PostgisIO();
 	            break;
