@@ -19,6 +19,7 @@ import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
+import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.util.Constant;
@@ -57,11 +58,8 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                 	if(l!=null){
                         try {
                         	File shape=new File(Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK));
-                            //URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
-                            Map<String,Object> config=new HashMap<String,Object>();
-                            config.put("url", shape.toURI().toURL());
-                            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                            GeometricLayer gl = shpio.read(l.getImageReader());
+                            //AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+                            GeometricLayer gl = SimpleShapefileIO.createIntersectedShapeFile(l.getImageReader(),shape);
                             addLayerInThread(gl, (IImageLayer) l);
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);

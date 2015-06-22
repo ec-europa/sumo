@@ -32,6 +32,7 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
+import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.Constant;
@@ -274,8 +275,8 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         IImageLayer imgLayer=Platform.getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
-                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                GeometricLayer gl = shpio.read(imgLayer.getImageReader());
+                //AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
+                GeometricLayer gl = SimpleShapefileIO.createIntersectedShapeFile(imgLayer.getImageReader(),new File(file));
                 // if 5 args, set a specific name
                 if (args.length == 3) {
                     if (gl != null) {

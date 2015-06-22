@@ -270,8 +270,25 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     	}
     	
     	return all;		
-    	
     }
+    
+  public ILayer getLayerByName(String name){
+    	Collection<ILayer> ks=layers.keySet();
+    	for(ILayer k:ks){
+    		if(k.getName().equals(name))
+    			return k;
+    		else{
+    			Collection<ILayer> childs=layers.get(k);
+    			for(ILayer c:childs){
+    				if(c.getName().equals(name))
+    	    			return c;
+    			}
+    		}
+    	}
+    	
+    	return null;		
+    }
+    
     
     /**
      * return the list of childs layers for a layer

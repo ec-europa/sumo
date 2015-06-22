@@ -588,14 +588,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);//AndreaG changed csv(sumo) with genericcsv
             csv.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
-            try {
-                Map config = new HashMap();
-                config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
-                AbstractVectorIO shp = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                shp.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
-            } catch (MalformedURLException ex) {
-            	logger.error(ex.getMessage(),ex);
-            }
+                SimpleShapefileIO.save(new File(file),glayer,projection,reader.getGeoTransform());
         }
 
     }
