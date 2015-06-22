@@ -326,7 +326,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         
                         gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-                        gl.glBegin(GL.GL_LINE_STRIP);
+                        gl.glBegin(GL.GL_POINTS);
                         Coordinate[] cs = temp.getCoordinates();
                         for (int p = 0; p < cs.length; p++) {
                             gl.glVertex2d((cs[p].x - x) / width, 1 - (cs[p].y - y) / height);
