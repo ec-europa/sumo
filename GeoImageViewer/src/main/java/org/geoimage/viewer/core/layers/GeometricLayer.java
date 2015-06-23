@@ -20,18 +20,17 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geotools.data.DataStore;
-import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.geometry.jts.GeometryClipper;
 import org.opengis.feature.Feature;
-import org.opengis.feature.simple.SimpleFeature;
+import org.opensphere.geometry.algorithm.ConcaveHull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
@@ -139,10 +138,8 @@ public class GeometricLayer implements Cloneable{
 	 */
     public static GeometricLayer createFromSimpleGeometry(final Polygon imageP, String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
         GeometricLayer out=null;
-        final GeometryFactory geometryFactory=new GeometryFactory();
-        
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometricLayer(GeometricLayer.LINESTRING);//POLYGON);
+                out = new GeometricLayer(GeometricLayer.POLYGON);//LINESTRING);//POLYGON);
                 out.setName(dataStore.getTypeNames()[0]);
                 out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
                 
@@ -163,25 +160,7 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
-				                        Coordinate[] coords=g.getCoordinates();
-				                        List<Coordinate>listCoords=new ArrayList<>();
-				                        for(int i=0;i<coords.length;i++){
-				                        	Point point = geometryFactory.createPoint(coords[i]);
-				                            if (imageP.contains(point)) {
-				                            	listCoords.add(coords[i]);
-				                            }
-				                        }
-
-				                        Geometry p2=geometryFactory.createLineString(listCoords.toArray(new Coordinate[0]));
-				                        result[0]=p2;
-		                                result[1]=at;
-				                        
-				              /*         // g=TopologyPreservingSimplifier.simplify(g,0.0005);
-				                        
-				                        //buffer(0) is used to avoid intersection errors 
 				                        Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
-				                        //Geometry p2 =clipper.clip(g, true);
-				                        
 				                        if(!p2.isEmpty()){
 			                                if(p2.getGeometryType().equalsIgnoreCase("MULTIPOLYGON")){
 						                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
@@ -194,11 +173,46 @@ public class GeometricLayer implements Cloneable{
 					                        	result[0]=p2;
 				                                result[1]=at;
 			                                }
-			                                
-			                                
-			                                
-				                        }	*/
+							             }	
 				                        
+				                      /*  Coordinate[] coords=g.getCoordinates();
+				                        List<Coordinate>listCoords=new ArrayList<>();
+				                        for(int i=0;i<coords.length;i++){
+				                        	Point point = geometryFactory.createPoint(coords[i]);
+				                            if (imageP.contains(point)) {
+				                            	listCoords.add(coords[i]);
+				                            }
+				                        }
+				                        if(listCoords.size()>0){
+					                        listCoords.add(listCoords.get(0));
+					                      //createMultiPoint(listCoords.toArray(new Coordinate[0]));
+					                      //GeometryCollection collection=createGeometryCollection(listCoords.toArray(new Point[0]));
+					                        Geometry p2=geometryFactory.createPolygon(listCoords.toArray(new Coordinate[0]));
+					                        		
+					                       // ConcaveHull ch = new ConcaveHull(collection,10);
+					                        //Geometry concaveHull = ch.getConcaveHull();
+					                        result[0]=p2;
+			                                result[1]=at;
+				                        }
+				                       // g=TopologyPreservingSimplifier.simplify(g,0.0005);
+				                        */
+				                        //buffer(0) is used to avoid intersection errors 
+				                  
+				                  
+				                        //Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(0),g);
+				                        //if(!p2.isEmpty()){
+			                      /*          if(p2.getGeometryType().equalsIgnoreCase("MULTIPOLYGON")){
+						                    	for (int i = 0; i < p2.getNumGeometries(); i++) {
+						                            if (!p2.getGeometryN(i).isEmpty()) {
+						                                result[0]=p2.getGeometryN(i);
+						                                result[1]=at;
+						                            }
+						                        }
+			                                }else{
+					                        	result[0]=p2;
+				                                result[1]=at;
+			                                }
+				                        //}	*/
 				                    } catch (Exception ex) {
 				                    	logger.error(ex.getMessage(),ex);
 				                    }

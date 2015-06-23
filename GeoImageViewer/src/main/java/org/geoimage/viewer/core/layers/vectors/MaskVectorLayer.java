@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +46,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -195,7 +196,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         gl.glFlush();
     }
 
-    public void render(GeoContext context) {
+     public void render(GeoContext context) {
         if (!context.isDirty()) {
             return;
         }
@@ -296,28 +297,37 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                     }
                 } else if (getType().equalsIgnoreCase(POLYGON)) {
                     for (Geometry tmp : glayer.getGeometries()) {
-                    	Polygon polygon=(Polygon)tmp;
-                        if (polygon.getCoordinates().length < 1) {
-                            continue;
-                        }
-                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
-                        
-                        
-                        int interior=polygon.getNumInteriorRing();
+                    	if(tmp instanceof Polygon){
+	                    	Polygon polygon=(Polygon)tmp;
+	                        if (polygon.getCoordinates().length < 1) {
+	                            continue;
+	                        }
+	                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
+	                        
+	                        
+	                        int interior=polygon.getNumInteriorRing();
+	
+	                        if(interior>0){
+	                        	//draw external polygon
+	                        	LineString line=polygon.getExteriorRing();
+	                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,rWidth);
+	                        	//draw holes
+	                        	for(int i=0;i<interior;i++){
+	                        		LineString line2=polygon.getInteriorRingN(i);
+	                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,rWidth);
+	                        	}
+	                       }else{
+	                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
+	                       }
+                    	}else if(tmp instanceof MultiPolygon){
+                    		MultiPolygon mpolygon=(MultiPolygon)tmp;
+                            if (mpolygon.getCoordinates().length < 1) {
+                                continue;
+                            }
+                            float rWidth=mpolygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
+                           	drawPoly(gl,mpolygon.getCoordinates(),width,height,x,y,rWidth);
 
-                        if(interior>0){
-                        	//draw external polygon
-                        	LineString line=polygon.getExteriorRing();
-                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,rWidth);
-                        	//draw holes
-                        	for(int i=0;i<interior;i++){
-                        		LineString line2=polygon.getInteriorRingN(i);
-                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,rWidth);
-                        	}
-                       }else{
-                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
-                        }
-                        
+                    	}
                     }
                 } else if (getType().equalsIgnoreCase(LINESTRING)) {
                     for (Geometry temp : glayer.getGeometries()) {
@@ -326,7 +336,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         
                         gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-                        gl.glBegin(GL.GL_POINTS);
+                        gl.glBegin(GL.GL_LINE_STRIP);
                         Coordinate[] cs = temp.getCoordinates();
                         for (int p = 0; p < cs.length; p++) {
                             gl.glVertex2d((cs[p].x - x) / width, 1 - (cs[p].y - y) / height);
@@ -360,6 +370,15 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                             gl.glBegin(GL.GL_POINTS);
                             Coordinate point = temp.getCoordinate();
                             gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
+                            gl.glEnd();
+                            gl.glFlush();
+                        }else if (temp instanceof MultiPoint) {
+                            gl.glPointSize(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+                            gl.glBegin(GL.GL_LINE_STRIP);
+                            Coordinate[] points=temp.getCoordinates();
+                            for (int i=0;i<points.length-1;i++) {
+                                gl.glVertex2d((points[i].x - x) / width, 1 - (points[i].y - y) / height);
+                            }
                             gl.glEnd();
                             gl.glFlush();
                         }

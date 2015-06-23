@@ -7,20 +7,14 @@ package org.geoimage.viewer.core.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -28,7 +22,6 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
@@ -36,39 +29,32 @@ import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.filter.FilterFactoryImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.legend.Drawer;
-import org.geotools.process.vector.IntersectionFeatureCollection;
-import org.geotools.process.vector.IntersectionFeatureCollection.IntersectionMode;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.process.ProcessException;
+import org.geotools.process.vector.RectangularClipProcess;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
-import org.opengis.filter.MultiValuedFilter.MatchAction;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -184,23 +170,14 @@ public class SimpleShapefileIO {
             //retrieve a FeatureSource to work with the feature data
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             
-            String geomName = featureSource.getSchema().getGeometryDescriptor().getLocalName();
-            
             Polygon imageP=buildPolygon(gir);
-            
             Envelope e=imageP.getBoundary().getEnvelopeInternal();
-            String f=new StringBuilder("BBOX(").append(geomName).append(",")
-            		.append(e.getMinX()).append(",")
-            		.append(e.getMinY()).append(",")
-            		.append(e.getMaxX()).append(",")
-            		.append(e.getMaxY())
-            		.append(")").toString();
-
+            CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
+            ReferencedEnvelope env = new ReferencedEnvelope(e,worldCRS);
             
-            Filter filter=CQL.toFilter(f);
-            //filtro prendendo solo le 'features' nell'area di interesse
-            FeatureCollection<?, ?> fc=featureSource.getFeatures(filter);
-            
+            RectangularClipProcess clip=new RectangularClipProcess();
+    		SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
+    		
             if (fc.isEmpty()) {
                 return null;
             }
@@ -214,7 +191,7 @@ public class SimpleShapefileIO {
            
             glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
             
-            //save(fc, featureSource,new File("C:\\tmp\\expp\\test_export"+System.currentTimeMillis()+".shp"));
+            
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -222,7 +199,6 @@ public class SimpleShapefileIO {
 
     }
 	
-    
     /**
      * 
      * @param output
