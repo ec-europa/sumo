@@ -40,6 +40,7 @@ import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.process.ProcessException;
+import org.geotools.process.vector.ClipProcess;
 import org.geotools.process.vector.RectangularClipProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -171,12 +172,15 @@ public class SimpleShapefileIO {
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             
             Polygon imageP=buildPolygon(gir);
-            Envelope e=imageP.getBoundary().getEnvelopeInternal();
-            CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
-            ReferencedEnvelope env = new ReferencedEnvelope(e,worldCRS);
+            //Envelope e=imageP.getBoundary().getEnvelopeInternal();
+            //CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
+            //ReferencedEnvelope env = new ReferencedEnvelope(e,worldCRS);
             
-            RectangularClipProcess clip=new RectangularClipProcess();
-    		SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
+            ClipProcess clip=new ClipProcess();
+            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
+            
+            //RectangularClipProcess clip=new RectangularClipProcess();
+    		//SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
     		
             if (fc.isEmpty()) {
                 return null;
