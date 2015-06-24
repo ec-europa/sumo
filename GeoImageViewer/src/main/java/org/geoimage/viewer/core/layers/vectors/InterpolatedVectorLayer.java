@@ -31,7 +31,7 @@ import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
-import org.geoimage.viewer.core.io.SimpleShapefileIO;
+import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.AbstractLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -153,19 +153,12 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
     }
 
     public void save(String file, int formattype, String projection) {
-        /*if (formattype.equals("csv")) {
-            Map config = new HashMap();
-            config.put(GenericCSVIO.CONFIG_FILE, file);
-            VectorIO csv = VectorIO.createVectorIO(VectorIO.CSV, config, ((IImageLayer) this.getParent()).getImageReader());
-            csv.save(glayer, projection);
-        } else*/ 
-    	
     	switch (formattype){
     	
 	    	case VectorIOFactory.SIMPLE_SHAPEFILE:{
 	            try {
 	                Map config =new HashMap();
-	                config.put(SimpleShapefileIO.CONFIG_URL, new File(file).toURI().toURL());
+	                config.put(SimpleShapefile.CONFIG_URL, new File(file).toURI().toURL());
 	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
 	                shpio.save(glayer,projection,(SarImageReader)reader);
 	            } catch (Exception ex) {
@@ -186,10 +179,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	        }
 	    	case VectorIOFactory.CSV:{
 	            try {
-	                Map config = new HashMap();
-	                config.put(GenericCSVIO.CONFIG_FILE, file);
-	                AbstractVectorIO sxl = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);
-	                sxl.save(glayer, projection,(SarImageReader)reader);
+	                GenericCSVIO.save(new File(file),glayer, projection,reader.getGeoTransform());
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(),ex);
 	            }

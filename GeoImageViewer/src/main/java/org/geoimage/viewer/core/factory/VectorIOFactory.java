@@ -3,12 +3,10 @@ package org.geoimage.viewer.core.factory;
 import java.util.Map;
 
 import org.geoimage.viewer.core.io.AbstractVectorIO;
-import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.GeoRSSIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.PostgisIO;
-import org.geoimage.viewer.core.io.SimpleShapefileIO;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 
@@ -51,14 +49,6 @@ public class VectorIOFactory {
 	            vio = new SumoXmlIOOld();
 	            break;
 	        }
-	    	case CSV: {
-	            vio = new GenericCSVIO();
-	            break;
-	        } 
-	    	case GENERIC_CSV :{
-	            vio = new GenericCSVIO();
-	            break;
-	        } 
 	    	case KML:{
 	            vio = new KmlIO();
 	            break;

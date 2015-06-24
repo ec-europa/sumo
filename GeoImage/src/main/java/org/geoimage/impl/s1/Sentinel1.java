@@ -25,6 +25,8 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
+import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.util.Constant;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -199,9 +201,13 @@ public abstract class Sentinel1 extends SarImageReader {
                 dispose();
                 return false;
             }
-            geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
-            //String epsg = "EPSG:4326";
-            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            String geoloc=Platform.getPreferences().getS1GeolocationAlgorithm();
+            if(geoloc.equalsIgnoreCase(Constant.GEOLOCATION_ORBIT)&& this instanceof Sentinel1GRD){
+                   geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
+            }else{       
+            	String epsg = "EPSG:4326";
+            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            }
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();

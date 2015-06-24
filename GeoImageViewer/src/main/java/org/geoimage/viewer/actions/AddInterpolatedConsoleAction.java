@@ -180,14 +180,13 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                 }
         }
     }
-
+    
     private void addSimpleCSV(String[] args) {
         if (args.length == 4&&args[1].contains("=")) {
-            Map<String, Object> config = new HashMap<String, Object>();
-            config.put(GenericCSVIO.CONFIG_FILE, args[1].split("=")[3]);
+            String file=args[1].split("=")[3];
             IImageLayer l=Platform.getCurrentImageLayer();
             if(l!=null){
-                    AbstractVectorIO csvio = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
+            		GenericCSVIO csvio=new GenericCSVIO(file);
                     GeometricLayer positions = csvio.read(l.getImageReader());
                     if (positions.getProjection() == null) {
                         addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
@@ -205,11 +204,9 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    Map<String, Object> config = new HashMap<String, Object>();
-                    config.put(GenericCSVIO.CONFIG_FILE, fd.getSelectedFile().getCanonicalPath());
                     IImageLayer l=Platform.getCurrentImageLayer();
                     if(l!=null){
-                            AbstractVectorIO csvio = VectorIOFactory.createVectorIO(VectorIOFactory.CSV, config);
+                    		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile().getCanonicalPath());
                             GeometricLayer positions = csvio.read(l.getImageReader());
                             if (positions.getProjection() == null) {
                                 addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
