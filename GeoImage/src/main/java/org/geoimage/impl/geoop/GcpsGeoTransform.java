@@ -321,9 +321,18 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
 	}
 
 	@Override
-	public Geometry transformGeometryGeoFromPixel(Geometry geo)
-			throws GeoTransformException {
-		return null;
+	public Geometry transformGeometryGeoFromPixel(Geometry geom)throws GeoTransformException {
+		Geometry geomNew=(Geometry) geom.clone();
+		try{
+            for(Coordinate pos:geomNew.getCoordinates()){
+                double[] temp=getGeoFromPixel(pos.x, pos.y);
+                pos.x=temp[0];
+                pos.y=temp[1];
+            }
+            return geomNew;
+		}catch(Exception ge){
+			throw new GeoTransformException(ge.getMessage());
+		} 
 	}
 
 	

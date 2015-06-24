@@ -316,6 +316,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 	@Override
 	public void layerClicked(ILayer l) {
 		if(l.getParent()==null){
+			List<ILayer>childs=layers.get(l);
 			if(l.isActive()){
 				//disable other layer
 				for(ILayer p:layers.keySet()){
@@ -324,11 +325,16 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 						
 					}	
 				}
-			}	
-			List<ILayer>childs=layers.get(l);
-			if(childs!=null){
-				for(ILayer c:childs){
-					c.setActive(!c.isActive());
+				if(childs!=null){
+					for(ILayer c:childs){
+						c.setActive(true);
+					}
+				}	
+			}else{
+				if(childs!=null){
+					for(ILayer c:childs){
+						c.setActive(false);
+					}
 				}
 			}	
 		}

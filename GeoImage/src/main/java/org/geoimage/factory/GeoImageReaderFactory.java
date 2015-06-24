@@ -50,7 +50,10 @@ public class GeoImageReaderFactory {
     	//TODO : add "if" for other reader with multiple images (cosmoskymed)
     	GeoImageReader clone=null;
     	if(gir instanceof Sentinel1){
-			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile());
+    		if(gir instanceof Sentinel1GRD)
+    			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile());
+    		else
+    			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath(),((Sentinel1SLC)gir).getManifestFile());
 			clone.initialise();
     	}else {
     		clone=createReaderForName(gir.getFilesList()[0]).get(0);

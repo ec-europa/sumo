@@ -60,6 +60,11 @@ public class Constant {
   public static final String CONF_FILE="analysis.conf";
   
   
+  public static final String PREF_S1_GEOLOCATION = "S1 Geolocation (ORB=Orbit / GRID=Grid Points)";
+  public static final String GEOLOCATION_GRID = "GRID";
+  public static final String GEOLOCATION_ORBIT = "ORB";
+  
+  
   //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
   //constants to define the margin x,y in which we need to check the value of the pixel 
   /*public static final String PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS="Horizontal exclusion margin pixel";
