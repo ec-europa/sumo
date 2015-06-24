@@ -12,7 +12,6 @@ import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
@@ -89,8 +88,7 @@ public class FactoryLayer {
 		 MaskVectorLayer mask = null;
         try {
             mask = (new MaskVectorLayer(Platform.getCurrentImageLayer(),name, type, layer.clone()));
-            //if(bufferingDistance!=0)
-            	mask.buffer(bufferingDistance);
+           	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }

@@ -21,6 +21,7 @@ import javax.media.opengl.GL2;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.PickedData;
@@ -36,7 +37,7 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
-import org.geoimage.viewer.core.io.SimpleShapefileIO;
+import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.AbstractLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -81,11 +82,6 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     protected double currentThresh = 0;
     
     
-    //Pietro: for testing layer intersaction / union
-    //public static ArrayList <Geometry>intersections=null;
-    //public static ArrayList <Geometry>results=null;
-    
-    
     
     public MaskVectorLayer(ILayer parent,String layername,String type, GeometricLayer layer) {
     	super.parent=parent;
@@ -100,11 +96,6 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             calculateMaxMinTresh();
             threshable = true;
         }
-       //Pietro: for testing layer intersaction / union 
-      /*  if(intersections==null)
-        	intersections=new ArrayList<Geometry>();
-        if(results==null)
-        	results=new ArrayList<Geometry>(); */
     }
     
 
@@ -297,6 +288,15 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                     }
                 } else if (getType().equalsIgnoreCase(POLYGON)) {
                     for (Geometry tmp : glayer.getGeometries()) {
+                    /*	Geometry gg;
+						try {
+							gg = Platform.getCurrentImageReader().getGeoTransform().transformGeometryGeoFromPixel(tmp);
+							System.out.println(gg.toText());
+						} catch (GeoTransformException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}*/
+                    	
                     	if(tmp instanceof Polygon){
 	                    	Polygon polygon=(Polygon)tmp;
 	                        if (polygon.getCoordinates().length < 1) {
@@ -597,17 +597,14 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     }
 
     public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=Platform.getCurrentImageReader();
+    	SarImageReader reader=(SarImageReader) Platform.getCurrentImageReader();
         if (formattype==ISave.OPT_EXPORT_CSV) {
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");
             }
-            Map config = new HashMap();
-            config.put(GenericCSVIO.CONFIG_FILE, file);
-            AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.GENERIC_CSV, config);//AndreaG changed csv(sumo) with genericcsv
-            csv.save(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
+            GenericCSVIO.save(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform());
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
-                SimpleShapefileIO.save(new File(file),glayer,projection,reader.getGeoTransform());
+            SimpleShapefile.save(new File(file),glayer,projection,reader.getGeoTransform());
         }
 
     }

@@ -5,7 +5,6 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,25 +34,18 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.process.ProcessException;
 import org.geotools.process.vector.ClipProcess;
-import org.geotools.process.vector.RectangularClipProcess;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
-import org.opengis.filter.Filter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -64,8 +56,8 @@ import com.vividsolutions.jts.io.ParseException;
  *
  * @author thoorfr
  */
-public class SimpleShapefileIO {
-	private static Logger logger= LoggerFactory.getLogger(SimpleShapefileIO.class);
+public class SimpleShapefile {
+	private static Logger logger= LoggerFactory.getLogger(SimpleShapefile.class);
     public static String CONFIG_URL = "url";
     private static int margin=100;
     
@@ -74,7 +66,7 @@ public class SimpleShapefileIO {
     	margin=Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
     }
     
-    public SimpleShapefileIO() { }
+    public SimpleShapefile() { }
 
     @SuppressWarnings("unused")
 	private static FileDataStore createDataStore(String filename, SimpleFeatureType ft, String projection) throws Exception {
@@ -87,50 +79,6 @@ public class SimpleShapefileIO {
         
         return dataStore;
     }
-
-    
-    
-
-   
-    /*
-     * 
-     * @param name
-     * @param glayer
-     * @return
-     *
-    public static SimpleFeatureType createFeatureType(String name, GeometricLayer glayer) {
-        try {
-
-            // Tell this shapefile what type of data it will store
-            // Shapefile handle only : Point, MultiPoint, MultiLineString, MultiPolygon
-            String sch = "";
-            String[] schema = glayer.getSchema();
-            String[] types = glayer.getSchemaTypes();
-            for (int i = 0; i < schema.length; i++) {
-                sch += "," + schema[i] + ":" + types[i];
-            }
-            sch = sch.substring(1);
-            String geomType = "MultiPolygon";
-            if (glayer.getGeometries().get(0) instanceof Point) {
-                geomType = "Point";
-            }
-            // "geom:" + geomType + ":srid=" +
-            SimpleFeatureType featureType = DataUtilities.createType(geomType, sch);
-
-            //to create other fields you can use a string like :
-            // "geom:MultiLineString,FieldName:java.lang.Integer"
-            // field name can not be over 10 characters
-            // use a ',' between each field
-            // field types can be : java.lang.Integer, java.lang.Long, 
-            // java.lang.Double, java.lang.String or java.util.Date
-
-            return featureType;
-        } catch (SchemaException ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
-        return null;
-    }*/
-    
 	
 	public static Polygon buildPolygon(GeoImageReader gir) throws ParseException, GeoTransformException, CQLException{
 		   double h=gir.getHeight();
@@ -172,16 +120,15 @@ public class SimpleShapefileIO {
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             
             Polygon imageP=buildPolygon(gir);
-            //Envelope e=imageP.getBoundary().getEnvelopeInternal();
-            //CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
-            //ReferencedEnvelope env = new ReferencedEnvelope(e,worldCRS);
             
             ClipProcess clip=new ClipProcess();
             SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-            
-            //RectangularClipProcess clip=new RectangularClipProcess();
-    		//SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
-    		
+
+           /* CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
+            ReferencedEnvelope env = new ReferencedEnvelope(imageP.getEnvelopeInternal(),worldCRS);
+            RectangularClipProcess clip=new RectangularClipProcess();
+    		SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
+    		*/
             if (fc.isEmpty()) {
                 return null;
             }

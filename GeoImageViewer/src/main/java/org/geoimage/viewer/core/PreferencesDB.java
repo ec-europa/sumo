@@ -26,6 +26,7 @@ import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
+import static org.geoimage.viewer.util.Constant.PREF_S1_GEOLOCATION;
 
 import java.awt.Color;
 import java.util.List;
@@ -132,7 +133,7 @@ public class PreferencesDB {
         insertIfNotExistRow(PREF_TARGETS_SYMBOL_BAND_MERGED, "cross");
         insertIfNotExistRow(PREF_TARGETS_COLOR_BAND_MERGED, "0xFFAA00");
         insertIfNotExistRow(PREF_TARGETS_SIZE_BAND_MERGED, "1.0");
-        insertIfNotExistRow(PREF_BUFFERING_DISTANCE, "15.0");			
+        insertIfNotExistRow(PREF_BUFFERING_DISTANCE, "0");			
         insertIfNotExistRow(PREF_AGGLOMERATION_METHODOLOGY, "neighbours");
         insertIfNotExistRow(PREF_NEIGHBOUR_DISTANCE, "2.0");
         insertIfNotExistRow(PREF_NEIGHBOUR_TILESIZE, "200");
@@ -169,6 +170,8 @@ public class PreferencesDB {
         insertIfNotExistRow(Constant.PREF_YMARGIN_EXCLUSION_PIXEL_ANALYSIS, "0");
         insertIfNotExistRow(Constant.PREF_MIN_PIXEL_VALUE_FOR_ANALYSIS,"5");*/
         
+        
+        insertIfNotExistRow(PREF_S1_GEOLOCATION, Constant.GEOLOCATION_ORBIT);
     }
     
     /**
@@ -200,6 +203,15 @@ public class PreferencesDB {
         }
 
     }
+    
+    public String getS1GeolocationAlgorithm(){
+    	try{
+            return readRow(PREF_S1_GEOLOCATION);
+    	}catch(Exception e){
+    		return Constant.GEOLOCATION_GRID;
+    	}    
+    }
+    
     /*
     public int getPrefTargetsSizeBand(int band,double defaultValue){
     	double val=defaultValue;
