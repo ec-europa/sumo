@@ -188,7 +188,6 @@ public class GeometricLayer implements Cloneable{
                 	List<Future<Object[][]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
 	                
-	                
 	                for(Future<Object[][]> f:results){
 	                	Object o[][]=f.get();
 	                	if(o!=null){
@@ -228,6 +227,80 @@ public class GeometricLayer implements Cloneable{
         return out;
     }
     
+    /**
+	 * 
+	 * @param imageP poligono creato con i punti di riferimento dell'immagine
+	 * @param geoName
+	 * @param dataStore  shape file
+	 * @param fc
+	 * @param schema
+	 * @param types
+	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
+	 * @throws IOException
+	 */
+    public static GeometricLayer createLayerFromFeatures(String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
+        GeometricLayer out=null;
+        if (geoName.contains("Polygon") || geoName.contains("Line")) 
+                out = new GeometricLayer(GeometricLayer.POLYGON);
+        else
+        	out = new GeometricLayer(GeometricLayer.POINT);
+        
+        out.setName(dataStore.getTypeNames()[0]);
+        out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
+        
+        FeatureIterator<?> fi = fc.features();
+        try{
+        	ThreadPoolExecutor executor = new ThreadPoolExecutor(2,Runtime.getRuntime().availableProcessors(),2, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>());
+        	List<Callable<Object[][]>> tasks=new ArrayList<Callable<Object[][]>>();
+        	
+            while (fi.hasNext()) {
+            		final Feature f = fi.next();
+                	Callable<Object[][]> run=new Callable<Object[][]>() {
+                		Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+						@Override
+						public Object[][] call() {
+							List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
+							try {
+								Attributes at = Attributes.createAttributes(schema, types);
+		                        for (int i = 0; i < f.getProperties().size(); i++) {
+		                            at.set(schema[i], f.getProperty(schema[i]).getValue());
+		                        }
+                        		for (int ii = 0; ii < g.getNumGeometries(); ii++) {
+	                                Object[]o=new Object[2];
+		                        	o[0]=g.getGeometryN(ii);
+	                                o[1]=at;
+	                                result.add(o);
+		                        }
+		                    } catch (Exception ex) {
+		                    	logger.error(ex.getMessage(),ex);
+		                    }
+							return result.toArray(new Object[0][]);
+						}
+					};
+					tasks.add(run);
+            }
+        	
+        	List<Future<Object[][]>> results=executor.invokeAll(tasks);
+            executor.shutdown();
+            
+            
+            for(Future<Object[][]> f:results){
+            	Object o[][]=f.get();
+            	if(o!=null){
+            		for(int i=0;i<o.length;i++){
+            			out.put((Geometry)o[i][0],(Attributes)o[i][1]);
+            		}	
+            	}	
+            }
+            
+        }catch(Exception e){
+        	logger.error(e.getMessage(),e);
+        }finally{
+        	fi.close();
+        }   
+            
+        return out;
+    }
 
     public GeometricLayer(String type) {
         geoms = new ArrayList<Geometry>();

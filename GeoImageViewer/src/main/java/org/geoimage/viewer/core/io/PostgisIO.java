@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.core.io;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,9 +12,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
@@ -65,11 +68,19 @@ public class PostgisIO extends AbstractVectorIO {
     public static String CONFIG_USER = "user";        //the user to connect with
     public static String CONFIG_PASSWORD = "passwd";  //the password of the user
 
+    private GeoImageReader gir=null;
+    private Map<String,String> config=null;
+    private GeometricLayer glayer=null;
     
-    public PostgisIO(){
+    public PostgisIO(GeoImageReader gir,Map config){
+    	this.gir=gir;
+    	this.config=config;
     }
-
-    public GeometricLayer read(GeoImageReader gir) {
+    public void read() {
+    	glayer=readLayer();
+    }
+    
+    public GeometricLayer readLayer() {
         try {
             GeometricLayer out = null;
             DataStore dataStore = DataStoreFinder.getDataStore(config);
@@ -150,7 +161,6 @@ public class PostgisIO extends AbstractVectorIO {
         return null;
     }
 
-    @Override
     public List<? extends Object> executeCommands(List<String> commands) {
         List<Integer> out = new ArrayList<Integer>();
         Connection conn;
@@ -340,13 +350,14 @@ public class PostgisIO extends AbstractVectorIO {
         }
     }
 
-/**
- * Save the corresponding VDS into corresponding format [kmz,xml,ddbb]
- * @param layer
- * @param projection
- */
-//@Override
-    public void save(GeometricLayer layer, String projection,SarImageReader gir) {
+    
+	/**
+	 * Save the corresponding VDS into corresponding format [kmz,xml,ddbb]
+	 * @param layer
+	 * @param projection
+	 */
+    @Override
+    public void save(File output, String projection,GeoTransform transform) {
         try {
         	//Data store to get access to ddbb
             DataStore datastore = (DataStore) DataStoreFinder.getDataStore(config);
@@ -363,7 +374,7 @@ public class PostgisIO extends AbstractVectorIO {
             //SimpleFeatureType type = builder.buildFeatureType();
             // System.out.println(type.getDescriptors().size());
             //*/
-            FeatureCollection features = createFeatures(featuretype, layer, projection, gir.getGeoTransform());
+            FeatureCollection features = createFeatures(featuretype, glayer, projection, gir.getGeoTransform());
             featurestore.addFeatures(features);
             writeToDB(datastore, features);
             datastore.dispose();
@@ -393,11 +404,13 @@ public class PostgisIO extends AbstractVectorIO {
             writeToDB(datastore, features);
             datastore.dispose();
             // store extracted VDS points
-            save(layer,projection,(SarImageReader)gir);
+            save(null,projection,((SarImageReader)gir).getGeoTransform());
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
     }
+	
+
 
 
 

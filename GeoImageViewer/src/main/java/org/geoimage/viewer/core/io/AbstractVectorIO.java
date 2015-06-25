@@ -4,30 +4,29 @@
  */
 package org.geoimage.viewer.core.io;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
 
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.def.GeoTransform;
 
 /**
  *
  * @author thoorfr
  */
 public abstract class AbstractVectorIO {
-	protected Map<String,Object> config;
-    //protected GeoImageReader gir;
+	public static final int SIMPLE_SHAPEFILE = 0;//"SimpleShapeFile";
+    public static final int GML = 1;//"GML";
+    public static final int POSTGIS = 2;//"Postgis";
+    public static final int SUMO_OLD = 3;//"Sumo";
+    public static final int CSV = 4;//"Csv";
+    public static final int GENERIC_CSV = 5;//"Generic Csv";
+    public static final int KML = 6;//"Kml";
+    public static final int GEORSS = 7;//"GeoRss";
+    
+    public static final int SUMO = 8;//"New Sumo XML";
+	
     protected String layername;
     
     
-	public Map<String,Object>  getConfig() {
-		return config;
-	}
-
-	public void setConfig(Map<String,Object>  config) {
-		this.config = config;
-	}
 
 	public String getLayername() {
 		return layername;
@@ -44,18 +43,7 @@ public abstract class AbstractVectorIO {
         this.layername = layername;
     }
 
+    public abstract void read();//File shpInput,GeoTransform transform);
+	public abstract void save(File output, String projection,GeoTransform transform) ;
     
-
-    public abstract GeometricLayer read(GeoImageReader reader);
-
-    public abstract void save(GeometricLayer layer, String projection,SarImageReader gir);
-    
-    /**
-     * For some reasons, you may execute some commands for some special datastore (clening database, ensure existence, or manual upload...)
-     * @param commands
-     * @return List of  Objects that describe the results of the associated commands
-     */
-    public List<? extends Object> executeCommands(List<String> commands) {
-        return null;
-    }
 }
