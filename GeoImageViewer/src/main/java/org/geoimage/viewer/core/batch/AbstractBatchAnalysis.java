@@ -14,13 +14,15 @@ import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
+import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.util.Utils;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 
 class AnalysisParams {
@@ -70,11 +72,8 @@ public abstract class AbstractBatchAnalysis {
 	 */
 	protected GeometricLayer readShapeFile(SarImageReader reader){
 		GeometricLayer gl=null;
-  	    Map<String,Object> config = new HashMap<String,Object>();
 	    try {
-            config.put("url", new File(params.shapeFile).toURI().toURL());
-            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-            gl = shpio.read(reader);
+            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),(SarImageReader)reader);
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
         }
@@ -142,11 +141,13 @@ public abstract class AbstractBatchAnalysis {
     		   if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
-	           HashMap<String,Object> config=new HashMap<String,Object>(); 
-	           config.put(SumoXMLWriter.CONFIG_FILE, file);
-    		   newWriter.setConfig(config);
-    		   newWriter.saveNewXML(FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable()), 
+           
+    		   newWriter.saveNewXML(new File(file),FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable()), 
     				   params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
+    		   
+    		   String bbox=new File(file).getParentFile().getAbsolutePath()+"\\bbox.shp";
+    		 //  Utils.createShapeFileFromPolygons( new File(bbox),reader.getBbox().get);
+    		   
     	   }
         }
 	}

@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -56,17 +57,20 @@ import com.vividsolutions.jts.io.ParseException;
  *
  * @author thoorfr
  */
-public class SimpleShapefile {
+public class SimpleShapefile extends AbstractVectorIO{
 	private static Logger logger= LoggerFactory.getLogger(SimpleShapefile.class);
     public static String CONFIG_URL = "url";
-    private static int margin=100;
     
     
-    static{
-    	margin=Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
+    private File shpInput=null;
+    private GeoTransform transform=null;
+    private GeometricLayer layer=null;
+    
+    
+    public SimpleShapefile(File input,GeoTransform transform) { 
+    	this.shpInput=input;
+    	this.transform=transform;
     }
-    
-    public SimpleShapefile() { }
 
     @SuppressWarnings("unused")
 	private static FileDataStore createDataStore(String filename, SimpleFeatureType ft, String projection) throws Exception {
@@ -80,35 +84,15 @@ public class SimpleShapefile {
         return dataStore;
     }
 	
-	public static Polygon buildPolygon(GeoImageReader gir) throws ParseException, GeoTransformException, CQLException{
-		   double h=gir.getHeight();
-		   double w=gir.getWidth();
-		
-	       GeoTransform gt = gir.getGeoTransform();
-           
-           double[] x0 = gt.getGeoFromPixel(-margin, -margin);
-           double[] x01 = gt.getGeoFromPixel(-margin, h/3); //image center coords
-           double[] x02 = gt.getGeoFromPixel(-margin, h/2); //image center coords
-           double[] x03 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
-           double[] x1 = gt.getGeoFromPixel(-margin, margin + h);
-           double[] x12 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
-           double[] x2 = gt.getGeoFromPixel(margin + w, margin + h);
-           double[] x21 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords
-           double[] x22 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
-           double[] x23 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
-           double[] x3 = gt.getGeoFromPixel(margin + w, -margin);
-           double[] x31 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
-
-           //poligono con punti di riferimento dell'immagine
-           Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
-           
-           logger.debug("Polygon imageP isvalid:"+imageP.isValid());
-           
-           return imageP;
-	}
 	
-
-    public static GeometricLayer createIntersectedShapeFile(GeoImageReader gir,File shpInput) {
+	
+	@Override
+	public void read() {
+		this.layer=createLayer(this.shpInput,transform);
+	}
+		
+	
+	public static GeometricLayer createLayer(File shpInput,GeoTransform transform) {
     	GeometricLayer glout=null;
         try {
         	Map<String, Serializable> params = new HashMap<String, Serializable>();
@@ -119,7 +103,43 @@ public class SimpleShapefile {
             //retrieve a FeatureSource to work with the feature data
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             
-            Polygon imageP=buildPolygon(gir);
+    
+            SimpleFeatureCollection fc=featureSource.getFeatures();
+
+            if (fc.isEmpty()) {
+                return null;
+            }
+            String[] schema = createSchema(fc.getSchema().getDescriptors());
+            String[] types = createTypes(fc.getSchema().getDescriptors());
+
+            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
+            
+            GeometricLayer out=GeometricLayer.createLayerFromFeatures(geoName, dataStore, fc, schema, types);
+            dataStore.dispose();
+           
+            glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
+            
+            
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+        }
+        return glout;
+
+    }
+
+    public static GeometricLayer createIntersectedLayer(File shpInput,SarImageReader gir) {
+    	GeometricLayer glout=null;
+    	DataStore dataStore =null;
+        try {
+        	Map<String, Serializable> params = new HashMap<String, Serializable>();
+            params.put("url", shpInput.toURI().toURL());
+        	
+            //create a DataStore object to connect to the physical source 
+            dataStore = DataStoreFinder.getDataStore(params);
+            //retrieve a FeatureSource to work with the feature data
+            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
+            
+            Polygon imageP=gir.getBbox();
             
             ClipProcess clip=new ClipProcess();
             SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
@@ -138,13 +158,14 @@ public class SimpleShapefile {
             String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
             
             GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
-            dataStore.dispose();
+            
            
             glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
             
-            
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
+        }finally{
+        	dataStore.dispose();
         }
         return glout;
 
@@ -157,7 +178,7 @@ public class SimpleShapefile {
      * @param projection
      * @param reader
      */
-    public static void save(File output,GeometricLayer layer, String projection,GeoTransform transform) {
+    public static void exportLayer(File output,GeometricLayer layer, String projection,GeoTransform transform) {
         try {
             layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
@@ -176,6 +197,17 @@ public class SimpleShapefile {
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
+    }
+    
+    /**
+     * 
+     * @param output
+     * @param layer
+     * @param projection
+     * @param reader
+     */
+    public void save(File output, String projection,GeoTransform transform) {
+    	exportLayer(output,this.layer,projection,transform);
     }
     
     /**
@@ -325,6 +357,8 @@ public class SimpleShapefile {
         }
         return out;
     }
+
+	
 
     /* private static void writeToShapefile(DataStore data, FeatureCollection<SimpleFeatureType,SimpleFeature> collection) {
 	SimpleFeatureStore store = null;

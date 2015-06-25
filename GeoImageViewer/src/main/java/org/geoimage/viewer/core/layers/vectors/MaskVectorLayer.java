@@ -11,17 +11,13 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.PickedData;
@@ -34,8 +30,6 @@ import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.AbstractLayer;
@@ -602,9 +596,9 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");
             }
-            GenericCSVIO.save(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform());
+            GenericCSVIO.export(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform());
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
-            SimpleShapefile.save(new File(file),glayer,projection,reader.getGeoTransform());
+            SimpleShapefile.exportLayer(new File(file),glayer,projection,reader.getGeoTransform());
         }
 
     }

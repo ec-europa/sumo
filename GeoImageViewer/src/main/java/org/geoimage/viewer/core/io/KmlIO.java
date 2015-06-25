@@ -64,21 +64,22 @@ import com.vividsolutions.jts.geom.Geometry;
 public class KmlIO extends AbstractVectorIO {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KmlIO.class);
 
-    public static String CONFIG_FILE = "file";
-
-    public KmlIO(){
-    } 
+    private SarImageReader gir=null;
+    private File input=null;
+    private GeometricLayer glayer=null;
     
-    public GeometricLayer read(GeoImageReader gir) {
-        return null;
+    public KmlIO(File input,SarImageReader gir){
+    	this.input=input;
+    	this.gir=gir;
     }
 
-    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
-    	GeoTransform gt=gir.getGeoTransform();
+    @Override
+    public void save(File output,String projection,GeoTransform gt) {
+    }	
+    public static void export(File output,GeometricLayer glayer,String projection,SarImageReader gir,GeoTransform gt) {
         boolean toFlip = false;
         int t = 0; //thumbnails id name
         try {
-            String file = ((String) config.get(CONFIG_FILE)).replace('\\', '/');
 
             if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
                 return;
@@ -89,11 +90,11 @@ public class KmlIO extends AbstractVectorIO {
                 return;
             }
             //name of the temporary kml file
-            String tempFile = file.replace("kmz", "kml");
+            String tempFile = output.getName().replace("kmz", "kml");
 
             //creation of the kmz file
             byte[] buffer = new byte[1024];
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(output));
 
             Kml kml = new Kml();
             Document doc = new Document();
@@ -345,7 +346,7 @@ public class KmlIO extends AbstractVectorIO {
 
 
             //copy of the boat icon inside the kmz
-            URL iconFile = getClass().getResource("/org/geoimage/viewer/core/resources/boat.PNG");
+            URL iconFile = KmlIO.class.getResource("/org/geoimage/viewer/core/resources/boat.PNG");
             InputStream in2 = iconFile.openStream();
             out.putNextEntry(new ZipEntry("boat.png"));
             while ((len = in2.read(buffer)) > 0) {
@@ -355,7 +356,7 @@ public class KmlIO extends AbstractVectorIO {
             in2.close();
 
             //copy of the not reliable boat icon inside the kmz
-            URL iconFileNR = getClass().getResource("/org/geoimage/viewer/core/resources/NRboat.PNG");
+            URL iconFileNR = KmlIO.class.getResource("/org/geoimage/viewer/core/resources/NRboat.PNG");
             InputStream in3 = iconFileNR.openStream();
             out.putNextEntry(new ZipEntry("NRboat.png"));
             while ((len = in3.read(buffer)) > 0) {
@@ -374,7 +375,7 @@ public class KmlIO extends AbstractVectorIO {
         }
     }
 
-    private URL createOverview(GeoImageReader gir, boolean toFlip) throws IOException {
+    private static URL createOverview(GeoImageReader gir, boolean toFlip) throws IOException {
         File f = File.createTempFile("kmloverview", ".png");
         // generate a suitable size image
         double ratio = Math.max(((double) gir.getWidth()) / 1024., ((double) gir.getHeight()) / 1024.);
@@ -412,6 +413,12 @@ public class KmlIO extends AbstractVectorIO {
         return f.toURI().toURL();
 
     }
+
+	@Override
+	public void read() {
+		
+	}
+	
 
 
 }

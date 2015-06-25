@@ -6,20 +6,17 @@ package org.geoimage.viewer.actions;
 
 import java.awt.Color;
 import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
+import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -54,11 +51,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	URL url=worldFile.toURI().toURL();
-                            Map<String,Object> config=new HashMap<String,Object>();
-                            config.put("url", url);
-                            AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                            GeometricLayer gl = shpio.read(l.getImageReader());
+                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, (SarImageReader)l.getImageReader());
                             addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);

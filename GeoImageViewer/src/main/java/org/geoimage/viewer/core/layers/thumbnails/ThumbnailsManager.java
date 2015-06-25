@@ -23,7 +23,6 @@ import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.util.ImageTiler;
 import org.slf4j.LoggerFactory;
@@ -146,10 +145,9 @@ public class ThumbnailsManager {
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
-        Map<String,Object> config = new HashMap<String,Object>();
-        config.put(SumoXmlIOOld.CONFIG_FILE, new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml").getAbsolutePath());
-        AbstractVectorIO csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-        ((SumoXmlIOOld)csv).save(glayer, "EPSG:4326",(SarImageReader)gir);
+        File out=new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml");
+        
+        SumoXmlIOOld.export(out, glayer, "EPSG:4326", (SarImageReader)gir);
         if (ip != null) {
             ip.setDone(true);
             ip.setMessage(null);

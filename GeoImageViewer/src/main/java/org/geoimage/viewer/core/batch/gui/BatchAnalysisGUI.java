@@ -38,7 +38,6 @@ import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
@@ -445,7 +444,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
 
         private void runAnalysis(File f) {
-            if (new File(output + "/" + f.getParentFile().getName()).exists()) {
+     /*       if (new File(output + "/" + f.getParentFile().getName()).exists()) {
                 return;
             }
             GeoImageReader gir = GeoImageReaderFactory.createReaderForName(f.getAbsolutePath()).get(0);
@@ -493,7 +492,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     //csv.save(gl, "EPSG:4326",gir);
                 }
             }
-            gir.dispose();
+            gir.dispose();*/
 
         }
     }
