@@ -19,7 +19,6 @@ import java.util.Map;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.common.OptionMenu;
@@ -28,7 +27,6 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -155,31 +153,25 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
     public void save(String file, int formattype, String projection) {
     	switch (formattype){
     	
-	    	case VectorIOFactory.SIMPLE_SHAPEFILE:{
+	    	case AbstractVectorIO.SIMPLE_SHAPEFILE:{
 	            try {
-	                Map config =new HashMap();
-	                config.put(SimpleShapefile.CONFIG_URL, new File(file).toURI().toURL());
-	                AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-	                shpio.save(glayer,projection,(SarImageReader)reader);
+	                SimpleShapefile.exportLayer(new File(file),glayer,projection,((SarImageReader)reader).getGeoTransform());
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(),ex);
 	            }
 	            break;
 	        }
-	    	case VectorIOFactory.SUMO_OLD:{
+	    	case AbstractVectorIO.SUMO_OLD:{
 	            try {
-	                Map config = new HashMap();
-	                config.put(SumoXmlIOOld.CONFIG_FILE, file);
-	                AbstractVectorIO sio = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
-	                sio.save(glayer, "",(SarImageReader)reader);
+	                SumoXmlIOOld.export(new File(file), glayer, projection, (SarImageReader)reader);
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(),ex);
 	            }
 	            break;
 	        }
-	    	case VectorIOFactory.CSV:{
+	    	case AbstractVectorIO.CSV:{
 	            try {
-	                GenericCSVIO.save(new File(file),glayer, projection,reader.getGeoTransform());
+	                GenericCSVIO.export(new File(file),glayer, projection,reader.getGeoTransform());
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(),ex);
 	            }

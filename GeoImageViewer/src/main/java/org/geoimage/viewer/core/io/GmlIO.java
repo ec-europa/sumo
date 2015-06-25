@@ -36,18 +36,27 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class GmlIO extends AbstractVectorIO {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GmlIO.class);
-
+	private File input=null;
+	private SarImageReader gir;
+	private GeometricLayer layer;
 	
     public static String CONFIG_FILE = "file";
 
-    public GmlIO(){
+    public GmlIO(File input,SarImageReader gir){
+    	this.input=input;
+    	this.gir=gir;
     }
     
-    public GeometricLayer read(GeoImageReader reader) {
+    public void read() {
+    	layer=readLayer();
+    }
+    
+    public GeometricLayer readLayer() {
+    	GeometricLayer layer=null;
         try {
-            GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
+            layer = new GeometricLayer(GeometricLayer.POINT);
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(new File((String) config.get(CONFIG_FILE)));
+            Document doc = builder.build(input);
 
             GeometryFactory gf = new GeometryFactory();
             String[] schema = VDSFields.getSchema();
@@ -57,7 +66,7 @@ public class GmlIO extends AbstractVectorIO {
             if (root != null) {
 
                 layer.setProjection("EPSG:4326");
-                layer.setName(new File((String) config.get(CONFIG_FILE)).getName());
+                layer.setName(input.getName());
                 for (Object obj : root.getChildren()) {
                     if (obj instanceof Element) {
                         Element feature = (Element) obj;
@@ -84,16 +93,19 @@ public class GmlIO extends AbstractVectorIO {
                     }
                 }
             }
-            return layer;
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
-        return null;
+        return layer;
     }
 
-    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
+    @Override
+	public void save(File output, String projection,GeoTransform transform) {
+    	save(output,layer,projection,transform,gir);
+    }
+    
+	public static void save(File output, GeometricLayer glayer, String projection,GeoTransform transform,SarImageReader gir) {
     	try {
-	    	GeoTransform transform=gir.getGeoTransform();
 	    	
 	        Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
 	        Namespace vd=Namespace.getNamespace("vd", "http://cweb.ksat.no/cweb/schema/vessel");
@@ -171,10 +183,10 @@ public class GmlIO extends AbstractVectorIO {
 	        source.addContent(time);
 	        Element coorners = new Element("cornerPoint", sat);
 	        coorners.setAttribute("srsName", "EPSG:4326");
-	        double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
-	        double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
-	        double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
-	        double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
+	        double[] topLeft = transform.getGeoFromPixel(0, 0);
+	        double[] topRight = transform.getGeoFromPixel(gir.getWidth(), 0);
+	        double[] bottomLeft = transform.getGeoFromPixel(0, gir.getHeight());
+	        double[] bottomRight = transform.getGeoFromPixel(gir.getWidth(), gir.getHeight());
 	        Element pos = new Element("pos", gml);
 	        pos.addContent(topLeft[1] +" "+topLeft[0]);
 	        coorners.addContent(pos);
@@ -203,13 +215,16 @@ public class GmlIO extends AbstractVectorIO {
 	        XMLOutputter serializer = new XMLOutputter();
 	        serializer.setFormat(Format.getPrettyFormat());
         
-            BufferedWriter out = new BufferedWriter(new FileWriter((String) config.get(CONFIG_FILE)));
+            BufferedWriter out = new BufferedWriter(new FileWriter(output));
             out.write(serializer.outputString(doc));
             out.close();
         } catch (IOException | GeoTransformException e) {
         	logger.error(e.getMessage(),e);
         }
     }
+
+
+	
 
     
 }

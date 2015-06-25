@@ -29,19 +29,27 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class SimpleCSVIO extends AbstractVectorIO {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SimpleCSVIO.class);
-
-    public static String CONFIG_FILE = "file";
-
-    public GeometricLayer read(GeoImageReader reader) {
+	private GeometricLayer glayer=null;
+	
+	private File file=null;
+	
+	public SimpleCSVIO(File input){
+		this.file=input;
+	}
+    
+	public void read() {
+		glayer=createLayer();
+	}
+	
+    public GeometricLayer createLayer() {
         RandomAccessFile fss = null;
-        String file = ((String) config.get(CONFIG_FILE)).replace('\\','/');
         try {
             fss = new RandomAccessFile(file, "r");
             String line = null;
             String[] temp = fss.readLine().split(",");
             String type = temp[0].split("=")[1];
             GeometricLayer out = new GeometricLayer(type);
-            out.setName(file.substring(file.lastIndexOf("/") + 1, file.lastIndexOf(".")));
+            out.setName(file.getName().substring(0, file.getPath().lastIndexOf(".")));
             if (temp.length == 2) {
                 out.setProjection(temp[1].split("=")[1]);
             }
@@ -109,12 +117,16 @@ public class SimpleCSVIO extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,SarImageReader reader) {
-    	GeoTransform transform=reader.getGeoTransform();
+    
+    
+    @Override
+	public void save(File output, String projection, GeoTransform transform) {
+    	export(output,glayer,projection,transform); 
+	}
+    
+    public static void export(File output, GeometricLayer glayer, String projection,GeoTransform transform) {
         try {
-            String file = ((String) config.get(CONFIG_FILE)).replace('\\','/');
-            new File(file).createNewFile();
-            FileWriter fis = new FileWriter(file);
+            FileWriter fis = new FileWriter(output);
             fis.write("type=" + glayer.getGeometryType());
             if (projection != null) {
                 fis.write(",projection=" + projection + "\n");
@@ -174,6 +186,8 @@ public class SimpleCSVIO extends AbstractVectorIO {
             return gf.createPolygon(gf.createLinearRing(coords.toArray(new Coordinate[coords.size()])), null);
         }
     }
+
+	
 
 
 }

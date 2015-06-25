@@ -19,9 +19,14 @@ import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
+import org.geoimage.viewer.util.PolygonOp;
+import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
 
 /**
  * this is a class that implememts default method to access raster data.
@@ -48,10 +53,13 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     double radarWavelength;
     double orbitInclination;
     double revolutionsPerDay;
+    final int defaultMargin=100;
+    private Polygon bbox=null;
+    
+    
+    
 
-    
-    
-    public SarImageReader(File manifest){
+	public SarImageReader(File manifest){
     	manifestFile=manifest;
     }
     
@@ -84,6 +92,14 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     public GeoTransform getGeoTransform() {
         return geotransform;
     }
+    
+    public Polygon getBbox() {
+		return bbox;
+	}
+
+	public void setBbox(Polygon bbox) {
+		this.bbox = bbox;
+	}
     
     @Override
     public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter,int band) {
@@ -217,9 +233,39 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return az;
     }
 
-    public void dispose() {
-    }
+    public Polygon buildBox() throws ParseException, GeoTransformException, CQLException{
+		   double h=getHeight();
+		   double w=getWidth();
+		
+	    GeoTransform gt = getGeoTransform();
+	    int margin=0;
+	    try{
+	    	margin=Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
+    	}catch(Exception e){
+    		margin=defaultMargin;
+    	}
+	    
+        double[] x0 = gt.getGeoFromPixel(-margin, -margin);
+        double[] x01 = gt.getGeoFromPixel(-margin, h/3); //image center coords
+        double[] x02 = gt.getGeoFromPixel(-margin, h/2); //image center coords
+        double[] x03 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
+        double[] x1 = gt.getGeoFromPixel(-margin, margin + h);
+        double[] x12 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
+        double[] x2 = gt.getGeoFromPixel(margin + w, margin + h);
+        double[] x21 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords
+        double[] x22 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
+        double[] x23 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
+        double[] x3 = gt.getGeoFromPixel(margin + w, -margin);
+        double[] x31 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
 
+        //poligono con punti di riferimento dell'immagine
+        Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
+        
+        logger.debug("Polygon imageP isvalid:"+imageP.isValid());
+        
+        return imageP;
+	}
+    
     public String getDescription() {
         StringBuilder description = new StringBuilder("Image Acquisition and Generation Parameters:\n")
         	 .append("--------------------\n\n")
@@ -474,5 +520,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setOverViewImage(BufferedImage overViewImage) {
 		this.overViewImage = overViewImage;
 	}
+	public void dispose() {
+    }
+
 
 }

@@ -85,12 +85,6 @@ public abstract class Sentinel1 extends SarImageReader {
     private List<Swath> swaths=null;
     
     
-    
-    //per test
-    //public GeoTransform testTransform=null;
-    
-    
-    
     public Sentinel1(String swath,String manifestXMLPath) {
     	super(new File(manifestXMLPath)); 
     	this.swath=swath;

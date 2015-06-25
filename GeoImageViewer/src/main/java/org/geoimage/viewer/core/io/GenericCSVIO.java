@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
@@ -47,20 +48,28 @@ import com.vividsolutions.jts.geom.Polygon;
  *         of the csv and the date column (optional).
  *
  */
-public class GenericCSVIO {
+public class GenericCSVIO extends AbstractVectorIO{
 	private static org.slf4j.Logger logger = LoggerFactory
 			.getLogger(GenericCSVIO.class);
 	private File csvFile = null;
+	private GeoTransform transform=null;
+	private GeometricLayer glayer=null;
 
-	public GenericCSVIO(File file) {
+	public GenericCSVIO(File file,GeoTransform transform) {
 		csvFile = file;
+		this.transform=transform;
 	}
 
-	public GenericCSVIO(String filePath) {
+	public GenericCSVIO(String filePath,GeoTransform transform) {
 		csvFile = new File(filePath);
+		this.transform=transform;
 	}
-
-	public GeometricLayer read(GeoImageReader reader) {
+	
+	public void read() {
+		glayer=readLayer();
+	}
+	
+	public GeometricLayer readLayer() {
 
 		try {
 			GeometricLayer out = null;
@@ -74,15 +83,14 @@ public class GenericCSVIO {
 					.read(csvFile.getName(), null, null);
 			ResultSetMetaData meta = rs.getMetaData();
 
-			// check if it is a sumo csv, based on Fix work
+			/* check if it is a sumo csv, based on Fix work
 			if (meta.getColumnName(1).equals("type=point")) {
 				GenericCSVIO csv = new GenericCSVIO(csvFile.getAbsolutePath());
 				GeometricLayer gl = csv.read(reader);
-				out = GeometricLayer.createImageProjectedLayer(gl,
-						reader.getGeoTransform(), "EPSG:4326");
+				out = GeometricLayer.createImageProjectedLayer(gl,reader.getGeoTransform(), "EPSG:4326");
 
 				return out;
-			}
+			}*/
 
 			SelectParametersJDialog ff2 = new SelectParametersJDialog(meta);
 			ff2.setVisible(true);
@@ -102,11 +110,8 @@ public class GenericCSVIO {
 			GeometricLayer gl = new GeometricLayer(MaskVectorLayer.POINT);
 
 			gl.setName(csvFile.getName());
-			addCSVGeom("tempcsv", gl, latName, lonName, dateName,
-					reader.getGeoTransform(), reader.getWidth(),
-					reader.getHeight());
-			out = GeometricLayer.createImageProjectedLayer(gl,
-					reader.getGeoTransform(), "EPSG:4326");
+			//addCSVGeom("tempcsv", gl, latName, lonName, dateName,transform, reader.getWidth(),reader.getHeight());
+			out = GeometricLayer.createImageProjectedLayer(gl,transform, "EPSG:4326");
 
 			rs.close();
 			stat.close();
@@ -124,9 +129,10 @@ public class GenericCSVIO {
 	/**
      * 
      */
-	// TODO: funziona solo con i points , bisogna correggerlo per salvare
-	// correttamente anche i poligoni
-	public static void save(File output, GeometricLayer glayer, String projection,GeoTransform transform) {
+	public void save(File output,String projection,GeoTransform transform) {
+		export(output,glayer,projection,transform);
+	}
+	public static void export(File output,GeometricLayer glayer,String projection,GeoTransform transform) {
 		FileWriter fis=null;
 		try {
 			fis = new FileWriter(output);
@@ -180,6 +186,7 @@ public class GenericCSVIO {
 
 	}
 
+	
 	private Geometry parse(String string) {
 		if (string.endsWith(";")) {
 			string = string.substring(0, string.length() - 1);
@@ -213,15 +220,12 @@ public class GenericCSVIO {
 				stat.execute("DROP TABLE TEMPCSV IF EXISTS");
 				String sql = null;
 
-				// "CREATE TABLE CSV (MMSI VARCHAR, IMO VARCHAR, date TIMESTAMP, Lat REAL, Lon REAL, Heading VARCHAR, SoG REAL, Width REAL, Length REAL, Draught REAL, Name VARCHAR, Callsign VARCHAR, Destination VARCHAR, ETA VARCHAR, Status VARCHAR, VeselType VARCHAR, ExtraInfo VARCHAR)";
-				// stat.execute(sql);
 
 				ResultSet rs = Csv.getInstance().read(args[0], null, null);
 				ResultSetMetaData meta = rs.getMetaData();
 				SelectParametersJDialog ff2 = new SelectParametersJDialog(meta);
 				ff2.setVisible(true);
-				sql = "create table tempcsv as select * from csvread('"
-						+ csvfilename + "')";
+				sql = "create table tempcsv as select * from csvread('"	+ csvfilename + "')";
 				stat.execute(sql);
 
 				String latName = ff2.getLatField();
@@ -231,8 +235,6 @@ public class GenericCSVIO {
 				sql = "select * from tempcsv";
 				stat.execute(sql);
 				GeometricLayer gl = new GeometricLayer(MaskVectorLayer.POINT);
-				// gl.setName(csvfilename.substring(csvfilename.lastIndexOf("/")
-				// + 1, csvfilename.length()));
 				gl.setName(csvFile.getName());
 				IImageLayer l = Platform.getCurrentImageLayer();
 				if (l != null) {
@@ -255,8 +257,7 @@ public class GenericCSVIO {
 		}
 	}
 
-	public void addCSVGeom(String tableName, GeometricLayer gl, String lat,
-			String lon, String date, GeoTransform gt, int width, int height)
+	public void addCSVGeom(String tableName, GeometricLayer gl, String lat,String lon, String date, GeoTransform gt, int width, int height)
 			throws SQLException {
 		Connection conn = DriverManager.getConnection(
 				"jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
@@ -354,4 +355,6 @@ public class GenericCSVIO {
 		conn.close();
 	}
 
+	
+	
 }

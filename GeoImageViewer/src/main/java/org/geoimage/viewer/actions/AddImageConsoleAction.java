@@ -6,9 +6,7 @@ package org.geoimage.viewer.actions;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -21,8 +19,6 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.factory.VectorIOFactory;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -266,38 +262,35 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
 
     private void addThumbnails(String[] args) {
-
-        AbstractVectorIO csv = null;
+    	 SumoXmlIOOld old=null;
         if (args.length == 2) {
             //csv = new SimpleCSVIO(args[1].split("=")[1]);
         } else {
             int returnVal = fileChooser.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 lastDirectory = fileChooser.getSelectedFile().getParent();
-                Map config = new HashMap();
-                config.put(SumoXmlIOOld.CONFIG_FILE, fileChooser.getSelectedFile().getAbsolutePath());
-                csv = VectorIOFactory.createVectorIO(VectorIOFactory.SUMO_OLD, config);
+                old=new SumoXmlIOOld(fileChooser.getSelectedFile());
             }
-        }
-        if(csv!=null){
-        	try{
-		        GeometricLayer positions = csv.read(null);
-		        if (positions.getProjection() == null) {
-		            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
-		        } else {
-		            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
-		            Platform.getLayerManager().addLayer(tm);
-		        }
-        	}catch(Exception e){
-        		logger.error(e.getMessage());
-        	}
-        	
-        }    
-        try {
-            Platform.refresh();
-        } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-        }
+	        if(old!=null){
+	        	try{
+			        GeometricLayer positions = old.readLayer();
+			        if (positions.getProjection() == null) {
+			            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
+			        } else {
+			            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
+			            Platform.getLayerManager().addLayer(tm);
+			        }
+	        	}catch(Exception e){
+	        		logger.error(e.getMessage());
+	        	}
+	        	
+	        }    
+	        try {
+	            Platform.refresh();
+	        } catch (Exception ex) {
+	        	logger.error(ex.getMessage(),ex);
+	        }
+        }   
 
     }
 

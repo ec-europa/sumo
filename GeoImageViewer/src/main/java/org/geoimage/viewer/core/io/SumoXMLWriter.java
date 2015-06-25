@@ -16,6 +16,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
@@ -39,21 +40,27 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
-	final Logger logger = Logger.getLogger(SumoXMLWriter.class);
+	public static Logger logger = Logger.getLogger(SumoXMLWriter.class);
+	private File input=null;
+	private GeometricLayer layer = null;
 	
-	
-	public SumoXMLWriter(){
+	public SumoXMLWriter(File input){
+		this.input=input;
 	}
 	
+	public SumoXMLWriter(){
+
+	}
+	
+	
 	@Override
-	public GeometricLayer read(GeoImageReader gir) {
-		GeometricLayer layer = null;
+	public void read() {
 		try {
 			layer = new GeometricLayer(GeometricLayer.POINT);
 
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
-			Document doc = builder.build(new File((String) config.get(CONFIG_FILE)));
+			Document doc = builder.build(input);
 
 			GeometryFactory gf = new GeometryFactory();
 			String[] schema = VDSFields.getSchema();
@@ -86,8 +93,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			if (root != null) {
 
 				layer.setProjection("EPSG:4326");
-				layer.setName(new File((String) config.get(CONFIG_FILE))
-						.getName());
+				layer.setName(input.getName());
 				for (Object obj : root.getChildren()) {
 					if (obj instanceof Element) {
 						Element boat = (Element) obj;
@@ -122,7 +128,6 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		return layer;
 	}
 	
 	/**
@@ -131,7 +136,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param date
 	 * @return
 	 */
-	private String roundedMillis(String date){
+	public static String roundedMillis(String date){
 		String millis=date.substring(date.indexOf(".")+1,date.length());
 		if(millis!=null&&millis.length()>0){
 			double val=Double.parseDouble("0."+millis);
@@ -161,7 +166,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param enl
 	 * @param landmask
 	 */
-	public void saveNewXML(GeometricLayer gLayer, String projection,SarImageReader gir,float[] thresholds,int buffer,double enl,String landmask) {
+	public static void saveNewXML(File output,GeometricLayer gLayer, String projection,SarImageReader gir,float[] thresholds,int buffer,float enl,String landmask) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 		
 		String start=gir.getTimeStampStart();
@@ -312,8 +317,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            File fout=new File((String) config.get(CONFIG_FILE) );
-            OutputStream os = new FileOutputStream(fout );
+            
+            OutputStream os = new FileOutputStream(output );
             //marshaller.marshal(an, System.out);
             marshaller.marshal( an, os );
             os.close();
@@ -332,7 +337,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @return
 	 * @throws GeoTransformException 
 	 */
-	public Gcps getCorners(GeoImageReader gir) throws GeoTransformException {
+	public static Gcps getCorners(GeoImageReader gir) throws GeoTransformException {
 		//Corners corners=((SarImageReader)gir).getOriginalCorners();
         double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
@@ -396,9 +401,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	}
 
 	@Override
-	public void save(GeometricLayer layer, String projection, SarImageReader gir) {
+	public void save(File output, String projection, GeoTransform transform) {
+		// TODO Auto-generated method stub
 		
 	}
+
 
 	
 	

@@ -36,18 +36,25 @@ import com.vividsolutions.jts.geom.Polygon;
 public class SumoXmlIOOld extends AbstractVectorIO {
     public static String CONFIG_FILE = "file";
     final Logger logger = Logger.getLogger(SumoXmlIOOld.class);
-
-    public SumoXmlIOOld(){
+    private File input=null;
+    private GeometricLayer glayer=null;
+    
+    
+    public SumoXmlIOOld(File file){
+    	this.input=file;
 	}
     
+    public void read() {
+    	glayer=readLayer();
+    }
     
-    public GeometricLayer read(GeoImageReader gir) {
+    public GeometricLayer readLayer() {
         try {
             GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
             
             //create xml doc
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(new File((String) config.get(CONFIG_FILE)));
+            Document doc = builder.build(input);
 
             
             GeometryFactory gf = new GeometryFactory();
@@ -81,7 +88,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
             if (root != null) {
 
                 layer.setProjection("EPSG:4326");
-                layer.setName(new File((String) config.get(CONFIG_FILE)).getName());
+                layer.setName(input.getName());
                 for (Object obj : root.getChildren()) {
                     if (obj instanceof Element) {
                         Element boat = (Element) obj;
@@ -116,7 +123,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         return null;
     }
 
-    public void save(GeometricLayer glayer, String projection,SarImageReader gir) {
+    public static void export(File output,GeometricLayer glayer, String projection,SarImageReader gir) {
     	 try {
 	    	GeoTransform transform=gir.getGeoTransform();
 	    	
@@ -236,7 +243,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
 	        serializer.setFormat(Format.getPrettyFormat());
 	        // System.out.println(serializer.outputString(doc));
        
-            BufferedWriter out = new BufferedWriter(new FileWriter((String) config.get(CONFIG_FILE)));
+            BufferedWriter out = new BufferedWriter(new FileWriter(output));
             out.write(serializer.outputString(doc));
             out.close();
         } catch (IOException |GeoTransformException e) {
@@ -371,7 +378,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     } catch (IOException e) {
     }
     }*/
-    public Element getCorners(GeoImageReader gir) throws GeoTransformException {
+    public static Element getCorners(GeoImageReader gir) throws GeoTransformException {
         Element gcps = new Element("gcps");
         double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0);
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
@@ -384,7 +391,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         return gcps;
     }
 
-    public Element createGcp(double lon, double lat, double x, double y) {
+    public static Element createGcp(double lon, double lat, double x, double y) {
         Element gcp = new Element("gcp");
 
         Element row = new Element("row");
@@ -405,6 +412,14 @@ public class SumoXmlIOOld extends AbstractVectorIO {
 
         return gcp;
     }
+
+
+	@Override
+	public void save(File output, String projection,GeoTransform transform) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }
