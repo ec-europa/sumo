@@ -14,8 +14,8 @@ import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
+import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.util.GeometricLayerIO;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -78,7 +78,7 @@ public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
             stat.execute("DROP TABLE \"" + glayer.getName() + "\" IF EXISTS");
             String sql = null;
             File tempfile = File.createTempFile(glayer.getName(), ".csv");
-            GeometricLayerIO.createCSV(glayer, tempfile.getAbsolutePath());
+            GenericCSVIO.createSimpleCSV(glayer, tempfile.getAbsolutePath());
             sql = "create table \"" + glayer.getName() + "\" as select * from csvread('" + tempfile.getAbsolutePath() + "')";
             stat.execute(sql);
             stat.close();

@@ -54,7 +54,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     double orbitInclination;
     double revolutionsPerDay;
     final int defaultMargin=100;
-    private Polygon bbox=null;
+    protected Polygon bbox=null;
     
     
     
@@ -307,8 +307,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return description.toString();
     }
     
-    
-    
 
     public int[] getAmbiguityCorrection(int xPos,int yPos) {
     	if(satelliteSpeed==0){
@@ -350,8 +348,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return output;
     }
 
-    
-    
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
         // estimation of incidence angle based on near and range distance values
