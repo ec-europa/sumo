@@ -2,6 +2,7 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -135,18 +136,23 @@ public abstract class AbstractBatchAnalysis {
     		   l.save(outfile.toString(),ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
     		   
     		   
-    		   SumoXMLWriter newWriter=new SumoXMLWriter();
-    		   
     		   String file=new String(outfile.append("_new").toString());
     		   if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
            
-    		   newWriter.saveNewXML(new File(file),FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable()), 
-    				   params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
+    		   GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
+    		   SumoXMLWriter.saveNewXML(new File(file),threshLayer,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
     		   
-    		   String bbox=new File(file).getParentFile().getAbsolutePath()+"\\bbox.shp";
-    		 //  Utils.createShapeFileFromPolygons( new File(bbox),reader.getBbox().get);
+    		   String bbox=outfolder+"\\bbox.shp";
+    		   List<Geometry> gg=new ArrayList<Geometry>();
+    		   gg.add(reader.getBbox());
+    		   //save the bound box as shape file
+    		//   Utils.createShapeFileFromGeometries(bbox,gg);
+    		   
+    		   //save targets as shape file
+    		   String targets=outfolder+"\\targets.shp";
+    		//   Utils.createShapeFileFromGeometries(targets,threshLayer.getGeometries());
     		   
     	   }
         }

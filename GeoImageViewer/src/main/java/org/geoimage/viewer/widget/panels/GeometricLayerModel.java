@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.util;
+package org.geoimage.viewer.widget.panels;
 
 import com.vividsolutions.jts.geom.Geometry;
 

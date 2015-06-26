@@ -4,7 +4,7 @@
  * Created on June 18, 2008, 5:12 PM
  */
 
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.panels;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,7 +13,6 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.util.GeometricLayerModel;
 
 /**
  *

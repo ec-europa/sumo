@@ -133,7 +133,7 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP, String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
+    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP,final String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
         GeometricLayer out=null;
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);//LINESTRING);//POLYGON);
