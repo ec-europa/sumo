@@ -148,7 +148,7 @@ public abstract class AbstractBatchAnalysis {
     		   List<Geometry> gg=new ArrayList<Geometry>();
     		   gg.add(reader.getBbox());
     		   //save the bound box as shape file
-    		//   Utils.createShapeFileFromGeometries(bbox,gg);
+    		   //Utils.createShapeFileFromGeometries(bbox,gg);
     		   
     		   //save targets as shape file
     		   String targets=outfolder+"\\targets.shp";

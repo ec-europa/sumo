@@ -196,7 +196,8 @@ public class SimpleShapefile extends AbstractVectorIO{
      */
     public static void exportLayer(File output,GeometricLayer layer, String projection,GeoTransform transform) {
         try {
-            layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
+        	if(transform!=null)
+        		layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
            
             SimpleFeatureSource source=layer.getFeatureSource();
