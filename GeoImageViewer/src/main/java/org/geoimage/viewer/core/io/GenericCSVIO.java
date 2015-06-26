@@ -7,6 +7,7 @@ package org.geoimage.viewer.core.io;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,7 +22,6 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
@@ -37,6 +37,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  *
@@ -69,18 +70,15 @@ public class GenericCSVIO extends AbstractVectorIO{
 		glayer=readLayer();
 	}
 	
-	public GeometricLayer readLayer() {
-
+	/*public GeometricLayer readLayer() {
+		GeometricLayer out = null;
 		try {
-			GeometricLayer out = null;
-			Connection conn = DriverManager.getConnection(
-					"jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
+			Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
 			Statement stat = conn.createStatement();
 			stat.execute("DROP TABLE TEMPCSV IF EXISTS");
 			String sql = null;
 
-			ResultSet rs = Csv.getInstance()
-					.read(csvFile.getName(), null, null);
+			ResultSet rs = Csv.getInstance().read(csvFile.getName(), null, null);
 			ResultSetMetaData meta = rs.getMetaData();
 
 			/* check if it is a sumo csv, based on Fix work
@@ -91,11 +89,10 @@ public class GenericCSVIO extends AbstractVectorIO{
 
 				return out;
 			}*/
-
+/*
 			SelectParametersJDialog ff2 = new SelectParametersJDialog(meta);
 			ff2.setVisible(true);
-			sql = "create table tempcsv as select * from csvread('"
-					+ csvFile.getName() + "')";
+			sql = "create table tempcsv as select * from csvread('"	+ csvFile.getName() + "')";
 			stat.execute(sql);
 
 			String latName = ff2.getLatField();
@@ -116,15 +113,88 @@ public class GenericCSVIO extends AbstractVectorIO{
 			rs.close();
 			stat.close();
 			conn.close();
-
-			return out;
-
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
 
-		return null;
-	}
+		return out;
+	}*/
+	
+	 public GeometricLayer readLayer() {
+	        RandomAccessFile fss = null;
+	        GeometricLayer out=null;
+	        try {
+	            fss = new RandomAccessFile(csvFile, "r");
+	            String line = null;
+	            String[] temp = fss.readLine().split(",");
+	            String type = temp[0].split("=")[1];
+	            out = new GeometricLayer(type);
+	            out.setName(csvFile.getName().substring(0, csvFile.getPath().lastIndexOf(".")));
+	            if (temp.length == 2) {
+	                out.setProjection(temp[1].split("=")[1]);
+	            }
+	            line = fss.readLine();
+	            String[] attributes = null;
+	            if (line.equals("")) {
+	                attributes = new String[]{};
+	            } else {
+	                attributes = line.split(",");
+	            }
+	            line = fss.readLine();
+	            String[] types = null;
+	            if (line.equals("")) {
+	                types = new String[]{};
+	            } else {
+	                types = line.split(",");
+	            }
+	            while ((line = fss.readLine()) != null) {
+	                Attributes atts = Attributes.createAttributes(attributes, types);
+	                String[] val = line.split(",");
+	                if (val.length != attributes.length + 1) {
+	                    continue;
+	                }
+	                Geometry geom = parse(val[0]);
+	                for (int i = 1; i < val.length; i++) {
+	                    if (types[i - 1].equals("Date")) {
+	                        try {
+	                            atts.set(attributes[i - 1], Timestamp.valueOf(val[i]));
+	                        } catch (Exception e) {
+	                            atts.set(attributes[i - 1], null);
+	                        }
+	                    } else {
+	                        if (types[i - 1].equals("Double")) {
+	                            try {
+	                                atts.set(attributes[i - 1], Double.valueOf(val[i]));
+	                            } catch (Exception e) {
+	                                atts.set(attributes[i - 1], Double.NaN);
+	                            }
+	                        } else {
+	                            if (types[i - 1].equals("Integer")) {
+	                                try {
+	                                    atts.set(attributes[i - 1], Integer.valueOf(val[i]));
+	                                } catch (Exception e) {
+	                                    atts.set(attributes[i - 1], 0);
+	                                }
+	                            } else {
+	                                atts.set(attributes[i - 1], val[i]);
+	                            }
+
+	                        }
+	                    }
+	                }
+	                out.put(geom, atts);
+	            }
+	        } catch (Exception ex) {
+	        	logger.error(ex.getMessage(), ex);
+	        } finally {
+	            try {
+	                fss.close();
+	            } catch (IOException ex) {
+	            	logger.error(ex.getMessage(), ex);
+	            }
+	        }
+	        return out;
+	    }
 
 	/**
      * 
@@ -153,8 +223,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 							temp = transform.getGeoFromPixel(pos[i].x, pos[i].y);
 							fis.write(temp[1] + "," + temp[0]);
 						} catch (GeoTransformException e) {
-							logger.warn("Can't write coordinates:"
-									+ e.getMessage());
+							logger.warn("Can't write coordinates:"+ e.getMessage());
 						}
 
 					}
@@ -186,6 +255,32 @@ public class GenericCSVIO extends AbstractVectorIO{
 
 	}
 
+	public static void createSimpleCSV(GeometricLayer glayer, String file) throws Exception {
+        FileWriter fw = new FileWriter(file);
+        fw.append("geom," + glayer.getSchema(',') + "\n");
+        WKTWriter wkt = new WKTWriter();
+        for (Geometry geom : glayer.getGeometries()) {
+            fw.append("\"" + wkt.writeFormatted(geom) + "\",");
+            Attributes att = glayer.getAttributes(geom);
+            if (att == null || att.getSchema().length==0) {
+                fw.append("\n");
+                continue;
+            }
+            for (int i = 0; i < att.getSchema().length; i++) {
+                String key = att.getSchema()[i];
+                fw.append(att.get(key) + "");
+                if (i < att.getSchema().length - 1) {
+                    fw.append(",");
+                } else {
+                    fw.append("\n");
+                }
+            }
+        }
+        fw.flush();
+        fw.close();
+    }
+	
+	
 	
 	private Geometry parse(String string) {
 		if (string.endsWith(";")) {

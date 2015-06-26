@@ -28,7 +28,6 @@ import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.PostgisIO;

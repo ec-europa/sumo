@@ -15,6 +15,8 @@ import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.panels.EditorPanel;
+import org.geoimage.viewer.widget.panels.GeometricInteractiveVDSLayerPanel;
+import org.geoimage.viewer.widget.panels.GeometricLayerPanel;
 import org.geoimage.viewer.widget.panels.LayerPanel;
 import org.geoimage.viewer.widget.panels.SavePanel;
 import org.geoimage.viewer.widget.panels.SelectPanel;

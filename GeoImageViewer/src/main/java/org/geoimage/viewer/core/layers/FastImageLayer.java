@@ -17,6 +17,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -34,6 +37,7 @@ import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImagePool;
 import org.geoimage.viewer.core.layers.image.TextureCacheManager;
 import org.geoimage.viewer.util.Constant;
+import org.geotools.legend.Drawer;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -124,7 +128,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     
     //for cuncurrency reader
     private ExecutorService poolExcutorService;
-    private int poolSize = 4;
+    private int poolSize = 2;
     
     private int arrayReadTilesOrder[][]=null ;
     
@@ -138,14 +142,23 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
         Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "512");
     }
-
+    
+    
+    /**
+     * 
+     * @param gir
+     */
     public FastImageLayer(GeoImageReader gir) {
     	iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
   
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-        poolExcutorService = Executors.newFixedThreadPool(poolSize);
+        //poolSize=Runtime.getRuntime().availableProcessors();
+        //poolExcutorService = Executors.newFixedThreadPool(poolSize);
+        poolExcutorService = new ThreadPoolExecutor(1,poolSize,500, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
+        
+        
         submitedTiles = new ArrayList<String>();
         imagePool = new ImagePool(gir, poolSize);
 
@@ -179,6 +192,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         }
     }
     
+   
+    
+    
     /**
      * Create the matrix that define the order in which the tiles will be read
      */
@@ -204,6 +220,30 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         }
     }
 
+    
+    /**
+     * 
+     * @param gl
+     */
+    private void updateFutures(GL gl) {
+        List<Future<Object[]>> remove1 = new ArrayList<Future<Object[]>>();
+        for (Future<Object[]> f : futures) {
+            if (f.isDone() || f.isCancelled()) {
+                remove1.add(f);
+                try {
+                    Object[] o = f.get();
+                    submitedTiles.remove(o[1]);
+                    if (o.length>2&&o[2] != null) {
+                        tcm.add((String) o[0], AWTTextureIO.newTexture(gl.getGLProfile(),(BufferedImage) o[2], false));
+                    }
+                } catch (Exception ex) {
+                	logger.error(ex.getMessage(),ex);
+                }
+            }
+        }
+        futures.removeAll(remove1);
+    }
+    
     @Override
     /**
      * displays the tiles on screen
@@ -230,11 +270,9 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 	        //max tiles to compute time by time
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
         
-        
 	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
 	        
 	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
-	        
 		        if (zoom >= 1) {
 		            curlevel = (int) Math.sqrt(zoom + 1);
 		            //cycle to avoid the black area when zooming in/out and tiles not in memory
@@ -252,14 +290,14 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		                if (this.mylevel != curlevel) {
 		                    this.mylevel = curlevel;
 		                    poolExcutorService.shutdown();
-		                    poolExcutorService = Executors.newFixedThreadPool(poolSize);
+		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,500, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
 		                }
 		                
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
 		                int h0 = yy / ((1 << lll) << 8);
 		                
 		                
-		                final String initfile = new StringBuffer("\\").//c.getPath().getName()).append("\\").
+		                final String initfile = new StringBuffer("\\").
 		                		append((int) lll ).
 		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
 		                
@@ -354,10 +392,8 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		                    }
 		                }
 		            }
-		
 		        }
 	        displayDownloading(futures.size());
-	        //Platform.getCurrentImageLayer().render(context);
 	        Platform.refresh();
 	        if (this.disposed) {
 	            disposeSync();
@@ -531,29 +567,6 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         }
     }
     
-    /**
-     * 
-     * @param gl
-     */
-    private void updateFutures(GL gl) {
-        List<Future<Object[]>> remove1 = new ArrayList<Future<Object[]>>();
-        for (Future<Object[]> f : futures) {
-            if (f.isDone() || f.isCancelled()) {
-                remove1.add(f);
-                try {
-                    Object[] o = f.get();
-                    submitedTiles.remove(o[1]);
-                    if (o[2] != null) {
-                        tcm.add((String) o[0], AWTTextureIO.newTexture(gl.getGLProfile(),(BufferedImage) o[2], false));
-                    }
-                } catch (Exception ex) {
-                	logger.error(ex.getMessage(),ex);
-                }
-            }
-        }
-        futures.removeAll(remove1);
-    }
-
     public void setContrast(float value) {
         contrast.put(createBandsString(activeBand), value); 
         torescale = true;

@@ -4,7 +4,7 @@
  * Created on June 18, 2008, 5:12 PM
  */
 
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.panels;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,7 +25,6 @@ import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.util.GeometricInteractiveVDSLayerModel;
 
 import com.vividsolutions.jts.geom.Geometry;
 

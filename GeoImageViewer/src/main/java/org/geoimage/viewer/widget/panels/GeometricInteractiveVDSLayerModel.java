@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.util;
+package org.geoimage.viewer.widget.panels;
 
 import java.awt.Color;
 import java.sql.Timestamp;
@@ -25,6 +25,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.slf4j.LoggerFactory;
 

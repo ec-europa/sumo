@@ -62,9 +62,7 @@ public class ImageTiler {
     }
 
     public static BufferedImage createImage(int[]tile, int width, int height, GeoImageReader gimage) {
-
         BufferedImage bufferedImage = new BufferedImage(width, height, gimage.getType(true));
-
 
         WritableRaster raster = bufferedImage.getRaster();
 

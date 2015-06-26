@@ -227,7 +227,8 @@ public abstract class Sentinel1 extends SarImageReader {
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
             setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
             setIncidenceNear(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-
+            
+    		super.bbox=buildBox();
 
             return true;
         } catch (TransformException ex) {
