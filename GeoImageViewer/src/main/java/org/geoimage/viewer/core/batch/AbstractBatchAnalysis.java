@@ -23,6 +23,7 @@ import org.geotools.feature.SchemaException;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
 
 
 class AnalysisParams {
@@ -73,7 +74,10 @@ public abstract class AbstractBatchAnalysis {
 	protected GeometricLayer readShapeFile(SarImageReader reader){
 		GeometricLayer gl=null;
 	    try {
-            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),(SarImageReader)reader);
+	    	Polygon imageP=(reader).getBbox();
+            if(imageP==null)
+            	imageP=(reader).buildBox();
+            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imageP,reader.getGeoTransform());
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
         }
