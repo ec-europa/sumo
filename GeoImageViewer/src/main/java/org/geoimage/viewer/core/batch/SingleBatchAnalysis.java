@@ -35,7 +35,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 				gl=readShapeFile(reader);
 			
 			IMask[] masks = null;
-			if(params.buffer!=0&&gl!=null){
+			if(gl!=null){
 				masks=new IMask[1];
 				masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, reader, gl);
 			}	
