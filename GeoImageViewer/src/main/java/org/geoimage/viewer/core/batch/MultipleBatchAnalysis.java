@@ -64,8 +64,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							activeParams=readLocalConfFile(params,localImageConfFilePath);
 						}
 						
-						
-						
 						//crate the reader
 						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath());
 						for(GeoImageReader r:readers){
@@ -81,15 +79,16 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							IMask[] masks = null;
 							if(gl!=null){
 								masks=new IMask[1];
-								masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, activeParams.buffer, reader, gl);
+								masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, activeParams.buffer,  gl);
 							}	
 							analizeImage(reader,masks,activeParams);
 							String name=image.getParentFile().getName();
 							saveResults(name,masks,reader);
 						}	
 					}	
+					logger.info("Image processed:"+image.getAbsolutePath());
 				}catch(Exception e){
-					logger.error(getClass().getName(),e);
+					logger.error("Problem working this image:"+image.getAbsolutePath(),e);
 				}	
 			}
 	}

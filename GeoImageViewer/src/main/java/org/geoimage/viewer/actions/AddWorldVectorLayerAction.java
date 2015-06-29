@@ -24,6 +24,8 @@ import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
  *
  * @author thoorfr.
@@ -57,7 +59,10 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                 	if(l!=null){
                         try {
                         	File shape=new File(Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK));
-                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,(SarImageReader)l.getImageReader());
+                        	Polygon imageP=((SarImageReader)l).getBbox();
+                            if(imageP==null)
+                            	imageP=((SarImageReader)l).buildBox();
+                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
                             addLayerInThread(gl, (IImageLayer) l);
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);

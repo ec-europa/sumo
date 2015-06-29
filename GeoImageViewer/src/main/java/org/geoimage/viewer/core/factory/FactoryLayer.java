@@ -84,7 +84,7 @@ public class FactoryLayer {
 	 * @param bufferingDistance
 	 * @return
 	 */
-	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeoImageReader reader,GeometricLayer layer) {
+	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeometricLayer layer) {
 		 MaskVectorLayer mask = null;
         try {
             mask = (new MaskVectorLayer(Platform.getCurrentImageLayer(),name, type, layer.clone()));

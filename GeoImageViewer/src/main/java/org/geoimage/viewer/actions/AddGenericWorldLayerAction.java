@@ -20,6 +20,8 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
  *
  * @author thoorfr.
@@ -51,7 +53,10 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, (SarImageReader)l.getImageReader());
+                        	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox();
+                            if(imageP==null)
+                            	imageP=((SarImageReader)l.getImageReader()).buildBox();
+                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
                             addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);
