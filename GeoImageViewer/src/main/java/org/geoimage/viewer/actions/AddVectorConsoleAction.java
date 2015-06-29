@@ -41,6 +41,8 @@ import org.geoimage.viewer.widget.DatabaseDialog;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
  *
  * @author thoorfr+ga
@@ -275,8 +277,11 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         IImageLayer imgLayer=Platform.getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
-                //AbstractVectorIO shpio = VectorIOFactory.createVectorIO(VectorIOFactory.SIMPLE_SHAPEFILE, config);
-                GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),(SarImageReader)imgLayer.getImageReader());
+        		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox();
+                if(imageP==null)
+                	imageP=((SarImageReader)imgLayer.getImageReader()).buildBox();
+
+                GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
                 // if 5 args, set a specific name
                 if (args.length == 3) {
                     if (gl != null) {

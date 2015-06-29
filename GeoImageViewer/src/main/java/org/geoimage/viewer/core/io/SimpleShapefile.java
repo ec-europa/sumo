@@ -135,7 +135,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 
     }
 
-    public static GeometricLayer createIntersectedLayer(File shpInput,SarImageReader gir) {
+    public static GeometricLayer createIntersectedLayer(File shpInput,Polygon bbox,GeoTransform transform) {
     	GeometricLayer glout=null;
     	DataStore dataStore =null;
         try {
@@ -147,9 +147,7 @@ public class SimpleShapefile extends AbstractVectorIO{
             //retrieve a FeatureSource to work with the feature data
             SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
             
-            Polygon imageP=gir.getBbox();
-            if(imageP==null)
-            	imageP=gir.buildBox();
+            Polygon imageP=bbox;
             	
             ClipProcess clip=new ClipProcess();
             SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
@@ -170,7 +168,7 @@ public class SimpleShapefile extends AbstractVectorIO{
             GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
             
            
-            glout = GeometricLayer.createImageProjectedLayer(out, gir.getGeoTransform(),null);
+            glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
             
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);

@@ -139,7 +139,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 for (int i=0;i<mask.size();i++) {
                 	IMask maskList = mask.get(i);
-               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance,reader, ((MaskVectorLayer)maskList).getGeometriclayer());
+               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
                 }
                 
                 final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV, this);

@@ -11,7 +11,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -27,7 +26,6 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -36,6 +34,8 @@ import org.geoimage.viewer.core.layers.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.widget.DatabaseDialog;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
@@ -166,7 +166,10 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
         IImageLayer l=Platform.getCurrentImageLayer();
         if(l!=null){
                 try {
-                    GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file), (SarImageReader)l.getImageReader());
+                	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox();
+                    if(imageP==null)
+                    	imageP=((SarImageReader)l.getImageReader()).buildBox();
+                    GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
                     addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
