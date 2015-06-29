@@ -800,9 +800,9 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
-        	//bufferedGeom[i] = bufferedGeom[i].buffer(bufferingDistance, 6, BufferParameters.CAP_ROUND);
-        	bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
-        	bufferedGeom[i]=PolygonOp.removeInteriorRing(bufferedGeom[i]);
+            if(bufferingDistance>0)
+            	bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
+        	bufferedGeom[i] = PolygonOp.removeInteriorRing(bufferedGeom[i]);
         }
         // then merge them
         List<Geometry> newgeoms = new ArrayList<Geometry>();
@@ -829,9 +829,6 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             newgeoms.removeAll(remove);
         }
         glayer.clear();
-
-        //newgeoms=PolygonOp.mergePolygons(newgeoms);
-        //newgeoms=PolygonOp.mergeCascadePolygons(newgeoms,bufferingDistance);
 
         // assign new value
         for (Geometry geom :newgeoms) {

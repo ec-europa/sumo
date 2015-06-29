@@ -1,12 +1,11 @@
 package org.geoimage.viewer.core.batch;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
@@ -14,13 +13,13 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
+import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.util.Utils;
+import org.geotools.feature.SchemaException;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -148,12 +147,19 @@ public abstract class AbstractBatchAnalysis {
     		   List<Geometry> gg=new ArrayList<Geometry>();
     		   gg.add(reader.getBbox());
     		   //save the bound box as shape file
-    		   //Utils.createShapeFileFromGeometries(bbox,gg);
+    		   try {
+				  SimpleShapefile.exportGeometriesToShapeFile(gg, new File(bbox),"Polygon");
+			   } catch (IOException | SchemaException e) {
+				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
+			   }
     		   
     		   //save targets as shape file
-    		   String targets=outfolder+"\\targets.shp";
-    		//   Utils.createShapeFileFromGeometries(targets,threshLayer.getGeometries());
-    		   
+    		   try{
+    			   String targets=outfolder+"\\"+l.getName()+".shp";
+    			   l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
+    		   } catch (Exception e) {
+ 				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
+ 			   }
     	   }
         }
 	}

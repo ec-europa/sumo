@@ -5,27 +5,30 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
-import org.geoimage.viewer.util.Utils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataStoreFinder;
+import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.FileDataStore;
+import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -35,14 +38,16 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.process.vector.ClipProcess;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -54,6 +59,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  *
@@ -205,10 +211,13 @@ public class SimpleShapefile extends AbstractVectorIO{
             if(source!=null){
             	ft = SimpleFeatureTypeBuilder.retype( source.getSchema(), source.getSchema().getCoordinateReferenceSystem() );
             }else{
-            	if(layer.getGeometryType().equals(layer.POINT))
-            		ft=Utils.createFeatureType(Point.class);
-            	else
-            		ft=Utils.createFeatureType(Polygon.class);
+            	if(layer.getGeometryType().equals(GeometricLayer.POINT))
+            		ft=createFeatureType(Point.class);
+            	else if(layer.getGeometryType().equals(GeometricLayer.POLYGON))
+            		ft=createFeatureType(Polygon.class);
+            	else{
+            		
+            	}
             }	
             Map<String, Serializable> params = new HashMap<String, Serializable>();
             params.put("url", output.toURI().toURL());
@@ -222,68 +231,7 @@ public class SimpleShapefile extends AbstractVectorIO{
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
-    }
-    
-   
-    /**
-     * Export features to a new shapefile using the map projection in which
-     * they are currently displayed
-     */
-     public static void save(FeatureCollection<?, ?> featureCollection,SimpleFeatureSource source,File fileOut) throws Exception {
-        SimpleFeatureType schema = source.getSchema();
-
-
-        // set up the math transform used to process the data
-        CoordinateReferenceSystem dataCRS = schema.getCoordinateReferenceSystem();
-        CoordinateReferenceSystem worldCRS = schema.getCoordinateReferenceSystem();
-        boolean lenient = true; // allow for some error due to different datums
-        MathTransform transform = CRS.findMathTransform( dataCRS, worldCRS, lenient );
-        
-
-        // And create a new Shapefile with a slight modified schema
-        DataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-        Map<String, Serializable> create = new HashMap<String, Serializable>();
-        create.put("url", fileOut.toURI().toURL());
-        create.put("create spatial index", Boolean.FALSE);        
-
-        DataStore newDataStore = factory.createNewDataStore(create);
-        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( schema, worldCRS );
-        newDataStore.createSchema( featureType );
-        
-
-        // carefully open an iterator and writer to process the results
-        Transaction transaction = new DefaultTransaction("Reproject");
-        FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriterAppend( newDataStore.getTypeNames()[0], transaction);
-        FeatureIterator<SimpleFeature> iterator = (FeatureIterator<SimpleFeature>) featureCollection.features();                
-        try {
-            while( iterator.hasNext() ){
-                // copy the contents of each feature and transform the geometry
-                SimpleFeature feature = iterator.next();
-                SimpleFeature copy = writer.next();
-                copy.setAttributes( feature.getAttributes() );
-
-                Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                Geometry geometry2 = JTS.transform(geometry, transform);
-                
-                copy.setDefaultGeometry( geometry2 );                
-                writer.write();
-            }
-            transaction.commit();
-            JOptionPane.showMessageDialog(null, "Export to shapefile complete" );
-        } catch (Exception problem) {
-            problem.printStackTrace();
-            transaction.rollback();
-            JOptionPane.showMessageDialog(null, "Export to shapefile failed" );
-        } finally {
-            writer.close();
-            iterator.close();
-            transaction.close();
-        }
-    }
-		 
-	
-	        	
-	        	
+    } 	
     
 
     /**
@@ -295,15 +243,16 @@ public class SimpleShapefile extends AbstractVectorIO{
 
         // carefully open an iterator and writer to process the results
         Transaction transaction = new DefaultTransaction();
-        FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriterAppend(newDataStore.getTypeNames()[0], transaction);
+        FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriter(newDataStore.getTypeNames()[0],  transaction);
         FeatureIterator<SimpleFeature> iterator = featureCollection.features();                
         try {
             while( iterator.hasNext() ){
                 SimpleFeature feature = iterator.next();
+                
                 SimpleFeature copy = writer.next();
                 copy.setAttributes( feature.getAttributes() );
                 Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                copy.setDefaultGeometry( geometry.buffer(0));                
+                copy.setDefaultGeometry( geometry);                
                 writer.write();
             }
             transaction.commit();
@@ -318,6 +267,53 @@ public class SimpleShapefile extends AbstractVectorIO{
             transaction.close();
         }
     }
+     
+     
+     public static void exportGeometriesToShapeFile(List<Geometry> geoms,File fileOutput,String geomType) throws IOException, SchemaException{
+    	 //FeatureType ft=createFeatureType(Polygon.class);
+    	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
+    	 Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
+    	 DataStore data = factory.createNewDataStore( map );
+    	 SimpleFeatureType featureType = DataUtilities.createType( "the_geom", "geom:"+geomType+",name:String,age:Integer,description:String" );
+    	 data.createSchema( featureType );
+    	 
+    	 Transaction transaction = new DefaultTransaction();
+         FeatureWriter<SimpleFeatureType, SimpleFeature> writer = data.getFeatureWriterAppend(data.getTypeNames()[0], transaction);
+
+         SimpleFeatureBuilder featureBuilder=new SimpleFeatureBuilder(featureType);
+         try {
+	         int fid=0;
+	         for(Geometry g:geoms){
+	        	 featureBuilder.add("the_geom");
+	        	 featureBuilder.add(g);
+	        	 SimpleFeature sf=featureBuilder.buildFeature(""+fid++);
+	        	 SimpleFeature sfout=writer.next();
+	        	 sfout.setAttributes( sf.getAttributes() );
+	             sfout.setDefaultGeometry( g);       
+	        	 writer.write();
+	    	 }
+	         transaction.commit();
+	         logger.info("Export to shapefile complete" );
+         } catch (Exception problem) {
+             problem.printStackTrace();
+             transaction.rollback();
+             logger.error("Export to shapefile failed",problem );
+         } finally {
+             writer.close();
+             transaction.close();
+         }
+    	 
+/*
+         FileWriter wr=new FileWriter(fileOutput);
+    	 
+    	 for(Geometry g:geoms){
+    		 WKTWriter writer=new WKTWriter();
+    		 writer.write(g, wr);
+    	 }
+    	 wr.close();*/
+     }
+     
+     
      
      /**
       * 
@@ -373,8 +369,41 @@ public class SimpleShapefile extends AbstractVectorIO{
         }
         return out;
     }
+    
+    
+    private static SimpleFeatureType createFeatureType(Class geoClass) {
+
+        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+        builder.setName("Location");
+        builder.setCRS(DefaultGeographicCRS.WGS84); // <- Coordinate reference system
+
+        // add attributes in order
+        builder.add(geoClass.getSimpleName(), geoClass);
+        builder.length(15).add("Name", String.class); // <- 15 chars width for name field
+        builder.add("Number", Integer.class);
+
+        // build the type
+        final SimpleFeatureType ft = builder.buildFeatureType();
+
+        return ft;
+    }
 
 	
-
+    public static void main(String[] args){
+    	double cc[][]=new double[][]{{200.0,200.0},{500.0,200.0},{500.0,500.0},{200.0,500.0},{200.0,200.0}};
+    	
+    	try {
+    		Polygon p=PolygonOp.createPolygon(cc);
+        	List<Geometry>geoms=new ArrayList<>();
+        	geoms.add(p);
+			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon");
+		} catch (IOException | SchemaException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    
   
 }

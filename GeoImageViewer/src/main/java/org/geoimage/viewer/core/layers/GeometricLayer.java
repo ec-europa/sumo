@@ -9,7 +9,6 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -28,7 +27,6 @@ import org.opengis.feature.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
@@ -166,6 +164,7 @@ public class GeometricLayer implements Cloneable{
 				                                result.add(o);
 					                        }else if(imageP.intersects(gbuff)){
 					                        	Geometry p2 =EnhancedPrecisionOp.intersection(imageP,gbuff);
+					                        	p2=p2.buffer(0);
 					                        	if (!p2.isEmpty()) {
 					                        		for (int ii = 0; ii < p2.getNumGeometries(); ii++) {
 						                                Object[]o=new Object[2];
@@ -174,6 +173,13 @@ public class GeometricLayer implements Cloneable{
 						                                result.add(o);
 							                        }
 						                        }
+					                        }else{
+					                        	/*for (int ii = 0; ii < gbuff.getNumGeometries(); ii++) {
+					                                Object[]o=new Object[2];
+						                        	o[0]=gbuff.getGeometryN(ii).buffer(0);
+					                                o[1]=at;
+					                                result.add(o);
+						                        }*/
 					                        }
 			                        	}    
 				                    } catch (Exception ex) {

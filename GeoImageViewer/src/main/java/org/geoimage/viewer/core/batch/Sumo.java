@@ -207,7 +207,7 @@ public class Sumo {
          * 
          *
          */
-		
+		long start=System.currentTimeMillis();
 		System.out.println("Start SUMO in batch mode");
 		List<String> params=Arrays.asList(args);
 		Sumo s=new Sumo();
@@ -217,6 +217,10 @@ public class Sumo {
 			s.execAnalysis();
 			System.out.println("Save results");
 		}
+		long end=System.currentTimeMillis();
+		long time=end-start;
+		System.out.println("Execution time:"+time);
+		///logger.debug("Execution time:"+time);
 		System.out.println("Exit");
 		System.exit(0);
 	}
