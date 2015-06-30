@@ -3,12 +3,10 @@ package org.geoimage.viewer.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geoimage.def.GeoTransform;
-import org.geoimage.exception.GeoTransformException;
-import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -58,6 +56,28 @@ public class PolygonOp {
 		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
 		return imageP;
 	}
+	
+	/**
+	 * 
+	 * @param xs
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static Polygon createPolygon(Coordinate[]...xs) throws ParseException{
+		StringBuilder builder =new StringBuilder("POLYGON((");
+		
+		for(int i=0;i<xs[0].length;i++){
+			Coordinate x=xs[0][i];
+			if(i<(xs[0].length-1))
+				builder=builder.append(x.x).append(" ").append(x.y).append(",");
+			else
+				builder=builder.append(xs[0][0].x).append(" ").append(xs[0][0].y).append("))");
+		}
+		
+		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
+		return imageP;
+	}
+	
 	
 	/**
 	 * 

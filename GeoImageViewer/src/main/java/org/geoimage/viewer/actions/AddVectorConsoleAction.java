@@ -30,6 +30,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.GmlIO;
@@ -116,13 +117,13 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
             	GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile(),l.getImageReader().getGeoTransform());
                 GeometricLayer positions = csv.readLayer();
                 if (positions.getProjection() == null) {
-                    addLayerInThread("complexvds", positions, (IImageLayer) l);
+                	done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
                 } else {
                 	try{
                     	positions = GeometricLayer.createImageProjectedLayer(positions, 
                     		((IImageLayer) l).getImageReader().getGeoTransform(),
                     		positions.getProjection());
-                			addLayerInThread("complexvds", positions, (IImageLayer) l);
+                    		done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
                 	}catch(Exception e){
                 		logger.error(e.getMessage(),e);
                 	}		
@@ -140,10 +141,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                     if(l!=null){
                         GeometricLayer positions = csv.readLayer();
                         if (positions.getProjection() == null) {
-                            addLayerInThread("complexvds", positions, (IImageLayer) l);
+                        	done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
                         } else {
                             positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                            addLayerInThread("complexvds", positions, (IImageLayer) l);
+                            done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
                         }
                     }
                 } catch (GeoTransformException ex) {
@@ -288,7 +289,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                         gl.setName(args[3]);
                     }
                 }
-                addLayerInThread("noncomplexlayer", gl, imgLayer);
+                done=LayerManager.addLayerInThread("noncomplexlayer", gl, imgLayer);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
@@ -308,10 +309,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	            		GenericCSVIO csv=new GenericCSVIO(file,l.getImageReader().getGeoTransform());
 	                    GeometricLayer positions = csv.readLayer();
 	                    if (positions.getProjection() == null) {
-	                        addLayerInThread("complexvds", positions, (IImageLayer) l);
+	                    	done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
 	                    } else {
 	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                        addLayerInThread("complexvds", positions, l);
+	                        done=LayerManager.addLayerInThread("complexvds", positions, l);
 	                    }
 	            }
 	        } else {
@@ -324,10 +325,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	                    if(l!=null){
 	                            GeometricLayer positions = csv.readLayer();
 	                            if (positions.getProjection() == null) {
-	                                addLayerInThread("complexvds", positions,  l);
+	                            	done=LayerManager.addLayerInThread("complexvds", positions,  l);
 	                            } else {
 	                                positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                                addLayerInThread("complexvds", positions,  l);
+	                                done=LayerManager.addLayerInThread("complexvds", positions,  l);
 	                            }
 	                    }
 	                
@@ -354,10 +355,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	            		SumoXmlIOOld old=new SumoXmlIOOld(f);
 	            		GeometricLayer positions = old.readLayer();
 	                    if (positions.getProjection() == null) {
-	                        addLayerInThread("noncomplexlayer", positions, l);
+	                    	done=LayerManager.addLayerInThread("noncomplexlayer", positions, l);
 	                    } else {
 	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                        addLayerInThread("noncomplexlayer", positions, l);
+	                        done=LayerManager.addLayerInThread("noncomplexlayer", positions, l);
 	                    }
 	            }
 	        } else {
@@ -370,10 +371,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	                    if(l!=null){
 		                    GeometricLayer positions = old.readLayer();
 		                    if (positions.getProjection() == null) {
-		                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+		                    	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
 		                    } else {
 		                        positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-		                        addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+		                        done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
 		                    }
 	                    }    
 	                } catch (Exception ex) {
@@ -405,10 +406,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	                		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
 	                        GeometricLayer positions = gmlIO.readLayer();
 	                        if (positions.getProjection() == null) {
-	                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                            done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
 	                        } else {
 	                            positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-	                            addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
+	                            done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (IImageLayer) l);
 	                        }
 	                }
 	            } catch (Exception ex) {
@@ -425,34 +426,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     }
 
     
-    /**
-     * 
-     * @param type
-     * @param layer
-     * @param il
-     */
-    public void addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
-        if (layer != null) {
-            new Thread(new Runnable() {
-
-                public void run() {
-                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
-                    ivl.setColor(Color.GREEN);
-                    ivl.setWidth(5);
-                    Platform.getLayerManager().addLayer((ILayer) ivl);
-                    done = true;
-                }
-            }).start();
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    JOptionPane.showMessageDialog(null, "Empty layer, not added to layers", "Warning", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-            done = true;
-        }
-    }
+   
 
     @Override
     public String getPath() {
