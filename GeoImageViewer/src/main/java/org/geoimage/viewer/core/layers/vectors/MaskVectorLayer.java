@@ -637,21 +637,29 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 					e.printStackTrace();
 				}
             }*/
-            if(glayer!=null)
+            	if(glayer!=null){
             	//if(total==null){
+        			GeometryFactory builder = new GeometryFactory();
+	                Point p1 = builder.createPoint(new Coordinate(c[0][0],c[0][1]));
+	                Point p2 = builder.createPoint(new Coordinate(c[1][0],c[1][1]));
+	                Point p3 = builder.createPoint(new Coordinate(c[2][0],c[2][1]));
+	                Point p4 = builder.createPoint(new Coordinate(c[3][0],c[3][1]));
+
 		            for (Geometry pp : glayer.getGeometries()) {
-		            	 Geometry g=pp.getBoundary();
-		            	 GeometryFactory builder = new GeometryFactory();
-		                 Point p1 = builder.createPoint(new Coordinate(c[0][0],c[0][1]));
-		                 Point p2 = builder.createPoint(new Coordinate(c[1][0],c[1][1]));
-		                 Point p3 = builder.createPoint(new Coordinate(c[2][0],c[2][1]));
-		                 Point p4 = builder.createPoint(new Coordinate(c[3][0],c[3][1]));
-		            	 if(g.contains(p1)&&g.contains(p2)&&g.contains(p3)&&g.contains(p4)){
-		            		return true;
-		            	 }
-		            	
+		            	if(pp.isValid()){
+			            	 if(pp.contains(p1)&&pp.contains(p2)&&pp.contains(p3)&&pp.contains(p4)){
+			            		return true;
+			            	 }
+		            	}else{
+		            		 Geometry e=pp.getEnvelope();
+		            		 //builder.createPolygon(pp.getCoordinates());
+			            	 if(e.contains(p1)&&e.contains(p2)&&e.contains(p3)&&e.contains(p4)){
+			            		return true;
+			            	 }
+
+		            	}
 		            }
-            
+            	}
             /*
 		            	Geometry p=(Geometry) pp.clone();
 		            	if(p instanceof MultiPolygon){
