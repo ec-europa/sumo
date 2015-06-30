@@ -642,10 +642,10 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 		            for (Geometry pp : glayer.getGeometries()) {
 		            	 Geometry g=pp.getBoundary();
 		            	 GeometryFactory builder = new GeometryFactory();
-		                 Point p1 = builder.createPoint(new Coordinate(c[0][1],c[0][2]));
-		                 Point p2 = builder.createPoint(new Coordinate(c[1][1],c[1][2]));
-		                 Point p3 = builder.createPoint(new Coordinate(c[2][1],c[2][2]));
-		                 Point p4 = builder.createPoint(new Coordinate(c[3][1],c[3][2]));
+		                 Point p1 = builder.createPoint(new Coordinate(c[0][0],c[0][1]));
+		                 Point p2 = builder.createPoint(new Coordinate(c[1][0],c[1][1]));
+		                 Point p3 = builder.createPoint(new Coordinate(c[2][0],c[2][1]));
+		                 Point p4 = builder.createPoint(new Coordinate(c[3][0],c[3][1]));
 		            	 if(g.contains(p1)&&g.contains(p2)&&g.contains(p3)&&g.contains(p4)){
 		            		return true;
 		            	 }
