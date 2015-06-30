@@ -640,7 +640,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             }*/
             	if(glayer!=null){
             	//if(total==null){
-        			GeometryFactory builder = new GeometryFactory();
+        	/*		GeometryFactory builder = new GeometryFactory();
 	                Point p1 = builder.createPoint(new Coordinate(c[0][0],c[0][1]));
 	                Point p2 = builder.createPoint(new Coordinate(c[1][0],c[1][1]));
 	                Point p3 = builder.createPoint(new Coordinate(c[2][0],c[2][1]));
@@ -664,8 +664,8 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 
 		            	}
 		            }
-            	}
-            /*
+            	}*/
+            		for (Geometry pp : glayer.getGeometries()) {
 		            	Geometry p=(Geometry) pp.clone();
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
@@ -679,8 +679,14 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 		            		}	
 		            	}else{
 		            		if(!p.isValid()){
-		            			 Geometry g=p.convexHull();
-		            			 if (g.intersects(geom)||geom.intersects(g)) 
+		            			 Coordinate[] cs=p.getCoordinates();
+			            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
+			            		 lcs.addAll(Arrays.asList(cs));
+			            		 lcs.add(cs[0]);
+			            		 GeometryFactory builder = new GeometryFactory();
+			            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+
+			            		 if (e.intersects(geom)||geom.intersects(e)) 
 			 		        			return true;
 		            		}else{
 		            			if (p.intersects(geom)||geom.intersects(p)) 
@@ -691,9 +697,10 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 	            			else
 	            				total=total.union(p);
 	            			*/
-		           // 	} 
+		            	} 
 		            	  
-		          //  }
+		            }
+            	}	
 		          /*  try {
 						SimpleShapefile.exportGeometriesToShapeFile(glayer.getGeometries(),new File("F:\\SumoImgs\\export\\totalXXX.shp") ,"Polygon");
 	            		List<Geometry>lg=new ArrayList<>();
