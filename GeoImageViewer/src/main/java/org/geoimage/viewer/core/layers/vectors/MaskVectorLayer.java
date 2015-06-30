@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.media.opengl.GL;
@@ -651,8 +652,12 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 			            		return true;
 			            	 }
 		            	}else{
-		            		 Geometry e=pp.getEnvelope();
-		            		 //builder.createPolygon(pp.getCoordinates());
+		            		 Coordinate[] cs=pp.getCoordinates();
+		            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
+		            		 lcs.addAll(Arrays.asList(cs));
+		            		 lcs.add(cs[0]);
+		            		 
+		            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 			            	 if(e.contains(p1)&&e.contains(p2)&&e.contains(p3)&&e.contains(p4)){
 			            		return true;
 			            	 }
