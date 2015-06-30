@@ -37,7 +37,6 @@ import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImagePool;
 import org.geoimage.viewer.core.layers.image.TextureCacheManager;
 import org.geoimage.viewer.util.Constant;
-import org.geotools.legend.Drawer;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.texture.Texture;
