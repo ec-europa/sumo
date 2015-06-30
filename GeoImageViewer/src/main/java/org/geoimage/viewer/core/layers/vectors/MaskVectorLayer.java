@@ -670,10 +670,19 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
 		            		for(int i=0;i<mp.getNumGeometries();i++){
-			             		Geometry g=mp.getGeometryN(i).buffer(0);
+			             		Geometry g=mp.getGeometryN(i);
 			             		if(!g.isValid()){
-			            			 Geometry gg=g.convexHull();
-			            			 if (gg.intersects(geom)||geom.intersects(gg)) 
+			            			 Coordinate[] cs=g.getCoordinates();
+				            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
+				            		 lcs.addAll(Arrays.asList(cs));
+				            		 lcs.add(cs[0]);
+				            		 GeometryFactory builder = new GeometryFactory();
+				            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+
+				            		 if (e.intersects(geom)||e.crosses(geom)) 
+				 		        			return true;
+			            		}else{
+			            			if (g.intersects(geom)||geom.intersects(g)) 
 			 		        			return true;
 			            		}
 		            		}	
@@ -686,7 +695,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 			            		 GeometryFactory builder = new GeometryFactory();
 			            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 
-			            		 if (e.intersects(geom)||geom.intersects(e)) 
+			            		 if (e.intersects(geom)||e.crosses(geom)) 
 			 		        			return true;
 		            		}else{
 		            			if (p.intersects(geom)||geom.intersects(p)) 
