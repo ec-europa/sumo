@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.core.gui.manager;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -11,10 +12,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
+import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
@@ -22,9 +27,12 @@ import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ITime;
+import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -340,6 +348,34 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 		}
 	}
 
+	 /**
+     * 
+     * @param type
+     * @param layer
+     * @param il
+     */
+    public static boolean addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
+    	boolean done=false;
+        if (layer != null) {
+            new Thread(new Runnable() {
+                public void run() {
+                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
+                    ivl.setColor(Color.GREEN);
+                    ivl.setWidth(5);
+                    Platform.getLayerManager().addLayer((ILayer) ivl);
+                }
+            }).start();
+            done=true;
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(null, "Empty layer, not added to layers", "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+            done = true;
+        }
+        return done;
+    }
 	
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;

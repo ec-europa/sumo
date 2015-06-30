@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +31,20 @@ import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.AbstractLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
+import org.geotools.feature.SchemaException;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
@@ -62,7 +66,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     public final static String MIXED = GeometricLayer.MIXED;
     protected boolean active = true;
     protected GeometricLayer glayer;
-    
+ //   protected Geometry total=null;
    	
 	protected String type;
     protected String name;
@@ -615,19 +619,79 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             if (getType().equals("point")) {
                 return false;
             }
-            //WKTReader wkt = new WKTReader();
-            //Geometry geom = wkt.read("POLYGON((" + x + " " + y + "," + (x + width) + " " + y + "," + (x + width) + " " + (y + height) + "," + x + " " + (y + height) + "," + x + " " + y + "))");
-            
-            int[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
+            double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
+          //for test only
+           /*  try {
+					SimpleShapefile.exportGeometriesToShapeFile(glayer.getGeometries(),new File("F:\\SumoImgs\\export\\aaa2.shp") ,"Polygon");
+				} catch (IOException | SchemaException e) {
+					e.printStackTrace();
+				}*/
+            /*if(x>18400&&x<19000&&y>18700&&y<18900){
+            	try {
+            		List<Geometry>lg=new ArrayList<>();
+            		lg.add(geom);
+					SimpleShapefile.exportGeometriesToShapeFile(lg,new File("F:\\SumoImgs\\export\\gg"+x+"-"+y+".shp") ,"Polygon");
+				} catch (IOException | SchemaException e) {
+					e.printStackTrace();
+				}
+            }*/
             if(glayer!=null)
-	            for (Geometry p : glayer.getGeometries()) {
-	                if (p.intersects(geom)) {
-	                    return true;
-	                }
-	            }
-            return false;
+            	//if(total==null){
+		            for (Geometry pp : glayer.getGeometries()) {
+		            	 Geometry g=pp.getBoundary();
+		            	 GeometryFactory builder = new GeometryFactory();
+		                 Point p1 = builder.createPoint(new Coordinate(c[0][1],c[0][2]));
+		                 Point p2 = builder.createPoint(new Coordinate(c[1][1],c[1][2]));
+		                 Point p3 = builder.createPoint(new Coordinate(c[2][1],c[2][2]));
+		                 Point p4 = builder.createPoint(new Coordinate(c[3][1],c[3][2]));
+		            	 if(g.contains(p1)&&g.contains(p2)&&g.contains(p3)&&g.contains(p4)){
+		            		return true;
+		            	 }
+		            	
+		            }
+            
+            /*
+		            	Geometry p=(Geometry) pp.clone();
+		            	if(p instanceof MultiPolygon){
+		            		MultiPolygon mp=(MultiPolygon)p;
+		            		for(int i=0;i<mp.getNumGeometries();i++){
+			             		Geometry g=mp.getGeometryN(i).buffer(0);
+			             		if(!g.isValid()){
+			            			 Geometry gg=g.convexHull();
+			            			 if (gg.intersects(geom)||geom.intersects(gg)) 
+			 		        			return true;
+			            		}
+		            		}	
+		            	}else{
+		            		if(!p.isValid()){
+		            			 Geometry g=p.convexHull();
+		            			 if (g.intersects(geom)||geom.intersects(g)) 
+			 		        			return true;
+		            		}else{
+		            			if (p.intersects(geom)||geom.intersects(p)) 
+		 		        			return true;
+		            		}
+				            /*if(total==null)
+	            				total=p;
+	            			else
+	            				total=total.union(p);
+	            			*/
+		           // 	} 
+		            	  
+		          //  }
+		          /*  try {
+						SimpleShapefile.exportGeometriesToShapeFile(glayer.getGeometries(),new File("F:\\SumoImgs\\export\\totalXXX.shp") ,"Polygon");
+	            		List<Geometry>lg=new ArrayList<>();
+	            		lg.add(total);
+						SimpleShapefile.exportGeometriesToShapeFile(lg,new File("F:\\SumoImgs\\export\\totalYYY.shp") ,"Polygon");
+					} catch (IOException | SchemaException e) {
+						e.printStackTrace();
+					}*/
+            
+          //  if(total.intersects(geom))
+          //  	return true;
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -808,11 +872,9 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         List<Geometry> newgeoms = new ArrayList<Geometry>();
         List<Geometry> remove = new ArrayList<Geometry>();
         
-        Geometry[] parse =bufferedGeom;
-  
        
         //ciclo sulle nuove geometrie
-        for (Geometry g : parse) {
+        for (Geometry g : bufferedGeom) {
             boolean isnew = true;
             remove.clear();
             for (Geometry newg : newgeoms) {
@@ -834,6 +896,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         for (Geometry geom :newgeoms) {
             glayer.put(geom);
         }
+        
     }
     
   

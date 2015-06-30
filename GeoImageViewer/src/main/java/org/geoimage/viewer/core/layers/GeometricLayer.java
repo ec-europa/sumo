@@ -7,6 +7,7 @@ package org.geoimage.viewer.core.layers;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureCollection;
@@ -173,13 +175,6 @@ public class GeometricLayer implements Cloneable{
 						                                result.add(o);
 							                        }
 						                        }
-					                        }else{
-					                        	/*for (int ii = 0; ii < gbuff.getNumGeometries(); ii++) {
-					                                Object[]o=new Object[2];
-						                        	o[0]=gbuff.getGeometryN(ii).buffer(0);
-					                                o[1]=at;
-					                                result.add(o);
-						                        }*/
 					                        }
 			                        	}    
 				                    } catch (Exception ex) {
@@ -199,6 +194,9 @@ public class GeometricLayer implements Cloneable{
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
 	                			out.put((Geometry)o[i][0],(Attributes)o[i][1]);
+	                	/*		List<Geometry>gs=new ArrayList<>();
+	                			gs.add((Geometry)o[i][0]);
+	                			SimpleShapefile.exportGeometriesToShapeFile(gs, new File("F:\\SumoImgs\\export\\gg"+i+System.currentTimeMillis()+".shp"), "Polygon");*/
 	                		}	
 	                	}	
 	                }
@@ -208,7 +206,6 @@ public class GeometricLayer implements Cloneable{
                 }finally{
                 	fi.close();
                 }   
-                //out.put(imageP, Attributes.createAttributes(schema, types));
             } else if (geoName.contains("Point")) {
                 out = new GeometricLayer(GeometricLayer.POINT);
                 FeatureIterator<?> fi = fc.features();

@@ -20,6 +20,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -122,24 +123,35 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
                     gl.glFlush();
                 } else if (geometry.getType().equalsIgnoreCase(POLYGON)) {
                     for (Geometry tmp : geometry.getGeometries()) {
-	                    	Polygon polygon=(Polygon)tmp;
-	                        if (polygon.getCoordinates().length < 1) {
-	                            continue;
-	                        }
-	                        int interior=polygon.getNumInteriorRing();
-
-	                        if(interior>0){
-	                        	//draw external polygon
-	                        	LineString line=polygon.getExteriorRing();
-	                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,geometry.getLinewidth());
-	                        	//draw holes
-	                        	for(int i=0;i<interior;i++){
-	                        		LineString line2=polygon.getInteriorRingN(i);
-	                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,geometry.getLinewidth());
-	                        	}
-	                        }else{
-	                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth());
-	                        }
+                    	List<Geometry>gs=new ArrayList<>();
+	                    if(tmp instanceof MultiPolygon){
+	                    	MultiPolygon mp=(MultiPolygon)tmp;
+	                    	for (int ig=0;ig<mp.getNumGeometries();ig++) {
+	                    		gs.add(mp.getGeometryN(ig));
+	                    	}
+	                    }else{
+	                    	gs.add(tmp);
+	                    }
+	                    for (Geometry g : gs) {
+	                    	Polygon polygon=(Polygon)g;
+		                        if (polygon.getCoordinates().length < 1) {
+		                            continue;
+		                        }
+		                        int interior=polygon.getNumInteriorRing();
+	
+		                        if(interior>0){
+		                        	//draw external polygon
+		                        	LineString line=polygon.getExteriorRing();
+		                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        	//draw holes
+		                        	for(int i=0;i<interior;i++){
+		                        		LineString line2=polygon.getInteriorRingN(i);
+		                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        	}
+		                        }else{
+		                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        }
+	                    }
                     }
                     
                 } else if (geometry.getType().equalsIgnoreCase(LINESTRING)) {

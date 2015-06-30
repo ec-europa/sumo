@@ -5,7 +5,6 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import org.geoimage.def.GeoTransform;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
@@ -41,16 +36,12 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.jts.JTS;
 import org.geotools.process.vector.ClipProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +50,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  *
@@ -151,7 +141,8 @@ public class SimpleShapefile extends AbstractVectorIO{
             	
             ClipProcess clip=new ClipProcess();
             SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-
+            
+            
            /* CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
             ReferencedEnvelope env = new ReferencedEnvelope(imageP.getEnvelopeInternal(),worldCRS);
             RectangularClipProcess clip=new RectangularClipProcess();
@@ -230,8 +221,21 @@ public class SimpleShapefile extends AbstractVectorIO{
         	logger.error(ex.getMessage(),ex);
         }
     } 	
-    
 
+    /**
+     * Export features to a new shapefile using the map projection in which
+     * they are currently displayed
+     */
+    public static void exportToShapefile(File shpOutput, FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection,SimpleFeatureType ft) throws Exception {
+    	    //create a DataStore object to connect to the physical source 
+       	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
+       	 Map map = Collections.singletonMap( "url", shpOutput.toURI().toURL() );
+       	 DataStore data = factory.createNewDataStore( map );
+       	 data.createSchema( ft );
+         SimpleShapefile.exportToShapefile(data, featureCollection, ft);
+
+
+    }
     /**
      * Export features to a new shapefile using the map projection in which
      * they are currently displayed
@@ -250,7 +254,7 @@ public class SimpleShapefile extends AbstractVectorIO{
                 SimpleFeature copy = writer.next();
                 copy.setAttributes( feature.getAttributes() );
                 Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                copy.setDefaultGeometry( geometry);                
+                copy.setDefaultGeometry( geometry.buffer(0));                
                 writer.write();
             }
             transaction.commit();
@@ -291,7 +295,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	        	 writer.write();
 	    	 }
 	         transaction.commit();
-	         logger.info("Export to shapefile complete" );
+	         logger.info("Export to shapefile complete:"+ fileOutput.getAbsolutePath());
          } catch (Exception problem) {
              problem.printStackTrace();
              transaction.rollback();
