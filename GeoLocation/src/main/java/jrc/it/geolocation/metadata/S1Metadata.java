@@ -187,16 +187,21 @@ public class S1Metadata extends AbstractMetadata {
 				coordinateConversion[i]=cc;
 				XMLGregorianCalendar xmlGc=ccType.getAzimuthTime();
 				cc.azimuthTime=xmlGc.toGregorianCalendar().getTimeInMillis();
-				cc.groundToSlantRangePolyTimesSeconds=xmlGc.getMinute()*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
+				int minutes=xmlGc.getMinute();
+				if(minutes==0)
+					minutes=60;
+				cc.groundToSlantRangePolyTimesSeconds=minutes*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
 				i++;
 			}
 			
 			//PRF and PRF mean
 			List<DownlinkInformationType> links=annotationReader.getDownLinkInformationList();
-			for(DownlinkInformationType info:links){
+			/*for(DownlinkInformationType info:links){
 				samplingf+=info.getPrf().getValue();
 			}
-			samplingf=samplingf/links.size();
+			samplingf=samplingf/links.size();*/
+			samplingf=7000/annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
+			
 			
 			numberOfSamplesPerLine=annotationReader.getImageInformation().getNumberOfSamples().getValue().doubleValue();
 			

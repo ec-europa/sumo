@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
-import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
+import org.geoimage.viewer.core.PreferencesDB;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
@@ -238,29 +238,39 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 		   double w=getWidth();
 		
 	    GeoTransform gt = getGeoTransform();
-	    int margin=0;
-	    try{
-	    	margin=Integer.parseInt(java.util.ResourceBundle.getBundle("GeoImageViewer").getString("SimpleShapeFileIO.margin"));
-    	}catch(Exception e){
-    		margin=defaultMargin;
-    	}
+	    int margin=PreferencesDB.getPrefDBInstance().getLandMaskMargin(0);
 	    
-        double[] x0 = gt.getGeoFromPixel(-margin, -margin);
-        double[] x01 = gt.getGeoFromPixel(-margin, h/3); //image center coords
-        double[] x02 = gt.getGeoFromPixel(-margin, h/2); //image center coords
-        double[] x03 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
-        double[] x1 = gt.getGeoFromPixel(-margin, margin + h);
-        double[] x12 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
-        double[] x2 = gt.getGeoFromPixel(margin + w, margin + h);
-        double[] x21 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords
-        double[] x22 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
-        double[] x23 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
-        double[] x3 = gt.getGeoFromPixel(margin + w, -margin);
-        double[] x31 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
+	    
+        double[] p0 = gt.getGeoFromPixel(-margin, -margin);
+        
+        double[] p1 = gt.getGeoFromPixel(margin  + w/3, -margin);
+        double[] p2 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
+        
+        double[] p3 = gt.getGeoFromPixel(margin + w*2/3, -margin ); //image center coords
+        double[] p4 = gt.getGeoFromPixel(margin + w, -margin);
+        
+        double[] p5 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
+        double[] p6 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
+        double[] p7 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords        
+
+        double[] p8 = gt.getGeoFromPixel(margin + w, margin + h); //bottom right corner
+        
+        
+        double[] p9 = gt.getGeoFromPixel(margin + w*2/3, margin +h); //image center coords
+        double[] p10 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
+        double[] p11 = gt.getGeoFromPixel(margin  + w/3, margin+h);
+        
+        
+        double[] p12 = gt.getGeoFromPixel(-margin, margin + h);
+        
+        double[] p13 = gt.getGeoFromPixel(-margin, h/3); //image center coords
+        double[] p14 = gt.getGeoFromPixel(-margin, h/2); //image center coords
+        double[] p15 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
+        
 
         //poligono con punti di riferimento dell'immagine
-        Polygon imageP=PolygonOp.createPolygon(x0,x01,x02,x03,x1,x12,x2,x21,x22,x23,x3,x31,x0);
-        
+        Polygon imageP=PolygonOp.createPolygon(p0,p13,p14,p15,p12,p11,p10,p9,p8,p7,p6,p5,p4,p3,p2,p1,p0);
+        imageP=(Polygon) imageP;//.buffer(0);
         logger.debug("Polygon imageP isvalid:"+imageP.isValid());
         
         return imageP;
