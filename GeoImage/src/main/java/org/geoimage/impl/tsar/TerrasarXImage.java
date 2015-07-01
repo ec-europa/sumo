@@ -483,9 +483,8 @@ public class TerrasarXImage extends SarImageReader {
             for (int j = 0; j < rect.width; j++) {
                 int temp = i * yOffset + j + rect.x;
                tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
-            //System.arraycopy(preloadedData, i * yOffset + rect.x, tile, (i + yinit) * width + xinit, rect.width);
             }
-            }
+        }
         return tile;
     }
 
@@ -598,12 +597,14 @@ public class TerrasarXImage extends SarImageReader {
             setRevolutionsPerday(11);
 
 
-            Double[] prf=new Double[3];
+            Double[] prf=null;
             //metadata used for ScanSAR mode during the Azimuth ambiguity computation
             if (getMode().equals("SC")) {
+            	List<Element> sets=doc.getRootElement().getChild("instrument").getChildren("settings");
+            	prf=new Double[sets.size()];
                 //extraction of the 4 PRF codes
                 int prf_count = 0;
-                for (Object o : doc.getRootElement().getChild("instrument").getChildren("settings")) {
+                for (Object o : sets) {
                     Element elem = (Element) o;
                     //setMetadata("PRF" + prf_count, elem.getChild("settingRecord").getChild("PRF").getText());
                     prf[prf_count]=Double.parseDouble(elem.getChild("settingRecord").getChild("PRF").getText());

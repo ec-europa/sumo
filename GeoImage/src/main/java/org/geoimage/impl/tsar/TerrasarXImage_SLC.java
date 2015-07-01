@@ -53,8 +53,8 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
         	parseProductXML(productxml);
         	
         	tiffImages = getImages();
-        	TIFF image = tiffImages.values().iterator().next();
-            bounds = new Rectangle(0, 0, image.xSize, image.ySize);
+        	//TIFF image = tiffImages.values().iterator().next();
+            bounds = new Rectangle(0, 0, getMetaWidth(),getMetaHeight());
             
             gcps = getGcps();
             if (gcps == null) {
@@ -102,7 +102,10 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
                 		.append( ((Element) o).getChild("file").getChild("location").getChild("path").getText())
                 		.append("\\").append(((Element) o).getChild("file").getChild("location").getChild("filename").getText());
                 String polarisation = ((Element) o).getChild("polLayer").getValue();
-                tiffs.put(polarisation,new TIFF(new File(f.toString()),0));
+                TIFF t=new TIFF(new File(f.toString()),0);
+                t.setxSize(getMetaWidth());
+                t.setySize(getMetaHeight());
+                tiffs.put(polarisation,t);
                 bands.add(polarisation);
             }
         }
@@ -146,7 +149,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
         }
         return tile;
     }
-
+    
 
     @Override
     //used by the position dialog to link pixel(x,y) to pixel value
@@ -172,6 +175,9 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
         }
         return result;
     }
+    
+    
+    
 
     @Override
     public void preloadLineTile(int y, int length,int band) {
@@ -342,5 +348,15 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
             return null;
         }
     }
+    @Override
+    public int getWidth(){
+    	return getMetaWidth();
+    }
+    @Override
+    public int getHeight(){
+    	return getMetaHeight();
+    }
+    
+    
 }
 

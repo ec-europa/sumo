@@ -56,9 +56,14 @@ public class TIFF {
             		reader = (TIFFImageReader)obj;
             		ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
             		reader.setInput(iis);
-            		xSize=reader.getWidth(band);
-            		ySize=reader.getHeight(band);
-            		bounds=new Rectangle(0,0,xSize,ySize);
+            		try{
+            			xSize=reader.getWidth(band);
+            			ySize=reader.getHeight(band);
+            			bounds=new Rectangle(0,0,xSize,ySize);
+            		}catch(Exception e){
+            			bounds=null;
+            			logger.warn("Problem reading size information");
+            		}	
             		worked=true;
             	}else{
             		
