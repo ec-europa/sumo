@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -155,7 +154,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
         //poolSize=Runtime.getRuntime().availableProcessors();
         //poolExcutorService = Executors.newFixedThreadPool(poolSize);
-        poolExcutorService = new ThreadPoolExecutor(1,poolSize,500, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
+        poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
         
         
         submitedTiles = new ArrayList<String>();
@@ -289,7 +288,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 		                if (this.mylevel != curlevel) {
 		                    this.mylevel = curlevel;
 		                    poolExcutorService.shutdown();
-		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,500, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
+		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
 		                }
 		                
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
