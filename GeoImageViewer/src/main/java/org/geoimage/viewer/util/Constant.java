@@ -31,6 +31,8 @@ public class Constant {
   public static final String PREF_NEIGHBOUR_DISTANCE = "VDS Analaysis - Neighbours distance";
   public static final String PREF_NEIGHBOUR_TILESIZE = "VDS Analaysis - Neighbours tile size";
   public static final String PREF_REMOVE_LANDCONNECTEDPIXELS = "VDS Analaysis - Remove pixels connected to land in neighbour mode";
+  public static final String PREF_LAND_MASK_MARGIN="Land mask margin pixel";
+  
 
   //preferences for import image and vector actions
   public static final String PREF_LASTIMAGE = "Last Image";
