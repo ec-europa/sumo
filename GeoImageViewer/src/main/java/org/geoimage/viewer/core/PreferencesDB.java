@@ -27,6 +27,7 @@ import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
 import static org.geoimage.viewer.util.Constant.PREF_S1_GEOLOCATION;
+import static org.geoimage.viewer.util.Constant.PREF_LAND_MASK_MARGIN;
 
 import java.awt.Color;
 import java.util.List;
@@ -138,6 +139,7 @@ public class PreferencesDB {
         insertIfNotExistRow(PREF_NEIGHBOUR_DISTANCE, "2.0");
         insertIfNotExistRow(PREF_NEIGHBOUR_TILESIZE, "200");
         insertIfNotExistRow(PREF_REMOVE_LANDCONNECTEDPIXELS, "true");
+        insertIfNotExistRow(PREF_LAND_MASK_MARGIN, "100");
         
         //default pref folder for import vector option
         insertIfNotExistRow(Constant.PREF_LASTVECTOR, "");
@@ -203,6 +205,21 @@ public class PreferencesDB {
         }
 
     }
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public int getLandMaskMargin(int defaultValue){
+        try {
+            return Integer.parseInt(readRow(PREF_LAND_MASK_MARGIN));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+
+    }
+    
     
     public String getS1GeolocationAlgorithm(){
     	try{
