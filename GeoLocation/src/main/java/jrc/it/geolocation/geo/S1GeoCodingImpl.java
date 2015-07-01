@@ -126,7 +126,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 				}
 		    }
 		    
-		    
+//		    factor1 = (groundToSlantRangePolyTimesSeconds(idx+1) - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds(idx+1) - groundToSlantRangePolyTimesSeconds(idx));
+//		    factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds(idx)) / (groundToSlantRangePolyTimesSeconds(idx+1) - groundToSlantRangePolyTimesSeconds(idx));
+
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
@@ -169,8 +171,8 @@ public class S1GeoCodingImpl implements GeoCoding {
            double deltaD=0;
            do{
         	 //calcolo dExp e denommExp come prodotti vettoriali => il risultato è uno scalare
-        	   double numCoeffsXGround[]=new double[nCoeffs];
-        	   double denomCoeffsXGround[]=new double[nCoeffs];
+        	   double numCoeffsXGround=0;//[]=new double[nCoeffs];
+        	   double denomCoeffsXGround=0;//[]=new double[nCoeffs];
         	   double scalNum=0;
         	   double scalDen=0;
 
@@ -178,12 +180,12 @@ public class S1GeoCodingImpl implements GeoCoding {
         		   double dExp=FastMath.pow(oldD,numExps[i]);
         		   double denomExp=FastMath.pow(oldD,denomExps[i]);
         		   
-        		   numCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*numCoeffs[i];
-        		   denomCoeffsXGround[i]=groundToSlantRangeCoefficientsInterp[i]*denomCoeffs[i];
+        		   numCoeffsXGround=groundToSlantRangeCoefficientsInterp[i]*numCoeffs[i];
+        		   denomCoeffsXGround=groundToSlantRangeCoefficientsInterp[i]*denomCoeffs[i];
         		   
              	  //calcolo lo scalare risultante dal prodotto di 2 matrici (1xn)x(nx1) 
-        		   scalNum=scalNum+dExp*numCoeffsXGround[i];
-        		   scalDen=scalDen+denomExp*denomCoeffsXGround[i];
+        		   scalNum=scalNum+dExp*numCoeffsXGround;
+        		   scalDen=scalDen+denomExp*denomCoeffsXGround;
         	   }
         	   
         	   double num=srdist+scalNum;
@@ -507,10 +509,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
 		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\geoloc\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\annotation\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
 		//String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		String metaF="F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
+		//String metaF="F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		
+		String metaF="F:\\SumoImgs\\S1\\GRD\\S1A_EW_GRDM_1SDH_20141030T105902_20141030T110002_003058_0037F3_D280.SAFE\\annotation\\s1a-ew-grd-hh-20141030t105902-20141030t110002-003058-0037f3-001.xml";
 		
 		
 		/*
@@ -534,16 +536,16 @@ public class S1GeoCodingImpl implements GeoCoding {
 		GeoCoding gc;
 		try {
 			gc = new S1GeoCodingImpl(metaF);
-			double lat = 41.31735;//43.13935;//42.81202;
-			double lon = 2.17263;//3.35876;//10.32972;
+			double lat = 61.77994;
+			double lon = -65.66427;
 			double r[];
 			try {
-				//r = gc.pixelFromGeo(lon, lat);
-				r = gc.geoFromPixel(4756, 2655);
+				r = gc.pixelFromGeo(lon, lat);
+				//r = gc.geoFromPixel(4756, 2655);
 				System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
 				
-				r =gc.pixelFromGeo(9.6081,40.9034);
-				System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
+				//r =gc.pixelFromGeo(9.6081,40.9034);
+				//System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
 				
 			} catch (GeoLocationException e) {
 				e.printStackTrace();
