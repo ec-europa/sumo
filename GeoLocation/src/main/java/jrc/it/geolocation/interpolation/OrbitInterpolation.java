@@ -134,7 +134,7 @@ public class OrbitInterpolation {
 			logger.debug("idxInitTime:"+idxInitTime+"	idxEndTime:"+idxEndTime);
 			
 			
-			Double[] t0=(Double[])timeStampInitSecondsRefPointsInterp.toArray();
+			Double[] t0=(Double[])timeStampInitSecondsRefPointsInterp.toArray(new Double[0]);
 			if (idxInitTime!=-1 && idxEndTime!=-1 && initTime < endTime){
 				 List<double[]>vPoints=new ArrayList<double[]>();
 				 List<double[]>pPoints=new ArrayList<double[]>();
