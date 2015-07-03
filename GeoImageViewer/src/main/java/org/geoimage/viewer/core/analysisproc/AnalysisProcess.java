@@ -174,11 +174,12 @@ public  class AnalysisProcess implements Runnable {
                      }
                      
                      
-                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName, 
-                    		 				"point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
-                    		 				thresholds,ENL,buffer,name);
+                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
+                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
+                    		 thresholds,ENL,buffer,name);
                  
                      boolean display = Platform.getPreferences().readRow(PREF_DISPLAY_PIXELS).equalsIgnoreCase("true");
+                     display=display&&!Platform.isBatchMode();
                      if (!agglomerationMethodology.startsWith("d")) {
                          vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdaggregatePixels(), display);
                          vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdclipPixels(), display);
@@ -186,7 +187,7 @@ public  class AnalysisProcess implements Runnable {
                      vdsanalysis.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, banddetectedpixels.getAllDetectedPixels(), display);
                      vdsanalysis.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
                      if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-                         vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+                        vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
                      }
                      vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
                      // set the color and symbol values for the VDS layer
