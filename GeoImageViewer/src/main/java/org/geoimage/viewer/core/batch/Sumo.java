@@ -119,7 +119,7 @@ public class Sumo {
 	        	File f=new File(dir);
 	        	if(f.exists()&&f.isDirectory()){
 	        		status=MULTI_IMG_ANALYSIS;
-	        		params.pathImg=dir;
+	        		params.pathImg=new String[]{dir};
 	        	}else{
 	        		status=PARAM_ERROR;
 	        		msg=FOLDER_ERROR;
@@ -131,7 +131,7 @@ public class Sumo {
 	        	File f=new File(dir);
 	        	if(f.exists()&&f.isFile()){
 	        		status=SINGLE_IMG_ANALYSIS;
-	        		params.pathImg=dir;
+	        		params.pathImg=new String[]{dir};
 	        	}else{
 	        		status=PARAM_ERROR;
 	        		msg=FILE_ERROR;

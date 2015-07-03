@@ -22,7 +22,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 	 */
 	protected void startAnalysis(){
 		//crate the reader
-		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg);
+		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0]);
 		
 		for(GeoImageReader r:readers){
 			currentReader=r;
