@@ -241,8 +241,6 @@ public class SimpleShapefile extends AbstractVectorIO{
      * they are currently displayed
      */
      public static void exportToShapefile(DataStore newDataStore, FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection,SimpleFeatureType ft) throws Exception {
-    	
-
         // carefully open an iterator and writer to process the results
         Transaction transaction = new DefaultTransaction();
         FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriter(newDataStore.getTypeNames()[0],  transaction);
@@ -271,7 +269,7 @@ public class SimpleShapefile extends AbstractVectorIO{
     }
      
      
-     public static void exportGeometriesToShapeFile(List<Geometry> geoms,File fileOutput,String geomType) throws IOException, SchemaException{
+     public static void exportGeometriesToShapeFile(List<Geometry> geoms,File fileOutput,String geomType,GeoTransform transform) throws IOException, SchemaException{
     	 //FeatureType ft=createFeatureType(Polygon.class);
     	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
     	 Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
@@ -286,6 +284,8 @@ public class SimpleShapefile extends AbstractVectorIO{
          try {
 	         int fid=0;
 	         for(Geometry g:geoms){
+	        	 if(transform!=null)
+	        		 g=transform.transformGeometryGeoFromPixel(g);
 	        	 featureBuilder.add("the_geom");
 	        	 featureBuilder.add(g);
 	        	 SimpleFeature sf=featureBuilder.buildFeature(""+fid++);
@@ -398,7 +398,7 @@ public class SimpleShapefile extends AbstractVectorIO{
     		Polygon p=PolygonOp.createPolygon(cc);
         	List<Geometry>geoms=new ArrayList<>();
         	geoms.add(p);
-			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon");
+			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null);
 		} catch (IOException | SchemaException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {

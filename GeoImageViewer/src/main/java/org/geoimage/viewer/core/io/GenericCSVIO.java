@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -53,17 +54,17 @@ public class GenericCSVIO extends AbstractVectorIO{
 	private static org.slf4j.Logger logger = LoggerFactory
 			.getLogger(GenericCSVIO.class);
 	private File csvFile = null;
-	private GeoTransform transform=null;
 	private GeometricLayer glayer=null;
+	
+	
+	
 
-	public GenericCSVIO(File file,GeoTransform transform) {
+	public GenericCSVIO(File file) {
 		csvFile = file;
-		this.transform=transform;
 	}
 
-	public GenericCSVIO(String filePath,GeoTransform transform) {
+	public GenericCSVIO(String filePath) {
 		csvFile = new File(filePath);
-		this.transform=transform;
 	}
 	
 	public void read() {
@@ -200,9 +201,9 @@ public class GenericCSVIO extends AbstractVectorIO{
      * 
      */
 	public void save(File output,String projection,GeoTransform transform) {
-		export(output,glayer,projection,transform);
+		export(output,glayer,projection,transform,false);
 	}
-	public static void export(File output,GeometricLayer glayer,String projection,GeoTransform transform) {
+	public static void export(File output,GeometricLayer glayer,String projection,GeoTransform transform,boolean append) {
 		FileWriter fis=null;
 		try {
 			fis = new FileWriter(output);
@@ -255,32 +256,71 @@ public class GenericCSVIO extends AbstractVectorIO{
 
 	}
 
-	public static void createSimpleCSV(GeometricLayer glayer, String file) throws Exception {
-        FileWriter fw = new FileWriter(file);
-        fw.append("geom," + glayer.getSchema(',') + "\n");
-        WKTWriter wkt = new WKTWriter();
-        for (Geometry geom : glayer.getGeometries()) {
-            fw.append("\"" + wkt.writeFormatted(geom) + "\",");
-            Attributes att = glayer.getAttributes(geom);
-            if (att == null || att.getSchema().length==0) {
-                fw.append("\n");
-                continue;
-            }
-            for (int i = 0; i < att.getSchema().length; i++) {
-                String key = att.getSchema()[i];
-                fw.append(att.get(key) + "");
-                if (i < att.getSchema().length - 1) {
-                    fw.append(",");
-                } else {
-                    fw.append("\n");
-                }
-            }
-        }
-        fw.flush();
-        fw.close();
+	public static void createSimpleCSV(GeometricLayer glayer, String file,boolean append) throws IOException {
+		FileWriter fw = new FileWriter(file,append);
+		try{
+	        if(!append)
+	        	fw.append("geom," + glayer.getSchema(',') + "\n");
+	        WKTWriter wkt = new WKTWriter();
+	        for (Geometry geom : glayer.getGeometries()) {
+	            fw.append("\"" + wkt.writeFormatted(geom) + "\",");
+	            Attributes att = glayer.getAttributes(geom);
+	            if (att == null || att.getSchema().length==0) {
+	                fw.append("\n");
+	                continue;
+	            }
+	            for (int i = 0; i < att.getSchema().length; i++) {
+	                String key = att.getSchema()[i];
+	                fw.append(att.get(key) + "");
+	                if (i < att.getSchema().length - 1) {
+	                    fw.append(",");
+	                } else {
+	                    fw.append("\n");
+	                }
+	            }
+	        }
+		}finally{    
+			fw.flush();
+			fw.close();
+		}	
     }
 	
-	
+	/**
+	 * 
+	 * @param output
+	 * @param geoms
+	 * @param transform
+	 * @param imageId
+	 * @param append
+	 * @throws IOException 
+	 */
+	public static void geomCsv(File output,List<Geometry> geoms,GeoTransform transform,String imageId,boolean append) throws IOException {
+		FileWriter fis=null;
+		try {
+			fis = new FileWriter(output,append);
+			if(!append)
+				fis.append("imageId,geom\n");
+
+			for (Geometry geom : geoms) {
+				if(transform!=null){
+					try {
+						geom = transform.transformGeometryGeoFromPixel(geom);
+					} catch (GeoTransformException e) {
+						logger.error("Geometry not saved in csv",e);
+					}
+				}
+				fis.append(imageId+","+geom.toText());
+				fis.append("\n");
+			}
+			
+		} catch (IOException ex) {
+			logger.error(ex.getMessage(), ex);
+		}finally{
+			fis.flush();
+			fis.close();
+		}
+
+	}
 	
 	private Geometry parse(String string) {
 		if (string.endsWith(";")) {
