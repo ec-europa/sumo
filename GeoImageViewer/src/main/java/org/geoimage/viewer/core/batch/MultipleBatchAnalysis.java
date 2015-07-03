@@ -27,10 +27,10 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 * 
 	 */
 	public void startAnalysis(){
-			File mainFolder=new File(super.params.pathImg);
+			//File mainFolder=new File(super.params.pathImg);
 			
-			List<File>filesImg=SarFileUtil.scanFolderForImages(mainFolder,confFile.getFilterFolder());
-			
+			//List<File>filesImg=SarFileUtil.scanFolderForImages(mainFolder,confFile.getFilterFolder());
+			List<File>filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
 			
 			for (File image:filesImg){
 				try{
