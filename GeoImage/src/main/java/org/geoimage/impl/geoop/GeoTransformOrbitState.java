@@ -1,6 +1,5 @@
 package org.geoimage.impl.geoop;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -77,10 +76,19 @@ public class GeoTransformOrbitState implements GeoTransform{
 	}
 	
 	@Override
-	public Geometry transformGeometryGeoFromPixel(Geometry geo)
+	public Geometry transformGeometryGeoFromPixel(Geometry geom)
 			throws GeoTransformException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+            Coordinate[] coords=geom.getCoordinates();
+            List<double[]> coordsConv=pGeo.parallelGeoFromPixel(coords);
+            for(int i=0;i<coords.length;i++){
+                coords[i].x=coordsConv.get(i)[0];
+                coords[i].y=coordsConv.get(i)[1];
+            }   
+            return geom;
+		}catch(InterruptedException|ExecutionException ge){
+			throw new GeoTransformException(ge.getMessage());
+		} 
 	}
 	
 	
