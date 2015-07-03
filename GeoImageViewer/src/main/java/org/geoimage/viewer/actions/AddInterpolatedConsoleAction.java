@@ -182,7 +182,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             String file=args[1].split("=")[3];
             IImageLayer l=Platform.getCurrentImageLayer();
             if(l!=null){
-            		GenericCSVIO csvio=new GenericCSVIO(file,l.getImageReader().getGeoTransform());
+            		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
                     GeometricLayer positions = csvio.readLayer();
                     if (positions.getProjection() == null) {
                         addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
@@ -202,7 +202,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                     lastDirectory = fd.getSelectedFile().getParent();
                     IImageLayer l=Platform.getCurrentImageLayer();
                     if(l!=null){
-                    		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile(),l.getImageReader().getGeoTransform());
+                    		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     		GeometricLayer positions = csvio.readLayer();
                             if (positions.getProjection() == null) {
                                 addLayerInThread(args[1], args[2], positions, (IImageLayer) l);

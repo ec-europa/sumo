@@ -40,5 +40,19 @@ public class SarFileUtil {
 		return imgFiles;
 	}
 	
+	/**
+	 * 
+	 * @param imagesFolder
+	 * @return
+	 */
+	public static List<File> scanFoldersForImages(String[] inputFolders,String patternFilterFolder,boolean recursive){
+		List<File> imgFiles=new ArrayList<File>();
+		
+		for(int i=0;i<inputFolders.length;i++){
+			imgFiles.addAll(scanFolderForImages(new File(inputFolders[i]), patternFilterFolder));
+		}
+		
+		return imgFiles;
+	}
 	
 }

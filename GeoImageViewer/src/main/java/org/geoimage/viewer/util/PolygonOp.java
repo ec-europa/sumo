@@ -45,20 +45,20 @@ public class PolygonOp {
 	public static Polygon createPolygon(double[]...xs) throws ParseException{
 		StringBuilder builder =new StringBuilder("POLYGON((");
 		
-		/*for(int i=0;i<xs.length;i++){
+		for(int i=0;i<xs.length;i++){
 			double x[]=xs[i];
 			if(i<(xs.length-1))
 				builder=builder.append(x[0]).append(" ").append(x[1]).append(",");
 			else
 				builder=builder.append(x[0]).append(" ").append(x[1]).append("))");
-		}*/
-		//Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
-		Coordinate[]cs=new Coordinate[xs.length];
+		}
+		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
+		/*Coordinate[]cs=new Coordinate[xs.length];
 		for(int i=0;i<xs.length;i++){
 			cs[i]=new Coordinate(xs[i][0],xs[i][1]);
 		}
 		GeometryFactory factor=new GeometryFactory();
-		Polygon imageP=factor.createPolygon(cs);
+		Polygon imageP=factor.createPolygon(cs);*/
 		
 		return imageP;
 	}

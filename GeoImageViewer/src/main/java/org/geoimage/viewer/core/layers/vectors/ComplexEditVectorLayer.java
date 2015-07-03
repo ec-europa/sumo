@@ -97,7 +97,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
     @Override
     public void render(GeoContext context) {
         super.render(context);
-        if (!context.isDirty() || glayer == null) {
+        if (!context.isDirty() || glayer == null||Platform.isBatchMode()) {
             return;
         }
 
