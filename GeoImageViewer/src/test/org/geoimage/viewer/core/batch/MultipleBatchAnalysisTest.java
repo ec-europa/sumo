@@ -20,7 +20,7 @@ public class MultipleBatchAnalysisTest {
 		params.thresholdArrayValues=new float[]{5,5,5,5};
 		params.epsg="C:\\tmp\\output\\";
 		params.buffer=10;
-		params.pathImg="C:\\tmp\\input"; 			//input folder
+		params.pathImg=new String[]{"C:\\tmp\\input"}; 			//input folder
 		params.epsg="C:\\tmp\\testmultiple\\";
 		
 		ConfigurationFile conf=new ConfigurationFile(null);

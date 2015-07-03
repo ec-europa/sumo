@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,20 +31,17 @@ import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.AbstractLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
-import org.geotools.feature.SchemaException;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
@@ -79,7 +75,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     private double minThresh = 0;
     private double maxThresh = 0;
     protected double currentThresh = 0;
-    
+    protected Geometry currentTile=null;
     
     
     public MaskVectorLayer(ILayer parent,String layername,String type, GeometricLayer layer) {
@@ -201,13 +197,17 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         gl.glColor3f(c[0], c[1], c[2]);
 
         if (glayer != null) {
+        	List<Geometry> geomList=glayer.getGeometries();
+        	if(currentTile!=null){
+       // 		geomList.add(currentTile);
+        	}
             if (!threshable) {
                 if (getType().equalsIgnoreCase(POINT)) {
                     switch (this.displaysymbol) {
                         case point: {
                             gl.glPointSize(this.renderWidth);
                             gl.glBegin(GL.GL_POINTS);
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 Coordinate point = temp.getCoordinate();
                                 gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
                             }
@@ -228,7 +228,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         break;
                         case square: {
                         	//usato anche per disegnare i contorni delle detection
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 3 : this.renderWidth);
                                 Coordinate point = new Coordinate(temp.getCoordinate());
                                 point.x = (point.x - x) / width;
@@ -246,7 +246,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case cross: {
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
                                 Coordinate point = new Coordinate(temp.getCoordinate());
                                 point.x = (point.x - x) / width;
@@ -265,7 +265,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case triangle: {
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
                                 Coordinate point = new Coordinate(temp.getCoordinate());
                                 point.x = (point.x - x) / width;
@@ -286,7 +286,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                     }
                 } else if (getType().equalsIgnoreCase(POLYGON)) {
-                    for (Geometry tmp : glayer.getGeometries()) {
+                    for (Geometry tmp : geomList) {
                     /*	Geometry gg;
 						try {
 							gg = Platform.getCurrentImageReader().getGeoTransform().transformGeometryGeoFromPixel(tmp);
@@ -329,7 +329,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                     	}
                     }
                 } else if (getType().equalsIgnoreCase(LINESTRING)) {
-                    for (Geometry temp : glayer.getGeometries()) {
+                    for (Geometry temp : geomList) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
                         }
@@ -344,7 +344,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         gl.glFlush();
                     }
                 } else if (getType().equalsIgnoreCase(MIXED)) {
-                    for (Geometry temp : glayer.getGeometries()) {
+                    for (Geometry temp : geomList) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
                         }
@@ -389,7 +389,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         case point: {
                             gl.glPointSize(this.renderWidth);
                             gl.glBegin(GL.GL_POINTS);
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                                     Coordinate point = temp.getCoordinate();
                                     gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
@@ -411,7 +411,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case square: {
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                                     gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 3 : this.renderWidth);
                                     Coordinate point = new Coordinate(temp.getCoordinate());
@@ -432,7 +432,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case cross: {
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                                     gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
                                     
@@ -454,7 +454,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case triangle: {
-                            for (Geometry temp : glayer.getGeometries()) {
+                            for (Geometry temp : geomList) {
                                 if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                                     gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
                                     Coordinate point = new Coordinate(temp.getCoordinate());
@@ -477,7 +477,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                     }
                 } else if (getType().equalsIgnoreCase(POLYGON)) {
-                    for (Geometry temp : glayer.getGeometries()) {
+                    for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
                                 continue;
@@ -495,7 +495,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                     }
                 } else if (getType().equalsIgnoreCase(LINESTRING)) {
-                    for (Geometry temp : glayer.getGeometries()) {
+                    for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
                                 continue;
@@ -510,7 +510,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                     }
                 } else if (getType().equalsIgnoreCase(MIXED)) {
-                    for (Geometry temp : glayer.getGeometries()) {
+                    for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
                                 continue;
@@ -595,13 +595,27 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         this.renderWidth = width;
     }
 
-    public void save(String file, int formattype, String projection) {
+    
+    
+    public Geometry getCurrentTile() {
+		return currentTile;
+	}
+
+
+
+	public void setCurrentTile(Geometry currentTile) {
+		this.currentTile = currentTile;
+	}
+
+
+
+	public void save(String file, int formattype, String projection) {
     	SarImageReader reader=(SarImageReader) Platform.getCurrentImageReader();
         if (formattype==ISave.OPT_EXPORT_CSV) {
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");
             }
-            GenericCSVIO.export(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform());
+            GenericCSVIO.export(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform(),false);
         } else if (formattype==ISave.OPT_EXPORT_SHP) {
             SimpleShapefile.exportLayer(new File(file),glayer,projection,reader.getGeoTransform());
         }
@@ -623,13 +637,14 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
+            this.setCurrentTile(geom);
           //for test only
            /*  try {
 					SimpleShapefile.exportGeometriesToShapeFile(glayer.getGeometries(),new File("F:\\SumoImgs\\export\\aaa2.shp") ,"Polygon");
 				} catch (IOException | SchemaException e) {
 					e.printStackTrace();
 				}*/
-            /*if(x>18400&&x<19000&&y>18700&&y<18900){
+          /*  if(x>1790&&x<1900&&y>5800&&y<6100){
             	try {
             		List<Geometry>lg=new ArrayList<>();
             		lg.add(geom);
@@ -672,7 +687,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 			            		 if (e.intersects(geom)) 
 			 		        			return true;
 		            		}else{
-		            			if (p.intersects(geom)||geom.intersects(p)) 
+		            			if (p.intersects(geom)) 
 		 		        			return true;
 		            		}
 				            /*if(total==null)
@@ -856,8 +871,8 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
-            if(bufferingDistance>0)
-            	bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
+            //if(bufferingDistance>0)
+            bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
         	bufferedGeom[i] = PolygonOp.removeInteriorRing(bufferedGeom[i]);
         }
         // then merge them

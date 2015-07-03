@@ -114,7 +114,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 //AG changed "noncomplexlayer" to "complexvds"
         if (args.length == 2) {
             if(l!=null){
-            	GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile(),l.getImageReader().getGeoTransform());
+            	GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                 GeometricLayer positions = csv.readLayer();
                 if (positions.getProjection() == null) {
                 	done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
@@ -135,7 +135,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
                     Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
-                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile(),l.getImageReader().getGeoTransform());
+                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     
                     
                     if(l!=null){
@@ -306,7 +306,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	            String file=args[1].split("=")[1];
 	            IImageLayer l=Platform.getCurrentImageLayer();
 	            if(l!=null){
-	            		GenericCSVIO csv=new GenericCSVIO(file,l.getImageReader().getGeoTransform());
+	            		GenericCSVIO csv=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
 	                    GeometricLayer positions = csv.readLayer();
 	                    if (positions.getProjection() == null) {
 	                    	done=LayerManager.addLayerInThread("complexvds", positions, (IImageLayer) l);
@@ -320,7 +320,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            		IImageLayer l=Platform.getCurrentImageLayer();
 	                    lastDirectory = fd.getSelectedFile().getParent();
-	                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile(),l.getImageReader().getGeoTransform());
+	                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
 	                    
 	                    if(l!=null){
 	                            GeometricLayer positions = csv.readLayer();

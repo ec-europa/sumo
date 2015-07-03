@@ -78,7 +78,7 @@ public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
             stat.execute("DROP TABLE \"" + glayer.getName() + "\" IF EXISTS");
             String sql = null;
             File tempfile = File.createTempFile(glayer.getName(), ".csv");
-            GenericCSVIO.createSimpleCSV(glayer, tempfile.getAbsolutePath());
+            GenericCSVIO.createSimpleCSV(glayer, tempfile.getAbsolutePath(),false);
             sql = "create table \"" + glayer.getName() + "\" as select * from csvread('" + tempfile.getAbsolutePath() + "')";
             stat.execute(sql);
             stat.close();

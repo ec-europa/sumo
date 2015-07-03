@@ -171,7 +171,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
 	        }
 	    	case AbstractVectorIO.CSV:{
 	            try {
-	                GenericCSVIO.export(new File(file),glayer, projection,reader.getGeoTransform());
+	                GenericCSVIO.export(new File(file),glayer, projection,reader.getGeoTransform(),false);
 	            } catch (Exception ex) {
 	            	logger.error(ex.getMessage(),ex);
 	            }
