@@ -13,8 +13,8 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
-import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -29,7 +29,7 @@ import com.vividsolutions.jts.geom.Polygon;
 class AnalysisParams {
 	//HH HV VH VV
 	public float[] thresholdArrayValues={0,0,0,0};
-	public String pathImg="";
+	public String pathImg[]=null;
 	public String shapeFile="";
 	public String outputFolder="";
 	public float enl=1;
@@ -148,11 +148,11 @@ public abstract class AbstractBatchAnalysis {
     		   SumoXMLWriter.saveNewXML(new File(file),threshLayer,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
     		   
     		   String bbox=outfolder+"\\bbox.shp";
-    		   List<Geometry> gg=new ArrayList<Geometry>();
-    		   gg.add(reader.getBbox());
+    		   List<Geometry> ggBbox=new ArrayList<Geometry>();
+    		   ggBbox.add(reader.getBbox());
     		   //save the bound box as shape file
     		   try {
-				  SimpleShapefile.exportGeometriesToShapeFile(gg, new File(bbox),"Polygon");
+				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null);
 			   } catch (IOException | SchemaException e) {
 				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
 			   }
@@ -160,10 +160,24 @@ public abstract class AbstractBatchAnalysis {
     		   //save targets as shape file
     		   try{
     			   String targets=outfolder+"\\"+l.getName()+".shp";
-    			   l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
+    			  // l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
+    			   SimpleShapefile.exportGeometriesToShapeFile(threshLayer.getGeometries(), new File(targets),"Point",reader.getGeoTransform());
     		   } catch (Exception e) {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
+    		   
+    		   try{
+    			   String targetscsv=params.outputFolder+"\\targets.csv";
+    			   GenericCSVIO.geomCsv(new File(targetscsv),threshLayer.getGeometries(),reader.getGeoTransform(),imageName,true);
+    		   }catch(Exception e ){
+    			   logger.error("Problem saving targets in csv:"+imageName,e);
+    		   }
+    		   try{
+    			   String bboxcsv=params.outputFolder+"\\bbox.csv";
+    			   GenericCSVIO.geomCsv(new File(bboxcsv),ggBbox,null,imageName,true);
+    		   }catch(Exception e ){
+    			   logger.error("Problem saving bbox in csv:"+imageName,e);
+    		   }
     	   }
         }
 	}

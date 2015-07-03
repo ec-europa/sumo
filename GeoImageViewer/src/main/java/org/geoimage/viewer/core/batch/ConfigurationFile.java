@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 
 /**
@@ -116,8 +119,16 @@ public class ConfigurationFile {
 		 * 
 		 * @return
 		 */
-		public String getInputFolder(){
-			return prop.getProperty(INPUT_FOLD_PARAM,"");
+		public String[] getInputFolder(){
+			List<String>inputs=new ArrayList<>();
+			Set<Object> ks=prop.keySet();
+			for(Object o:ks){
+				if(((String)o).contains(INPUT_FOLD_PARAM)){
+					inputs.add((String)prop.get(o));
+				}
+			}
+			
+			return inputs.toArray(new String[0]);
 		}
 		
 		
