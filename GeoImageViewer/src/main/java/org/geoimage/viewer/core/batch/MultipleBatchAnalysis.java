@@ -34,7 +34,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			
 			for (File image:filesImg){
 				try{
-					System.out.println("Start analyzing:"+image.getName());
+					System.out.println("Start analyzing:"+image.getParent());
 					
 					AnalysisParams activeParams=params;
 					
