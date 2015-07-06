@@ -18,7 +18,7 @@ import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.PreferencesDB;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
@@ -238,7 +238,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 		   double w=getWidth();
 		
 	    GeoTransform gt = getGeoTransform();
-	    int margin=PreferencesDB.getPrefDBInstance().getLandMaskMargin(0);
+	    int margin=PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0);
 	    
 	    
         double[] p0 = gt.getGeoFromPixel(-margin, -margin);

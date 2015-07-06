@@ -131,15 +131,10 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
     private int arrayReadTilesOrder[][]=null ;
     
     private int maxnumberoftiles = 7;
-    static String MaxNumberOfTiles = "Max Number Of Tiles";
     
     Iterator<ImageReader> iReader=null;
 	ImageReader pngReader=null;
 
-    static {
-        Platform.getPreferences().insertIfNotExistRow(MaxNumberOfTiles, "7");
-        Platform.getPreferences().insertIfNotExistRow("Maximum Tile Buffer Size", "512");
-    }
     
     
     /**
@@ -171,11 +166,11 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         xpadding = (((1 << levels) << 8) - gir.getWidth()) / 2;  // is equal to(int)((Math.pow(2,levels+8)- gir.getWidth())/2);
         ypadding = (((1 << levels) << 8) - gir.getHeight()) / 2; //			   (int)((Math.pow(2,levels+8)- gir.getHeight())/2);
         
-        String temp = Platform.getPreferences().readRow("Maximum Tile Buffer Size");
+        String temp = Platform.getConfiguration().getMaxTileBuffer();
         int maxBuffer = Integer.parseInt(temp);
         tcm = new TextureCacheManager(maxBuffer);
         setInitialContrast();
-        maxnumberoftiles = Integer.parseInt(Platform.getPreferences().readRow(MaxNumberOfTiles));
+        maxnumberoftiles = Platform.getConfiguration().getMaxNumOfTiles();
         createMatrixTileOrder();
         
         

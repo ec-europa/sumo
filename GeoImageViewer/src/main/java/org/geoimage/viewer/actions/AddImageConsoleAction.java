@@ -45,11 +45,11 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
     public AddImageConsoleAction() {
         
-        if(Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE).equals("")){
+        if(Platform.getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
-            lastDirectory = Platform.getPreferences().readRow(Constant.PREF_IMAGE_FOLDER);
+            lastDirectory = Platform.getConfiguration().getImageFolder();
         }else{
-            lastDirectory = new File(Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE)).getAbsolutePath();
+            lastDirectory = new File(Platform.getConfiguration().getLastImage()).getAbsolutePath();
         }
         fileChooser = new JFileChooser(lastDirectory);
     }
@@ -127,7 +127,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             	temp=tempList.get(0);
             }
             // save the file name in the preferences
-            Platform.getPreferences().updateRow(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
+            Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
             if (tempList==null||tempList.isEmpty()) {
                 this.done = true;
@@ -156,7 +156,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
         } else {
             //part used by the graphical interface
-            if (lastDirectory.equals(Platform.getPreferences().readRow(Constant.PREF_IMAGE_FOLDER))) {
+            if (lastDirectory.equals(Platform.getConfiguration().getImageFolder())) {
                 if (fileChooser == null) {
                     fileChooser = new JFileChooser(lastDirectory);
                 }
@@ -188,7 +188,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
                 for(int i=0;i<tempList.size();i++){
             		temp=tempList.get(i);
 	                // save the file name in the preferences
-	                Platform.getPreferences().updateRow(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
+	                Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
 	                Platform.getGeoContext().setX(0);
 	                Platform.getGeoContext().setY(0);

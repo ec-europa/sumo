@@ -82,7 +82,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
-        int bufferingDistance = Double.valueOf((Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE)).intValue();
+        int bufferingDistance = Double.valueOf((Platform.getConfiguration()).getBufferingDistance()).intValue();
         Platform.getMain().addStopListener(this);
         
         
@@ -292,7 +292,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         a3.setPossibleValues(vectors.toArray());
         Vector<Argument> out = new Vector<Argument>();
 
-        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, (Platform.getPreferences()).readRow(PREF_BUFFERING_DISTANCE));
+        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, Platform.getConfiguration().getBufferingDistance());
 
         //management of the different threshold in the VDS parameters panel
         out.add(a1);

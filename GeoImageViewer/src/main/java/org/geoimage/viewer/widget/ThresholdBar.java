@@ -69,7 +69,7 @@ public class ThresholdBar extends TransparentWidget {
         ThresholdBar bar = new ThresholdBar(layer);
         final double min = layer.getMinimumThresh()-0.01;
         final double max = layer.getMaximumThresh()+0.01;
-        int classes=Integer.parseInt(Platform.getPreferences().readRow(Constant.NUM_HISTOGRAM_CLASSES));
+        int classes=Integer.parseInt(Platform.getConfiguration().getNumHistgramClasses());
         bar.setHistogram(layer.getHistogram(classes));
         bar.slider.setValue((layer.getThresh()-min)/(max-min));
         bar.addListener(new ISliderMovedListener() {
@@ -96,8 +96,8 @@ public class ThresholdBar extends TransparentWidget {
         this.histogram = histogram;
         BufferedImage buf = null;
         try {
-            System.out.println(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
-            buf = ImageIO.read(new URL(Platform.getPreferences().readRow(Constant.GOOGLE_CHART_API)+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
+            System.out.println(Platform.getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
+            buf = ImageIO.read(new URL(Platform.getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }

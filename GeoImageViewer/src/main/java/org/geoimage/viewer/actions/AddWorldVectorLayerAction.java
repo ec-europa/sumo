@@ -58,7 +58,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	File shape=new File(Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK));
+                        	File shape=new File(Platform.getConfiguration().getDefaultLandMask());
                         	Polygon imageP=((SarImageReader)l).getBbox();
                             if(imageP==null)
                             	imageP=((SarImageReader)l).buildBox();
