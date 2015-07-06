@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.core;
+package org.geoimage.viewer.core.configuration;
 
 import java.io.Serializable;
 

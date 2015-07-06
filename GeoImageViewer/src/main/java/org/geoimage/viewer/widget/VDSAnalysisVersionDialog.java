@@ -7,8 +7,7 @@
 package org.geoimage.viewer.widget;
 
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.PreferencesDB;
-import org.geoimage.viewer.util.Constant;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.jdesktop.application.Action;
 
 /**
@@ -28,10 +27,9 @@ public class VDSAnalysisVersionDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         // create the preferences fields in the database
-        PreferencesDB preferences = Platform.getPreferences();
-        preferences.insertIfNotExistRow(Constant.PREF_VERSION, "NRT");
+        PlatformConfiguration preferences = Platform.getConfiguration();
         // set the preferred values in teh dialog
-        jTextField1.setText(preferences.readRow(Constant.PREF_VERSION));
+        jTextField1.setText(preferences.getVersion());
     }
 
     public String getVersion()

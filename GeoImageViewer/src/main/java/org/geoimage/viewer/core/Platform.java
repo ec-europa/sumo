@@ -5,8 +5,6 @@
 package org.geoimage.viewer.core;
 
 
-import java.io.File;
-
 import javax.media.opengl.awt.GLCanvas;
 
 import org.geoimage.def.GeoImageReader;
@@ -14,10 +12,10 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.batch.Sumo;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.slf4j.LoggerFactory;
 
@@ -146,8 +144,8 @@ public class Platform {
         ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setCacheManager(cacheManager);
     }
 
-    public static PreferencesDB getPreferences() {
-        return PreferencesDB.getPrefDBInstance();
+    public static PlatformConfiguration getConfiguration() {
+        return PlatformConfiguration.getConfigurationInstance();
     }
 
     public static void addWidget(TransparentWidget widget) {
@@ -184,12 +182,7 @@ public class Platform {
      * even if the file is empty a default path is used
      */
     public static String getCachePath() {
-        String cache = Platform.getPreferences().readRow(Constant.PREF_CACHE);
-        if (cache.equals("")) {
-        	cache = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("cache");
-            Platform.getPreferences().updateRow(Constant.PREF_CACHE, cache);
-        }
-       
+        String cache = Platform.getConfiguration().getCachePrefFolder();
         return cache;
     }
     

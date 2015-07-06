@@ -11,21 +11,32 @@ public class Constant {
 //vds analysis preferences
   public static final String PREF_DISPLAY_PIXELS = "VDS Analaysis - Display detected pixels";
   public static final String PREF_DISPLAY_BANDS = "VDS Analaysis - Display all bands detection results";
+  
+  public static final String PREF_TARGETS_COLOR_BAND = "VDS Analaysis - Target Color - Band ";
+  public static final String PREF_TARGETS_SIZE_BAND  = "VDS Analaysis - Target Size - Band ";
+  public static final String PREF_TARGETS_SYMBOL_BAND= "VDS Analaysis - Target Symbol - Band ";
+  
   public static final String PREF_TARGETS_COLOR_BAND_0 = "VDS Analaysis - Target Color - Band 0";
-  public static final String PREF_TARGETS_SIZE_BAND_0 = "VDS Analaysis - Target Size - Band 0";
-  public static final String PREF_TARGETS_SYMBOL_BAND_0 = "VDS Analaysis - Target Symbol - Band 0";
   public static final String PREF_TARGETS_COLOR_BAND_1 = "VDS Analaysis - Target Color - Band 1";
   public static final String PREF_TARGETS_COLOR_BAND_2 = "VDS Analaysis - Target Color - Band 2";
   public static final String PREF_TARGETS_COLOR_BAND_3 = "VDS Analaysis - Target Color - Band 3";
-  public static final String PREF_TARGETS_SIZE_BAND_1 = "VDS Analaysis - Target Size - Band 1";
-  public static final String PREF_TARGETS_SIZE_BAND_2 = "VDS Analaysis - Target Size - Band 2";
-  public static final String PREF_TARGETS_SIZE_BAND_3 = "VDS Analaysis - Target Size - Band 3";
-  public static final String PREF_TARGETS_SYMBOL_BAND_1 = "VDS Analaysis - Target Symbol - Band 1";
-  public static final String PREF_TARGETS_SYMBOL_BAND_2 = "VDS Analaysis - Target Symbol - Band 2";
-  public static final String PREF_TARGETS_SYMBOL_BAND_3 = "VDS Analaysis - Target Symbol - Band 3";
   public static final String PREF_TARGETS_COLOR_BAND_MERGED = "VDS Analaysis - Target Color - Band Merged";
+  
+  public static final String PREF_TARGETS_SIZE_BAND_0  = "VDS Analaysis - Target Size - Band 0";
+  public static final String PREF_TARGETS_SIZE_BAND_1  = "VDS Analaysis - Target Size - Band 1";
+  public static final String PREF_TARGETS_SIZE_BAND_2  = "VDS Analaysis - Target Size - Band 2";
+  public static final String PREF_TARGETS_SIZE_BAND_3  = "VDS Analaysis - Target Size - Band 3";
   public static final String PREF_TARGETS_SIZE_BAND_MERGED = "VDS Analaysis - Target Size - Band Merged";
+  
+  public static final String PREF_TARGETS_SYMBOL_BAND_0= "VDS Analaysis - Target Symbol - Band 0";
+  public static final String PREF_TARGETS_SYMBOL_BAND_1= "VDS Analaysis - Target Symbol - Band 1";
+  public static final String PREF_TARGETS_SYMBOL_BAND_2= "VDS Analaysis - Target Symbol - Band 2";
+  public static final String PREF_TARGETS_SYMBOL_BAND_3= "VDS Analaysis - Target Symbol - Band 3";
   public static final String PREF_TARGETS_SYMBOL_BAND_MERGED = "VDS Analaysis - Target Symbol - Band Merged";
+  
+  
+  
+  
   public static final String PREF_BUFFERING_DISTANCE = "VDS Analaysis - Buffering Distance in pixels";
   public static final String PREF_AGGLOMERATION_METHODOLOGY = "VDS Analaysis - Agglomeration Method";
   public static final String PREF_NEIGHBOUR_DISTANCE = "VDS Analaysis - Neighbours distance";
@@ -65,6 +76,18 @@ public class Constant {
   public static final String PREF_S1_GEOLOCATION = "S1 Geolocation (ORB=Orbit / GRID=Grid Points)";
   public static final String GEOLOCATION_GRID = "GRID";
   public static final String GEOLOCATION_ORBIT = "ORB";
+  
+  public static final String PREF_MAX_TILE_BUFFER="Maximum Tile Buffer Size";
+  public static final String PREF_MAX_NUM_OF_TILES="Max Number Of Tiles";
+  
+  public static final String PREF_HOST = "PostGIS - Host for Database";
+  public static final String PREF_DATABASE = "PostGIS - Database Name";
+  public static final String PREF_TABLE = "PostGIS - Database Table";
+  public static final String PREF_USER = "PostGIS - User";
+  public static final String PREF_PASSWORD = "PostGIS - Password";
+  public static final String PREF_PORT = "PostGIS - Port";
+
+		  
   
   
   //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------

@@ -185,6 +185,7 @@ public abstract class Sentinel1 extends SarImageReader {
             	s.setName(info.getSwath().name());
             	s.setLastLineSensingTime(info.getLastLineSensingTime().toGregorianCalendar().getTimeInMillis());
             	s.setPrf(info.getPrf().getValue());
+            	swaths.add(s);
             }
             
         	//read and set the metadata from the manifest and the annotation
@@ -195,7 +196,7 @@ public abstract class Sentinel1 extends SarImageReader {
                 dispose();
                 return false;
             }
-            String geoloc=Platform.getPreferences().getS1GeolocationAlgorithm();
+            String geoloc=Platform.getConfiguration().getS1GeolocationAlgorithm();
             if(geoloc.equalsIgnoreCase(Constant.GEOLOCATION_ORBIT)&& this instanceof Sentinel1GRD){
                    geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
             }else{       
@@ -226,7 +227,7 @@ public abstract class Sentinel1 extends SarImageReader {
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
             setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            setIncidenceNear(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
+            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
             
     		super.bbox=buildBox();
 
@@ -258,10 +259,10 @@ public abstract class Sentinel1 extends SarImageReader {
 		   List<SwathBoundsType> bounds=s.getBounds();
 		   for(int iBound=0;iBound<bounds.size()&&!findPrf;iBound++){
 			   SwathBoundsType bound=bounds.get(iBound);
-			   int xMin=bound.getFirstAzimuthLine().getValue().intValue();
-			   int xMax=bound.getLastAzimuthLine().getValue().intValue();
-			   int yMin=bound.getFirstRangeSample().getValue().intValue();
-			   int yMax=bound.getLastRangeSample().getValue().intValue();
+			   int yMin=bound.getFirstAzimuthLine().getValue().intValue();
+			   int yMax=bound.getLastAzimuthLine().getValue().intValue();
+			   int xMin=bound.getFirstRangeSample().getValue().intValue();
+			   int xMax=bound.getLastRangeSample().getValue().intValue();
 			   
 			   if((x>=xMin && x<xMax)&&(y>=yMin&&y<yMax)){
 				   findPrf=true;

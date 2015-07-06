@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.core.layers.vectors;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -61,12 +62,22 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
         
     }
 	
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask) {
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask,String band) {
         super(parent,layername, type, layer);
         this.thresholds=thresholds;
         this.enl=enl;
         this.buffer=buffer;
         this.landMask=landMask;
+        
+        // set the color and symbol values for the VDS layer
+   	 	int widthstring=Platform.getConfiguration().getTargetsSizeBand(""+band);
+   	 	String colorString=Platform.getConfiguration().getTargetsColorStringBand(""+band);
+   	 	String symbolString=Platform.getConfiguration().getTargetsSymbolBand(""+band);
+        
+        setWidth(widthstring);
+        Color colordisplay = new Color(Integer.decode(colorString));
+        setColor(colordisplay);
+        setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
     }
     
     public boolean anyDections(){

@@ -6,13 +6,15 @@
 package org.geoimage.viewer.widget;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import org.geoimage.viewer.core.Preferences;
+
+import org.geoimage.viewer.core.configuration.Preferences;
 import org.jdesktop.application.Action;
 
 /**
