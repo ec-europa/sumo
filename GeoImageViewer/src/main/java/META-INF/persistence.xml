@@ -4,7 +4,7 @@
   <persistence-unit name="GeoImageViewerPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.geoimage.viewer.core.Plugins</class>
-    <class>org.geoimage.viewer.core.Preferences</class>
+    <class>org.geoimage.viewer.core.configuration.Preferences</class>
     <class>org.geoimage.viewer.core.Catalogue</class>
     <properties>
       <property name="eclipselink.ddl-generation" value="create-tables"/>

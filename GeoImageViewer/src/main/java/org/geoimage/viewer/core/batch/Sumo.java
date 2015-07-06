@@ -144,7 +144,7 @@ public class Sumo {
 	        	if(index!=-1){
 	        		params.buffer=Integer.parseInt(inputParams.get(index+1));
 	        	}else{
-	        		params.buffer=Integer.parseInt(Platform.getPreferences().readRow(Constant.PREF_BUFFERING_DISTANCE));
+	        		params.buffer=Integer.parseInt(Platform.getConfiguration().getBufferingDistance());
 	        	}
 	
 	        	//set the treshold params
@@ -176,7 +176,7 @@ public class Sumo {
 	        		params.shapeFile=inputParams.get(index+1);
 	        	}else{
 	        		//search default shp file
-	        		params.shapeFile=Platform.getPreferences().readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK);
+	        		params.shapeFile=Platform.getConfiguration().getDefaultLandMask();
 	        	}
 	        } 	
         }

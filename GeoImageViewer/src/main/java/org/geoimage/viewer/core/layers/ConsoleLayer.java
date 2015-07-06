@@ -95,7 +95,7 @@ public class ConsoleLayer extends AbstractLayer {
      */
     private List<IAction> getDynamicActionForLandmask(){
     	List<IAction> actions=new ArrayList<IAction>();
-    	String folder=Platform.getPreferences().readRow(Constant.PREF_COASTLINES_FOLDER);
+    	String folder=Platform.getConfiguration().getCoastlinesFolder();
     	
     	File folderShapes=new File(folder);
     	if(folderShapes.exists()&&folderShapes.isDirectory()){

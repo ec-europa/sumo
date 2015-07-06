@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core;
+package org.geoimage.viewer.core.configuration;
 
 import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
 import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
@@ -36,7 +36,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-
 import org.geoimage.viewer.util.Constant;
 
 /**
@@ -44,21 +43,9 @@ import org.geoimage.viewer.util.Constant;
  * @author gabbaan + leforth + thoorfr
  */
 public class PreferencesDB {
-	private static PreferencesDB instance=null;
-	
     EntityManagerFactory emf;
-
-    public static PreferencesDB getPrefDBInstance(){
-    	if (instance == null) {
-            instance = new PreferencesDB();
-        }
-    	
-    	return instance;
-    }
     
-    
-    
-    private PreferencesDB() {
+    public PreferencesDB() {
         emf=Persistence.createEntityManagerFactory("GeoImageViewerPU");
         initializePreferences();
     }
@@ -140,6 +127,9 @@ public class PreferencesDB {
         insertIfNotExistRow(PREF_NEIGHBOUR_TILESIZE, "200");
         insertIfNotExistRow(PREF_REMOVE_LANDCONNECTEDPIXELS, "true");
         insertIfNotExistRow(PREF_LAND_MASK_MARGIN, "100");
+        insertIfNotExistRow(Constant.PREF_MAX_TILE_BUFFER, "512");
+        insertIfNotExistRow(Constant.PREF_MAX_NUM_OF_TILES, "7");
+        insertIfNotExistRow(Constant.PREF_VERSION, "NRT");
         
         //default pref folder for import vector option
         insertIfNotExistRow(Constant.PREF_LASTVECTOR, "");
@@ -174,6 +164,23 @@ public class PreferencesDB {
         
         
         insertIfNotExistRow(PREF_S1_GEOLOCATION, Constant.GEOLOCATION_ORBIT);
+        
+        
+        insertIfNotExistRow(Constant.PREF_HOST, "fishdb-copy.jrc.org");
+        insertIfNotExistRow(Constant.PREF_DATABASE, "Positions");
+        insertIfNotExistRow(Constant.PREF_TABLE, "vms");
+        insertIfNotExistRow(Constant.PREF_USER, "");
+        insertIfNotExistRow(Constant.PREF_PASSWORD, "");
+        insertIfNotExistRow(Constant.PREF_PORT, "5432");
+        
+        insertIfNotExistRow(Constant.PREF_CACHE, System.getProperty("user.dir") + "/sumocache/");
+        insertIfNotExistRow(Constant.PREF_LASTIMAGE, "");
+
+    }
+    
+    
+    public Object getConfiguration(String name){
+    	return readRow(name);
     }
     
     /**
@@ -181,13 +188,8 @@ public class PreferencesDB {
      * @param defaultValue
      * @return
      */
-    public double getNeighbourDistance(double defaultValue){
-    	double neighbouringDistance=defaultValue;
-    	try {
-            neighbouringDistance = Double.parseDouble(readRow(PREF_NEIGHBOUR_DISTANCE));
-        } catch (NumberFormatException e) {
-            neighbouringDistance = defaultValue;
-        }
+    public double getNeighbourDistance(){
+        double neighbouringDistance = Double.parseDouble(readRow(PREF_NEIGHBOUR_DISTANCE));
     	return neighbouringDistance;
     }
     
@@ -198,12 +200,7 @@ public class PreferencesDB {
      * @return
      */
     public int getTileSize(int defaultValue){
-        try {
-            return Integer.parseInt(readRow(PREF_NEIGHBOUR_TILESIZE));
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-
+        return Integer.parseInt(readRow(PREF_NEIGHBOUR_TILESIZE));
     }
     
     /**
@@ -212,34 +209,105 @@ public class PreferencesDB {
      * @return
      */
     public int getLandMaskMargin(int defaultValue){
-        try {
-            return Integer.parseInt(readRow(PREF_LAND_MASK_MARGIN));
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-
+        return Integer.parseInt(readRow(PREF_LAND_MASK_MARGIN));
     }
     
     
     public String getS1GeolocationAlgorithm(){
-    	try{
-            return readRow(PREF_S1_GEOLOCATION);
-    	}catch(Exception e){
-    		return Constant.GEOLOCATION_GRID;
-    	}    
+         return readRow(PREF_S1_GEOLOCATION);
+    }
+
+    /**
+     * 
+     * @param band 0,1,2,3,4,M M=merged
+     * @return
+     */
+    public int getPrefSizeBand(String band){
+    	Double d=Double.parseDouble(readRow(Constant.PREF_TARGETS_SIZE_BAND+band));
+    	return d.intValue();
+    	
+    }
+    /**
+     * 
+     * @param band 0,1,2,3,4,M M=merged
+     * @return
+     */
+
+    public String getPrefTargetsColorBand(String band){
+    	return readRow(Constant.PREF_TARGETS_COLOR_BAND+band);
+    }
+    /**
+     * 
+     * @param band 0,1,2,3,4,M M=merged
+     * @return
+     */
+
+    public String getPrefTargetsSymbolBand(String band){
+    	return readRow(Constant.PREF_TARGETS_SYMBOL_BAND+band);
     }
     
-    /*
-    public int getPrefTargetsSizeBand(int band,double defaultValue){
-    	double val=defaultValue;
-    	try{
-    		if
-    		Platform.getPreferences().readRow(PREF_TARGETS_SIZE_BAND_0);
-    	
-    	}catch(Exception e){
-    		
-    	}
-    	return val;
-    }*/
+    public String getPrefCache(){
+    	return readRow(Constant.PREF_CACHE);
+    }
+    
+    public String getPrefDisplayPixel(){
+    	return readRow(PREF_DISPLAY_PIXELS);
+    }
+    
+    public String getPrefRemoveLandConnectedPixels(){
+    	return readRow(PREF_REMOVE_LANDCONNECTEDPIXELS);
+    }	
+    
+    public String getPrefDisplayBandAnalysis(){
+    	return readRow(PREF_DISPLAY_BANDS);
+    }
+    
+    public String getPrefLastImage(){
+    	return readRow(Constant.PREF_LASTIMAGE);
+    }
+    
+    public String getPrefImageFolder(){
+    	return readRow(Constant.PREF_IMAGE_FOLDER);
+    }
+    
+    public String getPrefBufferingDistance(){
+    	return readRow(Constant.PREF_BUFFERING_DISTANCE);
+    }
+    
+    public String getPrefAgglomerationAlg(){
+    	return readRow(PREF_AGGLOMERATION_METHODOLOGY);
+    }
+    
+    public String getPrefDefaultLandMask(){
+    	return readRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK);
+    }
+    
+    public String getPrefMaxTileBuffer(){
+    	return readRow(Constant.PREF_MAX_TILE_BUFFER);
+    }
+    public String getPrefMaxNumOfTiles(){
+    	return readRow(Constant.PREF_MAX_NUM_OF_TILES);
+    }
+    public String getPrefCoastlinesFolder(){
+    	return readRow(Constant.PREF_COASTLINES_FOLDER);
+    }
+    
+    
+    public String getPrefAzimuthGeometryColor(){
+    	return readRow(Constant.PREF_AZIMUTH_GEOMETRYCOLOR);
+    }
+    public String getPrefAzimuthLineWidth(){
+    	return readRow(Constant.PREF_AZIMUTH_GEOMETRYLINEWIDTH);
+    }
+    
+    public String getPrefVersion(){
+    	return readRow(Constant.PREF_VERSION);
+    }
+    
+    
+    
     
 }
+    
+    
+    

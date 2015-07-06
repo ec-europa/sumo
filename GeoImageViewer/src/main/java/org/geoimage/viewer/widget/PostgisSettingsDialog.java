@@ -7,9 +7,9 @@
 package org.geoimage.viewer.widget;
 
 import java.util.HashMap;
+
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.PreferencesDB;
-//import org.geotools.data.postgis.PostgisDataStoreFactory;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 
 /**
  *
@@ -25,32 +25,22 @@ public class PostgisSettingsDialog extends javax.swing.JDialog {
     private String schema;
     private boolean ok=false;
     private HashMap config;
-    private static String HOST = "PostGIS - Host for Database";
-    private static String DATABASE = "PostGIS - Database Name";
-    private static String TABLE = "PostGIS - Database Table";
-    private static String USER = "PostGIS - User";
-    private static String PASSWORD = "PostGIS - Password";
-    private static String PORT = "PostGIS - Port";
 
     /** Creates new form PostgisSettingsDialog */
     public PostgisSettingsDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         // create the preferences fields in the database
-        PreferencesDB preferences = Platform.getPreferences();
-        preferences.insertIfNotExistRow(HOST, "fishdb-copy.jrc.org");
-        preferences.insertIfNotExistRow(DATABASE, "Positions");
-        preferences.insertIfNotExistRow(TABLE, "vms");
-        preferences.insertIfNotExistRow(USER, "");
-        preferences.insertIfNotExistRow(PASSWORD, "");
-        preferences.insertIfNotExistRow(PORT, "5432");
+        PlatformConfiguration preferences = Platform.getConfiguration();
+
+        
         // set the preferred values in teh dialog
-        jTextField1.setText(preferences.readRow(HOST));
-        jTextField2.setText(preferences.readRow(DATABASE));
-        jTextField3.setText(preferences.readRow(TABLE));
-        jTextField4.setText(preferences.readRow(USER));
-        jPasswordField1.setText(preferences.readRow(PASSWORD));
-        jTextField5.setText(preferences.readRow(PORT));
+        jTextField1.setText(preferences.getHost());
+        jTextField2.setText(preferences.getDatabase());
+        jTextField3.setText(preferences.getTableName());
+        jTextField4.setText(preferences.getUserName());
+        jPasswordField1.setText(preferences.getPassword());
+        jTextField5.setText(preferences.getPort());
     }
 
     /** This method is called from within the constructor to

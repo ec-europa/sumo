@@ -14,17 +14,15 @@ import javax.swing.table.DefaultTableModel;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.actions.AddImageConsoleAction;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.PreferencesDB;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.slf4j.LoggerFactory;
@@ -61,12 +59,12 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
         vdslayer = (IComplexVectorLayer) layer;
 
-        PreferencesDB preferences = Platform.getPreferences();
+        PlatformConfiguration configuration = Platform.getConfiguration();
         // set the preferences values
         try {
-            String colorString = preferences.readRow(Constant.PREF_AZIMUTH_GEOMETRYCOLOR);
+            String colorString = configuration.getAzimuthGeometryColor();
             this.azimuthGeometrycolor = new Color(Integer.parseInt(colorString.equals("") ? Color.ORANGE.getRGB() + "" : colorString));
-            this.azimuthGeometrylinewidth = Integer.parseInt(preferences.readRow(Constant.PREF_AZIMUTH_GEOMETRYLINEWIDTH));
+            this.azimuthGeometrylinewidth = configuration.getAzimuthLineWidth();
         } catch (NumberFormatException e) {
             //Logger.getLogger(GeometricInteractiveVDSLayerModel.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "Wrong format with the preference settings", "Error", JOptionPane.ERROR_MESSAGE);

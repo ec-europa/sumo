@@ -58,10 +58,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     private String message = "Adding data. Please wait...";
 
     public AddVectorConsoleAction() {
-        if(Platform.getPreferences().readRow(Constant.PREF_LASTVECTOR).equals("")){
+        if(Platform.getConfiguration().getLastVector().equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
-            lastDirectory = new File(Platform.getPreferences().readRow(Constant.PREF_LASTVECTOR)).getAbsolutePath();
+            lastDirectory = new File(Platform.getConfiguration().getLastVector()).getAbsolutePath();
         }
     	fd = new JFileChooser(lastDirectory);
 
@@ -134,7 +134,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
+                    Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
                     GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     
                     
@@ -245,7 +245,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 lastDirectory = fd.getSelectedFile().getParent();
-                Platform.getPreferences().updateRow(Constant.PREF_LASTVECTOR, lastDirectory);
+                Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
                 file = fd.getSelectedFile().getCanonicalPath();
             } catch (IOException ex) {
             	logger.error(ex.getMessage(), ex);

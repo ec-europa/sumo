@@ -153,8 +153,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         //WidgetManager.addWidget("Time", CurrentTimeWidget.class);
         //WidgetManager.addWidget("Info", InfoWidget.class);
         // AG init the preferences
-        Platform.getPreferences().insertIfNotExistRow(Constant.PREF_CACHE, System.getProperty("user.dir") + "/sumocache/");
-        Platform.getPreferences().insertIfNotExistRow(Constant.PREF_LASTIMAGE, "");
+        
 
         mainPanel.addComponentListener(new ComponentListener() {
             // This method is called after the component's size changes
@@ -645,7 +644,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
      */
     @Action
     public void openLastImage() {
-        final String lastImage = Platform.getPreferences().readRow(Constant.PREF_LASTIMAGE);
+        final String lastImage = Platform.getConfiguration().getLastImage();
         if (lastImage != null) {
             new Thread(new Runnable() {
 
