@@ -1,29 +1,19 @@
 package org.geoimage.viewer.core.analysisproc;
 
-import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
-import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
-import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
-import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_0;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
-import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
-
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+
+
 
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
@@ -102,14 +92,16 @@ public  class AnalysisProcess implements Runnable {
              if(blackBorderAnalysis!=null){
             	 blackBorderAnalysis.analyse(5);
              }	 
-             
-             // create K distribution
-             KDistributionEstimation kdist = new KDistributionEstimation(ENL);
-             DetectedPixels pixels = new DetectedPixels(reader);
-             
              // list of bands
              int numberofbands = gir.getNBand();
              int[] bands = new int[numberofbands];
+
+             
+             // create K distribution
+             final KDistributionEstimation kdist = new KDistributionEstimation(ENL);
+             DetectedPixels mergePixels = new DetectedPixels(reader);
+             DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
+             
              
              AzimuthAmbiguity azimuthAmbiguity =null;
              boolean displaybandanalysis = Platform.getConfiguration().getDisplayBandAnalysis();
@@ -121,146 +113,156 @@ public  class AnalysisProcess implements Runnable {
             	 bufferedMaskName=bufferedMask[0].getName(); 
              }
              
-             // compute detections for each band separately
-             for (int band = 0; band < numberofbands&&!stop; band++) {
-            	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
-                 bands[band] = band;
-                 
-                 String timeStampStart=reader.getTimeStampStart();
-                 double azimuth=reader.getAzimuthSpacing();
-                 
-                 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
-                 
-                 analysis.run(kdist,blackBorderAnalysis,band);
-                 DetectedPixels banddetectedpixels = analysis.getPixels();
-                 
-                 if (pixels == null) {
-                     return;
-                 }else{
-                 	pixels.merge(banddetectedpixels);
-                 }	
-                 
-                 
-                 if (numberofbands < 1 || displaybandanalysis) {
-                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
-
-                     if (agglomerationMethodology.startsWith("d")) {
-                         // method distance used
-                         banddetectedpixels.agglomerate();
-                         banddetectedpixels.computeBoatsAttributes();
-                     } else {
-                         // method neighbours used
-                         double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
-                         int tilesize=Platform.getConfiguration().getTileSize(200);
-                         boolean removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
-                         
-                         if(stop)
-                        	 break;
-                         banddetectedpixels.agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
-                        		 new int[]{band}, 
-                        		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
-                        
-                     }
-                     
-                     if (!gir.supportAzimuthAmbiguity()) {
-                         System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
-                     }else{
-                    	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-                         azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels.getBoats(), (SarImageReader) gir);
-                     }    
-                     
-                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
-                     
-                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
-                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels),
-                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
-                 
-                     boolean display = Platform.getConfiguration().getDisplayPixel();
-                     display=display&&!Platform.isBatchMode();
-                     if (!agglomerationMethodology.startsWith("d")) {
-                         vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdaggregatePixels(), display);
-                         vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, banddetectedpixels.getThresholdclipPixels(), display);
-                     }
-                     vdsanalysis.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, banddetectedpixels.getAllDetectedPixels(), display);
-                     vdsanalysis.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
-                     if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-                        vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
-                     }
-                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
-                     
-
-                     //if(!Platform.isBatchMode())
-                    	 //Platform.getLayerManager().addLayer(vdsanalysis);
-                     notifyLayerReady(vdsanalysis); 
-                     resultLayers.add(vdsanalysis);
-                 }
-             }
-             if(stop){
-            	 stop();
-            	 return;
-             }	 
-             // display merged results if there is more than one band
-             if (bands.length > 1) {
-                 notifyAgglomerating("VDS: agglomerating detections...");
-                 
-                 if (agglomerationMethodology.startsWith("d")) {
-                     // method distance used
-                     pixels.agglomerate();
-                     pixels.computeBoatsAttributes();
-                 } else {
-                     // method neighbours used
-                     double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
-                     int tilesize=Platform.getConfiguration().getTileSize(200);
-
-                     boolean removelandconnectedpixels = Platform.getConfiguration().removeLandConnectedPixel();
-                     pixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
-                 }
-
-                 if (!gir.supportAzimuthAmbiguity()) {
-                     System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
-                 }else{
-                	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-                	 azimuthAmbiguity = new AzimuthAmbiguity(pixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
-                 }
-                 
-                 if(stop){
-                     stop();
-                	 return;
-                 }
-                 String t=reader.getTimeStampStart();
-                 double azimuth=reader.getAzimuthSpacing();
-                 
-                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
-                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
-                		 																	"point", createGeometricLayer(t,azimuth, pixels),
-                		 																	thresholds,ENL,buffer,bufferedMaskName,"Merged");
-                 boolean display = Platform.getConfiguration().getDisplayPixel();
-                 if (!agglomerationMethodology.startsWith("d")) {
-                     vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, pixels.getThresholdaggregatePixels(), display);
-                     vdsanalysisLayer.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, pixels.getThresholdclipPixels(), display);
-                 }
-                 vdsanalysisLayer.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, pixels.getAllDetectedPixels(), display);
-                 vdsanalysisLayer.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
-                 if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
-                 }
-                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
-
-                 // set the color and symbol values for the VDS layer
-                 int widthstring = Platform.getConfiguration().getTargetsSizeBand("Merged");
-                 vdsanalysisLayer.setWidth(widthstring);
-                 String colorString = Platform.getConfiguration().getTargetsColorStringBand("Merged");
-                 Color colordisplay = new Color(Integer.decode(colorString));
-                 vdsanalysisLayer.setColor(colordisplay);
-                 String symbolString = Platform.getConfiguration().getTargetsSymbolBand("Merged");
-                 vdsanalysisLayer.setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
-
-                 //if(!Platform.isBatchMode())
-                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
-                 notifyLayerReady(vdsanalysisLayer);
-                 resultLayers.add(vdsanalysisLayer);
-             }
-             stop();
+             String timeStampStart=reader.getTimeStampStart();
+             double azimuth=reader.getAzimuthSpacing();
+             
+             int processors = Runtime.getRuntime().availableProcessors();
+             ThreadPoolExecutor executor = new ThreadPoolExecutor(2,processors,20, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
+             
+             try{
+	             final List<Future<DetectedPixels>> tasks=new ArrayList<Future<DetectedPixels>>();
+	             // compute detections for each band separately
+	             for (int band = 0; band < numberofbands&&!stop; band++) {
+	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
+	            	 final int b=band;
+	            	 
+	            	 Callable<DetectedPixels> anal=new Callable<DetectedPixels>(){
+	            		    @Override
+	            			public DetectedPixels call() throws Exception {
+	                         	return analysis.run(kdist,blackBorderAnalysis,b);
+	            			}
+	            	 };
+	            	 tasks.add(executor.submit(anal));
+	            	
+	             }    
+	             executor.shutdown();
+	             
+	             for (int idx=0;idx<tasks.size();idx++) {
+	            	Future<DetectedPixels> result =tasks.get(idx);
+	            	banddetectedpixels[idx]=result.get();
+	            	if (mergePixels == null) {
+	            		mergePixels=result.get();
+	            	}else{
+	            		mergePixels.merge(result.get());	
+	            	}
+	
+	 	        }   
+	             
+	             for (int band = 0; band < numberofbands&&!stop; band++) {
+	            	 bands[band] = band;
+	            	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
+	                 
+	                 if (numberofbands < 1 || displaybandanalysis) {
+	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
+	
+	                     if (agglomerationMethodology.startsWith("d")) {
+	                         // method distance used
+	                         banddetectedpixels[band].agglomerate();
+	                         banddetectedpixels[band].computeBoatsAttributes();
+	                     } else {
+	                         // method neighbours used
+	                         double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
+	                         int tilesize=Platform.getConfiguration().getTileSize(200);
+	                         boolean removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
+	                         
+	                         if(stop)
+	                        	 break;
+	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
+	                        		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+	                        
+	                     }
+	                     
+	                     if (!gir.supportAzimuthAmbiguity()) {
+	                         System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
+	                     }else{
+	                    	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+	                         azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir);
+	                     }    
+	                     
+	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
+	                     
+	                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
+	                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels[band]),
+	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
+	                 
+	                     boolean display = Platform.getConfiguration().getDisplayPixel();
+	                     display=display&&!Platform.isBatchMode();
+	                     if (!agglomerationMethodology.startsWith("d")) {
+	                         vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
+	                         vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
+	                     }
+	                     vdsanalysis.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
+	                     vdsanalysis.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
+	                     if ((bufferedMask != null) && (bufferedMask.length > 0)) {
+	                        vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+	                     }
+	                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	                     
+	
+	                     //if(!Platform.isBatchMode())
+	                    	 //Platform.getLayerManager().addLayer(vdsanalysis);
+	                     notifyLayerReady(vdsanalysis); 
+	                     resultLayers.add(vdsanalysis);
+	                 }
+	             }
+	             if(stop){
+	            	 stop();
+	            	 return;
+	             }	 
+	             // display merged results if there is more than one band
+	             if (bands.length > 1) {
+	                 notifyAgglomerating("VDS: agglomerating detections...");
+	                 
+	                 if (agglomerationMethodology.startsWith("d")) {
+	                     // method distance used
+	                     mergePixels.agglomerate();
+	                     mergePixels.computeBoatsAttributes();
+	                 } else {
+	                     // method neighbours used
+	                     double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
+	                     int tilesize=Platform.getConfiguration().getTileSize(200);
+	
+	                     boolean removelandconnectedpixels = Platform.getConfiguration().removeLandConnectedPixel();
+	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+	                 }
+	
+	                 if (!gir.supportAzimuthAmbiguity()) {
+	                     System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
+	                 }else{
+	                	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+	                	 azimuthAmbiguity = new AzimuthAmbiguity(mergePixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
+	                 }
+	                 
+	                 if(stop){
+	                     stop();
+	                	 return;
+	                 }
+	                 
+	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
+	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
+	                		 																	"point", createGeometricLayer(timeStampStart,azimuth, mergePixels),
+	                		 																	thresholds,ENL,buffer,bufferedMaskName,"Merged");
+	                 boolean display = Platform.getConfiguration().getDisplayPixel();
+	                 if (!agglomerationMethodology.startsWith("d")) {
+	                     vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);
+	                     vdsanalysisLayer.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, mergePixels.getThresholdclipPixels(), display);
+	                 }
+	                 vdsanalysisLayer.addGeometries("detectedpixels", new Color(0x00FF00), 1, MaskVectorLayer.POINT, mergePixels.getAllDetectedPixels(), display);
+	                 vdsanalysisLayer.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, MaskVectorLayer.POINT, azimuthAmbiguity.getAmbiguityboatgeometry(), display);
+	                 if ((bufferedMask != null) && (bufferedMask.length > 0)) {
+	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+	                 }
+	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	
+	                 //if(!Platform.isBatchMode())
+	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
+	                 notifyLayerReady(vdsanalysisLayer);
+	                 resultLayers.add(vdsanalysisLayer);
+	             }
+	             stop();
+             }catch(ExecutionException|InterruptedException ee){
+            	 ee.printStackTrace();
+             }    
          }
 		
 		private void stop(){

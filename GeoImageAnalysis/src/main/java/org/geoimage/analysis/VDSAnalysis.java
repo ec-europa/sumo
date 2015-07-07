@@ -15,7 +15,7 @@ import org.geoimage.utils.IProgress;
  *
  * @author thoorfr
  */
-public class VDSAnalysis implements Runnable{
+public class VDSAnalysis{
 
     private SarImageReader gir;
     private String enl = "010";
@@ -85,7 +85,7 @@ public class VDSAnalysis implements Runnable{
      * 
      * 
      */
-    public void run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) {
+    public DetectedPixels run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) {
         if(gir.getBandName(band).equals("HH")||gir.getBandName(band).equals("H/H")){
             pixels = analyse(kdist, thresholdHH,band,blackBorderAnalysis);
         }else if(gir.getBandName(band).equals("HV")||gir.getBandName(band).equals("H/V")){
@@ -97,7 +97,7 @@ public class VDSAnalysis implements Runnable{
         }else{
             pixels = analyse(kdist, threshold,band,blackBorderAnalysis);
         }
-        
+        return pixels;
     }
     
     /**
@@ -313,31 +313,6 @@ public class VDSAnalysis implements Runnable{
 		return tileSize;
 	}
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-    
-    /*
-    // return a geometry of grid of Tiles
-    public Vector<Geometry> getTiles() {
-        Vector<Geometry> tiles = new Vector<Geometry>();
-        int horTiles = gir.getWidth() / this.tileSize;
-        int verTiles = gir.getHeight() / this.tileSize;
-        int[] sizeTile = new int[2];
-        // the real size of tiles
-        sizeTile[0] = gir.getWidth() / horTiles;
-        sizeTile[1] = gir.getHeight() / verTiles;
-        GeometryFactory geomFactory = new GeometryFactory();
-        for (int j = 0; j < verTiles; j++) {
-            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(0, j * sizeTile[1]), new Coordinate((double)gir.getWidth(), (double)j * sizeTile[1])}));
-        }
-        for (int i = 0; i < horTiles; i++) {
-            tiles.add(geomFactory.createLineString(new Coordinate[]{new Coordinate(i * sizeTile[0], 0), new Coordinate((double)i * sizeTile[0], (double)gir.getHeight())}));
-        }
-        return tiles;
-
-    }*/
+	
     
 }

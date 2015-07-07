@@ -362,7 +362,6 @@ public class DetectedPixels {
                 // clip value is mean + 5 * std
                 thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
                 // check the pixel is still above the new threshold
-                
                 int value = data[bandcounter][boatx + boaty * tilesize];
                 if (value > thresholdvalues[bandcounter][1]) {
                     pixelabove = true;
