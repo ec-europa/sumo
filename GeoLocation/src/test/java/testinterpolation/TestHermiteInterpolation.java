@@ -1,6 +1,6 @@
 package testinterpolation;
 
-import interpolation.HermiteInterpolation;
+import jrc.it.geolocation.interpolation.HermiteInterpolation;
 
 import org.junit.After;
 import org.junit.AfterClass;

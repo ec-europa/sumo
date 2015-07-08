@@ -6,6 +6,7 @@ package org.geoimage.impl;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -30,7 +31,7 @@ public class TIFF {
 	public int xSize = -1;
     public int ySize = -1;
     public Rectangle bounds;
-   
+	ImageInputStream iis = null;
 
     public TIFFImageReader getReader() {
 		return reader;
@@ -54,7 +55,7 @@ public class TIFF {
             	Object obj=readers.next();
             	if( obj instanceof TIFFImageReader){
             		reader = (TIFFImageReader)obj;
-            		ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
+            		iis=ImageIO.createImageInputStream(imageFile);
             		reader.setInput(iis);
             		try{
             			xSize=reader.getWidth(band);
@@ -115,7 +116,13 @@ public class TIFF {
 	
 	public void dispose(){
 		reader.dispose();
-     
+		imageFile=null;
+		reader=null;
+		try {
+			iis.close();
+			iis=null;
+		} catch (IOException e) {
+		}
     }
     public File getImageFile() {
 		return imageFile;

@@ -307,18 +307,6 @@ public class AzimuthAmbiguity {
 
         this.sumoImage = image;
 
-        //AG commented
-        // check a few values before starting
-        /*if (Double.parseDouble((String) sumoImage.getMetadata(sumoImage.K)) == 0.0) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    JOptionPane.showMessageDialog(null, "K constant not available, please check your SAR processor", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-            return;
-        }*/
-
         // scan through the list of boats
         for (int i = 0; i < boatArray.length; i++) {
 
@@ -335,13 +323,6 @@ public class AzimuthAmbiguity {
             if (myBoat[7] < minSize) {
                 continue;
             }
-
-            //AG commented
-            /*double peakRCS = image.getSigmaNoughtDb(new int[]{xPos, yPos}, myBoat[3], image.getIncidence(xPos));
-            // Only strong RCS yield azimuth ambiguity
-            if (peakRCS < rcsThreshold) {
-                continue;
-            }*/
 
             for (int j = 0; j < boatArray.length; j++) {
 

@@ -74,6 +74,7 @@ Open Source Geospatial Foundation Maven 2 Repository
 		<module>GeoImage</module>
 		<module>GeoImageAnalysis</module>
 		<module>GeoImageViewer</module>
-		<module>fenggui-multi-gl-context</module>
+		<module>GeoLocation</module>
+		<module>SentinelXMLReader</module>
 	</modules>
 </project>
