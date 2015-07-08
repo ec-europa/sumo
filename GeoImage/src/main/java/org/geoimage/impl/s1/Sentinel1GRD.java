@@ -161,13 +161,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         
         return val;
     }
-    
-    
-    
-    
 
 	
-	public void preloadLineTile(int y, int length,int band) {
+	public  void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
@@ -183,7 +179,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         	BufferedImage bi=null;
         	TIFFImageReader reader=tiff.reader;
         	try{
-        		bi=reader.read(0, tirp);
+
+        			bi=reader.read(0, tirp);
+
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -192,8 +190,6 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     			    Thread.currentThread().interrupt();
     			}
         		bi=reader.read(0, tirp);
-        	}finally{
-        		reader.dispose();
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);

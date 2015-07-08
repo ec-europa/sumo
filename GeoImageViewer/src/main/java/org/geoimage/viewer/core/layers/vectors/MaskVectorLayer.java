@@ -795,6 +795,11 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
         return false;
     }
 
+ // rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+    public BufferedImage rasterize(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
+    	Rectangle rect=new Rectangle(x,y,w,h);
+    	return rasterize(rect, offsetX, offsetY, scalingFactor);
+    }
     // rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
     public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor) {
         // create the buffered image of the size of the Rectangle

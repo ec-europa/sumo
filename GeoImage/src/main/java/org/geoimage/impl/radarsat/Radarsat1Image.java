@@ -595,7 +595,7 @@ public class Radarsat1Image extends SarImageReader {
 
     @Override
     public void dispose() {
-        super.dispose();
+    	super.dispose();
         try {
             if (dat != null) {
                 dat.close();
