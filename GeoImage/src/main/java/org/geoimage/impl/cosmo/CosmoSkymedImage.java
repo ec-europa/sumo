@@ -54,6 +54,22 @@ public class CosmoSkymedImage extends SarImageReader {
     	this.group=group;
     }
 
+    @Override
+    public void dispose(){
+    	super.dispose();
+    	if(h5file!=null){
+    		try {
+				h5file.close();
+	    		h5file=null;
+			} catch (HDF5Exception e) {
+			}
+    	}
+    	if(imagedata!=null){
+    		imagedata.close(0);
+    		imagedata=null;
+    	}
+    }
+    
 
     public H5File getH5file() {
 		return h5file;

@@ -3,17 +3,12 @@ package org.geoimage.viewer.core.analysisproc;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-
-
 
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
@@ -116,11 +111,13 @@ public  class AnalysisProcess implements Runnable {
              String timeStampStart=reader.getTimeStampStart();
              double azimuth=reader.getAzimuthSpacing();
              
-             int processors = Runtime.getRuntime().availableProcessors();
-             ThreadPoolExecutor executor = new ThreadPoolExecutor(2,processors,20, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
+             //int processors = Runtime.getRuntime().availableProcessors();
+             //ExecutorService executor = Executors.newFixedThreadPool(processors);
              
              try{
-	             final List<Future<DetectedPixels>> tasks=new ArrayList<Future<DetectedPixels>>();
+	            // final List<Future<DetectedPixels>> tasks=new ArrayList<Future<DetectedPixels>>();
+	            
+	             /*   parallel test version
 	             // compute detections for each band separately
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
 	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
@@ -141,14 +138,26 @@ public  class AnalysisProcess implements Runnable {
 	            	Future<DetectedPixels> result =tasks.get(idx);
 	            	banddetectedpixels[idx]=result.get();
 	            	if (mergePixels == null) {
-	            		mergePixels=result.get();
+	            		mergePixels=banddetectedpixels[idx];
 	            	}else{
-	            		mergePixels.merge(result.get());	
+	            		mergePixels.merge(banddetectedpixels[idx]);	
 	            	}
 	
-	 	        }   
+	 	        }   */
 	             
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
+	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
+	            	 analysis.run(kdist,blackBorderAnalysis,band);
+
+	            	 banddetectedpixels[band]=analysis.getPixels();
+
+	            	 if (mergePixels == null) {
+	            		mergePixels=banddetectedpixels[band];
+	            	}else{
+	            		mergePixels.merge(banddetectedpixels[band]);	
+	            	}
+	            	 
+	            	 
 	            	 bands[band] = band;
 	            	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
 	                 
@@ -260,7 +269,8 @@ public  class AnalysisProcess implements Runnable {
 	                 resultLayers.add(vdsanalysisLayer);
 	             }
 	             stop();
-             }catch(ExecutionException|InterruptedException ee){
+             }catch(Exception ee){
+             //catch(ExecutionException|InterruptedException ee){
             	 ee.printStackTrace();
              }    
          }

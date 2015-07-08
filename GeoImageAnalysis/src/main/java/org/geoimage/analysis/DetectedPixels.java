@@ -311,6 +311,7 @@ public class DetectedPixels {
         int count=0;
         
         for (Pixel p: pixels) {
+        	long startPoint=System.currentTimeMillis();
         	count++;
         	
             int xx = p.x;
@@ -319,6 +320,7 @@ public class DetectedPixels {
             if((count % 100)==0)
             	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
             
+            long containPix=System.currentTimeMillis();
             // check pixels is not aggregated
             boolean checked = false;
             for (boatPixels boatpixel : listboatneighbours) {
@@ -327,6 +329,8 @@ public class DetectedPixels {
                     break;
                 }
             }
+            long cpxtime=System.currentTimeMillis()-containPix;
+            System.out.println("containPix time:"+cpxtime/1000);
 
             if (checked) {
                 continue;
@@ -340,20 +344,29 @@ public class DetectedPixels {
             int boatx = xx - cornerx;
             int boaty = yy - cornery;
             int numberbands = bands.length;
-            Rectangle rect=new Rectangle(cornerx, cornery, tilesize, tilesize);
-            // calculate thresholds
-            double[][] statistics = calculateImagemapStatistics(rect, bands,  kdist);
-            double[][] thresholdvalues = new double[numberbands][2];
+            
+            long readTile=System.currentTimeMillis();
+            //read the area for the bands
             int[][] data = new int[numberbands][];
+            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
+            	data[bandcounter] = gir.readTile(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
+            }	
+            long rt=System.currentTimeMillis()-readTile;
+            System.out.println("read tile time:"+rt/1000);
+            
+            //TODO: we need to read the same tile only 1 time!!!!!
+            // calculate thresholds
+            long sPoint=System.currentTimeMillis();
+            double[][] statistics = calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
+            long ePoint=System.currentTimeMillis()-sPoint;
+            System.out.println("calculateImagemapStatistics time :"+ePoint);
+            
+            double[][] thresholdvalues = new double[numberbands][2];
             int maxvalue = 0;
             boolean pixelabove = false;
             
+            long mean1=System.currentTimeMillis();
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-
-            	int band = bands[bandcounter];
-
-            	data[bandcounter] = gir.readTile(cornerx, cornery, tilesize, tilesize,band);
-                
                 // average the tile mean values
                 double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
                 
@@ -371,17 +384,23 @@ public class DetectedPixels {
                     maxvalue = data[bandcounter][boatx + boaty * tilesize];
                 }
             }
+            long mean2=System.currentTimeMillis()-mean1;
+            System.out.println("mean2 time:"+mean2/1000);
+            
             // add pixel only if above new threshold
             if (pixelabove) {
+            	long raster1=System.currentTimeMillis();
             	// check if there is land in tile
                 Raster rastermask = null;
                 if (mask != null) {
                     // check if land in tile
                     if (mask.intersects(cornerx, cornery, tilesize, tilesize)) {
                         // create raster mask
-                        rastermask = (mask.rasterize(rect, -cornerx, -cornery, 1.0)).getData();
+                        rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
                     }
                 }
+                long rTime=System.currentTimeMillis()-raster1;
+                System.out.println("raster time:"+rTime/1000);
             	
                 // add pixel to the list
                 boatPixels boatpixel = new boatPixels(xx, yy, id++, data[0][boatx + boaty * tilesize], thresholdvalues);
@@ -395,16 +414,32 @@ public class DetectedPixels {
                 for (int i = 0; i < tilesize * tilesize; i++) {
                     imagemap[i] = 0;
                 }
+                
+                
+                long checkStart=System.currentTimeMillis();
                 boolean result = checkNeighbours(boataggregatedpixels, imagemap, data, thresholdvalues, new int[]{boatx, boaty}, neighboursdistance, tilesize, rastermask);
+                long checkTime=System.currentTimeMillis()-checkStart;
+                System.out.println("checkNeighbours time:"+checkTime/1000);
+                
                 // set flag for touching land
                 boatpixel.setLandMask(result);
+                
+                
                 // shift pixels by cornerx and cornery and store in boat list
                 //Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
+                
+                
+                long agg1=System.currentTimeMillis();
                 for (int[] pixel : boataggregatedpixels) {
                     boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
                 }
+                long aggt=System.currentTimeMillis()-agg1;
+                System.out.println("Aggregation time:"+aggt/1000);
             } else {
             }
+            
+            long endPoint=System.currentTimeMillis()-startPoint;
+            System.out.println("Point analysis time :"+endPoint);
         }
 
         // if remove connected to land pixels flag
@@ -424,13 +459,31 @@ public class DetectedPixels {
     }
 
     // calculate new statistics using tile centered around pixel
-    public double[][] calculateImagemapStatistics(Rectangle imagerectangle, int[] bands, KDistributionEstimation kdist) {
+   /* public double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height, int[] bands, KDistributionEstimation kdist) {
         int numberofbands = bands.length;
         double[][] imagestat = new double[numberofbands][5];
         for (int i = 0; i < numberofbands; i++) {
             int band = bands[i];
-            kdist.setImageData(gir, imagerectangle.x, imagerectangle.y, 1, 1, imagerectangle.width, imagerectangle.height,0,0,band,null);
-            kdist.estimate(null);
+            kdist.setImageData(gir, cornerx,cornery, width, height,0,0,band,null);
+            kdist.estimate(null,1,1);
+            double[][][] thresh = kdist.getDetectThresh();
+            imagestat[i][0] = thresh[0][0][0];
+            imagestat[i][1] = thresh[0][0][1] / thresh[0][0][5];
+            imagestat[i][2] = thresh[0][0][2] / thresh[0][0][5];
+            imagestat[i][3] = thresh[0][0][3] / thresh[0][0][5];
+            imagestat[i][4] = thresh[0][0][4] / thresh[0][0][5];
+        }
+
+        return imagestat;
+    }*/
+    // calculate new statistics using tile centered around pixel
+    public double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height, int[] bands,int data[][], KDistributionEstimation kdist) {
+        int numberofbands = bands.length;
+        double[][] imagestat = new double[numberofbands][5];
+        for (int i = 0; i < numberofbands; i++) {
+            int band = bands[i];
+            kdist.setImageData(gir, cornerx,cornery, width, height,0,0,band,null);
+            kdist.estimate(null,data[i]);
             double[][][] thresh = kdist.getDetectThresh();
             imagestat[i][0] = thresh[0][0][0];
             imagestat[i][1] = thresh[0][0][1] / thresh[0][0][5];
@@ -441,6 +494,7 @@ public class DetectedPixels {
 
         return imagestat;
     }
+
 
     public boolean checkNeighbours(List<int[]> pixels, int[] imagemap, int[][] imagedata, double[][] thresholdaggregate, int[] position, int neighboursdistance, int tilesize, Raster rastermask) {
         int numberofbands = thresholdaggregate.length;

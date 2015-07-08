@@ -45,9 +45,6 @@ public class KDistributionEstimation {
 	// flag for external initialisation
 	private boolean initialisation = false;
 
-	// number of tiles (X,Y) for analysis
-	private int nTileX = 0;
-	private int nTileY = 0;
 
 	// number of iteration for the detect threshold estimation
 	int iteration = 2;
@@ -97,8 +94,7 @@ public class KDistributionEstimation {
 			enl = "0" + enl;
 		}
 		System.out.println("ktables/TabK" + enl + "17.r8");
-		URL lut = VDSAnalysis.class.getClassLoader().getResource(
-				"ktables/TabK" + enl + "17.r8");
+		URL lut = VDSAnalysis.class.getClassLoader().getResource("ktables/TabK" + enl + "17.r8");
 		System.out.println(lut.getPath());
 		loadLookUpTable(lut);
 
@@ -170,11 +166,9 @@ public class KDistributionEstimation {
 	 *  
 	 */
 	public void setImageData(SarImageReader gir, int sizeX, int sizeY,
-			int numTileX, int numTileY, int sizeTileX, int sizeTileY,
+			int sizeTileX, int sizeTileY,
 			int row,int col,int band,BlackBorderAnalysis blackBorderAnalysis) {
 		this.gir = gir;
-		nTileX = numTileX;
-		nTileY = numTileY;
 		startTile[0] = sizeX;
 		startTile[1] = sizeY;
 		this.sizeTileX = sizeTileX;
@@ -221,9 +215,13 @@ public class KDistributionEstimation {
 		initialisation = true;
 	}
 
-	// main method to estimate the mean and the standard deviation with iteration
-	/** the main method launching the process */
-	public void estimate(Raster mask) {
+	//method to estimate the mean and the standard deviation with iteration
+	/**
+	 * nTileX number of x tiles to analyze
+	 * nTileY number of y tiles to analyze
+	 * @param mask
+	 */
+	public void estimate(Raster mask,int nTileX,int nTileY) {
 
 		detectThresh = new double[nTileX][nTileY][6];
 		tileStat = new double[nTileY][nTileX][5];
@@ -244,21 +242,18 @@ public class KDistributionEstimation {
 				for (int k = 0; k < 5; k++) {
 					tileStat[j][i][k] = result[k];
 				}
-				clippingThresh = lookUpTable
-						.getClippingThreshFromStd(result[0]);
+				clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
 				// System.out.print("->>"+clippingThresh);
 
 				for (int iter = 0; iter < iteration; iter++) {
 					result = computeStat(clippingThresh, i, j, mask, data);
 					if (iter != iteration - 1) {
-						clippingThresh = lookUpTable
-								.getClippingThreshFromClippedStd(result[0]);
+						clippingThresh = lookUpTable.getClippingThreshFromClippedStd(result[0]);
 					} /*
 					 * if(new String().valueOf(clippingThresh).equals("NaN")){
 					 * clippingThresh=256.*256.; System.out.println("pouet"); }
 					 */else {
-						double threshTemp = lookUpTable
-								.getDetectThreshFromClippedStd(result[0]);
+						double threshTemp = lookUpTable.getDetectThreshFromClippedStd(result[0]);
 						for (int k = 1; k < 5; k++) {
 							detectThresh[i][j][k] = threshTemp * result[k];
 						}
@@ -270,7 +265,43 @@ public class KDistributionEstimation {
 		}
 	}
 
-	
+	/**
+	 * @param mask
+	 */
+	public void estimate(Raster mask,int data[]) {
+
+		detectThresh = new double[1][1][6];
+		tileStat = new double[1][1][5];
+		if (!initialisation) {
+			initialise(0.0, 0.0);
+		}
+		statData = new double[] { 1, 1, 1, 1, 1 };
+
+		double[] result = computeStat(256 * 256, 1, 1, mask, data);
+
+		for (int k = 0; k < 5; k++) {
+			tileStat[0][0][k] = result[k];
+		}
+		clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
+		// System.out.print("->>"+clippingThresh);
+
+		for (int iter = 0; iter < iteration; iter++) {
+			result = computeStat(clippingThresh, 1, 1, mask, data);
+			if (iter != iteration - 1) {
+				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(result[0]);
+			} /*
+			 * if(new String().valueOf(clippingThresh).equals("NaN")){
+			 * clippingThresh=256.*256.; System.out.println("pouet"); }
+			 */else {
+				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(result[0]);
+				for (int k = 1; k < 5; k++) {
+					detectThresh[0][0][k] = threshTemp * result[k];
+				}
+				detectThresh[0][0][0] = result[0];
+				detectThresh[0][0][5] = threshTemp;
+			}
+		}
+	}
 	/**
 	 * the tile is divided in 4 parts, this function analize each part
 	 * 

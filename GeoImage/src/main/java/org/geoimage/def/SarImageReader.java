@@ -82,6 +82,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
     @Override
     public abstract int getHeight();
+    
+    public void dispose(){
+    	overViewImage=null;
+    }
 
     private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
 
@@ -526,8 +530,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setOverViewImage(BufferedImage overViewImage) {
 		this.overViewImage = overViewImage;
 	}
-	public void dispose() {
-    }
+	 
 
 
 }

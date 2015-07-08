@@ -212,7 +212,7 @@ public class Radarsat2Image extends SarImageReader {
 
     @Override
     public void dispose() {
-        super.dispose();
+    	super.dispose();
         if(tiffImages==null) return;
         for(TIFF t:tiffImages.values()){
             t.dispose();

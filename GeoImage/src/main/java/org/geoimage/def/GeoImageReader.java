@@ -192,5 +192,7 @@ public interface GeoImageReader  {
 
     
     public boolean supportAzimuthAmbiguity();
+    
+    
 }
 

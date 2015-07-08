@@ -17,8 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.geoimage.utils.IProgress;
+//import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author leforth
  */
-public class SendMailAction extends AbstractAction implements IProgress {
+public class SendMailAction extends AbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SendMailAction.class);
 
     boolean done = false;
