@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: s1-level-1-noise.xsd 9013 2012-12-12 23:41:57Z cthain@DS.MDA.CA $ -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- $Id: s1-level-1-noise.xsd 9013 2012-12-12 23:41:57Z cthain@DS.MDA.CA $ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified">
    <xsd:include schemaLocation="s1-object-types.xsd"/>
    <xsd:complexType name="noiseVectorType">
       <xsd:annotation>
@@ -34,7 +33,7 @@
          <xsd:documentation>List of noise vector annotation records.</xsd:documentation>
       </xsd:annotation>
       <xsd:sequence>
-         <xsd:element name="noiseVector" type="noiseVectorType" minOccurs="0" maxOccurs="1500">
+         <xsd:element maxOccurs="1500" minOccurs="0" name="noiseVector" type="noiseVectorType">
             <xsd:annotation>
                <xsd:documentation>Noise vector. This record contains the thermal noise estimation annotations which can be used to remove or reinstate thermal noise from the image.</xsd:documentation>
             </xsd:annotation>

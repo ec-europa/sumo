@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.esa.int/safe/sentinel-1.0" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:gml="http://www.opengis.net/gml" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:s1="http://www.esa.int/safe/sentinel-1.0/sentinel-1" xmlns:s1sarl1="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.esa.int/safe/sentinel-1.0">
   <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1" schemaLocation="s1.xsd"/>
   <xs:import namespace="http://www.esa.int/safe/sentinel-1.0/sentinel-1/sar/level-1" schemaLocation="s1sarl1.xsd"/>
   <xs:import namespace="http://www.opengis.net/gml" schemaLocation="gml.xsd"/>
@@ -34,7 +34,7 @@
       <xs:sequence>
         <xs:element ref="gml:coordinates"/>
       </xs:sequence>
-      <xs:attribute name="srsName" use="required" type="xs:anyURI"/>
+      <xs:attribute name="srsName" type="xs:anyURI" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="orbitReference">
@@ -52,7 +52,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:integer">
-          <xs:attribute name="type" use="required" type="xs:NCName"/>
+          <xs:attribute name="type" type="xs:NCName" use="required"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -61,7 +61,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:integer">
-          <xs:attribute name="type" use="required" type="xs:NCName"/>
+          <xs:attribute name="type" type="xs:NCName" use="required"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -90,9 +90,9 @@
   </xs:element>
   <xs:group name="dataObjectPointer">
     <xs:sequence>
-      <xs:element name="dataObjectPointer" form="unqualified">
+      <xs:element form="unqualified" name="dataObjectPointer">
         <xs:complexType>
-          <xs:attribute name="dataObjectID" use="required" type="xs:NCName"/>
+          <xs:attribute name="dataObjectID" type="xs:NCName" use="required"/>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
@@ -113,13 +113,13 @@
   </xs:element>
   <xs:element name="processing">
     <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element ref="safe:facility"/>
         <xs:element ref="safe:resource"/>
       </xs:choice>
       <xs:attribute name="name" use="required"/>
-      <xs:attribute name="start" use="required" type="xs:NMTOKEN"/>
-      <xs:attribute name="stop" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="start" type="xs:NMTOKEN" use="required"/>
+      <xs:attribute name="stop" type="xs:NMTOKEN" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="facility">
@@ -127,16 +127,16 @@
       <xs:sequence>
         <xs:element ref="safe:software"/>
       </xs:sequence>
-      <xs:attribute name="country" use="required" type="xs:NCName"/>
+      <xs:attribute name="country" type="xs:NCName" use="required"/>
       <xs:attribute name="name" use="required"/>
-      <xs:attribute name="organisation" use="required" type="xs:NCName"/>
-      <xs:attribute name="site" use="required" type="xs:NCName"/>
+      <xs:attribute name="organisation" type="xs:NCName" use="required"/>
+      <xs:attribute name="site" type="xs:NCName" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="software">
     <xs:complexType>
       <xs:attribute name="name" use="required"/>
-      <xs:attribute name="version" use="required" type="xs:decimal"/>
+      <xs:attribute name="version" type="xs:decimal" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="resource">

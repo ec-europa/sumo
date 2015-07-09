@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<!-- analysis = xml root -->
 	<xs:element name="analysis">
@@ -44,20 +43,20 @@
 				<xs:element name="detecttime" type="xs:string"/>
 				<xs:element name="inc_angle" type="xs:decimal"/>
 				<xs:element name="reliability" type="xs:int"/>
-				<xs:element name="false_alarm_cause" type="xs:string" />
-				<xs:element name="nr_pixels" type="xs:int" nillable="true"/>
+				<xs:element name="false_alarm_cause" type="xs:string"/>
+				<xs:element name="nr_pixels" nillable="true" type="xs:int"/>
 				<xs:element name="length" type="xs:double"/>
 				<xs:element name="width" type="xs:double"/>
 				<xs:element name="size_class" type="xs:NCName"/>
-				<xs:element name="heading_range" type="xs:double" nillable="true"/>
+				<xs:element name="heading_range" nillable="true" type="xs:double"/>
 				<xs:element name="heading_north" type="xs:double"/>
-				<xs:element name="lwh_reliability" type="xs:boolean" nillable="true" />
+				<xs:element name="lwh_reliability" nillable="true" type="xs:boolean"/>
 				<xs:element name="significance" type="xs:string"/>
 				<xs:element name="rcs" type="xs:string"/>
 				<xs:element name="bgnd_mean" type="xs:string"/>
 				<xs:element name="bgnd_stdev" type="xs:string"/>
 				<xs:element name="bgnd_sigma0" type="xs:string"/>
-				<xs:element name="noise" type="xs:int" nillable="true" />
+				<xs:element name="noise" nillable="true" type="xs:int"/>
 				<xs:element name="maxValue" type="xs:string"/>
 				<xs:element name="minDetectableRcs" type="xs:string"/>
 			</xs:sequence>
@@ -121,28 +120,28 @@
 				<xs:element name="run_time" type="xs:string"/>
 				<xs:element name="run_version" type="xs:NCName"/>
 				<!-- xs:element ref="run_version_ori" minOccurs="0"/ -->
-				<xs:element name="run_version_ori" type="xs:string" minOccurs="0"/>
-				<xs:element name="detector_version" type="xs:string" />
-				<xs:element ref="algorithm" />
-				<xs:element name="parameters" type="xs:string" />
+				<xs:element minOccurs="0" name="run_version_ori" type="xs:string"/>
+				<xs:element name="detector_version" type="xs:string"/>
+				<xs:element ref="algorithm"/>
+				<xs:element name="parameters" type="xs:string"/>
 				<xs:element name="any_detections" type="xs:boolean"/>
 				<xs:element name="sumo_runid" type="xs:int"/>
 				<xs:element name="enl" type="xs:double"/>
 				
 				
 				<!-- correspond to pol/polnumeric from sat_image_metadata    -->	
-				<xs:element name="threshOrderChans" type="xs:string" minOccurs="0"/>
+				<xs:element minOccurs="0" name="threshOrderChans" type="xs:string"/>
 
 				<!-- thresh values are used only if the polarization channel is used in the VDS analysis -->
-				<xs:element name="threshHH" type="xs:float" minOccurs="0"/>
-				<xs:element name="threshHV" type="xs:float" minOccurs="0"/>
-				<xs:element name="threshVH" type="xs:float" minOccurs="0"/>
-				<xs:element name="threshVV" type="xs:float" minOccurs="0"/>
+				<xs:element minOccurs="0" name="threshHH" type="xs:float"/>
+				<xs:element minOccurs="0" name="threshHV" type="xs:float"/>
+				<xs:element minOccurs="0" name="threshVH" type="xs:float"/>
+				<xs:element minOccurs="0" name="threshVV" type="xs:float"/>
 				
 				<!-- buffer for land mask used in vds_analysis -->
-				<xs:element name="buffer" type="xs:int" />
-				<xs:element name="land_mask_read" type="xs:string" />
-				<xs:element name="matrixratio" type="xs:double" minOccurs="0"/>
+				<xs:element name="buffer" type="xs:int"/>
+				<xs:element name="land_mask_read" type="xs:string"/>
+				<xs:element minOccurs="0" name="matrixratio" type="xs:double"/>
 				
 				<!-- number of boats detected -->
 				<xs:element name="Nboat" type="xs:int"/>
@@ -159,15 +158,15 @@
 				<!-- for AC,CS sensor = file   name without ext  for R1,R2,TX,S1 = directory name  -->
 				<xs:element name="image_name" type="xs:string"/>
 				<!-- UTC -->				
-				<xs:element name="timestampStart" type="xs:string" /> 
-				<xs:element ref="sensor" />
+				<xs:element name="timestampStart" type="xs:string"/> 
+				<xs:element ref="sensor"/>
 				<!-- Comma separated list of integers 1=HH 2=HV 3=VH 4=VV-->
 				<xs:element name="pol" type="xs:string"/>
 				<xs:element name="polnumeric" type="xs:string"/>
 				<!-- timestart yyy-mm-dd HH:MM:SS.FFF -->
 				<xs:element name="TimeStart" type="xs:string"/>
 				<xs:element name="TimeStop" type="xs:string"/>
-				<xs:element ref="gcps" />
+				<xs:element ref="gcps"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -176,7 +175,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<!-- targets is a list of boats -->
-				<xs:element ref="boat" maxOccurs="unbounded" minOccurs="1"/>
+				<xs:element maxOccurs="unbounded" minOccurs="1" ref="boat"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
