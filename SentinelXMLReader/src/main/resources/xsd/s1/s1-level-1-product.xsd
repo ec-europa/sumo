@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: s1-level-1-product.xsd 10661 2014-07-24 21:42:29Z cthain $ -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- $Id: s1-level-1-product.xsd 10661 2014-07-24 21:42:29Z cthain $ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified">
   <xsd:include schemaLocation="s1-object-types.xsd"/>
   <xsd:complexType name="antennaPatternType">
     <xsd:annotation>
@@ -49,7 +48,7 @@
       <xsd:documentation>List of antenna elevation pattern annotation records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="antennaPattern" type="antennaPatternType" maxOccurs="750">
+      <xsd:element maxOccurs="750" name="antennaPattern" type="antennaPatternType">
         <xsd:annotation>
           <xsd:documentation>The antenna pattern record describes the antenna elevation pattern at the given zero Doppler azimuth time for a given swath. For a minimum azimuth antenna pattern spacing of 10s, a maximum segment length of 25 minutes and a maximum 5 swaths, the maximum number of records in the list is 750.</xsd:documentation>
         </xsd:annotation>
@@ -128,7 +127,7 @@
       <xsd:documentation>List of ASAR calibration pulse records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="asarCalPulse" type="asarCalPulseType" maxOccurs="32">
+      <xsd:element maxOccurs="32" name="asarCalPulse" type="asarCalPulseType">
         <xsd:annotation>
           <xsd:documentation>ASAR calibration pulse information.</xsd:documentation>
         </xsd:annotation>
@@ -212,7 +211,7 @@
       <xsd:documentation>List of attitude and angular velocity annotation records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="attitude" type="attitudeType" minOccurs="0" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" minOccurs="0" name="attitude" type="attitudeType">
         <xsd:annotation>
           <xsd:documentation>Attitude data record. This record contains the attitude quaternions and an angular velocity vector which together describe the attitude state of the platform at the annotated time. With a minimum orbit/attitude update rate of of 1s and a maximum product length of 25 minutes, the maximum size of this list is 1500 elements.</xsd:documentation>
         </xsd:annotation>
@@ -261,7 +260,7 @@
       <xsd:documentation>List of azimuth FM rate values updated along azimuth.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="azimuthFmRate" type="azimuthFmRateType" maxOccurs="1100">
+      <xsd:element maxOccurs="1100" name="azimuthFmRate" type="azimuthFmRateType">
         <xsd:annotation>
           <xsd:documentation>Azimuth FM rate = c0 + c1(tSR - t0) + c2(tSR - t0)2. Where tSR = two way slant range time. With a minimum azimuth processing block length of approximately 2s and a maximum product length of 25 minutes, the maximum size of this list is 750 elements.</xsd:documentation>
         </xsd:annotation>
@@ -487,7 +486,7 @@
       <xsd:documentation>Burst table annotation record.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="burst" type="burstType" minOccurs="0" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" minOccurs="0" name="burst" type="burstType">
         <xsd:annotation>
           <xsd:documentation>Burst table entry. This record contains the information for a single burst entry including the dimensions of the burst, the timing of the burst and where it is located within the image MDS. With an approximate burst cycle time of 1s and a maximum product length of 25 minutes, the maximum size of this list is 1500 elements. </xsd:documentation>
         </xsd:annotation>
@@ -558,7 +557,7 @@
       <xsd:documentation>List of ground range to slant range conversion polynomials.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="coordinateConversion" type="coordinateConversionType" minOccurs="0" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" minOccurs="0" name="coordinateConversion" type="coordinateConversionType">
         <xsd:annotation>
           <xsd:documentation>The polynomial used to convert image pixels between slant range and ground range. The polynomials are time-stamped with the zero Doppler azimuth and two way slant range times to which they apply. The coefficients used on range lines between updates are found by linear interpolation between the updated and previous values. For a minimum spacing of 1s between coordinateConversion record updates and a maximum acquisition length of 25 minutes, the maximum number of records in the list is 1500.</xsd:documentation>
         </xsd:annotation>
@@ -624,7 +623,7 @@
       <xsd:documentation>List of baseband Doppler centroid estimates.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="fineDce" type="fineDceType" minOccurs="0" maxOccurs="100">
+      <xsd:element maxOccurs="100" minOccurs="0" name="fineDce" type="fineDceType">
         <xsd:annotation>
           <xsd:documentation>Fine Doppler centroid estimate. Each estimate represents the Doppler frequency at the given slant range time within the current block. Approximately 20 estimates are performed per swath so for 5 swaths, the maximum number of estimates in this list is 100.</xsd:documentation>
         </xsd:annotation>
@@ -693,7 +692,7 @@
       <xsd:documentation>List of Doppler estimate block records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="dcEstimate" type="dcEstimateType" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" name="dcEstimate" type="dcEstimateType">
         <xsd:annotation>
           <xsd:documentation>Doppler centroid estimate record which contains the Doppler centroid calculated from geometry and estimated from the data, associated signal-to-noise ratio values and indicates which DCE method was used by the IPF during image processing. With a minimum Doppler centroid update rate of 1s (for IW and EW where the Doppler is recalculated for every burst cycle) and a maximum product length of 25 minutes, the maximum size of this list is 1500 elements.</xsd:documentation>
         </xsd:annotation>
@@ -830,7 +829,7 @@
       <xsd:documentation>List of orbit state vector annotation records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="orbit" type="orbitType" maxOccurs="7500">
+      <xsd:element maxOccurs="7500" name="orbit" type="orbitType">
         <xsd:annotation>
           <xsd:documentation>Orbit state vector record. This record contains a position vector and a velocity vector which together describe the orbit state of the platform at the annotated time. With a minimum orbit/attitude update rate of of 0.2s and a maximum product length of 25 minutes, the maximum size of this list is 7500 elements.</xsd:documentation>
         </xsd:annotation>
@@ -886,7 +885,7 @@
       <xsd:documentation>List of sampling window lengths.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="swl" type="swlType" maxOccurs="200">
+      <xsd:element maxOccurs="200" name="swl" type="swlType">
         <xsd:annotation>
           <xsd:documentation>Sampling window length record. This record holds the SWL for the given zero Doppler azimuth time. For a SWL update rate of approximately 8s and a maximum segment length of 25 minutes, the maximum number of records in the list is 200. </xsd:documentation>
         </xsd:annotation>
@@ -920,7 +919,7 @@
       <xsd:documentation>List of sampling window start time changes.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="swst" type="swstType" maxOccurs="200">
+      <xsd:element maxOccurs="200" name="swst" type="swstType">
         <xsd:annotation>
           <xsd:documentation>SWST record. This record holds the SWST for the given zero Doppler azimuth time. For a SWST update rate of approximately 8s and a maximum segment length of 25 minutes, the maximum number of records in the list is 200.</xsd:documentation>
         </xsd:annotation>
@@ -969,7 +968,7 @@
       <xsd:documentation>List of pointing status changes.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="pointingStatus" type="pointingStatusType" minOccurs="0" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" minOccurs="0" name="pointingStatus" type="pointingStatusType">
         <xsd:annotation>
           <xsd:documentation>Pointing status record. This record holds the pointing status for the given zero Doppler azimuth time.  With a minimum orbit/attitude update rate of of 1s and a maximum product length of 25 minutes, the maximum size of this list is 1500 elements.</xsd:documentation>
         </xsd:annotation>
@@ -1117,7 +1116,7 @@
       <xsd:documentation>List of downlink information records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="downlinkInformation" type="downlinkInformationType" maxOccurs="750">
+      <xsd:element maxOccurs="750" name="downlinkInformation" type="downlinkInformationType">
         <xsd:annotation>
           <xsd:documentation>Downlink information. This record contains information about the data extracted/calculated from the input data, including values extracted from the ISP and data error counters. For individual scene and slice products there is one downlinkInformation record, except in the case of IW/EW GRD products, where there will be one record per swath. For assembled products the list contains all the downlinkInformation records for each slice included in the assembled product. For a minimum output slice length of 10s, a maximum segment length of 25 minutes and a maximum 5 swaths, the maximum number of records in the list is 750.</xsd:documentation>
         </xsd:annotation>
@@ -1313,7 +1312,7 @@
       <xsd:documentation>List of swath boundary records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="swathBounds" type="swathBoundsType" maxOccurs="1500">
+      <xsd:element maxOccurs="1500" name="swathBounds" type="swathBoundsType">
         <xsd:annotation>
           <xsd:documentation>Swath boundary record. This record contains the information needed to identify the position of the swath within the image. The swath boundary is identified by a rectangular area defined by the points (firstRangeSample,firstAzimuthLine) and (lastRangeSample,lastAzimuthLine). The optimal range cut line can vary in azimuth and so a new record is included for each swath boundary update in azimuth. It is important to note that the information on the azimuth cut line is lost and not represented by these annotations. Although a line in azimuth is implicitly created by each bounding box, this does not necessarily represent the azimuth cut line used during swath merging. For an average spacing of 1s between swath bound updates and a maximum acquisition length of 25 minutes, the maximum number of records in the list is 1500.</xsd:documentation>
         </xsd:annotation>
@@ -1347,7 +1346,7 @@
       <xsd:documentation>List of swath merging records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="swathMerge" type="swathMergeType" minOccurs="0" maxOccurs="5">
+      <xsd:element maxOccurs="5" minOccurs="0" name="swathMerge" type="swathMergeType">
         <xsd:annotation>
           <xsd:documentation>This record contains the information needed to identify where each burst of the given swath was merged within the image MDS.</xsd:documentation>
         </xsd:annotation>
@@ -1438,7 +1437,7 @@
       <xsd:documentation>List of geolocation grid point annotations.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="geolocationGridPoint" type="geolocationGridPointType" maxOccurs="16500">
+      <xsd:element maxOccurs="16500" name="geolocationGridPoint" type="geolocationGridPointType">
         <xsd:annotation>
           <xsd:documentation>Geolocation grid point. This record describes geolocation information for a single point (line/pixel combination) within the image MDS. For 11 geolotcation grid points across range and a new set of points calculated every 1s in azimuth, for a maximum product length of 25 minutes, the maximum size of this list is 16500 elements.</xsd:documentation>
         </xsd:annotation>
@@ -1473,7 +1472,7 @@
       <xsd:documentation>List of slice annotation records</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="slice" type="sliceType" minOccurs="0" maxOccurs="150"/>
+      <xsd:element maxOccurs="150" minOccurs="0" name="slice" type="sliceType"/>
     </xsd:sequence>
     <xsd:attribute name="count" type="unsignedInt" use="required"/>
   </xsd:complexType>
@@ -1635,7 +1634,7 @@ pixels for a detected product, are both within specified range from expected std
       <xsd:documentation>List of image dimension annotations.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="inputDimensions" type="inputDimensionsType" maxOccurs="750">
+      <xsd:element maxOccurs="750" name="inputDimensions" type="inputDimensionsType">
         <xsd:annotation>
           <xsd:documentation>Input dimensions. This record contains the dimensions of the input data in terms of number of input samples and lines. For individual scene and slice products there is one inputDimensions record, except in the case of IW/EW GRD products which contain one record per swath. For assembled products the list contains all the inputDimensions records for each slice included in the assembled product. For a minimum output slice length of 10s, a maximum segment length of 25 minutes and a maximum of 5 swaths, the maximum number of records in the list is 750.</xsd:documentation>
         </xsd:annotation>
@@ -1679,7 +1678,7 @@ pixels for a detected product, are both within specified range from expected std
       <xsd:documentation>List of noise packet records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="noise" type="noiseType" minOccurs="0" maxOccurs="10">
+      <xsd:element maxOccurs="10" minOccurs="0" name="noise" type="noiseType">
         <xsd:annotation>
           <xsd:documentation>Noise parameters derived from noise packets.  There are a maximum of two sets of noise parameters per swath.</xsd:documentation>
         </xsd:annotation>
@@ -1765,7 +1764,7 @@ pixels for a detected product, are both within specified range from expected std
       <xsd:documentation>List of processing parameters that may vary per swath.  This list contains one record for all products except IW/EW GRD products.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="swathProcParams" type="swathProcParamsType" maxOccurs="5">
+      <xsd:element maxOccurs="5" name="swathProcParams" type="swathProcParamsType">
         <xsd:annotation>
           <xsd:documentation>Processing parameters. This record contains the range and azimuth processing parameters used to process each input swath in the image. There will be one record per ADS, except for IW/EW GRD products which will contain one per swath.</xsd:documentation>
         </xsd:annotation>
@@ -2117,7 +2116,7 @@ pixels for a detected product, are both within specified range from expected std
       <xsd:documentation>List of RDA information records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="rawDataAnalysis" type="rawDataAnalysisType" maxOccurs="750">
+      <xsd:element maxOccurs="750" name="rawDataAnalysis" type="rawDataAnalysisType">
         <xsd:annotation>
           <xsd:documentation>Raw data analysis information. This record contains data statistics collected from sampling a subset of the raw input data. It contains the values calculated for both the I and Q channels. For individual scene and slice products there is one rawDataAnalysis record except in the case of IW/EW GRD products, where there will be one record per swath. For assembled products the list contains all the downlinkInformation records for each slice included in the assembled product. For a minimum output slice length of 10s, a maximum segment length of 25 minutes and a maximum 5 swaths, the maximum number of records in the list is 750.</xsd:documentation>
         </xsd:annotation>
@@ -2166,7 +2165,7 @@ pixels for a detected product, are both within specified range from expected std
       <xsd:documentation>List of qualityData ADS records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="qualityData" type="qualityDataType" maxOccurs="150">
+      <xsd:element maxOccurs="150" name="qualityData" type="qualityDataType">
         <xsd:annotation>
           <xsd:documentation>Quality data. This record contains the quality values and flags that are set during image processing. Each flag indicates the status of a comparison between the corresponding value(s) and a pre-defined threshold. For individual scene and slice products there is one qualityData record. For assembled products the list contains all the qualityData records for each slice included in the assembled product. For a minimum output slice length of 10s and a maximum segment length of 25 minutes, the maximum number of records in the list is 150.</xsd:documentation>
         </xsd:annotation>
@@ -2315,7 +2314,7 @@ PG product values can only be calculated and validated for products that have at
       <xsd:documentation>List of reconstructed replica records.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="replica" type="replicaType" minOccurs="0" maxOccurs="300">
+      <xsd:element maxOccurs="300" minOccurs="0" name="replica" type="replicaType">
         <xsd:annotation>
           <xsd:documentation>PG chirp replica parameters derived from the calibration pulses at 100 MHz bandwidth, With an average calibration cycle interval of 5s and a maximum product length of 25 minutes, the maximum size of this list is 300 elements. </xsd:documentation>
         </xsd:annotation>
@@ -2354,7 +2353,7 @@ PG product values can only be calculated and validated for products that have at
       <xsd:documentation>List of replica information.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="replicaInformation" type="replicaInformationType" maxOccurs="5">
+      <xsd:element maxOccurs="5" name="replicaInformation" type="replicaInformationType">
         <xsd:annotation>
           <xsd:documentation>Replica information. This record contains information about the reference and reconstructed replicas.  There will be one replica information record per ADS, except for IW/EW GRD products which will contain one per swath.</xsd:documentation>
         </xsd:annotation>
@@ -2388,7 +2387,7 @@ PG product values can only be calculated and validated for products that have at
       <xsd:documentation>List of terrain height annotation records updated along track.</xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="terrainHeight" type="terrainHeightType" maxOccurs="2700">
+      <xsd:element maxOccurs="2700" name="terrainHeight" type="terrainHeightType">
         <xsd:annotation>
           <xsd:documentation>Terrain height record containing the average terrain height (in metres above the ocean surface) for the given zero Doppler azimuth time. With a minimum terrain height spacing of 1s and a maximum product length of 45 minutes, the maximum size of this list is 2700 elements. </xsd:documentation>
         </xsd:annotation>

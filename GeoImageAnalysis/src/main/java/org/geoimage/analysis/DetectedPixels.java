@@ -165,7 +165,6 @@ public class DetectedPixels {
     private class boatPixels {
 
         private Map<String, int[]> connectedpixels = new HashMap<String, int[]>();
-   //     private double[][] thresholdvalues;
         private double boatnumberofpixels = 0.0;
         private double[] boatposition;
         private double boatwidth = 0.0;
