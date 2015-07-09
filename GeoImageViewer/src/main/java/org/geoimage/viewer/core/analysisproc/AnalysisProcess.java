@@ -46,6 +46,10 @@ public  class AnalysisProcess implements Runnable {
 		private BlackBorderAnalysis blackBorderAnalysis=null;
 		private GeoImageReader gir;
 		private boolean stop=false;
+		private double neighbouringDistance;
+		private int tilesize;
+		private boolean removelandconnectedpixels;
+		private boolean display;
 		
 		public boolean isStop() {
 			return stop;
@@ -76,6 +80,11 @@ public  class AnalysisProcess implements Runnable {
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
 			this.gir=gir;//.clone();
+			
+			neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
+            tilesize=Platform.getConfiguration().getTileSize(200);
+            removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
+            display = Platform.getConfiguration().getDisplayPixel()&&!Platform.isBatchMode();
 		}
    
 		
@@ -170,14 +179,10 @@ public  class AnalysisProcess implements Runnable {
 	                         banddetectedpixels[band].computeBoatsAttributes();
 	                     } else {
 	                         // method neighbours used
-	                         double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
-	                         int tilesize=Platform.getConfiguration().getTileSize(200);
-	                         boolean removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
-	                         
 	                         if(stop)
 	                        	 break;
 	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
-	                        		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+	                         		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
 	                        
 	                     }
 	                     
@@ -193,9 +198,7 @@ public  class AnalysisProcess implements Runnable {
 	                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels[band]),
 	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
-	                 
-	                     boolean display = Platform.getConfiguration().getDisplayPixel();
-	                     display=display&&!Platform.isBatchMode();
+	                     
 	                     if (!agglomerationMethodology.startsWith("d")) {
 	                         vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, MaskVectorLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
 	                         vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, MaskVectorLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
@@ -228,10 +231,6 @@ public  class AnalysisProcess implements Runnable {
 	                     mergePixels.computeBoatsAttributes();
 	                 } else {
 	                     // method neighbours used
-	                     double neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
-	                     int tilesize=Platform.getConfiguration().getTileSize(200);
-	
-	                     boolean removelandconnectedpixels = Platform.getConfiguration().removeLandConnectedPixel();
 	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
 	                 }
 	
@@ -239,7 +238,7 @@ public  class AnalysisProcess implements Runnable {
 	                     System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
 	                 }else{
 	                	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                	 azimuthAmbiguity = new AzimuthAmbiguity(mergePixels.getBoats(), (SarImageReader)gir);// GeoImageReaderFactory.createReaderForName(gir.getFilesList()[0]).get(0));
+	                	 azimuthAmbiguity = new AzimuthAmbiguity(mergePixels.getBoats(), (SarImageReader)gir);
 	                 }
 	                 
 	                 if(stop){

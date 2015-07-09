@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="product">
     <xs:complexType>
@@ -55,7 +55,7 @@
       <xs:sequence>
         <xs:element ref="qualityData"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="qualityData">
@@ -209,7 +209,7 @@
       <xs:sequence>
         <xs:element ref="downlinkInformation"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="downlinkInformation">
@@ -366,7 +366,7 @@
       <xs:sequence>
         <xs:element ref="swl"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="swl">
@@ -382,7 +382,7 @@
       <xs:sequence>
         <xs:element ref="swst"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="swst">
@@ -398,7 +398,7 @@
       <xs:sequence>
         <xs:element ref="pointingStatus"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="pointingStatus">
@@ -421,7 +421,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="orbit"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="orbit">
@@ -456,7 +456,7 @@
   </xs:element>
   <xs:element name="attitudeList">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="rawDataAnalysisList">
@@ -464,7 +464,7 @@
       <xs:sequence>
         <xs:element ref="rawDataAnalysis"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="rawDataAnalysis">
@@ -514,7 +514,7 @@
       <xs:sequence>
         <xs:element ref="replicaInformation"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="replicaInformation">
@@ -541,12 +541,12 @@
   </xs:element>
   <xs:element name="amplitudeCoefficients">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="phaseCoefficients">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="timeDelay" type="xs:double"/>
@@ -560,7 +560,7 @@
   </xs:element>
   <xs:element name="replicaList">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="noiseList">
@@ -568,7 +568,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="noise"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="noise">
@@ -588,7 +588,7 @@
       <xs:sequence>
         <xs:element ref="terrainHeight"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="azimuthFmRateList">
@@ -596,7 +596,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="azimuthFmRate"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="azimuthFmRate">
@@ -654,7 +654,7 @@
   <xs:element name="sliceNumber" type="xs:integer"/>
   <xs:element name="sliceList">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="pixelValue" type="xs:NCName"/>
@@ -719,7 +719,7 @@
       <xs:sequence>
         <xs:element ref="swathProcParams"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="swathProcParams">
@@ -764,7 +764,7 @@
       <xs:sequence>
         <xs:element ref="inputDimensions"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="inputDimensions">
@@ -799,7 +799,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="dcEstimate"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="dcEstimate">
@@ -819,12 +819,12 @@
   </xs:element>
   <xs:element name="geometryDcPolynomial">
     <xs:complexType mixed="true">
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="dataDcPolynomial">
     <xs:complexType mixed="true">
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="dataDcRmsError" type="xs:double"/>
@@ -834,9 +834,9 @@
   <xs:element name="fineDceList">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="fineDce"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="fineDce"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="fineDce">
@@ -864,7 +864,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="burst"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="burst">
@@ -884,12 +884,12 @@
   <xs:element name="byteOffset" type="xs:integer"/>
   <xs:element name="firstValidSample">
     <xs:complexType mixed="true">
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="lastValidSample">
     <xs:complexType mixed="true">
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="geolocationGrid">
@@ -904,7 +904,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="geolocationGridPoint"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="geolocationGridPoint">
@@ -936,7 +936,7 @@
   </xs:element>
   <xs:element name="coordinateConversionList">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="swathMerging">
@@ -948,7 +948,7 @@
   </xs:element>
   <xs:element name="swathMergeList">
     <xs:complexType>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="swath" type="xs:NCName"/>
@@ -992,7 +992,7 @@
   <xs:element name="im" type="xs:double"/>
   <xs:element name="terrainHeight">
     <xs:complexType mixed="true">
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element ref="azimuthTime"/>
         <xs:element ref="value"/>
       </xs:choice>
@@ -1030,12 +1030,12 @@
       <xs:sequence>
         <xs:element ref="antennaPattern"/>
       </xs:sequence>
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="elevationPattern">
     <xs:complexType mixed="true">
-      <xs:attribute name="count" use="required" type="xs:integer"/>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="incidenceAngle">
