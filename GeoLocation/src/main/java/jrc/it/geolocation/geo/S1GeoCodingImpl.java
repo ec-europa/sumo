@@ -67,10 +67,12 @@ public class S1GeoCodingImpl implements GeoCoding {
 		double srdist=results[1];
 		
 		//Convert zero Doppler azimuth time to image line number
-		double lNominatore=(zeroDopplerTime - orbitInterpolation.getZeroDopplerTimeFirstRef()-iSafetyBufferAz/meta.getSamplingf());
-		double lDenom=(orbitInterpolation.getZeroDopplerTimeLastRef() - orbitInterpolation.getZeroDopplerTimeFirstRef() -2*(iSafetyBufferAz /meta.getSamplingf())) ;
+		
+		//Modfiche di Carlos del //20150703 pL = ((zeroDopplerTime - zeroDopplerTimeFirstLineSecondsRef) / (zeroDopplerTimeLastLineSecondsRef - zeroDopplerTimeFirstLineSecondsRef)) * (meta.nLines - 1);
+		double lNominatore=(zeroDopplerTime - orbitInterpolation.getZeroDopplerTimeFirstRef());
+		double lDenom=(orbitInterpolation.getZeroDopplerTimeLastRef() - orbitInterpolation.getZeroDopplerTimeFirstRef()) ;
 		double l = (lNominatore/lDenom )* (meta.getNlines() - 1);
-
+		
 		//******************* this part is only Sentinel 1 'SLC 'IW' and 'EW'
 		    // Need to take the bursts into account
 		/*if(meta.getMode().equalsIgnoreCase("IW")||meta.getMode().equalsIgnoreCase("EW")){
@@ -249,10 +251,12 @@ public class S1GeoCodingImpl implements GeoCoding {
 			    }     */
 			
 			}else{
-				double t01=(orbitInterpolation.getZeroDopplerTimeFirstRef()+ (iSafetyBufferAz / meta.getSamplingf())) * (meta.getNlines()-1-l);
-				double t02=(orbitInterpolation.getZeroDopplerTimeLastRef()- (iSafetyBufferAz / meta.getSamplingf()))*l;
+			 //modifiche di Carlos del 20150703 t0 = (zeroDopplerTimeFirstLineSecondsRef * (meta.nLines-1-l) + zeroDopplerTimeLastLineSecondsRef * l) / (meta.nLines-1);				
+				double t01=(orbitInterpolation.getZeroDopplerTimeFirstRef()) * (meta.getNlines()-1-l);
+				double t02=orbitInterpolation.getZeroDopplerTimeLastRef()*l;
 				t0 =  (t01+t02) / (meta.getNlines()-1); //In seconds
-			    for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().size();idxStartT0++){
+				
+				for(idxStartT0=0;idxStartT0<orbitInterpolation.getTimeStampInterp().size();idxStartT0++){
 			    	if(orbitInterpolation.getTimeStampInterp().get(idxStartT0)>=t0){
 			    		break;
 			    	}

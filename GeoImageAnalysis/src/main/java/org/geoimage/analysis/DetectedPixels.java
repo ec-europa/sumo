@@ -4,7 +4,6 @@
  */
 package org.geoimage.analysis;
 
-import java.awt.Rectangle;
 import java.awt.image.Raster;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

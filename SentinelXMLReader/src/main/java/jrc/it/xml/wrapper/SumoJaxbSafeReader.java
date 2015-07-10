@@ -9,6 +9,8 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.transform.stream.StreamSource;
 
 import jrc.it.safe.reader.jaxb.AcquisitionPeriod;
@@ -27,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 
 @XmlRootElement(name="xfdu:XFDU")
-public class SumoJaxbSafeReader  implements ISumoSafeReader{
+public class SumoJaxbSafeReader  implements ISumoSafeReader {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoJaxbSafeReader.class);
 
 	private File safefile;
@@ -49,12 +51,12 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader{
 	private HashMap <String,List<String>> swathMeasurementsMap=null;
 	
 	
-	public SumoJaxbSafeReader(File safePath) throws JDOMException, IOException,JAXBException {
+	public SumoJaxbSafeReader(final File safePath) throws JDOMException, IOException,JAXBException {
 		this.safefile=safePath;
 		init();
 	}
 
-	public SumoJaxbSafeReader(String safePath) throws JDOMException, IOException,JAXBException{
+	public SumoJaxbSafeReader(final String safePath) throws JDOMException, IOException,JAXBException{
 		this.safefile=new File(safePath);
 		init();
 	}
@@ -191,4 +193,6 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader{
 	public void setSafefile(File safefile) {
 		this.safefile = safefile;
 	}
+
+	
 }

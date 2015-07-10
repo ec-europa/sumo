@@ -118,12 +118,7 @@ public class AzimuthAmbiguity {
         int[] imageSize = new int[]{sumoImage.getWidth(), sumoImage.getHeight()};
         int shiftedPosUp = 0, shiftedPosDown = 0, x_offset = 0, x_shift = 0;
 
-        if ((sumoImage.getSatellite()).equals("RADARSAT")) {
-            String myImageType = sumoImage.getType();
-            if (myImageType.equals("RSAT-1-SAR-SGF") || myImageType.equals("RSAT-1-SAR-SGX")) {
-                deltaAzimuth[1] = 20;	// This is really range displacement
-            }
-        }
+        
         if (sumoImage.getOrbitDirection().equals("ASCENDING")) {
             x_offset = deltaAzimuth[1];
         } else {
