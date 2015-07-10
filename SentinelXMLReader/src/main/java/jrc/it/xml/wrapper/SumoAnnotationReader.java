@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import jrc.it.annotation.reader.jaxb.ReplicaInformationType;
 import jrc.it.annotation.reader.jaxb.SwathMergeListType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
+
 
 public class SumoAnnotationReader {
 	private JAXBContext jaxbContext =null;

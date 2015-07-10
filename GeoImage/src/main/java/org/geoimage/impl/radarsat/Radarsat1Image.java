@@ -671,7 +671,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     @Override
-    public double getSlantRange(int pos_range) {
+    public double getSlantRange(int pos_range,double incidenceAngle) {
         double slant_range = 0;
         double sampleDistRange = getGeoTransform().getPixelSize()[1];
         int j = 0;
@@ -696,7 +696,7 @@ public class Radarsat1Image extends SarImageReader {
         h = getSatelliteAltitude();
 
         // Calculate the slant range for the incidence angle
-        slant_range = this.getSlantRange(pos_range);
+        slant_range = this.getSlantRange(pos_range,0);
 
         // Calculate the incidence angle
         numerator = Math.pow(h, 2) - Math.pow(slant_range, 2) + 2 * earthradial * h;

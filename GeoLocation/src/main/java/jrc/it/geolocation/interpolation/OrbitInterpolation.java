@@ -61,23 +61,36 @@ public class OrbitInterpolation {
 		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime)+iSafetyBufferAz*deltaT;
 		//
 		
+		
+		 // Modifiche di Carlos del 20150703 //
+		
 		double minT=0;
 		double maxT=0;
 		
+		double zeroDopplerTimeFirstLineWSafetyBufSecondsRef=0;
+		double zeroDopplerTimeLastLineWSafetyBufSecondsRef=0;
 		if(zeroDopplerTimeFirstRef<zeroDopplerTimeLastRef){
-			minT=FastMath.min(0, zeroDopplerTimeFirstRef);
-			maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeLastRef);
+			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef - iSafetyBufferAz * deltaT; //20150703
+	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef + iSafetyBufferAz * deltaT;   //20150703
+	        
+	        minT = FastMath.min(0, zeroDopplerTimeFirstLineWSafetyBufSecondsRef); //20150703
+	        maxT = FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastLineWSafetyBufSecondsRef); //20150703
 		}else{
+			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef + iSafetyBufferAz * deltaT; //20150703
+	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef - iSafetyBufferAz * deltaT; //20150703
+	        
 			if(firstTime<(lastTime)){
-				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeLastRef);
-				maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeFirstRef);
+				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
+				maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
 			}else{
-				minT=FastMath.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastRef);
-				maxT=FastMath.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstRef);
+				minT=FastMath.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
+				maxT=FastMath.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
 			}	
 		}
-		int limit=((Double)((maxT-minT)/deltaT)).intValue();
+		// Fine Modifiche di Carlos del 20150703 //
 		
+		
+		int limit=((Double)((maxT-minT)/deltaT)).intValue();
 		
 		Double[] timeStampInterpSecondsRef=new Double[limit+1];
 		double nextVal=0;
