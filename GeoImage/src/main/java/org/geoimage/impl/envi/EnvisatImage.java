@@ -552,7 +552,7 @@ public class EnvisatImage extends SarImageReader {
     }
 
     @Override
-    public double getSlantRange(int position) {
+    public double getSlantRange(int position,double incidenceAngle) {
         float slant_range_time;
         float lightSpeed = (float) 0.299792458; // * 10^-9
         double slant_range = 0;

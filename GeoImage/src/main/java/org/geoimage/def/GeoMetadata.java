@@ -87,7 +87,7 @@ public interface GeoMetadata {
     
     public double getIncidence(int position);
 
-    public double getSlantRange(int position);
+    public double getSlantRange(int position,double incidenceAngle);
     
   //  public void geoCorrect();
 

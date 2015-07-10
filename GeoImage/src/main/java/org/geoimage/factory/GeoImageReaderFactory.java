@@ -97,7 +97,7 @@ public class GeoImageReaderFactory {
 	                
 	        	}
 	        }else if(parent.contains("S1A")||parent.contains("S1B")){//sentinel 1
-	        	SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());
+	        	final SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());
 	        	boolean multipleImages=false;
 	        	
 	        	//for multiple images. For SLC product we can have 1 images for each sub-swat and for each polarization

@@ -336,9 +336,11 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
         try {
 
-            double slantRange = getSlantRange(xPos);
-            // already in radian
+        	// already in radian
             double incidenceAngle = getIncidence(xPos);
+        	
+            double slantRange = getSlantRange(xPos,incidenceAngle);
+            
             double prf = getPRF(xPos,yPos);
             
             
@@ -355,6 +357,15 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
             output[0] = (int) FastMath.floor(deltaAzimuth);
             output[1] = (int) FastMath.floor(deltaRange);
+            
+            
+            //TODO: why this for radarsat only ?? 
+            if ((getSatellite()).equals("RADARSAT")) {
+                String myImageType = getType();
+                if (myImageType.equals("RSAT-1-SAR-SGF") || myImageType.equals("RSAT-1-SAR-SGX")) {
+                    output[1] = 20;	// This is really range displacement
+                }
+            }
 
         } catch (Exception ex) {
         	ex.printStackTrace();
@@ -398,16 +409,17 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return satellite_speed;
     }
 
-    public double getSlantRange(int position) {
+    public double getSlantRange(int position,double incidenceAngle) {
         double slantrange = 0.0;
-        double incidenceangle = getIncidence(position);
+     //   double incidenceangle = getIncidence(position);
         double sataltitude = getSatelliteAltitude();
         // calculate slant range
-        if (Math.cos(incidenceangle) != 0.0) {
-            slantrange = sataltitude / Math.cos(incidenceangle);
+        if (Math.cos(incidenceAngle) != 0.0) {
+            slantrange = sataltitude / Math.cos(incidenceAngle);
         }
         return slantrange;
     }
+    
 
     public abstract double getPRF(int x,int y); 
     
