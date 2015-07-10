@@ -57,13 +57,16 @@ public class OrbitInterpolation {
 			secondsDiffFromRefTime[idx]= (vp.time-reftime);
 			idx++;
 		}
-		zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime)-iSafetyBufferAz*deltaT;
-		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime)+iSafetyBufferAz*deltaT;
-		//
+		
 		
 		
 		 // Modifiche di Carlos del 20150703 //
-		
+		//zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime)-iSafetyBufferAz*deltaT;
+		//zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime)+iSafetyBufferAz*deltaT;
+		//
+		zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime);
+		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime);
+
 		double minT=0;
 		double maxT=0;
 		
