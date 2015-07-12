@@ -290,7 +290,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/imageio-ext-kakadu-1.1.10.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/swing-worker-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/swing-layout-1.0.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_45">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
