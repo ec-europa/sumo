@@ -4,12 +4,8 @@
  */
 package org.geoimage.viewer.actions;
 
-import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +32,9 @@ import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-import org.geotools.feature.SchemaException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
