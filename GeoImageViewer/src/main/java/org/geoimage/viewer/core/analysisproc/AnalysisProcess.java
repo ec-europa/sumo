@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * 
- * @author argenpo
+ * @author Pietro Argentieri
  *
  */
 public  class AnalysisProcess implements Runnable {
@@ -62,6 +62,10 @@ public  class AnalysisProcess implements Runnable {
 		private List<VDSAnalysisProcessListener> listeners; 
 		
 		
+		/**
+		 * 
+		 * @return the list of the layers with the target results
+		 */
 		public List<ComplexEditVDSVectorLayer> getResultLayers() {
 			return resultLayers;
 		}
@@ -70,6 +74,16 @@ public  class AnalysisProcess implements Runnable {
 			this.resultLayers = resultLayers;
 		}
 
+		/**
+		 * 
+		 * @param gir
+		 * @param ENL
+		 * @param analysis
+		 * @param bufferedMask
+		 * @param thresholds
+		 * @param buffer
+		 * @param blackBorderAnalysis
+		 */
 		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,BlackBorderAnalysis blackBorderAnalysis) {
 			this.ENL=ENL;
 			this.analysis=analysis;
@@ -87,7 +101,9 @@ public  class AnalysisProcess implements Runnable {
             display = Platform.getConfiguration().getDisplayPixel()&&!Platform.isBatchMode();
 		}
    
-		
+		/**
+		 *  Exec the analysis process
+		 */
 		public void run() {
 			notifyStartProcessListener();
 			SarImageReader reader=((SarImageReader)gir);
@@ -156,6 +172,7 @@ public  class AnalysisProcess implements Runnable {
 	             
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
 	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
+	            	
 	            	 analysis.run(kdist,blackBorderAnalysis,band);
 
 	            	 banddetectedpixels[band]=analysis.getPixels();
@@ -208,7 +225,7 @@ public  class AnalysisProcess implements Runnable {
 	                     if ((bufferedMask != null) && (bufferedMask.length > 0)) {
 	                        vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, MaskVectorLayer.POLYGON, bufferedMask[0].getGeometries(), display);
 	                     }
-	                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, MaskVectorLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), display);
 	                     
 	
 	                     //if(!Platform.isBatchMode())
