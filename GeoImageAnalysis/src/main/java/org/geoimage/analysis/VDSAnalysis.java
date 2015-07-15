@@ -6,6 +6,7 @@ package org.geoimage.analysis;
 
 import java.awt.Rectangle;
 import java.awt.image.Raster;
+import java.io.IOException;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -85,7 +86,7 @@ public class VDSAnalysis{
      * 
      * 
      */
-    public DetectedPixels run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) {
+    public DetectedPixels run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) throws IOException {
         if(gir.getBandName(band).equals("HH")||gir.getBandName(band).equals("H/H")){
             pixels = analyse(kdist, thresholdHH,band,blackBorderAnalysis);
         }else if(gir.getBandName(band).equals("HV")||gir.getBandName(band).equals("H/V")){
@@ -105,8 +106,9 @@ public class VDSAnalysis{
      * @param kdist
      * @param significance
      * @return
+     * @throws IOException 
      */
-    private DetectedPixels analyse(KDistributionEstimation kdist, float significance,int band, BlackBorderAnalysis blackBorderAnalysis ) {
+    private DetectedPixels analyse(KDistributionEstimation kdist, float significance,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
         
@@ -167,19 +169,12 @@ public class VDSAnalysis{
                 if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	kdist.setImageData(gir, xLeftTile, yTopTile, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                     
-                	int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                	int[] data2=null;
-                	try{
-                		data2 = gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                	}catch(Exception e){
-                		
-                	}	
+                	//int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                	int[] data= gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                 	kdist.estimate(null,data);
 
                 	double[][][] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex] = kdist.getTileStat()[0];
-                    
-
                     
                     double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
 
