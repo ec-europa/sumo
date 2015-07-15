@@ -43,20 +43,20 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
     private float contrast = 1;
     private float brightness = 0;
     private RescaleOp rescale = new RescaleOp(contrast, brightness, null);
-    private GeoImageReader gir;
+    private ThumbnailsImageReader thumbReader;
     private float scale;
 
     public ThumbnailsLayer(ILayer parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) throws GeoTransformException {
-        gir = new ThumbnailsImageReader(tmanager);
+        thumbReader = new ThumbnailsImageReader(tmanager);
         if (projection == null) {
             this.glayer = glayer;
         } else {
-            this.glayer = GeometricLayer.createImageProjectedLayer(glayer, gir.getGeoTransform(), projection);
+            this.glayer = GeometricLayer.createImageProjectedLayer(glayer, thumbReader.getTransformation(), projection);
         }
         this.id = idColumnName;
         this.tmanager = tmanager;
         this.overview = this.tmanager.getOverview();
-        this.scale=gir.getWidth()/(1f*gir.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
+        this.scale=thumbReader.getWidth()/(1f*thumbReader.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
         Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
@@ -85,7 +85,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         texture.disable(gl);
         context.setX(0);
         context.setY(0);
-        context.setZoom(Math.max(gir.getWidth() / context.getWidth(),gir.getHeight() / context.getHeight()));
+        context.setZoom(Math.max(thumbReader.getWidth() / context.getWidth(),thumbReader.getHeight() / context.getHeight()));
         Platform.getLayerManager().render(context);
     }
 
@@ -93,7 +93,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         GeometryFactory gf = new GeometryFactory();
         com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(position.x, position.y));
         for (Geometry temp : glayer.getGeometries()) {
-            if (temp.isWithinDistance(p, 5 * gir.getWidth() / 512f)) {
+            if (temp.isWithinDistance(p, 5 * thumbReader.getWidth() / 512f)) {
                 BufferedImage image=tmanager.get(glayer.getAttributes(temp).get(id).toString());
                 return rescale.filter(image,image);
             }
@@ -153,8 +153,8 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
         return 0;
     }
 
-    public GeoImageReader getImageReader() {
-        return this.gir;
+    public ThumbnailsImageReader getImageReader() {
+        return this.thumbReader;
     }
 
     public void setMaximumCut(float value) {

@@ -18,7 +18,6 @@ import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
@@ -97,7 +96,34 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return geotransform;
     }
     
-    public Polygon getBbox() {
+   /**
+    *  read part of the image starting from x,y
+    *  NO CACHE
+    *  
+    * @param x
+    * @param y
+    * @param w
+    * @param h
+    * @param band
+    * @return
+    */
+    public abstract int[] read(int x, int y,int width,int height,int band) throws IOException;
+    
+    /**
+     * 
+     * @param margin
+     * @return
+     * @throws Exception
+     */
+    public Polygon getBbox(int margin) throws Exception{
+        if(bbox==null)
+			try {
+				bbox=buildBox(margin);
+			} catch (CQLException | ParseException | GeoTransformException e) {
+				logger.error(e.getMessage(),e);
+				throw e;
+			}
+
 		return bbox;
 	}
 
@@ -237,12 +263,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return az;
     }
 
-    public Polygon buildBox() throws ParseException, GeoTransformException, CQLException{
+    public Polygon buildBox(int margin) throws ParseException, GeoTransformException, CQLException{
 		   double h=getHeight();
 		   double w=getWidth();
 		
 	    GeoTransform gt = getGeoTransform();
-	    int margin=PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0);
+	    //int margin=PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0);
 	    
 	    
         double[] p0 = gt.getGeoFromPixel(-margin, -margin);
@@ -321,8 +347,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return description.toString();
     }
     
-
-    public int[] getAmbiguityCorrection(int xPos,int yPos) {
+    
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
     	if(satelliteSpeed==0){
 	    	satelliteSpeed = calcSatelliteSpeed();
 	        radarWavelength = getRadarWaveLenght();
@@ -338,12 +365,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
         	// already in radian
             double incidenceAngle = getIncidence(xPos);
-        	
             double slantRange = getSlantRange(xPos,incidenceAngle);
-            
             double prf = getPRF(xPos,yPos);
-            
-            
 
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];
             double sampleDistRange = getGeoTransform().getPixelSize()[1];
@@ -420,7 +443,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return slantrange;
     }
     
-
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
     public abstract double getPRF(int x,int y); 
     
     public double getBetaNought(int x, double DN) {
@@ -482,10 +510,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         for (i = 0; i < nbBytes; i++) {
             convert += getCharValue(file, pointer++);
         }
-        System.out.println("getFloatValue: " + convert);
+
         convert = convert.trim();
         if (convert.equalsIgnoreCase("")) {
-            System.out.println("getFloatValue : nothing at this place");
             data = -1;
         } else {
             temp = new Float(convert);

@@ -462,6 +462,32 @@ public class TerrasarXImage extends SarImageReader {
         }
         return tiffs;
     }
+    
+    @Override
+	public int[] read(int x, int y, int w, int h, int band) throws IOException {
+		Rectangle rect = new Rectangle(x, y, w, h);
+        rect = rect.intersection(bounds);
+        int[] data= new int[h*w];
+        if (rect.isEmpty()) {
+            return data;
+        }
+
+        TIFFImageReadParam tirp=new TIFFImageReadParam();
+        tirp.setSourceRegion(rect);
+        TIFF tiff=getImage(band);
+        int[] rawData = tiff.getReader().read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        
+        int yOffset = getImage(band).xSize;
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+                int temp = i * yOffset + j + rect.x;
+                data[(i + yinit) * w + j + xinit] = rawData[temp];
+            }
+        }
+        return data;
+	}
 
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
@@ -489,7 +515,7 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
@@ -729,5 +755,7 @@ public class TerrasarXImage extends SarImageReader {
 	public TIFF getImage(int band){
 		return tiffImages.get(getBandName(band));
 	}
+
+	
 
 }

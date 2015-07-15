@@ -170,7 +170,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
 // #[regen=yes,id=DCE.091BEB3C-7DA3-1625-A9FA-3CED510139EC]
 // </editor-fold>
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {

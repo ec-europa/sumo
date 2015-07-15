@@ -7,6 +7,7 @@ package org.geoimage.impl.cosmo;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -331,7 +332,7 @@ public class CosmoSkymedImage extends SarImageReader {
     }
    
 
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         if (x < 0 || y < 0 || x > xSize || y > ySize) {
             return -1;
         }
@@ -353,6 +354,11 @@ public class CosmoSkymedImage extends SarImageReader {
     public String getBandName(int band) {
         return getPolarization();
     }
+
+	@Override
+	public int[] read(int x, int y, int width, int height, int band) throws IOException {
+		return readTile(x, y, width, height, band);
+	}
 
 
     public void preloadLineTile(int y, int height,int band) {

@@ -13,6 +13,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -74,9 +75,7 @@ public abstract class AbstractBatchAnalysis {
 	protected GeometricLayer readShapeFile(SarImageReader reader){
 		GeometricLayer gl=null;
 	    try {
-	    	Polygon imageP=(reader).getBbox();
-            if(imageP==null)
-            	imageP=(reader).buildBox();
+	    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
             gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imageP,reader.getGeoTransform());
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
@@ -149,11 +148,12 @@ public abstract class AbstractBatchAnalysis {
     		   
     		   String bbox=outfolder+"\\bbox.shp";
     		   List<Geometry> ggBbox=new ArrayList<Geometry>();
-    		   ggBbox.add(reader.getBbox());
+
     		   //save the bound box as shape file
     		   try {
+        		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
 				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null);
-			   } catch (IOException | SchemaException e) {
+			   } catch (Exception e) {
 				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
 			   }
     		   

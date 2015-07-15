@@ -288,7 +288,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
 
     
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         GDALTIFF tiff=null;
         try {
         	String b=getBandName(band);
