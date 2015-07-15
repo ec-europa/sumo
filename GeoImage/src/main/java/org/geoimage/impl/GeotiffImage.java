@@ -172,6 +172,11 @@ public class GeotiffImage extends SarImageReader {
 
     }
   
+	@Override
+	public int[] read(int x, int y, int w, int h, int band) {
+		 return readTile(x, y, w, h, band) ;
+	}
+    
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
         return readTile(x, y, width, height, new int[width * height],band);
@@ -200,7 +205,7 @@ public class GeotiffImage extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         int[] pix = new int[1];
@@ -438,6 +443,8 @@ public class GeotiffImage extends SarImageReader {
 	public String getDisplayName(int band) {
 		return displayName;
 	}
+
+
 
 }
 

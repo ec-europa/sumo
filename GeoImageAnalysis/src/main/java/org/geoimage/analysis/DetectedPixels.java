@@ -5,6 +5,7 @@
 package org.geoimage.analysis;
 
 import java.awt.image.Raster;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,27 +46,12 @@ public class DetectedPixels {
     private SarImageReader gir = null;
 
     
-    ArrayList<boatPixels> listboatneighbours = new ArrayList<boatPixels>();
+    ArrayList<BoatPixel> listboatneighbours = new ArrayList<BoatPixel>();
 
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
 
-
-    public DetectedPixels(SarImageReader gir) {
-        this.gir = gir;
-        // get the image pixel size
-        this.pixsam = gir.getRangeSpacing();
-        this.pixrec = gir.getAzimuthSpacing();
-
-        // calculate search window size using pixel size
-        if (SEARCHWINDOW > pixsam) {
-            this.searchwindowWidth = (int) (SEARCHWINDOW / pixsam);
-        }
-        if (SEARCHWINDOW > pixrec) {
-            this.searchwindowHeight = (int) (SEARCHWINDOW / pixrec);
-        }
-    }
-
-    private class Pixel {
+    
+    protected class Pixel {
 
         public int x;
         public int y;
@@ -86,7 +72,111 @@ public class DetectedPixels {
             this.band = band;
         }
     }
+    
+    
+    protected class Boat{
+    	private Pixel pixel=null;
+    	private double posx;
+    	private double posy;
+    	private double size;
+    	private double length;
+    	private double width;
+    	private double heading;
 
+		public Boat(DetectedPixels.Pixel pixel,double x,double y,double size,double length,double width,double heading){
+    		this.pixel=pixel;
+    		this.posx=x;
+    		this.posy=y;
+    		this.size=size;
+    		this.length=length;
+    		this.width=width;
+    		this.heading=this.heading;
+    	}
+		
+		public Pixel getPixel() {
+			return pixel;
+		}
+
+		public void setPixel(Pixel pixel) {
+			this.pixel = pixel;
+		}
+
+		public double getPosx() {
+			return posx;
+		}
+
+		public void setPosx(double posx) {
+			this.posx = posx;
+		}
+
+		public double getPosy() {
+			return posy;
+		}
+
+		public void setPosy(double posy) {
+			this.posy = posy;
+		}
+
+		public double getSize() {
+			return size;
+		}
+
+		public void setSize(double size) {
+			this.size = size;
+		}
+
+		public double getLength() {
+			return length;
+		}
+
+		public void setLength(double length) {
+			this.length = length;
+		}
+
+		public double getWidth() {
+			return width;
+		}
+
+		public void setWidth(double width) {
+			this.width = width;
+		}
+
+		public double getHeading() {
+			return heading;
+		}
+
+		public void setHeading(double heading) {
+			this.heading = heading;
+		}
+    }
+    
+
+    public DetectedPixels(SarImageReader gir) {
+        this.gir = gir;
+        // get the image pixel size
+        this.pixsam = gir.getRangeSpacing();
+        this.pixrec = gir.getAzimuthSpacing();
+
+        // calculate search window size using pixel size
+        if (SEARCHWINDOW > pixsam) {
+            this.searchwindowWidth = (int) (SEARCHWINDOW / pixsam);
+        }
+        if (SEARCHWINDOW > pixrec) {
+            this.searchwindowHeight = (int) (SEARCHWINDOW / pixrec);
+        }
+    }
+
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param value
+     * @param tileAvg
+     * @param tileStd
+     * @param threshold
+     * @param band
+     */
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
         Pixel boat = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
         StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
@@ -95,9 +185,9 @@ public class DetectedPixels {
     }
 
     // add the detectedpixels
-    public void add(DetectedPixels pixels) {
-    	Map<String, Pixel> boatpixels = pixels.getDetectedPixels();
-    	Collection<Pixel> boats = boatpixels.values();
+    public void addAll(DetectedPixels pixels) {
+    	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
+    	Collection<Pixel> boats = BoatPixel.values();
     	StringBuilder point=new StringBuilder();
         for (Pixel boat:boats) {
         	point.setLength(0);
@@ -108,8 +198,8 @@ public class DetectedPixels {
 
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
-    	Map<String, Pixel> boatpixels = pixels.getDetectedPixels();
-    	Collection<Pixel> boats = boatpixels.values();
+    	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
+    	Collection<Pixel> boats = BoatPixel.values();
     	StringBuilder position = new StringBuilder();
         for (Pixel boat:boats) {
         	position.setLength(0);
@@ -160,148 +250,19 @@ public class DetectedPixels {
         }
     }
 
-    private class boatPixels {
+    
 
-        private Map<String, int[]> connectedpixels = new HashMap<String, int[]>();
-        private double boatnumberofpixels = 0.0;
-        private double[] boatposition;
-        private double boatwidth = 0.0;
-        private double boatlength = 0.0;
-        private double boatheading = 0.0;
-        private int id = 0;
-        private double boatmaximumvalue = 0.0;
-        private boolean touchlandmask = false;
-        private double thresholdvalue = 0.0;
-        private double meanvalue = 0.0;
-        private double stdvalue = 0.0;
-
-        public boatPixels(int x, int y, int id, int value, double[][] thresholdvalues) {
-            // add initial pixel, clipped value is always set to 1
-            connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, 1});
-       //     this.thresholdvalues = thresholdvalues;
-            this.boatposition = new double[]{x, y};
-            this.boatmaximumvalue = value;
-            this.id = id;
-        }
-
-        public void addConnectedPixel(int x, int y, int value, boolean clipped) {
-            connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, clipped ? 1 : 0});
-        }
-
-        public boolean containsPixel(int x, int y) {
-            return connectedpixels.get(new StringBuilder().append(x).append(" ").append(y).toString()) != null;
-        }
-
-        public void computeValues() {
-            // clip all values below thresholdclip
-            List<int[]> clust = new ArrayList<int[]>();
-            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
-            for (int[] pixel: pixels) {
-                if (pixel[3] == 1) {
-                    clust.add(pixel);
-                }
-                // look for maximum value in pixels
-                if (pixel[2] > boatmaximumvalue) {
-                    boatmaximumvalue = pixel[2];
-                }
-            }
-            // calculate length and width for cluster
-            double[] result = LenWidHedd(clust, new double[]{pixsam, pixrec});
-            boatnumberofpixels = result[0];
-            boatposition[0] = result[1];
-            boatposition[1] = result[2];
-            boatlength = result[3];
-            boatwidth = result[4];
-            boatheading = result[5];
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public double getBoatheading() {
-            return boatheading;
-        }
-
-        public double getBoatlength() {
-            return boatlength;
-        }
-
-        public double getBoatnumberofpixels() {
-            return boatnumberofpixels;
-        }
-
-        public double[] getBoatposition() {
-            return boatposition;
-        }
-
-        public double getBoatwidth() {
-            return boatwidth;
-        }
-
-        private double getMaximumValue() {
-            return boatmaximumvalue;
-        }
-
-        private void setMeanValue(double meanvalue) {
-            this.meanvalue = meanvalue;
-        }
-
-        private double getMeanValue() {
-            return meanvalue;
-        }
-
-        private void setStdValue(double stdvalue) {
-            this.stdvalue = stdvalue;
-        }
-
-        private double getStdValue() {
-            return stdvalue;
-        }
-
-        private void setThresholdValue(double thresholdvalue) {
-            this.thresholdvalue = thresholdvalue;
-        }
-
-        private double getThresholdValue() {
-            return thresholdvalue;
-        }
-
-        private List<int[]> getThresholdclipPixels() {
-            // clip all values below thresholdclip
-            List<int[]> clust = new ArrayList<int[]>();
-            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
-            for (int[] pixel:pixels) {
-                if (pixel[3] == 1) {
-                	clust.add(pixel);
-                }
-            }
-
-            return clust;
-        }
-
-        private List<int[]> getThresholdaggregatePixels() {
-            // clip all values below thresholdclip
-            List<int[]> clust = new ArrayList<int[]>();
-            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
-            for (int[] pixel:pixels) {
-                clust.add(pixel);
-            }
-
-            return clust;
-        }
-
-        private void setLandMask(boolean touchlandmask) {
-            this.touchlandmask = touchlandmask;
-        }
-
-        private boolean touchesLand() {
-            return touchlandmask;
-        }
-    }
-
-    // aggregate using the neighbours within tilesize
-    private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist) {
+    /**
+     *  aggregate using the neighbours within tilesize
+     * @param neighboursdistance
+     * @param tilesize
+     * @param removelandconnectedpixels
+     * @param bands
+     * @param mask
+     * @param kdist
+     * @throws IOException
+     */
+    private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
         int id = 0;
         // scan through list of detected pixels
         Pixel pixels[]=allDetectedPixels.values().toArray(new Pixel[0]);
@@ -317,17 +278,14 @@ public class DetectedPixels {
             if((count % 100)==0)
             	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
             
-            long containPix=System.currentTimeMillis();
             // check pixels is not aggregated
             boolean checked = false;
-            for (boatPixels boatpixel : listboatneighbours) {
+            for (BoatPixel boatpixel : listboatneighbours) {
                 if (boatpixel.containsPixel(xx, yy)) {
                     checked = true;
                     break;
                 }
             }
-            long cpxtime=System.currentTimeMillis()-containPix;
-            System.out.println("containPix time:"+cpxtime/1000);
 
             if (checked) {
                 continue;
@@ -341,28 +299,25 @@ public class DetectedPixels {
             int boatx = xx - cornerx;
             int boaty = yy - cornery;
             int numberbands = bands.length;
-            
-            long readTile=System.currentTimeMillis();
+
             //read the area for the bands
             int[][] data = new int[numberbands][];
-            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-            	data[bandcounter] = gir.readTile(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
-            }	
-            long rt=System.currentTimeMillis()-readTile;
-            System.out.println("read tile time:"+rt/1000);
-            
+            try{
+	            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
+	            	data[bandcounter] = gir.read(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
+	            }	
+            }catch(IOException e){
+        		logger.error(e.getMessage());
+        		throw e;
+        	}
             //TODO: we need to read the same tile only 1 time!!!!!
             // calculate thresholds
-            long sPoint=System.currentTimeMillis();
             double[][] statistics = calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
-            long ePoint=System.currentTimeMillis()-sPoint;
-            System.out.println("calculateImagemapStatistics time :"+ePoint);
             
             double[][] thresholdvalues = new double[numberbands][2];
             int maxvalue = 0;
             boolean pixelabove = false;
             
-            long mean1=System.currentTimeMillis();
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
                 // average the tile mean values
                 double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
@@ -381,12 +336,9 @@ public class DetectedPixels {
                     maxvalue = data[bandcounter][boatx + boaty * tilesize];
                 }
             }
-            long mean2=System.currentTimeMillis()-mean1;
-            System.out.println("mean2 time:"+mean2/1000);
             
             // add pixel only if above new threshold
             if (pixelabove) {
-            	long raster1=System.currentTimeMillis();
             	// check if there is land in tile
                 Raster rastermask = null;
                 if (mask != null) {
@@ -396,11 +348,9 @@ public class DetectedPixels {
                         rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
                     }
                 }
-                long rTime=System.currentTimeMillis()-raster1;
-                System.out.println("raster time:"+rTime/1000);
             	
                 // add pixel to the list
-                boatPixels boatpixel = new boatPixels(xx, yy, id++, data[0][boatx + boaty * tilesize], thresholdvalues);
+                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize], thresholdvalues);
                 boatpixel.setMeanValue((statistics[0][1] + statistics[0][2] + statistics[0][3] + statistics[0][4]) / 4);
                 boatpixel.setStdValue(statistics[0][0]);
                 boatpixel.setThresholdValue(p.threshold);
@@ -412,26 +362,16 @@ public class DetectedPixels {
                     imagemap[i] = 0;
                 }
                 
-                
-                long checkStart=System.currentTimeMillis();
                 boolean result = checkNeighbours(boataggregatedpixels, imagemap, data, thresholdvalues, new int[]{boatx, boaty}, neighboursdistance, tilesize, rastermask);
-                long checkTime=System.currentTimeMillis()-checkStart;
-                System.out.println("checkNeighbours time:"+checkTime/1000);
                 
                 // set flag for touching land
                 boatpixel.setLandMask(result);
                 
-                
                 // shift pixels by cornerx and cornery and store in boat list
                 //Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
-                
-                
-                long agg1=System.currentTimeMillis();
                 for (int[] pixel : boataggregatedpixels) {
                     boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
                 }
-                long aggt=System.currentTimeMillis()-agg1;
-                System.out.println("Aggregation time:"+aggt/1000);
             } else {
             }
             
@@ -442,9 +382,9 @@ public class DetectedPixels {
         // if remove connected to land pixels flag
         if (removelandconnectedpixels) {
             // remove all boats connecting to land
-        	List<boatPixels> toRemove=new ArrayList<boatPixels>();
+        	List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
             for (int i=0;i<listboatneighbours.size();i++) {
-            	boatPixels boat = listboatneighbours.get(i);
+            	BoatPixel boat = listboatneighbours.get(i);
                 if (boat.touchesLand()) {
                     toRemove.add(boat);
                 }
@@ -455,25 +395,18 @@ public class DetectedPixels {
         computeBoatsAttributesAndStatistics(listboatneighbours);
     }
 
-    // calculate new statistics using tile centered around pixel
-   /* public double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height, int[] bands, KDistributionEstimation kdist) {
-        int numberofbands = bands.length;
-        double[][] imagestat = new double[numberofbands][5];
-        for (int i = 0; i < numberofbands; i++) {
-            int band = bands[i];
-            kdist.setImageData(gir, cornerx,cornery, width, height,0,0,band,null);
-            kdist.estimate(null,1,1);
-            double[][][] thresh = kdist.getDetectThresh();
-            imagestat[i][0] = thresh[0][0][0];
-            imagestat[i][1] = thresh[0][0][1] / thresh[0][0][5];
-            imagestat[i][2] = thresh[0][0][2] / thresh[0][0][5];
-            imagestat[i][3] = thresh[0][0][3] / thresh[0][0][5];
-            imagestat[i][4] = thresh[0][0][4] / thresh[0][0][5];
-        }
 
-        return imagestat;
-    }*/
-    // calculate new statistics using tile centered around pixel
+    /**
+     *  calculate new statistics using tile centered around pixel
+     * @param cornerx
+     * @param cornery
+     * @param width
+     * @param height
+     * @param bands
+     * @param data
+     * @param kdist
+     * @return
+     */
     public double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height, int[] bands,int data[][], KDistributionEstimation kdist) {
         int numberofbands = bands.length;
         double[][] imagestat = new double[numberofbands][5];
@@ -492,7 +425,18 @@ public class DetectedPixels {
         return imagestat;
     }
 
-
+    /**
+     * 
+     * @param pixels
+     * @param imagemap
+     * @param imagedata
+     * @param thresholdaggregate
+     * @param position
+     * @param neighboursdistance
+     * @param tilesize
+     * @param rastermask
+     * @return
+     */
     public boolean checkNeighbours(List<int[]> pixels, int[] imagemap, int[][] imagedata, double[][] thresholdaggregate, int[] position, int neighboursdistance, int tilesize, Raster rastermask) {
         int numberofbands = thresholdaggregate.length;
         // touches land flag
@@ -590,7 +534,7 @@ public class DetectedPixels {
     //computeBoatsAttributes();
     }
 
-    public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist) {
+    public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
     	final long startAgglomerating=System.currentTimeMillis();
     	
         aggregate((int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
@@ -601,11 +545,11 @@ public class DetectedPixels {
 
     public void computeBoatsAttributes() {
         Collection<List<int[]>> enumeration = aggregatedBoats.values();
-        List <double[]> boatsTemp=new ArrayList<double[]>();
+        List <Boat> boatsTemp=new ArrayList<Boat>();
         
         for (List<int[]>agBoat:enumeration) {
             // start with estimating length, size and heading
-            double[] boatvalues = fLenWidHead(agBoat, this.pixsam, this.pixrec);
+            double[] boatvalues = Compute.fLenWidHead(agBoat, this.pixsam, this.pixrec);
 
             // look for maximum brightness point in cluster
             int[][] it = agBoat.toArray(new int[0][]);
@@ -618,39 +562,25 @@ public class DetectedPixels {
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
                 String id=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                 Pixel pixelValue = aggregatedPixels.get(id);
-                double[] boatValue = new double[11];
-                boatValue[0] = pixelValue.id;
-                boatValue[3] = pixelValue.value;
-                boatValue[4] = pixelValue.tileAvg;
-                boatValue[5] = pixelValue.tileStd;
-                boatValue[6] = pixelValue.threshold;
-                // set the number of pixels
-                boatValue[7] = boatvalues[0];
-                // set the position
-                boatValue[1] = boatvalues[1];
-                boatValue[2] = boatvalues[2];
-                // set the estimated length, width and heading
-                boatValue[8] = boatvalues[3];
-                boatValue[9] = boatvalues[4];
-                boatValue[10] = boatvalues[5];
-
+                
+                //boatvalues[0]=number of pixel boatvalues[1-2]= posx e posy  boatvalues[3-4-5]=length,width,heading
+                Boat boatValue=new Boat(pixelValue, boatvalues[1], boatvalues[2], boatvalues[0], boatvalues[3], boatvalues[4], boatvalues[5]);
+  
                 // look for maximum value in agglomerate
                 for (int i=1;i<it.length;i++) {
                     pixel = it[i];
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                     Pixel boat = aggregatedPixels.get(key);
-                    if (boat.value > boatValue[3]) {
-                        boatValue[3] = boat.value;
+                    if (boat.value > boatValue.getPixel().value) {
+                    	boatValue.getPixel().value = boat.value;
                     }
                 }
                 
-                
-                
                 // check if agglomerated boat has a width or a length larger than filterSize
-                if (boatValue[8] > this.filterminSize && boatValue[9] > this.filterminSize) { //AG changed || to &&
+                if (boatValue.getLength() > this.filterminSize && boatValue.getWidth() > this.filterminSize) { //AG changed || to &&
 
                     // check if agglomerated boat has a width or a length lower than filterSize
-                    if (boatValue[8] < this.filtermaxSize && boatValue[9] < this.filtermaxSize) {
+                    if (boatValue.getLength() < this.filtermaxSize && boatValue.getWidth() < this.filtermaxSize) {
                     	boatsTemp.add(boatValue);
                     }
                 }
@@ -658,18 +588,18 @@ public class DetectedPixels {
         }
 
         // create new array
-        Map<Integer, List<double[]>> hashtableBoat = new HashMap<Integer, List<double[]>>();
+        Map<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
         // list for keys
         List<Integer> keys = new ArrayList<Integer>();
         // sort the list by position
-        for (double[] boat : boatsTemp) {
+        for (Boat boat : boatsTemp) {
             // if entry does not exist in the hashtable create it
-            if (hashtableBoat.get(new Integer((int) (boat[2] / 512))) == null) {
-                hashtableBoat.put(new Integer((int) (boat[2] / 512)), new ArrayList<double[]>());
-                keys.add((int) (boat[2] / 512));
+            if (hashtableBoat.get(new Integer((int) (boat.posy / 512))) == null) {
+                hashtableBoat.put(new Integer((int) (boat.posy / 512)), new ArrayList<Boat>());
+                keys.add((int) (boat.posy / 512));
             }
             // sort boat positions by stripes of 512
-            hashtableBoat.get(new Integer((int) (boat[2] / 512))).add(boat);
+            hashtableBoat.get(new Integer((int) (boat.posy / 512))).add(boat);
         }
 
         // clear the boatArray
@@ -679,12 +609,12 @@ public class DetectedPixels {
         Collections.sort(keys);
         for (Integer key : keys) {
             // get the boats in the stripe
-            List<double[]> boatsinStripe = hashtableBoat.get(key);
+            List<Boat> boatsinStripe = hashtableBoat.get(key);
             if (boatsinStripe != null) {
                 for (int i = 1; i < boatsinStripe.size(); i++) {
-                    double positionX = boatsinStripe.get(i)[1];
+                    double positionX = boatsinStripe.get(i).posx;
                     for (int j = 0; j < i; j++) {
-                        if (positionX < boatsinStripe.get(j)[1]) {
+                        if (positionX < boatsinStripe.get(j).posx) {
                             // insert element at the right position
                             boatsinStripe.add(j, boatsinStripe.get(i));
                             // remove element from its previous position increased by one position
@@ -696,7 +626,7 @@ public class DetectedPixels {
             }
 
             // add the sorted boats to the table
-            for (double[] boat : boatsinStripe) {
+            for (Boat boat : boatsinStripe) {
             	boatsTemp.add(boat);
             }
         }
@@ -706,13 +636,13 @@ public class DetectedPixels {
     }
 
     //AG inserted a test to filter boats by length
-    private void computeBoatsAttributesAndStatistics(List<boatPixels> list) {
+    private void computeBoatsAttributesAndStatistics(List<BoatPixel> list) {
 
     	 List <double[]> boatsTemp=new ArrayList<double[]>();
     	 
         // compute attributes and statistics values on boats
-        for (boatPixels boat : list) {
-            boat.computeValues();
+        for (BoatPixel boat : list) {
+            boat.computeValues(pixsam,pixrec);
             if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
             	double[] boatvalues = new double[]{boat.getId(), boat.getBoatposition()[0], boat.getBoatposition()[1], boat.getMaximumValue(), boat.getMeanValue(), boat.getStdValue(), boat.getThresholdValue(), boat.getBoatnumberofpixels(), boat.getBoatlength(), boat.getBoatwidth(), boat.getBoatheading()};
             	boatsTemp.add(boatvalues);
@@ -768,374 +698,6 @@ public class DetectedPixels {
         boatArray=boatsTemp.toArray(new double[0][]);
     }
 
-    //
-    // Compute Length (m), Width (m) and Heading (deg) of target cluster
-    //   Clust     Cluster obtained e.g. by ClustGrow, i.e. Clust( 1, :) are
-    //             sample locations of cluster and Clust( 2, :) record locations
-    //   PixszSam  Sample pixel size in m
-    //   PixszRec  Record pixel size in m
-    //   Tlen      Length of cluster in m
-    //   Twid      Width of custer in m
-    //   Thed      Heading (orientation) of cluster long axis
-    // Heading is positive (anti-clockwise) wrt sample axis, with the record axis
-    // at +90 deg wrt sample axis, 180 deg ambigue, between [-90..+90].
-    // Calculated by least-squares fit of a line through the pixels in the cluster.
-    // (Each pixel is treated as (x,y) pair, assuming errors in both x and y.)
-    // Based on CFAR08.m
-    //
-    // See also LenWidHed.m (script)
-    // (c) H. Greidanus 2004
-    public double[] fLenWidHead(List<int[]> Clust, double PixszSam, double PixszRec) {
-        double Tlen = 0.0;
-        double Twid = 0.0;
-        double Thed = 0.0;
-        double aa = 0.0;
-        // Make sums of pixel coordinates
-        int icpt = Clust.size();
-        double tt[] = matlabSumRow(Clust, 1);
-        double Sjs = tt[0];
-        double Sjr = tt[1];
-        tt = matlabSumRow(Clust, 2);
-        double Sjs2 = tt[0];
-        double Sjr2 = tt[1];
-        double Sjsjr = matlabSumCross(Clust);
-
-        // Quadratic sums and cross-sum in units of meters
-        double s2x = (Sjs2 - Sjs * Sjs / icpt) * PixszSam * PixszSam;
-        double s2y = (Sjr2 - Sjr * Sjr / icpt) * PixszRec * PixszRec;
-        double r2 = (Sjsjr - Sjs * Sjr / icpt) * PixszSam * PixszRec;
-
-        if (r2 != 0) {
-            // Elongated shape
-            double QQ = (s2y - s2x) / (2 * r2);
-            aa = QQ + Math.sqrt(QQ * QQ + 1);
-            double a2 = QQ - Math.sqrt(QQ * QQ + 1);
-            double dd = (aa * (aa * s2x - 2 * r2) + s2y) / (aa * aa + 1);
-            double d2 = (a2 * (a2 * s2x - 2 * r2) + s2y) / (a2 * a2 + 1);
-            if (d2 < dd) {
-                aa = a2;
-            }
-            a2 = -1 / aa;
-            // The next is to find min and max of d1 and d2 (in units of m)
-            double d1mn = aa * Clust.get(0)[0] * PixszSam - Clust.get(0)[1] * PixszRec;
-            double d1mx = d1mn;
-            double d2mn = a2 * Clust.get(0)[0] * PixszSam - Clust.get(0)[1] * PixszRec;
-            double d2mx = d2mn;
-            for (int icp = 2; icp < icpt; icp++) {
-                dd = aa * Clust.get(icp)[0] * PixszSam - Clust.get(icp)[1] * PixszRec;
-                if (dd < d1mn) {
-                    d1mn = dd;
-                } else {
-                    if (dd > d1mx) {
-                        d1mx = dd;
-                    }
-                }
-                dd = a2 * Clust.get(icp)[0] * PixszSam - Clust.get(icp)[1] * PixszRec;
-                if (dd < d2mn) {
-                    d2mn = dd;
-                } else {
-                    if (dd > d2mx) {
-                        d2mx = dd;
-                    }
-                }
-            }
-
-            Twid = (d1mx - d1mn) / Math.sqrt(aa * aa + 1);
-            Tlen = (d2mx - d2mn) / Math.sqrt(a2 * a2 + 1);
-        } else {
-            // Round shape or line on sample axis or on record axis
-            double[] srmn = matlabMinRow(Clust);
-            double[] srmx = matlabMaxRow(Clust);
-            Twid = (srmx[1] - srmn[1]) * PixszRec;
-            Tlen = (srmx[0] - srmn[0]) * PixszSam;
-            if (s2x == s2y) {
-                // Round shape
-                aa = 0.0;
-                Twid = (Twid + Tlen) / 2;
-                Tlen = Twid;
-            } else {
-                aa = 0;
-                // Line on sample axis
-                if (s2x < s2y) {
-                    // No, line on record axis
-                    aa = Double.POSITIVE_INFINITY;
-                    double a2 = Tlen;
-                    Tlen = Twid;
-                    Twid = a2;
-                }
-            }
-        }
-
-        // Deconvolve
-        Tlen = Math.max(Tlen - Math.sqrt(PixszSam * PixszRec), 0);
-        Twid = Math.max(Twid - Math.sqrt(PixszSam * PixszRec), 0);
-        // Size calculated is difference between the extreme pixel centers,
-        // therefore 0 if 1 pixel wide or long; give minimum size (not perfect)
-        Tlen = Math.sqrt(Tlen * Tlen + PixszSam * PixszRec);
-        Twid = Math.sqrt(Twid * Twid + PixszSam * PixszRec);
-
-        // Heading in degrees [-90..90]
-        Thed = 180.0 / Math.PI * Math.atan(aa);
-
-        // calculate centre using min and max
-        double[] centre = new double[2];
-        centre[0] = matlabMinRow(Clust)[0] + (matlabMaxRow(Clust)[0] - matlabMinRow(Clust)[0]) / 2;
-        centre[1] = matlabMinRow(Clust)[1] + (matlabMaxRow(Clust)[1] - matlabMinRow(Clust)[1]) / 2;
-
-        return new double[]{icpt, centre[0], centre[1], Tlen, Twid, Thed};
-
-    }
-
-    // LenWidHedd Length, width, heading and centre of pixel cluster
-    // 
-    //    Clust  Cluster obtained e.g. by ClustGrow, i.e. Clust( 1, :) are
-    //           sample locations of cluster and Clust( 2, :) record locations
-    //    Pixsz  [PixszSam PixszRec] Sample, record pixel size in m
-    //    Len    Length of cluster in m
-    //    Wid    Width of custer in m
-    //    Hed    Heading (orientation) of cluster long axis in rad
-    //           heading in coordinate frame in m (different from heading in
-    //           coordinate frame in pixels in case Pixsz(1)~=Pixsz(2))
-    //           In case of round cluster, NaN
-    //    Cen    Centre of clustre [sam; rec] in pixels (real)
-    //  Heading is positive (anti-clockwise) wrt sample (x-)axis, with the record (y-)
-    //  axis at +90 deg wrt sample axis, 180 deg ambiguous, between [-pi/2..+pi/2].
-    //  Calculated by least-squares fit of a line through the pixels in the cluster
-    //  as plotted in a frame in meters using Pixsz.
-    //  (Each pixel is treated as (x,y) pair, assuming errors in both x and y.)
-    //  Based on CFAR08.m
-    //  Improved version of LenWidHedm; uses cluster size based on average pixel
-    //  location instead of extreme pixel location, and better treatment for non-
-    //  square pixels and for nearly-round clusters.
-    //  Recursively discards outlying pixels from cluster.
-    // 
-    //  See also LenWidHedBox, LenWidHedm, fLenWidHead, LenWidHead.m
-    //  (c) H. Greidanus 2008
-
-    //  Subroutines: none
-    public double[] LenWidHedd(List<int[]> clust, double[] pixsz) {
-        double Len = 0.0;
-        double Wid = 0.0;
-        double Hed = Double.NaN;
-        double[] Cen = {Double.NaN, Double.NaN};
-        double ap = 0.0;
-
-        //  Parameter
-        double fRecl = 0.6; //  # Pixels limit for outlier removal in length
-        double fRecw = 0.4; //  # Pixels limit for outlier removal in width
-        //  (the higher the less outliers removed)
-
-        double Nptc = (double) clust.size(); //  # Pixels in cluster
-
-        if (Nptc == 0) {
-            //  Empty cluster
-            return new double[]{Len, Wid, Hed, Cen[0], Cen[1]};
-        }
-
-        //  (Note, Clust is [x; y] for each pixel in the cluster)
-        //  Sums, quadratic sums and cross-sum in units of pixels
-        final  double[] sJ = matlabSumRow(clust, 1); //  Sigma( x), Sigma( y)
-        final  double[] sJ2 = matlabSumRow(clust, 2); //  Sigma( x2), Sigma( y2)
-        final  double sJx = matlabSumCross(clust); //  Sigma( xy)
-
-        Cen[0] = sJ[0] / Nptc; //  [centre-x; centre-y]
-        Cen[1] = sJ[1] / Nptc; //  [centre-x; centre-y]
-
-        //System.out.println("\nCen: " + Cen[0] + " " + Cen[1] + " Nptc: " + Nptc + " Sj2: " + Sj2[0] + " " + Sj2[1] + " Sjx: " + Sjx);
-
-        // create new cluster
-        List<double[]> Clust0 = new ArrayList<double[]>();
-        for (int[] element : clust) {
-            Clust0.add(new double[]{(double) element[0] - Cen[0], (double) element[1] - Cen[1]}); //  Cluster pixels wrt centre
-        }
-        //  Stdev and correlation in units of meters
-        final double s2x = (sJ2[0] - sJ[0] * sJ[0] / Nptc) * pixsz[0] * pixsz[0]; //  Sigma( x2)- Sigma( x)^2/ N
-        final double s2y = (sJ2[1] - sJ[1] * sJ[1] / Nptc) * pixsz[1] * pixsz[1]; //  Sigma( y2)- Sigma( y)^2/ N
-        final double r2 = (sJx - sJ[0] * sJ[1] / Nptc) * pixsz[0] * pixsz[1]; //  Sigma( xy)- Sigma( x).Sigma( y)/ N
-        //System.out.println("Cen: " + Cen[0] + " " + Cen[1] + " r2 " + r2 + " s2x " + s2x + " s2y " + s2y);
-
-        if ((Math.abs(r2) / (pixsz[0] * pixsz[1])) > 1 / 40.0) // (if r2~= 0)
-        {
-            //  Elongated shape (as seen in meters frame)
-            double QQ = (s2y - s2x) / (2.0 * r2);
-            ap = QQ + Math.sqrt(QQ * QQ + 1.0); //  RC of best fitting line (in meters coord frame)
-            //  RC of line perpendicular to best fitting line:
-            double a2 = QQ - Math.sqrt(QQ * QQ + 1.0);
-            //  (However, ap and a2 may be interchanged, not known here)
-            double w1 = ap * ap + 1.0;
-            double w2 = a2 * a2 + 1.0;
-            //  Distances of all cluster pixels to best fitting line (in meters)
-            //  times sqrt( w1):
-            double[] d1 = matlabSumProdRegmat2D(new double[]{ap * pixsz[0], -1.0 * pixsz[1]}, Clust0);
-            //  Average (absolute) distance (m) of cluster pixels to line (times 2):
-            double ma1 = 2.0 * matlabMeanAbs1D(d1) / Math.sqrt(w1);
-            //  One pixel distance along direction ap is dl1 meters:
-            double dl1 = Math.sqrt((pixsz[0] * pixsz[0] + ap * ap * pixsz[1] * pixsz[1]) / w1);
-            // Wid= max( ma1+ realsqrt( 0.5* dl1* dl1+ ma1* ma1)- dl1, dl1); //  Width (meters)
-            // Wid= max( ma1+ realsqrt( 0.5* dl1* dl1+ ma1* ma1), dl1); //  Width (meters)
-            //  (The above formula approximates the relation between "ma1" and "Wid"
-            //  for a rectangular noise-free cluster, width an accuracy of +/- 0.5
-            //  pixel and a minimum value of 1 pixel for an unresolved target.)
-            Wid = Math.max(2.0 * ma1, dl1); //  Width (meters)
-            //  Same for perpendicular line:
-            double[] d2 = matlabSumProdRegmat2D(new double[]{a2 * pixsz[0], -1.0 * pixsz[1]}, Clust0);
-            double ma2 = 2 * matlabMeanAbs1D(d2) / Math.sqrt(w2);
-            double dl2 = Math.sqrt((pixsz[0] * pixsz[0] + a2 * a2 * pixsz[1] * pixsz[1]) / w2);
-            // Len= max( ma2+ realsqrt( 0.5* dl2* dl2+ ma2* ma2)- dl2, dl2); //  Length (meters)
-            // Len= max( ma2+ realsqrt( 0.5* dl2* dl2+ ma2* ma2), dl2); //  Length (meters)
-            Len = Math.max(2.0 * ma2, dl2); //  Length (meters)
-            //  At this point, it is still not know which of Len and Wid is actually
-            //  the longer or shorter dimension
-            //System.out.println(" Len: " + Len + " Wid: " + Wid + " ma1 " + ma1 + " dl1 " + dl1 + " ma2 " + ma2 + " dl2 " + dl2 + " ap " + ap + " a2 " + a2);
-
-            //  Which points are outliers (further than fRec pixels out of box):
-            List<int[]> clust1 = new ArrayList<int[]>();
-            // find( abs( d1)/ realsqrt( w1)- Wid/ 2> fRecw* dl1 | abs( d2)/ realsqrt( w2)- Len/ 2> fRecl* dl2);
-            for (int i = 0; i < d1.length; i++) {
-                if ((Math.abs(d1[i]) / Math.sqrt(w1) - Wid / 2.0 > fRecw * dl1) || (Math.abs(d2[i]) / Math.sqrt(w2) - Len / 2.0 > fRecl * dl2)) {
-                    //  Remove outliers and call recursively
-                } else {
-                    clust1.add(clust.get(i));
-                }
-            }
-
-            //System.out.println("Clust size : " + Clust.size() + " clust1 size: " + clust1.size());
-            if (clust1.size() < clust.size()) {
-                //System.out.println(clust1.size());
-                double[] result = LenWidHedd(clust1, pixsz);
-                return result;
-            }
-
-            //  Change length and width if needed to get length as the longest (in m):
-            if (Len < Wid) {
-                double tmp = Len;
-                Len = Wid;
-                Wid = tmp;
-                ap = a2;
-            }
-        } else {
-            //  Round shape or line on sample axis or on record axis
-            //System.out.println("Round shape or line on sample axis or on record axis Cen: " + Cen[0] + " " + Cen[1] + " Len: " + Len + " Wid: " + Wid);
-
-            //  Average (absolute) distance of cluster pixels [to x-axis; to y-axis]
-            //  (times 2) (in units of pixels):
-            double[] ma = matlabMeanAbs2D(Clust0);
-            ma[0] = ma[0] * 2.0;
-            ma[1] = ma[1] * 2.0;
-            //  Cluster size along [x-axis; y-axis] (meters):
-            // Siz= max( ma+ realsqrt( 0.5+ ma.* ma)- 1, 1).* Pixsz;
-            double[] Siz = new double[]{Math.max(ma[0] + Math.sqrt(0.5 + ma[0] * ma[0]), 1) * pixsz[0], Math.max(ma[1] + Math.sqrt(0.5 + ma[1] * ma[1]), 1) * pixsz[1]};
-            if (Math.abs(Math.sqrt(s2x / Nptc) - Math.sqrt(s2y / Nptc)) < (Math.max(pixsz[0], pixsz[1]) / 40.0)) //  (if s2x== s2y)
-            {
-                //  Round shape
-                Len = (Siz[0] + Siz[1]) / 2.0;
-                Wid = Len;
-                ap = 0.0;
-            } else {
-                if (s2x > s2y) {
-                    //  Line on sample axis
-                    Len = Siz[0];
-                    Wid = Siz[1];
-                    ap = 0.0;
-                } else {
-                    //  Line on record axis
-                    Len = Siz[1];
-                    Wid = Siz[0];
-                    ap = Double.POSITIVE_INFINITY;
-                }
-            }
-        }
-
-        Hed = Math.atan(ap); //  Heading in rad [-pi/2..pi/2]
-
-        return new double[]{clust.size(), Cen[0], Cen[1], Len, Wid, Math.toDegrees(Hed)};
-    }
-
-    // return the smallest x and the smallest y in the Vector
-    private double[] matlabMinRow(List<int[]> table) {
-        double[] result = {0.0, 0.0};
-        if (table.size() > 0) {
-            result[0] = table.get(0)[0];
-            result[1] = table.get(0)[1];
-            for (int i = 1; i < table.size(); i++) {
-                if (result[0] > (double) table.get(i)[0]) {
-                    result[0] = (double) table.get(i)[0];
-                }
-                if (result[1] > (double) table.get(i)[1]) {
-                    result[1] = (double) table.get(i)[1];
-                }
-            }
-        }
-        return result;
-    }
-
-    // return the largest x and the largest y in the Vector
-    private double[] matlabMaxRow(List<int[]> table) {
-        double[] result = {0.0, 0.0};
-        if (table.size() > 0) {
-            result[0] = table.get(0)[0];
-            result[1] = table.get(0)[1];
-            for (int i = 1; i < table.size(); i++) {
-                if (result[0] < (double) table.get(i)[0]) {
-                    result[0] = (double) table.get(i)[0];
-                }
-                if (result[1] < (double) table.get(i)[1]) {
-                    result[1] = (double) table.get(i)[1];
-                }
-            }
-        }
-        return result;
-    }
-
-    private double[] matlabSumRow(List<int[]> table, int power) {
-        double[] result = {0.0, 0.0};
-        for (int i = 0; i < table.size(); i++) {
-            result[0] = result[0] + Math.pow((double) table.get(i)[0], power);
-            result[1] = result[1] + Math.pow((double) table.get(i)[1], power);
-        }
-        return result;
-    }
-
-    private double matlabSumCross(List<int[]> table) {
-        double result = 0.0;
-        for (int i = 0; i < table.size(); i++) {
-            result = result + (double) table.get(i)[0] * (double) table.get(i)[1];
-        }
-        return result;
-    }
-
-    private double[] matlabSumProdRegmat2D(double regmat[], List<double[]> table) {
-        double[] result = new double[table.size()];
-        for (int i = 0; i < table.size(); i++) {
-            result[i] = regmat[0] * (double) table.get(i)[0] + regmat[1] * (double) table.get(i)[1];
-        }
-        return result;
-    }
-
-    private double[] matlabMeanAbs2D(List<double[]> table) {
-        double[] result = new double[]{0.0, 0.0};
-        for (int i = 0; i < table.size(); i++) {
-            result[0] = result[0] + (double) Math.abs(table.get(i)[0]);
-            result[1] = result[1] + (double) Math.abs(table.get(i)[1]);
-        }
-        // calculate mean of the values
-        result[0] = result[0] / table.size();
-        result[1] = result[1] / table.size();
-
-        return result;
-    }
-
-    private double matlabMeanAbs1D(double[] table) {
-        double result = 0.0;
-        for (int i = 0; i < table.length; i++) {
-            result += (double) Math.abs(table[i]);
-        }
-        // calculate mean of the values
-        result = result / table.length;
-
-        return result;
-    }
-
     public double[] getValues() {
         double[] values = new double[2 * boatArray.length];
         int i = 0;
@@ -1161,7 +723,7 @@ public class DetectedPixels {
     public List<Geometry> getThresholdclipPixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        for (boatPixels boat : listboatneighbours) {
+        for (BoatPixel boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdclipPixels();
             for (int[] position : positions) {
                 out.add(gf.createPoint(new Coordinate(position[0], position[1])));
@@ -1174,7 +736,7 @@ public class DetectedPixels {
     public List<Geometry> getThresholdaggregatePixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        for (boatPixels boat : listboatneighbours) {
+        for (BoatPixel boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdaggregatePixels();
             for (int[] position : positions) {
                 out.add(gf.createPoint(new Coordinate(position[0], position[1])));

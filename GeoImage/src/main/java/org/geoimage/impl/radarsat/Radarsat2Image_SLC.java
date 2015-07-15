@@ -54,7 +54,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     }
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
@@ -72,9 +72,34 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         }finally{
         }
         return -1;
-
     }
-
+    
+    @Override
+    public int[] read(int x, int y,int w,int h,int band) {
+    	int[] data=new int[w*h];
+        TIFFImageReadParam t = new TIFFImageReadParam();
+        t.setSourceRegion(new Rectangle(x, y, w, h));
+        TIFF tiff=getImage(band);
+        try {            
+            int[] img =  tiff.getReader().read(0, t).getRaster().getSamples(x, y,w,h, 1,(int[])null);
+            int[] real =  tiff.getReader().read(0, t).getRaster().getSamples(x, y,w,h, 0,(int[])null);
+            for(int i=0;i<img.length;i++){
+            	data[i]= (int) Math.sqrt(real[i] * real[i] + img[i] * img[i]);
+            }
+            
+        } catch (IOException ex) {
+        	logger.error(ex.getMessage(),ex);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+        	logger.warn(ex.getMessage());
+        }catch(IllegalArgumentException iae){
+        	logger.warn(iae.getMessage());
+        }finally{
+        }
+        return data;
+    }
+    
+    
+    
     @Override
     public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {

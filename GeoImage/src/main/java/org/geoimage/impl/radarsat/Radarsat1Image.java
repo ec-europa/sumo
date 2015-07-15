@@ -368,7 +368,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[2];
@@ -464,6 +464,11 @@ public class Radarsat1Image extends SarImageReader {
 
         return null;
     }
+	@Override
+	public int[] read(int x, int y, int width, int height, int band) throws IOException {
+		return readTile(x,y,width,height,band);
+	}
+    
     /*
     public IntTile readTile(int x, int y, int width, int height) {
     if (y + height > ySize) {
@@ -807,6 +812,9 @@ public class Radarsat1Image extends SarImageReader {
 	public int getNBand() {
 		return 1;
 	}
+
+
+
 
 	
 }

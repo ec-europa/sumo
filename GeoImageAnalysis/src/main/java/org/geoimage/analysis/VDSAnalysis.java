@@ -168,6 +168,12 @@ public class VDSAnalysis{
                 	kdist.setImageData(gir, xLeftTile, yTopTile, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                     
                 	int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                	int[] data2=null;
+                	try{
+                		data2 = gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                	}catch(Exception e){
+                		
+                	}	
                 	kdist.estimate(null,data);
 
                 	double[][][] thresh = kdist.getDetectThresh();

@@ -26,6 +26,7 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -166,9 +167,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
         IImageLayer l=Platform.getCurrentImageLayer();
         if(l!=null){
                 try {
-                	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox();
-                    if(imageP==null)
-                    	imageP=((SarImageReader)l.getImageReader()).buildBox();
+                	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                     GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
                     addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
                 } catch (Exception ex) {

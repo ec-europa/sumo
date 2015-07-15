@@ -374,7 +374,7 @@ public class TiledBufferedImage implements GeoImageReader {
     }
 
 
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         return readTile(x, y, 1, 1,band)[0];
     }
 

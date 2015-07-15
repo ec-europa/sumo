@@ -15,6 +15,7 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -53,9 +54,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                 	IImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox();
-                            if(imageP==null)
-                            	imageP=((SarImageReader)l.getImageReader()).buildBox();
+                        	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
                             addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
                         } catch (Exception ex) {

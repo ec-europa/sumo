@@ -87,7 +87,7 @@ public class PositionDialog extends javax.swing.JDialog{
 	        this.jLabel6.setText("-1");
 		}
         FastImageLayer parent=(FastImageLayer)layer.getParent();
-        this.jLabel8.setText(""+parent.getImageReader().read(imagePosition.x, imagePosition.y,parent.getActiveBand()));
+        this.jLabel8.setText(""+parent.getImageReader().readPixel(imagePosition.x, imagePosition.y,parent.getActiveBand()));
     }
     
     public void setDistance(final String distance){

@@ -333,7 +333,7 @@ public class EnvisatImage extends SarImageReader {
 
     // </editor-fold>
     @Override
-    public int read(int x, int y, int band) {
+    public int readPixel(int x, int y, int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[2];
@@ -397,6 +397,13 @@ public class EnvisatImage extends SarImageReader {
         return xOffset;
     }
 
+
+	@Override
+	public int[] read(int x, int y, int width, int height, int band) throws IOException {
+		return readTile(x,y,width,height,band) ;
+	}
+	
+    
     @Override
     public int[] readTile(int x, int y, int width, int height, int band) {
         return readTile(x, y, width, height, new int[width * height], band);
@@ -655,5 +662,6 @@ public class EnvisatImage extends SarImageReader {
 
 
     }
-	
+
+
 }
