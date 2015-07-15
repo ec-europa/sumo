@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.geoimage.impl.TIFF;
 import org.geoimage.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
 /**
  * 
@@ -24,7 +27,7 @@ public class Sentinel1SLC extends Sentinel1 {
     }
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[4];
@@ -107,6 +110,53 @@ public class Sentinel1SLC extends Sentinel1 {
         return tile;
     }
 
+    
+    @Override
+	public int[] read(int x, int y, int w, int h, int band) throws IOException {
+        TIFF tiff=getImage(band);
+        
+        int length=w*h;
+        int[] data  = new int[]{y, y + length};
+       
+        //positioning in file images y=rows image.xSize=cols 4=numero bytes 
+        int offset =  (y * (x * 4 ));
+        byte[] rawData = new byte[(tiff.xSize * 4) * length];
+        try {
+        	File fimg = tiff.getImageFile();
+			fss = new RandomAccessFile(fimg.getAbsolutePath(), "r");
+			fss.seek(offset);
+           	fss.read(rawData);
+        }finally{
+        	try {
+				fss.close();
+			} catch (IOException e) {
+				logger.warn(e.getMessage());
+			}
+        }
+        
+		Rectangle rect = new Rectangle(x, y, w, h);
+        rect = rect.intersection(getImage(band).bounds);
+
+        int yOffset = 4*x;
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+            	//i*yOffset= start col position j*4=col position from start 4*rect.x=rows offset  
+                int temp = i * yOffset + j*4 + 4 * rect.x ;
+                
+                byte[] bufferReal={rawData[temp+1], rawData[temp+0]};
+                //true = use Big Endian
+                long real = ByteUtils.byteArrayToShort(bufferReal,true);
+                byte[] bufferImg={rawData[temp+3], rawData[temp+2]};
+                long img = ByteUtils.byteArrayToShort(bufferImg,true);
+                
+                data[(i + yinit) * w + j + xinit] = (int)Math.sqrt(real*real+img*img);
+            }
+        }
+        return data;
+	}
+    
    
     @Override
     public int getNumberOfBytes() {

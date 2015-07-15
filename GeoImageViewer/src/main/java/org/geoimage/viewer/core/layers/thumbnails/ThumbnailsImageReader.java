@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr
  */
-public class ThumbnailsImageReader extends SarImageReader {
+public class ThumbnailsImageReader  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ThumbnailsImageReader.class);
 
 	protected int xSize = -1;
@@ -29,40 +30,35 @@ public class ThumbnailsImageReader extends SarImageReader {
     private BufferedImage overview=null;
     private int[] size=null;
     private float[] ratio=null;
-
+    private ArrayList<Gcp> gcps=null;
+    private GeoTransform transformation=null;
+    
     public ThumbnailsImageReader(ThumbnailsManager tm) {
-    	super(null);
         this.tm = tm;
         parsePTS(tm.getPTS());
-        geotransform = new GcpsGeoTransform(gcps, "EPSG:4326");
+        transformation=new GcpsGeoTransform(gcps, "EPSG:4326");
         overview = tm.getOverview();
         size = tm.getImageSize();
         ratio = new float[]{overview.getWidth()/(1f*size[0]),overview.getHeight()/(1f*size[1])};
-        displayName = "Thumbnails";
         xSize = size[0];
         ySize = size[1];
     }
 
-    @Override
-    public int getNBand() {
-        return 1;
-    }
 
-    @Override
-    public int getNumberOfBytes() {
-        return 2;
-    }
-
-    @Override
-    public int getType(boolean oneBand) {
-        return BufferedImage.TYPE_USHORT_GRAY;
-    }
-
-    public  double getPRF(int x,int y){
-        return getPRF();
-    }
     
-    private void parsePTS(File pts) {
+    public GeoTransform getTransformation() {
+		return transformation;
+	}
+
+
+
+	public void setTransformation(GeoTransform transformation) {
+		this.transformation = transformation;
+	}
+
+
+
+	private void parsePTS(File pts) {
         try {
             RandomAccessFile temp = new RandomAccessFile(pts, "r");
             String line = null;
@@ -84,55 +80,6 @@ public class ThumbnailsImageReader extends SarImageReader {
         }
     }
 
-    @Override
-    public String getAccessRights() {
-        return "r";
-    }
-
-    @Override
-    public String[] getFilesList() {
-        return new String[]{tm.getPTS().getAbsolutePath()};
-    }
-
-    @Override
-    public boolean initialise() {
-        return true;
-    }
-
-
-    @Override
-    public int[] readTile(int x, int y, int width, int height,int band) {
-        return null;
-    }
-
-    @Override
-    public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outLength, int xSize, int ySize,boolean filter,int band) {
-        return null;
-    }
-
-    @Override
-    public int read(int x, int y,int band) {
-        return overview.getRaster().getSample((int)(x*ratio[0]), (int)(y*ratio[1]), 0);
-    }
-
-    @Override
-    public String getBandName(int band) {
-        return "N/A";
-    }
-
-    @Override
-    public void preloadLineTile(int y, int height,int band) {
-    }
-
-    @Override
-    public String getFormat() {
-        return "Dummy";
-    }
-
-    @Override
-    public double getImageAzimuth() {
-        return 0;
-    }
 
     public int getBand() {
         return 0;
@@ -146,34 +93,13 @@ public class ThumbnailsImageReader extends SarImageReader {
   		return null;
   	}
 
-	@Override
 	public int getWidth() {
 		return xSize;
 	}
 
-	@Override
 	public int getHeight() {
 		return ySize;
 	}
 
-	@Override
-	public File getOverviewFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return false;
-	}
-
-	@Override
-	public String getImgName() {
-		return displayName;
-	}
-	@Override
-	public String getDisplayName(int band) {
-		return displayName;
-	}
 }
 

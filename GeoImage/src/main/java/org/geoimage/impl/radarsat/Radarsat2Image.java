@@ -101,7 +101,7 @@ public class Radarsat2Image extends SarImageReader {
             parseProductXML(productxml);
             
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
-            read(0,0,0);
+            readPixel(0,0,0);
         } catch (Exception ex) {
             dispose();
             logger.error(ex.getMessage(),ex);
@@ -138,6 +138,51 @@ public class Radarsat2Image extends SarImageReader {
     	return this.tiffImages.get(getBandName(band));
     }
     
+	@Override
+	public int[] read(int x, int y, int w, int h, int band) throws IOException {
+		Rectangle rect = new Rectangle(x, y, w, h);
+        rect = rect.intersection(bounds);
+        int[] data= new int[h*w];
+        if (rect.isEmpty()) {
+            return data;
+        }
+
+        TIFFImageReadParam tirp=new TIFFImageReadParam();
+        tirp.setSourceRegion(rect);
+        TIFF tiff=getImage(band);
+        int[] rawData = tiff.getReader().read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        
+        int yOffset = getImage(band).xSize;
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+                int temp = i * yOffset + j + rect.x;
+                data[(i + yinit) * w + j + xinit] = rawData[temp];
+            }
+        }
+        return data;
+	}
+
+    
+    @Override
+    public void preloadLineTile(int y, int length,int band) {
+        if (y < 0) {
+            return;
+        }
+        preloadedInterval = new int[]{y, y + length};
+        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
+        TIFFImageReadParam tirp=new TIFFImageReadParam();
+        tirp.setSourceRegion(rect);
+        TIFF tiff=getImage(band);
+        try {
+            preloadedData = tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
+        } catch (Exception ex) {
+        	logger.error(ex.getMessage(),ex);
+            System.gc();
+        }
+    }
+    
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
@@ -163,7 +208,7 @@ public class Radarsat2Image extends SarImageReader {
 
 
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t=new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
@@ -192,23 +237,7 @@ public class Radarsat2Image extends SarImageReader {
     	}	
     }*/
 
-    @Override
-    public void preloadLineTile(int y, int length,int band) {
-        if (y < 0) {
-            return;
-        }
-        preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
-        TIFFImageReadParam tirp=new TIFFImageReadParam();
-        tirp.setSourceRegion(rect);
-        TIFF tiff=getImage(band);
-        try {
-            preloadedData = tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
-        } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-            System.gc();
-        }
-    }
+    
 
     @Override
     public void dispose() {

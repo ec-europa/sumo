@@ -33,6 +33,8 @@ public class AffineGeoTransform implements GeoTransform {
     AffineTransform geo2pix;
     private int m_translationX;
     private int m_translationY;
+    private double[] pixelSize;
+    
 
     public AffineGeoTransform(AffineTransform atpix2geo, String epsgGeoProj) {
         pix2geo = atpix2geo;
@@ -41,6 +43,7 @@ public class AffineGeoTransform implements GeoTransform {
         try {
             geo2pix = pix2geo.createInverse();
             sourceCRS = CRS.decode(epsgGeoProj);
+            calcPixelSize();
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -150,7 +153,7 @@ public class AffineGeoTransform implements GeoTransform {
     }
 
     // get pixel size, returns the pixel size in both directions
-    public double[] getPixelSize()
+    public void calcPixelSize()
     {
         double[] pixelsize = {0.0, 0.0};
         // should be in the image reader class
@@ -166,9 +169,13 @@ public class AffineGeoTransform implements GeoTransform {
         gc.setDestinationGeographicPoint(latlon[0], latlon[1]);
         pixelsize[1] = gc.getOrthodromicDistance() / 100;
         
-        return pixelsize;
+        this.pixelSize=pixelsize;
     }
 
+    public double[] getPixelSize(){
+    	return this.pixelSize;
+    	
+    }
 
 	@Override
 	public double[] getPixelFromGeo(double xgeo, double ygeo) {

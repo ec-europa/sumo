@@ -228,8 +228,6 @@ public abstract class Sentinel1 extends SarImageReader {
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
             setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
             setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            
-    		super.bbox=buildBox();
 
             return true;
         } catch (TransformException ex) {
@@ -297,7 +295,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
     
     @Override
-    public int read(int x, int y,int band) {
+    public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=null;

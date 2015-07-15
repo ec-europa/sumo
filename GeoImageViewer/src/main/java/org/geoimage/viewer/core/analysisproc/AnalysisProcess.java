@@ -207,7 +207,7 @@ public  class AnalysisProcess implements Runnable {
 	                         System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
 	                     }else{
 	                    	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                         azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir);
+	                         azimuthAmbiguity = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);
 	                     }    
 	                     
 	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
@@ -251,12 +251,14 @@ public  class AnalysisProcess implements Runnable {
 	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
 	                 }
 	
+	                 //TODO merge azimuth ambiguites calculated on each band
+	                 /*
 	                 if (!gir.supportAzimuthAmbiguity()) {
 	                     System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
 	                 }else{
-	                	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                	 azimuthAmbiguity = new AzimuthAmbiguity(mergePixels.getBoats(), (SarImageReader)gir);
-	                 }
+	                	 //notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+	                	 //azimuthAmbiguity = new AzimuthAmbiguity(mergePixels.getBoats(), (SarImageReader)gir,0);
+	                 }*/
 	                 
 	                 if(stop){
 	                     stop();

@@ -4,7 +4,6 @@
  */
 package org.geoimage.viewer.actions;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,8 +15,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
@@ -27,11 +24,10 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -278,9 +274,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         IImageLayer imgLayer=Platform.getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
-        		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox();
-                if(imageP==null)
-                	imageP=((SarImageReader)imgLayer.getImageReader()).buildBox();
+        		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
                 GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
                 // if 5 args, set a specific name

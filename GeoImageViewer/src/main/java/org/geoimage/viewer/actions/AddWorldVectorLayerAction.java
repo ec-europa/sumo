@@ -5,9 +5,7 @@
 package org.geoimage.viewer.actions;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -18,10 +16,10 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
-import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -59,9 +57,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                 	if(l!=null){
                         try {
                         	File shape=new File(Platform.getConfiguration().getDefaultLandMask());
-                        	Polygon imageP=((SarImageReader)l).getBbox();
-                            if(imageP==null)
-                            	imageP=((SarImageReader)l).buildBox();
+                        	Polygon imageP=((SarImageReader)l).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
                             addLayerInThread(gl, (IImageLayer) l);
                         } catch (Exception ex) {
