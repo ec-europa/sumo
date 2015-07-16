@@ -6,7 +6,9 @@ package org.geoimage.viewer.widget.panels;
 
 import java.awt.Color;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -137,14 +139,12 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         gl.getAttributes(geom).set(gl.getSchema()[columnIndex - 1], aValue);
         Platform.getGeoContext().setDirty(true);
     }
-/*
-    public void addTableModelListener(TableModelListener l) {
-    }
 
-    public void removeTableModelListener(TableModelListener l) {
-    }*/
-
-    // specific VDS rendering
+    /**
+     *  specific VDS rendering
+     * @param selectionLine
+     * @param display
+     */
     public void changeSelection(int selectionLine, boolean display) {
         if (selectionLine != -1&&gl.getGeometries().size()>0) {
             Geometry geom = gl.getGeometries().get(selectionLine);
@@ -155,7 +155,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             Platform.getGeoContext().setZoom((float) 1.0);
             GeometryFactory gf = new GeometryFactory();
             // generate the geometry for the target shape
-            Vector<Geometry> winGeom = new Vector<Geometry>();
+            List<Geometry> winGeom = new ArrayList<Geometry>();
             int size = 100;
             Coordinate[] coordinates = new Coordinate[5];
             coordinates[0] = new Coordinate(posX - size / 2, posY - size / 2);
@@ -165,7 +165,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             coordinates[4] = new Coordinate(posX - size / 2, posY - size / 2);
             winGeom.add(gf.createLinearRing(coordinates));
             // generate the geometry for the boat shape
-            Vector<Geometry> boatGeom = new Vector<Geometry>();
+            List<Geometry> boatGeom = new ArrayList<Geometry>();
             Attributes boatattributes = gl.getAttributes(geom);
             double[] pixelsize = il.getImageReader().getGeoTransform().getPixelSize();
             double boatwidth = (Double) boatattributes.get(VDSSchema.ESTIMATED_WIDTH) / pixelsize[0];
@@ -242,7 +242,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 	                // create new geometry
 	                GeometryFactory gf = new GeometryFactory();
 	                // generate the geometry for the target shape
-	                Vector<Geometry> winGeom = new Vector<Geometry>();
+	                List<Geometry> winGeom = new ArrayList<Geometry>();
 	                Coordinate[] coordinatesvertical = new Coordinate[2];
 	                coordinatesvertical[0] = new Coordinate(posX + direction * (0 - posY) / pixeldelta, 0);
 	                coordinatesvertical[1] = new Coordinate(posX + direction * (il.getImageReader().getHeight() - posY) / pixeldelta, il.getImageReader().getHeight());

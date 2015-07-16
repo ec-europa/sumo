@@ -104,7 +104,7 @@ public class PreferencesDB {
     	// creates preferences fields
     	
     	// vds analysis preferences
-        insertIfNotExistRow(PREF_DISPLAY_PIXELS, "true");
+        insertIfNotExistRow(PREF_DISPLAY_PIXELS, "false");
         insertIfNotExistRow(PREF_DISPLAY_BANDS, "true");
         insertIfNotExistRow(PREF_TARGETS_COLOR_BAND_0, "0x0000FF");
         insertIfNotExistRow(PREF_TARGETS_SIZE_BAND_0, "1.0");
