@@ -610,16 +610,24 @@ public class DetectedPixels {
         }
     //computeBoatsAttributes();
     }
-
+    
+    /**
+     * 
+     * @param distance
+     * @param tilesize
+     * @param removelandconnectedpixels
+     * @param bands
+     * @param mask
+     * @param kdist
+     * @throws IOException
+     */
     public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
-    	final long startAgglomerating=System.currentTimeMillis();
-    	
         aggregate((int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
-        
-        final long stopAgglomerating=System.currentTimeMillis();
-        System.out.println("Agglomerating time:"+(stopAgglomerating-startAgglomerating));
     }
 
+    /**
+     * 
+     */
     public void computeBoatsAttributes() {
         Collection<List<int[]>> enumeration = aggregatedBoats.values();
         List <Boat> boatsTemp=new ArrayList<Boat>();
@@ -632,7 +640,6 @@ public class DetectedPixels {
             int[][] it = agBoat.toArray(new int[0][]);
         
             // get teh first boat in teh aggregate
-            
             int[] pixel = null;
             if (it.length>0) {
                 pixel = it[0];
@@ -702,30 +709,25 @@ public class DetectedPixels {
                     }
                 }
             }
-
             // add the sorted boats to the table
             for (Boat boat : boatsinStripe) {
             	boatsTemp.add(boat);
             }
         }
-        
         boatArray=boatsTemp.toArray(new Boat[0]);			//new double[boatsTemp.size()][];
-        
     }
 
-    //AG inserted a test to filter boats by length
+    /**
+     * AG inserted a test to filter boats by length
+     * @param list
+     */
     private void computeBoatsAttributesAndStatistics(List<BoatPixel> list) {
-
     	 List <Boat> boatsTemp=new ArrayList<Boat>();
     	 
         // compute attributes and statistics values on boats
         for (BoatPixel boat : list) {
             boat.computeValues(pixsam,pixrec);
             if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
-            	//double[] boatvalues = new double[]{boat.getId(), boat.getBoatposition()[0], 
-            	//boat.getBoatposition()[1], boat.getMaximumValue(), boat.getMeanValue(), boat.getStdValue(), 
-            	//boat.getThresholdValue(), boat.getBoatnumberofpixels(), boat.getBoatlength(), boat.getBoatwidth(), boat.getBoatheading()};
-            	
             	Boat b=new Boat(boat.getId(),(int)boat.getBoatposition()[0], (int)boat.getBoatposition()[1],(int)boat.getBoatnumberofpixels(),
             			(int)boat.getBoatlength(),(int)boat.getBoatwidth(),(int)boat.getBoatheading(),boat.getMaximumValue(),boat.getMeanValue(),
             			boat.getStdValue(),boat.getThresholdValue(),0);
@@ -783,6 +785,10 @@ public class DetectedPixels {
         boatArray=boatsTemp.toArray(new Boat[0]);
     }
 
+    /**
+     * 
+     * @return
+     */
     public double[] getValues() {
         double[] values = new double[2 * boatArray.length];
         int i = 0;
@@ -793,6 +799,11 @@ public class DetectedPixels {
         return values;
     }
 
+    
+    /**
+     * 
+     * @return
+     */
     public List<Geometry> getAllDetectedPixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();

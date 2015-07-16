@@ -34,8 +34,11 @@ public class LayerDialog extends javax.swing.JDialog {
         this.setAlwaysOnTop(false);
         initComponents();
         jTabbedPane1.add("Description",new LayerPanel(layer));
+        
         if(layer instanceof IImageLayer) jTabbedPane1.add("Image parameters",new ImagePanel((IImageLayer)layer));
+        
         if(layer instanceof IVectorLayer) jTabbedPane1.add("Style",new VectorPanel((IVectorLayer)layer));
+        
         if(layer instanceof MaskVectorLayer)
         {
             if(layer instanceof IComplexVectorLayer)
@@ -49,7 +52,9 @@ public class LayerDialog extends javax.swing.JDialog {
         if(layer instanceof IEditable) jTabbedPane1.add("Edit",new EditorPanel((IEditable)layer));
         
         if(layer instanceof ISave) jTabbedPane1.add("Save",new SavePanel((ISave)layer));
+       
         if(layer instanceof ISelect) jTabbedPane1.add("Select",new SelectPanel((ISelect)layer));
+        
         pack();
     }
     /** This method is called from within the constructor to
