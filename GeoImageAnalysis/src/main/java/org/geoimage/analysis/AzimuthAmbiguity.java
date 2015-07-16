@@ -87,15 +87,17 @@ public class AzimuthAmbiguity {
     private int band=0;
     
     public AzimuthAmbiguity(Boat[] boatList, SarImageReader image,int band) {
+    	this.boatArray=boatList;
     	init();
     	this.band=band;
-    	this.boatArray=boatList;
+    	
     }
     
     public AzimuthAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold,int band) {
-        init();
+    	this.boatArray=boatList;
+    	init();
         this.band=band;
-        this.boatArray=boatList;
+        
     }
     
     /**
