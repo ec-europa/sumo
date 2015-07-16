@@ -88,6 +88,7 @@ public class AzimuthAmbiguity {
     
     public AzimuthAmbiguity(Boat[] boatList, SarImageReader image,int band) {
     	this.boatArray=boatList;
+    	this.sumoImage=image;
     	init();
     	this.band=band;
     	
@@ -95,6 +96,7 @@ public class AzimuthAmbiguity {
     
     public AzimuthAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold,int band) {
     	this.boatArray=boatList;
+    	this.sumoImage=image;
     	init();
         this.band=band;
         
@@ -137,8 +139,7 @@ public class AzimuthAmbiguity {
      * @throws IOException 
      */
     private int getWindowMaxPixelValue(int x,int y,int sizeX,int sizeY,int band) throws IOException{
-    	int[] data=sumoImage.readTile(x,y,sizeX,sizeY, band);
-    	int[] data2=sumoImage.read(x,y,sizeX,sizeY, band);
+    	int[] data=sumoImage.read(x,y,sizeX,sizeY, band);
     	int highest = data[0];
 	    for (int index = 1; index < data.length; index ++) {
 	        if (data[index] > highest) {
