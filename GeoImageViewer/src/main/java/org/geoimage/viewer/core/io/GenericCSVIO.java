@@ -153,8 +153,8 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            } else {
 	                types = line.split(",");
 	            }*/
-	            String[] attributes=ArrayUtils.subarray(titles, 2,titles.length);
-	            String[] types={"Double","Double","Double","Double","Double","Double",
+	            final String[] attributes=ArrayUtils.subarray(titles, 2,titles.length);
+	            final String[] types={"Double","Double","Integer","Double","Double","Double",
 	            		"Double","Double","Double","Double","Double","Double","Double",
 	            		"Date","Double"};
 	            
