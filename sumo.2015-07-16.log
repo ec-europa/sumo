@@ -97,3 +97,141 @@
 2015-07-16 00:18:18 INFO  DetectedPixels:279 - Aggregating pixel Num:4800  x:17802   y:9901
 2015-07-16 00:18:18 INFO  DetectedPixels:279 - Aggregating pixel Num:4900  x:15433   y:8897
 2015-07-16 02:26:07 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-07-16 02:34:13 INFO  DetectedPixels:356 - Aggregating pixel Num:100  x:16256   y:2785
+2015-07-16 02:34:14 INFO  DetectedPixels:356 - Aggregating pixel Num:200  x:15047   y:16634
+2015-07-16 02:34:14 INFO  DetectedPixels:356 - Aggregating pixel Num:300  x:14319   y:141
+2015-07-16 02:34:15 INFO  DetectedPixels:356 - Aggregating pixel Num:400  x:14581   y:12234
+2015-07-16 02:34:16 INFO  DetectedPixels:356 - Aggregating pixel Num:500  x:17738   y:15014
+2015-07-16 02:34:16 INFO  DetectedPixels:356 - Aggregating pixel Num:600  x:16959   y:8754
+2015-07-16 02:34:17 INFO  DetectedPixels:356 - Aggregating pixel Num:700  x:12115   y:4556
+2015-07-16 02:34:17 INFO  DetectedPixels:356 - Aggregating pixel Num:800  x:14637   y:12408
+2015-07-16 02:34:18 INFO  DetectedPixels:356 - Aggregating pixel Num:900  x:16972   y:8730
+2015-07-16 02:34:18 INFO  DetectedPixels:356 - Aggregating pixel Num:1000  x:15646   y:13600
+2015-07-16 02:34:18 INFO  DetectedPixels:356 - Aggregating pixel Num:1100  x:16353   y:14544
+2015-07-16 02:34:19 INFO  DetectedPixels:356 - Aggregating pixel Num:1200  x:15436   y:8903
+2015-07-16 02:34:19 INFO  DetectedPixels:356 - Aggregating pixel Num:1300  x:14164   y:14367
+2015-07-16 02:34:20 INFO  DetectedPixels:356 - Aggregating pixel Num:1400  x:14321   y:126
+2015-07-16 02:34:20 INFO  DetectedPixels:356 - Aggregating pixel Num:1500  x:16707   y:10394
+2015-07-16 02:34:21 INFO  DetectedPixels:356 - Aggregating pixel Num:1600  x:14799   y:16576
+2015-07-16 02:34:21 INFO  DetectedPixels:356 - Aggregating pixel Num:1700  x:12357   y:4447
+2015-07-16 02:34:22 INFO  DetectedPixels:356 - Aggregating pixel Num:1800  x:14776   y:16605
+2015-07-16 02:34:22 INFO  DetectedPixels:356 - Aggregating pixel Num:1900  x:15632   y:13580
+2015-07-16 02:34:22 INFO  DetectedPixels:356 - Aggregating pixel Num:2000  x:14587   y:12214
+2015-07-16 02:34:23 INFO  DetectedPixels:356 - Aggregating pixel Num:2100  x:13611   y:3991
+2015-07-16 02:34:23 INFO  DetectedPixels:356 - Aggregating pixel Num:2200  x:14591   y:12120
+2015-07-16 02:34:23 INFO  DetectedPixels:356 - Aggregating pixel Num:2300  x:13717   y:14894
+2015-07-16 02:34:24 INFO  DetectedPixels:356 - Aggregating pixel Num:2400  x:6897   y:9002
+2015-07-16 02:34:24 INFO  DetectedPixels:356 - Aggregating pixel Num:2500  x:13717   y:14878
+2015-07-16 02:34:24 INFO  DetectedPixels:356 - Aggregating pixel Num:2600  x:16144   y:14784
+2015-07-16 02:34:25 INFO  DetectedPixels:356 - Aggregating pixel Num:2700  x:9449   y:5334
+2015-07-16 02:34:25 INFO  DetectedPixels:356 - Aggregating pixel Num:2800  x:14314   y:11548
+2015-07-16 02:34:25 INFO  DetectedPixels:356 - Aggregating pixel Num:2900  x:16617   y:12791
+2015-07-16 02:34:25 INFO  DetectedPixels:356 - Aggregating pixel Num:3000  x:16614   y:12734
+2015-07-16 02:34:26 INFO  DetectedPixels:356 - Aggregating pixel Num:3100  x:14165   y:14372
+2015-07-16 02:34:26 INFO  DetectedPixels:356 - Aggregating pixel Num:3200  x:14744   y:16646
+2015-07-16 02:34:26 INFO  DetectedPixels:356 - Aggregating pixel Num:3300  x:18152   y:1055
+2015-07-16 02:34:27 INFO  DetectedPixels:356 - Aggregating pixel Num:3400  x:9686   y:5206
+2015-07-16 02:34:27 INFO  DetectedPixels:356 - Aggregating pixel Num:3500  x:16592   y:12869
+2015-07-16 02:34:27 INFO  DetectedPixels:356 - Aggregating pixel Num:3600  x:18855   y:8646
+2015-07-16 02:34:27 INFO  DetectedPixels:356 - Aggregating pixel Num:3700  x:17739   y:15012
+2015-07-16 02:34:28 INFO  DetectedPixels:356 - Aggregating pixel Num:3800  x:2685   y:12205
+2015-07-16 02:34:28 INFO  DetectedPixels:356 - Aggregating pixel Num:3900  x:14753   y:16629
+2015-07-16 02:34:28 INFO  DetectedPixels:356 - Aggregating pixel Num:4000  x:13958   y:11255
+2015-07-16 02:34:29 INFO  DetectedPixels:356 - Aggregating pixel Num:4100  x:6478   y:15409
+2015-07-16 02:34:29 INFO  DetectedPixels:356 - Aggregating pixel Num:4200  x:13244   y:12096
+2015-07-16 02:34:29 INFO  DetectedPixels:356 - Aggregating pixel Num:4300  x:17388   y:9177
+2015-07-16 02:34:29 INFO  DetectedPixels:356 - Aggregating pixel Num:4400  x:2751   y:11702
+2015-07-16 02:34:29 INFO  DetectedPixels:356 - Aggregating pixel Num:4500  x:16158   y:3568
+2015-07-16 02:34:30 INFO  DetectedPixels:356 - Aggregating pixel Num:4600  x:13928   y:14733
+2015-07-16 02:34:30 INFO  DetectedPixels:356 - Aggregating pixel Num:4700  x:16927   y:8859
+2015-07-16 02:34:30 INFO  DetectedPixels:356 - Aggregating pixel Num:4800  x:16757   y:10395
+2015-07-16 02:34:30 INFO  DetectedPixels:356 - Aggregating pixel Num:4900  x:14320   y:133
+2015-07-16 02:34:30 INFO  DetectedPixels:356 - Aggregating pixel Num:5000  x:14365   y:10407
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5100  x:16961   y:8748
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5200  x:14578   y:12207
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5300  x:18116   y:986
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5400  x:16969   y:8724
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5500  x:14470   y:15043
+2015-07-16 02:34:31 INFO  DetectedPixels:356 - Aggregating pixel Num:5600  x:16955   y:8764
+2015-07-16 02:34:32 INFO  DetectedPixels:356 - Aggregating pixel Num:5700  x:7934   y:8661
+2015-07-16 02:34:32 INFO  DetectedPixels:356 - Aggregating pixel Num:5800  x:14589   y:12186
+2015-07-16 02:34:32 INFO  DetectedPixels:356 - Aggregating pixel Num:5900  x:14972   y:3499
+2015-07-16 02:34:32 INFO  DetectedPixels:356 - Aggregating pixel Num:6000  x:14712   y:1917
+2015-07-16 02:34:33 INFO  DetectedPixels:356 - Aggregating pixel Num:6100  x:17452   y:8374
+2015-07-16 02:34:33 INFO  DetectedPixels:356 - Aggregating pixel Num:6200  x:14647   y:12792
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6300  x:16932   y:8873
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6400  x:12612   y:4556
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6500  x:14784   y:16597
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6600  x:6167   y:11108
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6700  x:17732   y:15044
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6800  x:16620   y:12795
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:6900  x:2752   y:11740
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:7000  x:13116   y:4508
+2015-07-16 02:34:34 INFO  DetectedPixels:356 - Aggregating pixel Num:7100  x:13073   y:2838
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7200  x:2753   y:11677
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7300  x:9718   y:6000
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7400  x:7824   y:9867
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7500  x:16623   y:12891
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7600  x:14576   y:12227
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7700  x:18764   y:13296
+2015-07-16 02:34:35 INFO  DetectedPixels:356 - Aggregating pixel Num:7800  x:14766   y:16640
+2015-07-16 02:34:54 ERROR AzimuthAmbiguity:205 - Error processing Azimuth Ambiguity
+java.lang.NullPointerException
+	at org.geoimage.analysis.AzimuthAmbiguity.init(AzimuthAmbiguity.java:189)
+	at org.geoimage.analysis.AzimuthAmbiguity.<init>(AzimuthAmbiguity.java:90)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:210)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:35:53 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.ArrayIndexOutOfBoundsException: 24890
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:468)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:280)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:93)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:35:53 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.ArrayIndexOutOfBoundsException: 24890
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:468)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:289)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:93)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:35:53 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.ArrayIndexOutOfBoundsException: 24890
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:468)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:289)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:93)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:41:27 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.NullPointerException
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:449)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:280)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:91)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:41:27 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.NullPointerException
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:449)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:289)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:91)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
+2015-07-16 02:41:27 ERROR KDistributionEstimation:523 - Error computing statistics for iniX:1   iniY:1
+java.lang.NullPointerException
+	at org.geoimage.analysis.KDistributionEstimation.calcStatValues(KDistributionEstimation.java:382)
+	at org.geoimage.analysis.KDistributionEstimation.computeStat(KDistributionEstimation.java:449)
+	at org.geoimage.analysis.KDistributionEstimation.estimate(KDistributionEstimation.java:289)
+	at org.geoimage.analysis.VDSAnalysis.analyse(VDSAnalysis.java:174)
+	at org.geoimage.analysis.VDSAnalysis.run(VDSAnalysis.java:91)
+	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:176)
+	at java.lang.Thread.run(Thread.java:745)
