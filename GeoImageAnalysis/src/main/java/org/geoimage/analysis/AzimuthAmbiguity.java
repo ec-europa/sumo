@@ -86,14 +86,16 @@ public class AzimuthAmbiguity {
     private Logger logger= LoggerFactory.getLogger(AzimuthAmbiguity.class);
     private int band=0;
     
-    public AzimuthAmbiguity(double[][] boatList, SarImageReader image,int band) {
+    public AzimuthAmbiguity(Boat[] boatList, SarImageReader image,int band) {
     	init();
     	this.band=band;
+    	this.boatArray=boatList;
     }
     
-    public AzimuthAmbiguity(double[][] boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold,int band) {
+    public AzimuthAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps, double rcsThreshold,int band) {
         init();
         this.band=band;
+        this.boatArray=boatList;
     }
     
     /**
@@ -161,12 +163,12 @@ public class AzimuthAmbiguity {
         logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
         int maxVal=getWindowMaxPixelValue(winUp.sizeX,winUp.sizeY,X_WINDOW_SIZE,Y_WINDOW_SIZE,band);
         
-        if(maxVal>(boat.getPixel().value*10)){
+        if(maxVal>(boat.getValue()*10)){
         	return true;
         }else{
         	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, -deltaAzimuth,pxSize ,pySize);
         	maxVal=getWindowMaxPixelValue(winDown.sizeX,winDown.sizeY,X_WINDOW_SIZE,Y_WINDOW_SIZE,band);
-        	if(maxVal>(boat.getPixel().value*10)){
+        	if(maxVal>(boat.getValue()*10)){
             	return true;
         	}	
         }	
