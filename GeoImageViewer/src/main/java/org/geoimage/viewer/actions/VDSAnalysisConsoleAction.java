@@ -206,58 +206,10 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         return ap.getResultLayers();
     }
     
-    
-    
-    
-    /**
- *
- * @param gir
- * @param pixels
- * @param runid
- * @return
-     * @throws GeoTransformException 
- */
-    public static GeometricLayer createGeometricLayer(GeoImageReader gir, DetectedPixels pixels, long runid) throws GeoTransformException {
-        GeometricLayer out = new GeometricLayer("point");
-        out.setName("VDS Analysis");
-        GeometryFactory gf = new GeometryFactory();
-        int count=0;
-        for (double[] boat : pixels.getBoats()) {
-
-            Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
-            atts.set(VDSSchema.ID, count++);
-            atts.set(VDSSchema.MAXIMUM_VALUE, boat[3]);
-            atts.set(VDSSchema.TILE_AVERAGE, boat[4]);
-            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat[5]);
-            atts.set(VDSSchema.THRESHOLD, boat[6]);
-            atts.set(VDSSchema.RUN_ID, runid + "");
-            atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat[7]);
-            atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
-            atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
-            atts.set(VDSSchema.SIGNIFICANCE, (boat[3]-boat[4])/(boat[4]*boat[5]));
-            atts.set(VDSSchema.DATE,Timestamp.valueOf(((SarImageReader)gir).getTimeStampStart()));
-
-            atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
-            atts.set(VDSSchema.DATE, Timestamp.valueOf(((SarImageReader)gir).getTimeStampStart()));
-            atts.set(VDSSchema.VS, 0);
-            //compute the direction of the vessel considering the azimuth of the image
-            //result is between 0 and 180 degree
-            double azimuth = ((SarImageReader)gir).getImageAzimuth();
-            double degree = boat[10] + 90 + azimuth;
-            if (degree > 180) {
-                degree = degree - 180;
-            }
-        
-            atts.set(VDSSchema.ESTIMATED_HEADING, degree);
-            out.put(gf.createPoint(new Coordinate(boat[1], boat[2])), atts);
-        }
-
-        return out;
-    }
-/**
- *
- * @return
- */
+	/**
+	 *
+	 * @return
+	 */
     public String getPath() {
         return "Analysis/VDS";
     }

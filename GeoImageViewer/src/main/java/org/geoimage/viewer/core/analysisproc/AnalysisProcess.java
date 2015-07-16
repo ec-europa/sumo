@@ -305,30 +305,30 @@ public  class AnalysisProcess implements Runnable {
 	        GeometryFactory gf = new GeometryFactory();
 	        long runid = System.currentTimeMillis();
 	        int count=0;
-	        for (double[] boat : pixels.getBoats()) {
+	        for (DetectedPixels.Boat boat : pixels.getBoats()) {
 	            Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
 	            atts.set(VDSSchema.ID, count++);
-	            atts.set(VDSSchema.MAXIMUM_VALUE, boat[3]);
-	            atts.set(VDSSchema.TILE_AVERAGE, boat[4]);
-	            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat[5]);
-	            atts.set(VDSSchema.THRESHOLD, boat[6]);
+	            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getValue());
+	            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());
+	            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat.getTileStd());
+	            atts.set(VDSSchema.THRESHOLD, boat.getThreshold());
 	            atts.set(VDSSchema.RUN_ID, runid + "");
-	            atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat[7]);
-	            atts.set(VDSSchema.ESTIMATED_LENGTH, boat[8]);
-	            atts.set(VDSSchema.ESTIMATED_WIDTH, boat[9]);
-	            atts.set(VDSSchema.SIGNIFICANCE, (boat[3] - boat[4]) / (boat[4] * boat[5]));
+	            atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat.getSize());
+	            atts.set(VDSSchema.ESTIMATED_LENGTH, boat.getLength());
+	            atts.set(VDSSchema.ESTIMATED_WIDTH, boat.getWidth());
+	            atts.set(VDSSchema.SIGNIFICANCE, (boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
 	            timeStampStart=timeStampStart.replace("Z", "");
 	            atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
 	            atts.set(VDSSchema.VS, 0);
 	            //compute the direction of the vessel considering the azimuth of the image
 	            //result is between 0 and 180 degree
-	            double degree = boat[10] + 90 + azimuth;
+	            double degree = boat.getHeading() + 90 + azimuth;
 	            if (degree > 180) {
 	                degree = degree - 180;
 	            }
 	         
 	            atts.set(VDSSchema.ESTIMATED_HEADING, degree);
-	            out.put(gf.createPoint(new Coordinate(boat[1], boat[2])), atts);
+	            out.put(gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy())), atts);
 	        }
 	        return out;
 	    }
