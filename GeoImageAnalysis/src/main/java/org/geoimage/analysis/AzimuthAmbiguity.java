@@ -198,10 +198,14 @@ public class AzimuthAmbiguity {
 	            deltaAzimuth =sumoImage.getAmbiguityCorrection(xPos,yPos);
 	            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
 	            
+	            //first check to 250 meters
 	            if(isAmbiguity(myBoat,xPos, yPos, deltaAzimuth[0],pixSize[0] ,pixSize[1])){
 	            	ambiguityboatlist.add(myBoat);
+	            	myBoat.setAmbiguity(true);
+	            //second check to 500 meters	
 	            }else if(isAmbiguity(myBoat,xPos, yPos, (deltaAzimuth[0]*2),pixSize[0] ,pixSize[1])){
 	            	ambiguityboatlist.add(myBoat);
+	            	myBoat.setAmbiguity(true);
 	            }
 	        }
         }catch(Exception e){
