@@ -1166,3 +1166,4 @@ Search Window start from: 24714 24  D Azimuth:1190
 Search Window start from: 25150 24  D Azimuth:597
 2015-07-17 02:56:51 INFO  AzimuthAmbiguity:166 - 
 Search Window start from: 25150 24  D Azimuth:1194
+2015-07-17 03:01:17 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
