@@ -4,7 +4,7 @@
  * Created on November 5, 2008, 1:37 PM
  */
 
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.net.URL;
 import org.jdesktop.application.Action;
@@ -68,15 +68,15 @@ public class PlanningDialog extends javax.swing.JDialog {
         jTextField6.setText(date);
     }
 
-    String getOutputdirectory() {
+    public String getOutputdirectory() {
         return jTextField2.getText();
     }
 
-    boolean isValidated() {
+    public boolean isValidated() {
         return validated;
     }
 
-    void setOutputdirectory(String string) {
+    public void setOutputdirectory(String string) {
         jTextField2.setText(string);
     }
 

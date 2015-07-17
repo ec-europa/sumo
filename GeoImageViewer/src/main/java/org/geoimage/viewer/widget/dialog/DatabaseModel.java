@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

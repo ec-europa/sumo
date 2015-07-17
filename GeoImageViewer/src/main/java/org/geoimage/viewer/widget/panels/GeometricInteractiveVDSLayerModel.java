@@ -168,9 +168,15 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             List<Geometry> boatGeom = new ArrayList<Geometry>();
             Attributes boatattributes = gl.getAttributes(geom);
             double[] pixelsize = il.getImageReader().getGeoTransform().getPixelSize();
-            double boatwidth = (Double) boatattributes.get(VDSSchema.ESTIMATED_WIDTH) / pixelsize[0];
-            double boatlength = (Double) boatattributes.get(VDSSchema.ESTIMATED_LENGTH) / pixelsize[0];
-            Double boatheading = -(Double) boatattributes.get(VDSSchema.ESTIMATED_HEADING);
+            double boatwidth =0;
+            double boatlength=0;
+            double boatheading =0;
+            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
+            	boatwidth = (Double) boatattributes.get(VDSSchema.ESTIMATED_WIDTH) / pixelsize[0];
+            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
+                boatlength = (Double) boatattributes.get(VDSSchema.ESTIMATED_LENGTH) / pixelsize[0];
+            if(boatattributes.get(VDSSchema.ESTIMATED_HEADING)!=null)
+            	boatheading = -(Double) boatattributes.get(VDSSchema.ESTIMATED_HEADING);
             //get the image azimuth
             double imageAz = ((SarImageReader)il.getImageReader()).getImageAzimuth();
             boatheading = boatheading + 90 + imageAz;
@@ -185,8 +191,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             vdslayer.removeGeometriesByTag("boatshape");
             vdslayer.removeGeometriesByTag("target");
             // add new geometries
-            vdslayer.addGeometries("target", new Color(0xFF2200), 1, MaskVectorLayer.LINESTRING, winGeom, display);
-            vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, MaskVectorLayer.LINESTRING, boatGeom, display);
+            vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometricLayer.LINESTRING, winGeom, display);
+            vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometricLayer.LINESTRING, boatGeom, display);
             Platform.getGeoContext().setDirty(true);
             System.out.println(selectionLine + " " + geom.getCoordinate().x + " " + geom.getCoordinate().y);
         } else {
@@ -251,7 +257,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 	                coordinateshorizontal[0] = new Coordinate(0, posY);
 	                coordinateshorizontal[1] = new Coordinate(il.getImageReader().getWidth(), posY);
 	                winGeom.add(gf.createLineString(coordinateshorizontal));
-	                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, SimpleEditVectorLayer.LINESTRING, winGeom, true);
+	                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, GeometricLayer.LINESTRING, winGeom, true);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}   

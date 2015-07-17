@@ -38,7 +38,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
         private String tag;
         private Color color;
         private int lineWidth = 1;
-        private String type = POINT;
+        private String type = GeometricLayer.POINT;
         private List<Geometry> geometries;
         private boolean status;
        
@@ -111,7 +111,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
             {
                 float[] c = geometry.getColor().getColorComponents(null);
                 gl.glColor3f(c[0], c[1], c[2]);
-                if (geometry.getType().equalsIgnoreCase(POINT)) {
+                if (geometry.getType().equalsIgnoreCase(GeometricLayer.POINT)) {
                     gl.glPointSize(geometry.getLinewidth());
                     gl.glBegin(GL.GL_POINTS);
                     for (Geometry temp : geometry.getGeometries()) {
@@ -121,7 +121,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
                     }
                     gl.glEnd();
                     gl.glFlush();
-                } else if (geometry.getType().equalsIgnoreCase(POLYGON)) {
+                } else if (geometry.getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
                     for (Geometry tmp : geometry.getGeometries()) {
                     	List<Geometry>gs=new ArrayList<>();
 	                    if(tmp instanceof MultiPolygon){
@@ -154,7 +154,7 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
 	                    }
                     }
                     
-                } else if (geometry.getType().equalsIgnoreCase(LINESTRING)) {
+                } else if (geometry.getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
                     for (Geometry temp : geometry.getGeometries()) {
                         if (temp.getCoordinates().length < 1) {
                             continue;

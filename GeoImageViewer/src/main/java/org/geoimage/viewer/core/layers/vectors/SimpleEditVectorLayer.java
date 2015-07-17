@@ -112,7 +112,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
         int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
         GL2 gl = context.getGL().getGL2();
-        if (type.equalsIgnoreCase(POLYGON) || type.equalsIgnoreCase(LINESTRING)) {
+        if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
             gl.glPointSize(getWidth() * 2);
             gl.glBegin(GL.GL_POINTS);
             for (Geometry temp : glayer.getGeometries()) {
@@ -206,10 +206,10 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
     }
 
     protected void performAdd(Point imagePosition, GeoContext context) {
-        if (type.equals(POINT)) {
+        if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             glayer.put(selectedGeometry);
-        } else if (type.equals(POLYGON) || type.equals(LINESTRING)) {
+        } else if (type.equals(GeometricLayer.POLYGON) || type.equals(GeometricLayer.LINESTRING)) {
             if (selectedGeometry == null && (glayer.getGeometries().size() != 0)) {
                 super.mouseClicked(imagePosition, BUTTON1, context);
                 return;
@@ -218,7 +218,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
                 try {
                     double step = 5 * context.getZoom();
                     Coordinate initend = new Coordinate(imagePosition.x - step, imagePosition.y - step);
-                    if (type.equals(POLYGON)) {
+                    if (type.equals(GeometricLayer.POLYGON)) {
                         selectedGeometry = gf.createPolygon(gf.createLinearRing(new Coordinate[]{initend, new Coordinate(imagePosition.x - step, imagePosition.y + step), new Coordinate(imagePosition.x + step, imagePosition.y + step), initend}), null);
                     } else {
                         selectedGeometry = gf.createLineString(new Coordinate[]{initend, new Coordinate(imagePosition.x - step, imagePosition.y + step)});
@@ -236,7 +236,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
             }
             int index = -1;
             double dist = Double.MAX_VALUE;
-            if (type.equals(POLYGON)) {
+            if (type.equals(GeometricLayer.POLYGON)) {
                 Coordinate[] polygon = ((Polygon) currGeom).getExteriorRing().getCoordinates();
                 for (int i = 0; i < polygon.length - 1; i++) {
                     Coordinate point = polygon[i];
@@ -291,7 +291,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
                 }
             }
 
-            if (type.equals(POINT)) {
+            if (type.equals(GeometricLayer.POINT)) {
                 glayer.put(gf.createPoint(editedPoint));
                 editedPoint = null;
                 return;
@@ -309,12 +309,12 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
         }
         if (this.editedPoint == null) {
             com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-            if (type.equals(POINT)) {
+            if (type.equals(GeometricLayer.POINT)) {
                 if (p.isWithinDistance(selectedGeometry, 5 * context.getZoom())) {
                     toBeRemoved.add(selectedGeometry);
                 }
                 selectedGeometry = null;
-            } else if (type.equals(POLYGON)) {
+            } else if (type.equals(GeometricLayer.POLYGON)) {
                 Coordinate[] polygon = ((Polygon) selectedGeometry).getExteriorRing().getCoordinates();
                 for (Coordinate point : polygon) {
                     if (p.isWithinDistance(gf.createPoint(point), 5 * context.getZoom())) {
@@ -348,9 +348,9 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
             super.mouseClicked(imagePosition, IClickable.BUTTON1, context);
 
             if (this.editedPoint == null && selectedGeometry != null) {
-                if (type.equals(POINT)) {
+                if (type.equals(GeometricLayer.POINT)) {
                     this.editedPoint = selectedGeometry.getCoordinate();
-                } else if (type.equals(POLYGON)) {
+                } else if (type.equals(GeometricLayer.POLYGON)) {
                     LineString ls = ((Polygon) selectedGeometry).getExteriorRing();
                     for (int i = 0; i < ls.getNumPoints(); i++) {
                         Coordinate point = ls.getCoordinateN(i);
@@ -394,7 +394,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
             selectedGeometry = null;
             return;
         }
-        if (type.equals(POLYGON) || type.equals(LINESTRING)) {
+        if (type.equals(GeometricLayer.POLYGON) || type.equals(GeometricLayer.LINESTRING)) {
             selectedGeometry.apply(new CoordinateSequenceFilter() {
 
                 public void filter(CoordinateSequence seq, int i) {

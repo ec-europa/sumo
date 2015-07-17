@@ -4,7 +4,7 @@
  * Created on April 17, 2008, 6:00 PM
  */
 
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

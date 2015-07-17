@@ -177,6 +177,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	            break;
 	        }
 	    }
+        if(msgResult[0]==null||msgResult[0].equals(""))
+        		msgResult[0]=file+" created";
         if(!Platform.isBatchMode())
         	JOptionPane.showMessageDialog(null,msgResult[0], msgResult[1],JOptionPane.INFORMATION_MESSAGE);
         else 
@@ -350,7 +352,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 
     @Override
     protected void performAdd(Point imagePosition, GeoContext context) {
-        if (type.equals(POINT)) {
+        if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             final Attributes atts = Attributes.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());
             atts.set(VDSSchema.SIGNIFICANCE, 100.0d);

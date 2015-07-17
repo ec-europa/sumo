@@ -21,6 +21,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.widget.dialog.LayerDialog;
 
 /**
  *
