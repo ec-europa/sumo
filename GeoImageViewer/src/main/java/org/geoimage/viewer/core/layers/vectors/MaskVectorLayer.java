@@ -183,7 +183,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     }
 
      public void render(GeoContext context) {
-        if (!context.isDirty()) {
+        if (!context.isDirty()||Platform.isBatchMode()) {
             return;
         }
         int x = context.getX();

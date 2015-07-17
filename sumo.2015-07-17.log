@@ -1,0 +1,817 @@
+2015-07-17 00:46:46 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:100  x:20771   y:4238
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:200  x:25236   y:8799
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:300  x:25230   y:8799
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:400  x:17056   y:3511
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:500  x:17266   y:7546
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:600  x:23812   y:2716
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:700  x:24310   y:4319
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:800  x:21002   y:1706
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:900  x:25053   y:9209
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1000  x:17368   y:4254
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1100  x:17258   y:7551
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1200  x:17390   y:7500
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1300  x:17040   y:3509
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1400  x:25067   y:9223
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1500  x:25224   y:8801
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1600  x:17709   y:8200
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1700  x:17762   y:7842
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1800  x:17382   y:7625
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:1900  x:17790   y:7884
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2000  x:17374   y:4256
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2100  x:25004   y:2475
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2200  x:20755   y:4231
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2300  x:11564   y:2173
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2400  x:17055   y:3518
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2500  x:20774   y:4237
+2015-07-17 00:50:47 INFO  DetectedPixels:356 - Aggregating pixel Num:2600  x:20987   y:1708
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:533
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:1066
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:512
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:1024
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:512
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:1024
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:536
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:1072
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:579
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:1158
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:593
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:1186
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:596
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:1192
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:466
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:932
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:477
+2015-07-17 00:50:47 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:954
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:472
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:944
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:480
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:960
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:591
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:1182
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:466
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:932
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:570
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:1140
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:485
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:970
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22220 24  D Azimuth:584
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22220 24  D Azimuth:1168
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:572
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:1144
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:578
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:1156
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:593
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:1186
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:486
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:972
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:596
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:1192
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:590
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:1180
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:485
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:970
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:486
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:972
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:485
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:970
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:486
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:972
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:485
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:970
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:485
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:970
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:565
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:1130
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:597
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:1194
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:595
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:1190
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:597
+2015-07-17 00:50:48 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:1194
+2015-07-17 01:02:28 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:100  x:20771   y:4238
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:200  x:25236   y:8799
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:300  x:25230   y:8799
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:400  x:17056   y:3511
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:500  x:17266   y:7546
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:600  x:23812   y:2716
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:700  x:24310   y:4319
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:800  x:21002   y:1706
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:900  x:25053   y:9209
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1000  x:17368   y:4254
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1100  x:17258   y:7551
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1200  x:17390   y:7500
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1300  x:17040   y:3509
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1400  x:25067   y:9223
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1500  x:25224   y:8801
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1600  x:17709   y:8200
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1700  x:17762   y:7842
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1800  x:17382   y:7625
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:1900  x:17790   y:7884
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2000  x:17374   y:4256
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2100  x:25004   y:2475
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2200  x:20755   y:4231
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2300  x:11564   y:2173
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2400  x:17055   y:3518
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2500  x:20774   y:4237
+2015-07-17 01:06:32 INFO  DetectedPixels:356 - Aggregating pixel Num:2600  x:20987   y:1708
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:533
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:1066
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:512
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:1024
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:512
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:1024
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:536
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:1072
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:579
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:1158
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:593
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:1186
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:596
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:1192
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:466
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:932
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:477
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:954
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:472
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:944
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:480
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:960
+2015-07-17 01:06:32 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:591
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:1182
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:466
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:932
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:570
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:1140
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:485
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:970
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22220 24  D Azimuth:584
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22220 24  D Azimuth:1168
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:572
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:1144
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:578
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:1156
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:593
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:1186
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:486
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:972
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:596
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:1192
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:590
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:1180
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:485
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:970
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:486
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:972
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:485
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:970
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:486
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:972
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:485
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:970
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:485
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:970
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:565
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:1130
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:597
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:1194
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:595
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:1190
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:597
+2015-07-17 01:06:33 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:1194
+2015-07-17 01:50:40 INFO  DetectedPixels:356 - Aggregating pixel Num:100  x:17265   y:7544
+2015-07-17 01:50:40 INFO  DetectedPixels:356 - Aggregating pixel Num:200  x:295   y:88
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:300  x:24964   y:5509
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:400  x:24728   y:8796
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:500  x:23811   y:2713
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:600  x:13164   y:2572
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:700  x:21380   y:6771
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:800  x:17384   y:7501
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:900  x:278   y:1140
+2015-07-17 01:50:41 INFO  DetectedPixels:356 - Aggregating pixel Num:1000  x:18729   y:3456
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1100  x:17054   y:3042
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1200  x:17378   y:7622
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1300  x:17032   y:3504
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1400  x:17253   y:7551
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1500  x:22227   y:3911
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1600  x:17030   y:3514
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1700  x:24368   y:2359
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1800  x:25233   y:8800
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:1900  x:463   y:1958
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:2000  x:17064   y:3514
+2015-07-17 01:50:42 INFO  DetectedPixels:356 - Aggregating pixel Num:2100  x:19161   y:4936
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2200  x:22239   y:3914
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2300  x:23807   y:2711
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2400  x:21780   y:5586
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2500  x:20990   y:1707
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2600  x:18746   y:3456
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2700  x:17721   y:7825
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2800  x:18734   y:4009
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:2900  x:24999   y:2472
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3000  x:11480   y:2596
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3100  x:19167   y:3830
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3200  x:17363   y:4252
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3300  x:17047   y:3514
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3400  x:20991   y:1706
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3500  x:23797   y:2710
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3600  x:18737   y:4012
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3700  x:506   y:1368
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3800  x:17261   y:7557
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:3900  x:24689   y:8842
+2015-07-17 01:50:43 INFO  DetectedPixels:356 - Aggregating pixel Num:4000  x:17784   y:7887
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4100  x:22218   y:3907
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4200  x:17061   y:3526
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4300  x:25052   y:9209
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4400  x:19144   y:3818
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4500  x:17764   y:7307
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4600  x:24957   y:5502
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4700  x:23802   y:2710
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4800  x:25079   y:9234
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:4900  x:24375   y:2361
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5000  x:23058   y:6669
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5100  x:17056   y:3520
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5200  x:24306   y:4317
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5300  x:11567   y:2171
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5400  x:19160   y:3823
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5500  x:367   y:880
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5600  x:11489   y:2596
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5700  x:382   y:866
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5800  x:18735   y:3441
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:5900  x:24360   y:2361
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6000  x:22231   y:3914
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6100  x:16321   y:4571
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6200  x:17268   y:7544
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6300  x:19165   y:3823
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6400  x:25072   y:9233
+2015-07-17 01:50:44 INFO  DetectedPixels:356 - Aggregating pixel Num:6500  x:23805   y:2715
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:533
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 6433 24  D Azimuth:1066
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 487 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 488 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:536
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 7232 24  D Azimuth:1072
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 465 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 465 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 473 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 473 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 506 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 506 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 490 24  D Azimuth:512
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 490 24  D Azimuth:1024
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:579
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20981 24  D Azimuth:1158
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24359 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24357 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24357 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24351 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:596
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24985 24  D Azimuth:1192
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:477
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14740 24  D Azimuth:954
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:466
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11548 24  D Azimuth:932
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21552 24  D Azimuth:581
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20983 24  D Azimuth:579
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20983 24  D Azimuth:1158
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:472
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13160 24  D Azimuth:944
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:591
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23793 24  D Azimuth:1182
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:466
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11472 24  D Azimuth:932
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:480
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15543 24  D Azimuth:960
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17042 24  D Azimuth:485
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17042 24  D Azimuth:970
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24352 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24352 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24354 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24354 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17047 24  D Azimuth:485
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17047 24  D Azimuth:970
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:570
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18718 24  D Azimuth:1140
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24373 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24373 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:485
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17033 24  D Azimuth:970
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22220 24  D Azimuth:584
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19154 24  D Azimuth:572
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19154 24  D Azimuth:1144
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19164 24  D Azimuth:572
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19164 24  D Azimuth:1144
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23781 24  D Azimuth:591
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23781 24  D Azimuth:1182
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18719 24  D Azimuth:570
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18719 24  D Azimuth:1140
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19148 24  D Azimuth:571
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19148 24  D Azimuth:1142
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22221 24  D Azimuth:584
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 22221 24  D Azimuth:1168
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 10003 24  D Azimuth:461
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 10003 24  D Azimuth:922
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19152 24  D Azimuth:572
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19152 24  D Azimuth:1144
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:578
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 20750 24  D Azimuth:1156
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:593
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24301 24  D Azimuth:1186
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:486
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17354 24  D Azimuth:972
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19151 24  D Azimuth:572
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11343 24  D Azimuth:466
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11343 24  D Azimuth:932
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 18716 24  D Azimuth:570
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14251 24  D Azimuth:475
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14251 24  D Azimuth:950
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:482
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16308 24  D Azimuth:964
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13544 24  D Azimuth:473
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 13544 24  D Azimuth:946
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16204 24  D Azimuth:482
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16204 24  D Azimuth:964
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14711 24  D Azimuth:477
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14711 24  D Azimuth:954
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14007 24  D Azimuth:474
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14007 24  D Azimuth:948
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14593 24  D Azimuth:476
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14593 24  D Azimuth:952
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:572
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19149 24  D Azimuth:1144
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:596
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24947 24  D Azimuth:1192
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15258 24  D Azimuth:479
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15258 24  D Azimuth:958
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21768 24  D Azimuth:582
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21768 24  D Azimuth:1164
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 9159 24  D Azimuth:459
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 9159 24  D Azimuth:918
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:590
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23594 24  D Azimuth:1180
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17648 24  D Azimuth:565
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17648 24  D Azimuth:1130
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24946 24  D Azimuth:596
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16576 24  D Azimuth:483
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16576 24  D Azimuth:966
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 9866 24  D Azimuth:461
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 9866 24  D Azimuth:922
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17205 24  D Azimuth:485
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17205 24  D Azimuth:970
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15023 24  D Azimuth:478
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15023 24  D Azimuth:956
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15024 24  D Azimuth:478
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 9132 24  D Azimuth:459
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21728 24  D Azimuth:582
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21615 24  D Azimuth:582
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 21615 24  D Azimuth:1164
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14412 24  D Azimuth:476
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 14412 24  D Azimuth:952
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17860 24  D Azimuth:566
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17860 24  D Azimuth:1132
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16719 24  D Azimuth:484
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16719 24  D Azimuth:968
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23178 24  D Azimuth:588
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23178 24  D Azimuth:1176
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23240 24  D Azimuth:589
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23240 24  D Azimuth:1178
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17802 24  D Azimuth:566
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23389 24  D Azimuth:589
+2015-07-17 01:50:45 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23389 24  D Azimuth:1178
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11974 24  D Azimuth:468
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 11974 24  D Azimuth:936
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17274 24  D Azimuth:486
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17274 24  D Azimuth:972
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:485
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17251 24  D Azimuth:970
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:486
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17377 24  D Azimuth:972
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:485
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17118 24  D Azimuth:970
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:486
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17370 24  D Azimuth:972
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17705 24  D Azimuth:566
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17705 24  D Azimuth:1132
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17708 24  D Azimuth:566
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17699 24  D Azimuth:566
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17274 24  D Azimuth:486
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17274 24  D Azimuth:972
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19197 24  D Azimuth:572
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 19197 24  D Azimuth:1144
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 15672 24  D Azimuth:480
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17104 24  D Azimuth:485
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17104 24  D Azimuth:970
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17781 24  D Azimuth:566
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17781 24  D Azimuth:1132
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17557 24  D Azimuth:565
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16256 24  D Azimuth:482
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16256 24  D Azimuth:964
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16351 24  D Azimuth:482
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16351 24  D Azimuth:964
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16312 24  D Azimuth:482
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16312 24  D Azimuth:964
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16024 24  D Azimuth:481
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16024 24  D Azimuth:962
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:485
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 16988 24  D Azimuth:970
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:565
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17451 24  D Azimuth:1130
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25219 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25219 24  D Azimuth:1194
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25219 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25219 24  D Azimuth:1194
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23303 24  D Azimuth:589
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23303 24  D Azimuth:1178
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:485
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 17172 24  D Azimuth:970
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 23080 24  D Azimuth:588
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25221 24  D Azimuth:1194
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24714 24  D Azimuth:1190
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24647 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24647 24  D Azimuth:1190
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24619 24  D Azimuth:594
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24619 24  D Azimuth:1188
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25150 24  D Azimuth:1194
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24638 24  D Azimuth:594
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24966 24  D Azimuth:596
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24966 24  D Azimuth:1192
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24782 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24680 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24680 24  D Azimuth:1190
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24864 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24864 24  D Azimuth:1190
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24642 24  D Azimuth:594
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24642 24  D Azimuth:1188
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24676 24  D Azimuth:595
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25216 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24629 24  D Azimuth:594
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 24629 24  D Azimuth:1188
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25218 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25218 24  D Azimuth:1194
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25227 24  D Azimuth:597
+2015-07-17 01:50:46 INFO  AzimuthAmbiguity:166 - 
+Search Window start from: 25227 24  D Azimuth:1194

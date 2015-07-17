@@ -130,53 +130,52 @@ public class GenericCSVIO extends AbstractVectorIO{
 	        RandomAccessFile fss = null;
 	        GeometricLayer out=null;
 	        try {
-	            fss = new RandomAccessFile(csvFile, "r");
-	            String line = null;
-	            String[] titles = fss.readLine().split(",");
-	            String type = titles[0].split("=")[1];
-	            out = new GeometricLayer(type);
-	            out.setName(csvFile.getName().substring(0, csvFile.getName().lastIndexOf(".")));
-	            if (titles.length == 2) {
-	                out.setProjection(titles[1].split("=")[1]);
-	            }
-	           /* line = fss.readLine();
-	            String[] attributes = null;
-	            if (line.equals("")) {
-	                attributes = new String[]{};
-	            } else {
-	                attributes = line.split(",");
-	            }
-	            line = fss.readLine();
-	            String[] types = null;
-	            if (line.equals("")) {
-	                types = new String[]{};
-	            } else {
-	                types = line.split(",");
-	            }*/
-	            final String[] attributes=ArrayUtils.subarray(titles, 2,titles.length);
-	            final String[] types={"Double","Double","Integer","Double","Double","Double",
+	        	/*final String[] types={"Double","Double","Integer","Double","Double","Double",
 	            		"Double","Double","Double","Double","Double","Double","Double",
 	            		"Date","Double"};
+	            */
+	            fss = new RandomAccessFile(csvFile, "r");
+	            String line = null;
+	            //first line = info layer
+	            final String[] layerinfo = fss.readLine().split(",");
+	            //second line = fields name
+	            final String[] titles = fss.readLine().split(",");
+	            //third line = types
+	            String[] types=fss.readLine().split(",");
 	            
-	            SimpleDateFormat d=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.");		
+	            String geomtype = layerinfo[0].split("=")[1];
+	            out = new GeometricLayer(geomtype);
+	            
+	            if(layerinfo.length==2){
+	            	String proj = layerinfo[1].split("=")[1];
+		            out.setProjection(proj);
+	            }
+	            
+	            out.setName(csvFile.getName().substring(0, csvFile.getName().lastIndexOf(".")));
+	           
+	            //read attributes 
+	            final String[] attributes=ArrayUtils.subarray(titles, 1,titles.length);
+	            types=ArrayUtils.subarray(types, 1,types.length);
+	            
 	            GeometryFactory factory=new GeometryFactory();
 	            WKTReader parser=new WKTReader(factory);
 	            while ((line = fss.readLine()) != null) {
 	                Attributes atts = Attributes.createAttributes(attributes, types);
 	                String[] val = line.split(",");
-	                /*if (val.length != attributes.length + 1) {
-	                    continue;
-	                }*/
-	                Geometry geom = parser.read(val[1]);
 
-	                for (int i = 2; i < val.length-1; i++) {
-	                	String typ=types[i - 2];
-	                	String att=attributes[i - 2];
-	                	
+	                Geometry geom = parser.read(val[0]);
+	           //     GeoTransform transform=Platform.getCurrentImageReader().getGeoTransform();
+	           //     geom=transform.transformGeometryPixelFromGeo(geom);
+	                
+	                for (int i = 1; i < val.length; i++) {
+	                	String typ=types[i - 1];
+	                	String att=attributes[i - 1];
+	                	val[i]=val[i].replace("\"", "");
 	                    if (typ.equals("Date")) {
 	                        try {
-	                        	val[i]=val[i].trim().replace(" ","T");
-	                            atts.set(att,d.parse(val[i]).toString());
+	                        	//val[i]=val[i].trim().replace(" ","T");
+	                            Timestamp t=Timestamp.valueOf(val[i]);
+	                        	atts.set(att,t);
 	                        } catch (Exception e) {
 	                            atts.set(att, null);
 	                        }
@@ -185,7 +184,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                            try {
 	                                atts.set(att, Double.valueOf(val[i].trim()));
 	                            } catch (Exception e) {
-	                                atts.set(att, Double.NaN);
+	                                atts.set(att, 0);
 	                            }
 	                        } else {
 	                            if (typ.equals("Integer")) {
@@ -197,7 +196,6 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                            } else {
 	                                atts.set(att, val[i]);
 	                            }
-
 	                        }
 	                    }
 	                }
@@ -221,19 +219,33 @@ public class GenericCSVIO extends AbstractVectorIO{
 	public void save(File output,String projection,GeoTransform transform) {
 		export(output,glayer,projection,transform,false);
 	}
+	
+	/**
+	 * 
+	 * @param output
+	 * @param glayer
+	 * @param projection
+	 * @param transform
+	 * @param append
+	 */
 	public static void export(File output,GeometricLayer glayer,String projection,GeoTransform transform,boolean append) {
 		FileWriter fis=null;
 		try {
 			fis = new FileWriter(output);
+			fis.write("type=" + glayer.getGeometryType());
+            if (projection != null) {
+                fis.write(",projection=" + projection + "\n");
+            }
 			if (projection == null) {
-				fis.write("type="+glayer.getGeometryType()+",geom,x,y," + glayer.getSchema(',') + "\n");
+				fis.write("geom,x,y," + glayer.getSchema(',') + "\n");
 			} else {
-				fis.write("type="+glayer.getGeometryType()+",geom,lat,lon," + glayer.getSchema(',') + "\n");
+				fis.write("geom,lat,lon," + glayer.getSchema(',') + "\n");
 			}
+			fis.write(glayer.getGeometryType()+",Double,Double,"+glayer.getSchemaTypes(',') + "\n");
 			String[] schema = glayer.getSchema();
 			for (Geometry geom : glayer.getGeometries()) {
-				fis.write(geom.getGeometryType().toString()+",");
-				fis.write(geom.toText()+",");
+				Geometry geomGeo=transform.transformGeometryGeoFromPixel(geom);
+				fis.write(geomGeo.toText()+",");
 				Coordinate[] pos = geom.getCoordinates();
 				for (int i = 0; i < pos.length; i++) {
 					if (projection == null) {
@@ -266,6 +278,8 @@ public class GenericCSVIO extends AbstractVectorIO{
 			
 		} catch (IOException ex) {
 			logger.error(ex.getMessage(), ex);
+		} catch (GeoTransformException e1) {
+			e1.printStackTrace();
 		}finally{
 			try {
 				fis.flush();
@@ -412,151 +426,6 @@ public class GenericCSVIO extends AbstractVectorIO{
 		}
 	}
 
-	private void addGenericCSV(String[] args) {
-		try {
-
-			if (args.length > 0) {
-				String csvfilename = args[0];
-				Connection conn = DriverManager.getConnection(
-						"jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
-				Statement stat = conn.createStatement();
-				stat.execute("DROP TABLE TEMPCSV IF EXISTS");
-				String sql = null;
-
-
-				ResultSet rs = Csv.getInstance().read(args[0], null, null);
-				ResultSetMetaData meta = rs.getMetaData();
-				SelectParametersJDialog ff2 = new SelectParametersJDialog(meta);
-				ff2.setVisible(true);
-				sql = "create table tempcsv as select * from csvread('"	+ csvfilename + "')";
-				stat.execute(sql);
-
-				String latName = ff2.getLatField();
-				String lonName = ff2.getLonField();
-				String dateName = ff2.getTimeField();
-
-				sql = "select * from tempcsv";
-				stat.execute(sql);
-				GeometricLayer gl = new GeometricLayer(MaskVectorLayer.POINT);
-				gl.setName(csvFile.getName());
-				IImageLayer l = Platform.getCurrentImageLayer();
-				if (l != null) {
-					GeoImageReader reader = l.getImageReader();
-					addCSVGeom("tempcsv", gl, latName, lonName, dateName,
-							reader.getGeoTransform(), reader.getWidth(),
-							reader.getHeight());
-					gl = GeometricLayer.createImageProjectedLayer(gl,
-							((IImageLayer) l).getImageReader()
-									.getGeoTransform(), "EPSG:4326");
-				}
-				rs.close();
-				stat.close();
-				conn.close();
-
-			}
-
-		} catch (SQLException | GeoTransformException ex) {
-			logger.error(ex.getMessage(), ex);
-		}
-	}
-
-	public void addCSVGeom(String tableName, GeometricLayer gl, String lat,String lon, String date, GeoTransform gt, int width, int height)
-			throws SQLException {
-		Connection conn = DriverManager.getConnection(
-				"jdbc:h2:~/.sumo/AIS;AUTO_SERVER=TRUE", "sa", "");
-		Statement stat = conn.createStatement();
-		String sql = "select * from " + tableName;
-		ResultSet rset = stat.executeQuery(sql);
-		ResultSetMetaData rsetM = rset.getMetaData();
-		int numcols = rsetM.getColumnCount();
-		String[] attributes = new String[numcols];
-		String[] types = new String[numcols];
-		for (int i = 0; i < numcols; i++) {
-			attributes[i] = rsetM.getColumnName(i + 1);
-			int type = rsetM.getColumnType(i + 1);
-			switch (type) {
-			case 12:
-				types[i] = "String";
-				break;
-			case 93:
-				types[i] = "Date";
-				break;
-			case 7:
-				types[i] = "Double";
-				break;
-			}
-			if (attributes[i].equals(date)) {
-				types[i] = "Date";
-			}
-
-		}
-		Attributes atts = Attributes.createAttributes(attributes, types);
-		GeometryFactory gf = new GeometryFactory();
-		Geometry geom = null;
-
-		try {
-			double[] x0;
-			double[] x1;
-			double[] x2;
-			double[] x3;
-			int margin = Integer.parseInt(java.util.ResourceBundle.getBundle(
-					"GeoImageViewer").getString("SimpleShapeFileIO.margin"));
-			x0 = gt.getGeoFromPixel(-margin, -margin);
-			x2 = gt.getGeoFromPixel(margin + width, margin + height);
-			x3 = gt.getGeoFromPixel(margin + width, -margin);
-			x1 = gt.getGeoFromPixel(-margin, margin + height);
-
-			Polygon imageP = PolygonOp.createPolygon(x0, x1, x2, x3, x0);
-
-			int count = 0;
-			while (rset.next()) {
-				if (count == 0) {
-					count++;
-					for (int i = 0; i < numcols; i++) {
-						try {
-							Double.parseDouble(rset.getString(i + 1));
-							types[i] = "Double";
-						} catch (Exception e) {
-
-						}
-					}
-				}
-				atts = Attributes.createAttributes(attributes, types);
-				for (int i = 0; i < numcols; i++) {
-					if (attributes[i].equals(date)) {
-						atts.set(attributes[i],
-								Timestamp.valueOf(rset.getString(i + 1)));
-					} else {
-						if (types[i].equals("Double")) {
-							atts.set(attributes[i],
-									new Double(rset.getString(i + 1)));
-						} else {
-							atts.set(attributes[i], rset.getString(i + 1));
-						}
-					}
-				}
-				geom = gf.createPoint(new Coordinate(Double.parseDouble(rset
-						.getString(lon)), Double.parseDouble(rset
-						.getString(lat))));
-				if (imageP.contains(geom)) {
-					gl.put(geom, atts);
-				}
-
-			}
-		} catch (Exception e) {
-			SwingUtilities.invokeLater(new Runnable() {
-
-				public void run() {
-					JOptionPane.showMessageDialog(null,
-							"Problem with date format", "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			});
-			System.out.println("Problem with date format");
-		}
-		stat.close();
-		conn.close();
-	}
 
 	
 	
