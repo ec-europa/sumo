@@ -10,7 +10,7 @@ import java.awt.Point;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.widget.ThumbnailsDialog;
+import org.geoimage.viewer.widget.dialog.ThumbnailsDialog;
 
 /**
  *

@@ -34,8 +34,8 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.Constant;
-import org.geoimage.viewer.widget.DatabaseDialog;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
+import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;

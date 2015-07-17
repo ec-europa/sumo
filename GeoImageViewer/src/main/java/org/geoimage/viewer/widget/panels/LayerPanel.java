@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.widget.LayerDialog;
+import org.geoimage.viewer.widget.dialog.LayerDialog;
 
 /**
  *

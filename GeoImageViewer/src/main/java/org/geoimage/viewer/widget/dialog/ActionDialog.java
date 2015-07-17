@@ -3,7 +3,7 @@
  *
  * Created on April 1, 2008, 11:09 AM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.awt.GridLayout;
 import java.awt.Label;

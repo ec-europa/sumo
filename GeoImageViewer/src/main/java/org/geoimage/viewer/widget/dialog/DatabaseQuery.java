@@ -3,7 +3,7 @@
  *
  * Created on June 16, 2008, 4:55 PM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -78,11 +78,11 @@ public class DatabaseQuery extends javax.swing.JPanel {
 
             GeometricLayer glayer = null;
             if (geom instanceof Point) {
-                glayer = new GeometricLayer(MaskVectorLayer.POINT);
+                glayer = new GeometricLayer(GeometricLayer.POINT);
             } else if (geom instanceof Polygon) {
-                glayer = new GeometricLayer(MaskVectorLayer.POLYGON);
+                glayer = new GeometricLayer(GeometricLayer.POLYGON);
             } else if (geom instanceof LineString) {
-                glayer = new GeometricLayer(MaskVectorLayer.LINESTRING);
+                glayer = new GeometricLayer(GeometricLayer.LINESTRING);
             }
             glayer.setName(jTextArea1.getText());
             Attributes att = Attributes.createAttributes(schema, types);

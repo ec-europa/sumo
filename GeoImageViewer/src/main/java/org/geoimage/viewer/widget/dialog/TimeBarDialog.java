@@ -3,7 +3,7 @@
  *
  * Created on May 20, 2008, 10:43 AM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.sql.Timestamp;
 import java.util.Date;

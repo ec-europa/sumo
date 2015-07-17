@@ -346,7 +346,6 @@ public class DetectedPixels {
         int count=0;
         
         for (Pixel p: pixels) {
-        	long startPoint=System.currentTimeMillis();
         	count++;
         	
             int xx = p.x;
@@ -452,8 +451,6 @@ public class DetectedPixels {
             } else {
             }
             
-            long endPoint=System.currentTimeMillis()-startPoint;
-            System.out.println("Point analysis time :"+endPoint);
         }
 
         // if remove connected to land pixels flag

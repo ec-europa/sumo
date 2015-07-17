@@ -130,20 +130,20 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
                 //Boolean statusCheckBoolean = new Boolean(status.equalsIgnoreCase("On"));
                 
                 debugTableModel.addRow(new Object[]{tag, statusCheckBoolean});
-                debugTableModel.addTableModelListener(new TableModelListener() {
-                    public void tableChanged(TableModelEvent e) {
-                        int selectedrow = flagTable.getSelectedRow();
-                        if((selectedrow != -1) && (selectedrow < flagTable.getRowCount()))
-                        {
-                            boolean status = ((Boolean)flagTable.getValueAt(selectedrow, 1));
-                            String tag = ((String)flagTable.getValueAt(selectedrow, 0));
-                            ((IComplexVDSVectorLayer)layer).toggleGeometriesByTag(tag, status);
-                            repaint();
-                        }
-                    }
-                });
+                
             };
-           
+            debugTableModel.addTableModelListener(new TableModelListener() {
+                public void tableChanged(TableModelEvent e) {
+                    int selectedrow = flagTable.getSelectedRow();
+                    if((selectedrow != -1) && (selectedrow < flagTable.getRowCount()))
+                    {
+                        boolean status = ((Boolean)flagTable.getValueAt(selectedrow, 1));
+                        String tag = ((String)flagTable.getValueAt(selectedrow, 0));
+                        ((IComplexVDSVectorLayer)layer).toggleGeometriesByTag(tag, status);
+                        repaint();
+                    }
+                }
+            });
         }
         flagTable.setModel(debugTableModel);
         flagTable.setName("jTable2"); // NOI18N

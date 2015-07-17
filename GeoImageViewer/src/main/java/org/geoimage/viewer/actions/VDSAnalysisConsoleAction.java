@@ -229,13 +229,13 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
             for (ILayer l : Platform.getLayerManager().getAllLayers()) {
-                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(MaskVectorLayer.POINT)) {
+                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometricLayer.POINT)) {
                     vectors.add(l.getName());
                 }
             }
         }
         a3.setPossibleValues(vectors.toArray());
-        Vector<Argument> out = new Vector<Argument>();
+        List<Argument> out = new ArrayList<Argument>();
 
         Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, Platform.getConfiguration().getBufferingDistance());
 

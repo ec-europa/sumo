@@ -3,7 +3,7 @@
  *
  * Created on June 16, 2008, 5:20 PM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -68,7 +68,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        databaseQuery1 = new org.geoimage.viewer.widget.DatabaseQuery();
+        databaseQuery1 = new org.geoimage.viewer.widget.dialog.DatabaseQuery();
         jButton1 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
 
@@ -165,7 +165,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.geoimage.viewer.widget.DatabaseQuery databaseQuery1;
+    private org.geoimage.viewer.widget.dialog.DatabaseQuery databaseQuery1;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     // End of variables declaration//GEN-END:variables

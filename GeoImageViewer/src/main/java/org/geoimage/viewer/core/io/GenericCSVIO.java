@@ -130,10 +130,6 @@ public class GenericCSVIO extends AbstractVectorIO{
 	        RandomAccessFile fss = null;
 	        GeometricLayer out=null;
 	        try {
-	        	/*final String[] types={"Double","Double","Integer","Double","Double","Double",
-	            		"Double","Double","Double","Double","Double","Double","Double",
-	            		"Date","Double"};
-	            */
 	            fss = new RandomAccessFile(csvFile, "r");
 	            String line = null;
 	            //first line = info layer
@@ -145,31 +141,47 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            
 	            String geomtype = layerinfo[0].split("=")[1];
 	            out = new GeometricLayer(geomtype);
+	            out.setName(csvFile.getName().substring(0, csvFile.getName().lastIndexOf(".")));
 	            
 	            if(layerinfo.length==2){
 	            	String proj = layerinfo[1].split("=")[1];
 		            out.setProjection(proj);
 	            }
-	            
-	            out.setName(csvFile.getName().substring(0, csvFile.getName().lastIndexOf(".")));
 	           
 	            //read attributes 
-	            final String[] attributes=ArrayUtils.subarray(titles, 1,titles.length);
-	            types=ArrayUtils.subarray(types, 1,types.length);
+	            String[] attributes=titles;
+	            boolean usegeom=true;
+	            if(titles[0].equals("geom")){
+	            	//if file contains the geom , atts start from the second colums
+                	types=ArrayUtils.subarray(types, 1,types.length);
+                	attributes=ArrayUtils.subarray(titles, 1,titles.length);
+                }else{
+                	usegeom=false;
+                }
 	            
 	            GeometryFactory factory=new GeometryFactory();
 	            WKTReader parser=new WKTReader(factory);
+	            
 	            while ((line = fss.readLine()) != null) {
 	                Attributes atts = Attributes.createAttributes(attributes, types);
 	                String[] val = line.split(",");
 
-	                Geometry geom = parser.read(val[0]);
-	           //     GeoTransform transform=Platform.getCurrentImageReader().getGeoTransform();
-	           //     geom=transform.transformGeometryPixelFromGeo(geom);
-	                
-	                for (int i = 1; i < val.length; i++) {
-	                	String typ=types[i - 1];
-	                	String att=attributes[i - 1];
+	                Geometry geom=null;
+	                int startCol=1;
+	                if(usegeom){
+	                	geom = parser.read(val[0]);
+	                }else{
+	                	//create  geom from lat and lon
+	                	double lat=Double.parseDouble(val[0]);
+	                	double lon=Double.parseDouble(val[1]);
+	                	geom=factory.createPoint(new Coordinate(lon,lat));
+	                	startCol=0;
+	                }
+	                for (int i = startCol; i < val.length; i++) {
+	                	
+	                	String typ=types[i - startCol];
+	                	String att=attributes[i - startCol];
+	                	
 	                	val[i]=val[i].replace("\"", "");
 	                    if (typ.equals("Date")) {
 	                        try {
@@ -179,25 +191,21 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                        } catch (Exception e) {
 	                            atts.set(att, null);
 	                        }
-	                    } else {
-	                        if (typ.equals("Double")) {
+	                    } else  if (typ.equals("Double")) {
 	                            try {
 	                                atts.set(att, Double.valueOf(val[i].trim()));
 	                            } catch (Exception e) {
 	                                atts.set(att, 0);
 	                            }
-	                        } else {
-	                            if (typ.equals("Integer")) {
+                        } else if (typ.equals("Integer")) {
 	                                try {
 	                                    atts.set(att, Integer.valueOf(val[i].trim()));
 	                                } catch (Exception e) {
 	                                    atts.set(att, 0);
 	                                }
-	                            } else {
-	                                atts.set(att, val[i]);
-	                            }
-	                        }
-	                    }
+                        } else {
+                            atts.set(att, val[i]);
+                        }
 	                }
 	                out.put(geom,atts);
 	            }

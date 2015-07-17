@@ -3,7 +3,7 @@
  *
  * Created on April 9, 2008, 4:59 PM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.dialog;
 
 import java.awt.Frame;
 import javax.swing.SwingUtilities;

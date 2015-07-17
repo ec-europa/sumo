@@ -57,10 +57,7 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IMask, IClickable, IThreshable {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
 
-    public final static String POINT = GeometricLayer.POINT;
-    public final static String POLYGON = GeometricLayer.POLYGON;
-    public final static String LINESTRING = GeometricLayer.LINESTRING;
-    public final static String MIXED = GeometricLayer.MIXED;
+  
     protected boolean active = true;
     protected GeometricLayer glayer;
  //   protected Geometry total=null;
@@ -202,7 +199,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
        // 		geomList.add(currentTile);
         	}
             if (!threshable) {
-                if (getType().equalsIgnoreCase(POINT)) {
+                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
                     switch (this.displaysymbol) {
                         case point: {
                             gl.glPointSize(this.renderWidth);
@@ -224,18 +221,20 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case circle: {
-                        	gl.glBegin(GL.GL_LINE_LOOP);
+                        	gl.glBegin(GL.GL_POINTS);
                         	gl.glLineWidth(this.renderWidth);
-                        	for (Geometry temp : geomList) {
+                        	for (int ii=0;ii<geomList.size();ii++) {
+                        	   Geometry temp =geomList.get(ii);
 	                           Coordinate point = temp.getCoordinate();
 	                           double dx=(point.x - x) / width;
 	                           double dy=1 - (point.y - y) / height;
                         	   for (int i=0; i < 360; i++){
-                        		   double angle = 2 * Math.PI * i / 300;
-                        		   double xx = Math.cos(angle);
-                        		   double yy = Math.sin(angle);
+                        		   //double angle = 2 * Math.PI * i / 360;
+                        		   double xx = dx+Math.sin(i)*0.005;
+                        		   double yy = dy+Math.cos(i)*0.005;
                         		   
-                        		   gl.glVertex2d(xx+dx,yy+dy);
+                        		   gl.glVertex2d(xx,yy);
+                        		   //System.out.println(""+xx+"--"+yy);
                         	   }
 	                        } 
                     	    gl.glEnd();
@@ -301,7 +300,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         default: {
                         }
                     }
-                } else if (getType().equalsIgnoreCase(POLYGON)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
                     for (Geometry tmp : geomList) {
                     /*	Geometry gg;
 						try {
@@ -344,7 +343,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 
                     	}
                     }
-                } else if (getType().equalsIgnoreCase(LINESTRING)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
                     for (Geometry temp : geomList) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
@@ -359,7 +358,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         gl.glEnd();
                         gl.glFlush();
                     }
-                } else if (getType().equalsIgnoreCase(MIXED)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.MIXED)) {
                     for (Geometry temp : geomList) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
@@ -400,7 +399,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                     }
                 }
             } else {
-                if (getType().equalsIgnoreCase(POINT)) {
+                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
                     switch (this.displaysymbol) {
                         case point: {
                             gl.glPointSize(this.renderWidth);
@@ -424,7 +423,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case circle: {
-                        	gl.glBegin(GL.GL_LINE_LOOP);
+                        	gl.glBegin(GL.GL_POINTS);
                         	gl.glLineWidth(this.renderWidth);
                         	for (int ii=0;ii<geomList.size();ii++) {
                         	   Geometry temp =geomList.get(ii);
@@ -433,10 +432,11 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
 	                           double dy=1 - (point.y - y) / height;
                         	   for (int i=0; i < 360; i++){
                         		   //double angle = 2 * Math.PI * i / 360;
-                        		   double xx = dx+Math.sin(i)*0.01;
-                        		   double yy = dy+Math.cos(i)*0.01;
+                        		   double xx = dx+Math.sin(i)*0.005;
+                        		   double yy = dy+Math.cos(i)*0.005;
                         		   
                         		   gl.glVertex2d(xx,yy);
+                        		   //System.out.println(""+xx+"--"+yy);
                         	   }
 	                        } 
                     	    gl.glEnd();
@@ -509,7 +509,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         default: {
                         }
                     }
-                } else if (getType().equalsIgnoreCase(POLYGON)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
                     for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
@@ -527,7 +527,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                             gl.glFlush();
                         }
                     }
-                } else if (getType().equalsIgnoreCase(LINESTRING)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
                     for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
@@ -542,7 +542,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                             gl.glFlush();
                         }
                     }
-                } else if (getType().equalsIgnoreCase(MIXED)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.MIXED)) {
                     for (Geometry temp : geomList) {
                         if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
                             if (temp.getCoordinates().length < 1) {
@@ -784,7 +784,7 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
     }
     
     public boolean contains(int x, int y) {
-        if (getType().equals(POINT)) {
+        if (getType().equals(GeometricLayer.POINT)) {
             return false;
         }
         GeometryFactory gf = new GeometryFactory();
