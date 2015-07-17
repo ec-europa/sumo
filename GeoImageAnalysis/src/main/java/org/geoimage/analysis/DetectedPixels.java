@@ -87,7 +87,9 @@ public class DetectedPixels {
     	private double threshold;
     	private double band;
     	private double id;
+    	private boolean isAmbiguity=false;
     	
+
 		public Boat(double id,double x,double y,double size,double length,double width,double heading,
 				double value,double tileAvg,double tileStd,double threshold, double band){
     		this.id=id;
@@ -225,6 +227,18 @@ public class DetectedPixels {
 		public void setHeading(double heading) {
 			this.heading = heading;
 		}
+		
+		public boolean isAmbiguity() {
+			return isAmbiguity;
+		}
+
+
+
+		public void setAmbiguity(boolean isAmbiguity) {
+			this.isAmbiguity = isAmbiguity;
+		}
+
+
     }
     
 
