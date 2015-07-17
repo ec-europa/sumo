@@ -122,6 +122,22 @@ public class SimpleGeometryLayer extends AbstractLayer implements IVectorLayer{
                         }
                         break;
                         case circle: {
+                        	gl.glBegin(GL.GL_LINE_LOOP);
+                        	gl.glLineWidth(this.renderWidth);
+                        	for (Geometry temp : geometries) {
+	                           Coordinate point = temp.getCoordinate();
+	                           double dx=(point.x - x) / width;
+	                           double dy=1 - (point.y - y) / height;
+                        	   for (int i=0; i < 360; i++){
+                        		   double angle = 2 * Math.PI * i / 300;
+                        		   double xx = Math.cos(angle);
+                        		   double yy = Math.sin(angle);
+                        		   
+                        		   gl.glVertex2d(xx+dx,yy+dy);
+                        	   }
+	                        } 
+                    	    gl.glEnd();
+                            gl.glFlush();
                         }
                         break;
                         case square: {
