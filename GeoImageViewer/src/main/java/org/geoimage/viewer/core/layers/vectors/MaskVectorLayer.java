@@ -424,6 +424,23 @@ public class MaskVectorLayer extends AbstractLayer implements IVectorLayer, ISav
                         }
                         break;
                         case circle: {
+                        	gl.glBegin(GL.GL_LINE_LOOP);
+                        	gl.glLineWidth(this.renderWidth);
+                        	for (int ii=0;ii<geomList.size();ii++) {
+                        	   Geometry temp =geomList.get(ii);
+	                           Coordinate point = temp.getCoordinate();
+	                           double dx=(point.x - x) / width;
+	                           double dy=1 - (point.y - y) / height;
+                        	   for (int i=0; i < 360; i++){
+                        		   //double angle = 2 * Math.PI * i / 360;
+                        		   double xx = dx+Math.sin(i)*0.01;
+                        		   double yy = dy+Math.cos(i)*0.01;
+                        		   
+                        		   gl.glVertex2d(xx,yy);
+                        	   }
+	                        } 
+                    	    gl.glEnd();
+                            gl.glFlush();
                         }
                         break;
                         case square: {
