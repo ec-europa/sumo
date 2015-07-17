@@ -6,7 +6,7 @@
 
 package org.geoimage.viewer.widget.panels;
 
-import org.geoimage.viewer.widget.InfoDialog;
+import org.geoimage.viewer.widget.dialog.InfoDialog;
 
 
 /**

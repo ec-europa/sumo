@@ -140,17 +140,15 @@ public class Radarsat2Image extends SarImageReader {
     
 	@Override
 	public int[] read(int x, int y, int w, int h, int band) throws IOException {
-		Rectangle rect = new Rectangle(x, y, w, h);
+		/*Rectangle rect = new Rectangle(x, y, w, h);
         rect = rect.intersection(bounds);
         int[] data= new int[h*w];
         if (rect.isEmpty()) {
             return data;
         }
 
-        TIFFImageReadParam tirp=new TIFFImageReadParam();
-        tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
-        int[] rawData = tiff.getReader().read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        int[] rawData = tiff.getReader().read(0).getData(rect).getSamples(x, y,rect.width,rect.height, 0, (int[]) null);
         
         int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
@@ -161,7 +159,8 @@ public class Radarsat2Image extends SarImageReader {
                 data[(i + yinit) * w + j + xinit] = rawData[temp];
             }
         }
-        return data;
+        return data;*/
+		return readTile(x, y, w, h, band);
 	}
 
     

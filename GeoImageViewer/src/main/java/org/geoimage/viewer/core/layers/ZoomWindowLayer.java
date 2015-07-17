@@ -17,7 +17,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IMouseMove;
-import org.geoimage.viewer.widget.ZoomDialog;
+import org.geoimage.viewer.widget.dialog.ZoomDialog;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;

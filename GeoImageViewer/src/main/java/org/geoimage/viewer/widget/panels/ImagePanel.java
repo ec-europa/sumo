@@ -3,7 +3,7 @@
  *
  * Created on March 31, 2008, 12:18 PM
  */
-package org.geoimage.viewer.widget;
+package org.geoimage.viewer.widget.panels;
 
 import javax.swing.DefaultComboBoxModel;
 

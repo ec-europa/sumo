@@ -5,6 +5,8 @@
 
 package org.geoimage.viewer.widget;
 
+import org.geoimage.viewer.widget.dialog.InfoDialog;
+
 /**
  *
  * @author thoorfr

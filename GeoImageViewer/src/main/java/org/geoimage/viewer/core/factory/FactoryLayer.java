@@ -52,7 +52,7 @@ public class FactoryLayer {
                 Vector<Geometry> frames = new Vector<Geometry>();
                 frames.add(frame);
                 ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(),  layer.getGeometryType(), layer,landMask);
-                clayer.addGeometries("image frame", Color.BLUE, 1, MaskVectorLayer.LINESTRING, frames, false);
+                clayer.addGeometries("image frame", Color.BLUE, 1, GeometricLayer.LINESTRING, frames, false);
                 return clayer;
             } else {
                 ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer,landMask);

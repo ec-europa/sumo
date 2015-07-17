@@ -66,7 +66,7 @@ public class TimeVectorLayer extends MaskVectorLayer implements ITime {
             gl.glColor3f(c[0], c[1], c[2]);
 
             if (glayer != null) {
-                if (getType().equalsIgnoreCase(POINT)) {
+                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
                     gl.glPointSize(this.renderWidth);
                     gl.glBegin(GL.GL_POINTS);
                     for (Geometry temp : renderedLayer) {
@@ -83,7 +83,7 @@ public class TimeVectorLayer extends MaskVectorLayer implements ITime {
                         gl.glEnd();
                         gl.glFlush();
                     }
-                } else if (getType().equalsIgnoreCase(POLYGON)) {
+                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
                     for (Geometry temp : renderedLayer) {
                         if (temp.getCoordinates().length < 1) {
                             continue;

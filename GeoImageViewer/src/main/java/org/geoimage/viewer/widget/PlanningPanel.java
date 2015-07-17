@@ -23,6 +23,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.geoimage.viewer.core.ImagePlanning;
 import org.geoimage.viewer.core.Utilities;
 import org.geoimage.viewer.core.wwj.H2Fetcher;
+import org.geoimage.viewer.widget.dialog.PlanningDialog;
 import org.jdesktop.application.Action;
 import org.jdom.Document;
 import org.jdom.Element;

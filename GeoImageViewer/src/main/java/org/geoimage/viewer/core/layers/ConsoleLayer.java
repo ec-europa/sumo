@@ -44,7 +44,7 @@ import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.util.Constant;
-import org.geoimage.viewer.widget.ActionDialog;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.slf4j.LoggerFactory;
 
 /**
