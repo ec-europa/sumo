@@ -9,11 +9,12 @@ package org.geoimage.viewer.core.layers;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 
-public class BaseLayer extends AbstractLayer {
+public class BaseLayer extends GenericLayer {
 	
 
 
 	public BaseLayer(ILayer parent) {
+		super(parent,"",null,null);
 		init(parent);
 	}
 

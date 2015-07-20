@@ -23,5 +23,6 @@ public interface ILayer {
     public String getDescription();
     public void dispose();
     public void init(ILayer parent);
+    public String getType();
     
 }

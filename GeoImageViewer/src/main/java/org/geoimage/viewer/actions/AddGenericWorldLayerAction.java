@@ -12,13 +12,13 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -51,12 +51,12 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
             public void run() {
                 Platform.setInfo("Importing land coastline "+name,-1);
                 try {
-                	IImageLayer  l=Platform.getCurrentImageLayer();
+                	ImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
-                            addLayerInThread("noncomplexlayer", gl, (IImageLayer) l);
+                            addLayerInThread("noncomplexlayer", gl, (ImageLayer) l);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);
                         }
@@ -75,12 +75,12 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
      * @param layer
      * @param il
      */
-    public void addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
+    public void addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
         if (layer != null) {
             new Thread(new Runnable() {
 
                 public void run() {
-                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
+                    GenericLayer ivl = FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
                     Platform.getLayerManager().addLayer((ILayer) ivl);

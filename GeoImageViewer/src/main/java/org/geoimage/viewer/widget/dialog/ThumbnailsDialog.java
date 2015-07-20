@@ -8,7 +8,8 @@ package org.geoimage.viewer.widget.dialog;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import org.geoimage.viewer.core.layers.ThumbnailsLayer;
+
+import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 
 /**
  *

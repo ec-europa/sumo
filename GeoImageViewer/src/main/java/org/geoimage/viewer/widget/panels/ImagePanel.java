@@ -8,15 +8,14 @@ package org.geoimage.viewer.widget.panels;
 import javax.swing.DefaultComboBoxModel;
 
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.layers.CaretLayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.PositionLayer;
-import org.geoimage.viewer.core.layers.ThumbnailsLayer;
-import org.geoimage.viewer.core.layers.ThumbnailsSmallLayer;
-import org.geoimage.viewer.core.layers.ZoomWindowLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
+import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsSmallLayer;
+import org.geoimage.viewer.core.layers.visualization.CaretLayer;
+import org.geoimage.viewer.core.layers.visualization.PositionLayer;
+import org.geoimage.viewer.core.layers.visualization.ZoomWindowLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
 
 /**
  *
@@ -24,10 +23,10 @@ import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
  */
 public class ImagePanel extends javax.swing.JPanel {
 
-    private IImageLayer layer;
+    private ImageLayer layer;
 
     /** Creates new form ImagePanel */
-    public ImagePanel(IImageLayer layer) {
+    public ImagePanel(ImageLayer layer) {
         initComponents();
         this.layer = layer;
         jSlider1.setValue((int) (10 * layer.getContrast()));
@@ -267,12 +266,12 @@ public class ImagePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(layer instanceof FastImageLayer){
+        if(layer instanceof ImageLayer){
             Platform.getLayerManager().addLayer(new ZoomWindowLayer(layer));
         }
-        else if(layer instanceof ThumbnailsLayer){
+    /*    else if(layer instanceof ThumbnailsLayer){
         	Platform.getLayerManager().addLayer(new ThumbnailsSmallLayer((ThumbnailsLayer)layer));
-        }
+        }*/
         Platform.refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -10,7 +10,7 @@ import org.fenggui.event.ISliderMovedListener;
 import org.fenggui.event.SliderMovedEvent;
 import org.fenggui.render.Graphics;
 import org.fenggui.util.Color;
-import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -71,7 +71,7 @@ public class Slider extends TransparentWidget {
         else return slider.getValue();
     }
     
-    public static ISliderMovedListener createContrastListener(final IImageLayer layer){
+    public static ISliderMovedListener createContrastListener(final ImageLayer layer){
         return new ISliderMovedListener() {
             public void sliderMoved(SliderMovedEvent sliderMovedEvent) {
                 layer.setContrast((float)(sliderMovedEvent.getPosition()*cvalue));
@@ -79,7 +79,7 @@ public class Slider extends TransparentWidget {
         };
     }
     
-    public static ISliderMovedListener createBrightnessListener(final IImageLayer layer){
+    public static ISliderMovedListener createBrightnessListener(final ImageLayer layer){
         return new ISliderMovedListener() {
             public void sliderMoved(SliderMovedEvent sliderMovedEvent) {
                 layer.setBrightness((float)((sliderMovedEvent.getPosition()-0.5)*100000));

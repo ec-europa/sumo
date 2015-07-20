@@ -5,17 +5,6 @@
  */
 package org.geoimage.viewer.widget;
 
-import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.event.SelectEvent;
-import gov.nasa.worldwind.event.SelectListener;
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.Polyline;
-import gov.nasa.worldwind.render.Renderable;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
@@ -28,12 +17,11 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.GeoImageViewer;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.wwj.H2Fetcher;
 import org.geoimage.viewer.core.wwj.TimeRenderableLayer;
 import org.geoimage.viewer.core.wwj.WWGeoImage;
@@ -41,6 +29,17 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+
+import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.event.SelectEvent;
+import gov.nasa.worldwind.event.SelectListener;
+import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.GlobeAnnotation;
+import gov.nasa.worldwind.render.Polyline;
+import gov.nasa.worldwind.render.Renderable;
 
 /**
  *
@@ -76,7 +75,7 @@ public class WWJPanel extends javax.swing.JPanel {
         wwjCanvas.getModel().getLayers().add(imageLayer);
     }
 
-    public void add(IImageLayer layer) {
+    public void add(ImageLayer layer) {
     	try{
 	        if(layer==null) return;
 	        GeoImageReader reader=layer.getImageReader();
@@ -96,7 +95,7 @@ public class WWJPanel extends javax.swing.JPanel {
     	}  
     }
 
-    public void triggerState(IImageLayer layer){
+    public void triggerState(ImageLayer layer){
         if(layer==null) return;
         WWGeoImage totrigger=null;
         for(Renderable wwg:imageLayer.getRenderables()){
@@ -108,7 +107,7 @@ public class WWJPanel extends javax.swing.JPanel {
         totrigger.setAnnotationVisible(layer.isActive());
     }
 
-    public void remove(IImageLayer layer) {
+    public void remove(ImageLayer layer) {
         if(layer==null) return;
         Renderable toremove=null;
         for(Renderable wwg:imageLayer.getRenderables()){

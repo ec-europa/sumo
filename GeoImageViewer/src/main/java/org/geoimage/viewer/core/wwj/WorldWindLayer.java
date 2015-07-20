@@ -4,14 +4,6 @@
  */
 package org.geoimage.viewer.core.wwj;
 
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.render.DrawContext;
-import gov.nasa.worldwind.render.Polyline;
-import gov.nasa.worldwind.view.orbit.BasicOrbitView;
-
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,10 +14,18 @@ import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+
+import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.DrawContext;
+import gov.nasa.worldwind.render.Polyline;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 
 /**
  *
@@ -49,8 +49,8 @@ public class WorldWindLayer extends RenderableLayer implements ITime {
         super.render(dc);
         boolean done = false;
         for (ILayer layer : lm.getLayers().keySet()) {
-            if (layer instanceof IImageLayer) {
-                GeoImageReader gir = ((IImageLayer) layer).getImageReader();
+            if (layer instanceof ImageLayer) {
+                GeoImageReader gir = ((ImageLayer) layer).getImageReader();
                 Polyline pol = geoms.get(gir);
                 Timestamp ts = Timestamp.valueOf(((SarImageReader)gir).getTimeStampStop());
                 if (pol == null) {

@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,12 +18,11 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.slf4j.LoggerFactory;
@@ -40,7 +38,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
     private GeometricLayer gl;
-    private IImageLayer il;
+    private ImageLayer il;
     private IComplexVectorLayer vdslayer;
     
     private Color azimuthGeometrycolor = null;
@@ -53,8 +51,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         this.il = null;
 
         for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-            if (l instanceof IImageLayer && l.isActive()) {
-                il = (IImageLayer) l;
+            if (l instanceof ImageLayer && l.isActive()) {
+                il = (ImageLayer) l;
                 break;
             }
         }

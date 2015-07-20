@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.slf4j.LoggerFactory;

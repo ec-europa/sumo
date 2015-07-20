@@ -15,7 +15,7 @@ import java.util.Vector;
  *
  * @author leforth
  */
-public interface IComplexVectorLayer extends IVectorLayer {
+public interface IComplexVectorLayer  {
     public void addGeometries(String geometrytag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status);
     public boolean tagExists(String tag);
     public boolean removeGeometriesByTag(String geometrytag);

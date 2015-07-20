@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -11,8 +11,7 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.GeoTransform;
+import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
@@ -22,6 +21,7 @@ import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.widget.AttributesEditor;
 
@@ -35,9 +35,9 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
- * @author thoorfr
+ * @author Pietro Argentieri
  */
-public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable, IMouseMove, IEditable, IMouseDrag, IKeyPressed {
+public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IMouseMove, IEditable, IMouseDrag, IKeyPressed {
 
     protected Coordinate editedPoint = null;
     protected boolean edit = false;
@@ -60,7 +60,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
     @Override
     public void mouseClicked(Point imagePosition, int button, GeoContext context) {
         if (!this.edit || button != IClickable.BUTTON1) {
-            super.mouseClicked(imagePosition, button, context);
+            mouseClicked(imagePosition, context);
             return;
         }
         if (this.move) {
@@ -72,10 +72,28 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
         } else if (this.changeAttributes) {
             performChangeAttributes(imagePosition, context);
         }
-        super.mouseClicked(imagePosition, button, context);
+        mouseClicked(imagePosition, context);
 
     }
 
+    /**
+     * 
+     * @param imagePosition
+     * @param context
+     */
+    public void mouseClicked(java.awt.Point imagePosition, GeoContext context) {
+        this.selectedGeometry = null;
+        GeometryFactory gf = new GeometryFactory();
+        com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
+        for (Geometry temp : glayer.getGeometries()) {
+            //if (temp.isWithinDistance(p, 5 * context.getZoom())) {
+            if (p.equalsExact(temp, 5 * context.getZoom())) {
+                this.selectedGeometry = temp;
+                PickedData.put(temp, glayer.getAttributes(temp));
+            }
+        }
+    }
+    
     @Override
     public void render(GeoContext context) {
         if (toBeRemoved.size() > 0) {
@@ -211,7 +229,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
             glayer.put(selectedGeometry);
         } else if (type.equals(GeometricLayer.POLYGON) || type.equals(GeometricLayer.LINESTRING)) {
             if (selectedGeometry == null && (glayer.getGeometries().size() != 0)) {
-                super.mouseClicked(imagePosition, BUTTON1, context);
+                mouseClicked(imagePosition, BUTTON1, context);
                 return;
             }
             if (glayer.getGeometries().size() == 0 | selectedGeometry == null) {
@@ -304,7 +322,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
 
     protected void performDelete(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            super.mouseClicked(imagePosition, BUTTON1, context);
+            mouseClicked(imagePosition, BUTTON1, context);
             return;
         }
         if (this.editedPoint == null) {
@@ -345,7 +363,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
 
     protected void performMove(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            super.mouseClicked(imagePosition, IClickable.BUTTON1, context);
+            mouseClicked(imagePosition, IClickable.BUTTON1, context);
 
             if (this.editedPoint == null && selectedGeometry != null) {
                 if (type.equals(GeometricLayer.POINT)) {
@@ -440,7 +458,7 @@ public class SimpleEditVectorLayer extends MaskVectorLayer implements IClickable
 
     private void performChangeAttributes(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            super.mouseClicked(imagePosition, BUTTON1, context);
+            mouseClicked(imagePosition, BUTTON1, context);
         }
         if (selectedGeometry != null) {
             AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);

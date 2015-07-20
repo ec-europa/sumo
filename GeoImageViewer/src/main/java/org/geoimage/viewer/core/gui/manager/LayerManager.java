@@ -19,7 +19,6 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
@@ -27,12 +26,12 @@ import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ITime;
-import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -168,10 +167,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
      */
     public void addLayer(ILayer layer) {
         // if we are adding an image layer turn off all the other image active layers
-        if (layer instanceof FastImageLayer) {
+        if (layer instanceof ImageLayer) {
             // look for other image layers active
             for (ILayer il : layers.keySet()) {
-                if (il instanceof FastImageLayer) {
+                if (il instanceof ImageLayer) {
                     if (il.isActive()) {
                         il.setActive(false);
                     }
@@ -192,10 +191,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
      * @param needActive
      */
     public void addLayer(ILayer layer,boolean needActive) {
-        if (needActive && layer instanceof FastImageLayer) {
+        if (needActive && layer instanceof ImageLayer) {
             // look for other image layers active
             for (ILayer il : layers.keySet()) {
-                if (il instanceof FastImageLayer) {
+                if (il instanceof ImageLayer) {
                     if (il.isActive()) {
                         il.setActive(false);
                     }
@@ -354,12 +353,12 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
      * @param layer
      * @param il
      */
-    public static boolean addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
+    public static boolean addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
     	boolean done=false;
         if (layer != null) {
             new Thread(new Runnable() {
                 public void run() {
-                    IVectorLayer ivl = FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"");
+                	GenericLayer ivl = FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
                     Platform.getLayerManager().addLayer((ILayer) ivl);

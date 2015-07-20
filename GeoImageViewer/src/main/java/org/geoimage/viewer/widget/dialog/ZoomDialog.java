@@ -17,7 +17,7 @@ import javax.media.opengl.glu.GLU;
 
 import org.geoimage.impl.GeotiffImage;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.layers.ZoomWindowLayer;
+import org.geoimage.viewer.core.layers.visualization.ZoomWindowLayer;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.texture.Texture;
