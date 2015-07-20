@@ -11,9 +11,9 @@ import org.fenggui.layout.FormAttachment;
 import org.fenggui.layout.FormData;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.Slider;
 
 /**
@@ -46,19 +46,19 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
         //manage a slider for changing the contrast
         if(args[0].equals("sl")){
              for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-            if (l instanceof IImageLayer && l.isActive()) {
+            if (l instanceof ImageLayer && l.isActive()) {
                 Slider slider = new Slider(true, Slider.CONTRAST);
                 slider.setSize(200, 40);
                 slider.setExpandable(false);
                 slider.setShrinkable(false);
-                slider.addListener(Slider.createContrastListener((IImageLayer) l));
+                slider.addListener(Slider.createContrastListener((ImageLayer) l));
                 {
                     FormData fd = new FormData();
                     fd.right = new FormAttachment(100, -50);
                     fd.top = new FormAttachment(100, -300);
                     slider.setLayoutData(fd);
                 }
-                slider.setValue(((IImageLayer) l).getContrast());
+                slider.setValue(((ImageLayer) l).getContrast());
                 Platform.getGeoContext().getFenguiDisplay().addWidget(slider);
                 slider.hook(Platform.getGeoContext().getFenguiDisplay());
 
@@ -72,23 +72,23 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
         if (args[0].startsWith("+")) {
             float contrast = Float.parseFloat(args[0].substring(1));
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    ((IImageLayer) l).setContrast(((IImageLayer) l).getContrast() + contrast);
+                if (l instanceof ImageLayer & l.isActive()) {
+                    ((ImageLayer) l).setContrast(((ImageLayer) l).getContrast() + contrast);
                 }
             }
         // c -(number) to decrease the actual contrast
         } else if (args[0].startsWith("-")) {
             float contrast = Float.parseFloat(args[0].substring(1));
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    ((IImageLayer) l).setContrast(((IImageLayer) l).getContrast() - contrast);
+                if (l instanceof ImageLayer & l.isActive()) {
+                    ((ImageLayer) l).setContrast(((ImageLayer) l).getContrast() - contrast);
                 }
             }
         } else {
             float contrast = Float.parseFloat(args[0]);
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    ((IImageLayer) l).setContrast(contrast);
+                if (l instanceof ImageLayer & l.isActive()) {
+                    ((ImageLayer) l).setContrast(contrast);
                 }
             }
         }

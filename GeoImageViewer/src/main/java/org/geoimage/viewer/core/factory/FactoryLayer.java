@@ -11,12 +11,12 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
-import org.geoimage.viewer.core.api.IVectorLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.TimeVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -27,11 +27,11 @@ public class FactoryLayer {
 
 	
 	public final static String TYPE_COMPLEX="complexvds";
-	
+	public final static String TYPE_NON_COMPLEX="noncomplexlayer";
 	//TODO utilizzare queste costanti : in questo momento viene utilizzata solo TYPE_COMPLEX
 	public final static String TYPE_SIMPLE="simple";
 	public final static String TYPE_TIMESTAMP="timestamp";
-	
+	public final static String TYPE_DATE="Date";
 	
 	/**
 	 * 
@@ -40,7 +40,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */
-	public static IVectorLayer createVectorLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
+	public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
         String[] types = layer.getSchemaTypes();
         boolean timestamplayer = false;
@@ -62,7 +62,7 @@ public class FactoryLayer {
         } else {
             for (int i = 0; i < types.length; i++) {
                 String t = types[i];
-                if (t.equals("Date") || t.equals("Timestamp")) {
+                if (t.equals(TYPE_DATE) || t.equals(TYPE_TIMESTAMP)) {
                     timestamplayer = true;
                     timecolumnname = schema[i];
                     break;
@@ -101,18 +101,17 @@ public class FactoryLayer {
 	 */
 	  public static  GeometricLayer createThresholdedLayer(GeometricLayer layer,double currentThresh,boolean threshable) {
 	        GeometricLayer out = layer.clone();
-	        if (!threshable) {
-	            return out;
-	        }
-	        List<Geometry> remove = new ArrayList<Geometry>();
-	        for (Geometry geom : Collections.unmodifiableList(out.getGeometries())) {
-	            if (new Double("" + out.getAttributes(geom).get(VDSSchema.SIGNIFICANCE)) < currentThresh) {
-	                remove.add(geom);
-	            }
-	        }
-	        for (Geometry geom : remove) {
-	            out.remove(geom);
-	        }
+	        if (threshable) {
+		        List<Geometry> remove = new ArrayList<Geometry>();
+		        for (Geometry geom : Collections.unmodifiableList(out.getGeometries())) {
+		            if (new Double("" + out.getAttributes(geom).get(VDSSchema.SIGNIFICANCE)) < currentThresh) {
+		                remove.add(geom);
+		            }
+		        }
+		        for (Geometry geom : remove) {
+		            out.remove(geom);
+		        }
+	        }    
 	        return out;
 
 	    }

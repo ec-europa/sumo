@@ -11,11 +11,13 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.geoimage.viewer.core.api.ILayer;
+
 /**
  * Interface that handles the methods to mask part of the raster
  * @author thoorfr
  */
-public interface IMask {
+public interface IMask extends ILayer{
 
     public boolean intersects(int x, int y, int width, int height);
     public boolean contains(int x, int y);
@@ -25,8 +27,6 @@ public interface IMask {
     public Area getShape(int width, int height);
     public void buffer(double bufferingDistance);
     public List<Geometry> getGeometries();
-    public String getName();
-    public String getType();
     
 
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -26,12 +25,11 @@ import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.api.IVectorLayer;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.layers.AbstractLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -45,14 +43,13 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLayer, ISave, IClickable {
+public class InterpolatedVectorLayer extends GenericLayer implements  ISave, IClickable {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(InterpolatedVectorLayer.class);
 
     protected boolean active = true;
     protected  GeoImageReader reader;
     protected GeometricLayer glayer;
     protected String type;
-    protected String name;
     protected float renderWidth = 1;
     protected Color color = new Color(1f, 1f, 1f);
     protected Geometry selectedGeometry;
@@ -63,7 +60,7 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
     private List<Point> interpolated = new ArrayList<Point>();
 
     public InterpolatedVectorLayer(String layername, GeoImageReader reader, GeometricLayer layer, String idColumn, String dateColumn, Date date) {
-        this.name = layername;
+    	super(null,layername,null,layer);
         this.date = date;
         this.glayer = layer;
         this.idColumn = idColumn;
@@ -72,13 +69,6 @@ public class InterpolatedVectorLayer extends AbstractLayer implements IVectorLay
         createRenderingLayer();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void render(GeoContext context) {
         if (!context.isDirty()) {

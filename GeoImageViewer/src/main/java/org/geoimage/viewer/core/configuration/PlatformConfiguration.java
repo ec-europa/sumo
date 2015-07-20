@@ -1,7 +1,7 @@
 package org.geoimage.viewer.core.configuration;
 
 
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.Constant;
 
 public class PlatformConfiguration {

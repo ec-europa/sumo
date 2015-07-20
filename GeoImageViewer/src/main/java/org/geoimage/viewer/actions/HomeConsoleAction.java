@@ -9,12 +9,10 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
-import org.geoimage.viewer.core.api.iactions.IConsoleAction;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -35,8 +33,8 @@ public class HomeConsoleAction extends AbstractConsoleAction {
     public boolean execute(String[] args) {
         ILayerManager lm = Platform.getLayerManager();
         for (ILayer l : lm.getLayers().keySet()) {
-            if (l instanceof IImageLayer & l.isActive()) {
-               GeoImageReader gir=((IImageLayer)l).getImageReader();
+            if (l instanceof ImageLayer & l.isActive()) {
+               GeoImageReader gir=((ImageLayer)l).getImageReader();
                
                int x=(gir.getWidth()/Platform.getGeoContext().getWidth());
                int y=gir.getHeight()/Platform.getGeoContext().getHeight();

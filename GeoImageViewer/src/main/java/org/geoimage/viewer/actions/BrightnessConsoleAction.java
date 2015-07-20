@@ -9,9 +9,9 @@ import java.util.Vector;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -33,15 +33,15 @@ public class BrightnessConsoleAction implements IAction	 {
     public boolean execute(String[] args) {
         if (args.length == 1) {
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    ((IImageLayer) l).setBrightness(Float.parseFloat(args[0]));
+                if (l instanceof ImageLayer & l.isActive()) {
+                    ((ImageLayer) l).setBrightness(Float.parseFloat(args[0]));
                 }
             }
         } else if (args.length == 2) {
             float br = Float.parseFloat(args[0]);
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer & l.isActive()) {
-                    ((IImageLayer) l).setBrightness(((IImageLayer) l).getBrightness() + br);
+                if (l instanceof ImageLayer & l.isActive()) {
+                    ((ImageLayer) l).setBrightness(((ImageLayer) l).getBrightness() + br);
                 }
             }
 

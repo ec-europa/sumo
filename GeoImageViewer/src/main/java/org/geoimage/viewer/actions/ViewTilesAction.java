@@ -10,9 +10,9 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.layers.vectors.SimpleGeometryLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class ViewTilesAction extends AbstractAction{
 
 	            public void run() {
 	                try {
-	                	IImageLayer  l=Platform.getCurrentImageLayer();
+	                	ImageLayer  l=Platform.getCurrentImageLayer();
 	                	if(l!=null){
 	                        try {
 	                        	GeoImageReader gir=l.getImageReader();

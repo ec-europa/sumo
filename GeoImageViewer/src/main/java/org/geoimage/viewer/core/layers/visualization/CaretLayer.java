@@ -2,14 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.visualization;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -18,26 +19,20 @@ import org.geoimage.viewer.core.api.ILayer;
  * not used anymore
  *
  */
-public class CaretLayer extends AbstractLayer {
+public class CaretLayer extends GenericLayer {
 
     private boolean active=true;
     private int width;
     private int height;
 
-    public CaretLayer(IImageLayer parent) {
+    public CaretLayer(ImageLayer parent) {
+    	super(parent,"Caret",null,null);
         this.width = parent.getImageReader().getWidth();
         this.height = parent.getImageReader().getHeight();
         super.setParent((ILayer) parent);
     }
 
-    public String getName() {
-        return "Caret";
-    }
-
-    public void setName(String name) {
-
-    }
-
+    
     public void render(GeoContext context) {
         GL2 gl = context.getGL().getGL2();
         gl.glColor3f(1, 1, 1);

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
 import java.util.List;
@@ -10,11 +10,9 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.layers.AbstractLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +23,9 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
- * @author thoorfr
+ * @author Pietro Argentieri
  */
-public class SimpleGeometryLayer extends AbstractLayer implements IVectorLayer{
+public class SimpleGeometryLayer extends GenericLayer {
 
     public final static String POINT = GeometricLayer.POINT;
     public final static String POLYGON = GeometricLayer.POLYGON;
@@ -36,8 +34,6 @@ public class SimpleGeometryLayer extends AbstractLayer implements IVectorLayer{
     protected boolean active = true;
     
    	
-	protected String type;
-    protected String name;
     protected float renderWidth = 1;
     protected Color color = new Color(1f, 1f, 1f);
     protected List<Geometry> geometries;
@@ -49,10 +45,8 @@ public class SimpleGeometryLayer extends AbstractLayer implements IVectorLayer{
     
     
     public SimpleGeometryLayer(ILayer parent,String layername, List<Geometry> geometries,String type) {
-    	super.parent=parent;
-        this.name = layername;
+    	super(parent,layername,type,null);
         this.geometries=geometries;
-        this.type=type;
     }
 
 

@@ -1,10 +1,7 @@
 /*
- * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.geoimage.viewer.widget;
-
-import gov.nasa.worldwind.Model;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -31,11 +28,13 @@ import org.fenggui.render.ITexture;
 import org.fenggui.render.Pixmap;
 import org.fenggui.util.Color;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.IImageLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
+
+import gov.nasa.worldwind.Model;
 
 /**
  *
@@ -51,7 +50,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
         private double northAngle = 0.0;
         private ITexture texture = null;
         private URL imageFile = null;
-        private IImageLayer il;
+        private ImageLayer il;
 
 
         public Compass(Container parent) {
@@ -83,10 +82,10 @@ public class GeoNavigationToolbar extends TransparentWidget {
             {
                 boolean found=false;
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                    if (l instanceof IImageLayer && l.isActive()) {
-                        if (il != (IImageLayer) l) {
+                    if (l instanceof ImageLayer && l.isActive()) {
+                        if (il != (ImageLayer) l) {
                             try {
-                                il = (IImageLayer) l;
+                                il = (ImageLayer) l;
                                 northAngle = ((((SarImageReader)il.getImageReader()).getImageAzimuth()) / 180) * Math.PI;
                                 System.out.println(northAngle);
                                 BufferedImage bi = ImageIO.read(this.imageFile);
@@ -228,7 +227,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
         private ITexture texture = null;
         private Color backgroundColor = null;
         private int maxZoomLevel = 32;
-        private IImageLayer il;
+        private ImageLayer il;
         private float zoom = 0;
 
 
@@ -255,8 +254,8 @@ public class GeoNavigationToolbar extends TransparentWidget {
             if ((il == null) || (!il.isActive())) {
                 il = null;
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                    if (l instanceof IImageLayer && l.isActive()) {
-                        il = (IImageLayer) l;
+                    if (l instanceof ImageLayer && l.isActive()) {
+                        il = (ImageLayer) l;
                         // update the max zoom value
                         maxZoomLevel = ((int) Math.max(Math.log10(il.getImageReader().getWidth() / Platform.getGeoContext().getWidth()) / Math.log10(2), Math.log10(il.getImageReader().getHeight() / Platform.getGeoContext().getHeight()) / Math.log10(2))) + 1;
                         break;

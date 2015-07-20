@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.io.File;
 import java.sql.Connection;
@@ -15,6 +15,7 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.io.GenericCSVIO;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ import com.vividsolutions.jts.io.WKTReader;
  *
  * @author thoorfr
  */
-public class SelectableVectorLayer extends MaskVectorLayer implements ISelect {
+public class SelectableVectorLayer extends GenericLayer implements ISelect {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SelectableVectorLayer.class);
 
     private String whereClause = null;

@@ -18,9 +18,8 @@ import javax.swing.SwingUtilities;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.layers.FastImageLayer;
-import org.geoimage.viewer.core.layers.PositionLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.PositionLayer;
 import org.geotools.referencing.CRS;
 
 /**
@@ -37,7 +36,7 @@ public class PositionDialog extends javax.swing.JDialog{
         super(parent, modal);
         initComponents();
         this.layer=player;
-        gt=((IImageLayer)layer.getParent()).getImageReader().getGeoTransform();
+        gt=((ImageLayer)layer.getParent()).getImageReader().getGeoTransform();
         this.jComboBox1.setModel(new DefaultComboBoxModel(CRS.getSupportedCodes("EPSG").toArray()));
         this.jComboBox1.getModel().setSelectedItem("4326");
         this.jComboBox1.addItemListener(new ItemListener() {
@@ -86,7 +85,7 @@ public class PositionDialog extends javax.swing.JDialog{
 			this.jLabel5.setText("-1");
 	        this.jLabel6.setText("-1");
 		}
-        FastImageLayer parent=(FastImageLayer)layer.getParent();
+        ImageLayer parent=(ImageLayer)layer.getParent();
         this.jLabel8.setText(""+parent.getImageReader().readPixel(imagePosition.x, imagePosition.y,parent.getActiveBand()));
     }
     

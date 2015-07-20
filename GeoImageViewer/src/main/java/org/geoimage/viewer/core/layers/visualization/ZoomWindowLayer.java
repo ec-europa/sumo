@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.visualization;
 
 import java.awt.Frame;
 import java.awt.Point;
@@ -15,8 +15,9 @@ import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.dialog.ZoomDialog;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -26,7 +27,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
+public class ZoomWindowLayer extends GenericLayer implements  IMouseMove {
 
     private String name = "";
     private boolean active = true;
@@ -40,7 +41,8 @@ public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
     private int[] nat;
     private boolean automaticConstrast=true;
 
-    public ZoomWindowLayer(IImageLayer parent) {
+    public ZoomWindowLayer(ImageLayer parent) {
+    	super(parent,"",null,null);
         init(parent);
         this.gir=parent.getImageReader();
         //this.gir = GeoImageReaderFactory.create(parent.getImageReader().getFilesList()[0]).get(0);
@@ -82,7 +84,7 @@ public class ZoomWindowLayer extends AbstractLayer implements  IMouseMove {
             this.image = createImage(this.gir, position.x - 50, position.y - 50, 100, 100);
             BufferedImageOp temp = null;
             if (!isAutomaticConstrast()) {
-                temp = new RescaleOp(((IImageLayer)super.getParent()).getContrast(), ((IImageLayer)super.getParent()).getBrightness(), null);
+                temp = new RescaleOp(((ImageLayer)super.getParent()).getContrast(), ((ImageLayer)super.getParent()).getBrightness(), null);
             } else {
                 float average = 0;
                 for (int i = 0; i < nat.length; i += 20) {

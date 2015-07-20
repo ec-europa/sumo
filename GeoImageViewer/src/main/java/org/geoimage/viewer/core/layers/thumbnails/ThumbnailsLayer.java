@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.thumbnails;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -12,15 +12,13 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLBase;
 
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsImageReader;
-import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
@@ -33,9 +31,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  *
  * @author thoorfr
  */
-public class ThumbnailsLayer extends AbstractLayer implements IClickable {
+public class ThumbnailsLayer extends GenericLayer {
 
-    private GeometricLayer glayer;
     private String id;
     public ThumbnailsManager tmanager;
     private BufferedImage overview;
@@ -47,6 +44,7 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
     private float scale;
 
     public ThumbnailsLayer(ILayer parent, GeometricLayer glayer, String projection, String idColumnName, ThumbnailsManager tmanager) throws GeoTransformException {
+    	super(parent,"",null,glayer);
         thumbReader = new ThumbnailsImageReader(tmanager);
         if (projection == null) {
             this.glayer = glayer;
@@ -170,13 +168,6 @@ public class ThumbnailsLayer extends AbstractLayer implements IClickable {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
-	@Override
-	public void mouseClicked(Point imagePosition, int button, GeoContext context) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -8,9 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -20,7 +18,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.Constant;
@@ -30,9 +27,6 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-/*
-import org.geoimage.utils.KSATVessel;
- */
 /**
  *
  * @author thoorfr

@@ -6,18 +6,13 @@ package org.geoimage.viewer.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
-import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.VDSAnalysis;
-import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.impl.s1.Sentinel1;
@@ -27,17 +22,13 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 
 /**
  *
@@ -86,8 +77,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             if (args[0].equals("k-dist")) {
                 done = false;
                 
-                IImageLayer cl=Platform.getCurrentImageLayer();
-                GeoImageReader reader = ((IImageLayer) cl).getImageReader();
+                ImageLayer cl=Platform.getCurrentImageLayer();
+                GeoImageReader reader = ((ImageLayer) cl).getImageReader();
                 if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
                     gir = reader;
                 }
@@ -224,7 +215,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
         Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
         ArrayList<String> vectors = new ArrayList<String>();
-        IImageLayer il=Platform.getCurrentImageLayer();
+        ImageLayer il=Platform.getCurrentImageLayer();
 
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
