@@ -19,10 +19,9 @@ import javax.swing.event.TableModelListener;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -121,12 +120,12 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         jScrollPaneTableData.setViewportView(tableDataLayer);
 
         // add check boxes for debug information
-        List<String> geometriestaglist = ((IComplexVDSVectorLayer)layer).getGeometriestagList();
+        List<String> geometriestaglist = ((ComplexEditVDSVectorLayer)layer).getGeometriestagList();
         if(geometriestaglist != null)
         {
             for(final String tag : geometriestaglist)
             {
-            	Boolean statusCheckBoolean = ((IComplexVDSVectorLayer)layer).getGeometriesDisplay(tag);// ? "On" : "Off";
+            	Boolean statusCheckBoolean = ((ComplexEditVDSVectorLayer)layer).getGeometriesDisplay(tag);// ? "On" : "Off";
                 //Boolean statusCheckBoolean = new Boolean(status.equalsIgnoreCase("On"));
                 
                 debugTableModel.addRow(new Object[]{tag, statusCheckBoolean});
@@ -139,7 +138,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
                     {
                         boolean status = ((Boolean)flagTable.getValueAt(selectedrow, 1));
                         String tag = ((String)flagTable.getValueAt(selectedrow, 0));
-                        ((IComplexVDSVectorLayer)layer).toggleGeometriesByTag(tag, status);
+                        ((ComplexEditVDSVectorLayer)layer).toggleGeometriesByTag(tag, status);
                         repaint();
                     }
                 }

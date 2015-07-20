@@ -9,13 +9,13 @@ import javax.media.opengl.awt.GLCanvas;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.slf4j.LoggerFactory;
 
@@ -152,12 +152,12 @@ public class Platform {
         ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).addWidget(widget);
     }
 
-    public static IImageLayer getCurrentImageLayer() {
+    public static ImageLayer getCurrentImageLayer() {
     	if(!Platform.batchMode){
 	        for (ILayer l : getLayerManager().getLayers().keySet()) {
-	            if (l instanceof IImageLayer && l.isActive()) {
+	            if (l instanceof ImageLayer && l.isActive()) {
 	                try {
-	                    return (IImageLayer) l;
+	                    return (ImageLayer) l;
 	                } catch (Exception ex) {
 	                	logger.error(ex.getMessage(),ex);
 	                }

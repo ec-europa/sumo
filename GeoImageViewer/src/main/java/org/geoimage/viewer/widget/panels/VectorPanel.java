@@ -9,8 +9,8 @@ import java.awt.Color;
 
 import javax.swing.JColorChooser;
 
-import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 
 /**
  *
@@ -18,10 +18,10 @@ import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
  */
 public class VectorPanel extends javax.swing.JPanel {
 
-    private IVectorLayer layer;
+    private GenericLayer layer;
 
     /** Creates new form VectorPanel */
-    public VectorPanel(IVectorLayer layer) {
+    public VectorPanel(GenericLayer layer) {
         initComponents();
         this.layer = layer;
         jButton1.setBackground(layer.getColor());

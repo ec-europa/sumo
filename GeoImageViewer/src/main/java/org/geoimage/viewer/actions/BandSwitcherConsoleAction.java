@@ -9,10 +9,9 @@ import java.util.Vector;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
-import org.geoimage.viewer.core.layers.FastImageLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -32,8 +31,8 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
 
     public boolean execute(String[] args) {
         for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-            if (l instanceof IImageLayer & l.isActive()) {
-            	IImageLayer imL=((IImageLayer) l);
+            if (l instanceof ImageLayer & l.isActive()) {
+            	ImageLayer imL=((ImageLayer) l);
             	
             	//int[] bands=((IImageLayer) l).getBands()[0]+1);
             	int bb=imL.getActiveBand()+1;
@@ -42,8 +41,8 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
             	}
             	imL.setActiveBand(bb);
             	
-           		((FastImageLayer)imL).setName(imL.getImageReader());
-                Platform.setInfo(imL.getImageReader().getBandName(((IImageLayer) l).getActiveBand()), 2000);
+           		((ImageLayer)imL).setName(imL.getImageReader());
+                Platform.setInfo(imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()), 2000);
             }
         }
         return true;

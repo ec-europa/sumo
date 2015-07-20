@@ -23,7 +23,6 @@ import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -31,7 +30,8 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.InterpolatedVectorLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.slf4j.LoggerFactory;
@@ -102,13 +102,13 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             layer = ps.getTable();
             config = ps.getConfig();
         } else {
-            IImageLayer l=Platform.getCurrentImageLayer();
+            ImageLayer l=Platform.getCurrentImageLayer();
             if(l!=null){
                     try {
                         PostgisIO pio=new PostgisIO(l.getImageReader(),config);
                         pio.setLayerName(layer);
                         GeometricLayer gl = pio.readLayer();
-                        addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
+                        addLayerInThread(args[1], args[2], gl, (ImageLayer) l);
                     } catch (Exception ex) {
                         logger.error(ex.getMessage(), ex);
                     }
@@ -120,11 +120,11 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
     private void addQuery(String[] args) {
         try {
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer && l.isActive()) {
+                if (l instanceof ImageLayer && l.isActive()) {
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
                     dialog.setConnection(conn);
-                    dialog.setImageLayer((IImageLayer) l, args[1]);
+                    dialog.setImageLayer((ImageLayer) l, args[1]);
                     dialog.setVisible(true);
                     done = true;
                 }
@@ -164,12 +164,12 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                 return;
             }
         }
-        IImageLayer l=Platform.getCurrentImageLayer();
+        ImageLayer l=Platform.getCurrentImageLayer();
         if(l!=null){
                 try {
                 	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                     GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
-                    addLayerInThread(args[1], args[2], gl, (IImageLayer) l);
+                    addLayerInThread(args[1], args[2], gl, (ImageLayer) l);
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
@@ -179,16 +179,16 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
     private void addSimpleCSV(String[] args) {
         if (args.length == 4&&args[1].contains("=")) {
             String file=args[1].split("=")[3];
-            IImageLayer l=Platform.getCurrentImageLayer();
+            ImageLayer l=Platform.getCurrentImageLayer();
             if(l!=null){
             		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
                     GeometricLayer positions = csvio.readLayer();
                     if (positions.getProjection() == null) {
-                        addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                        addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
                     } else {
                     	try{
-                        	positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                    			addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                        	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                    			addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
                     	}catch(Exception e){
                     		logger.error(e.getMessage(),e);
                     	}		
@@ -199,15 +199,15 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    IImageLayer l=Platform.getCurrentImageLayer();
+                    ImageLayer l=Platform.getCurrentImageLayer();
                     if(l!=null){
                     		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     		GeometricLayer positions = csvio.readLayer();
                             if (positions.getProjection() == null) {
-                                addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                                addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
                             } else {
-                                positions = GeometricLayer.createImageProjectedLayer(positions, ((IImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                                addLayerInThread(args[1], args[2], positions, (IImageLayer) l);
+                                positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                                addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
                             }
                     }
                 } catch (GeoTransformException ex) {
@@ -218,13 +218,13 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
         }
     }
 
-    private static ILayer createLayer(String id, final String date, GeometricLayer layer, IImageLayer parent) {
+    private static ILayer createLayer(String id, final String date, GeometricLayer layer, ImageLayer parent) {
     	Timestamp t=Timestamp.valueOf(((SarImageReader)parent.getImageReader()).getTimeStampStart());
         return new InterpolatedVectorLayer(layer.getName(),parent.getImageReader(), layer, id, date,t);
 
     }
 
-    public void addLayerInThread(final String id, final String date, final GeometricLayer layer, final IImageLayer il) {
+    public void addLayerInThread(final String id, final String date, final GeometricLayer layer, final ImageLayer il) {
         new Thread(new Runnable() {
 
             public void run() {

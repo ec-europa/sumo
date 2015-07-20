@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -30,11 +30,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
-import org.geoimage.viewer.core.layers.image.Cache;
-import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.geoimage.viewer.core.layers.image.ImagePool;
-import org.geoimage.viewer.core.layers.image.TextureCacheManager;
+import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +42,12 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class FastImageLayer extends AbstractLayer implements IImageLayer {
+public class ImageLayer implements ILayer  {
+	protected String name = "";
+	protected boolean active = true;
+	protected boolean isRadio = false;
+	protected String type;
+	protected ILayer parent=null;
 	
 	class ServiceTile implements  Callable<Object[]> {
 		private String initfile;
@@ -99,7 +100,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
 	
 	
 	
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FastImageLayer.class);
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer.class);
 
     private GeoImageReader activeGir;
     private HashMap<String, Float> contrast = new HashMap<String, Float>();
@@ -141,7 +142,7 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
      * 
      * @param gir
      */
-    public FastImageLayer(GeoImageReader gir) {
+    public ImageLayer(GeoImageReader gir) {
     	iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
   
@@ -677,6 +678,54 @@ public class FastImageLayer extends AbstractLayer implements IImageLayer {
         	setName(name);
         }	
     }
+
+    
+    public boolean isActive() {
+        return active;
+    }
+
+	public void setActive(boolean active) {
+        this.active=active;
+    }
+	
+	public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+	
+	
+    public boolean isRadio() {
+        return isRadio;
+    }
+
+    public void setIsRadio(boolean radio) {
+        isRadio = radio;
+    }
+    
+    public void init(ILayer parent) {
+		this.parent = parent;
+	}
+
+	
+	public ILayer getParent() {
+		return parent;
+	}
+
+	public void setParent(ILayer parent) {
+		this.parent = parent;
+	}
+	
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    
     
    
 }

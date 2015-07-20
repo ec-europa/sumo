@@ -10,10 +10,10 @@ import javax.swing.JOptionPane;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
  *
@@ -37,7 +37,7 @@ public class DeleteConsoleAction extends AbstractAction {
             // delete command
             if (args==null||args.length == 0)
             {
-                if (l instanceof IImageLayer & l.isActive()) {
+                if (l instanceof ImageLayer & l.isActive()) {
                         l.dispose();
                         lm.removeLayer(l);
                         return true;
@@ -46,7 +46,7 @@ public class DeleteConsoleAction extends AbstractAction {
             // delete imagelayer command
             if (args!=null&&args.length == 1)
             {
-                if (l instanceof IImageLayer & (l.getName().compareTo(args[0]) == 0))
+                if (l instanceof ImageLayer & (l.getName().compareTo(args[0]) == 0))
                 {
                         l.dispose();
                         lm.removeLayer(l);
@@ -56,7 +56,7 @@ public class DeleteConsoleAction extends AbstractAction {
             // delete imagelayer layername command
             if (args!=null&&args.length == 2)
             {
-                if (l instanceof IImageLayer & (l.getName().compareTo(args[0]) == 0))
+                if (l instanceof ImageLayer & (l.getName().compareTo(args[0]) == 0))
                 {
                     // loops through the image layer layers
                     for (ILayer lvector : ((ILayerManager)l).getAllLayers())

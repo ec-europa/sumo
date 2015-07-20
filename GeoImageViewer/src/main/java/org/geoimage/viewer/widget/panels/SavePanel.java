@@ -16,10 +16,10 @@ import javax.swing.JFileChooser;
 
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geotools.referencing.CRS;
 import org.slf4j.LoggerFactory;
 
@@ -68,11 +68,11 @@ public class SavePanel extends javax.swing.JPanel {
             }
         });
         if(layer instanceof MaskVectorLayer)
-            if(((MaskVectorLayer)layer).getParent() instanceof IImageLayer){
+            if(((MaskVectorLayer)layer).getParent() instanceof ImageLayer){
             	OptionMenu opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
             	if (opt==null)
             		opt=comboSaveFormat.getItemAt(0);
-                jTextField1.setText(((IImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
+                jTextField1.setText(((ImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
             }    
     }
 
@@ -179,8 +179,8 @@ public class SavePanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String filename = null;
         for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-            if (l instanceof IImageLayer & l.isActive()) {
-                filename = ((IImageLayer) l).getName();
+            if (l instanceof ImageLayer & l.isActive()) {
+                filename = ((ImageLayer) l).getName();
                 break;
             }
         }

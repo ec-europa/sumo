@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.visualization;
 
 import java.awt.Color;
 import java.awt.Frame;
@@ -14,8 +14,9 @@ import javax.media.opengl.GL2;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.Positioning;
 import org.geoimage.viewer.widget.PositionDialog;
 import org.geotools.referencing.GeodeticCalculator;
@@ -25,9 +26,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr
  */
-public class PositionLayer extends AbstractLayer implements  IMouseMove, IClickable {
+public class PositionLayer extends GenericLayer implements  IMouseMove, IClickable {
 
-    private IImageLayer parent;
     private boolean active = true;
     private Point imagePosition;
     private PositionDialog pd;
@@ -36,18 +36,13 @@ public class PositionLayer extends AbstractLayer implements  IMouseMove, IClicka
 
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(PositionLayer.class);
     
-    public PositionLayer(IImageLayer layer) {
+    public PositionLayer(ImageLayer layer) {
+    	super(layer,"Position",null,null);
         this.pd = new PositionDialog(Frame.getFrames()[0], false, this);
         this.pd.setVisible(true);
         super.init(parent);
     }
 
-    public String getName() {
-        return "Position";
-    }
-
-    public void setName(String name) {
-    }
 
     public void render(GeoContext context) {
         if (initPosition == null) {

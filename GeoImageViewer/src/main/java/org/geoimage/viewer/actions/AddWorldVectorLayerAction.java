@@ -14,12 +14,12 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -53,13 +53,13 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
             public void run() {
                 Platform.setInfo("Importing land mask from GSHHS shapefile...",-1);
                 try {
-                	IImageLayer  l=Platform.getCurrentImageLayer();
+                	ImageLayer  l=Platform.getCurrentImageLayer();
                 	if(l!=null){
                         try {
                         	File shape=new File(Platform.getConfiguration().getDefaultLandMask());
-                        	Polygon imageP=((SarImageReader)l).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
+                        	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
-                            addLayerInThread(gl, (IImageLayer) l);
+                            addLayerInThread(gl, (ImageLayer) l);
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);
                         }
@@ -72,7 +72,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
         return true;
     }
 
-    public void addLayerInThread(final GeometricLayer layer, final IImageLayer il) {
+    public void addLayerInThread(final GeometricLayer layer, final ImageLayer il) {
         if(layer != null)
         {
             new Thread(new Runnable() {

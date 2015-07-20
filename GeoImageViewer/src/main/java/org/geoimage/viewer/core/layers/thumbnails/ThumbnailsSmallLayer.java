@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.thumbnails;
 
 import java.awt.Frame;
 import java.awt.Point;
@@ -10,20 +10,23 @@ import java.awt.Point;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.widget.dialog.ThumbnailsDialog;
 
 /**
  *
  * @author thoorfr
  */
-public class ThumbnailsSmallLayer extends AbstractLayer implements  IClickable {
+public class ThumbnailsSmallLayer extends GenericLayer implements  IClickable {
 
-    private ThumbnailsLayer parent;
     private boolean active = true;
     private Point imagePosition;
-    private ThumbnailsDialog pd;
+    
+
+	private ThumbnailsDialog pd;
 
     public ThumbnailsSmallLayer(ThumbnailsLayer layer) {
+    	super(layer,"",null,null);
         this.pd = new ThumbnailsDialog(Frame.getFrames()[0], false, layer);
         this.pd.setVisible(true);
         super.init((ILayer)layer);
@@ -53,7 +56,13 @@ public class ThumbnailsSmallLayer extends AbstractLayer implements  IClickable {
         return false;
     }
 
-  
+    public Point getImagePosition() {
+		return imagePosition;
+	}
+
+	public void setImagePosition(Point imagePosition) {
+		this.imagePosition = imagePosition;
+	}
 
     public String getDescription() {
         return "Gives the positon of the mouse in the image";

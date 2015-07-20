@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -24,8 +24,6 @@ import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -35,6 +33,7 @@ import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
@@ -48,7 +47,7 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  * @author leforth
  */
-public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements IComplexVDSVectorLayer {
+public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ComplexEditVDSVectorLayer.class);
 	private String[] thresholds={};
 	private double enl=0;
@@ -172,7 +171,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer implements
 	        }
 	        case ISave.OPT_EXPORT_THUMBS:{
 	            ThumbnailsManager tm = new ThumbnailsManager(file);
-	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, null,((IImageLayer)super.parent).getActiveBand());
+	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, null,((ImageLayer)super.parent).getActiveBand());
 	            msgResult[0]="The thumnails have been successfully saved";
 	            break;
 	        }

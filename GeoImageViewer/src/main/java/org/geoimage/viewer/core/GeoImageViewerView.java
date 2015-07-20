@@ -50,7 +50,6 @@ import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -59,7 +58,7 @@ import org.geoimage.viewer.core.gui.manager.WidgetManager;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.geoimage.viewer.util.Constant;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.geoimage.viewer.widget.PluginManagerDialog;
 import org.geoimage.viewer.widget.PreferencesDialog;
@@ -114,20 +113,20 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		public LayerListener() {}
 		
 	    public void layerAdded(ILayer l) {
-	        if (l instanceof IImageLayer) {
-	            wwjPanel.add((IImageLayer) l);
+	        if (l instanceof ImageLayer) {
+	            wwjPanel.add((ImageLayer) l);
 	        }
 	    }
 
 	    public void layerRemoved(ILayer l) {
-	        if (l instanceof IImageLayer) {
-	            wwjPanel.remove((IImageLayer) l);
+	        if (l instanceof ImageLayer) {
+	            wwjPanel.remove((ImageLayer) l);
 	        }
 	    }
 
 	    public void layerClicked(ILayer l) {
-	        if (l instanceof IImageLayer) {
-	            wwjPanel.triggerState((IImageLayer) l);
+	        if (l instanceof ImageLayer) {
+	            wwjPanel.triggerState((ImageLayer) l);
 	        }
 	    }
 	}
@@ -306,7 +305,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                        lm.mouseMoved(p, geoContext);
 	                        
 	                       // public void setImagePosition(Point imagePosition) {
-	                       IImageLayer imgL=Platform.getCurrentImageLayer();
+	                       ImageLayer imgL=Platform.getCurrentImageLayer();
 	                       if(imgL!=null){
 	                    	   GeoImageReader gir=imgL.getImageReader();
 	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y);

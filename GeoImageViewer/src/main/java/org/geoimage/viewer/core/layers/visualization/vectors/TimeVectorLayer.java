@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers.vectors;
+package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.util.Date;
 import java.util.Hashtable;
@@ -11,11 +11,11 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  * @author thoorfr
  */
-public class TimeVectorLayer extends MaskVectorLayer implements ITime {
+public class TimeVectorLayer extends GenericLayer implements ITime {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TimeVectorLayer.class);
 
     private String timeColumn;

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:UML="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xmi:id="_H4RHwCuhEeWitMgingZqqQ" version="10.0.0.201505222000">
-  <semanticResources>../dist3.xml</semanticResources>
-  <models xmi:type="UML:Model" href="Sumo.uml#_nKqpICugEeWitMgingZqqQ"/>
-</viewpoint:DAnalysis>

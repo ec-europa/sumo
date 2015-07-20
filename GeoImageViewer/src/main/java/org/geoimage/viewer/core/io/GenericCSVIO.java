@@ -8,40 +8,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.lang3.ArrayUtils;
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.PolygonOp;
-import org.geoimage.viewer.widget.SelectParametersJDialog;
-import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.text.WKTParser;
-import org.h2.tools.Csv;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 

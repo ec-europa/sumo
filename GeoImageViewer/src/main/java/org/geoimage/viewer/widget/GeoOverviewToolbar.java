@@ -23,9 +23,9 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.ScaleTransformation;
 import org.geoimage.viewer.util.Constant;
 
@@ -35,7 +35,7 @@ import org.geoimage.viewer.util.Constant;
 	
     private ITexture texture = null;
     protected Color backgroundColor = null;
-    private IImageLayer il = null;
+    private ImageLayer il = null;
     private double ratio = -1.0;
     private Rectangle minimizeRectangle = new Rectangle(1, 1, 10, 8);
     private boolean minimize = false;
@@ -60,8 +60,8 @@ import org.geoimage.viewer.util.Constant;
             onbuilding = false;
             texture = null;
             for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                if (l instanceof IImageLayer && l.isActive()) {
-                    il = (IImageLayer) l;
+                if (l instanceof ImageLayer && l.isActive()) {
+                    il = (ImageLayer) l;
                     break;
                 }
             }

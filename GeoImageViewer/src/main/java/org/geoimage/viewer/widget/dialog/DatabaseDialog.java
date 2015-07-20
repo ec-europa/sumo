@@ -9,12 +9,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(DatabaseDialog.class);
 
     private GeometricLayer layer;
-    private IImageLayer ilayer;
+    private ImageLayer ilayer;
     private String vtype;
 
     /** Creates new form DatabaseDialog */
@@ -45,16 +44,16 @@ public class DatabaseDialog extends javax.swing.JDialog {
         databaseQuery1.setConnection(conn);
     }
 
-    public void setImageLayer(IImageLayer layer, String vectorType) {
+    public void setImageLayer(ImageLayer layer, String vectorType) {
         this.ilayer = layer;
         this.vtype = vectorType;
     }
 
-    public void addLayerInThread(final String type, final GeometricLayer layer, final IImageLayer il) {
+    public void addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.getLayerManager().addLayer((ILayer)(FactoryLayer.createVectorLayer(type, layer, il.getImageReader(),"")));
+                Platform.getLayerManager().addLayer((ILayer)(FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"")));
             }
         }).start();
     }

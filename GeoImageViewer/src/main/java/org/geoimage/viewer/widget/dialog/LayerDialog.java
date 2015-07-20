@@ -5,15 +5,15 @@
  */
 
 package org.geoimage.viewer.widget.dialog;
-import org.geoimage.viewer.core.api.IComplexVDSVectorLayer;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.ISelect;
-import org.geoimage.viewer.core.api.IVectorLayer;
-import org.geoimage.viewer.core.layers.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.panels.EditorPanel;
 import org.geoimage.viewer.widget.panels.GeometricInteractiveVDSLayerPanel;
 import org.geoimage.viewer.widget.panels.GeometricLayerPanel;
@@ -36,15 +36,15 @@ public class LayerDialog extends javax.swing.JDialog {
         initComponents();
         jTabbedPane1.add("Description",new LayerPanel(layer));
         
-        if(layer instanceof IImageLayer) jTabbedPane1.add("Image parameters",new ImagePanel((IImageLayer)layer));
+        if(layer instanceof ImageLayer) jTabbedPane1.add("Image parameters",new ImagePanel((ImageLayer)layer));
         
-        if(layer instanceof IVectorLayer) jTabbedPane1.add("Style",new VectorPanel((IVectorLayer)layer));
+        if(layer instanceof GenericLayer) jTabbedPane1.add("Style",new VectorPanel((GenericLayer)layer));
         
         if(layer instanceof MaskVectorLayer)
         {
             if(layer instanceof IComplexVectorLayer)
             {
-                if(layer instanceof IComplexVDSVectorLayer)
+                if(layer instanceof ComplexEditVDSVectorLayer)
                     jTabbedPane1.add("Data", new GeometricInteractiveVDSLayerPanel(layer));
             } else {
                 jTabbedPane1.add("Data", new GeometricLayerPanel(((MaskVectorLayer)layer).getGeometriclayer()));

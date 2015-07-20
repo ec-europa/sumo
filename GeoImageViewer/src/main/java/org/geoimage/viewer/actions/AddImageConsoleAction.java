@@ -17,13 +17,12 @@ import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.layers.FastImageLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -138,7 +137,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             	for(int i=0;i<tempList.size();i++){
             		temp=tempList.get(i);
 	             
-            		FastImageLayer newImage = new FastImageLayer(temp);
+            		ImageLayer newImage = new ImageLayer(temp);
 	                Platform.getLayerManager().addLayer(newImage,i==0);
 	                try {
 	                    Thread.sleep(5000);
@@ -193,7 +192,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	                Platform.getGeoContext().setX(0);
 	                Platform.getGeoContext().setY(0);
 	                //Platform.getGeoContext().setZoom(temp.getWidth() / Platform.getGeoContext().getWidth() + 1);
-	                IImageLayer newImage = new FastImageLayer( temp);
+	                ImageLayer newImage = new ImageLayer( temp);
 	                Platform.getLayerManager().addLayer(newImage);
 	                try {
 	                    Thread.sleep(1000);

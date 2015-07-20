@@ -31,19 +31,17 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.io.FilenameUtils;
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.Plugins;
 import org.geoimage.viewer.core.api.GeoContext;
-import org.geoimage.viewer.core.api.IImageLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.ClassPathHacker;
-import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr
  */
-public class ConsoleLayer extends AbstractLayer {
+public class ConsoleLayer extends GenericLayer {
 
     private String message = "";
     private String oldMessage = "";
@@ -64,6 +62,7 @@ public class ConsoleLayer extends AbstractLayer {
 
     
     public ConsoleLayer(ILayer parent) {
+    	super(parent,"Console",null,null);
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
         
         actions = new HashMap<String, IAction>();
@@ -157,8 +156,8 @@ public class ConsoleLayer extends AbstractLayer {
         try {
             if (message.startsWith("google")) {
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                    if (l instanceof IImageLayer) {
-                        GeoImageReader gir = ((IImageLayer) l).getImageReader();
+                    if (l instanceof ImageLayer) {
+                        GeoImageReader gir = ((ImageLayer) l).getImageReader();
                         double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0);
                         double[] x1 = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
                         Desktop.getDesktop().browse(new URI("http://maps.google.com/?ie=UTF8&ll=" + (x1[1] + x0[1]) / 2 + "," + (x0[0] + x1[0]) / 2 + "&spn=0.009676,0.020084&t=h&z=9"));
@@ -174,8 +173,8 @@ public class ConsoleLayer extends AbstractLayer {
         try {
             if (message.startsWith("level")) {
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
-                    if (l instanceof IImageLayer) {
-                        ((IImageLayer) l).level(Integer.parseInt(message.split(" ")[1]));
+                    if (l instanceof ImageLayer) {
+                        ((ImageLayer) l).level(Integer.parseInt(message.split(" ")[1]));
                     }
                 }
             }
