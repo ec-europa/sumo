@@ -19,7 +19,6 @@ import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
-import org.geoimage.viewer.core.layers.GenericLayer.symbol;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
