@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer"
+        x="367" y="27">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.GenericLayer" x="320" y="179"/>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
+        x="41" y="264"/>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SelectableVectorLayer"
+        x="583" y="299">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer"
+        x="165" y="311">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"
+        x="46" y="180">
+        <Association
+            destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
+            endpointName="additionalGeometries" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
+        x="79" y="53"/>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer"
+        x="420" y="297">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Association
+            destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
+            endpointName="displaysymbol" kind="Simple"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer"
+        x="591" y="175">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer"
+        x="593" y="64">
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </CommunicationClass>
+</ClassDiagram>
