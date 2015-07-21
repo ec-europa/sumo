@@ -13,7 +13,6 @@ import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.panels.EditorPanel;
 import org.geoimage.viewer.widget.panels.GeometricInteractiveVDSLayerPanel;
 import org.geoimage.viewer.widget.panels.GeometricLayerPanel;
@@ -40,16 +39,13 @@ public class LayerDialog extends javax.swing.JDialog {
         
         if(layer instanceof GenericLayer) jTabbedPane1.add("Style",new VectorPanel((GenericLayer)layer));
         
-        if(layer instanceof MaskVectorLayer)
+        if(layer instanceof IComplexVectorLayer)
         {
-            if(layer instanceof IComplexVectorLayer)
-            {
-                if(layer instanceof ComplexEditVDSVectorLayer)
-                    jTabbedPane1.add("Data", new GeometricInteractiveVDSLayerPanel(layer));
-            } else {
-                jTabbedPane1.add("Data", new GeometricLayerPanel(((MaskVectorLayer)layer).getGeometriclayer()));
-            }
-        }  
+            if(layer instanceof ComplexEditVDSVectorLayer)
+                jTabbedPane1.add("Data", new GeometricInteractiveVDSLayerPanel(layer));
+        } else {
+           // jTabbedPane1.add("Data", new GeometricLayerPanel(((GenericLayer)layer).getGeometriclayer()));
+        }
         if(layer instanceof IEditable) jTabbedPane1.add("Edit",new EditorPanel((IEditable)layer));
         
         if(layer instanceof ISave) jTabbedPane1.add("Save",new SavePanel((ISave)layer));

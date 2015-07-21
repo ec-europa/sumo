@@ -14,6 +14,7 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 
@@ -27,7 +28,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author leforth
  */
-public class ComplexEditVectorLayer extends SimpleEditVectorLayer {
+public class ComplexEditVectorLayer extends SimpleEditVectorLayer implements IComplexVectorLayer {
 	
 	
 	

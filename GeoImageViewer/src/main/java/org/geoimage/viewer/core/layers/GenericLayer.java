@@ -57,6 +57,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
         this.name = layername;
         this.displaysymbol = symbol.point;
         this.type = type;
+        this.glayer=layer;
     }
 	
 	@Override
@@ -557,7 +558,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     
 	@Override
 	public String getDescription() {
-		return null;
+		return name;
 	}
 
 	@Override
