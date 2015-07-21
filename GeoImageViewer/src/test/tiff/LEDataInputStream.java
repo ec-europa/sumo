@@ -10,7 +10,8 @@
  *******************************************************************************/
 package tiff;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 final class LEDataInputStream extends InputStream {
 	int position;

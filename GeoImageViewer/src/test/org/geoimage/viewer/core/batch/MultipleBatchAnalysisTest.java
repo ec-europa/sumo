@@ -1,8 +1,7 @@
 package org.geoimage.viewer.core.batch;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import org.geoimage.viewer.core.batch.MultipleBatchAnalysis;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

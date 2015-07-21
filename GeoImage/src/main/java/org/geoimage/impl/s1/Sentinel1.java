@@ -10,17 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jrc.it.annotation.reader.jaxb.AdsHeaderType;
-import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
-import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
-import jrc.it.annotation.reader.jaxb.ImageInformationType;
-import jrc.it.annotation.reader.jaxb.OrbitType;
-import jrc.it.annotation.reader.jaxb.SwathBoundsType;
-import jrc.it.annotation.reader.jaxb.SwathMergeType;
-import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
-import jrc.it.xml.wrapper.SumoAnnotationReader;
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -38,6 +27,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+
+import jrc.it.annotation.reader.jaxb.AdsHeaderType;
+import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
+import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
+import jrc.it.annotation.reader.jaxb.ImageInformationType;
+import jrc.it.annotation.reader.jaxb.OrbitType;
+import jrc.it.annotation.reader.jaxb.SwathBoundsType;
+import jrc.it.annotation.reader.jaxb.SwathMergeType;
+import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
+import jrc.it.xml.wrapper.SumoAnnotationReader;
+import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 /**
  * 

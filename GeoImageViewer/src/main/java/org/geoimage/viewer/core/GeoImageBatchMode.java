@@ -8,7 +8,6 @@ package org.geoimage.viewer.core;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.image.Cache;
 import org.slf4j.LoggerFactory;
 
 /**

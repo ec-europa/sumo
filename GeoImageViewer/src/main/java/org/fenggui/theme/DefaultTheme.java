@@ -21,18 +21,43 @@ package org.fenggui.theme;
 
 import java.awt.image.BufferedImage;
 
-import org.fenggui.*;
-import org.fenggui.background.*;
-import org.fenggui.border.*;
+import org.fenggui.Button;
+import org.fenggui.CheckBox;
+import org.fenggui.ComboBox;
+import org.fenggui.Container;
+import org.fenggui.IWidget;
+import org.fenggui.Label;
+import org.fenggui.List;
+import org.fenggui.ProgressBar;
+import org.fenggui.RadioButton;
+import org.fenggui.ScrollBar;
+import org.fenggui.ScrollContainer;
+import org.fenggui.Slider;
+import org.fenggui.SnappingSlider;
+import org.fenggui.Span;
+import org.fenggui.SplitContainer;
+import org.fenggui.TabItemLabel;
+import org.fenggui.TextEditor;
+import org.fenggui.VerticalList;
+import org.fenggui.background.Background;
+import org.fenggui.background.GradientBackground;
+import org.fenggui.background.PlainBackground;
+import org.fenggui.border.BevelBorder;
+import org.fenggui.border.PlainBorder;
 import org.fenggui.composites.Window;
 import org.fenggui.console.Console;
 import org.fenggui.layout.Alignment;
-import org.fenggui.menu.*;
-import org.fenggui.render.*;
-import org.fenggui.switches.*;
+import org.fenggui.menu.Menu;
+import org.fenggui.menu.MenuBar;
+import org.fenggui.render.Binding;
+import org.fenggui.render.ITexture;
+import org.fenggui.render.Pixmap;
+import org.fenggui.switches.SetPixmapSwitch;
+import org.fenggui.switches.SetTextColorSwitch;
 import org.fenggui.table.Table;
 import org.fenggui.tree.Tree;
-import org.fenggui.util.*;
+import org.fenggui.util.Color;
+import org.fenggui.util.Spacing;
 
 /**
  * The standard theme used per default in FengGUI. It does not use

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="jrc.it.geolocation.interpolation.HermiteInterpolation"
+        x="392" y="182">
+        <Communication destinationClassName="jrc.it.geolocation.common.MathUtil"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="jrc.it.geolocation.geo.ParallelGeoCoding.ParallelReverse"
+        x="1065" y="351">
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
+    </CommunicationClass>
+    <CommunicationClass name="jrc.it.geolocation.geo.GeoCoding" x="789" y="387"/>
+    <CommunicationClass name="jrc.it.geolocation.metadata.S1Metadata"
+        x="481" y="411"/>
+    <CommunicationClass
+        name="jrc.it.geolocation.interpolation.OrbitInterpolation"
+        x="245" y="300">
+        <Communication destinationClassName="jrc.it.geolocation.metadata.S1Metadata"/>
+        <Communication destinationClassName="jrc.it.geolocation.interpolation.HermiteInterpolation"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="jrc.it.geolocation.geo.ParallelGeoCoding.ParallelForward"
+        x="780" y="245">
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
+    </CommunicationClass>
+    <CommunicationClass name="jrc.it.geolocation.common.MathUtil"
+        x="579" y="76"/>
+</ClassDiagram>

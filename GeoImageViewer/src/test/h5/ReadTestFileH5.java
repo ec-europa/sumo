@@ -1,6 +1,4 @@
 package h5;
-import java.util.List;
-
 import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5ScalarDS;
 

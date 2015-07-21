@@ -22,7 +22,7 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometricInteractiveVDSLayerModel.class);
     
     public GeometricInteractiveVDSLayerModel(ILayer layer) {
-        this.gl = ((SimpleEditVectorLayer) layer).getGeometriclayer();
+        this.gl = ((EditGeometryVectorLayer) layer).getGeometriclayer();
         this.il = null;
 
         for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {

@@ -24,7 +24,6 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;

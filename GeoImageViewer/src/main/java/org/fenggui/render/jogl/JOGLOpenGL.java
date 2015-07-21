@@ -19,7 +19,22 @@
  */
 package org.fenggui.render.jogl;
 
-import static javax.media.opengl.GL.*;
+import static javax.media.opengl.GL.GL_BACK;
+import static javax.media.opengl.GL.GL_BLEND;
+import static javax.media.opengl.GL.GL_CULL_FACE;
+import static javax.media.opengl.GL.GL_CW;
+import static javax.media.opengl.GL.GL_DEPTH_TEST;
+import static javax.media.opengl.GL.GL_LEQUAL;
+import static javax.media.opengl.GL.GL_LINES;
+import static javax.media.opengl.GL.GL_LINE_WIDTH;
+import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
+import static javax.media.opengl.GL.GL_POINTS;
+import static javax.media.opengl.GL.GL_POINT_SIZE;
+import static javax.media.opengl.GL.GL_SRC_ALPHA;
+import static javax.media.opengl.GL.GL_TEXTURE_2D;
+import static javax.media.opengl.GL.GL_TRIANGLES;
+import static javax.media.opengl.GL.GL_TRIANGLE_FAN;
+import static javax.media.opengl.GL.GL_TRIANGLE_STRIP;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -5,13 +5,14 @@
 
 package org.geoimage.utils;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.geoimage.viewer.core.api.ILayer;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Interface that handles the methods to mask part of the raster

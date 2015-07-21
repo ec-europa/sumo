@@ -13,13 +13,19 @@
  ****************************************************************************/
 package org.geoimage.analysis;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 /**
  * 
  * @author thoorfr, lemoigu
  * 
  */
-import java.sql.*;
-import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.slf4j.LoggerFactory;
 

@@ -41,14 +41,18 @@ class Window{
 	 * @param sizePixelY	size of each pixel in meters in Azimuth
 	 * @return
 	 */
-	public static Window createWindowFromAzimuth(int xBoat,int yBoat,int dAz,double sizePixelX,double sizePixelY){
+	public static Window createWindowFromAzimuth(int xBoat,int yBoat,int dAz,double sizePixelX,double sizePixelY,boolean up){
 		//size in pixel
-		int xPixel=new Double(AzimuthAmbiguity.X_WINDOW_SIZE/sizePixelX).intValue();
-		int yPixel=new Double(AzimuthAmbiguity.X_WINDOW_SIZE/sizePixelY).intValue();
+		int xPixel=new Double(AzimuthAmbiguity.X_WINDOW_SIZE/sizePixelX+1).intValue();
+		int yPixel=new Double(AzimuthAmbiguity.Y_WINDOW_SIZE/sizePixelY+1).intValue();
 		
 		//top left corner of the area
 		int windowX=xBoat- (xPixel/2);
-		int windowY=yBoat- (yPixel/2)+(int)(dAz/sizePixelY);
+		int windowY=0;
+		if(up)
+			windowY=yBoat- (yPixel/2)-dAz;
+		else
+			windowY=yBoat+ (yPixel/2)+dAz;
 		
 		return new Window(windowX, windowY, xPixel, yPixel);
 	}
@@ -138,14 +142,27 @@ public class AzimuthAmbiguity {
      * @return
      * @throws IOException 
      */
-    private int getWindowMaxPixelValue(int x,int y,int sizeX,int sizeY,int band) throws IOException{
-    	int[] data=sumoImage.read(x,y,sizeX,sizeY, band);
-    	int highest = data[0];
-	    for (int index = 1; index < data.length; index ++) {
-	        if (data[index] > highest) {
-	            highest = data [index];
-	        }
-	    }
+    private int getWindowMaxPixelValue(int x,int y,int sizeX,int sizeY,int band){
+    	int highest =0;
+    	try{
+    		if(y<0)
+    			y=0;
+    		if(x<0)
+    			x=0;
+    		if(x>this.sumoImage.getWidth())
+    			x=sumoImage.getWidth();
+    		if(y>this.sumoImage.getHeight())
+    			y=sumoImage.getHeight();
+	    	int[] data=sumoImage.readTile(x,y,sizeX,sizeY, band);
+	    	highest = data[0];
+		    for (int index = 1; index < data.length; index ++) {
+		        if (data[index] > highest) {
+		            highest = data [index];
+		        }
+		    }
+    	}catch(Exception e){
+    		logger.warn("AzimuthAmb - error reading data:"+e.getLocalizedMessage());
+    	}    
 	    return highest;
     } 
     
@@ -155,22 +172,22 @@ public class AzimuthAmbiguity {
      * @param boat
      * @param xPos
      * @param yPos
-     * @param deltaAzimuth
+     * @param deltaAzimuth azimuth correction in pixels
      * @param pxSize
      * @param pySize
      * @return
      * @throws IOException
      */
     private boolean isAmbiguity(Boat boat,int xPos, int yPos,int deltaAzimuth,double pxSize ,double pySize) throws IOException{
-    	Window winUp=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize);
-        logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
-        int maxVal=getWindowMaxPixelValue(winUp.sizeX,winUp.sizeY,X_WINDOW_SIZE,Y_WINDOW_SIZE,band);
+    	Window winUp=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,true);
+       // logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
+        int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band);
         
         if(maxVal>(boat.getValue()*10)){
         	return true;
         }else{
-        	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, -deltaAzimuth,pxSize ,pySize);
-        	maxVal=getWindowMaxPixelValue(winDown.sizeX,winDown.sizeY,X_WINDOW_SIZE,Y_WINDOW_SIZE,band);
+        	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,false);
+        	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band);
         	if(maxVal>(boat.getValue()*10)){
             	return true;
         	}	
@@ -195,7 +212,9 @@ public class AzimuthAmbiguity {
 	            int xPos = (int) myBoat.getPosx();
 	            int yPos = (int) myBoat.getPosy();
 	            
+	            //is already in pixel
 	            deltaAzimuth =sumoImage.getAmbiguityCorrection(xPos,yPos);
+	            
 	            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
 	            
 	            //first check to 250 meters

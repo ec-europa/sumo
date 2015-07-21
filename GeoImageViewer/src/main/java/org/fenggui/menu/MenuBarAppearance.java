@@ -24,7 +24,6 @@ import java.io.IOException;
 import org.fenggui.DecoratorAppearance;
 import org.fenggui.DecoratorLayer;
 import org.fenggui.background.Background;
-import org.fenggui.background.PlainBackground;
 import org.fenggui.render.Font;
 import org.fenggui.render.Graphics;
 import org.fenggui.render.IOpenGL;

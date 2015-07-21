@@ -11,9 +11,10 @@
 package tiff;
 
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-import java.io.*;
+import java.io.IOException;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * Baseline TIFF decoder revision 6.0

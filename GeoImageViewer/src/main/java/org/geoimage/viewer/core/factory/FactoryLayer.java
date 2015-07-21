@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
@@ -15,7 +14,6 @@ import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,7 @@ public class FactoryLayer {
 	 * @param layer
 	 * @param parent
 	 * @return
-	 */
+	 */            	//TODO: implement another way to understand the type of the layer
 	public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
         String[] types = layer.getSchemaTypes();
@@ -62,6 +60,7 @@ public class FactoryLayer {
         } else {
             for (int i = 0; i < types.length; i++) {
                 String t = types[i];
+                // TODO: check if this type of layer is used!!!
                 if (t.equals(TYPE_DATE) || t.equals(TYPE_TIMESTAMP)) {
                     timestamplayer = true;
                     timecolumnname = schema[i];
@@ -69,6 +68,7 @@ public class FactoryLayer {
                 }
             }
             if (!timestamplayer) {
+            	//TODO: implement another way to understand the type of the layer
                 //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
                 return new MaskVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
             } else {

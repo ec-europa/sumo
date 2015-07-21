@@ -25,8 +25,8 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOnlyStream;
 import org.fenggui.theme.xml.InputOutputStream;
 import org.fenggui.theme.xml.MalformedElementException;

@@ -4,25 +4,6 @@
  */
 package org.geoimage.viewer.offline;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.geoimage.analysis.DetectedPixels;
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.SarImageReader;
-import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.io.AbstractVectorIO;
-import org.geoimage.viewer.core.io.GenericCSVIO;
-import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
 /**
  *
  * @author thoorfr

@@ -22,14 +22,15 @@ import java.util.ArrayList;
 
 import org.fenggui.event.ActivationEvent;
 import org.fenggui.event.FocusEvent;
-
 import org.fenggui.event.IActivationListener;
 import org.fenggui.event.IFocusListener;
-
 import org.fenggui.event.IKeyPressedListener;
 import org.fenggui.event.IKeyReleasedListener;
+import org.fenggui.event.IKeyTypedListener;
+import org.fenggui.event.Key;
 import org.fenggui.event.KeyPressedEvent;
 import org.fenggui.event.KeyReleasedEvent;
+import org.fenggui.event.KeyTypedEvent;
 import org.fenggui.event.mouse.IMouseDraggedListener;
 import org.fenggui.event.mouse.IMouseEnteredListener;
 import org.fenggui.event.mouse.IMouseExitedListener;
@@ -44,8 +45,6 @@ import org.fenggui.event.mouse.MouseMovedEvent;
 import org.fenggui.event.mouse.MousePressedEvent;
 import org.fenggui.event.mouse.MouseReleasedEvent;
 import org.fenggui.event.mouse.MouseWheelEvent;
-
-import org.fenggui.event.*;
 
 /**
  * Widget that travels between states.

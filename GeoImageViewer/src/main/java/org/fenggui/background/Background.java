@@ -24,8 +24,8 @@ import java.io.IOException;
 import org.fenggui.IDecorator;
 import org.fenggui.Span;
 import org.fenggui.render.Graphics;
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOutputStream;
 
 /**

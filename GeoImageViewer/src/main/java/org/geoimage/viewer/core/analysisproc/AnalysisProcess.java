@@ -4,11 +4,6 @@ import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
@@ -26,7 +21,6 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -228,7 +222,7 @@ public  class AnalysisProcess implements Runnable {
 	                     
 	                     List<Geometry> az=azimuthAmbiguity[band].getAmbiguityboatgeometry();
                          allAzimuthAmbiguity.addAll(az);
-	                     vdsanalysis.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, GeometricLayer.POINT, az, display);
+	                     vdsanalysis.addGeometries("azimuthambiguities",Color.RED , 5, GeometricLayer.POINT, az, display);
 
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
@@ -283,7 +277,7 @@ public  class AnalysisProcess implements Runnable {
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	
 	                 
-	                 vdsanalysisLayer.addGeometries("azimuthambiguities", new Color(0xFFD000), 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
+	                 vdsanalysisLayer.addGeometries("azimuthambiguities", Color.RED, 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
 	                 //if(!Platform.isBatchMode())
 	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
 	                 notifyLayerReady(vdsanalysisLayer);

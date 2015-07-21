@@ -18,7 +18,6 @@ import java.util.Vector;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.GeotiffImage;
 import org.geoimage.impl.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;

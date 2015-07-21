@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;

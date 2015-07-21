@@ -60,7 +60,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
         this.glayer=layer;
     }
 	
-	@Override
+
+    @Override
 	public void render(GeoContext context){
 		  if (!context.isDirty()||Platform.isBatchMode()) {
 	            return;
@@ -114,7 +115,6 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        		   double yy = dy+Math.cos(i)*0.005;
 	                        		   
 	                        		   gl.glVertex2d(xx,yy);
-	                        		   //System.out.println(""+xx+"--"+yy);
 	                        	   }
 		                        } 
 	                    	    gl.glEnd();

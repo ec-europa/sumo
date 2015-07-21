@@ -19,6 +19,7 @@
  */
 package org.fenggui.util;
 
+import org.lwjgl.util.WritableDimension;
 
 /**
  * Class for holding sizes. This Dimension is read-only.

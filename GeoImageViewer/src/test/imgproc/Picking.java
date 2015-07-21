@@ -1,6 +1,21 @@
 package imgproc;
 
 
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.nio.IntBuffer;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.glu.GLU;
+
 //=================================================================================
 //Picking 0.2                                                       (Thomas Bladh)
 //=================================================================================
@@ -12,12 +27,6 @@ package imgproc;
 //      * This version should handle overlapping objects correctly.
 //---------------------------------------------------------------------------------
 import com.jogamp.common.nio.Buffers;
-import java.awt.*;
-import java.awt.event.*;
-import java.nio.*;
-import javax.media.opengl.*;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.*;
 import com.jogamp.opengl.util.Animator;
 
 public class Picking

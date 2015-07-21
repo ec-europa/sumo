@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
 import org.slf4j.LoggerFactory;

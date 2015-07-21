@@ -7,6 +7,7 @@
 package org.geoimage.viewer.widget.dialog;
 
 import java.net.URL;
+
 import org.jdesktop.application.Action;
 
 /**

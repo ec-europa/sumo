@@ -6,10 +6,12 @@
 package org.geoimage.viewer.widget.dialog;
 
 import java.awt.Frame;
+
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.wwj.VectorObject;
 

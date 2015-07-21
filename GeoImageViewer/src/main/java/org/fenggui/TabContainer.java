@@ -18,15 +18,12 @@
  */
 package org.fenggui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.fenggui.event.FocusEvent;
 import org.fenggui.render.Graphics;
 import org.fenggui.render.IOpenGL;
 import org.fenggui.render.Pixmap;
-import org.fenggui.theme.xml.IXMLStreamableException;
-import org.fenggui.theme.xml.InputOutputStream;
 import org.fenggui.util.Dimension;
 
 /**

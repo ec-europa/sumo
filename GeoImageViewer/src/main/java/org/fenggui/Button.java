@@ -45,7 +45,6 @@ import org.fenggui.event.mouse.MousePressedEvent;
 import org.fenggui.event.mouse.MouseReleasedEvent;
 import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOnlyStream;
-import org.fenggui.theme.xml.InputOutputStream;
 
 /**
  * 

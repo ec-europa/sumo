@@ -26,9 +26,12 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  *
- * @author leforth
+ * @author Pietro Argentieri
+ * this class extends the EditGeometryLayer to manage "additional geometries"
+ *   
+ * 
  */
-public class ComplexEditVectorLayer extends SimpleEditVectorLayer implements IComplexVectorLayer {
+public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer implements IComplexVectorLayer {
 	
 	
 	
@@ -91,13 +94,15 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer implements ICo
 
     private List<additionalgeometries> additionalGeometries = new ArrayList<additionalgeometries>();
 
-    public ComplexEditVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+    public ComplexEditGeometryVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
         super(parent,layername, type, layer);
     }
 
     @Override
     public void render(GeoContext context) {
         super.render(context);
+        
+        
         if (!context.isDirty() || glayer == null||Platform.isBatchMode()) {
             return;
         }
@@ -105,11 +110,9 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer implements ICo
         int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
         GL2 gl = context.getGL().getGL2();
-        for(additionalgeometries geometry : additionalGeometries)
-        {
+        for(additionalgeometries geometry : additionalGeometries){
             // check geometries need to be displayed
-            if(geometry.isStatus())
-            {
+            if(geometry.isStatus()){
                 float[] c = geometry.getColor().getColorComponents(null);
                 gl.glColor3f(c[0], c[1], c[2]);
                 if (geometry.getType().equalsIgnoreCase(GeometricLayer.POINT)) {
@@ -171,7 +174,6 @@ public class ComplexEditVectorLayer extends SimpleEditVectorLayer implements ICo
                 }
             }
         }
-    
     }
 
     public void addGeometries(String geometrytag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)

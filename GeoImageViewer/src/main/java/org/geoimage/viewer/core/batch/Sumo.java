@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
 

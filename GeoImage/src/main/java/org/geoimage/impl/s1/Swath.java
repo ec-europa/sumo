@@ -1,6 +1,5 @@
 package org.geoimage.impl.s1;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import jrc.it.annotation.reader.jaxb.SwathBoundsType;

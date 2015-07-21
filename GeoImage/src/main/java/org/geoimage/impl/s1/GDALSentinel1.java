@@ -1,6 +1,5 @@
 package org.geoimage.impl.s1;
 
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.geoimage.def.SarImageReader;
+import org.geoimage.factory.GeoTransformFactory;
+import org.geoimage.impl.GDALTIFF;
+import org.geoimage.impl.Gcp;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.jdom.Document;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
@@ -20,23 +33,6 @@ import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-
-import org.geoimage.def.SarImageReader;
-import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.GDALTIFF;
-import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeocentricCRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.jdom.Document;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
 /**
  * 

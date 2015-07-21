@@ -10,7 +10,7 @@
  *******************************************************************************/
 package tiff;
 
-import java.io.*;
+import java.io.InputStream;
 
 import org.eclipse.swt.graphics.ImageData;
 

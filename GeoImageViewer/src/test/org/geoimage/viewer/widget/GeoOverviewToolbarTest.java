@@ -3,9 +3,8 @@
  */
 package org.geoimage.viewer.widget;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

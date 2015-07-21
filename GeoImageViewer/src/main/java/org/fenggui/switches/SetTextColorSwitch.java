@@ -21,7 +21,6 @@ package org.fenggui.switches;
 
 import java.io.IOException;
 
-import org.fenggui.FengGUI;
 import org.fenggui.IWidget;
 import org.fenggui.LabelAppearance;
 import org.fenggui.StandardWidget;

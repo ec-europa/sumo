@@ -23,7 +23,6 @@ import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IThreshable;
-import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="jrc.it.geolocation.common" x="362" y="281">
+        <DependencyLink destination="jrc.it.geolocation.exception"/>
+    </Package>
+    <Package name="jrc.it.geolocation.exception" x="453" y="167"/>
+    <Package name="jrc.it.geolocation.geo" x="140" y="311">
+        <DependencyLink destination="jrc.it.geolocation.interpolation"/>
+        <DependencyLink destination="jrc.it.geolocation.common"/>
+        <DependencyLink destination="jrc.it.geolocation.exception"/>
+        <DependencyLink destination="jrc.it.geolocation.metadata"/>
+    </Package>
+    <Package name="jrc.it.geolocation.interpolation" x="453" y="448">
+        <DependencyLink destination="jrc.it.geolocation.common"/>
+        <DependencyLink destination="jrc.it.geolocation.exception"/>
+        <DependencyLink destination="jrc.it.geolocation.metadata"/>
+    </Package>
+    <Package name="jrc.it.geolocation.metadata" x="188" y="494"/>
+</PackageAnalysis>
