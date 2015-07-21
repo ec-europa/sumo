@@ -5,7 +5,6 @@
 package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,9 +44,12 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *
- * @author leforth
+ * @author Pietro Argentieri
+ *  The main class to visualize the result of the analysis
+ * 
+ * 
  */
-public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer  {
+public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ComplexEditVDSVectorLayer.class);
 	private String[] thresholds={};
 	private double enl=0;
@@ -184,6 +186,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer  {
         	logger.info(msgResult[0]);
     }
 
+    
+    
     public String[] getThresholds() {
 		return thresholds;
 	}
@@ -349,8 +353,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditVectorLayer  {
         return postgiscommands;
     }
 
-    @Override
-    protected void performAdd(Point imagePosition, GeoContext context) {
+    protected void performAdd(java.awt.Point imagePosition, GeoContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             final Attributes atts = Attributes.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());

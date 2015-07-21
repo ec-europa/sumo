@@ -2,7 +2,7 @@ package org.fenggui.render.jogl;
 
 import java.awt.Component;
 
-import org.fenggui.render.*;
+import org.fenggui.render.Cursor;
 
 public class JOGLCursor extends Cursor 
 {

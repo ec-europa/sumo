@@ -2,7 +2,6 @@ package org.fenggui.util.fonttoolkit;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.io.IOException;
 
 import org.fenggui.util.Alphabet;
 /**

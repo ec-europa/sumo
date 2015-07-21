@@ -6,6 +6,7 @@ package org.geoimage.viewer.widget;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import org.fenggui.Container;
 import org.fenggui.Display;
 import org.fenggui.IWidget;

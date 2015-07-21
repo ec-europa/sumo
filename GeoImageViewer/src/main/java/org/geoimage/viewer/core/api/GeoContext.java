@@ -10,7 +10,6 @@ import javax.media.opengl.GLDrawable;
 import javax.media.opengl.glu.GLU;
 
 import org.fenggui.Display;
-import org.geoimage.def.GeoTransform;
 
 /**
  * This class deals with the realtime status of the geolocation of the display.

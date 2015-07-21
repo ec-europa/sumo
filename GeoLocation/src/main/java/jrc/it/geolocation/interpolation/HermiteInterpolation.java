@@ -3,15 +3,15 @@ package jrc.it.geolocation.interpolation;
 import java.util.ArrayList;
 import java.util.List;
 
-import jrc.it.geolocation.common.MathUtil;
-import jrc.it.geolocation.exception.MathException;
-import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
-import jrc.it.geolocation.metadata.S1Metadata;
-
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.FastMath;
+
+import jrc.it.geolocation.common.MathUtil;
+import jrc.it.geolocation.exception.MathException;
+import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 
 public class HermiteInterpolation {//implements IInterpolation{

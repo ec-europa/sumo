@@ -4,22 +4,21 @@
  */
 package org.geoimage.viewer.core.wwj;
 
-import gov.nasa.worldwind.Disposable;
-import gov.nasa.worldwind.Locatable;
-import gov.nasa.worldwind.layers.AbstractLayer;
-import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.pick.PickSupport;
-import gov.nasa.worldwind.render.DrawContext;
-import gov.nasa.worldwind.render.Renderable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
-import javax.media.opengl.GL;
+
 import javax.media.opengl.GL2;
 
 import org.geoimage.viewer.core.api.ITime;
+
+import gov.nasa.worldwind.Disposable;
+import gov.nasa.worldwind.Locatable;
+import gov.nasa.worldwind.layers.AbstractLayer;
+import gov.nasa.worldwind.pick.PickSupport;
+import gov.nasa.worldwind.render.DrawContext;
+import gov.nasa.worldwind.render.Renderable;
 
 /**
  *

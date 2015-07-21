@@ -8,9 +8,11 @@ import static org.geoimage.viewer.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
 import static org.geoimage.viewer.util.Constant.PREF_BUFFERING_DISTANCE;
 import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_BANDS;
 import static org.geoimage.viewer.util.Constant.PREF_DISPLAY_PIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_LAND_MASK_MARGIN;
 import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_DISTANCE;
 import static org.geoimage.viewer.util.Constant.PREF_NEIGHBOUR_TILESIZE;
 import static org.geoimage.viewer.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
+import static org.geoimage.viewer.util.Constant.PREF_S1_GEOLOCATION;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_0;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_1;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_COLOR_BAND_2;
@@ -26,8 +28,6 @@ import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
 import static org.geoimage.viewer.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
-import static org.geoimage.viewer.util.Constant.PREF_S1_GEOLOCATION;
-import static org.geoimage.viewer.util.Constant.PREF_LAND_MASK_MARGIN;
 
 import java.awt.Color;
 import java.util.List;
@@ -36,6 +36,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+
 import org.geoimage.viewer.util.Constant;
 
 /**

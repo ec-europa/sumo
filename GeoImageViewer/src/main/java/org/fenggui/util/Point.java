@@ -19,6 +19,7 @@
  */
 package org.fenggui.util;
 
+import org.lwjgl.util.WritablePoint;
 
 /**
  * Implementation of a point. This class is read-only.

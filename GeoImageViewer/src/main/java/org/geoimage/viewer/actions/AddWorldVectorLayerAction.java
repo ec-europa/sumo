@@ -19,7 +19,7 @@ import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -78,7 +78,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
             new Thread(new Runnable() {
 
                 public void run() {
-                    Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer));
+                    Platform.getLayerManager().addLayer(new EditGeometryVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer));
                     done = true;
                 }
             }).start();

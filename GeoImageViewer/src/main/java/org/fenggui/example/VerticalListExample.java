@@ -2,7 +2,9 @@ package org.fenggui.example;
 
 import java.io.File;
 
-import org.fenggui.*;
+import org.fenggui.Display;
+import org.fenggui.ScrollContainer;
+import org.fenggui.VerticalList;
 
 
 public class VerticalListExample implements IExample

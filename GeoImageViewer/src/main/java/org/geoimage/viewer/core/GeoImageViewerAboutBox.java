@@ -8,7 +8,6 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.net.URI;
 
-import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsImageReader;
 import org.jdesktop.application.Action;
 import org.slf4j.LoggerFactory;
 

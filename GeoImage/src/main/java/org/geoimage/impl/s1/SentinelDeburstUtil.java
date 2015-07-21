@@ -12,11 +12,6 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileImageInputStream;
 
-import jrc.it.annotation.reader.jaxb.BurstType;
-import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
-import jrc.it.xml.wrapper.SumoAnnotationReader;
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
@@ -29,6 +24,11 @@ import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
 import com.sun.media.jai.codec.SeekableStream;
+
+import jrc.it.annotation.reader.jaxb.BurstType;
+import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
+import jrc.it.xml.wrapper.SumoAnnotationReader;
+import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 
 class BurstSupport{

@@ -48,10 +48,6 @@ public class SimpleGeometryLayer extends GenericLayer {
     	super(parent,layername,type,null);
         this.geometries=geometries;
     }
-
-
-    public static enum symbol {point, circle, square, triangle, cross};
-
  
 
     public String getName() {
