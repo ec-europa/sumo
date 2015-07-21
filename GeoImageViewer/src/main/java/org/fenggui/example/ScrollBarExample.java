@@ -23,7 +23,9 @@ import org.fenggui.Display;
 import org.fenggui.Label;
 import org.fenggui.ScrollBar;
 import org.fenggui.composites.Window;
-import org.fenggui.layout.*;
+import org.fenggui.layout.Alignment;
+import org.fenggui.layout.BorderLayout;
+import org.fenggui.layout.BorderLayoutData;
 import org.fenggui.util.Spacing;
 
 /**

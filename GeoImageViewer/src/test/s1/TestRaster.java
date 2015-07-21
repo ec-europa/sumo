@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;

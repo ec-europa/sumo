@@ -25,8 +25,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.fenggui.Container;
-import org.fenggui.LayoutManager;
 import org.fenggui.IWidget;
+import org.fenggui.LayoutManager;
 import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOutputStream;
 import org.fenggui.util.Dimension;

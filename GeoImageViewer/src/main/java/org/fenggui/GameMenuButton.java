@@ -5,7 +5,6 @@ package org.fenggui;
 
 import java.io.IOException;
 
-import org.fenggui.Button;
 import org.fenggui.render.Binding;
 import org.fenggui.render.Pixmap;
 import org.fenggui.switches.SetPixmapSwitch;

@@ -5,6 +5,15 @@
  */
 package org.geoimage.viewer.widget.dialog;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+
+import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
+import org.slf4j.LoggerFactory;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -12,16 +21,6 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
 import com.vividsolutions.jts.io.WKTReader;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-
-import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Task;
-import org.slf4j.LoggerFactory;
 
 /**
  *

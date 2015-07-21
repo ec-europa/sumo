@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer"
-        x="689" y="-199">
+    <Class name="jrc.it.geolocation.metadata.AbstractMetadata" x="341" y="116">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -10,13 +8,41 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Extension destinationClassName="jrc.it.geolocation.metadata.IMetadata"/>
+    </Class>
+    <Class name="jrc.it.geolocation.common.GeoUtils" x="607" y="260">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="true"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="jrc.it.geolocation.geo.S1GeoCodingImpl" x="208" y="598">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
         <Association
-            destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
-            endpointName="displaysymbol" kind="Simple"/>
+            destinationClassName="jrc.it.geolocation.metadata.IMetadata.CoordinateConversion"
+            endpointName="coordConv" kind="Simple"/>
+        <Association
+            destinationClassName="jrc.it.geolocation.metadata.S1Metadata"
+            endpointName="meta" kind="Simple"/>
+        <Communication destinationClassName="jrc.it.geolocation.metadata.AbstractMetadata"/>
+        <Communication destinationClassName="jrc.it.geolocation.common.GeoUtils"/>
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
+        <Communication destinationClassName="jrc.it.geolocation.metadata.S1Metadata"/>
+        <Communication destinationClassName="jrc.it.geolocation.common.MathUtil"/>
     </Class>
-    <Class name="org.geoimage.viewer.core.layers.GenericLayer.symbol"
-        x="325" y="-436">
+    <Class
+        name="jrc.it.geolocation.metadata.IMetadata.CoordinateConversion"
+        x="-19" y="237">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -26,8 +52,8 @@
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
     <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer"
-        x="444" y="-461">
+        name="jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox"
+        x="72" y="20">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -35,11 +61,44 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </Class>
+    <Class name="jrc.it.geolocation.geo.GeoCoding" x="711" y="456">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="jrc.it.geolocation.metadata.IMetadata" x="424" y="17">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="jrc.it.geolocation.metadata.S1Metadata" x="283" y="365">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="jrc.it.geolocation.metadata.AbstractMetadata"/>
+        <Association
+            destinationClassName="jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox"
+            endpointName="orbitStatePosVelox" kind="Simple"/>
+        <Association
+            destinationClassName="jrc.it.geolocation.metadata.IMetadata.CoordinateConversion"
+            endpointName="coordinateConversion" kind="Simple"/>
     </Class>
     <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer"
-        x="23" y="-123">
+        name="jrc.it.geolocation.geo.ParallelGeoCoding.ParallelForward"
+        x="1009" y="635">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -47,9 +106,30 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
     </Class>
-    <Class name="org.geoimage.viewer.core.layers.GenericLayer" x="430" y="-228">
+    <Class
+        name="jrc.it.geolocation.geo.ParallelGeoCoding.ParallelReverse"
+        x="1007" y="532">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
+    </Class>
+    <Class name="jrc.it.geolocation.common.MathUtil" x="789" y="38">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="true"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="jrc.it.geolocation.geo.ParallelGeoCoding" x="686" y="575">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -58,97 +138,8 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="org.geoimage.viewer.core.layers.GenericLayer.symbol"
-            endpointName="displaysymbol" kind="Simple"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer"
-        x="60" y="556">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
-        x="414" y="401">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer"
-        x="760" y="46">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer"
-        x="385" y="94">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SelectableVectorLayer"
-        x="182" y="-315">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"
-        x="24" y="419">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer"/>
-        <Association
-            destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
-            endpointName="additionalGeometries" kind="Simple"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
-        x="970" y="-224">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
+            destinationClassName="jrc.it.geolocation.geo.GeoCoding"
+            endpointName="geoCoding" kind="Simple"/>
+        <Communication destinationClassName="jrc.it.geolocation.geo.GeoCoding"/>
     </Class>
 </ClassDiagram>

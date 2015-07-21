@@ -15,7 +15,6 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
-import org.geoimage.impl.GeotiffImage;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.layers.visualization.ZoomWindowLayer;
 import org.slf4j.LoggerFactory;

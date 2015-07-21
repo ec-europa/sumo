@@ -5,10 +5,10 @@
 
 package org.geoimage.viewer.core.api;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.awt.Color;
 import java.util.List;
-import java.util.Vector;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 
 /**

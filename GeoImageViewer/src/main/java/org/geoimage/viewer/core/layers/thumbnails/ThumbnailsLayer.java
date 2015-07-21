@@ -18,7 +18,7 @@ import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
@@ -57,7 +57,7 @@ public class ThumbnailsLayer extends GenericLayer {
         this.scale=thumbReader.getWidth()/(1f*thumbReader.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
-        Platform.getLayerManager().addLayer(new SimpleEditVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
+        Platform.getLayerManager().addLayer(new EditGeometryVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
         setName("Thumbnails Image");
         super.init(parent);
     }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package tiff;
 
-import org.eclipse.swt.*;
+import org.eclipse.swt.SWT;
 
 /*
 * Decoder for 

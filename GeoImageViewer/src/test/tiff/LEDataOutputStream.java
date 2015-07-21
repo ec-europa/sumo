@@ -10,7 +10,8 @@
  *******************************************************************************/
 package tiff;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
 final class LEDataOutputStream extends OutputStream {
 	OutputStream out;

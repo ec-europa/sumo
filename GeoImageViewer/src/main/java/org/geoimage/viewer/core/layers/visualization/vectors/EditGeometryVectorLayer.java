@@ -37,7 +37,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author Pietro Argentieri
  */
-public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IMouseMove, IEditable, IMouseDrag, IKeyPressed {
+public class EditGeometryVectorLayer extends GenericLayer implements IClickable,IMouseMove, IEditable, IMouseDrag, IKeyPressed {
 
     protected Coordinate editedPoint = null;
     protected boolean edit = false;
@@ -52,7 +52,7 @@ public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IM
     protected boolean undo=false;
     
     
-    public SimpleEditVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+    public EditGeometryVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
         super(parent,layername, type, layer);
         gf = new GeometryFactory();
     }
@@ -94,9 +94,11 @@ public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IM
         }
     }
     
-    @Override
-    public void render(GeoContext context) {
-        if (toBeRemoved.size() > 0) {
+    /**
+     * 
+     */
+    private void checkRemoved(){
+    	if (toBeRemoved.size() > 0) {
             for (Geometry remove : toBeRemoved) {
             	//save in this list for the undo operation
             	removed.add(0,remove);
@@ -121,8 +123,13 @@ public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IM
             }
             undo=false;
         }
-
+    }
+    
+    @Override
+    public void render(GeoContext context) {
+    	checkRemoved();
         super.render(context);
+        
         if (!context.isDirty() || glayer == null || !this.edit) {
             return;
         }
@@ -130,15 +137,14 @@ public class SimpleEditVectorLayer extends GenericLayer implements IClickable,IM
         int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
         GL2 gl = context.getGL().getGL2();
+
         if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
             gl.glPointSize(getWidth() * 2);
             gl.glBegin(GL.GL_POINTS);
             for (Geometry temp : glayer.getGeometries()) {
                 for (Coordinate point : temp.getCoordinates()) {
                     gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-
                 }
-
             }
             gl.glEnd();
             gl.glFlush();

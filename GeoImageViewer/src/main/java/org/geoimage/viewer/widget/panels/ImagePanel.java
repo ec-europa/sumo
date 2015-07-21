@@ -10,12 +10,10 @@ import javax.swing.DefaultComboBoxModel;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
-import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsSmallLayer;
 import org.geoimage.viewer.core.layers.visualization.CaretLayer;
 import org.geoimage.viewer.core.layers.visualization.PositionLayer;
 import org.geoimage.viewer.core.layers.visualization.ZoomWindowLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 
 /**
  *
@@ -287,7 +285,7 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
     	Platform.getLayerManager().addLayer(
-    			new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),
+    			new EditGeometryVectorLayer(Platform.getCurrentImageLayer(),
     					jTextField2.getText(),(String)jComboBox1.getSelectedItem(), 
     			new GeometricLayer((String)jComboBox1.getSelectedItem())));
         Platform.refresh();

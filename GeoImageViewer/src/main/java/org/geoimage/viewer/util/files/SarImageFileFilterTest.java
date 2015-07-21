@@ -1,7 +1,5 @@
 package org.geoimage.viewer.util.files;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 
 import org.junit.After;

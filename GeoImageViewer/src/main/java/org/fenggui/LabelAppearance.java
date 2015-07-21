@@ -3,7 +3,12 @@ package org.fenggui;
 import java.io.IOException;
 
 import org.fenggui.layout.Alignment;
-import org.fenggui.render.*;
+import org.fenggui.render.DirectTextRenderer;
+import org.fenggui.render.Font;
+import org.fenggui.render.Graphics;
+import org.fenggui.render.IOpenGL;
+import org.fenggui.render.ITextRenderer;
+import org.fenggui.render.Pixmap;
 import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOutputStream;
 import org.fenggui.util.Color;

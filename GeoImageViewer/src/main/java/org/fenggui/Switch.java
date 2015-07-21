@@ -21,8 +21,8 @@ package org.fenggui;
 
 import java.io.IOException;
 
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOutputStream;
 
 public abstract class Switch implements IXMLStreamable

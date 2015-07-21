@@ -22,8 +22,8 @@ package org.fenggui.util;
 import java.io.IOException;
 
 import org.fenggui.theme.xml.DefaultElementName;
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOnlyStream;
 import org.fenggui.theme.xml.InputOutputStream;
 

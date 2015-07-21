@@ -18,7 +18,8 @@
  */
 package org.fenggui.example;
 
-import org.fenggui.*;
+import org.fenggui.Display;
+import org.fenggui.TextEditor;
 
 /**
  * Demonstrates a <code>TextField</code> Widget.

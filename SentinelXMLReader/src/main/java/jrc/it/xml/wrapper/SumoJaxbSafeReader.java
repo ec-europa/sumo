@@ -9,9 +9,11 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.transform.stream.StreamSource;
+
+import org.jdom2.JDOMException;
+import org.jdom2.xpath.XPathFactory;
+import org.slf4j.LoggerFactory;
 
 import jrc.it.safe.reader.jaxb.AcquisitionPeriod;
 import jrc.it.safe.reader.jaxb.FrameSet;
@@ -22,10 +24,6 @@ import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.safe.reader.jaxb.XFDU;
 import jrc.it.safe.reader.jaxb.XFDU.DataObjectSection.DataObject;
 import jrc.it.safe.reader.jaxb.XFDU.MetadataSection.MetadataObject;
-
-import org.jdom2.JDOMException;
-import org.jdom2.xpath.XPathFactory;
-import org.slf4j.LoggerFactory;
 
 
 @XmlRootElement(name="xfdu:XFDU")

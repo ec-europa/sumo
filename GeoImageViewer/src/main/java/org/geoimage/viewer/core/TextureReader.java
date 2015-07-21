@@ -1,13 +1,13 @@
 package org.geoimage.viewer.core;
 
 
-import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
 
 /**
  * Image loading class that converts BufferedImages into a data

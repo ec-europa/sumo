@@ -28,8 +28,6 @@ import org.fenggui.ToggableGroup;
 import org.fenggui.composites.Window;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
-import org.fenggui.event.IWindowClosedListener;
-import org.fenggui.event.WindowClosedEvent;
 import org.fenggui.event.mouse.IMousePressedListener;
 import org.fenggui.event.mouse.IMouseReleasedListener;
 import org.fenggui.event.mouse.MousePressedEvent;

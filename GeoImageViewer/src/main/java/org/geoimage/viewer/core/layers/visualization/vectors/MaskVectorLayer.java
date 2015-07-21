@@ -100,14 +100,7 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
             }
         }
     }
-    
-     public void render(GeoContext context) {
-    	 super.render(context);
-     }
-
-    
-    
-
+  
     public boolean isRadio() {
         return false;
     }

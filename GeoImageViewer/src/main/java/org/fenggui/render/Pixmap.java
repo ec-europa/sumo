@@ -20,10 +20,9 @@ package org.fenggui.render;
 
 import java.io.IOException;
 
-import org.fenggui.FengGUI;
 import org.fenggui.theme.XMLTheme;
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOnlyStream;
 import org.fenggui.theme.xml.InputOutputStream;
 

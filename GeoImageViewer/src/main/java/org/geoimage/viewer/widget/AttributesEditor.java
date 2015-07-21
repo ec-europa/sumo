@@ -13,8 +13,10 @@ package org.geoimage.viewer.widget;
 import java.awt.GridLayout;
 import java.sql.Timestamp;
 import java.util.HashMap;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.viewer.core.api.Attributes;
 

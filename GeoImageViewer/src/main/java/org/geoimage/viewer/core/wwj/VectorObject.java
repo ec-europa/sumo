@@ -5,8 +5,9 @@
 
 package org.geoimage.viewer.core.wwj;
 
-import com.vividsolutions.jts.geom.Geometry;
 import org.geoimage.viewer.core.api.Attributes;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  *

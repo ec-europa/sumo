@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import org.fenggui.render.Graphics;
 import org.fenggui.render.IOpenGL;
-import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.IXMLStreamable;
+import org.fenggui.theme.xml.IXMLStreamableException;
 import org.fenggui.theme.xml.InputOutputStream;
 import org.fenggui.util.Dimension;
 import org.fenggui.util.Spacing;

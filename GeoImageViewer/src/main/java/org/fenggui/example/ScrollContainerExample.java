@@ -19,7 +19,9 @@
  */
 package org.fenggui.example;
 
-import org.fenggui.*;
+import org.fenggui.Display;
+import org.fenggui.Label;
+import org.fenggui.ScrollContainer;
 import org.fenggui.background.PlainBackground;
 import org.fenggui.composites.Window;
 import org.fenggui.render.Font;

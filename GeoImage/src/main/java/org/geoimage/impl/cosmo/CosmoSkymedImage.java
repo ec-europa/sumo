@@ -14,16 +14,16 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
-import ncsa.hdf.object.Attribute;
-import ncsa.hdf.object.h5.H5File;
-import ncsa.hdf.object.h5.H5ScalarDS;
-
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.slf4j.LoggerFactory;
+
+import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
+import ncsa.hdf.object.Attribute;
+import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.object.h5.H5ScalarDS;
 
 /**
  * Class to read Cosmo Skymed Images in hdf5 format.

@@ -16,7 +16,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;

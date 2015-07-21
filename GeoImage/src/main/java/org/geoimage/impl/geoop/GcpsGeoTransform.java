@@ -7,7 +7,6 @@ package org.geoimage.impl.geoop;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.geoimage.def.IGcpsGeoTransform;
 import org.geoimage.exception.GeoTransformException;

@@ -7,7 +7,8 @@ import org.fenggui.ScrollContainer;
 import org.fenggui.border.PlainBorder;
 import org.fenggui.layout.StaticLayout;
 import org.fenggui.render.Pixmap;
-import org.fenggui.tree.*;
+import org.fenggui.tree.ITreeModel;
+import org.fenggui.tree.Tree;
 import org.fenggui.util.Color;
 
 public class TreeExample implements IExample

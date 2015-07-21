@@ -6,11 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
-import ncsa.hdf.object.HObject;
-import ncsa.hdf.object.h5.H5File;
-import ncsa.hdf.object.h5.H5Group;
-
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
@@ -23,6 +18,11 @@ import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
 import org.slf4j.LoggerFactory;
+
+import jrc.it.xml.wrapper.SumoJaxbSafeReader;
+import ncsa.hdf.object.HObject;
+import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.object.h5.H5Group;
 
 
 public class GeoImageReaderFactory {

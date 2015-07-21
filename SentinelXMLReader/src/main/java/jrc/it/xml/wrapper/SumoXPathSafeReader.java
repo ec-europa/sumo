@@ -5,22 +5,19 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-
-import jrc.it.safe.reader.xpath.object.wrapper.AcquisitionPeriod;
-import jrc.it.safe.reader.xpath.object.wrapper.OrbitInformation;
-import jrc.it.safe.reader.xpath.object.wrapper.ProductInformation;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 import org.xml.sax.SAXException;
+
+import jrc.it.safe.reader.xpath.object.wrapper.AcquisitionPeriod;
+import jrc.it.safe.reader.xpath.object.wrapper.OrbitInformation;
+import jrc.it.safe.reader.xpath.object.wrapper.ProductInformation;
 
 /*class CustomValidationEventHandler implements ValidationEventHandler {
 

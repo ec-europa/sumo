@@ -5,6 +5,14 @@
 
 package org.geoimage.viewer.core.wwj;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
+
 import gov.nasa.worldwind.Locatable;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
@@ -13,14 +21,6 @@ import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.Renderable;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 
 /**
  *
