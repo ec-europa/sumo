@@ -3,12 +3,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.math3.util.FastMath;
+import org.slf4j.LoggerFactory;
+
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.S1Metadata;
-
-import org.apache.commons.math3.util.FastMath;
-import org.slf4j.LoggerFactory;
  
 
 
@@ -83,10 +83,10 @@ public class OrbitInterpolation {
 	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef - iSafetyBufferAz * deltaT; //20150703
 	        
 			if(firstTime<(lastTime)){
-				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
+				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeLastLineWSafetyBufSecondsRef);
 				maxT=FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1],zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
 			}else{
-				minT=FastMath.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
+				minT=FastMath.min(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastLineWSafetyBufSecondsRef);
 				maxT=FastMath.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
 			}	
 		}
@@ -102,12 +102,12 @@ public class OrbitInterpolation {
 			nextVal=deltaT+nextVal;
 		}
 		
-		double zeroDopplerTimeInitRef=zeroDopplerTimeFirstRef;
-		double zeroDopplerTimeEndRef=zeroDopplerTimeLastRef;
+		double zeroDopplerTimeInitRef=zeroDopplerTimeFirstLineWSafetyBufSecondsRef;
+		double zeroDopplerTimeEndRef=zeroDopplerTimeLastLineWSafetyBufSecondsRef;
 		
-		if( zeroDopplerTimeFirstRef > zeroDopplerTimeLastRef){
-				zeroDopplerTimeInitRef = zeroDopplerTimeLastRef;
-				zeroDopplerTimeEndRef = zeroDopplerTimeFirstRef;
+		if( zeroDopplerTimeFirstLineWSafetyBufSecondsRef > zeroDopplerTimeLastLineWSafetyBufSecondsRef){
+				zeroDopplerTimeInitRef = zeroDopplerTimeLastLineWSafetyBufSecondsRef;
+				zeroDopplerTimeEndRef = zeroDopplerTimeFirstLineWSafetyBufSecondsRef;
 		}
 		
 		/////////////////////////Hermite interpolation/////////////////////////////////

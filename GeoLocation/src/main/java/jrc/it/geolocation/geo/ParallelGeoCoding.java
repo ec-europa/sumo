@@ -10,9 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import jrc.it.geolocation.exception.MathException;
-
 import com.vividsolutions.jts.geom.Coordinate;
+
+import jrc.it.geolocation.exception.MathException;
 
 public class ParallelGeoCoding {
 	
