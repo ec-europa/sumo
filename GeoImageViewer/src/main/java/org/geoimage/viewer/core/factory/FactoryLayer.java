@@ -49,7 +49,7 @@ public class FactoryLayer {
             Geometry frame = layer.getGeometries().get(0);
             if (!(frame instanceof Point)) {
                 layer.remove(frame);
-                Vector<Geometry> frames = new Vector<Geometry>();
+                List<Geometry> frames = new ArrayList<Geometry>();
                 frames.add(frame);
                 ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(),  layer.getGeometryType(), layer,landMask);
                 clayer.addGeometries("image frame", Color.BLUE, 1, GeometricLayer.LINESTRING, frames, false);
@@ -69,7 +69,8 @@ public class FactoryLayer {
                 }
             }
             if (!timestamplayer) {
-                return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
+                //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
+                return new MaskVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
             } else {
                 TimeComponent.setDirty(true);
                 return new TimeVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer, timecolumnname);
