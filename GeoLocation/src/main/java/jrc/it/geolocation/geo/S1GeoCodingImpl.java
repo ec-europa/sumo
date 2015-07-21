@@ -5,18 +5,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.util.FastMath;
+import org.slf4j.LoggerFactory;
+
 import jrc.it.geolocation.common.GeoUtils;
 import jrc.it.geolocation.common.MathUtil;
 import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
-import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.util.FastMath;
-import org.slf4j.LoggerFactory;
+import jrc.it.geolocation.metadata.S1Metadata;
 
 public class S1GeoCodingImpl implements GeoCoding {
 	
@@ -26,7 +26,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	private IMetadata.CoordinateConversion[] coordConv=null;
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
 	
-	private final int  iSafetyBufferAz=1000;
+	private final int  iSafetyBufferAz=500;
 	private List<double[]> statepVecInterp=null;
 	private List<double[]> statevVecInterp=null;
 	
@@ -53,6 +53,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	/**
 	 * 
+	 * 
+	 *@see In matlab: reverse geolocation
 	 */
 	@Override
 	public double[] pixelFromGeo(final double lon,final double lat)throws GeoLocationException{
@@ -68,7 +70,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		
 		//Convert zero Doppler azimuth time to image line number
 		
-		//Modfiche di Carlos del //20150703 pL = ((zeroDopplerTime - zeroDopplerTimeFirstLineSecondsRef) / (zeroDopplerTimeLastLineSecondsRef - zeroDopplerTimeFirstLineSecondsRef)) * (meta.nLines - 1);
+		//Modifiche di Carlos del //20150703 pL = ((zeroDopplerTime - zeroDopplerTimeFirstLineSecondsRef) / (zeroDopplerTimeLastLineSecondsRef - zeroDopplerTimeFirstLineSecondsRef)) * (meta.nLines - 1);
 		double lNominatore=(zeroDopplerTime - orbitInterpolation.getZeroDopplerTimeFirstRef());
 		double lDenom=(orbitInterpolation.getZeroDopplerTimeLastRef() - orbitInterpolation.getZeroDopplerTimeFirstRef()) ;
 		double l = (lNominatore/lDenom )* (meta.getNlines() - 1);
@@ -214,7 +216,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	}
 	
 	/**
-	 * In Matlab forwardgeolocation
+	 *@see In Matlab forwardgeolocation
 	 */
 	@Override
 	public double[] geoFromPixel(final double p, final double l) throws GeoLocationException{
@@ -509,14 +511,14 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\pixel analysis\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\annotation\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		//String metaF="C:\\\\tmp\\\\sumo_images\\\\carlos tests\\\\pixel analysis\\\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		//String metaF="C:\\tmp\\sumo_images\\carlos tests\\geoloc\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\annotation\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		//String metaF="C:\\\\tmp\\\\sumo_images\\\\carlos tests\\\\geoloc\\\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\\\annotation\\\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
 		//String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		//String metaF="F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
+		//String metaF="F:\\\\SumoImgs\\\\test_geo_loc\\\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="F:\\SumoImgs\\S1\\GRD\\S1A_EW_GRDM_1SDH_20141030T105902_20141030T110002_003058_0037F3_D280.SAFE\\annotation\\s1a-ew-grd-hh-20141030t105902-20141030t110002-003058-0037f3-001.xml";
+		String metaF="F:\\Sumo_test\\Azimuth ambiguity\\S1A_IW_GRDH_1SDV_20150701T181744_20150701T181809_006621_008D4A_4903.SAFE\\annotation\\s1a-iw-grd-vv-20150701t181744-20150701t181809-006621-008d4a-001.xml";
 		
 		
 		/*
@@ -540,12 +542,12 @@ public class S1GeoCodingImpl implements GeoCoding {
 		GeoCoding gc;
 		try {
 			gc = new S1GeoCodingImpl(metaF);
-			double lat = 61.77994;
-			double lon = -65.66427;
+			double lat = 36.950;
+			double lon = -3.6315;
 			double r[];
 			try {
-				r = gc.pixelFromGeo(lon, lat);
-				//r = gc.geoFromPixel(4756, 2655);
+				//r = gc.pixelFromGeo(lon, lat);
+				r = gc.geoFromPixel(24223,16704);
 				System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);

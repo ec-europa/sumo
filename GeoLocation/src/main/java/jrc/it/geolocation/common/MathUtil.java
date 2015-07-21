@@ -1,9 +1,9 @@
 package jrc.it.geolocation.common;
 
-import jrc.it.geolocation.exception.MathException;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.util.FastMath;
+
+import jrc.it.geolocation.exception.MathException;
 
 public class MathUtil {
 
