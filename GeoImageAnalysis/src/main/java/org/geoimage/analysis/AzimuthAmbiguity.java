@@ -52,7 +52,7 @@ class Window{
 		if(up)
 			windowY=yBoat- (yPixel/2)-dAz;
 		else
-			windowY=yBoat+ (yPixel/2)+dAz;
+			windowY=yBoat- (yPixel/2)+dAz;
 		
 		return new Window(windowX, windowY, xPixel, yPixel);
 	}

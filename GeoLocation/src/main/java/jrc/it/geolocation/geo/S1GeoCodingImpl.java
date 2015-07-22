@@ -297,7 +297,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 				}else if (zeroDopplerTime > groundToSlantRangePolyTimesSeconds[groundToSlantRangePolyTimesSeconds.length-1]){
 			        idx = groundToSlantRangePolyTimesSeconds.length - 2;
 				}else{
-					for(idx=0;idx<groundToSlantRangePolyTimesSeconds.length;idx++){
+					for(idx=groundToSlantRangePolyTimesSeconds.length-1;idx>0;idx--){
 						if(groundToSlantRangePolyTimesSeconds[idx] < zeroDopplerTime)
 							break;
 					}
@@ -511,14 +511,14 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		//String metaF="C:\\\\tmp\\\\sumo_images\\\\carlos tests\\\\pixel analysis\\\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		//String metaF="C:\\\\\\\\tmp\\\\\\\\sumo_images\\\\\\\\carlos tests\\\\\\\\pixel analysis\\\\\\\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\\\\\\\annotation\\\\\\\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		//String metaF="C:\\\\tmp\\\\sumo_images\\\\carlos tests\\\\geoloc\\\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\\\annotation\\\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		//String metaF="C:\\\\\\\\tmp\\\\\\\\sumo_images\\\\\\\\carlos tests\\\\\\\\geoloc\\\\\\\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\\\\\\\annotation\\\\\\\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
 		//String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		//String metaF="F:\\\\SumoImgs\\\\test_geo_loc\\\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
+		//String metaF="F:\\\\\\\\SumoImgs\\\\\\\\test_geo_loc\\\\\\\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="F:\\Sumo_test\\Azimuth ambiguity\\S1A_IW_GRDH_1SDV_20150701T181744_20150701T181809_006621_008D4A_4903.SAFE\\annotation\\s1a-iw-grd-vv-20150701t181744-20150701t181809-006621-008d4a-001.xml";
+		String metaF="F:\\Sumo_test\\geolocation\\S1A_IW_GRDH_1SDV_20141018T171315_20141018T171340_002887_003449_936A.SAFE\\annotation\\s1a-iw-grd-vv-20141018t171315-20141018t171340-002887-003449-001.xml";
 		
 		
 		/*
@@ -546,9 +546,12 @@ public class S1GeoCodingImpl implements GeoCoding {
 			double lon = -3.6315;
 			double r[];
 			try {
+				  //Line: 12687.5  Col: 3762.5
+				  // Computed coor.:   Lat: 41.21314  			  Lon: 9.43059
+										  //41.21234928435785---       9.426994237344225
 				//r = gc.pixelFromGeo(lon, lat);
-				r = gc.geoFromPixel(24223,16704);
-				System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
+				r = gc.geoFromPixel(3763,12688);
+				System.out.println(""+r[1]+"--- "+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);
 				//System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
