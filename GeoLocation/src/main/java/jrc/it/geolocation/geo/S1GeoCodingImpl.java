@@ -118,8 +118,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 			}else if (zeroDopplerTime > groundToSlantRangePolyTimesSeconds[groundToSlantRangePolyTimesSeconds.length-1]){
 		        idx = groundToSlantRangePolyTimesSeconds.length - 2;
 			}else{
-				for(idx=0;idx<groundToSlantRangePolyTimesSeconds.length;idx++){
-					if(groundToSlantRangePolyTimesSeconds[idx] > zeroDopplerTime)
+				for(idx=groundToSlantRangePolyTimesSeconds.length-1;idx>0;idx--){
+					if(groundToSlantRangePolyTimesSeconds[idx] < zeroDopplerTime)
 						break;
 				}
 				if(idx==groundToSlantRangePolyTimesSeconds.length-1){
@@ -423,7 +423,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 */
 	public double[] findZeroDoppler(List<double[]> statepVecInterp,double[] pXYZ,double[] timeStampInterp){
 		try{
-			int iOptFactor = 100;// to improve speed
+			int iOptFactor = 10;// to improve speed
 		    int nPointsAroundMin = 100;//100;//50;
 		    int nWindowLength = 7;//5;
 		    double nWindowLengthSize = FastMath.floor(nWindowLength/2);
@@ -548,9 +548,11 @@ public class S1GeoCodingImpl implements GeoCoding {
 			try {
 				  //Line: 12687.5  Col: 3762.5
 				  // Computed coor.:   Lat: 41.21314  			  Lon: 9.43059
-										  //41.21234928435785---       9.426994237344225
-				//r = gc.pixelFromGeo(lon, lat);
-				r = gc.geoFromPixel(3763,12688);
+										  //41.21287665300109--- 9.430096036953463
+										  //41.21278292694313--- 9.430058984747808
+
+				r = gc.pixelFromGeo(9.430058984747808, 41.21278292694313);
+				//r = gc.geoFromPixel(3762.5,12687.5);
 				System.out.println(""+r[1]+"--- "+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);
