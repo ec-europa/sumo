@@ -1,6 +1,8 @@
 package jrc.it.geolocation.interpolation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
@@ -339,7 +341,6 @@ public class OrbitInterpolation {
 					 timeStampInterp.addAll(timeStampInterpSecondsRefOutput);
 	        }
 		 }   
-		
 	}
 	
 	/**
