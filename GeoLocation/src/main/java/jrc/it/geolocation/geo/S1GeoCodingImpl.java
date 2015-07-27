@@ -3,6 +3,7 @@ package jrc.it.geolocation.geo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -102,7 +103,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			
 			
 			//TODO check if the time ref is correct and if the 2 values are calculated in the correct way
-																			//getSecondsDiffFromRefTime is timeStampInitSecondsRef in Matlab
+				  							//getSecondsDiffFromRefTime is timeStampInitSecondsRef in Matlab
 			double timeRef = meta.getOrbitStatePosVelox().get(0).timeStampInitSeconds - orbitInterpolation.getSecondsDiffFromRefTime()[0];
 			
 			double[]groundToSlantRangePolyTimesSeconds=new double[coordConv.length];
@@ -130,9 +131,6 @@ public class S1GeoCodingImpl implements GeoCoding {
 				}
 		    }
 		    
-//		    factor1 = (groundToSlantRangePolyTimesSeconds(idx+1) - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds(idx+1) - groundToSlantRangePolyTimesSeconds(idx));
-//		    factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds(idx)) / (groundToSlantRangePolyTimesSeconds(idx+1) - groundToSlantRangePolyTimesSeconds(idx));
-
 		    double factor1 = (groundToSlantRangePolyTimesSeconds[idx+1] - zeroDopplerTime) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 		    double factor2 = (zeroDopplerTime - groundToSlantRangePolyTimesSeconds[idx]) / (groundToSlantRangePolyTimesSeconds[idx+1] - groundToSlantRangePolyTimesSeconds[idx]);
 
@@ -179,7 +177,7 @@ public class S1GeoCodingImpl implements GeoCoding {
         	   double denomCoeffsXGround=0;//[]=new double[nCoeffs];
         	   double scalNum=0;
         	   double scalDen=0;
-
+        	   
         	   for(int i=0;i<groundToSlantRangeCoefficientsInterp.length;i++){
         		   double dExp=FastMath.pow(oldD,numExps[i]);
         		   double denomExp=FastMath.pow(oldD,denomExps[i]);
@@ -202,7 +200,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		           
 			// Convert slant range distance to image pixel (column)
 			double p=0;
-			
+			//newD=37575.05;
 			if (meta.isPixelTimeOrderingAscending()){
 			    p = (newD + meta.getGroundRangeOrigin())/meta.getSamplePixelSpacing();
 			 }else{
@@ -421,7 +419,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * @param timeStampInterp
 	 * @return double array with 2 elements [0]=zeroDopplerTimeSmooth  [1]=sRdistSmooth
 	 */
-	public double[] findZeroDoppler(List<double[]> statepVecInterp,double[] pXYZ,double[] timeStampInterp){
+	public double[] findZeroDoppler(final List<double[]> statepVecInterp,double[] pXYZ,double[] timeStampInterp){
 		try{
 			int iOptFactor = 10;// to improve speed
 		    int nPointsAroundMin = 100;//100;//50;
@@ -430,8 +428,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    
 		    int size=statepVecInterp.size();
 
-		///**********Optimization************    
-		    int sizeFactor=size/iOptFactor;
+		    ///**********Optimization************    
+		    int sizeFactor=(int)Math.ceil((new Double(size*1.0/iOptFactor)));
 		    double [][]diffSubsample = new double[sizeFactor][statepVecInterp.get(0).length];
 		    double []vDistSubsample = new double[sizeFactor];
 		    
@@ -457,10 +455,11 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    
 		    double[] vDist=new double[size];
 		    for(int i=0;i<vDistSubsample.length;i++){
-		    	for(int j=0;j<iOptFactor;j++){
+		    	for(int j=0;j<iOptFactor&&((i*iOptFactor)+j)<vDist.length;j++){
 		    		vDist[(i*iOptFactor)+j]=vDistSubsample[i];
 		    	}			
 		    }
+		    //Arrays.fill(vDist,iOptFactor*vDistSubsample.length,size,vDistSubsample[vDistSubsample.length-1]);
 		///**********End Optimization************
 		    
 	   ////
@@ -471,7 +470,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double iDistWInit = idxMin-nPointsAroundMin;
 		    if( iDistWInit <= 0) 
 		    	iDistWInit = 1; 
-		    double iDistWEnd = idxMin+nPointsAroundMin;
+		    double iDistWEnd = idxMin+nPointsAroundMin+1;
 		    if (iDistWEnd > vDist.length)
 		    	iDistWEnd = vDist.length;
 

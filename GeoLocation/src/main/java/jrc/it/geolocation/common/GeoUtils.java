@@ -37,8 +37,7 @@ public class GeoUtils {
 		double pZ = (semiMinorAxis2/denomTmp + pH) * sinLat;
 		
 		double[] pXYZ = {pX ,pY, pZ};
-		
-		
+		//double[] pXYZ = {4740162.032532615 , 787287.082659188, 4180253.542739194};
 		return pXYZ;
 	} 
 		
@@ -181,8 +180,8 @@ public class GeoUtils {
 			Geoid geoRow[]=geoidPoints[row];
 			//first value
 			Geoid g=geoRow[middle];
-			double middleDist = distance(lonRad,lat,g.lonRad,g.latRad);
-		    if(middleDist<110){
+			double middleDist = distance(lonRad,latRad,g.lonRad,g.latRad);
+		    if(middleDist<50){
 		    	h= g.h;
 		    }else{
 		    	int left=0;
@@ -203,7 +202,7 @@ public class GeoUtils {
 						middle=left+(right-left)/2;
 						middleDist=middleDistR;
 					}
-					if(middleDist<110){
+					if(middleDist<50){
 				    	h=geoRow[middle].h;
 				    	finded=true;
 				    	break;
