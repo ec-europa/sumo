@@ -14,13 +14,22 @@ import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.geo.ParallelGeoCoding;
 import jrc.it.geolocation.geo.S1GeoCodingImpl;
-
+/**
+ * 
+ * @author Pietro Argentieri
+ *
+ */
 public class GeoTransformOrbitState implements GeoTransform{
 	//private String annotationFile="";
 	private S1GeoCodingImpl geocoding=null;
 	private ParallelGeoCoding pGeo=null;
 	private double[] pixelsize = {0.0, 0.0};
 	
+	/**
+	 * 
+	 * @param annotationFile
+	 * @throws GeoTransformException
+	 */
 	public GeoTransformOrbitState(String annotationFile) throws GeoTransformException{
 		try{
 			//this.annotationFile=annotationFile;
@@ -51,7 +60,9 @@ public class GeoTransformOrbitState implements GeoTransform{
 			throw new GeoTransformException(ge.getMessage());
 		}
 	}
-	
+	/**
+	 * 
+	 */
 	public List<double[]> getPixelFromGeo(Coordinate[]coords)throws GeoTransformException {
 		try{
 			List<double[]> coo=pGeo.parallelPixelFromGeo(coords);
@@ -60,7 +71,9 @@ public class GeoTransformOrbitState implements GeoTransform{
 			throw new GeoTransformException(ge.getMessage());
 		} 
 	}
-	
+	/**
+	 * 
+	 */
 	public Geometry transformGeometryPixelFromGeo(Geometry geom)throws GeoTransformException {
 		try{
             Coordinate[] coords=geom.getCoordinates();
@@ -89,6 +102,10 @@ public class GeoTransformOrbitState implements GeoTransform{
 		}catch(InterruptedException|ExecutionException ge){
 			throw new GeoTransformException(ge.getMessage());
 		} 
+	}
+	
+	public double getSlanteRangeDist(double lon,double lat){
+		return geocoding.getSlantRange(lon, lat);
 	}
 	
 	

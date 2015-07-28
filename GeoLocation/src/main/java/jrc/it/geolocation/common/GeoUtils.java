@@ -4,13 +4,20 @@ import java.util.Scanner;
 
 import org.apache.commons.math3.util.FastMath;
 
+/**
+ * 
+ * @author Pietro Argentieri
+ *
+ */
 public class GeoUtils {
 	// Reference ellipsoid axes
-	public final static double semiMajorAxis = 6.378137000000000e+06; //KeywVal.semiMajorAxis;
-	public final static double semiMinorAxis = 6.356752314245179e+06; 						//KeywVal.semiMinorAxis;
+	public final static double semiMajorAxis = 6.378137000000000e+06; 		//KeywVal.semiMajorAxis;
+	public final static double semiMinorAxis = 6.356752314245179e+06; 		//KeywVal.semiMinorAxis;
 	public final static double semiMajorAxis2=semiMajorAxis*semiMajorAxis;
 	public final static double semiMinorAxis2=semiMinorAxis*semiMinorAxis;
 	public final static double cc = 299792458; //Speed of light
+	public final static double R_HEART=6372.795477598;
+	public final static double GRS80_EARTH_MU=3.986005e14;//	Earth gravitational constant from GRS80 model: 3.986005e14 m³/s².
 	
 	/**
 	 * 
@@ -42,7 +49,11 @@ public class GeoUtils {
 	} 
 		
 	
-	
+	/**
+	 * 
+	 * @author argenpo
+	 *
+	 */
 	public final static class Geoid{
 		private double lat=0;
 		private double lon=0;
@@ -60,37 +71,73 @@ public class GeoUtils {
 			this.h=h;
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public double getLat() {
 			return lat;
 		}
+		/**
+		 * 
+		 * @param lat
+		 */
 		public void setLat(double lat) {
 			this.lat = lat;
 		}
+		/**
+		 * 
+		 * @return
+		 */
 		public double getLon() {
 			return lon;
 		}
+		/**
+		 * 
+		 * @param lon
+		 */
 		public void setLon(double lon) {
 			this.lon = lon;
 		}
+		/**
+		 * 
+		 * @return
+		 */
 		public double getLatRad() {
 			return latRad;
 		}
-
+		/**
+		 * 
+		 * @param latRad
+		 */
 		public void setLatRad(double latRad) {
 			this.latRad = latRad;
 		}
-
+		/**
+		 * 
+		 * @return
+		 */
 		public double getLonRad() {
 			return lonRad;
 		}
-
+		/**
+		 * 
+		 * @param lonRad
+		 */
 		public void setLonRad(double lonRad) {
 			this.lonRad = lonRad;
 		}
-
+		/**
+		 * 
+		 * @return
+		 */
 		public double getH() {
 			return h;
 		}
+		/**
+		 * 
+		 * @param h
+		 */
 		public void setH(double h) {
 			this.h = h;
 		}
@@ -98,7 +145,10 @@ public class GeoUtils {
 
 	
 	private static  Geoid[][] geoidPoints=new Geoid[360][180];
-	
+
+	/**
+	 * this part of code load the file that contains the geoid height 
+	 */
 	static{
 		Scanner inputStream=null;
 		try{
@@ -162,6 +212,7 @@ public class GeoUtils {
 	
 	
 	/**
+	 * search a point with distance<50 from the (lon,lat) parameter and return the geoid height  
 	 * 
 	 * @param lon
 	 * @param lat
@@ -245,11 +296,11 @@ public class GeoUtils {
 	 * @return calculate the distance between 2 points
 	 */
 	public static double distanceRad(double lonRad1, double latRad1, double lonRad2, double latRad2){
-		double R=6372.795477598;
+		
 		
 		double dlon = FastMath.abs(lonRad1 - lonRad2);
 		double p=FastMath.acos(FastMath.sin(latRad2)*FastMath.sin(latRad1)+FastMath.cos(latRad2) * FastMath.cos(latRad1) * FastMath.cos(dlon));
-		double d = R * p ;
+		double d = R_HEART * p ;
 		
 		return d;
 	}
@@ -315,8 +366,6 @@ public class GeoUtils {
 	 */
 	public static double gcpIncidenceAngleForGRD(double slntRangeInNearRange,double sizeXPixel,double samplePixelSpacing,double xPix,double hsat,double earthRad,String timeOrdering){
 		double srAndIA=0;
-		
-
 		//convert slant range into grnd range 
 		double gndRangeAtNearRange=earthRad*FastMath.acos(1-(slntRangeInNearRange*slntRangeInNearRange-hsat*hsat)/(2*earthRad*(earthRad+hsat))  );
 		double gndRangePixel=0;
@@ -349,7 +398,6 @@ public class GeoUtils {
 	 * @return	horizontal shift
 	 */
 	public static double gcpComplexGeoCorrectionMeters(double incidenceAngle,double dHeight,double geoidHeight){
-		
 		double dx=FastMath.cos(incidenceAngle)*(dHeight-geoidHeight);
 		return dx;
 	}

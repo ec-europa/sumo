@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Vector;
 
+import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
@@ -692,9 +693,9 @@ public class Radarsat1Image extends SarImageReader {
     @Override
     public double getIncidence(int pos_range) {
         double incidence = 0;
-        double denominator, numerator, tan;
+        double denominator, numerator;
         double slant_range;
-        double r, h;
+        double h;
 
         h = getSatelliteAltitude();
 
@@ -707,7 +708,7 @@ public class Radarsat1Image extends SarImageReader {
         incidence = (Math.acos(numerator / denominator));
 
         // Calculate the beam elevation angle
-        double elevationAngle = Math.asin(Math.sin(incidence * Math.PI / 180) * (earthradial / (earthradial + h)));
+        //double elevationAngle = Math.asin(Math.sin(incidence * Math.PI / 180) * (earthradial / (earthradial + h)));
 
         return incidence;
     }
@@ -769,6 +770,50 @@ public class Radarsat1Image extends SarImageReader {
         setBeam(imgBeam);
         setMode(imgMode);
 
+    }
+    
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	if(satelliteSpeed==0){
+	    	satelliteSpeed = calcSatelliteSpeed();
+	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+    	}    
+
+        double temp, deltaAzimuth, deltaRange;
+        int[] output = new int[2];
+
+        try {
+
+        	// already in radian
+            double incidenceAngle = getIncidence(xPos);
+            double slantRange = getSlantRange(xPos,incidenceAngle);
+            double prf = getPRF(xPos,yPos);
+
+            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
+            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+
+            temp = (getRadarWaveLenght() * slantRange * prf) /
+                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
+
+            //azimuth and delta in number of pixels
+            deltaAzimuth = temp / sampleDistAzim;
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
+            
+            
+            if ((getSatellite()).equals("RADARSAT")) {
+                String myImageType = getType();
+                if (myImageType.equals("RSAT-1-SAR-SGF") || myImageType.equals("RSAT-1-SAR-SGX")) {
+                    output[1] = 20;	// This is really range displacement
+                }
+            }
+
+        } catch (Exception ex) {
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+        }
+        return output;
     }
 
     public String getInternalImage() {

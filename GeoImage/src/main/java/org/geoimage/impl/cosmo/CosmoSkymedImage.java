@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
@@ -438,6 +439,43 @@ public class CosmoSkymedImage extends SarImageReader {
 		return geo;
 	}
 
+	@Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	if(satelliteSpeed==0){
+	    	satelliteSpeed = calcSatelliteSpeed();
+	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+    	}    
+
+        double temp, deltaAzimuth, deltaRange;
+        int[] output = new int[2];
+
+        try {
+
+        	// already in radian
+            double incidenceAngle = getIncidence(xPos);
+            double slantRange = getSlantRange(xPos,incidenceAngle);
+            double prf = getPRF(xPos,yPos);
+
+            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
+            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+
+            temp = (getRadarWaveLenght() * slantRange * prf) /
+                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
+
+            //azimuth and delta in number of pixels
+            deltaAzimuth = temp / sampleDistAzim;
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
+
+        } catch (Exception ex) {
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+        }
+        return output;
+    }
+	
+	
  	public String getGroup() {
 		return group;
 	}
