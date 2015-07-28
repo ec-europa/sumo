@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 
+import jrc.it.geolocation.common.GeoUtils;
+
 /**
  * this is a class that implememts default method to access raster data.
  * Your own reader should extends this class in most cases:
@@ -48,10 +50,11 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
     protected File manifestFile=null;
 
-	double satelliteSpeed;
-    double radarWavelength;
-    double orbitInclination;
-    double revolutionsPerDay;
+    protected double satelliteSpeed;
+    protected double orbitInclination;
+    
+  /*  protected double radarWavelength;
+    protected double revolutionsPerDay;*/
     final int defaultMargin=100;
     protected Polygon bbox=null;
     
@@ -81,6 +84,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
     @Override
     public abstract int getHeight();
+    
+    public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
     
     public void dispose(){
     	overViewImage=null;
@@ -246,6 +251,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return outData;
     }
 
+    /**
+     * 
+     */
     public double getImageAzimuth(){
         double az = 0;
         try{
@@ -262,7 +270,15 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }    
         return az;
     }
-
+    
+    /**
+     * 
+     * @param margin
+     * @return
+     * @throws ParseException
+     * @throws GeoTransformException
+     * @throws CQLException
+     */
     public Polygon buildBox(int margin) throws ParseException, GeoTransformException, CQLException{
 		   double h=getHeight();
 		   double w=getWidth();
@@ -306,116 +322,29 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return imageP;
 	}
     
-    public String getDescription() {
-        StringBuilder description = new StringBuilder("Image Acquisition and Generation Parameters:\n")
-        	 .append("--------------------\n\n")
-        	 .append("Satellite and Instrument: ")
-	         .append("\n").append(getSatellite()).append("  " + getSensor())
-	         .append("\nProduct: ")
-	         .append(getProduct())
-	         .append("\nMode: ")
-	         .append(getMode())
-	         .append("\nBeam: ")
-	         .append(getBeam())
-	         .append("\nPolarisations: ")
-	         .append(getPolarization())
-	         .append("\nHeading Angle: ")
-	         .append(getHeadingAngle())
-	         .append("\nOrbit Direction: ")
-	         .append(getOrbitDirection())
-	         .append("\nImage Dimensions:\n")
-	         .append("\tWidth:").append(getWidth())
-	         .append("\n\tHeight:").append(getHeight())
-	         .append("\nImage Acquisition Time:\n")
-	         .append("\tStart:").append(getTimeStampStart())
-	         .append("\n\tStop:").append(getTimeStampStop())
-	         .append("\nImage Pixel Spacing:\n")
-	         .append("\tAzimuth:").append(getAzimuthSpacing())
-	         .append("\n\tRange:").append(getRangeSpacing())
-	         .append("\nImage Processor and Algorithm: ")
-	         .append(getProcessor())
-	         .append("\nImage ENL: ")
-	         .append(getENL())
-	         .append("\nSatellite Altitude (m): ")
-	         .append(getSatelliteAltitude())
-	         .append("\nSatellite Speed (m/s): ")
-	         .append(getSatelliteSpeed())
-	         .append("\nIncidence Angles (degrees):\n")
-	         .append("\tNear: ").append(getIncidenceNear())
-	         .append("\n\tFar: ").append(getIncidenceFar());
-
-        return description.toString();
-    }
     
     
-    @Override
-    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-    	if(satelliteSpeed==0){
-	    	satelliteSpeed = calcSatelliteSpeed();
-	        radarWavelength = getRadarWaveLenght();
-	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-	        revolutionsPerDay = getRevolutionsPerday();
-    	}    
-
-
-        double temp, deltaAzimuth, deltaRange;
-        int[] output = new int[2];
-
-        try {
-
-        	// already in radian
-            double incidenceAngle = getIncidence(xPos);
-            double slantRange = getSlantRange(xPos,incidenceAngle);
-            double prf = getPRF(xPos,yPos);
-
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
-
-            temp = (radarWavelength * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / revolutionsPerDay));
-
-            //azimuth and delta in number of pixels
-            deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
-
-            output[0] = (int) FastMath.floor(deltaAzimuth);
-            output[1] = (int) FastMath.floor(deltaRange);
-            
-            
-            //TODO: why this for radarsat only ?? 
-            if ((getSatellite()).equals("RADARSAT")) {
-                String myImageType = getType();
-                if (myImageType.equals("RSAT-1-SAR-SGF") || myImageType.equals("RSAT-1-SAR-SGX")) {
-                    output[1] = 20;	// This is really range displacement
-                }
-            }
-
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        }
-        return output;
-    }
-
+   
+    
+    /**
+     * 
+     */
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
         // estimation of incidence angle based on near and range distance values
         double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
         double sataltitude=getSatelliteAltitude();
         
-        
         double distancerange = sataltitude * FastMath.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
         incidenceangle = FastMath.atan(distancerange / sataltitude);
         return incidenceangle;
     }
 
-    private double calcSatelliteSpeed() {
-        // calculate satellite speed
-/*
-        double seconds = ((double)(getTimestamp(GeoImageReaderBasic.TIMESTAMP_STOP).getTime() - getTimestamp(GeoImageReaderBasic.TIMESTAMP_START).getTime())) / 1000;
-        // calculate satellite speed in azimuth pixels / seconds
-        double azimuthpixelspeed = ((double)getHeight() * (6400000 + sataltitude) / 6400000) / seconds;
-        return azimuthpixelspeed * getGeoTransform().getPixelSize()[0];
-         */
+    /**
+     * calculate satellite speed 
+     * @return
+     */
+    public double calcSatelliteSpeed() {
         double satellite_speed = 0.0;
 
         // check if satellite speed has been calculated
@@ -425,13 +354,15 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             // Ephemeris --> R + H
             //Approaching the orbit as circular V=SQRT(GM/(R+H))
             double sataltitude = getSatelliteAltitude();
-            satellite_speed = Math.pow(3.986005e14 / (6371000 + sataltitude), 0.5);
+            satellite_speed = Math.pow(GeoUtils.GRS80_EARTH_MU / (GeoUtils.R_HEART + sataltitude), 0.5);
             setSatelliteSpeed(satellite_speed);
         }
 
         return satellite_speed;
     }
-
+    /**
+     * 
+     */
     public double getSlantRange(int position,double incidenceAngle) {
         double slantrange = 0.0;
      //   double incidenceangle = getIncidence(position);
@@ -572,4 +503,44 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	 
 
 
+	 public String getDescription() {
+	        StringBuilder description = new StringBuilder("Image Acquisition and Generation Parameters:\n")
+	        	 .append("--------------------\n\n")
+	        	 .append("Satellite and Instrument: ")
+		         .append("\n").append(getSatellite()).append("  " + getSensor())
+		         .append("\nProduct: ")
+		         .append(getProduct())
+		         .append("\nMode: ")
+		         .append(getMode())
+		         .append("\nBeam: ")
+		         .append(getBeam())
+		         .append("\nPolarisations: ")
+		         .append(getPolarization())
+		         .append("\nHeading Angle: ")
+		         .append(getHeadingAngle())
+		         .append("\nOrbit Direction: ")
+		         .append(getOrbitDirection())
+		         .append("\nImage Dimensions:\n")
+		         .append("\tWidth:").append(getWidth())
+		         .append("\n\tHeight:").append(getHeight())
+		         .append("\nImage Acquisition Time:\n")
+		         .append("\tStart:").append(getTimeStampStart())
+		         .append("\n\tStop:").append(getTimeStampStop())
+		         .append("\nImage Pixel Spacing:\n")
+		         .append("\tAzimuth:").append(getAzimuthSpacing())
+		         .append("\n\tRange:").append(getRangeSpacing())
+		         .append("\nImage Processor and Algorithm: ")
+		         .append(getProcessor())
+		         .append("\nImage ENL: ")
+		         .append(getENL())
+		         .append("\nSatellite Altitude (m): ")
+		         .append(getSatelliteAltitude())
+		         .append("\nSatellite Speed (m/s): ")
+		         .append(getSatelliteSpeed())
+		         .append("\nIncidence Angles (degrees):\n")
+		         .append("\tNear: ").append(getIncidenceNear())
+		         .append("\n\tFar: ").append(getIncidenceFar());
+
+	        return description.toString();
+	    }
 }
