@@ -79,7 +79,9 @@ public class AzimuthAmbiguity {
     
     private SarImageReader sumoImage = null;
     private Boat[] boatArray = null;
-
+    
+    private final int AZIMUT_FACTOR=10;
+    
     // lits of boats having been filtered out
     List<Boat> ambiguityboatlist = new ArrayList<Boat>();
 
@@ -183,12 +185,12 @@ public class AzimuthAmbiguity {
        // logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
         int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band);
         
-        if(maxVal>(boat.getValue()*10)){
+        if(maxVal>(boat.getValue()*AZIMUT_FACTOR)){
         	return true;
         }else{
         	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,false);
         	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band);
-        	if(maxVal>(boat.getValue()*10)){
+        	if(maxVal>(boat.getValue()*AZIMUT_FACTOR)){
             	return true;
         	}	
         }	
@@ -217,11 +219,11 @@ public class AzimuthAmbiguity {
 	            
 	            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
 	            
-	            //first check to 250 meters
+	            //first check to dAzimuth
 	            if(isAmbiguity(myBoat,xPos, yPos, deltaAzimuth[0],pixSize[0] ,pixSize[1])){
 	            	ambiguityboatlist.add(myBoat);
 	            	myBoat.setAmbiguity(true);
-	            //second check to 500 meters	
+	            //second check to dAzimuth*2	
 	            }else if(isAmbiguity(myBoat,xPos, yPos, (deltaAzimuth[0]*2),pixSize[0] ,pixSize[1])){
 	            	ambiguityboatlist.add(myBoat);
 	            	myBoat.setAmbiguity(true);

@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
+import org.geoimage.impl.geoop.GeoTransformOrbitState;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.util.Constant;
 import org.geotools.referencing.CRS;
@@ -35,6 +37,7 @@ import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.annotation.reader.jaxb.SwathBoundsType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
+import jrc.it.annotation.reader.jaxb.VelocityType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -212,6 +215,13 @@ public abstract class Sentinel1 extends SarImageReader {
             	yposition=o.getPosition().getY().getValue();
             	zposition=o.getPosition().getZ().getValue();
             }
+            
+            //use the middle orbit position to calculate the satellite speed
+            VelocityType middlePos=orbitList.get(orbitList.size()/2).getVelocity();
+            satelliteSpeed=Math.sqrt((middlePos.getX().getValue()*middlePos.getX().getValue()+
+            		middlePos.getY().getValue()*middlePos.getY().getValue()+
+            		middlePos.getZ().getValue()*middlePos.getZ().getValue()));
+            
             
             //set the satellite altitude
             double radialdist = Math.pow(xposition * xposition + yposition * yposition + zposition * zposition, 0.5);
@@ -426,6 +436,44 @@ public abstract class Sentinel1 extends SarImageReader {
     	}	
     }
 
+    @Override
+    public double calcSatelliteSpeed(){
+    	return satelliteSpeed;
+    }
+    
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+	    orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+
+        double temp, deltaAzimuth, deltaRange;
+        int[] output = new int[2];
+
+        try {
+        	// already in radian
+            double incidenceAngle = getIncidence(xPos);
+            double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
+            double slantRange = ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lonlat[0], lonlat[1]);
+            double sold=getSlantRange(xPos,incidenceAngle);
+            double prf = getPRF(xPos,yPos);
+
+            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
+            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+
+            temp = (getRadarWaveLenght() * slantRange * prf) /
+                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
+
+            //azimuth and delta in number of pixels
+            deltaAzimuth = temp / sampleDistAzim;
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
+            
+        } catch (Exception ex) {
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+        }
+        return output;
+    }
         
     
     public String getInternalImage() {

@@ -52,6 +52,21 @@ public class S1GeoCodingImpl implements GeoCoding {
 		statevVecInterp=Collections.unmodifiableList(orbitInterpolation.getStatevVecInterp());
 	}
 	
+	
+	/**
+	 * 
+	 * @param lon
+	 * @param lat
+	 * @return
+	 */
+	public double getSlantRange(final double lon,final double lat){
+		double[] pXYZ =GeoUtils.convertFromGeoToEarthCentred(lat, lon);
+		Double dd2[]=(Double[])orbitInterpolation.getTimeStampInterp().toArray(new Double[0]);
+		double[] results=findZeroDoppler(statepVecInterp, pXYZ, ArrayUtils.toPrimitive(dd2));
+		return results[1];
+	}	
+	
+	
 	/**
 	 * 
 	 * 
