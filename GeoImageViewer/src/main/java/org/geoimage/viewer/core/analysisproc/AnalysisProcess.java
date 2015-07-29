@@ -20,11 +20,19 @@ import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_AGG_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.DETECTED_PIXELS_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.AZIMUTH_AMBIGUITY_TAG;
+
+
+
 
 /**
  * 
@@ -215,14 +223,14 @@ public  class AnalysisProcess implements Runnable {
 	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
 	                     
 	                     if (!agglomerationMethodology.startsWith("d")) {
-	                         vdsanalysis.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
-	                         vdsanalysis.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
+	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
+	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
 	                     }
-	                     vdsanalysis.addGeometries("detectedpixels", new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
+	                     vdsanalysis.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
 	                     List<Geometry> az=azimuthAmbiguity[band].getAmbiguityboatgeometry();
                          allAzimuthAmbiguity.addAll(az);
-	                     vdsanalysis.addGeometries("azimuthambiguities",Color.RED , 5, GeometricLayer.POINT, az, display);
+	                     vdsanalysis.addGeometries(AZIMUTH_AMBIGUITY_TAG,Color.RED,5, GeometricLayer.POINT, az, display);
 
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
@@ -266,10 +274,10 @@ public  class AnalysisProcess implements Runnable {
 	                		 																	thresholds,ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = Platform.getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
-	                     vdsanalysisLayer.addGeometries("thresholdaggregatepixels", new Color(0x0000FF), 1, GeometricLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);
-	                     vdsanalysisLayer.addGeometries("thresholdclippixels", new Color(0x00FFFF), 1, GeometricLayer.POINT, mergePixels.getThresholdclipPixels(), display);
+	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);
+	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, mergePixels.getThresholdclipPixels(), display);
 	                 }
-	                 vdsanalysisLayer.addGeometries("detectedpixels", new Color(0x00FF00), 1, GeometricLayer.POINT, mergePixels.getAllDetectedPixels(), display);
+	                 vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, mergePixels.getAllDetectedPixels(), display);
 	                 
 	                 if ((bufferedMask != null) && (bufferedMask.length > 0)) {
 	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), display);
@@ -277,7 +285,7 @@ public  class AnalysisProcess implements Runnable {
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	
 	                 
-	                 vdsanalysisLayer.addGeometries("azimuthambiguities", Color.RED, 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
+	                 vdsanalysisLayer.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED, 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
 	                 //if(!Platform.isBatchMode())
 	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
 	                 notifyLayerReady(vdsanalysisLayer);

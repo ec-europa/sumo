@@ -141,8 +141,8 @@ public abstract class AbstractBatchAnalysis {
 	                file = file.concat(".xml");
 	            }
            
-    		   GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
-    		   SumoXMLWriter.saveNewXML(new File(file),threshLayer,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
+    		   //GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
+    		   SumoXMLWriter.saveNewXML(new File(file),l,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
     		   
     		   String bbox=outfolder+"\\bbox.shp";
     		   List<Geometry> ggBbox=new ArrayList<Geometry>();
@@ -159,14 +159,14 @@ public abstract class AbstractBatchAnalysis {
     		   try{
     			   String targets=outfolder+"\\"+l.getName()+".shp";
     			  // l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
-    			   SimpleShapefile.exportGeometriesToShapeFile(threshLayer.getGeometries(), new File(targets),"Point",reader.getGeoTransform());
+    			   SimpleShapefile.exportGeometriesToShapeFile(l.getGeometriclayer().getGeometries(), new File(targets),"Point",reader.getGeoTransform());
     		   } catch (Exception e) {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
     		   
     		   try{
     			   String targetscsv=params.outputFolder+"\\targets.csv";
-    			   GenericCSVIO.geomCsv(new File(targetscsv),threshLayer.getGeometries(),reader.getGeoTransform(),imageName,true);
+    			   GenericCSVIO.geomCsv(new File(targetscsv),l.getGeometriclayer().getGeometries(),reader.getGeoTransform(),imageName,true);
     		   }catch(Exception e ){
     			   logger.error("Problem saving targets in csv:"+imageName,e);
     		   }

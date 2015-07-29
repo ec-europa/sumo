@@ -7,11 +7,14 @@ package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
@@ -32,13 +35,16 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  */
 public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer implements IComplexVectorLayer {
-	
+public static final String AZIMUTH_AMBIGUITY_TAG="azimuthambiguities";
+public static final String DETECTED_PIXELS_TAG="detectedpixels";
+public static final String TRESHOLD_PIXELS_AGG_TAG="thresholdaggregatepixels";
+public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 	
 	
     // Acts as a simple edit vector but allows additional display features
     // additional display features are stored in separate GeometricLayers
     // the class also allows more interactions such as multiple selection
-    class additionalgeometries {
+    public class Additionalgeometries {
         private String tag;
         private Color color;
         private int lineWidth = 1;
@@ -47,7 +53,7 @@ public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer impl
         private boolean status;
        
         
-        public additionalgeometries(String tag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)
+        public Additionalgeometries(String tag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)
         {
             this.color = color;
             this.lineWidth = lineWidth;
@@ -92,7 +98,7 @@ public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer impl
 
     };
 
-    private List<additionalgeometries> additionalGeometries = new ArrayList<additionalgeometries>();
+    private Map<String,Additionalgeometries> additionalGeometriesMap = new HashMap<String,Additionalgeometries>();
 
     public ComplexEditGeometryVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
         super(parent,layername, type, layer);
@@ -110,7 +116,7 @@ public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer impl
         int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
         GL2 gl = context.getGL().getGL2();
-        for(additionalgeometries geometry : additionalGeometries){
+        for(Additionalgeometries geometry : additionalGeometriesMap.values()){
             // check geometries need to be displayed
             if(geometry.isStatus()){
                 float[] c = geometry.getColor().getColorComponents(null);
@@ -178,59 +184,46 @@ public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer impl
 
     public void addGeometries(String geometrytag, Color color, int lineWidth, String type, List<Geometry> geometries, boolean status)
     {
-        additionalGeometries.add(new additionalgeometries(geometrytag, color, lineWidth, type, geometries, status));
+    	additionalGeometriesMap.put(geometrytag,new Additionalgeometries(geometrytag, color, lineWidth, type, geometries, status));
     }
 
-    private int getGeometriesByTag(String geometrytag)
+    public Additionalgeometries getGeometriesByTag(String geometrytag)
     {
-        for(additionalgeometries geometries : additionalGeometries)
-        {
-            if(geometries.getTag().equals(geometrytag))
-                return additionalGeometries.indexOf(geometries);
-        }
-
-        return -1;
+        return additionalGeometriesMap.get(geometrytag);
     }
 
     public boolean removeGeometriesByTag(String geometrytag)
     {
-        int index = getGeometriesByTag(geometrytag);
-        if(index != -1)
-        {
-            this.additionalGeometries.remove(index);
-            return true;
-        }
-
-        return false;
+    	try{
+    		additionalGeometriesMap.remove(geometrytag);
+    		return true;
+    	}catch(Exception e){
+    		return false;
+    	}	
     }
 
     public boolean tagExists(String tag)
     {
-        return getGeometriesByTag(tag) == -1 ? false : true;
+        return getGeometriesByTag(tag) == null ? false : true;
     }
 
     public List<String> getGeometriestagList()
     {
-        ArrayList<String> geometriestaglist = new ArrayList<String>();
-
-        for(additionalgeometries geometries : additionalGeometries)
-        {
-            geometriestaglist.add(geometries.getTag());
-        }
-
-        return geometriestaglist;
+    	List<String> keys=new ArrayList<>();
+    	keys.addAll(additionalGeometriesMap.keySet());
+        return keys;
     }
 
     public boolean getGeometriesDisplay(String geometrytag) {
         if(tagExists(geometrytag))
-            return additionalGeometries.get(getGeometriesByTag(geometrytag)).isStatus();
+            return additionalGeometriesMap.get(getGeometriesByTag(geometrytag)).isStatus();
 
         return false;
     }
 
     public void toggleGeometriesByTag(String geometrytag, boolean status) {
         if(tagExists(geometrytag))
-            additionalGeometries.get(getGeometriesByTag(geometrytag)).setStatus(status);
+            additionalGeometriesMap.get(getGeometriesByTag(geometrytag)).setStatus(status);
         Platform.getGeoContext().setDirty(true);
     }
 

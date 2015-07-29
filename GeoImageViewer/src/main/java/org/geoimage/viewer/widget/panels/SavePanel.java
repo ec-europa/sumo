@@ -32,13 +32,13 @@ import org.slf4j.LoggerFactory;
 public class SavePanel extends javax.swing.JPanel {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SavePanel.class);
 
-    private ISave layer;
+    private ISave saveLayer;
     private String epsg="4326";
 
     /** Creates new form SavePanel */
     public SavePanel(ISave layer) {
         initComponents();
-        this.layer = layer;
+        this.saveLayer = layer;
         
         
         DefaultComboBoxModel<OptionMenu> modelComboFormat=new DefaultComboBoxModel<OptionMenu>(layer.getFileFormatTypes()){
@@ -173,7 +173,7 @@ public class SavePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     	OptionMenu opt=(OptionMenu)comboSaveFormat.getSelectedItem();
-        layer.save(jTextField1.getText(),opt.getOptionId() , "EPSG:"+epsg);        
+        saveLayer.save(jTextField1.getText(),opt.getOptionId() , "EPSG:"+epsg);        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

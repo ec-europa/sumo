@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
@@ -29,6 +30,7 @@ import org.geoimage.viewer.core.io.sumoxml.SatImageMetadata;
 import org.geoimage.viewer.core.io.sumoxml.VdsAnalysis;
 import org.geoimage.viewer.core.io.sumoxml.VdsTarget;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -166,7 +168,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param enl
 	 * @param landmask
 	 */
-	public static void saveNewXML(File output,GeometricLayer gLayer, String projection,SarImageReader gir,float[] thresholds,int buffer,float enl,String landmask) {
+	public static void saveNewXML(File output,ComplexEditVDSVectorLayer layer, String projection,SarImageReader gir,float[] thresholds,int buffer,float enl,String landmask) {
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 		
 		String start=gir.getTimeStampStart();
@@ -216,13 +218,14 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		vdsA.setLandMaskRead(landmask);
 		
+
+		List<Geometry> ambiguity=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG).getGeometries();
 		
 		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
-		for (Geometry geom : gLayer.getGeometries()) {
-
-			Attributes att = gLayer.getAttributes(geom);
+		for (Geometry geom : layer.getGeometriclayer().getGeometries()) {
+			Attributes att = layer.getGeometriclayer().getAttributes(geom);
 
 			/**Boat section **/
 			// create new boat

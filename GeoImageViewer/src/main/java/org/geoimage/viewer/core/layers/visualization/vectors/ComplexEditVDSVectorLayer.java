@@ -149,8 +149,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            for(int i=0;i<thresholds.length;i++){
 	            	ts[i]=Float.parseFloat(thresholds[i]);
 	            }
-	            SumoXMLWriter.saveNewXML(new File(file),
-	            		FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
+	            SumoXMLWriter.saveNewXML(new File(file),this,
+	            		//FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
 	            		projection,
 	            		sar,ts,buffer,new Float(enl),landMask);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
