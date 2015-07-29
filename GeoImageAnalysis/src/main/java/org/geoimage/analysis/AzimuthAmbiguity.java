@@ -155,6 +155,8 @@ public class AzimuthAmbiguity {
     			x=sumoImage.getWidth();
     		if(y>this.sumoImage.getHeight())
     			y=sumoImage.getHeight();
+    		
+    		//todo: check why the read method doesn't works
 	    	int[] data=sumoImage.readTile(x,y,sizeX,sizeY, band);
 	    	highest = data[0];
 		    for (int index = 1; index < data.length; index ++) {
