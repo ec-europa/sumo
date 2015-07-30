@@ -16,8 +16,8 @@
         </jar>
         <delete dir="${dir.jarfile}/sumo_lib"/>
         <mkdir dir="${dir.jarfile}/sumo_lib"/>
-        <copy file="C:/Program Files/oepe-12.1.3.2-luna-maf-distro-win32-x86_64/plugins/org.junit_4.12.0.v201504281640/junit.jar" todir="${dir.jarfile}/sumo_lib"/>
-        <copy file="C:/Program Files/oepe-12.1.3.2-luna-maf-distro-win32-x86_64/plugins/org.hamcrest.core_1.3.0.v201303031735.jar" todir="${dir.jarfile}/sumo_lib"/>
+        <!-- copy file="C:/Program Files/oepe-12.1.3.2-luna-maf-distro-win32-x86_64/plugins/org.junit_4.12.0.v201504281640/junit.jar" todir="${dir.jarfile}/sumo_lib"/ -->
+        <!-- copy file="C:/Program Files/oepe-12.1.3.2-luna-maf-distro-win32-x86_64/plugins/org.hamcrest.core_1.3.0.v201303031735.jar" todir="${dir.jarfile}/sumo_lib"/ -->
         <copy file="${dir.buildfile}/libs/apache-log4j-extras-1.2.17.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/appframework-1.0.3.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/AppleJavaExtensions.jar" todir="${dir.jarfile}/sumo_lib"/>
