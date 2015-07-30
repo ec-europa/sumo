@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
@@ -35,7 +34,9 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  */
 public class ComplexEditGeometryVectorLayer extends EditGeometryVectorLayer implements IComplexVectorLayer {
+public static final String ARTEFACTS_AMBIGUITY_TAG="artefactsambiguities";
 public static final String AZIMUTH_AMBIGUITY_TAG="azimuthambiguities";
+public static final String AMBIGUITY_TAG="All ambiguities";
 public static final String DETECTED_PIXELS_TAG="detectedpixels";
 public static final String TRESHOLD_PIXELS_AGG_TAG="thresholdaggregatepixels";
 public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
@@ -215,15 +216,16 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
     }
 
     public boolean getGeometriesDisplay(String geometrytag) {
-        if(tagExists(geometrytag))
-            return additionalGeometriesMap.get(getGeometriesByTag(geometrytag)).isStatus();
-
+        if(tagExists(geometrytag)){
+        	Additionalgeometries add=getGeometriesByTag(geometrytag);
+            return add.isStatus();
+        }    
         return false;
     }
 
     public void toggleGeometriesByTag(String geometrytag, boolean status) {
         if(tagExists(geometrytag))
-            additionalGeometriesMap.get(getGeometriesByTag(geometrytag)).setStatus(status);
+            additionalGeometriesMap.get(geometrytag).setStatus(status);
         Platform.getGeoContext().setDirty(true);
     }
 

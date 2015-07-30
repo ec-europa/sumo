@@ -678,10 +678,6 @@ public class EnvisatImage extends SarImageReader {
 		return null;
 	}
 
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return true;
-	}
 
 	@Override
 	public String getImgName() {

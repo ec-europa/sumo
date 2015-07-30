@@ -9,6 +9,7 @@ import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
+import org.geoimage.analysis.S1ArtefactsAmbiguity;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
@@ -20,7 +21,6 @@ import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -30,8 +30,7 @@ import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditG
 import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
 import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.DETECTED_PIXELS_TAG;
 import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.AZIMUTH_AMBIGUITY_TAG;
-
-
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.ARTEFACTS_AMBIGUITY_TAG;
 
 
 /**
@@ -127,6 +126,8 @@ public  class AnalysisProcess implements Runnable {
              
              
              AzimuthAmbiguity[] azimuthAmbiguity =new AzimuthAmbiguity[numberofbands];
+             S1ArtefactsAmbiguity[] arAmbiguity =new S1ArtefactsAmbiguity[numberofbands];
+             
              List<Geometry>allAzimuthAmbiguity=new ArrayList<>();
              
              boolean displaybandanalysis = Platform.getConfiguration().getDisplayBandAnalysis();
@@ -205,16 +206,12 @@ public  class AnalysisProcess implements Runnable {
 	                        	 break;
 	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
 	                         		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
-	                        
 	                     }
 	                     
-	                     if (!gir.supportAzimuthAmbiguity()) {
-	                         System.out.println("\nSatellite sensor not supported for Azimuth Ambiguity detection");
-	                     }else{
-	                    	 notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                         azimuthAmbiguity[band] = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);
-	                     }
-                         
+	                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+	                     azimuthAmbiguity[band] = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);
+	                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);
+	                     
 	                     
 	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
 	                     
@@ -231,6 +228,10 @@ public  class AnalysisProcess implements Runnable {
 	                     List<Geometry> az=azimuthAmbiguity[band].getAmbiguityboatgeometry();
                          allAzimuthAmbiguity.addAll(az);
 	                     vdsanalysis.addGeometries(AZIMUTH_AMBIGUITY_TAG,Color.RED,5, GeometricLayer.POINT, az, display);
+	                     
+	                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
+	                     allAzimuthAmbiguity.addAll(artefactsA);
+	                     vdsanalysis.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
 
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
@@ -285,7 +286,9 @@ public  class AnalysisProcess implements Runnable {
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	
 	                 
-	                 vdsanalysisLayer.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED, 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
+	                 vdsanalysisLayer.addGeometries(ComplexEditVDSVectorLayer.AMBIGUITY_TAG, Color.RED, 5, GeometricLayer.POINT,allAzimuthAmbiguity , display);
+
+	                 
 	                 //if(!Platform.isBatchMode())
 	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
 	                 notifyLayerReady(vdsanalysisLayer);

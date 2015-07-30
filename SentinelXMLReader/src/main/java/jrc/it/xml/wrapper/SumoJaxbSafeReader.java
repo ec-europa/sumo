@@ -16,10 +16,12 @@ import org.jdom2.xpath.XPathFactory;
 import org.slf4j.LoggerFactory;
 
 import jrc.it.safe.reader.jaxb.AcquisitionPeriod;
+import jrc.it.safe.reader.jaxb.Facility;
 import jrc.it.safe.reader.jaxb.FrameSet;
 import jrc.it.safe.reader.jaxb.InstrumentMode;
 import jrc.it.safe.reader.jaxb.OrbitReference;
 import jrc.it.safe.reader.jaxb.Platform;
+import jrc.it.safe.reader.jaxb.Processing;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.safe.reader.jaxb.XFDU;
 import jrc.it.safe.reader.jaxb.XFDU.DataObjectSection.DataObject;
@@ -40,6 +42,7 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader {
 	private FrameSet frameSet;
 	private OrbitReference orbitReference;
 	private Platform platform;
+	private Processing processing;
 	
 	private String[] swaths=null;
 	private String[] hrefsTiff=null;
@@ -80,6 +83,8 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader {
 	    		orbitReference=meta.getMetadataWrap().getXmlData().getOrbitReference();
 	    	}else if(meta.getID().equalsIgnoreCase("platform")){
 	    		platform=meta.getMetadataWrap().getXmlData().getPlatform();
+	    	}else if(meta.getID().equalsIgnoreCase("processing")){
+	    		processing=meta.getMetadataWrap().getXmlData().getProcessing();
 	    	}
 	    }
 	    
@@ -158,6 +163,21 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader {
 		this.swathMeasurementsMap = swathMeasurementsMap;
 	}
 
+	public int getIPFVersion(){
+		int ipf=-1;
+		List<Object> list=processing.getFacilityOrResource();
+		Facility f=null;
+		for(Object o:list){
+			if(o instanceof Facility){
+				f=(Facility)o;
+				break;
+			}	
+		}
+		if(f!=null){
+			ipf=(int)(f.getSoftware().getVersion().doubleValue()*100);
+		}
+		return ipf;
+	}
 
 	public String[] getSwaths() {
 		return swaths;
