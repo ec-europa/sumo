@@ -539,10 +539,6 @@ public class Radarsat2Image extends SarImageReader {
 	}
 
 	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return true;
-	}
-	@Override
 	public String getImgName() {
 		return imgName;
 	}

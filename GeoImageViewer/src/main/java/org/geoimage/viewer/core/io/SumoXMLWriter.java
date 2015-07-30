@@ -220,6 +220,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 
 		List<Geometry> ambiguity=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG).getGeometries();
+		List<Geometry> ambiguityArt=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG).getGeometries();
 		
 		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
@@ -249,6 +250,23 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			
 			//for the moment we leave 
 			b.setDetecttime(format.format(tStart));
+			
+			if(ambiguity.contains(geom)){
+				//is an ambiguity
+				b.setReliability(1);
+				b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
+			}else{
+				//is a target
+				b.setReliability(0);
+			}
+			if(ambiguityArt.contains(geom)){
+				//is an ambiguity
+				b.setReliability(1);
+				b.setFalseAlarmCause("TA");//AA is for azimuth ambiguity
+			}else{
+				//is a target
+				b.setReliability(0);
+			}
 			
 			b.setMaxValue(att.get(VDSSchema.MAXIMUM_VALUE).toString());
 			

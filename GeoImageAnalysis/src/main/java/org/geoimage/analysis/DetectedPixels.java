@@ -75,6 +75,9 @@ public class DetectedPixels {
     
     
     public class Boat{
+    	public final static int AMBIGUITY_TYPE_AZIMUTH=1;
+    	public final static int AMBIGUITY_TYPE_ARTEFACTS=2;
+    	
     	private double posx;
     	private double posy;
     	private double size;
@@ -88,6 +91,7 @@ public class DetectedPixels {
     	private double band;
     	private double id;
     	private boolean isAmbiguity=false;
+    	private int ambiguityType=0;
     	
 
 		public Boat(double id,double x,double y,double size,double length,double width,double heading,
@@ -178,7 +182,13 @@ public class DetectedPixels {
 			this.band = band;
 		}
 
+		public int getAmbiguityType() {
+			return ambiguityType;
+		}
 
+		public void setAmbiguityType(int ambiguityType) {
+			this.ambiguityType = ambiguityType;
+		}
 
 		public double getPosx() {
 			return posx;

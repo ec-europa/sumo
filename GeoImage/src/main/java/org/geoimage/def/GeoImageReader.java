@@ -191,7 +191,6 @@ public interface GeoImageReader  {
     public int[] getAmbiguityCorrection(int xPos,int yPos);
 
     
-    public boolean supportAzimuthAmbiguity();
     
     
 }

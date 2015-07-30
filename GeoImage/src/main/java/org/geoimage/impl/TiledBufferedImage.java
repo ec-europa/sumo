@@ -419,11 +419,6 @@ public class TiledBufferedImage implements GeoImageReader {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return false;
-	}
-   
 
 	@Override
 	public int[] getAmbiguityCorrection(int xPos, int yPos) {
