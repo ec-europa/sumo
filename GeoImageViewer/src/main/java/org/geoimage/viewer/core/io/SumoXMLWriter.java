@@ -251,18 +251,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			//for the moment we leave 
 			b.setDetecttime(format.format(tStart));
 			
-			if(ambiguity.contains(geom)){
+			if(ambiguity.contains(geom)||ambiguityArt.contains(geom)){
 				//is an ambiguity
-				b.setReliability(1);
-				b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
-			}else{
-				//is a target
-				b.setReliability(0);
-			}
-			if(ambiguityArt.contains(geom)){
-				//is an ambiguity
-				b.setReliability(1);
-				b.setFalseAlarmCause("TA");//AA is for azimuth ambiguity
+				b.setReliability(3);
+				if(ambiguity.contains(geom))
+					b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
+				else
+					b.setFalseAlarmCause("TP");//TP is for Twin peaks artefacts ambiguity
 			}else{
 				//is a target
 				b.setReliability(0);
