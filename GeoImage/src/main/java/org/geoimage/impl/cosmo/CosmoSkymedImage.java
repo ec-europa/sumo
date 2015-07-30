@@ -505,11 +505,6 @@ public class CosmoSkymedImage extends SarImageReader {
 
 
 	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return true;
-	}
-
-	@Override
 	public String getImgName() {
 		return imgName;
 	}

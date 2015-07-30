@@ -67,6 +67,7 @@ public abstract class Sentinel1 extends SarImageReader {
     
     protected File mainFolder;
     private String swath=null;
+    protected int ipfVersion=0;
     
 	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
 	
@@ -104,6 +105,14 @@ public abstract class Sentinel1 extends SarImageReader {
         return bands.size();
     }
 
+    public int getIpfVersion() {
+		return ipfVersion;
+	}
+	public void setIpfVersion(int ipfVersion) {
+		this.ipfVersion = ipfVersion;
+	}
+
+    
     /**
      * read ground control points from xml annotation file. 
      *   
@@ -161,6 +170,8 @@ public abstract class Sentinel1 extends SarImageReader {
         	tiffs=safeReader.getTiffsBySwath(this.swath);
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
+        	
+        	this.ipfVersion=safeReader.getIPFVersion();
         	
 			//set image properties
             tiffImages=getImages();
@@ -260,10 +271,27 @@ public abstract class Sentinel1 extends SarImageReader {
      */
    @Override
    public double getPRF(int x,int y){
+	   Swath s=findSwath(x, y);
+	   return s.getPrf();
+   }
+   
+   public String getSwathName(int x,int y){
+	   Swath s=findSwath(x, y);
+	   return s.getName();
+   }
+   
+   
+   /**
+    * 
+    * @param x
+    * @param y
+    * @return
+    */
+   private Swath findSwath(int x,int y){
 	   boolean findPrf=false;
-	   double prf=0;
+	   Swath s=null;
 	   for (int i=0;i<swaths.size()&&!findPrf;i++){
-		   Swath s=swaths.get(i);
+		   s=swaths.get(i);
 		   List<SwathBoundsType> bounds=s.getBounds();
 		   for(int iBound=0;iBound<bounds.size()&&!findPrf;iBound++){
 			   SwathBoundsType bound=bounds.get(iBound);
@@ -274,11 +302,12 @@ public abstract class Sentinel1 extends SarImageReader {
 			   
 			   if((x>=xMin && x<xMax)&&(y>=yMin&&y<yMax)){
 				   findPrf=true;
-				   prf=s.getPrf();
+				   break;
+				   //prf=s.getPrf();
 			   }
 		   }
 	   }
-	   return prf;
+	   return s;
    } 
     
     
@@ -519,10 +548,6 @@ public abstract class Sentinel1 extends SarImageReader {
 	}
 
 	
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return true;
-	}
 }
 
 

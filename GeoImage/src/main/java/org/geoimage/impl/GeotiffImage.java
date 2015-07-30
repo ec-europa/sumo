@@ -467,10 +467,7 @@ public class GeotiffImage extends SarImageReader {
 	public File getOverviewFile() {
 		return null;
 	}
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return false;
-	}
+	
 
 	@Override
 	public String getImgName() {

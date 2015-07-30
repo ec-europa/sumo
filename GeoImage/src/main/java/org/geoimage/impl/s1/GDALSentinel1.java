@@ -458,10 +458,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
 	}
 
 	
-	@Override
-	public boolean supportAzimuthAmbiguity() {
-		return true;
-	}
+
 }
 
 
