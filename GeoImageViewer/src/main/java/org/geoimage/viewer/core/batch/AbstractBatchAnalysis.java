@@ -166,7 +166,17 @@ public abstract class AbstractBatchAnalysis {
     		   
     		   try{
     			   String targetscsv=params.outputFolder+"\\targets.csv";
-    			   GenericCSVIO.geomCsv(new File(targetscsv),l.getGeometriclayer().getGeometries(),reader.getGeoTransform(),imageName,true);
+    			   List<Geometry> targets=l.getGeometriclayer().getGeometries();
+    			   List<Geometry> ambi=l.getGeometriesByTag(ComplexEditVDSVectorLayer.AMBIGUITY_TAG).getGeometries();
+    			   //remove ambiguities
+    			   if(ambi!=null){
+	    			   for(Geometry geom:targets){
+		    			   if(ambi.contains(geom)){
+		    				   targets.remove(geom);
+		    			   }
+	    			   }	   
+    			   }	   
+    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,reader.getGeoTransform(),imageName,true);
     		   }catch(Exception e ){
     			   logger.error("Problem saving targets in csv:"+imageName,e);
     		   }
