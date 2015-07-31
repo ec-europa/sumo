@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.geoimage.viewer.core.io.sumoxml.SatImageMetadata;
 import org.geoimage.viewer.core.io.sumoxml.VdsAnalysis;
 import org.geoimage.viewer.core.io.sumoxml.VdsTarget;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -219,8 +221,15 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setLandMaskRead(landmask);
 		
 
-		List<Geometry> ambiguity=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG).getGeometries();
-		List<Geometry> ambiguityArt=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG).getGeometries();
+		List<Geometry> ambiguity=new ArrayList<>();
+		Additionalgeometries amb=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG);
+		if(amb!=null)
+			ambiguity=amb.getGeometries();
+		
+		Additionalgeometries art=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG);
+		List<Geometry> ambiguityArt=new ArrayList<>();
+		if(art!=null)
+			ambiguityArt=art.getGeometries();
 		
 		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
