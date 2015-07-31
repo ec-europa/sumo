@@ -214,12 +214,13 @@ public  class AnalysisProcess implements Runnable {
 	                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels[band]),
 	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
+
+	                     vdsanalysis.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
 	                     if (!agglomerationMethodology.startsWith("d")) {
 	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
 	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
 	                     }
-	                     vdsanalysis.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
 	                     //Azimuth Ambiguities
 	                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
@@ -230,11 +231,13 @@ public  class AnalysisProcess implements Runnable {
 
 	                     //Azimuth Ambiguities ONLY FOR S1
 	                     if(gir instanceof Sentinel1){
-		                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
-		                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);	
-		                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
-		                     allAmbiguities.addAll(artefactsA);
-		                     vdsanalysis.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
+	                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
+			                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
+			                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);	
+			                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
+			                     allAmbiguities.addAll(artefactsA);
+			                     vdsanalysis.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
+	                    	 }    
 	                     }    
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {

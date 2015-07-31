@@ -76,7 +76,7 @@ public abstract class Sentinel1 extends SarImageReader {
     private List<String> tiffs=null;
     private List<String> polarizations=null;
     private String safeFilePath=null;
-    
+    private String instumentationMode="";
     
     @Override
     public abstract int[] readTile(int x, int y, int width, int height,int band);
@@ -113,7 +113,13 @@ public abstract class Sentinel1 extends SarImageReader {
 	}
 
     
-    /**
+    public String getInstumentationMode() {
+		return instumentationMode;
+	}
+	public void setInstumentationMode(String instumentationMode) {
+		this.instumentationMode = instumentationMode;
+	}
+	/**
      * read ground control points from xml annotation file. 
      *   
      * There is one annotation file for each tiff image 
@@ -170,6 +176,7 @@ public abstract class Sentinel1 extends SarImageReader {
         	tiffs=safeReader.getTiffsBySwath(this.swath);
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
+        	this.instumentationMode=safeReader.getInstrumentationMode();
         	
         	this.ipfVersion=safeReader.getIPFVersion();
         	
@@ -504,7 +511,6 @@ public abstract class Sentinel1 extends SarImageReader {
         return output;
     }
         
-    
     public String getInternalImage() {
   		return null;
   	}

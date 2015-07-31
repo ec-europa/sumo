@@ -211,6 +211,8 @@ public class SumoJaxbSafeReader  implements ISumoSafeReader {
 	public void setSafefile(File safefile) {
 		this.safefile = safefile;
 	}
-
+	public String getInstrumentationMode(){
+    	return this.platform.getInstrument().getExtension().getInstrumentMode().getMode();
+    }
 	
 }
