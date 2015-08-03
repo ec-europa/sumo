@@ -7,17 +7,27 @@ package org.geoimage.analysis;
 import java.awt.Rectangle;
 import java.awt.image.Raster;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
-import org.geoimage.utils.IProgress;
+
+
+
 
 /**
  *
- * @author thoorfr
+ * @author Pietro Argentieri
  */
 public class VDSAnalysis{
-
+	public interface ProgressListener{
+		public void startRowProcesseing(int row);
+		public void endRowProcesseing(int row);
+		
+	}
+	
+	
     private SarImageReader gir;
     private String enl = "010";
     private float thresholdHH = 1.5f;
@@ -28,13 +38,9 @@ public class VDSAnalysis{
     private DetectedPixels pixels;
     private IMask[] mask;
     private int tileSize;
+    private int verTiles=0;
     
-
-	// batch mode flag
-    private boolean isBatch = false;
-    // application progress bar
-    private IProgress progressBar = null;
-    
+    private List<ProgressListener>progressListener=null;
 
 	/**
      *
@@ -43,11 +49,10 @@ public class VDSAnalysis{
      * @param enlf
      * @param threshold
      * @param progressBar
-     */
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf,  float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV , boolean batch){
+     *
+    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf,  float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV ){
         this(gir,mask, enlf, thresholdHH, thresholdHV, thresholdVH, thresholdVV,null);
-        this.isBatch = batch;
-    }
+    }*/
 
     /**
      *
@@ -60,7 +65,7 @@ public class VDSAnalysis{
      * @param thresholdVV
      * @param progressBar
      */
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV,IProgress progressBar) {
+    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV) {
         this.enl = "" + (int) (enlf * 10);
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
@@ -74,14 +79,35 @@ public class VDSAnalysis{
         this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getGeoTransform().getPixelSize()[0]);
         if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
         
-        // progress bar for progress monitoring
-        this.progressBar = progressBar;
+        this.verTiles = gir.getHeight() / this.tileSize;
+        
+        progressListener=new ArrayList<ProgressListener>();
     }
 
     public DetectedPixels getPixels() {
         return pixels;
     }
 
+    public void addProgressListener(ProgressListener listener){
+    	if(!this.progressListener.contains(listener))
+    		this.progressListener.add(listener);
+    }
+    public void removeProgressListener(ProgressListener listener){
+    	this.progressListener.remove(listener);
+    }
+    public void clearProgressListener(ProgressListener listener){
+    	this.progressListener.clear();
+    }
+    /**
+     * notify to all listener new row start analyzing
+     * @param row
+     */
+    public void notifyStartNextRowProcessing(int row){
+    	for(ProgressListener pl:progressListener)
+    		pl.startRowProcesseing(row);
+    }
+    
+    
     /*support of different thresholds for different bands
      * 
      * 
@@ -111,13 +137,11 @@ public class VDSAnalysis{
     private DetectedPixels analyse(KDistributionEstimation kdist, float significance,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
-        
-        int horTiles = gir.getWidth() / this.tileSize, verTiles = gir.getHeight() / this.tileSize;
-        //int[] sizeTile = new int[2];
+        int horTiles = gir.getWidth() / this.tileSize;
+
         // the real size of tiles
         int sizeX = gir.getWidth() / horTiles;
         int sizeY = gir.getHeight() / verTiles;
-        
         
         
         int xLeftTile=0;
@@ -128,27 +152,15 @@ public class VDSAnalysis{
         
         double[][][] tileStat = new double[verTiles][horTiles][5];
 
-        // set values for progress bar
-        if(!this.isBatch )
-        {
-            this.progressBar.setMessage("Performing VDS Analysis");
-            this.progressBar.setMaximum(verTiles);
-        }
-        
         int dy=0;
         
         for (int rowIndex = 0; rowIndex < verTiles; rowIndex++) {
-            
-            // update the progress bar value
-            if(this.progressBar != null)
-            {
-                this.progressBar.setCurrent(rowIndex);
-            }
-            if(rowIndex==verTiles-1){
+            notifyStartNextRowProcessing(rowIndex);
+
+        	if(rowIndex==verTiles-1){
             	//the last tiles have more pixels so we need to calculate the real size
             	dy=gir.getHeight()-((verTiles-1)*sizeY)-sizeY;
             }
-            
             
             xLeftTile = 0;				 
             xRightTile = gir.getWidth(); 
@@ -161,7 +173,6 @@ public class VDSAnalysis{
             	if(colIndex==horTiles-1){
             		//the last tiles have more pixels so we need to calculate the real size
                 	dx=(gir.getWidth()-((horTiles-1)*sizeX))-sizeX;
-                	
                 }
             	
                 xLeftTile = colIndex * sizeX;   //x start tile 
@@ -169,8 +180,9 @@ public class VDSAnalysis{
                 if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	kdist.setImageData(gir, xLeftTile, yTopTile, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                     
-                	//int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                	int[] data= gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                	//TODO: check problem with read function
+                	int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                	//int[] data= gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                 	kdist.estimate(null,data);
 
                 	double[][][] thresh = kdist.getDetectThresh();
@@ -207,15 +219,17 @@ public class VDSAnalysis{
                     // check if there is sea pixels in the tile area
                     if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
                         continue;
+                    
                     // create raster mask
-                    Raster rastermask = null;
-                    rastermask = (mask[0].rasterize(new Rectangle(xLeftTile, yTopTile, sizeX+dx, sizeY+dy), -xLeftTile, -yTopTile, 1.0)).getData();
+                    Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
+
                     //Read pixels for the area and check there are enough sea pixels
                     int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                     int pixelcount = 0;
                     for(int count = 0; count < maskdata.length; count++)
                         pixelcount += maskdata[count];
-                    //System.out.println("Mask pixels at " + (new Rectangle(xLeftTile, yTopTile, sizeX, sizeY)).toString() + ":" + pixelcount);
+                    //System.out.println("Mask pixels at " + (new Rectangle(xLeftTile, yTopTile, sizeX, sizeY)).toString() + ":" + pixelcount);                    
+
                     if(((double)pixelcount / maskdata.length) < 0.7)
                     {
                         // if there are pixels to estimate, calculate statistics using the mask
@@ -262,13 +276,22 @@ public class VDSAnalysis{
                 }
             }
             System.out.println(rowIndex + "/" + verTiles);
-           // System.out.println("Detected Pixels for Tile "+j+ ":"+dpixels.getAllDetectedPixels().size());
         }
         System.out.println("Detected Pixels Total :"+dpixels.getAllDetectedPixels().size());
         return dpixels;
     }
 
-    /**
+    
+    
+    public int getVerTiles() {
+		return verTiles;
+	}
+
+	public void setVerTiles(int verTiles) {
+		this.verTiles = verTiles;
+	}
+
+	/**
      * 
      * @param significance
      * @param thresh
