@@ -1,5 +1,11 @@
 package org.geoimage.viewer.core.analysisproc;
 
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.ARTEFACTS_AMBIGUITY_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.AZIMUTH_AMBIGUITY_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.DETECTED_PIXELS_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_AGG_TAG;
+import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
+
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -23,15 +29,11 @@ import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_AGG_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.DETECTED_PIXELS_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.AZIMUTH_AMBIGUITY_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.ARTEFACTS_AMBIGUITY_TAG;
 
 
 /**
@@ -39,7 +41,7 @@ import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditG
  * @author Pietro Argentieri
  *
  */
-public  class AnalysisProcess implements Runnable {
+public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
 		private IMask[] bufferedMask=null;
@@ -53,6 +55,10 @@ public  class AnalysisProcess implements Runnable {
 		private int tilesize;
 		private boolean removelandconnectedpixels;
 		private boolean display;
+		private int numPointLimit=0;
+		
+		private static org.slf4j.Logger logger=LoggerFactory.getLogger(AnalysisProcess.class);
+
 		
 		public boolean isStop() {
 			return stop;
@@ -86,8 +92,9 @@ public  class AnalysisProcess implements Runnable {
 		 * @param thresholds
 		 * @param buffer
 		 * @param blackBorderAnalysis
+		 * @param numLimitPoint   num max of point that we can analize (0=all) 
 		 */
-		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,BlackBorderAnalysis blackBorderAnalysis) {
+		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,BlackBorderAnalysis blackBorderAnalysis,int numLimitPoint) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 			this.bufferedMask=bufferedMask;
@@ -97,6 +104,7 @@ public  class AnalysisProcess implements Runnable {
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
 			this.gir=gir;//.clone();
+			this.numPointLimit=numLimitPoint;
 			
 			neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
             tilesize=Platform.getConfiguration().getTileSize(200);
@@ -143,47 +151,24 @@ public  class AnalysisProcess implements Runnable {
              String timeStampStart=reader.getTimeStampStart();
              double azimuth=reader.getAzimuthSpacing();
              
-             //int processors = Runtime.getRuntime().availableProcessors();
-             //ExecutorService executor = Executors.newFixedThreadPool(processors);
-             
              try{
-	            // final List<Future<DetectedPixels>> tasks=new ArrayList<Future<DetectedPixels>>();
-	            
-	             /*   parallel test version
-	             // compute detections for each band separately
-	             for (int band = 0; band < numberofbands&&!stop; band++) {
-	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
-	            	 final int b=band;
-	            	 
-	            	 Callable<DetectedPixels> anal=new Callable<DetectedPixels>(){
-	            		    @Override
-	            			public DetectedPixels call() throws Exception {
-	                         	return analysis.run(kdist,blackBorderAnalysis,b);
-	            			}
-	            	 };
-	            	 tasks.add(executor.submit(anal));
-	            	
-	             }    
-	             executor.shutdown();
-	             
-	             for (int idx=0;idx<tasks.size();idx++) {
-	            	Future<DetectedPixels> result =tasks.get(idx);
-	            	banddetectedpixels[idx]=result.get();
-	            	if (mergePixels == null) {
-	            		mergePixels=banddetectedpixels[idx];
-	            	}else{
-	            		mergePixels.merge(banddetectedpixels[idx]);	
-	            	}
-	
-	 	        }   */
-	             
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
 	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
 	            	 
+	            	 
+	            	 int vTiles=analysis.getVerTiles();
+	            	 notifyVDSAnalysis("Performing VDS Analysis",vTiles);
+	            	 analysis.addProgressListener(this);
+
 	            	 //identify problably target
 	            	 analysis.run(kdist,blackBorderAnalysis,band);
 	            	 banddetectedpixels[band]=analysis.getPixels();
-
+	            	 
+	            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
+	            		 logger.warn("Too much points. Stop Image analysis!!!");
+	            		 return;
+	            	 }
+	            	 
 	            	 if (mergePixels == null) {
 	            		mergePixels=banddetectedpixels[band];
 	            	}else{
@@ -403,6 +388,12 @@ public  class AnalysisProcess implements Runnable {
 			}
 		} 
 		
+		public void notifyVDSAnalysis(String message,int maxSteps){
+			for(VDSAnalysisProcessListener listener:listeners){
+				listener.performVDSAnalysis(message,maxSteps);
+			}
+		}
+		
 		public void notifyAgglomerating(String message){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.agglomerating(message);
@@ -425,6 +416,17 @@ public  class AnalysisProcess implements Runnable {
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.calcAzimuthAmbiguity(message);
 			}
+		}
+
+		@Override
+		public void startRowProcesseing(int step) {
+			for(VDSAnalysisProcessListener listener:listeners){
+				listener.nextVDSAnalysisStep(step);
+			}
+		}
+
+		@Override
+		public void endRowProcesseing(int row) {
 		}
 		
      }

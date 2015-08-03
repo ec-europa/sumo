@@ -1010,36 +1010,30 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 	@Override
 	public void startAnalysis() {
 		stopThreadButton.setVisible(true);
-		
 	}
-
+	@Override
+	public void endAnalysis() {
+		stopThreadButton.setVisible(false);
+	}
+	
 	@Override
 	public void startAnalysisBand(String message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void agglomerating(String message) {
-		// TODO Auto-generated method stub
-		
 	}
-
-	@Override
-	public void endAnalysis() {
-		stopThreadButton.setVisible(false);
-		
-	}
-
 	@Override
 	public void layerReady(ILayer layer) {
-		// TODO Auto-generated method stub
-		
+	}
+	@Override
+	public void performVDSAnalysis(String message, int numSteps) {
+	}
+	@Override
+	public void nextVDSAnalysisStep(int numSteps) {
 	}
 }
