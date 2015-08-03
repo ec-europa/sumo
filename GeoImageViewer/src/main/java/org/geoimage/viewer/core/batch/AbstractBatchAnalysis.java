@@ -95,8 +95,7 @@ public abstract class AbstractBatchAnalysis {
         		params.thresholdArrayValues[0], 
         		params.thresholdArrayValues[1], 
         		params.thresholdArrayValues[2], 
-        		params.thresholdArrayValues[3], 
-        		true);
+        		params.thresholdArrayValues[3]);
   
         
         final String[] thresholds={""+params.thresholdArrayValues[0], 

@@ -139,7 +139,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 					e.printStackTrace();
 				}*/
                 
-                final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV, this);
+                final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV);
                 
                 final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
@@ -154,7 +154,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
                 } 	
                 
-                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,blackBorderAnalysis);
+                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,blackBorderAnalysis,0);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);
@@ -192,7 +192,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
        		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
         } 	
         
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis);
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,50000);
         ap.run();
         return ap.getResultLayers();
     }
@@ -305,6 +305,14 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 		setCurrent(1);
 		message="Starting VDS Analysis";
 	}
+	@Override
+	public void performVDSAnalysis(String message,int numSteps) {
+		if(!stopping){
+			setMaximum(numSteps);
+			setCurrent(1);
+			this.message=message;
+		}	
+	}
 
 	@Override
 	public void startAnalysisBand(String message) {
@@ -330,6 +338,12 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 		}	
 	}
 
+	public void nextVDSAnalysisStep(int numSteps){
+		//setMessage(numSteps+"/"+maximum);
+		setCurrent(numSteps);
+	}
+
+	
 	@Override
 	public void endAnalysis() {
 		setDone(true);
@@ -353,4 +367,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 		}
 		
 	}
+
+	
 }
