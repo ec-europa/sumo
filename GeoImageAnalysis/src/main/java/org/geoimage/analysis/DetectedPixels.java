@@ -410,7 +410,6 @@ public class DetectedPixels {
         		logger.error(e.getMessage());
         		throw e;
         	}
-            //TODO: we need to read the same tile only 1 time!!!!!
             // calculate thresholds
             double[][] statistics = calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
             
