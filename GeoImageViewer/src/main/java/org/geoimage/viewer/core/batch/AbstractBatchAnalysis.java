@@ -6,18 +6,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
+import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
+import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -103,10 +107,38 @@ public abstract class AbstractBatchAnalysis {
         		""+params.thresholdArrayValues[3]};
         		//Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
         
-        VDSAnalysisConsoleAction action= new VDSAnalysisConsoleAction();
-        layerResults=action.runBatchAnalysis(reader,params.enl,analysis,masks,thresholds,params.buffer);
+            layerResults=runBatchAnalysis(reader,params.enl,analysis,masks,thresholds,params.buffer);
         
 	}	
+	
+	 /**
+     * 
+     * @param ENL
+     * @param analysis
+     * @param bufferedMask
+     * @param thresholds
+     * @return
+     */
+    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
+        
+        BlackBorderAnalysis blackBorderAnalysis=null;
+        if(reader instanceof Sentinel1){
+            MaskVectorLayer mv=null;
+       	 	if(bufferedMask!=null&&bufferedMask.length>0)
+       	 		mv=(MaskVectorLayer)bufferedMask[0];
+       	 	if(mv!=null)
+       	 		blackBorderAnalysis= new BlackBorderAnalysis(reader,mv.getGeometries());
+       	 	else 
+       		    blackBorderAnalysis= new BlackBorderAnalysis(reader,null);
+        } 	
+        
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,1250000);
+        ap.run();
+        return ap.getResultLayers();
+    }
+    
+	
+	
 	
 	/**
 	 * 

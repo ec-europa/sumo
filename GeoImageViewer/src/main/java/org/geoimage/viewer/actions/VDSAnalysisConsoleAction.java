@@ -170,33 +170,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     
     
     
-    /**
-     * 
-     * @param ENL
-     * @param analysis
-     * @param bufferedMask
-     * @param thresholds
-     * @return
-     */
-    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
-    	this.gir=reader;
-        
-        BlackBorderAnalysis blackBorderAnalysis=null;
-        if(gir instanceof Sentinel1){
-            MaskVectorLayer mv=null;
-       	 	if(bufferedMask!=null&&bufferedMask.length>0)
-       	 		mv=(MaskVectorLayer)bufferedMask[0];
-       	 	if(mv!=null)
-       	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
-       	 	else 
-       		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
-        } 	
-        
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,1750000);
-        ap.run();
-        return ap.getResultLayers();
-    }
-    
+   
 	/**
 	 *
 	 * @return
