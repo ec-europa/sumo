@@ -190,21 +190,22 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                         // method neighbours used
 	                         if(stop)
 	                        	 break;
+	                         
 	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
 	                         		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
 	                     }
 	                     
 	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
 	                     
-	                     ComplexEditVDSVectorLayer vdsanalysis = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
+	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels[band]),
 	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
 
-	                     vdsanalysis.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
+	                     vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
 	                     if (!agglomerationMethodology.startsWith("d")) {
-	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
-	                         vdsanalysis.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
+	                         vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
+	                         vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
 	                     }
 	                     
 	                     //Azimuth Ambiguities
@@ -212,7 +213,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     azimuthAmbiguity[band] = new AzimuthAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);
 	                     List<Geometry> az=azimuthAmbiguity[band].getAmbiguityboatgeometry();
                          allAmbiguities.addAll(az);
-	                     vdsanalysis.addGeometries(AZIMUTH_AMBIGUITY_TAG,Color.RED,5, GeometricLayer.POINT, az, display);
+	                     vdsanalysisLayer.addGeometries(AZIMUTH_AMBIGUITY_TAG,Color.RED,5, GeometricLayer.POINT, az, display);
 
 	                     //Azimuth Ambiguities ONLY FOR S1
 	                     if(gir instanceof Sentinel1){
@@ -221,21 +222,21 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);	
 			                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
 			                     allAmbiguities.addAll(artefactsA);
-			                     vdsanalysis.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
+			                     vdsanalysisLayer.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
 	                    	 }    
 	                     }    
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-	                        vdsanalysis.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+	                        vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), display);
 	                     }
 	                     //leave display params forced to false
-	                     vdsanalysis.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	                     
 	
 	                     //if(!Platform.isBatchMode())
 	                    	 //Platform.getLayerManager().addLayer(vdsanalysis);
-	                     notifyLayerReady(vdsanalysis); 
-	                     resultLayers.add(vdsanalysis);
+	                     notifyLayerReady(vdsanalysisLayer); 
+	                     resultLayers.add(vdsanalysisLayer);
 	                 }
 	             }
 	             if(stop){

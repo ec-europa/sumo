@@ -28,6 +28,10 @@ public class S1ArtefactsAmbiguity extends Ambiguity{
 		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW2_245", 2951);
 		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW3_245", 2624);
 		
+		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW1_252", 2417); //IPF=252
+		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW2_252", 2951);
+		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW3_252", 2624);
+		
 		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW1_253", 2417); //IPF=253
 		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW2_253", 2951);
 		DISTANCE_LOOKUP_TABLE_AMBIGUITY.put("IW3_253", 2624);
@@ -61,7 +65,13 @@ public class S1ArtefactsAmbiguity extends Ambiguity{
 		            if(ipfVersion!=-1){
 			            String swath=s1.getSwathName(xPos, yPos);
 			            swath=swath.replace("_","");
-			            deltaAzimuth=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get(swath+"_"+ipfVersion);
+			            Object o=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get(swath+"_"+ipfVersion);
+			            if(o==null){
+			            	//default value for the moment
+			            	deltaAzimuth=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get("IW1_243");
+			            }else{
+			            	deltaAzimuth=(int)o;
+			            }
 			            
 			            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
 			            deltaAzimuth=(int)(deltaAzimuth/pixSize[1]);

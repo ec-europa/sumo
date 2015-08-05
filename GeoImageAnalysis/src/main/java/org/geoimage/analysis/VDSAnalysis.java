@@ -4,7 +4,6 @@
  */
 package org.geoimage.analysis;
 
-import java.awt.Rectangle;
 import java.awt.image.Raster;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +38,7 @@ public class VDSAnalysis{
     private IMask[] mask;
     private int tileSize;
     private int verTiles=0;
+    private final double MIN_TRESH_FOR_ANALYSIS=0.7;
     
     private List<ProgressListener>progressListener=null;
 
@@ -177,104 +177,84 @@ public class VDSAnalysis{
             	
                 xLeftTile = colIndex * sizeX;   //x start tile 
                 xRightTile = xLeftTile + sizeX+dx; //dx is always 0 except on the last tile
-                if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
-                	kdist.setImageData(gir, xLeftTile, yTopTile, sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
-                    
-                	//TODO: check problem with read function
-                	int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                	//int[] data= gir.read(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                	kdist.estimate(null,data);
 
-                	double[][][] thresh = kdist.getDetectThresh();
+                Raster rastermask =null;
+                boolean minPixelAvailable=false;
+                
+                if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
+                	rastermask =null;
+                }else{
+                	// compute different statistics if the tile intersects the land mask
+                    // check if there is sea pixels in the tile area
+                    if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
+                        continue;
+                    
+                    // create raster mask //dx and dy are for tile on the border that have different dimensions
+                    rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
+
+                    //Read pixels for the area and check there are enough sea pixels
+                    int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                    //float[] maskdata2 = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (float[])null);
+                    int pixelcount = 0;
+                    double firstMaskLength=maskdata.length;
+                    for(int count = 0; count < maskdata.length; count++)
+                        pixelcount += maskdata[count];
+                    
+                    minPixelAvailable=((double)pixelcount / maskdata.length) >= MIN_TRESH_FOR_ANALYSIS;
+                    if(!minPixelAvailable){
+                    	//try to read more pixels (out of the current tile) to have more pixels for the statistics
+                    	rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx+20, sizeY+dy+20, -xLeftTile-20, -yTopTile-20, 1.0)).getData();
+                        //Read pixels for the area and check there are enough sea pixels
+                        maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                        
+                        for(int count = 0; count < maskdata.length; count++)
+                            pixelcount += maskdata[count];
+                        minPixelAvailable=((double)pixelcount / firstMaskLength) >= MIN_TRESH_FOR_ANALYSIS;
+                    }
+                }	
+                //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
+                if(minPixelAvailable||rastermask==null){
+                	
+                    // if there are pixels to estimate, calculate statistics using the mask
+                    kdist.setImageData(gir, xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
+                    int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
+                    
+                    kdist.estimate(rastermask,data);
+                    
+                    double[][][] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex] = kdist.getTileStat()[0];
                     
                     double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
 
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
-                            int subwindow = 1;
-                            if (h < (sizeX+dx) / 2) {
-                                if (k < (sizeY+dy) / 2) {
-                                    subwindow = 1;
-                                } else {
-                                    subwindow = 3;
-                                }
-                            } else {
-                                if (k < (sizeY+dy) / 2) {
-                                    subwindow = 2;
-                                } else {
-                                    subwindow = 4;
-                                }
-                            }
-                            int pix = data[k * (sizeX+dx) + h];
-                            // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
-                            if (pix >threshWindowsVals[subwindow-1] ) {
-                                dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
-                            }
-
-                        }
-                    }
-                } else {
-                    // compute different statistics if the tile intersects the land mask
-                    // check if there is sea pixels in the tile area
-                    if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
-                        continue;
-                    
-                    // create raster mask
-                    Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
-
-                    //Read pixels for the area and check there are enough sea pixels
-                    int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
-                    int pixelcount = 0;
-                    for(int count = 0; count < maskdata.length; count++)
-                        pixelcount += maskdata[count];
-                    //System.out.println("Mask pixels at " + (new Rectangle(xLeftTile, yTopTile, sizeX, sizeY)).toString() + ":" + pixelcount);                    
-
-                    if(((double)pixelcount / maskdata.length) < 0.7)
-                    {
-                        // if there are pixels to estimate, calculate statistics using the mask
-                        kdist.setImageData(gir, xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
-                        int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                        
-                        kdist.estimate(rastermask,data);
-                        
-                        double[][][] thresh = kdist.getDetectThresh();
-                        tileStat[rowIndex] = kdist.getTileStat()[0];
-                        
-                        double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
-
-                        for (int k = 0; k < (sizeY+dy); k++) {
-                            for (int h = 0; h < (sizeX+dx); h++) {
-                                // check pixel is in the sea
-                                if(rastermask.getSample(h, k, 0) == 0)
-                                {
-                                    int subwindow = 1;
-                                    if (h < (sizeX+dx) / 2) {
-                                        if (k < (sizeY+dy) / 2) {
-                                            subwindow = 1;
-                                        } else {
-                                            subwindow = 3;
-                                        }
+                            // check pixel is in the sea
+                            if(rastermask==null||(rastermask.getSample(h, k, 0) == 0)){
+                                int subwindow = 1;
+                                if (h < (sizeX+dx) / 2) {
+                                    if (k < (sizeY+dy) / 2) {
+                                        subwindow = 1;
                                     } else {
-                                        if (k < (sizeY +dy)/ 2) {
-                                            subwindow = 2;
-                                        } else {
-                                            subwindow = 4;
-                                        }
+                                        subwindow = 3;
                                     }
-                                    int pix = data[k * (sizeX+dx) + h];
-                                    // if (pix > thresh[i][0][subwindow] * (significance - (significance - 1.)	/ thresh[i][0][5])) {
-                                    // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
-                                    if (pix > threshWindowsVals[subwindow-1]) {
-                                        dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
+                                } else {
+                                    if (k < (sizeY +dy)/ 2) {
+                                        subwindow = 2;
+                                    } else {
+                                        subwindow = 4;
                                     }
                                 }
-
+                                int pix = data[k * (sizeX+dx) + h];
+                                // if (pix > thresh[i][0][subwindow] * (significance - (significance - 1.)	/ thresh[i][0][5])) {
+                                // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
+                                if (pix > threshWindowsVals[subwindow-1]) {
+                                    dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
+                                }
                             }
                         }
                     }
-                }
-            }
+	            }
+	        }
             System.out.println(rowIndex + "/" + verTiles);
         }
         System.out.println("Detected Pixels Total :"+dpixels.getAllDetectedPixels().size());
@@ -307,7 +287,14 @@ public class VDSAnalysis{
     	return threshWindowsVals;
     }
     
-    
+    /**
+     * 
+     * @param xLeftTile
+     * @param xRightTile
+     * @param yTopTile
+     * @param yBottomTile
+     * @return
+     */
     public boolean intersects(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
         if (mask == null) {
             return false;
@@ -320,7 +307,15 @@ public class VDSAnalysis{
         }
         return false;
     }
-
+    
+    /**
+     * 
+     * @param xLeftTile
+     * @param xRightTile
+     * @param yTopTile
+     * @param yBottomTile
+     * @return
+     */
     private boolean includes(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
          if (mask == null) {
             return false;

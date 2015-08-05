@@ -7,7 +7,6 @@ import org.geoimage.viewer.util.Constant;
 public class PlatformConfiguration {
 	private static PlatformConfiguration instance=null;
 	private static PreferencesDB prefDB=null;
-	private String cacheFolder="";
 	
 	public static PlatformConfiguration getConfigurationInstance(){
     	if (instance == null) {
@@ -37,7 +36,7 @@ public class PlatformConfiguration {
 	
 	
 	public String getCachePrefFolder(){
-		return cacheFolder;
+		return prefDB.getPrefCache();
 	}
 	
 	/**
