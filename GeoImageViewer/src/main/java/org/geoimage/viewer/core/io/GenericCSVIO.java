@@ -379,7 +379,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 						logger.error("Geometry not saved in csv",e);
 					}
 				}
-				fis.append(imageId+","+geom.toText());
+				fis.append(imageId+",\""+geom.toText()+"\"");
 				fis.append("\n");
 			}
 			

@@ -236,7 +236,10 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
         }
         return false;
     }
-
+    
+    /**
+     * 
+     */
     public boolean includes(int x, int y, int width, int height) {
         try {
             if (getType().equals("point")) {
@@ -268,12 +271,16 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
         return false;
     }
 
- // rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+    /**
+     * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+     */
     public BufferedImage rasterize(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
     	Rectangle rect=new Rectangle(x,y,w,h);
     	return rasterize(rect, offsetX, offsetY, scalingFactor);
     }
-    // rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+    /**
+     * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+     */
     public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor) {
         // create the buffered image of the size of the Rectangle
         BufferedImage image = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_BYTE_BINARY);
@@ -290,12 +297,13 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
         g2d.setColor(Color.WHITE);
         for (Geometry p : glayer.getGeometries()) {
             if (p.intersects(geom)) {
-                int[] xPoints = new int[p.getNumPoints()];
-                int[] yPoints = new int[p.getNumPoints()];
+                int[] xPoints = new int[p.getNumPoints()];//build array for x coordinates
+                int[] yPoints = new int[p.getNumPoints()];//build array for y coordinates
                 int i = 0;
                 for (Coordinate c : p.getCoordinates()) {
                     xPoints[i] = (int) ((c.x + offsetX) * scalingFactor);
-                    yPoints[i++] = (int) ((c.y + offsetY) * scalingFactor);
+                    yPoints[i] = (int) ((c.y + offsetY) * scalingFactor);
+                    i++;
                 }
                 g2d.fillPolygon(xPoints, yPoints, p.getNumPoints());
             }
@@ -342,7 +350,6 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
         
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
-            //if(bufferingDistance>0)
             bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
         	bufferedGeom[i] = PolygonOp.removeInteriorRing(bufferedGeom[i]);
         }

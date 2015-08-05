@@ -55,7 +55,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	private double enl=0;
 	private int buffer=0;
 	private String landMask;
-	
+	private String band="";
 	
 	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String landMask) {
         super(parent,layername, type, layer);
@@ -69,6 +69,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         this.enl=enl;
         this.buffer=buffer;
         this.landMask=landMask;
+        this.band=band;
         
         // set the color and symbol values for the VDS layer
    	 	int widthstring=Platform.getConfiguration().getTargetsSizeBand(""+band);
@@ -188,7 +189,15 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 
     
     
-    public String[] getThresholds() {
+    public String getBand() {
+		return band;
+	}
+
+	public void setBand(String band) {
+		this.band = band;
+	}
+
+	public String[] getThresholds() {
 		return thresholds;
 	}
 

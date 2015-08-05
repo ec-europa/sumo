@@ -34,8 +34,8 @@ public class SarFileUtil {
 				}
 			}
 		}
-		String s="S1A_IW_GRDH_1SDH_20141030T061035_20141030T061104_003055_0037E5_D3D1.SAFE";
-		s.matches("S1");
+		//String s="S1A_IW_GRDH_1SDH_20141030T061035_20141030T061104_003055_0037E5_D3D1.SAFE";
+		//s.matches("S1");
 		
 		return imgFiles;
 	}
