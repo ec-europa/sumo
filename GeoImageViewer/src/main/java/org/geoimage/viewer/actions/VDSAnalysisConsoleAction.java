@@ -192,7 +192,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
        		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
         } 	
         
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,50000);
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,1750000);
         ap.run();
         return ap.getResultLayers();
     }

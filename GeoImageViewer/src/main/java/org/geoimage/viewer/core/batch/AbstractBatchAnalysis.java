@@ -13,7 +13,6 @@ import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
-import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
@@ -114,16 +113,16 @@ public abstract class AbstractBatchAnalysis {
 	 */
 	protected void saveResults(String imageName,IMask[] masks,SarImageReader reader){
 		if(layerResults!=null){
+			String outfolder=new StringBuilder(params.outputFolder)
+   					.append(File.separator)
+   					.append(imageName).toString();
+   
+		   //create folder if not exist
+		   File folder=new File(outfolder);
+		   if(!folder.exists())
+			   folder.mkdirs();
+		
     	   for(ComplexEditVDSVectorLayer l:layerResults){
-    		   String outfolder=new StringBuilder(params.outputFolder)
-    		   					.append(File.separator)
-    		   					.append(imageName).toString();
-    		   
-    		   //create folder if not exist
-    		   File folder=new File(outfolder);
-    		   if(!folder.exists())
-    			   folder.mkdirs();
-    		   
     		   StringBuilder outfile=new StringBuilder(outfolder).append(File.separator)
     				            .append(l.getName()).append("_")
     				   			.append(dFormat.format(params.startDate));
@@ -143,16 +142,23 @@ public abstract class AbstractBatchAnalysis {
     		   //GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
     		   SumoXMLWriter.saveNewXML(new File(file),l,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
     		   
-    		   String bbox=outfolder+"\\bbox.shp";
-    		   List<Geometry> ggBbox=new ArrayList<Geometry>();
-
     		   //save the bound box as shape file
-    		   try {
-        		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
-				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null);
-			   } catch (Exception e) {
-				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
-			   }
+    		   try{
+    			   String bbox=outfolder+"\\bbox.shp";
+    			   List<Geometry> ggBbox=new ArrayList<Geometry>();
+    			
+    			   try {
+    	    		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
+    				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null);
+    			   } catch (Exception e) {
+    				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
+    			   }
+    			   
+    			   String bboxcsv=params.outputFolder+"\\bbox.csv";
+    			   GenericCSVIO.geomCsv(new File(bboxcsv),ggBbox,null,imageName,true);
+    		   }catch(Exception e ){
+    			   logger.error("Problem saving bbox in csv:"+imageName,e);
+    		   }
     		   
     		   //save targets as shape file
     		   try{
@@ -163,29 +169,49 @@ public abstract class AbstractBatchAnalysis {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
     		   
-    		   try{
-    			   String targetscsv=params.outputFolder+"\\targets.csv";
-    			   List<Geometry> targets=l.getGeometriclayer().getGeometries();
-    			   List<Geometry> ambi=l.getGeometriesByTag(ComplexEditVDSVectorLayer.AMBIGUITY_TAG).getGeometries();
-    			   //remove ambiguities
-    			   if(ambi!=null){
-	    			   for(Geometry geom:targets){
-		    			   if(ambi.contains(geom)){
-		    				   targets.remove(geom);
-		    			   }
+    		   if(!l.getBand().equals("Merged")){
+	    		   try{
+	    			   String targetscsv=params.outputFolder+"\\targets.csv";
+	    			   List<Geometry> targets=new ArrayList<Geometry>(l.getGeometriclayer().getGeometries());
+	    			   List<Geometry> ambi=new ArrayList<>();
+	    			   
+	    			   if(l.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG)!=null)
+	    				   ambi.addAll(l.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG).getGeometries());
+	    			   
+	    			   if(l.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG)!=null)
+		    			   ambi.addAll(l.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG).getGeometries());	   
+	    			  
+		    		   //remove ambiguities
+	    			   if(!ambi.isEmpty()){
+		    			   for(Geometry geom:targets){
+			    			   if(ambi.contains(geom)){
+			    				   targets.remove(geom);
+			    			   }
+		    			   }	   
 	    			   }	   
-    			   }	   
-    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,reader.getGeoTransform(),imageName,true);
-    		   }catch(Exception e ){
-    			   logger.error("Problem saving targets in csv:"+imageName,e);
-    		   }
-    		   try{
-    			   String bboxcsv=params.outputFolder+"\\bbox.csv";
-    			   GenericCSVIO.geomCsv(new File(bboxcsv),ggBbox,null,imageName,true);
-    		   }catch(Exception e ){
-    			   logger.error("Problem saving bbox in csv:"+imageName,e);
-    		   }
+	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,reader.getGeoTransform(),imageName,true);
+	    		   }catch(Exception e ){
+	    			   logger.error("Problem saving targets in csv:"+imageName,e);
+	    		   }
+    		   }	   
     	   }
-        }
+		   //save the bound box as shape file
+		   try{
+			   String bbox=outfolder+"\\bbox.shp";
+			   List<Geometry> ggBbox=new ArrayList<Geometry>();
+			
+			   try {
+	    		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
+				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null);
+			   } catch (Exception e) {
+				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
+			   }
+			   
+			   String bboxcsv=params.outputFolder+"\\bbox.csv";
+			   GenericCSVIO.geomCsv(new File(bboxcsv),ggBbox,null,imageName,true);
+		   }catch(Exception e ){
+			   logger.error("Problem saving bbox in csv:"+imageName,e);
+		   }
+		}   
 	}
 }
