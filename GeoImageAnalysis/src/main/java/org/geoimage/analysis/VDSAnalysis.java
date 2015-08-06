@@ -200,21 +200,20 @@ public class VDSAnalysis{
                     for(int count = 0; count < maskdata.length; count++)
                         pixelcount += maskdata[count];
                     
-                    minPixelAvailable=((double)pixelcount / maskdata.length) >= MIN_TRESH_FOR_ANALYSIS;
+                    minPixelAvailable=((double)pixelcount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     if(!minPixelAvailable){
                     	//try to read more pixels (out of the current tile) to have more pixels for the statistics
                     	rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx+20, sizeY+dy+20, -xLeftTile-20, -yTopTile-20, 1.0)).getData();
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                         
-                        for(int count = 0; count < maskdata.length; count++)
-                            pixelcount += maskdata[count];
-                        minPixelAvailable=((double)pixelcount / firstMaskLength) >= MIN_TRESH_FOR_ANALYSIS;
+                        //for(int count = 0; count < maskdata.length; count++)
+                          //  pixelcount += maskdata[count];
+                        minPixelAvailable=((double)pixelcount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }	
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
                 if(minPixelAvailable||rastermask==null){
-                	
                     // if there are pixels to estimate, calculate statistics using the mask
                     kdist.setImageData(gir, xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
