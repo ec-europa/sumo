@@ -37,6 +37,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import com.ibm.icu.math.BigDecimal;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -252,6 +253,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			}catch(GeoTransformException e){
 				logger.warn(e);
 			}		
+			double incAngle=gir.getIncidence((int)geom.getCoordinate().x);
+			incAngle=Math.toDegrees(incAngle);
+			b.setIncAng(Precision.round(incAngle,3));
 			
 			//x,y without decimal
 			b.setXpixel(Precision.round(geom.getCoordinate().x,0));
@@ -271,8 +275,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				//is a target
 				b.setReliability(0);
 			}
-			
-			b.setMaxValue(att.get(VDSSchema.MAXIMUM_VALUE).toString());
+			Double max=(Double)att.get(VDSSchema.MAXIMUM_VALUE);
+			if(max!=null)
+				b.setMaxvalue(""+(max.intValue()));
 			
 			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
 			b.setLength(lenght);
@@ -284,12 +289,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			else if(lenght>120)
 				b.setSizeClass("L");
 			
-			b.setNrPixels(null);
-			b.setHeadingRange(null);
-
-			b.setNoise(null);
-			
-			b.setHeadingNorth((Double) att.get(VDSSchema.ESTIMATED_HEADING));
+			//b.setNrPixels();
+			//b.setHeadingRange(null);
+			//b.setNoise(null);
+			double hn=Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR);
+			b.setHeadingNorth(hn);
 			target.getBoat().add(b);
 		}
 		vdsA.setNboat(targetNumber);
