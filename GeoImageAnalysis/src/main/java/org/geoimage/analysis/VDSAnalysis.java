@@ -179,7 +179,7 @@ public class VDSAnalysis{
                 xRightTile = xLeftTile + sizeX+dx; //dx is always 0 except on the last tile
 
                 Raster rastermask =null;
-                boolean minPixelAvailable=false;
+                boolean containsMinPixelValid=false;
                 
                 if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	rastermask =null;
@@ -195,25 +195,26 @@ public class VDSAnalysis{
                     //Read pixels for the area and check there are enough sea pixels
                     int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                     //float[] maskdata2 = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (float[])null);
-                    int pixelcount = 0;
-                    double firstMaskLength=maskdata.length;
+                    int inValidPixelCount = 0;
+                    //double firstMaskLength=maskdata.length;
                     for(int count = 0; count < maskdata.length; count++)
-                        pixelcount += maskdata[count];
+                        inValidPixelCount += maskdata[count];
                     
-                    minPixelAvailable=((double)pixelcount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
-                    if(!minPixelAvailable){
+                    double oldInValidPixelCount=inValidPixelCount;
+                    containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                    if(!containsMinPixelValid){
                     	//try to read more pixels (out of the current tile) to have more pixels for the statistics
-                    	rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx+20, sizeY+dy+20, -xLeftTile-20, -yTopTile-20, 1.0)).getData();
+                    	rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx+30, sizeY+dy+30, -xLeftTile-30, -yTopTile-30, 1.0)).getData();
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                         
                         //for(int count = 0; count < maskdata.length; count++)
-                          //  pixelcount += maskdata[count];
-                        minPixelAvailable=((double)pixelcount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                        //    inValidPixelCount += maskdata[count];
+                        containsMinPixelValid=((double)oldInValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }	
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
-                if(minPixelAvailable||rastermask==null){
+                if(containsMinPixelValid||rastermask==null){
                     // if there are pixels to estimate, calculate statistics using the mask
                     kdist.setImageData(gir, xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
