@@ -32,6 +32,7 @@ import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -295,7 +296,23 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     	
     	return null;		
     }
-    
+  public MaskVectorLayer getChildMaskLayer(ILayer layer){
+	  ILayer mask=getChildLayerByType(layer, MaskVectorLayer.class);
+	  if(mask!=null)
+		  return (MaskVectorLayer)mask;
+	  return  null;
+  }
+  
+  public ILayer getChildLayerByType(ILayer layer,Class type){
+  	Collection<ILayer> ks=getChilds(layer);
+
+  	for(ILayer k:ks){
+  		if(k.getClass().isAssignableFrom(type))
+  			return k;
+  	}
+  	
+  	return null;		
+  }  
     
     /**
      * return the list of childs layers for a layer

@@ -15,6 +15,7 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -56,7 +57,8 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
-                            addLayerInThread("noncomplexlayer", gl, (ImageLayer) l);
+                            //addLayerInThread("noncomplexlayer", gl, (ImageLayer) l);
+                            LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, l);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);
                         }
@@ -69,12 +71,12 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
         return true;
     }
 
-    /**
+    /*
      * 
      * @param type
      * @param layer
      * @param il
-     */
+     *
     public void addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
         if (layer != null) {
             new Thread(new Runnable() {
@@ -96,7 +98,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
             });
             done = true;
         }
-    }
+    }*/
     
     public String getPath() {
         return "Import/Coastline/"+name;

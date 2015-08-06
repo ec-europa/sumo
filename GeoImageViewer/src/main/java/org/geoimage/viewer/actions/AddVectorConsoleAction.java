@@ -222,8 +222,8 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
      * 
      * @return
      */
-    private String selectFile(){
-    	String file=null;
+    private File selectFile(){
+    	File file=null;
     	FileFilter f = new FileFilter() {
 
             public boolean accept(File f) {
@@ -242,8 +242,8 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
             try {
                 lastDirectory = fd.getSelectedFile().getParent();
                 Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
-                file = fd.getSelectedFile().getCanonicalPath();
-            } catch (IOException ex) {
+                file = fd.getSelectedFile();
+            } catch (Exception ex) {
             	logger.error(ex.getMessage(), ex);
             }
         } 
@@ -257,18 +257,11 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
      * @param args
      */
     private void addShapeFile(String[] args) {
-        String file = "";
+        File file = null;
         if (args.length >= 2) {
-            file = args[2].split("=")[1].replace("%20", " ");
+            file = new File(args[2].split("=")[1].replace("%20", " "));
         } else {
         	file=selectFile();
-        }
-        
-        Map<String,Object> config = new HashMap<String,Object>();
-        try {
-            config.put("url", new File(file).toURI().toURL());
-        } catch (Exception e) {
-            return;
         }
         
         ImageLayer imgLayer=Platform.getCurrentImageLayer();
@@ -276,7 +269,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         	try {
         		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
-                GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
+                GeometricLayer gl = SimpleShapefile.createIntersectedLayer(file,imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
                 // if 5 args, set a specific name
                 if (args.length == 3) {
                     if (gl != null) {

@@ -16,6 +16,8 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -59,7 +61,8 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                         	File shape=new File(Platform.getConfiguration().getDefaultLandMask());
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
-                            addLayerInThread(gl, (ImageLayer) l);
+                            //addLayerInThread(gl, (ImageLayer) l);
+                            LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, l);
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);
                         }
@@ -71,7 +74,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
         }).start();
         return true;
     }
-
+/*
     public void addLayerInThread(final GeometricLayer layer, final ImageLayer il) {
         if(layer != null)
         {
@@ -90,7 +93,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
             });
             done = true;
         }
-    }
+    }*/
 
     public String getPath() {
         return "Import/Land mask";
