@@ -32,7 +32,7 @@ public class ConfigurationFile {
 	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
 	public static  final String FORCE_NEW_ANALYSIS="force_new_analysis";
 	public static  final String FILTER_FOLDER="filter";
-	
+	public static final String MAX_DETECTIONS_ALLOWED="max_detections_allowed";
 	
 	private String confFile;
 	private Properties prop = new Properties();
@@ -144,6 +144,15 @@ public class ConfigurationFile {
 		public boolean forceNewAnalysis(){
 			String tmp= prop.getProperty(FORCE_NEW_ANALYSIS,"false");
 			return Boolean.parseBoolean(tmp);
+		}
+		
+		public int getMaxDetections(){
+			String val=prop.getProperty(MAX_DETECTIONS_ALLOWED,"0");
+			int max=0;
+			try{
+				max=Integer.parseInt(val);
+			}catch(Exception e){}	
+			return max;
 		}
 		
 		/*public boolean replaceOldAnalysis(){
