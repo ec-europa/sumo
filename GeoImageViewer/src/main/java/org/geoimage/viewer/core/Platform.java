@@ -82,7 +82,7 @@ public class Platform {
     }
 
     public static LayerManager getLayerManager() {
-        return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getLayerManager();
+        return LayerManager.getIstanceManager();
     }
 
     public static GLCanvas getMainCanvas() {

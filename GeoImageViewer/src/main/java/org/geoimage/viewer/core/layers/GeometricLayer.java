@@ -53,7 +53,15 @@ public class GeometricLayer implements Cloneable{
     
     
     
-    /**
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
      * 
      */
     public final static String MIXED = "mixed";
@@ -245,9 +253,12 @@ public class GeometricLayer implements Cloneable{
                 out = new GeometricLayer(GeometricLayer.POLYGON);
         else
         	out = new GeometricLayer(GeometricLayer.POINT);
-        
-        out.setName(dataStore.getTypeNames()[0]);
-        out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
+        if(dataStore.getTypeNames().length>0){
+        	out.setName(dataStore.getTypeNames()[0]);
+        	out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
+        }else{
+    	   //out.setName(dataStore.getTypeNames()[0]);
+        }
         
         FeatureIterator<?> fi = fc.features();
         try{

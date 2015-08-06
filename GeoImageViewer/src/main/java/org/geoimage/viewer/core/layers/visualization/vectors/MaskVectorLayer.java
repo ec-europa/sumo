@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
@@ -44,7 +43,6 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
  */
 public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
-    protected Geometry currentTile=null;
     
     private Map<String,Boolean> intersectedMapCache=null;
     private Map<String,Boolean> includesMapCache=null;
@@ -71,6 +69,7 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
     }
     
 
+    
     
 
     private void calculateMaxMinTresh() {
@@ -124,16 +123,7 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
     	}	
     }
 
-    public Geometry getCurrentTile() {
-		return currentTile;
-	}
-
-
-
-	public void setCurrentTile(Geometry currentTile) {
-		this.currentTile = currentTile;
-	}
-	
+  
 	private Boolean checkInIntersectionCache(int x, int y, int width, int height){
 		return intersectedMapCache.get(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString());
 	}
@@ -162,7 +152,6 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
-            this.setCurrentTile(geom);
         
             	if(glayer!=null){
             		for (int idx=0;idx<glayer.getGeometries().size()&&intersectLand==false;idx++) {
