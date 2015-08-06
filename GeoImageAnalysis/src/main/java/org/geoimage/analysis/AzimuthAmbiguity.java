@@ -4,8 +4,6 @@
  */
 package org.geoimage.analysis;
 
-import java.io.IOException;
-
 import org.geoimage.analysis.DetectedPixels.Boat;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.Logger;
