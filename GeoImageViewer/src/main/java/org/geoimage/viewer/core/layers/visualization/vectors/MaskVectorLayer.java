@@ -11,8 +11,11 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
@@ -43,6 +46,8 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
     protected Geometry currentTile=null;
     
+    private Map<String,Boolean> intersectedMapCache=null;
+    private Map<String,Boolean> includesMapCache=null;
     /**
      * 
      * @param parent
@@ -52,6 +57,8 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
      */
     public MaskVectorLayer(ILayer parent,String layername,String type, GeometricLayer layer) {
     	super(parent,layername,type,layer);
+    	intersectedMapCache=new HashMap<String,Boolean>();
+    	includesMapCache=new HashMap<String,Boolean>();
         if (layer == null) {
             return;
         }
@@ -127,34 +134,39 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
 		this.currentTile = currentTile;
 	}
 	
+	private Boolean checkInIntersectionCache(int x, int y, int width, int height){
+		return intersectedMapCache.get(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString());
+	}
+	private void putInIntersectionCache(int x, int y, int width, int height,Boolean intersects){
+		intersectedMapCache.put(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString(),intersects);
+	}
    
+	private Boolean checkInIncludesCache(int x, int y, int width, int height){
+		return includesMapCache.get(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString());
+	}
+	private void putInIncludesCache(int x, int y, int width, int height,Boolean intersects){
+		includesMapCache.put(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString(),intersects);
+	}
+	
     public boolean intersects(int x, int y, int width, int height) {
+        Boolean intersectLandCache=checkInIntersectionCache(x, y, width, height);
+        if(intersectLandCache!=null)
+        	return intersectLandCache.booleanValue();
+
+    	boolean intersectLand=false;
         try {
             if (getType().equals("point")) {
                 return false;
             }
+            
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
             this.setCurrentTile(geom);
-          //for test only
-           /*  try {
-					SimpleShapefile.exportGeometriesToShapeFile(glayer.getGeometries(),new File("F:\\SumoImgs\\export\\aaa2.shp") ,"Polygon");
-				} catch (IOException | SchemaException e) {
-					e.printStackTrace();
-				}*/
-          /*  if(x>1790&&x<1900&&y>5800&&y<6100){
-            	try {
-            		List<Geometry>lg=new ArrayList<>();
-            		lg.add(geom);
-					SimpleShapefile.exportGeometriesToShapeFile(lg,new File("F:\\SumoImgs\\export\\gg"+x+"-"+y+".shp") ,"Polygon");
-				} catch (IOException | SchemaException e) {
-					e.printStackTrace();
-				}
-            }*/
+        
             	if(glayer!=null){
-            		for (Geometry pp : glayer.getGeometries()) {
-		            	Geometry p=(Geometry) pp.clone();
+            		for (int idx=0;idx<glayer.getGeometries().size()&&intersectLand==false;idx++) {
+		            	Geometry p=(Geometry) glayer.getGeometries().get(idx);
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
 		            		for(int i=0;i<mp.getNumGeometries();i++){
@@ -167,11 +179,12 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
 				            		 GeometryFactory builder = new GeometryFactory();
 				            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 
-				            		 if (e.intersects(geom)) 
-				 		        			return true;
+				            		 if (e.intersects(geom)) {
+				            			 intersectLand= true;
+				            		 }		
 			            		}else{
 			            			if (g.intersects(geom)) 
-			 		        			return true;
+			            				intersectLand=true;
 			            		}
 		            		}	
 		            	}else{
@@ -184,16 +197,11 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
 			            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 
 			            		 if (e.intersects(geom)) 
-			 		        			return true;
+			            			 intersectLand=true;
 		            		}else{
 		            			if (p.intersects(geom)) 
-		 		        			return true;
+		            				intersectLand=true;
 		            		}
-				            /*if(total==null)
-	            				total=p;
-	            			else
-	            				total=total.union(p);
-	            			*/
 		            	} 
 		            	  
 		            }
@@ -201,7 +209,8 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
         }
-        return false;
+        putInIntersectionCache( x,  y,  width,  height, intersectLand);
+        return intersectLand;
     }
 	
 
@@ -241,10 +250,15 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
      * 
      */
     public boolean includes(int x, int y, int width, int height) {
-        try {
-            if (getType().equals("point")) {
-                return false;
-            }
+         if (getType().equals("point")) {
+             return false;
+         }
+
+    	 Boolean includesLandCache=checkInIncludesCache(x, y, width, height);
+         if(includesLandCache!=null)
+         	return includesLandCache.booleanValue();
+   
+         try {
             WKTReader wkt = new WKTReader();
             StringBuilder polyStr=new StringBuilder("POLYGON((" )
             						.append(x).append(" ")
@@ -261,13 +275,14 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
             Geometry geom = wkt.read(polyStr.toString());
             for (Geometry p : glayer.getGeometries()) {
                 if (geom.within(p)) {
+                	putInIncludesCache(x, y, width, height, true);
                     return true;
                 }
             }
-            return false;
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
         }
+        putInIncludesCache(x, y, width, height, false);
         return false;
     }
 
