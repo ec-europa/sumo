@@ -41,23 +41,24 @@
 				<xs:element name="xpixel" type="xs:double"/>
 				<xs:element name="ypixel" type="xs:double"/>
 				<xs:element name="detecttime" type="xs:string"/>
+				<xs:element name="inc_ang" type="xs:double"/>
 				<xs:element name="inc_angle" type="xs:decimal"/>
 				<xs:element name="reliability" type="xs:int"/>
 				<xs:element name="false_alarm_cause" type="xs:string"/>
-				<xs:element name="nr_pixels" nillable="true" type="xs:int"/>
+				<xs:element name="nr_pixels"  type="xs:int"/>
 				<xs:element name="length" type="xs:double"/>
 				<xs:element name="width" type="xs:double"/>
 				<xs:element name="size_class" type="xs:NCName"/>
-				<xs:element name="heading_range" nillable="true" type="xs:double"/>
+				<xs:element name="heading_range"  type="xs:double"/>
 				<xs:element name="heading_north" type="xs:double"/>
-				<xs:element name="lwh_reliability" nillable="true" type="xs:boolean"/>
+				<xs:element name="lwh_reliability"  type="xs:boolean"/>
 				<xs:element name="significance" type="xs:string"/>
 				<xs:element name="rcs" type="xs:string"/>
 				<xs:element name="bgnd_mean" type="xs:string"/>
 				<xs:element name="bgnd_stdev" type="xs:string"/>
 				<xs:element name="bgnd_sigma0" type="xs:string"/>
-				<xs:element name="noise" nillable="true" type="xs:int"/>
-				<xs:element name="maxValue" type="xs:string"/>
+				<xs:element name="noise" type="xs:int"/>
+				<xs:element name="maxvalue" type="xs:string"/>
 				<xs:element name="minDetectableRcs" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
