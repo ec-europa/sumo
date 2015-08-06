@@ -197,9 +197,10 @@ public abstract class Sentinel1 extends SarImageReader {
             List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
             List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
             swaths=new ArrayList<Swath>();
-            for(int i=0;i<swathMerges.size();i++){
+            for(int i=0;i<downInfos.size();i++){
             	Swath s=new Swath();
-            	s.setBounds(swathMerges.get(i).getSwathBoundsList().getSwathBounds());
+            	if(!swathMerges.isEmpty())
+            		s.setBounds(swathMerges.get(i).getSwathBoundsList().getSwathBounds());
             	DownlinkInformationType info=downInfos.get(i);
             	s.setAzimuthTime(info.getAzimuthTime().toGregorianCalendar().getTimeInMillis());
             	s.setFirstLineSensingTime(info.getFirstLineSensingTime().toGregorianCalendar().getTimeInMillis());
@@ -295,6 +296,8 @@ public abstract class Sentinel1 extends SarImageReader {
     * @return
     */
    private Swath findSwath(int x,int y){
+	   if(swaths.size()==1)
+		   return swaths.get(0);
 	   boolean findPrf=false;
 	   Swath s=null;
 	   for (int i=0;i<swaths.size()&&!findPrf;i++){
@@ -489,7 +492,7 @@ public abstract class Sentinel1 extends SarImageReader {
             double incidenceAngle = getIncidence(xPos);
             double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
             double slantRange = ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lonlat[0], lonlat[1]);
-            double sold=getSlantRange(xPos,incidenceAngle);
+          //  double sold=getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
             double sampleDistAzim = getGeoTransform().getPixelSize()[0];
@@ -506,7 +509,7 @@ public abstract class Sentinel1 extends SarImageReader {
             output[1] = (int) FastMath.floor(deltaRange);
             
         } catch (Exception ex) {
-        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage(),ex);
         }
         return output;
     }
