@@ -13,7 +13,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.actions.VDSAnalysisConsoleAction;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.io.GenericCSVIO;
@@ -38,6 +37,7 @@ class AnalysisParams {
 	public int buffer=0;
 	public String epsg="EPSG:4326";	
 	public Date startDate;
+	public int maxDetections=0;
 	
 }
 
@@ -221,7 +221,8 @@ public abstract class AbstractBatchAnalysis {
 			    			   }
 		    			   }	   
 	    			   }	   
-	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,reader.getGeoTransform(),imageName,true);
+	    			   //reader.getGeoTransform()
+	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,null,imageName,true);
 	    		   }catch(Exception e ){
 	    			   logger.error("Problem saving targets in csv:"+imageName,e);
 	    		   }

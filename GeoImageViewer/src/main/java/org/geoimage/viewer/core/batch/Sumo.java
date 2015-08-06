@@ -32,7 +32,7 @@ public class Sumo {
 	private final  String FOLDER_ERROR="Folder not exist, check path";
 	private final  String FILE_ERROR="File not exist, check path";
 	
-	//starting params
+	//starting params for the command line
 	public static final String TRESH_HH_PARAM="-thh";
 	public static  final String TRESH_HV_PARAM="-thv";
 	public static  final String TRESH_VH_PARAM="-tvh";
@@ -49,6 +49,8 @@ public class Sumo {
 	public static  final String SHP_FILE="-sh";
 	public static  final String GLOBAL_CONF_FILE_PARAM="-gconf";
 	public static  final String LOCAL_CONF_FILE_PARAM="-uselocalconf"; // Y/N
+	
+	//
 	
 	
 	private AnalysisParams params;
@@ -101,6 +103,7 @@ public class Sumo {
 				params.thresholdArrayValues=conf.getThresholdArray();
 				params.pathImg=conf.getInputFolder();
 				params.outputFolder=conf.getOutputFolder();
+				params.maxDetections=conf.getMaxDetections();
 				status=MULTI_IMG_ANALYSIS;
 			} catch (IOException e) {
 				e.printStackTrace();
