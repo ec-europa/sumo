@@ -371,16 +371,21 @@ public class KDistributionEstimation {
 				int newEnd=endx;
 				
 				if(blackAn!=null){
+					boolean jump=false;
 					if(blackAn.horizLeftCutOffArray!=null&&y>=blackAn.horizLeftCutOffArray.length){
-						y=blackAn.horizLeftCutOffArray.length-1;
+						//y=blackAn.horizLeftCutOffArray.length-1;
+						jump=true;
 					}else if(blackAn.horizRightCutOffArray!=null&&y>=blackAn.horizRightCutOffArray.length){
-						y=blackAn.horizRightCutOffArray.length-1;
+						//y=blackAn.horizRightCutOffArray.length-1;
+						jump=true;
 					}
-					if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y]){
-						newStart=startx+blackAn.horizLeftCutOffArray[y];
-					}	
-					if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y]){
-						newEnd=blackAn.horizRightCutOffArray[y];
+					if(!jump){
+						if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y]){
+							newStart=startx+blackAn.horizLeftCutOffArray[y];
+						}	
+						if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y]){
+							newEnd=blackAn.horizRightCutOffArray[y];
+						}
 					}	
 				}	
 				for (int x = newStart; x < newEnd ; x += 2) {
