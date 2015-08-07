@@ -150,42 +150,44 @@ public class SimpleShapefile extends AbstractVectorIO{
     	GeometricLayer glout=null;
     	DataStore dataStore =null;
         try {
-        	Map<String, Serializable> params = new HashMap<String, Serializable>();
-            params.put("url", shpInput.toURI().toURL());
-        	
-            //create a DataStore object to connect to the physical source 
-            dataStore = DataStoreFinder.getDataStore(params);
-            //retrieve a FeatureSource to work with the feature data
-            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
-            
-            Polygon imageP=bbox;
-            	
-            ClipProcess clip=new ClipProcess();
-            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-            
-            
-           /* CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
-            ReferencedEnvelope env = new ReferencedEnvelope(imageP.getEnvelopeInternal(),worldCRS);
-            RectangularClipProcess clip=new RectangularClipProcess();
-    		SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
-    		*/
-            if (fc.isEmpty()) {
-                return null;
-            }
-            String[] schema = createSchema(fc.getSchema().getDescriptors());
-            String[] types = createTypes(fc.getSchema().getDescriptors());
-
-            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
-            
-            GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
-            
-           
-            glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
-            
+        	if(shpInput!=null){
+	        	Map<String, Serializable> params = new HashMap<String, Serializable>();
+	            params.put("url", shpInput.toURI().toURL());
+	        	
+	            //create a DataStore object to connect to the physical source 
+	            dataStore = DataStoreFinder.getDataStore(params);
+	            //retrieve a FeatureSource to work with the feature data
+	            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
+	            
+	            Polygon imageP=bbox;
+	            	
+	            ClipProcess clip=new ClipProcess();
+	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
+	            
+	            
+	           /* CoordinateReferenceSystem worldCRS = DefaultGeographicCRS.WGS84;
+	            ReferencedEnvelope env = new ReferencedEnvelope(imageP.getEnvelopeInternal(),worldCRS);
+	            RectangularClipProcess clip=new RectangularClipProcess();
+	    		SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), env, true);
+	    		*/
+	            if (fc.isEmpty()) {
+	                return null;
+	            }
+	            String[] schema = createSchema(fc.getSchema().getDescriptors());
+	            String[] types = createTypes(fc.getSchema().getDescriptors());
+	
+	            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
+	            
+	            GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, dataStore, fc, schema, types);
+	            
+	           
+	            glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
+        	}
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }finally{
-        	dataStore.dispose();
+        	if(dataStore!=null)
+        		dataStore.dispose();
         }
         return glout;
 

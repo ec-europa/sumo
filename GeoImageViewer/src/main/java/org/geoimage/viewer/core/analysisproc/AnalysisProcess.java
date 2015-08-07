@@ -222,12 +222,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(banddetectedpixels[band].getBoats(), (SarImageReader) gir,band);	
 			                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
 			                     allAmbiguities.addAll(artefactsA);
-			                     vdsanalysisLayer.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.GREEN,5, GeometricLayer.POINT, artefactsA, display);
+			                     vdsanalysisLayer.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.CYAN,5, GeometricLayer.POINT, artefactsA, display);
 	                    	 }    
 	                     }    
                          
                          if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-	                        vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), true);
 	                     }
 	                     //leave display params forced to false
 	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
@@ -273,7 +273,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, mergePixels.getAllDetectedPixels(), display);
 	                 
 	                 if ((bufferedMask != null) && (bufferedMask.length > 0)) {
-	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), display);
+	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), true);
 	                 }
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	

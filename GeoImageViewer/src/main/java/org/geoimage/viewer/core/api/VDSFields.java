@@ -30,5 +30,6 @@ public class VDSFields {
     
     public static String[] getTypes(){
          return new String[]{"Double", "Double", "Double", "Double", "Double", "Double", "String", "Double", "Double", "Double", "String"};
+
     }
 }
