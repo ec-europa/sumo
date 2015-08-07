@@ -306,9 +306,10 @@ public class DetectedPixels {
         	position.setLength(0);
             // do not add if position already exists
             position = position.append(boat.x).append(" ").append(boat.y); 
-            if (allDetectedPixels.get(position.toString()) == null) {
+            //if (allDetectedPixels.get(position.toString()) == null) {
+            	//if the value is already in the map it will be replaced 
                 allDetectedPixels.put(position.toString(), boat);
-            }
+            //}
         }
     }
 
