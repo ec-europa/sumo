@@ -217,18 +217,15 @@ public class SimpleShapefile extends AbstractVectorIO{
     	SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) layer.getFeatureCollection();
         SimpleFeatureType schemaLayer=collectionsLayer.getSchema();
         
-        
-        
-        //Create the new type using the former as a template
+        //merge the schema and the types
         SimpleFeatureTypeBuilder stb = new SimpleFeatureTypeBuilder();
         stb.setName("merged_geom");
         stb.setCRS(schemaLayer.getCoordinateReferenceSystem());
         stb.addAll(schemaShape2.getAttributeDescriptors());
         stb.addAll(schemaLayer.getAttributeDescriptors());
         SimpleFeatureType newFeatureType = stb.buildFeatureType();
-
         
-        
+        //create new datastore to save the new shapefile
         FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
         File tmp=new File(Platform.getCachePath()+"\\tmpshape_"+System.currentTimeMillis()+".shp");
         Map<String, Serializable> params2 = new HashMap<String, Serializable>();
@@ -236,11 +233,14 @@ public class SimpleShapefile extends AbstractVectorIO{
         ShapefileDataStore newds=(ShapefileDataStore)factory.createNewDataStore(params2);
         newds.createSchema(newFeatureType);
 
+        //merge the feaures
         SimpleFeatureStore mergeFeat=(SimpleFeatureStore)newds.getFeatureSource();
         mergeFeat.addFeatures(collectionsLayer);
         mergeFeat.addFeatures(fc);
+        //save the new shape file
         exportToShapefile(newds, mergeFeat.getFeatures(),newds.getSchema());
 
+        //from here create the new GeometricLayer
         Collection<PropertyDescriptor>descriptorsMerge=new ArrayList<>();
         descriptorsMerge.addAll(schemaShape2.getDescriptors());
         descriptorsMerge.addAll(schemaLayer.getDescriptors());
