@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
@@ -50,7 +51,8 @@ public class MergeShapeFileAction extends AbstractAction  {
 	                        	ImageLayer layer=Platform.getCurrentImageLayer();
 	                        	MaskVectorLayer ml=Platform.getLayerManager().getChildMaskLayer(layer);
 	                        	if(ml!=null){
-	                        		GeometricLayer gl = SimpleShapefile.addShape(ml.getGeometriclayer(), shpFile,l.getImageReader().getGeoTransform());
+	                        		GeometricLayer gl = SimpleShapefile.addShape(ml.getGeometriclayer(), shpFile,l.getImageReader().getGeoTransform(),
+	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 	                        		LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, (ImageLayer) l);
 	                        	}	
 	                        } catch (Exception ex) {
