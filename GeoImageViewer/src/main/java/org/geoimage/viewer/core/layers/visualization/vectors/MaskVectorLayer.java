@@ -21,6 +21,7 @@ import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
+import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -41,7 +42,7 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
  *
  * @author thoorfr
  */
-public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
+public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable,IEditable{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
     
     private Map<String,Boolean> intersectedMapCache=null;
@@ -393,6 +394,106 @@ public class MaskVectorLayer extends GenericLayer implements  IMask,IClickable{
     public List<Geometry> getGeometries() {
         return glayer.getGeometries();
     }
+
+
+
+
+
+	@Override
+	public void setEditable(boolean editable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public boolean isEditable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+
+	@Override
+	public void setAddAction(boolean add) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public boolean isAddAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+
+	@Override
+	public void setDeleteAction(boolean delete) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public boolean isDeleteAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+
+	@Override
+	public void setMoveAction(boolean move) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public boolean isMoveAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+
+	@Override
+	public void setChangeAttributesAction(boolean move) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public boolean isChangeAttributesAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
 }
