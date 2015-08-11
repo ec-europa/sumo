@@ -246,9 +246,17 @@ public class VDSAnalysis{
                                 }
                                 int pix = data[k * (sizeX+dx) + h];
                                 // if (pix > thresh[i][0][subwindow] * (significance - (significance - 1.)	/ thresh[i][0][5])) {
+
                                 // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                                 if (pix > threshWindowsVals[subwindow-1]) {
-                                    dpixels.add(h + xLeftTile, k + yTopTile, pix, thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5], thresh[0][0][5], band);
+                                	double tileAvg=thresh[0][0][subwindow] / thresh[0][0][5];
+                                	double tileStdDev=thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5];
+                                    dpixels.add(h + xLeftTile,//x
+                                    		    k + yTopTile, //y
+                                    		    pix,//pixelvalue 
+                                    		    tileAvg,
+                                    		    tileStdDev,//tile standard deviation normalized 
+                                    		    thresh[0][0][5], band);
                                 }
                             }
                         }
