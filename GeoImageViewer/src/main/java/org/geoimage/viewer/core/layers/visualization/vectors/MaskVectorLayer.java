@@ -20,6 +20,7 @@ import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
@@ -33,13 +34,14 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.operation.distance.DistanceOp;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
 /**
  *
  * @author thoorfr
  */
-public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask{//,IClickable,IEditable,IMouseMove, IMouseDrag, IKeyPressed{
+public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,IClickable{//,,IEditable,IMouseMove, IMouseDrag, IKeyPressed{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
     
     private Map<String,Boolean> intersectedMapCache=null;
@@ -64,9 +66,33 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask{/
             calculateMaxMinTresh();
             threshable = true;
         }
+        this.edit=false;
     }
     
-
+    /**
+     * 
+     * @param imagePosition
+     * @param context
+     */
+    public void mouseClicked(java.awt.Point imagePosition, GeoContext context) {
+    	if(isEditable()){
+	        this.selectedGeometry = null;
+	        GeometryFactory gf = new GeometryFactory();
+	        com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
+	        for (Geometry temp : glayer.getGeometries()) {
+	        	if(temp instanceof Polygon){
+		        	Coordinate[] c=DistanceOp.nearestPoints(temp, p);
+		        	com.vividsolutions.jts.geom.Point nearest=gf.createPoint(c[0]);
+		            if (nearest.isWithinDistance(temp,5 * context.getZoom())) {
+		                this.selectedGeometry = temp;
+		                System.out.println(""+temp.getCoordinate().x+","+temp.getCoordinate().y);
+		                PickedData.put(temp, glayer.getAttributes(temp));
+		                break;
+		            }
+	        	}   
+	        }
+    	}   
+    }
     
     
 
@@ -88,23 +114,6 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask{/
     
 
  
-    /**
-	 * 
-	 */
-	@Override
-    public void mouseClicked(java.awt.Point imagePosition, int button, GeoContext context) {
-        this.selectedGeometry = null;
-        GeometryFactory gf = new GeometryFactory();
-        Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-        for (Geometry temp : glayer.getGeometries()) {
-            //if (temp.isWithinDistance(p, 5 * context.getZoom())) {
-            if (p.equalsExact(temp, 5 * context.getZoom())) {
-                this.selectedGeometry = temp;
-                PickedData.put(temp, glayer.getAttributes(temp));
-            }
-        }
-    }
-  
     public boolean isRadio() {
         return false;
     }
