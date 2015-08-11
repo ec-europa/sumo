@@ -32,6 +32,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.distance.DistanceOp;
 
 /**
  *
@@ -86,9 +87,10 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         GeometryFactory gf = new GeometryFactory();
         com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
         for (Geometry temp : glayer.getGeometries()) {
-            //if (temp.isWithinDistance(p, 5 * context.getZoom())) {
-            if (p.equalsExact(temp, 5 * context.getZoom())) {
+            //if (p.equalsExact(temp, 5 * context.getZoom())) {
+            if (p.equalsExact(temp, 5 * context.getZoom())) {	
                 this.selectedGeometry = temp;
+                //System.out.println(""+temp.getCoordinate().x+","+temp.getCoordinate().y);
                 PickedData.put(temp, glayer.getAttributes(temp));
             }
         }
@@ -328,7 +330,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
 
     protected void performDelete(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            mouseClicked(imagePosition, BUTTON1, context);
+            //super.mouseClicked(imagePosition, BUTTON1, context);
             return;
         }
         if (this.editedPoint == null) {
@@ -369,7 +371,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
 
     protected void performMove(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            mouseClicked(imagePosition, IClickable.BUTTON1, context);
+            //super.mouseClicked(imagePosition, IClickable.BUTTON1, context);
 
             if (this.editedPoint == null && selectedGeometry != null) {
                 if (type.equals(GeometricLayer.POINT)) {
@@ -464,7 +466,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
 
     private void performChangeAttributes(Point imagePosition, GeoContext context) {
         if (selectedGeometry == null) {
-            mouseClicked(imagePosition, BUTTON1, context);
+            //mouseClicked(imagePosition, BUTTON1, context);
         }
         if (selectedGeometry != null) {
             AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
