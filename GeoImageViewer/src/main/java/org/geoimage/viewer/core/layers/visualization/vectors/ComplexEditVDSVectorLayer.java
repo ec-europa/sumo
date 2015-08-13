@@ -19,10 +19,10 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -362,7 +362,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         return postgiscommands;
     }
 
-    protected void performAdd(java.awt.Point imagePosition, GeoContext context) {
+    protected void performAdd(java.awt.Point imagePosition, OpenGLContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             final Attributes atts = Attributes.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());

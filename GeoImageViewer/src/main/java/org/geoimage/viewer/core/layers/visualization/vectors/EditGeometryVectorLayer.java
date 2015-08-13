@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.core.layers.visualization.vectors;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
@@ -11,10 +12,10 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.PickedData;
+import org.geoimage.opengl.GL2ShapesRender;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.IKeyPressed;
@@ -23,6 +24,7 @@ import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.widget.AttributesEditor;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -59,7 +61,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
     }
 
     @Override
-    public void mouseClicked(Point imagePosition, int button, GeoContext context) {
+    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
         if (!this.edit || button != IClickable.BUTTON1) {
             mouseClicked(imagePosition, context);
             return;
@@ -82,7 +84,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
      * @param imagePosition
      * @param context
      */
-    public void mouseClicked(java.awt.Point imagePosition, GeoContext context) {
+    public void mouseClicked(java.awt.Point imagePosition, OpenGLContext context) {
         this.selectedGeometry = null;
         GeometryFactory gf = new GeometryFactory();
         com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
@@ -91,7 +93,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
             if (p.equalsExact(temp, 5 * context.getZoom())) {	
                 this.selectedGeometry = temp;
                 //System.out.println(""+temp.getCoordinate().x+","+temp.getCoordinate().y);
-                PickedData.put(temp, glayer.getAttributes(temp));
+                LayerPickedData.put(temp, glayer.getAttributes(temp));
             }
         }
     }
@@ -128,7 +130,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
     }
     
     @Override
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
     	checkRemoved();
         super.render(context);
         
@@ -136,36 +138,18 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
             return;
         }
 
-        int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
-        GL2 gl = context.getGL().getGL2();
 
         if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
-            gl.glPointSize(getWidth() * 2);
-            gl.glBegin(GL.GL_POINTS);
-            for (Geometry temp : glayer.getGeometries()) {
-                for (Coordinate point : temp.getCoordinates()) {
-                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                }
-            }
-            gl.glEnd();
-            gl.glFlush();
+            GL2ShapesRender.renderPolygon(context, width, height,glayer.getGeometries(),width * 2,getColor());
         }
 
-        if (editedPoint == null) {
-            return;
-        }
-
-        float[] c = getColor().brighter().getColorComponents(null);
-        gl.glColor3f(c[0], c[1], c[2]);
-        gl.glPointSize(this.getWidth() * 3);
-        gl.glBegin(GL.GL_POINTS);
-        gl.glVertex2d((editedPoint.x - x) / width, 1 - (editedPoint.y - y) / height);
-        gl.glEnd();
-        gl.glFlush();
+        if (editedPoint != null) {
+        	GL2ShapesRender.renderPoint(context,width,height,editedPoint,width * 3,getColor());
+        }    
     }
 
-    public void mouseMoved(Point imagePosition, GeoContext context) {
+    public void mouseMoved(Point imagePosition, OpenGLContext context) {
         if (this.selectedGeometry == null || this.editedPoint == null) {
             return;
         } else {
@@ -231,7 +215,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
                 + point3.distance(point4);
     }
 
-    protected void performAdd(Point imagePosition, GeoContext context) {
+    protected void performAdd(Point imagePosition, OpenGLContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             glayer.put(selectedGeometry);
@@ -328,7 +312,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         }
     }
 
-    protected void performDelete(Point imagePosition, GeoContext context) {
+    protected void performDelete(Point imagePosition, OpenGLContext context) {
         if (selectedGeometry == null) {
             //super.mouseClicked(imagePosition, BUTTON1, context);
             return;
@@ -369,7 +353,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         }
     }
 
-    protected void performMove(Point imagePosition, GeoContext context) {
+    protected void performMove(Point imagePosition, OpenGLContext context) {
         if (selectedGeometry == null) {
             //super.mouseClicked(imagePosition, IClickable.BUTTON1, context);
 
@@ -412,7 +396,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         this.editedPoint = null;
     }
 
-    public void mouseDragged(final Point initPosition, final Point imagePosition, int button, GeoContext context) {
+    public void mouseDragged(final Point initPosition, final Point imagePosition, int button, OpenGLContext context) {
         if (selectedGeometry == null | !this.edit | this.move | this.add | this.delete) {
             return;
         }
@@ -464,7 +448,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         return changeAttributes;
     }
 
-    private void performChangeAttributes(Point imagePosition, GeoContext context) {
+    private void performChangeAttributes(Point imagePosition, OpenGLContext context) {
         if (selectedGeometry == null) {
             //mouseClicked(imagePosition, BUTTON1, context);
         }

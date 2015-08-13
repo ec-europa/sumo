@@ -10,7 +10,7 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -83,7 +83,7 @@ public class SimpleGeometryLayer extends GenericLayer {
         gl.glFlush();
     }
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (!context.isDirty()) {
             return;
         }
