@@ -2,6 +2,7 @@ package org.geoimage.viewer.core.layers;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL;
@@ -9,10 +10,11 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.opengl.GL2ShapesRender;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
@@ -62,7 +64,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	
 
     @Override
-	public void render(GeoContext context){
+	public void render(OpenGLContext context){
 		  if (!context.isDirty()||Platform.isBatchMode()) {
 	            return;
 	        }
@@ -83,80 +85,24 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
 	                    switch (this.displaysymbol) {
 	                        case point: {
-	                            gl.glPointSize(this.renderWidth);
-	                            gl.glBegin(GL.GL_POINTS);
-	                            for (Geometry temp : geomList) {
-	                                Coordinate point = temp.getCoordinate();
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
+	                        	GL2ShapesRender.renderPolygon(context, width, height, geomList, this.renderWidth, color);
+	                            
 	                            if (selectedGeometry != null) {
-	                                gl.glPointSize(this.renderWidth * 2);
-	                                gl.glBegin(GL.GL_POINTS);
-	                                Coordinate point = selectedGeometry.getCoordinate();
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                gl.glEnd();
-	                                gl.glFlush();
+	                            	GL2ShapesRender.renderPoint(context, width, height, selectedGeometry.getCoordinate(), this.renderWidth, color);
 	                            }
 	                        }
 	                        break;
 	                        case circle: {
-	                        	gl.glBegin(GL.GL_POINTS);
-	                        	gl.glLineWidth(this.renderWidth);
-	                        	for (int ii=0;ii<geomList.size();ii++) {
-	                        	   Geometry temp =geomList.get(ii);
-		                           Coordinate point = temp.getCoordinate();
-		                           double dx=(point.x - x) / width;
-		                           double dy=1 - (point.y - y) / height;
-	                        	   for (int i=0; i < 360; i++){
-	                        		   //double angle = 2 * Math.PI * i / 360;
-	                        		   double xx = dx+Math.sin(i)*0.005;
-	                        		   double yy = dy+Math.cos(i)*0.005;
-	                        		   
-	                        		   gl.glVertex2d(xx,yy);
-	                        	   }
-		                        } 
-	                    	    gl.glEnd();
-	                            gl.glFlush();
+	                        	GL2ShapesRender.renderCircle(context, width, height, geomList, this.renderWidth, color);
 	                        }
 	                        break;
 	                        case square: {
 	                        	//usato anche per disegnare i contorni delle detection
-	                            for (Geometry temp : geomList) {
-	                                gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 3 : this.renderWidth);
-	                                Coordinate point = new Coordinate(temp.getCoordinate());
-	                                point.x = (point.x - x) / width;
-	                                point.y = 1 - (point.y - y) / height;
-	                                double rectwidth = 0.01;
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                gl.glVertex2d(point.x - rectwidth, point.y + rectwidth);
-	                                gl.glVertex2d(point.x + rectwidth, point.y + rectwidth);
-	                                gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
-	                                gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                gl.glEnd();
-	                                gl.glFlush();
-	                            }
+	                        	GL2ShapesRender.renderSquare(context,width,height,geomList,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        case cross: {
-	                            for (Geometry temp : geomList) {
-	                                gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                Coordinate point = new Coordinate(temp.getCoordinate());
-	                                point.x = (point.x - x) / width;
-	                                point.y = 1 - (point.y - y) / height;
-	                                double rectwidth = 0.01;
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                gl.glVertex2d(point.x - rectwidth, point.y);
-	                                gl.glVertex2d(point.x + rectwidth, point.y);
-	                                gl.glEnd();
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                gl.glVertex2d(point.x, point.y - rectwidth);
-	                                gl.glVertex2d(point.x, point.y + rectwidth);
-	                                gl.glEnd();
-	                                gl.glFlush();
-	                            }
+	                        	GL2ShapesRender.renderCross(context,width,height,geomList,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        case triangle: {
@@ -243,15 +189,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        if (temp.getCoordinates().length < 1) {
 	                            continue;
 	                        }
-	                        if (temp instanceof LineString) {
-	                            gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_LINE_STRIP);
-	                            for (Coordinate point : temp.getCoordinates()) {
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
-	                        } else if (temp instanceof Polygon) {
+	                        if (temp instanceof LineString||temp instanceof Polygon) {
 	                            gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
 	                            gl.glBegin(GL.GL_LINE_STRIP);
 	                            for (Coordinate point : temp.getCoordinates()) {
@@ -280,90 +218,32 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                }
 	            } else {
 	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
+	                	List<Geometry> toVisualize=new ArrayList<>();
+                    	for (Geometry temp : geomList) {
+                            if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
+                            	toVisualize.add(temp);
+                            }
+                        }
 	                    switch (this.displaysymbol) {
 	                        case point: {
-	                            gl.glPointSize(this.renderWidth);
-	                            gl.glBegin(GL.GL_POINTS);
-	                            for (Geometry temp : geomList) {
-	                                if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
-	                                    Coordinate point = temp.getCoordinate();
-	                                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                }
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
-	                            if (selectedGeometry != null) {
-	                                gl.glPointSize(this.renderWidth * 2);
-	                                gl.glBegin(GL.GL_POINTS);
-	                                Coordinate point = selectedGeometry.getCoordinate();
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                gl.glEnd();
-	                                gl.glFlush();
+	                        	
+	                        	GL2ShapesRender.renderPolygon(context, width, height, toVisualize, this.renderWidth, color);
+
+	                        	if (selectedGeometry != null) {
+	                            	GL2ShapesRender.renderPoint(context, width, height, selectedGeometry.getCoordinate(), this.renderWidth*2, color);
 	                            }
 	                        }
 	                        break;
 	                        case circle: {
-	                        	gl.glBegin(GL.GL_POINTS);
-	                        	gl.glLineWidth(this.renderWidth);
-	                        	for (int ii=0;ii<geomList.size();ii++) {
-	                        	   Geometry temp =geomList.get(ii);
-		                           Coordinate point = temp.getCoordinate();
-		                           double dx=(point.x - x) / width;
-		                           double dy=1 - (point.y - y) / height;
-	                        	   for (int i=0; i < 360; i++){
-	                        		   //double angle = 2 * Math.PI * i / 360;
-	                        		   double xx = dx+Math.sin(i)*0.005;
-	                        		   double yy = dy+Math.cos(i)*0.005;
-	                        		   
-	                        		   gl.glVertex2d(xx,yy);
-	                        		   //System.out.println(""+xx+"--"+yy);
-	                        	   }
-		                        } 
-	                    	    gl.glEnd();
-	                            gl.glFlush();
+	                        	GL2ShapesRender.renderCircle(context, width, height, geomList, this.renderWidth, color);
 	                        }
 	                        break;
 	                        case square: {
-	                            for (Geometry temp : geomList) {
-	                                if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
-	                                    gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 3 : this.renderWidth);
-	                                    Coordinate point = new Coordinate(temp.getCoordinate());
-	                                    point.x = (point.x - x) / width;
-	                                    point.y = 1 - (point.y - y) / height;
-	                                    double rectwidth = 0.01;
-	                                    
-	                                    gl.glBegin(GL.GL_LINE_STRIP);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y + rectwidth);
-	                                    gl.glVertex2d(point.x + rectwidth, point.y + rectwidth);
-	                                    gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                    gl.glEnd();
-	                                    gl.glFlush();
-	                                }
-	                            }
+	                        	GL2ShapesRender.renderSquare(context,width,height,toVisualize,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        case cross: {
-	                            for (Geometry temp : geomList) {
-	                                if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
-	                                    gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                    
-	                                    Coordinate point = new Coordinate(temp.getCoordinate());
-	                                    point.x = (point.x - x) / width;
-	                                    point.y = 1 - (point.y - y) / height;
-	                                    double rectwidth = 0.01;
-	                                    gl.glBegin(GL.GL_LINE_STRIP);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y);
-	                                    gl.glVertex2d(point.x + rectwidth, point.y);
-	                                    gl.glEnd();
-	                                    gl.glBegin(GL.GL_LINE_STRIP);
-	                                    gl.glVertex2d(point.x, point.y - rectwidth);
-	                                    gl.glVertex2d(point.x, point.y + rectwidth);
-	                                    gl.glEnd();
-	                                    gl.glFlush();
-	                                }
-	                            }
+	                        	GL2ShapesRender.renderCross(context,width,height,toVisualize,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        case triangle: {

@@ -1,12 +1,7 @@
 
 package org.geoimage.viewer.core.layers;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ILayer;
 
 public class BaseLayer extends GenericLayer {
@@ -19,7 +14,7 @@ public class BaseLayer extends GenericLayer {
 	}
 
 	@Override
-	public void render(GeoContext context) {
+	public void render(OpenGLContext context) {
 
 	}
 

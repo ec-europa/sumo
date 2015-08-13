@@ -7,7 +7,7 @@ package org.geoimage.viewer.core.layers.thumbnails;
 import java.awt.Frame;
 import java.awt.Point;
 
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
@@ -40,7 +40,7 @@ public class ThumbnailsSmallLayer extends GenericLayer implements  IClickable {
 
     }
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
     }
 
     public boolean isActive() {
@@ -73,7 +73,7 @@ public class ThumbnailsSmallLayer extends GenericLayer implements  IClickable {
         pd.dispose();
     }
 
-    public void mouseClicked(Point imagePosition, int button, GeoContext context) {
+    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
         this.imagePosition = imagePosition;
         if (active) {
             pd.setBufferedImage(((ThumbnailsLayer)super.getParent()).get(imagePosition));

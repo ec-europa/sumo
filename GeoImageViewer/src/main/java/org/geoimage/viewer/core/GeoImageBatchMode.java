@@ -5,7 +5,7 @@
 package org.geoimage.viewer.core;
 
 
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class GeoImageBatchMode {
         cl = new ConsoleLayer(null);
         lm.addLayer(cl);
         new Thread(new Runnable() {
-            private GeoContext gc=new GeoContext(null);
+            private OpenGLContext gc=new OpenGLContext(null);
             public void run() {
                 gc.setDirty(false);
                 while(!stop){

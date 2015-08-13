@@ -8,6 +8,8 @@ package org.geoimage.viewer.core.api;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import org.geoimage.opengl.OpenGLContext;
+
 /**
  *
  * @author thoorfr
@@ -22,5 +24,5 @@ public interface IClickable {
      * @param button the button clicked: BUTTON1 (left click), BUTTON2 or BUTTON3 (right click)
      * @param context the geographic GeoContext of the current display
      */
-    public void mouseClicked(Point imagePosition, int button, GeoContext context);
+    public void mouseClicked(Point imagePosition, int button, OpenGLContext context);
 }

@@ -28,8 +28,8 @@ import org.fenggui.render.ITexture;
 import org.fenggui.render.Pixmap;
 import org.fenggui.util.Color;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
@@ -182,7 +182,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
                     {
                         // clicked on the left arrow
                         System.out.println("left\n");
-                        if(Platform.getGeoContext() instanceof GeoContext)
+                        if(Platform.getGeoContext() instanceof OpenGLContext)
                             Platform.getGeoContext().setX((int)(Platform.getGeoContext().getX() - Platform.getGeoContext().getWidth() / 3));
                     }
             if(positionX > 2 * width / 3)
@@ -191,7 +191,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
                     {
                         // clicked on the right arrow
                         System.out.println("right\n");
-                        if(Platform.getGeoContext() instanceof GeoContext)
+                        if(Platform.getGeoContext() instanceof OpenGLContext)
                             Platform.getGeoContext().setX((int)(Platform.getGeoContext().getX() + Platform.getGeoContext().getWidth() / 3));
                     }
             if(positionX > width / 3)
@@ -200,12 +200,12 @@ public class GeoNavigationToolbar extends TransparentWidget {
                     {
                         // clicked on the bottom arrow
                         System.out.println("bottom\n");
-                        if(Platform.getGeoContext() instanceof GeoContext)
+                        if(Platform.getGeoContext() instanceof OpenGLContext)
                             Platform.getGeoContext().setY((int)(Platform.getGeoContext().getY() + Platform.getGeoContext().getHeight() / 3));
                     } else if(positionY > 2 * height / 3) {                    
                         // clicked on the top arrow
                         System.out.println("top\n");
-                        if(Platform.getGeoContext() instanceof GeoContext)
+                        if(Platform.getGeoContext() instanceof OpenGLContext)
                             Platform.getGeoContext().setY((int)(Platform.getGeoContext().getY() - Platform.getGeoContext().getHeight() / 3));
                     }
         }
@@ -267,7 +267,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
             if(zoom != Platform.getGeoContext().getZoom())
             {
                 zoom = Platform.getGeoContext().getZoom();
-                if(Platform.getGeoContext() instanceof GeoContext)
+                if(Platform.getGeoContext() instanceof OpenGLContext)
                     setValue((zoom - 1) / Math.pow(2, maxZoomLevel));
             }
 
@@ -297,8 +297,8 @@ public class GeoNavigationToolbar extends TransparentWidget {
             addSliderMovedListener(new ISliderMovedListener() {
 
                 public void sliderMoved(SliderMovedEvent arg0) {
-                    if (Platform.getGeoContext() instanceof GeoContext) {
-                        GeoContext geoContext = Platform.getGeoContext();
+                    if (Platform.getGeoContext() instanceof OpenGLContext) {
+                        OpenGLContext geoContext = Platform.getGeoContext();
                         float zoom = (float) (1+(float) getValue() * Math.pow(2, maxZoomLevel));
                         int x = (int) (geoContext.getX() + geoContext.getWidth() * geoContext.getZoom() / 2);
                         int y = (int) (geoContext.getY() + geoContext.getHeight() * geoContext.getZoom() / 2);

@@ -21,8 +21,8 @@ import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -101,7 +101,7 @@ import org.geoimage.viewer.util.Constant;
                 g.setColor(new Color(0, 255, 0, bar.transparency));
 
                 // draw current view bounding rectangle in image
-                GeoContext ctx=Platform.getGeoContext(); 
+                OpenGLContext ctx=Platform.getGeoContext(); 
                 int xmin=imagePosition.x + (int) (ctx.getX() / ratio);
                 int ymin=imagePosition.y + (int) ((gir.getHeight() - ctx.getY()) / ratio) - (int) (ctx.getHeight() * ctx.getZoom() / ratio);
                 int xmax= (int) (ctx.getWidth() * ctx.getZoom() / ratio);

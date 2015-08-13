@@ -48,8 +48,8 @@ import org.fenggui.layout.FormData;
 import org.fenggui.render.jogl.EventBinding;
 import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -59,6 +59,7 @@ import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.widget.GeoOverviewToolbar;
 import org.geoimage.viewer.widget.PluginManagerDialog;
 import org.geoimage.viewer.widget.PreferencesDialog;
@@ -88,7 +89,7 @@ import com.jogamp.opengl.util.GLReadBufferUtil;
 public class GeoImageViewerView extends FrameView implements GLEventListener,VDSAnalysisProcessListener {
 
     private LayerManager lm;
-    private GeoContext geoContext;
+    private OpenGLContext geoContext;
     private int dxx = 0;
     private int dyy = 0;
     private boolean onRefresh = false;
@@ -430,7 +431,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             		Point p = new Point();
             		p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
             		p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
-            		PickedData.clear();
+            		LayerPickedData.clear();
             		lm.mouseClicked(p, e.getButton(), geoContext);
             	}
             }
@@ -460,7 +461,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
     public void init(GLAutoDrawable drawable) {
     	Display display = FengGUI.createDisplay(new JOGLBinding(mainCanvas, mainCanvas.getGL()));
-    	geoContext = new GeoContext(display);
+    	geoContext = new OpenGLContext(display);
         geoContext.initialize(drawable.getContext());
         geoContext.setHeight(sumopanel.getHeight());
     	geoContext.setWidth(sumopanel.getWidth());
@@ -484,7 +485,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             fd.top = new FormAttachment(100, -10);
             addWidget("Overview", fd, "");
         }
-
+        geoContext.initialize(drawable.getContext());
     }
 
     /**
@@ -560,7 +561,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             }
         }
         onRefresh = true;
-        geoContext.initialize(drawable.getContext());
         GL gl = geoContext.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         if (dxx != 0 || dyy != 0) {
@@ -606,7 +606,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         return lm;
     }
 
-    public GeoContext getGeoContext() {
+    public OpenGLContext getGeoContext() {
         return geoContext;
     }
 

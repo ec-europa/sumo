@@ -15,9 +15,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.TimeComponent;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
@@ -68,7 +68,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     	return manager;
     }
 
-    public void render(final GeoContext context) {
+    public void render(final OpenGLContext context) {
         if (this.add.size() > 0) {
         	for(ILayer l:add){
         		if(l.getParent()==null){
@@ -143,7 +143,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 
 
-    public void mouseClicked(Point imagePosition, int button, GeoContext context) {
+    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IClickable) {
@@ -153,7 +153,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
-    public void mouseMoved(Point imagePosition, GeoContext context) {
+    public void mouseMoved(Point imagePosition, OpenGLContext context) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseMove) {
@@ -226,7 +226,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         return layers;
     }
 
-    public void mouseDragged(Point initPosition, Point imagePosition, int button, GeoContext context) {
+    public void mouseDragged(Point initPosition, Point imagePosition, int button, OpenGLContext context) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseDrag) {
