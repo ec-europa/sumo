@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.analysis.VDSSchema;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.PickedData;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.util.PolygonOp;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
      * @param imagePosition
      * @param context
      */
-    public void mouseClicked(java.awt.Point imagePosition, GeoContext context) {
+    public void mouseClicked(java.awt.Point imagePosition, OpenGLContext context) {
     	if(isEditable()){
 	        this.selectedGeometry = null;
 	        GeometryFactory gf = new GeometryFactory();
@@ -86,7 +86,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		            if (nearest.isWithinDistance(temp,5 * context.getZoom())) {
 		                this.selectedGeometry = temp;
 		                System.out.println(""+temp.getCoordinate().x+","+temp.getCoordinate().y);
-		                PickedData.put(temp, glayer.getAttributes(temp));
+		                LayerPickedData.put(temp, glayer.getAttributes(temp));
 		                break;
 		            }
 	        	}   

@@ -11,8 +11,8 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.layers.GenericLayer;
@@ -51,7 +51,7 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
     }
 
     @Override
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (minimumDate == null || maximumDate == null) {
             super.render(context);
         } else {
