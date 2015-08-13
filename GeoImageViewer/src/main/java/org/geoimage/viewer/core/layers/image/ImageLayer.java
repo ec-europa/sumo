@@ -28,8 +28,8 @@ import javax.media.opengl.GL2;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -242,7 +242,7 @@ public class ImageLayer implements ILayer  {
     /**
      * displays the tiles on screen
      */
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
     	if(activeGir!=null){	
 	        if (torescale) {
 	            torescale = false;

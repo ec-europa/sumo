@@ -5,7 +5,7 @@
 
 package org.geoimage.viewer.core.api;
 
-
+import org.geoimage.opengl.OpenGLContext;
 
 /**
  *
@@ -14,7 +14,7 @@ package org.geoimage.viewer.core.api;
 public interface ILayer {
 	public String getName();
     public void setName(String name);
-    public void render(GeoContext context);
+    public void render(OpenGLContext context);
     public boolean isActive();
     public void setActive(boolean active);
     public void setParent(ILayer parent);

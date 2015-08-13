@@ -7,7 +7,7 @@ package org.geoimage.viewer.core.layers.visualization;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -33,7 +33,7 @@ public class CaretLayer extends GenericLayer {
     }
 
     
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         GL2 gl = context.getGL().getGL2();
         gl.glColor3f(1, 1, 1);
         gl.glLineWidth(1.0f);

@@ -8,7 +8,7 @@ package org.geoimage.viewer.core;
 import javax.media.opengl.awt.GLCanvas;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -77,7 +77,7 @@ public class Platform {
         return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getConsole();
     }
 
-    public static GeoContext getGeoContext() {
+    public static OpenGLContext getGeoContext() {
         return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getGeoContext();
     }
 

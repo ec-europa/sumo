@@ -12,7 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.geoimage.viewer.core.PickedData;
+import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.core.wwj.VectorObject;
 
 /**
@@ -28,13 +28,13 @@ public class InfoDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setTitle("Info Dialog");
-        PickedData.addListener(new ChangeListener() {
+        LayerPickedData.addListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
                 if (!isVisible()) {
                     return;
                 }
-                VectorObject l = PickedData.getTopObject();
+                VectorObject l = LayerPickedData.getTopObject();
                 if (l == null) {
                     SwingUtilities.invokeLater(new Runnable() {
 

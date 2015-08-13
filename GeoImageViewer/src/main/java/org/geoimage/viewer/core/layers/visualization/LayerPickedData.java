@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.core;
+package org.geoimage.viewer.core.layers.visualization;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * A class that deals with the Vector objects that have been clicked on.
  * @author thoorfr
  */
-public class PickedData {
+public class LayerPickedData {
     
     static private Map<Geometry,Attributes> data=new HashMap<Geometry, Attributes>();
     private static VectorObject topOject;
@@ -30,7 +30,7 @@ public class PickedData {
     
     public static void put(Geometry geom, Attributes att){
         if(data.isEmpty()){
-            PickedData.topOject=new VectorObject(geom, att);
+            LayerPickedData.topOject=new VectorObject(geom, att);
         }
         data.put(geom, att);
         fire();
