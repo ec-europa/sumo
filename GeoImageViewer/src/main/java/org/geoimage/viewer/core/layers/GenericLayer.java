@@ -128,22 +128,12 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                    }
 	                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
 	                    for (Geometry tmp : geomList) {
-	                    /*	Geometry gg;
-							try {
-								gg = Platform.getCurrentImageReader().getGeoTransform().transformGeometryGeoFromPixel(tmp);
-								System.out.println(gg.toText());
-							} catch (GeoTransformException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}*/
-	                    	
 	                    	if(tmp instanceof Polygon){
 		                    	Polygon polygon=(Polygon)tmp;
 		                        if (polygon.getCoordinates().length < 1) {
 		                            continue;
 		                        }
 		                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
-		                        
 		                        
 		                        int interior=polygon.getNumInteriorRing();
 		
