@@ -288,7 +288,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	             }
 	             stop();
              }catch(Exception ee){
-             //catch(ExecutionException|InterruptedException ee){
             	 ee.printStackTrace();
              }    
          }

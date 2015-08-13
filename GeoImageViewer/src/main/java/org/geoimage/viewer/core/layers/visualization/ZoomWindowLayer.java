@@ -14,7 +14,7 @@ import java.awt.image.WritableRaster;
 import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.api.GeoContext;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -63,7 +63,7 @@ public class ZoomWindowLayer extends GenericLayer implements  IMouseMove {
         this.name = name;
     }
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (position == null) {
             return;
         }
@@ -184,7 +184,7 @@ public class ZoomWindowLayer extends GenericLayer implements  IMouseMove {
         this.gir.dispose();
     }
 
-    public void mouseMoved(Point imagePosition, GeoContext context) {
+    public void mouseMoved(Point imagePosition, OpenGLContext context) {
         this.position = imagePosition;
         this.newP = true;
 

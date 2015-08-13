@@ -11,8 +11,8 @@ import java.awt.Point;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.layers.GenericLayer;
@@ -44,7 +44,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
     }
 
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (initPosition == null) {
             return;
         }
@@ -89,7 +89,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         pd.dispose();
     }
 
-    public void mouseMoved(Point imagePosition, GeoContext context) {
+    public void mouseMoved(Point imagePosition, OpenGLContext context) {
         this.imagePosition = imagePosition;
         if (active) {
         	try{
@@ -106,7 +106,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         }
     }
 
-    public void mouseClicked(Point imagePosition, int button, GeoContext context) {
+    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
         if (pd.getCheckDistance()) {
             if (initPosition == null) {
                 initPosition = imagePosition;

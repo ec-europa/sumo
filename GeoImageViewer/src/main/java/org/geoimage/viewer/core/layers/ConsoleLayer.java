@@ -32,11 +32,11 @@ import javax.swing.JTabbedPane;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.Plugins;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
@@ -311,7 +311,7 @@ public class ConsoleLayer extends GenericLayer {
         //do nothing
     }
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (currentAction != null) {
             if (currentAction.isDone()) {
                 Platform.setInfo(((IAction) currentAction).getName() + " done", 10000);

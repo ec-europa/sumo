@@ -16,9 +16,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Attributes;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -236,7 +236,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             		}	
             		
             	}else{
-                    GeoContext geoContext = Platform.getGeoContext();
+                    OpenGLContext geoContext = Platform.getGeoContext();
                     float zoom = (float) geoContext.getZoom();
                     if(e.isShiftDown())
                     {
