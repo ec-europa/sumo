@@ -14,8 +14,8 @@ import java.util.Map;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -106,7 +106,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
     }
 
     @Override
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         super.render(context);
         
         

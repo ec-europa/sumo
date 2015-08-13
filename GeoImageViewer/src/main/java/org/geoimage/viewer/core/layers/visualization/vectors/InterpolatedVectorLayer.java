@@ -20,9 +20,8 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
-import org.geoimage.viewer.core.PickedData;
-import org.geoimage.viewer.core.api.GeoContext;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
@@ -31,6 +30,7 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -70,7 +70,7 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
     }
 
 
-    public void render(GeoContext context) {
+    public void render(OpenGLContext context) {
         if (!context.isDirty()) {
             return;
         }
@@ -183,14 +183,14 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
         return false;
     }
 
-    public void mouseClicked(java.awt.Point imagePosition, int button, GeoContext context) {
+    public void mouseClicked(java.awt.Point imagePosition, int button, OpenGLContext context) {
         this.selectedGeometry = null;
         GeometryFactory gf = new GeometryFactory();
         Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
         for (Point temp : interpolated) {
             if (temp.isWithinDistance(p, 5 * context.getZoom())) {
                 this.selectedGeometry = temp;
-                PickedData.put(temp, glayer.getAttributes(temp));
+                LayerPickedData.put(temp, glayer.getAttributes(temp));
             }
         }
     }
