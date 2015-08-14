@@ -11,16 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
+import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -116,22 +113,13 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 
         int x = context.getX(), y = context.getY();
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
-        GL2 gl = context.getGL().getGL2();
+
         for(Additionalgeometries geometry : additionalGeometriesMap.values()){
             // check geometries need to be displayed
             if(geometry.isStatus()){
-                float[] c = geometry.getColor().getColorComponents(null);
-                gl.glColor3f(c[0], c[1], c[2]);
                 if (geometry.getType().equalsIgnoreCase(GeometricLayer.POINT)) {
-                    gl.glPointSize(geometry.getLinewidth());
-                    gl.glBegin(GL.GL_POINTS);
-                    for (Geometry temp : geometry.getGeometries()) {
-                        Coordinate point = temp.getCoordinate();
-                        gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
+                	GL2ShapesRender.renderPolygons(context,width,height,geometry.getGeometries(),geometry.getLinewidth(),geometry.getColor());
 
-                    }
-                    gl.glEnd();
-                    gl.glFlush();
                 } else if (geometry.getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
                     for (Geometry tmp : geometry.getGeometries()) {
                     	List<Geometry>gs=new ArrayList<>();
@@ -153,14 +141,14 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 		                        if(interior>0){
 		                        	//draw external polygon
 		                        	LineString line=polygon.getExteriorRing();
-		                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        	GL2ShapesRender.drawPoly(context,line.getCoordinates(),width,height,x,y,geometry.getLinewidth(),color);
 		                        	//draw holes
 		                        	for(int i=0;i<interior;i++){
 		                        		LineString line2=polygon.getInteriorRingN(i);
-		                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        		GL2ShapesRender.drawPoly(context,line2.getCoordinates(),width,height,x,y,geometry.getLinewidth(),color);
 		                        	}
 		                        }else{
-		                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth());
+		                        	GL2ShapesRender.drawPoly(context,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth(),color);
 		                        }
 	                    }
                     }
@@ -170,13 +158,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
                         if (temp.getCoordinates().length < 1) {
                             continue;
                         }
-                        gl.glLineWidth(geometry.getLinewidth());
-                        gl.glBegin(GL.GL_LINE_STRIP);
-                        for (Coordinate point : temp.getCoordinates()) {
-                            gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-                        }
-                        gl.glEnd();
-                        gl.glFlush();
+                    	GL2ShapesRender.renderPolygon(context,width,height,temp.getCoordinates(),geometry.getLinewidth(),color);
                     }
                 }
             }

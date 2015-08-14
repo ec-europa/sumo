@@ -74,10 +74,6 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	        float width = context.getWidth() * zoom;
 	        float height = context.getHeight() * zoom;
 	        
-	        GL2 gl = context.getGL().getGL2();
-	        float[] c = color.getColorComponents(null);
-	        gl.glColor3f(c[0], c[1], c[2]);
-
 	        if (glayer != null) {
 	        	List<Geometry> geomList=glayer.getGeometries();
 
@@ -85,8 +81,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
 	                    switch (this.displaysymbol) {
 	                        case point: {
-	                        	GL2ShapesRender.renderPolygon(context, width, height, geomList, this.renderWidth, color);
-	                            
+	                        	GL2ShapesRender.renderPolygons(context, width, height, geomList, this.renderWidth, color);
 	                            if (selectedGeometry != null) {
 	                            	GL2ShapesRender.renderPoint(context, width, height, selectedGeometry.getCoordinate(), this.renderWidth, color);
 	                            }
@@ -106,21 +101,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        }
 	                        break;
 	                        case triangle: {
-	                            for (Geometry temp : geomList) {
-	                                gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                Coordinate point = new Coordinate(temp.getCoordinate());
-	                                point.x = (point.x - x) / width;
-	                                point.y = 1 - (point.y - y) / height;
-	                                double rectwidth = 0.01;
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                gl.glVertex2d(point.x, point.y + rectwidth);
-	                                gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
-	                                gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                gl.glEnd();
-	                                gl.glFlush();
-	                            }
-
+	                        	GL2ShapesRender.renderTriangle(context,width,height,geomList,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        default: {
@@ -136,18 +117,18 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 		                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
 		                        
 		                        int interior=polygon.getNumInteriorRing();
-		
+		                        
 		                        if(interior>0){
 		                        	//draw external polygon
 		                        	LineString line=polygon.getExteriorRing();
-		                        	drawPoly(gl,line.getCoordinates(),width,height,x,y,rWidth);
+		                        	GL2ShapesRender.drawPoly(context,line.getCoordinates(),width,height,x,y,rWidth,color);
 		                        	//draw holes
 		                        	for(int i=0;i<interior;i++){
 		                        		LineString line2=polygon.getInteriorRingN(i);
-		                        		drawPoly(gl,line2.getCoordinates(),width,height,x,y,rWidth);
+		                        		GL2ShapesRender.drawPoly(context,line2.getCoordinates(),width,height,x,y,rWidth,color);
 		                        	}
 		                       }else{
-		                        	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
+		                    	   GL2ShapesRender.drawPoly(context,polygon.getCoordinates(),width,height,x,y,rWidth,color);
 		                       }
 	                    	}else if(tmp instanceof MultiPolygon){
 	                    		MultiPolygon mpolygon=(MultiPolygon)tmp;
@@ -155,7 +136,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                                continue;
 	                            }
 	                            float rWidth=mpolygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
-	                           	drawPoly(gl,mpolygon.getCoordinates(),width,height,x,y,rWidth);
+	                            GL2ShapesRender.drawPoly(context,mpolygon.getCoordinates(),width,height,x,y,rWidth,color);
 
 	                    	}
 	                    }
@@ -164,15 +145,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        if (temp.getCoordinates().length < 1) {
 	                            continue;
 	                        }
-	                        
-	                        gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                        gl.glBegin(GL.GL_LINE_STRIP);
-	                        Coordinate[] cs = temp.getCoordinates();
-	                        for (int p = 0; p < cs.length; p++) {
-	                            gl.glVertex2d((cs[p].x - x) / width, 1 - (cs[p].y - y) / height);
-	                        }
-	                        gl.glEnd();
-	                        gl.glFlush();
+                            float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+                            GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                    }
 	                } else if (getType().equalsIgnoreCase(GeometricLayer.MIXED)) {
 	                    for (Geometry temp : geomList) {
@@ -180,29 +154,15 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                            continue;
 	                        }
 	                        if (temp instanceof LineString||temp instanceof Polygon) {
-	                            gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_LINE_STRIP);
-	                            for (Coordinate point : temp.getCoordinates()) {
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
+	                            float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+	                            GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                        } else if (temp instanceof Point) {
-	                            gl.glPointSize(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_POINTS);
+	                            float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
 	                            Coordinate point = temp.getCoordinate();
-	                            gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            gl.glEnd();
-	                            gl.glFlush();
+	                            GL2ShapesRender.renderPoint(context, width, height, point, size, color);
 	                        }else if (temp instanceof MultiPoint) {
-	                            gl.glPointSize(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_LINE_STRIP);
-	                            Coordinate[] points=temp.getCoordinates();
-	                            for (int i=0;i<points.length-1;i++) {
-	                                gl.glVertex2d((points[i].x - x) / width, 1 - (points[i].y - y) / height);
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
+	                            float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+	                            GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                        }
 	                    }
 	                }
@@ -216,16 +176,14 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
                         }
 	                    switch (this.displaysymbol) {
 	                        case point: {
-	                        	
-	                        	GL2ShapesRender.renderPolygon(context, width, height, toVisualize, this.renderWidth, color);
-
+	                        	GL2ShapesRender.renderPolygons(context, width, height, toVisualize, this.renderWidth, color);
 	                        	if (selectedGeometry != null) {
 	                            	GL2ShapesRender.renderPoint(context, width, height, selectedGeometry.getCoordinate(), this.renderWidth*2, color);
 	                            }
 	                        }
 	                        break;
 	                        case circle: {
-	                        	GL2ShapesRender.renderCircle(context, width, height, geomList, this.renderWidth, color);
+	                        	GL2ShapesRender.renderCircle(context, width, height, toVisualize, this.renderWidth, color);
 	                        }
 	                        break;
 	                        case square: {
@@ -237,59 +195,20 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        }
 	                        break;
 	                        case triangle: {
-	                            for (Geometry temp : geomList) {
-	                                if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
-	                                    gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                    Coordinate point = new Coordinate(temp.getCoordinate());
-	                                    point.x = (point.x - x) / width;
-	                                    point.y = 1 - (point.y - y) / height;
-	                                    double rectwidth = 0.01;
-	                                    gl.glBegin(GL.GL_LINE_STRIP);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                    gl.glVertex2d(point.x, point.y + rectwidth);
-	                                    gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
-	                                    gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	                                    gl.glEnd();
-	                                    gl.glFlush();
-	                                }
-	                            }
-
+	                        	GL2ShapesRender.renderTriangle(context,width,height,toVisualize,selectedGeometry,renderWidth,color);
 	                        }
 	                        break;
 	                        default: {
 	                        }
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
+	                } else if (getType().equalsIgnoreCase(GeometricLayer.POLYGON)||getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
 	                    for (Geometry temp : geomList) {
 	                        if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
 	                            if (temp.getCoordinates().length < 1) {
 	                                continue;
 	                            }
-	                            
-	                            gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_LINE_STRIP);
-	                            for (Coordinate point : temp.getCoordinates()) {
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            }
-	                            Coordinate point = temp.getCoordinates()[0];
-	                            gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            gl.glEnd();
-	                            gl.glFlush();
-	                        }
-	                    }
-	                } else if (getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
-	                    for (Geometry temp : geomList) {
-	                        if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
-	                            if (temp.getCoordinates().length < 1) {
-	                                continue;
-	                            }
-	                            gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                            gl.glBegin(GL.GL_LINE_STRIP);
-	                            for (Coordinate point : temp.getCoordinates()) {
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                            }
-	                            gl.glEnd();
-	                            gl.glFlush();
+	                            float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+	                            GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                        }
 	                    }
 	                } else if (getType().equalsIgnoreCase(GeometricLayer.MIXED)) {
@@ -298,29 +217,13 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                            if (temp.getCoordinates().length < 1) {
 	                                continue;
 	                            }
-	                            if (temp instanceof LineString) {
-	                                gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                for (Coordinate point : temp.getCoordinates()) {
-	                                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                }
-	                                gl.glEnd();
-	                                gl.glFlush();
-	                            } else if (temp instanceof Polygon) {
-	                                gl.glLineWidth(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                gl.glBegin(GL.GL_LINE_STRIP);
-	                                for (Coordinate point : temp.getCoordinates()) {
-	                                    gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                }
-	                                gl.glEnd();
-	                                gl.glFlush();
+	                            if (temp instanceof Polygon||temp instanceof LineString) {
+	                                float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
+	                                GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                            } else if (temp instanceof Point) {
-	                                gl.glPointSize(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
-	                                gl.glBegin(GL.GL_POINTS);
+	                                float size=temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
 	                                Coordinate point = temp.getCoordinate();
-	                                gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-	                                gl.glEnd();
-	                                gl.glFlush();
+	                                GL2ShapesRender.renderPoint(context, width, height, point, size, color);
 	                            }
 	                        }
 	                    }
@@ -329,30 +232,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	        }
 	}
 	
-	/**
-     * 
-     * @param gl
-     * @param cs
-     * @param width
-     * @param height
-     * @param x
-     * @param y
-     */
-    protected void drawPoly(GL2 gl,Coordinate[] cs,float width,float height,int x,int y,float rwidth){
-    	gl.glLineWidth(rwidth);
-        gl.glBegin(GL.GL_LINE_STRIP);
-        for (int p = 0; p < cs.length; p++) {
-        	double vx=(cs[p].x - x) / width;
-        	double vy=1 - (cs[p].y - y) / height;
-            gl.glVertex2d(vx,vy);
-        }
-       
-        //close polygon
-        Coordinate point = cs[0];
-        gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
-        gl.glEnd();
-        gl.glFlush();
-    }
+	
 
 	
 
