@@ -285,7 +285,10 @@ public class DetectedPixels {
 
     }
 
-    // add the detectedpixels
+    /**
+     *  add the detectedpixels
+     * @param pixels
+     */
     public void addAll(DetectedPixels pixels) {
     	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
     	Collection<Pixel> boats = BoatPixel.values();
@@ -370,11 +373,12 @@ public class DetectedPixels {
         Pixel pixels[]=allDetectedPixels.values().toArray(new Pixel[0]);
         int count=0;
         
-        for (Pixel p: pixels) {
+        //loop on all detected pixel
+        for (Pixel detectedPix: pixels) {
         	count++;
         	
-            int xx = p.x;
-            int yy = p.y;
+            int xx = detectedPix.x;
+            int yy = detectedPix.y;
             
             if((count % 100)==0)
             	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
@@ -453,7 +457,7 @@ public class DetectedPixels {
                 BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize], thresholdvalues);
                 boatpixel.setMeanValue((statistics[0][1] + statistics[0][2] + statistics[0][3] + statistics[0][4]) / 4);
                 boatpixel.setStdValue(statistics[0][0]);
-                boatpixel.setThresholdValue(p.threshold);
+                boatpixel.setThresholdValue(detectedPix.threshold);
                 listboatneighbours.add(boatpixel);
                 // start list of aggregated pixels
                 List<int[]> boataggregatedpixels = new ArrayList<int[]>();
