@@ -4,13 +4,9 @@
  */
 package org.geoimage.viewer.core.layers.visualization.vectors;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
-
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
@@ -34,7 +30,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.operation.distance.DistanceOp;
 
 /**
  *
@@ -141,7 +136,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
 
         if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
-            GL2ShapesRender.renderPolygon(context, width, height,glayer.getGeometries(),width * 2,getColor());
+            GL2ShapesRender.renderPolygons(context, width, height,glayer.getGeometries(),width * 2,getColor());
         }
 
         if (editedPoint != null) {
