@@ -56,6 +56,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private boolean removelandconnectedpixels;
 		private boolean display;
 		private int numPointLimit=0;
+		private boolean displaybandanalysis;
+		private String agglomerationMethodology;
 		
 		private static org.slf4j.Logger logger=LoggerFactory.getLogger(AnalysisProcess.class);
 
@@ -110,6 +112,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             tilesize=Platform.getConfiguration().getTileSize(200);
             removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
             display = Platform.getConfiguration().getDisplayPixel()&&!Platform.isBatchMode();
+            displaybandanalysis= Platform.getConfiguration().getDisplayBandAnalysis();
+            agglomerationMethodology = Platform.getConfiguration().getAgglomerationAlg();
 		}
    
 		/**
@@ -139,9 +143,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              
              List<Geometry>allAmbiguities=new ArrayList<>();
              
-             boolean displaybandanalysis = Platform.getConfiguration().getDisplayBandAnalysis();
-             String agglomerationMethodology = Platform.getConfiguration().getAgglomerationAlg();
-             
              //landmask name
              String bufferedMaskName="";
              if(bufferedMask!=null && bufferedMask.length>0){
@@ -160,7 +161,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	 notifyVDSAnalysis("Performing VDS Analysis",vTiles);
 	            	 analysis.addProgressListener(this);
 
-	            	 //identify problably target
+	            	 //identify probably target
 	            	 analysis.run(kdist,blackBorderAnalysis,band);
 	            	 banddetectedpixels[band]=analysis.getPixels();
 	            	 
