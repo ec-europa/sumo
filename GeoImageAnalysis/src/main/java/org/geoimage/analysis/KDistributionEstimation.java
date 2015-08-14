@@ -8,6 +8,7 @@ import java.awt.image.Raster;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class KDistributionEstimation {
 	private static String dbhost = "localhost";
 	private static String dbport = "5432";
 	private double[][][] detectThresh = null;
-	private double[][][] tileStat = null;
+	private double[] tileStat = null;
 
 	  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
 /*	private int xMarginCheck = 0;
@@ -220,7 +221,7 @@ public class KDistributionEstimation {
 	 * nTileX number of x tiles to analyze
 	 * nTileY number of y tiles to analyze
 	 * @param mask
-	 */
+	 *
 	public void estimate(Raster mask,int nTileX,int nTileY) {
 
 		detectThresh = new double[nTileX][nTileY][6];
@@ -237,7 +238,7 @@ public class KDistributionEstimation {
 				int iniX = startTile[0] + i * sizeTileX;
 				int iniY = startTile[1] + j * sizeTileY;
 				int[] data = gir.readTile(iniX, iniY, sizeTileX, sizeTileY,band);
-				double[] result = computeStat(256 * 256, i, j, mask, data);
+				final double[] result = computeStat(256 * 256, i, j, mask, data);
 
 				for (int k = 0; k < 5; k++) {
 					tileStat[j][i][k] = result[k];
@@ -246,58 +247,55 @@ public class KDistributionEstimation {
 				// System.out.print("->>"+clippingThresh);
 
 				for (int iter = 0; iter < iteration; iter++) {
-					result = computeStat(clippingThresh, i, j, mask, data);
+					final double[] newresult = computeStat(clippingThresh, i, j, mask, data);
 					if (iter != iteration - 1) {
-						clippingThresh = lookUpTable.getClippingThreshFromClippedStd(result[0]);
-					} /*
-					 * if(new String().valueOf(clippingThresh).equals("NaN")){
-					 * clippingThresh=256.*256.; System.out.println("pouet"); }
-					 */else {
-						double threshTemp = lookUpTable.getDetectThreshFromClippedStd(result[0]);
+						clippingThresh = lookUpTable.getClippingThreshFromClippedStd(newresult[0]);
+					} 
+					   //if(new String().valueOf(clippingThresh).equals("NaN")){
+					   //clippingThresh=256.*256.; System.out.println("pouet"); }
+					 else {
+						double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
 						for (int k = 1; k < 5; k++) {
-							detectThresh[i][j][k] = threshTemp * result[k];
+							detectThresh[i][j][k] = threshTemp * newresult[k];
 						}
-						detectThresh[i][j][0] = result[0];
+						detectThresh[i][j][0] = newresult[0];
 						detectThresh[i][j][5] = threshTemp;
 					}
 				}
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * @param mask
 	 */
 	public void estimate(Raster mask,int data[]) {
-
 		detectThresh = new double[1][1][6];
-		tileStat = new double[1][1][5];
 		if (!initialisation) {
 			initialise(0.0, 0.0);
 		}
 		statData = new double[] { 1, 1, 1, 1, 1 };
 
-		double[] result = computeStat(256 * 256, 1, 1, mask, data);
+		final double[] result = computeStat(256 * 256, 1, 1, mask, data);
 
-		for (int k = 0; k < 5; k++) {
-			tileStat[0][0][k] = result[k];
-		}
+		tileStat = ArrayUtils.clone(result);
+
 		clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
 		// System.out.print("->>"+clippingThresh);
 
 		for (int iter = 0; iter < iteration; iter++) {
-			result = computeStat(clippingThresh, 1, 1, mask, data);
+			final double[] newresult = computeStat(clippingThresh, 1, 1, mask, data);
 			if (iter != iteration - 1) {
-				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(result[0]);
+				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(newresult[0]);
 			} /*
 			 * if(new String().valueOf(clippingThresh).equals("NaN")){
 			 * clippingThresh=256.*256.; System.out.println("pouet"); }
 			 */else {
-				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(result[0]);
+				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
 				for (int k = 1; k < 5; k++) {
-					detectThresh[0][0][k] = threshTemp * result[k];
+					detectThresh[0][0][k] = threshTemp * newresult[k];
 				}
-				detectThresh[0][0][0] = result[0];
+				detectThresh[0][0][0] = newresult[0];
 				detectThresh[0][0][5] = threshTemp;
 			}
 		}
@@ -432,11 +430,10 @@ public class KDistributionEstimation {
 	 * @return the stats of each subtiles
 	 */
 	protected double[] computeStat(double clip, int iniX, int iniY,	Raster mask, int[] data) {
-		
+		//multiply the clip with the previous statData[]
 		double clip1 = statData[1] * clip, clip2 = statData[2] * clip, clip3 = statData[3]* clip, clip4 = statData[4] * clip;
 		
 		// used to fill in the zero values for the means
-		
 		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
 		standardDeviation = 0.0;
 
@@ -550,7 +547,7 @@ public class KDistributionEstimation {
 	 *
 	 * @return the stats
 	 */
-	public double[][][] getTileStat() {
+	public double[] getTileStat() {
 		return tileStat;
 	}
 

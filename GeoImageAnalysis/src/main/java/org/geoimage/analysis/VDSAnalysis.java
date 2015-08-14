@@ -12,9 +12,6 @@ import java.util.List;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 
-
-
-
 /**
  *
  * @author Pietro Argentieri
@@ -41,18 +38,6 @@ public class VDSAnalysis{
     private final double MIN_TRESH_FOR_ANALYSIS=0.7;
     
     private List<ProgressListener>progressListener=null;
-
-	/**
-     *
-     * @param gir
-     * @param mask
-     * @param enlf
-     * @param threshold
-     * @param progressBar
-     *
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf,  float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV ){
-        this(gir,mask, enlf, thresholdHH, thresholdHV, thresholdVH, thresholdVV,null);
-    }*/
 
     /**
      *
@@ -130,11 +115,11 @@ public class VDSAnalysis{
     /**
      * 
      * @param kdist
-     * @param significance
+     * @param thresholdBand
      * @return
      * @throws IOException 
      */
-    private DetectedPixels analyse(KDistributionEstimation kdist, float significance,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
+    private DetectedPixels analyse(KDistributionEstimation kdist, float thresholdBand,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
         int horTiles = gir.getWidth() / this.tileSize;
@@ -208,8 +193,6 @@ public class VDSAnalysis{
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                         
-                        //for(int count = 0; count < maskdata.length; count++)
-                        //    inValidPixelCount += maskdata[count];
                         containsMinPixelValid=((double)oldInValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }	
@@ -222,9 +205,9 @@ public class VDSAnalysis{
                     kdist.estimate(rastermask,data);
                     
                     double[][][] thresh = kdist.getDetectThresh();
-                    tileStat[rowIndex] = kdist.getTileStat()[0];
+                    tileStat[rowIndex][0] = kdist.getTileStat();
                     
-                    double threshWindowsVals[]=calcThreshWindowVals(significance, thresh[0][0]);
+                    double threshWindowsVals[]=calcThreshWindowVals(thresholdBand, thresh[0][0]);
 
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
