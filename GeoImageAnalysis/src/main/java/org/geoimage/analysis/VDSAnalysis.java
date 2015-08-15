@@ -204,10 +204,10 @@ public class VDSAnalysis{
                     
                     kdist.estimate(rastermask,data);
                     
-                    double[][][] thresh = kdist.getDetectThresh();
+                    double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
                     
-                    double threshWindowsVals[]=calcThreshWindowVals(thresholdBand, thresh[0][0]);
+                    double threshWindowsVals[]=calcThreshWindowVals(thresholdBand, thresh);
 
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
@@ -232,14 +232,14 @@ public class VDSAnalysis{
 
                                 // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                                 if (pix > threshWindowsVals[subwindow-1]) {
-                                	double tileAvg=thresh[0][0][subwindow] / thresh[0][0][5];
-                                	double tileStdDev=thresh[0][0][0] * thresh[0][0][subwindow] / thresh[0][0][5];
+                                	double tileAvg=thresh[subwindow] / thresh[5];
+                                	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
                                     dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue 
                                     		    tileAvg,
                                     		    tileStdDev,//tile standard deviation normalized 
-                                    		    thresh[0][0][5], band);
+                                    		    thresh[5], band);
                                 }
                             }
                         }
