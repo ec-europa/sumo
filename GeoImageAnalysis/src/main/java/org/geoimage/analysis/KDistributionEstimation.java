@@ -65,7 +65,7 @@ public class KDistributionEstimation {
 	private static String dbpass = "";
 	private static String dbhost = "localhost";
 	private static String dbport = "5432";
-	private double[][][] detectThresh = null;
+	private double[] detectThresh = null;
 	private double[] tileStat = null;
 
 	  //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
@@ -270,7 +270,7 @@ public class KDistributionEstimation {
 	 * @param mask
 	 */
 	public void estimate(Raster mask,int data[]) {
-		detectThresh = new double[1][1][6];
+		detectThresh = new double[6];
 		if (!initialisation) {
 			initialise(0.0, 0.0);
 		}
@@ -293,10 +293,10 @@ public class KDistributionEstimation {
 			 */else {
 				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
 				for (int k = 1; k < 5; k++) {
-					detectThresh[0][0][k] = threshTemp * newresult[k];
+					detectThresh[k] = threshTemp * newresult[k];
 				}
-				detectThresh[0][0][0] = newresult[0];
-				detectThresh[0][0][5] = threshTemp;
+				detectThresh[0] = newresult[0];
+				detectThresh[5] = threshTemp;
 			}
 		}
 	}
@@ -556,7 +556,7 @@ public class KDistributionEstimation {
 	 *
 	 * @return the threshs
 	 */
-	public double[][][] getDetectThresh() {
+	public double[] getDetectThresh() {
 		return detectThresh;
 	}
 

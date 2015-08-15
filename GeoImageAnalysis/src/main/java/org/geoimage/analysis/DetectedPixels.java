@@ -516,12 +516,12 @@ public class DetectedPixels {
             int band = bands[i];
             kdist.setImageData(gir, cornerx,cornery, width, height,0,0,band,null);
             kdist.estimate(null,data[i]);
-            double[][][] thresh = kdist.getDetectThresh();
-            imagestat[i][0] = thresh[0][0][0];
-            imagestat[i][1] = thresh[0][0][1] / thresh[0][0][5];
-            imagestat[i][2] = thresh[0][0][2] / thresh[0][0][5];
-            imagestat[i][3] = thresh[0][0][3] / thresh[0][0][5];
-            imagestat[i][4] = thresh[0][0][4] / thresh[0][0][5];
+            double[] thresh = kdist.getDetectThresh();
+            imagestat[i][0] = thresh[0];
+            imagestat[i][1] = thresh[1] / thresh[5];
+            imagestat[i][2] = thresh[2] / thresh[5];
+            imagestat[i][3] = thresh[3] / thresh[5];
+            imagestat[i][4] = thresh[4] / thresh[5];
         }
 
         return imagestat;
