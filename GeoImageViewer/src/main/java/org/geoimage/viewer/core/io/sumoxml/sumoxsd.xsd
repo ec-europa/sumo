@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"   elementFormDefault="qualified">
 	<!-- analysis = xml root -->
 	<xs:element name="analysis">
 		<xs:complexType>
@@ -52,14 +52,28 @@
 				<xs:element name="heading_range"  type="xs:double"/>
 				<xs:element name="heading_north" type="xs:double"/>
 				<xs:element name="lwh_reliability"  type="xs:boolean"/>
-				<xs:element name="significance" type="xs:string"/>
+
 				<xs:element name="rcs" type="xs:string"/>
 				<xs:element name="bgnd_mean" type="xs:string"/>
 				<xs:element name="bgnd_stdev" type="xs:string"/>
 				<xs:element name="bgnd_sigma0" type="xs:string"/>
 				<xs:element name="noise" type="xs:int"/>
-				<xs:element name="maxvalue" type="xs:string"/>
-				<xs:element name="minDetectableRcs" type="xs:string"/>
+				
+				<!-- format 0.000,0.000,0.000,0.000 significance values for the boat for each polarization -->
+				<xs:element name="significance" type="xs:string"/>
+				
+				<!-- format 0.000,0.000,0.000,0.000  threshold values for the tile for each polarization -->
+				<xs:element name="threshold_tile" type="xs:string"/>
+				
+				<xs:element name="max_value" type="xs:int"/>
+				<xs:element name="min_detectable_rcs" type="xs:string"/>
+				
+				<!--  only for compatibility with the old code -->
+				<xs:element name="speed" minOccurs="0" type="xs:double"/>
+				<xs:element name="target_type" minOccurs="0" type="xs:string"/>
+				<xs:element name="comment" minOccurs="0" type="xs:string"/>
+				<xs:element name="related_target_number" minOccurs="0" type="xs:int"/>
+				
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -73,27 +87,6 @@
 	  </xs:simpleType>
 	</xs:element>
 	
-	<xs:element name="run_version_ori">
-	  <xs:simpleType>
-	    <xs:restriction base="xs:string">
-	      <xs:enumeration value="man"/>
-	      <xs:enumeration value="aut"/>
-	    </xs:restriction>
-	  </xs:simpleType>
-	</xs:element>
-
-	<!-- xs:element name="parameters">
-	  <xs:complexType>
-			<xs:sequence>
-				<xs:element name="p1" type="xs:decimal"/>
-				<xs:element name="p2" type="xs:decimal"/>
-				<xs:element name="p3" type="xs:decimal"/>
-				<xs:element name="p4" type="xs:decimal"/>
-				<xs:element name="p5" type="xs:decimal"/>
-				<xs:element name="p6" type="xs:decimal"/>
-			</xs:sequence>	
-	  </xs:complexType>			
-	</xs:element -->
 
 	<xs:element name="sensor">
 	 <xs:simpleType>
@@ -119,33 +112,21 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="run_time" type="xs:string"/>
-				<xs:element name="run_version" type="xs:NCName"/>
-				<!-- xs:element ref="run_version_ori" minOccurs="0"/ -->
-				<xs:element minOccurs="0" name="run_version_ori" type="xs:string"/>
+
+				<xs:element name="run_version" type="xs:string"/>
+				<xs:element minOccurs="0" name="run_version_num" type="xs:int"/>
+
 				<xs:element name="detector_version" type="xs:string"/>
 				<xs:element ref="algorithm"/>
 				<xs:element name="parameters" type="xs:string"/>
-				<xs:element name="any_detections" type="xs:boolean"/>
-				<xs:element name="sumo_runid" type="xs:int"/>
-				<xs:element name="enl" type="xs:double"/>
-				
-				
-				<!-- correspond to pol/polnumeric from sat_image_metadata    -->	
-				<xs:element minOccurs="0" name="threshOrderChans" type="xs:string"/>
-
-				<!-- thresh values are used only if the polarization channel is used in the VDS analysis -->
-				<xs:element minOccurs="0" name="threshHH" type="xs:float"/>
-				<xs:element minOccurs="0" name="threshHV" type="xs:float"/>
-				<xs:element minOccurs="0" name="threshVH" type="xs:float"/>
-				<xs:element minOccurs="0" name="threshVV" type="xs:float"/>
+				<!-- number of boats detected -->
+				<xs:element name="nr_detections" type="xs:int"/>
 				
 				<!-- buffer for land mask used in vds_analysis -->
 				<xs:element name="buffer" type="xs:int"/>
 				<xs:element name="land_mask_read" type="xs:string"/>
-				<xs:element minOccurs="0" name="matrixratio" type="xs:double"/>
+
 				
-				<!-- number of boats detected -->
-				<xs:element name="Nboat" type="xs:int"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
