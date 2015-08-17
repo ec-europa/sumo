@@ -192,32 +192,33 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		
 		vdsA.setBuffer(buffer);
 		vdsA.setDetectorVersion("");
-		
+
+		/// fields removed in the last xml version
 		//add thresholds in order
-    	vdsA.setThreshHH(thresholds[0]);
+    	/*vdsA.setThreshHH(thresholds[0]);
     	vdsA.setThreshHV(thresholds[1]);
     	vdsA.setThreshVH(thresholds[2]);
-    	vdsA.setThreshVV(thresholds[3]);
-    	
-		vdsA.setMatrixratio(new Double(0));
+    	vdsA.setThreshVV(thresholds[3]);*/
+		//vdsA.setMatrixratio(new Double(0));
+		//vdsA.setEnl(enlround);
+		//		vdsA.setSumoRunid(0);
+		
 		double enlround=Precision.round(enl,2); 
-		vdsA.setEnl(enlround);
-		vdsA.setSumoRunid(0);
+		
 		
 		StringBuilder params=new StringBuilder("").append(enlround).append(",");
 		if(thresholds!=null && thresholds.length>0){
 			String th=Arrays.toString(thresholds);
 			th=th.substring(1, th.length()-1);
-			
-			vdsA.setThreshOrderChans(th);
 			params=params.append(th).append(",0.00");
 			
 		}
 		vdsA.setParameters(params.toString());
 		vdsA.setRunTime(format.format(new Date()));
 
+		//TODO: modify the gui to add this fields
 		vdsA.setRunVersion("");
-		vdsA.setRunVersionOri("");
+		vdsA.setRunVersionNum(1);
 		
 		vdsA.setLandMaskRead(landmask);
 		
@@ -277,7 +278,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			}
 			Double max=(Double)att.get(VDSSchema.MAXIMUM_VALUE);
 			if(max!=null)
-				b.setMaxvalue(""+(max.intValue()));
+				b.setMaxValue(max.intValue());
 			
 			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
 			b.setLength(lenght);
@@ -294,10 +295,14 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			//b.setNoise(null);
 			double hn=Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR);
 			b.setHeadingNorth(hn);
+			
+			
+			//TODO: add significance and thresholdtile
+			b.setSignificance("");
+			b.setThresholdTile("");
+			
 			target.getBoat().add(b);
 		}
-		vdsA.setNboat(targetNumber);
-		vdsA.setAnyDetections(targetNumber>0);
 		
 		
 		/**** IMAGE METADATA ***********/
@@ -414,6 +419,17 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	
 	
 	
+	
+	@Override
+	public void save(File output, String projection, GeoTransform transform) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
+	
+	//to test xml 
 	public static void main(String[] args){
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd_HHmmSSS");
@@ -422,19 +438,134 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			Date d=format.parse(dd);
 			String dd2=format2.format(d);
 			System.out.println(dd2);
+			
+			/**** VDS ANALYSIS ***********/
+			VdsAnalysis vdsA = new VdsAnalysis();
+			vdsA.setAlgorithm("k-dist");
+			
+			vdsA.setBuffer(0);
+			vdsA.setDetectorVersion("");
+			
+			
+			vdsA.setParameters("");
+			vdsA.setRunTime(format.format(new Date()));
+
+			vdsA.setRunVersion("");
+			vdsA.setRunVersionNum(1);
+			
+			vdsA.setLandMaskRead("");
+			
+			/**** VDS TARGETS ***********/
+			int targetNumber = 0;
+			VdsTarget target = new VdsTarget();
+			for (int i=0;i<3;i++) {
+				/**Boat section **/
+				// create new boat
+				Boat b = new Boat();
+				// set boat target number
+				targetNumber++;
+				b.setTargetNumber(targetNumber);
+
+				b.setLat(0);
+				b.setLon(0);
+						
+				b.setIncAng(0);
+				
+				//x,y without decimal
+				b.setXpixel(0);
+				b.setYpixel(0);
+				
+				//for the moment we leave 
+				b.setDetecttime(dd);
+				
+				b.setReliability(3);
+				b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
+
+				b.setMaxValue(0);
+				
+				double lenght=0;
+				b.setLength(lenght);
+				b.setWidth(0);
+				
+				b.setSizeClass("S");//lenght<70
+				
+				double hn=0;
+				b.setHeadingNorth(hn);
+				
+				//TODO: add significance and thresholdtile
+				b.setSignificance("");
+				b.setThresholdTile("");
+				
+				target.getBoat().add(b);
+			}
+			
+			
+			/**** IMAGE METADATA ***********/
+			SatImageMetadata imageMeta = new SatImageMetadata();
+			
+			
+			try {
+				imageMeta.setGcps(new Gcps());
+				imageMeta.setTimestampStart(dd);
+				imageMeta.setTimeStart(format.format(dd));
+				
+				Timestamp tStop=Timestamp.valueOf(dd);
+				imageMeta.setTimeStop(format.format(tStop));
+				
+				format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+				
+				imageMeta.setImId("XX_"+format.format(dd));
+				imageMeta.setImageName("TEST");
+				
+				imageMeta.setSensor("XX");
+				
+				String pol="HH";
+				imageMeta.setPol(pol.trim());
+				String polNumeric=pol.replace("HH","1");
+				polNumeric=polNumeric.replace("HV","2");
+				polNumeric=polNumeric.replace("VH","3");
+				polNumeric=polNumeric.replace("VV","4");
+				if(polNumeric.endsWith(" "))
+					polNumeric=polNumeric.substring(0, polNumeric.length()-1);
+				polNumeric=polNumeric.replace(" ",",").trim();
+				imageMeta.setPolnumeric(polNumeric);
+			} catch (Exception e) {
+				logger.error(e);
+			}
+			
+			
+			Analysis an = new Analysis();
+			an.setSatImageMetadata(imageMeta);
+			an.setVdsAnalysis(vdsA);
+			an.setVdsTarget(target);
+			
+			/**** SAVING ***********/
+			try {            
+	            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
+	            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+	            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+	            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+	            File output=new File("./test.xml");
+	            OutputStream os = new FileOutputStream(output );
+	            //marshaller.marshal(an, System.out);
+	            marshaller.marshal( an, os );
+	            os.close();
+	        } catch (javax.xml.bind.JAXBException ex) {
+	        	logger.log(Level.ERROR, null, ex);
+	        } catch (FileNotFoundException e) {
+	        	logger.log(Level.ERROR, null, e);
+			} catch (IOException e) {
+				logger.log(Level.ERROR, null, e);
+
+			}
+			
+			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.exit(0);
 	}
-
-	@Override
-	public void save(File output, String projection, GeoTransform transform) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	
 	
