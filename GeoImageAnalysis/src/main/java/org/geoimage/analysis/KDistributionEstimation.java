@@ -53,18 +53,19 @@ public class KDistributionEstimation {
 	// clipping thresh to compute the mean and the standard deviation
 	double clippingThresh;
 
-	// detect Thresh
-	// [tileX][tileY][field]
-	// with field = 0 -> mormalized detect Thresh
-	// with field = 1 -> detect Thresh for subTile 1
-	// with field = 2 -> detect Thresh for subTile 2
-	// with field = 3 -> detect Thresh for subTile 3
-	// with field = 4 -> detect Thresh for subTile 4
+	
 	private static String dbname = "Positions";
 	private static String dbuser = "vms-vds-user";
 	private static String dbpass = "";
 	private static String dbhost = "localhost";
 	private static String dbport = "5432";
+	
+	// detect Thresh
+	// with field = 0 -> mormalized detect Thresh
+	// with field = 1 -> detect Thresh for subTile 1
+	// with field = 2 -> detect Thresh for subTile 2
+	// with field = 3 -> detect Thresh for subTile 3
+	// with field = 4 -> detect Thresh for subTile 4
 	private double[] detectThresh = null;
 	private double[] tileStat = null;
 
@@ -76,7 +77,7 @@ public class KDistributionEstimation {
 	private BlackBorderAnalysis borderAnalysis;
 	private int rowTile;
 	private int colTile;
-	private int band=0;
+	//private int band=0;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
 	
@@ -178,7 +179,7 @@ public class KDistributionEstimation {
 		this.borderAnalysis=blackBorderAnalysis;
 		this.rowTile=row;
 		this.colTile=col;
-		this.band=band;
+		//this.band=band;
 	}
 
 	/**
@@ -216,55 +217,6 @@ public class KDistributionEstimation {
 		initialisation = true;
 	}
 
-	//method to estimate the mean and the standard deviation with iteration
-	/**
-	 * nTileX number of x tiles to analyze
-	 * nTileY number of y tiles to analyze
-	 * @param mask
-	 *
-	public void estimate(Raster mask,int nTileX,int nTileY) {
-
-		detectThresh = new double[nTileX][nTileY][6];
-		tileStat = new double[nTileY][nTileX][5];
-		if (!initialisation) {
-			initialise(0.0, 0.0);
-		}
-
-		for (int j = 0; j < nTileY; j++) {
-			for (int i = 0; i < nTileX; i++) {
-
-				statData = new double[] { 1, 1, 1, 1, 1 };
-
-				int iniX = startTile[0] + i * sizeTileX;
-				int iniY = startTile[1] + j * sizeTileY;
-				int[] data = gir.readTile(iniX, iniY, sizeTileX, sizeTileY,band);
-				final double[] result = computeStat(256 * 256, i, j, mask, data);
-
-				for (int k = 0; k < 5; k++) {
-					tileStat[j][i][k] = result[k];
-				}
-				clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
-				// System.out.print("->>"+clippingThresh);
-
-				for (int iter = 0; iter < iteration; iter++) {
-					final double[] newresult = computeStat(clippingThresh, i, j, mask, data);
-					if (iter != iteration - 1) {
-						clippingThresh = lookUpTable.getClippingThreshFromClippedStd(newresult[0]);
-					} 
-					   //if(new String().valueOf(clippingThresh).equals("NaN")){
-					   //clippingThresh=256.*256.; System.out.println("pouet"); }
-					 else {
-						double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
-						for (int k = 1; k < 5; k++) {
-							detectThresh[i][j][k] = threshTemp * newresult[k];
-						}
-						detectThresh[i][j][0] = newresult[0];
-						detectThresh[i][j][5] = threshTemp;
-					}
-				}
-			}
-		}
-	}*/
 
 	/**
 	 * @param mask
@@ -281,16 +233,12 @@ public class KDistributionEstimation {
 		tileStat = ArrayUtils.clone(result);
 
 		clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
-		// System.out.print("->>"+clippingThresh);
 
 		for (int iter = 0; iter < iteration; iter++) {
 			final double[] newresult = computeStat(clippingThresh, 1, 1, mask, data);
 			if (iter != iteration - 1) {
 				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(newresult[0]);
-			} /*
-			 * if(new String().valueOf(clippingThresh).equals("NaN")){
-			 * clippingThresh=256.*256.; System.out.println("pouet"); }
-			 */else {
+			} else {
 				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
 				for (int k = 1; k < 5; k++) {
 					detectThresh[k] = threshTemp * newresult[k];
