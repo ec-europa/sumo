@@ -10,15 +10,12 @@ import java.net.URL;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
-import org.geoimage.def.SarImageReader;
 import org.slf4j.LoggerFactory;
 
 /**
  * the class applying the algorithm based on k-distribution
  */
 public class KDistributionEstimation {
-	// the image data for estimation
-	protected SarImageReader gir = null;
 	/** the processed image */
 	protected byte[] imageData = null;
 	/** the size of the processed image */
@@ -29,7 +26,7 @@ public class KDistributionEstimation {
 	/** */
 	protected int N;
 	/** the stats of subtiles */
-	protected double[] statData = { 1., 1., 1., 1., 1. };
+	//protected double[] statData = { 1., 1., 1., 1., 1. };
 	/** the flag to know if the image is log-scale encoded */
 	protected int logScaling = 0;
 	/** parameter to decode log-scale images */
@@ -41,11 +38,6 @@ public class KDistributionEstimation {
 	// deviation
 	/** the client to get the lookup table through the webservice */
 	protected LookUpTable lookUpTable = null;
-	private double standardDeviation = -1.;
-
-	// flag for external initialisation
-	private boolean initialisation = false;
-
 
 	// number of iteration for the detect threshold estimation
 	int iteration = 2;
@@ -90,7 +82,9 @@ public class KDistributionEstimation {
 
 	// CONSTRUCTOR
 	/** the cinstructor */
-	public KDistributionEstimation(float enlf) {
+	public KDistributionEstimation(float enlf,BlackBorderAnalysis blackBorderAnalysis) {
+		this.borderAnalysis=blackBorderAnalysis;
+
 		String enl = "" + (int) (enlf * 10);
 		if (enl.length() == 2) {
 			enl = "0" + enl;
@@ -148,8 +142,6 @@ public class KDistributionEstimation {
 	/**
 	 * set the image to analyse
 	 *
-	 * @param gir
-	 *            the image to analyse
 	 * @param sizeX
 	 *            the x size of the image
 	 * @param sizeY
@@ -167,19 +159,16 @@ public class KDistributionEstimation {
 	 * 
 	 *  
 	 */
-	public void setImageData(SarImageReader gir, int sizeX, int sizeY,
-			int sizeTileX, int sizeTileY,
-			int row,int col,int band,BlackBorderAnalysis blackBorderAnalysis) {
-		this.gir = gir;
+	public void setImageData(int sizeX, int sizeY,
+							 int sizeTileX, int sizeTileY,
+							 int row,int col,int band) {
 		startTile[0] = sizeX;
 		startTile[1] = sizeY;
 		this.sizeTileX = sizeTileX;
 		this.sizeTileY = sizeTileY;
 		N = sizeTileX * sizeTileY / 2;
-		this.borderAnalysis=blackBorderAnalysis;
 		this.rowTile=row;
 		this.colTile=col;
-		//this.band=band;
 	}
 
 	/**
@@ -202,20 +191,7 @@ public class KDistributionEstimation {
 		return imageData;
 	}
 
-	// initialise the parameters if you know a estimation
-	/**
-	 * initialise the stat
-	 *
-	 * @param mean
-	 *            th mean of the tile
-	 * @param standardDeviation
-	 *            the standard deviation of the tile
-	 */
-	public void initialise(double mean, double std) {
-		standardDeviation = std;
-		clippingThresh = 0.0;
-		initialisation = true;
-	}
+	
 
 
 	/**
@@ -223,30 +199,27 @@ public class KDistributionEstimation {
 	 */
 	public void estimate(Raster mask,int data[]) {
 		detectThresh = new double[6];
-		if (!initialisation) {
-			initialise(0.0, 0.0);
-		}
-		statData = new double[] { 1, 1, 1, 1, 1 };
 
-		final double[] result = computeStat(256 * 256, 1, 1, mask, data);
+		double[] statData = new double[] { 1, 1, 1, 1, 1 };
 
-		tileStat = ArrayUtils.clone(result);
+		computeStat(256 * 256, 1, 1, mask, data,statData);
 
-		clippingThresh = lookUpTable.getClippingThreshFromStd(result[0]);
+		clippingThresh = lookUpTable.getClippingThreshFromStd(statData[0]);
 
 		for (int iter = 0; iter < iteration; iter++) {
-			final double[] newresult = computeStat(clippingThresh, 1, 1, mask, data);
+			computeStat(clippingThresh, 1, 1, mask, data,statData);
 			if (iter != iteration - 1) {
-				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(newresult[0]);
+				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(statData[0]);
 			} else {
-				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(newresult[0]);
+				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(statData[0]);
 				for (int k = 1; k < 5; k++) {
-					detectThresh[k] = threshTemp * newresult[k];
+					detectThresh[k] = threshTemp * statData[k];
 				}
-				detectThresh[0] = newresult[0];
+				detectThresh[0] = statData[0];
 				detectThresh[5] = threshTemp;
 			}
 		}
+		tileStat = ArrayUtils.clone(statData);
 	}
 	/**
 	 * the tile is divided in 4 parts, this function analize each part
@@ -377,13 +350,16 @@ public class KDistributionEstimation {
 	 *            the column of the tile
 	 * @return the stats of each subtiles
 	 */
-	protected double[] computeStat(double clip, int iniX, int iniY,	Raster mask, int[] data) {
+	protected void computeStat(double clip, int iniX, int iniY,	Raster mask, int[] data,double[] statData) {
 		//multiply the clip with the previous statData[]
-		double clip1 = statData[1] * clip, clip2 = statData[2] * clip, clip3 = statData[3]* clip, clip4 = statData[4] * clip;
+		double clip1 = statData[1] * clip;
+		double clip2 = statData[2] * clip;
+		double clip3 = statData[3]* clip;
+		double clip4 = statData[4] * clip;
 		
 		// used to fill in the zero values for the means
 		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
-		standardDeviation = 0.0;
+		double standardDeviation = 0.0;
 
 		
 		boolean estimate=true;
@@ -484,7 +460,6 @@ public class KDistributionEstimation {
 			statData[3] = 100000;
 			statData[4] = 100000;
 		}	
-		return statData;
 	}
 	
 	

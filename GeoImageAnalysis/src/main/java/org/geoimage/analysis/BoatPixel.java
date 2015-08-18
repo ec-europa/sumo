@@ -16,11 +16,17 @@ public class BoatPixel {
         private int id = 0;
         private double boatmaximumvalue = 0.0;
         private boolean touchlandmask = false;
-        private double thresholdvalue = 0.0;
-        private double meanvalue = 0.0;
+        
+        
         private double stdvalue = 0.0;
+        private boolean isMergedBoat=false;
+        
+        
+        private List<Double> thresholdvalue = new ArrayList<>();
+        private List<Double> meanvalue = new ArrayList<>();
+        
 
-        public BoatPixel(int x, int y, int id, int value, double[][] thresholdvalues) {
+        public BoatPixel(int x, int y, int id, int value) {
             // add initial pixel, clipped value is always set to 1
             connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, 1});
             this.boatposition = new double[]{x, y};
@@ -87,14 +93,20 @@ public class BoatPixel {
             return boatmaximumvalue;
         }
 
-        protected void setMeanValue(double meanvalue) {
+        protected void putMeanValue(int band,double meanvalue) {
+            this.meanvalue.add(band,meanvalue);
+        }
+        protected void setMeanValue(List<Double> meanvalue) {
             this.meanvalue = meanvalue;
         }
-
-        protected double getMeanValue() {
+        protected List<Double> getMeanValue(int band) {
             return meanvalue;
         }
-
+        
+        protected double getMeanValueBand(int band) {
+            return this.meanvalue.get(band);
+        }
+        
         protected void setStdValue(double stdvalue) {
             this.stdvalue = stdvalue;
         }
@@ -103,13 +115,21 @@ public class BoatPixel {
             return stdvalue;
         }
 
-        protected void setThresholdValue(double thresholdvalue) {
+        protected void setThresholdValue(List<Double> thresholdvalue) {
             this.thresholdvalue = thresholdvalue;
         }
 
-        protected double getThresholdValue() {
+        protected List<Double> getThresholdValue() {
             return thresholdvalue;
         }
+        protected void putThresholdValue(int band,double thresholdvalue) {
+            this.thresholdvalue.add(band,thresholdvalue);
+        }
+
+        protected double getThresholdValueBand(int band) {
+            return thresholdvalue.get(band);
+        }
+
 
         protected List<int[]> getThresholdclipPixels() {
             // clip all values below thresholdclip

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.api;
+package org.geoimage.viewer.core.layers;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Map;
  * can access one instanciated class
  * @author thoorfr
  */
-public class Attributes implements Cloneable{
+public class AttributesLayer implements Cloneable{
 
     private Map<String, Object> attributes;
     private String[] schema;
@@ -31,8 +31,8 @@ public class Attributes implements Cloneable{
      * @param types ordered
      * @return
      */
-    public static Attributes createAttributes(String[] schema, String[] types) {
-        Attributes att = new Attributes();
+    public static AttributesLayer createAttributes(String[] schema, String[] types) {
+        AttributesLayer att = new AttributesLayer();
         att.schema = schema;
         att.types = types;
         att.attributes = new HashMap<String, Object>();
@@ -62,8 +62,8 @@ public class Attributes implements Cloneable{
      * @return a new instance of Attributes with full copy of data
      */
     @Override
-    public Attributes clone(){
-        Attributes out=Attributes.createAttributes(schema, types);
+    public AttributesLayer clone(){
+        AttributesLayer out=AttributesLayer.createAttributes(schema, types);
         out.attributes.putAll(attributes);
         return out;
     }

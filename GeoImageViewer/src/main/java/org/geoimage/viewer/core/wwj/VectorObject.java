@@ -5,7 +5,7 @@
 
 package org.geoimage.viewer.core.wwj;
 
-import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -15,9 +15,9 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class VectorObject {
     public Geometry geom;
-    public Attributes attributes;
+    public AttributesLayer attributes;
 
-    public VectorObject(Geometry geom, Attributes att) {
+    public VectorObject(Geometry geom, AttributesLayer att) {
         this.geom=geom;
         this.attributes=att;
     }

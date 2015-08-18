@@ -22,7 +22,6 @@ import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -31,6 +30,7 @@ import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
@@ -247,8 +247,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         layer.setName(glayer.getName());
         // change the layer fields to match the vds table layout
         for (Geometry geom : glayer.getGeometries()) {
-            Attributes attributes = glayer.getAttributes(geom);
-            Attributes tableattributes = Attributes.createAttributes(
+            AttributesLayer attributes = glayer.getAttributes(geom);
+            AttributesLayer tableattributes = AttributesLayer.createAttributes(
                     new String[]{
                         "id",
                         "detectime",
@@ -335,7 +335,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
                 "insert into "+table+" (detecttime,geom,image_id,run_id,io,xp,yp,vs,calc_length,calc_width,calc_course,sub_objects,version,related_obj,size_classification,reliability,comment) values ");
         // scan through the list of boats
         for (Geometry geom : glayer.getGeometries()) {
-            Attributes attributes = glayer.getAttributes(geom);
+            AttributesLayer attributes = glayer.getAttributes(geom);
             StringBuilder values = new StringBuilder(qryString.toString());
             values.append("('").append(detect_time).append("',");
             // convert pixel values to projected values
@@ -365,7 +365,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     protected void performAdd(java.awt.Point imagePosition, OpenGLContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-            final Attributes atts = Attributes.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());
+            final AttributesLayer atts = AttributesLayer.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());
             atts.set(VDSSchema.SIGNIFICANCE, 100.0d);
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
             ae.setAttributes(atts);

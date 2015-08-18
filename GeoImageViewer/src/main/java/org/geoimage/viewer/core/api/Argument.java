@@ -11,15 +11,15 @@ package org.geoimage.viewer.core.api;
  */
 public class Argument {
     private String name;
-    private Class type;
-    public final static Class INTEGER = java.lang.Integer.class;
-    public final static Class DOUBLE = java.lang.Double.class;
-    public final static Class FLOAT = java.lang.Float.class;
-    public final static Class STRING = java.lang.String.class;
-    public final static Class BOOLEAN = java.lang.Boolean.class;
-    public final static Class DATE = java.util.Date.class;
-    public final static Class FILE = java.io.File.class;
-    public final static Class DIRECTORY = Void.class;
+    private Class<?> type;
+    public final static Class<Integer> INTEGER = java.lang.Integer.class;
+    public final static Class<Double> DOUBLE = java.lang.Double.class;
+    public final static Class <Float>FLOAT = java.lang.Float.class;
+    public final static Class <String>STRING = java.lang.String.class;
+    public final static Class <Boolean>BOOLEAN = java.lang.Boolean.class;
+    public final static Class <java.util.Date>DATE = java.util.Date.class;
+    public final static Class <java.io.File>FILE = java.io.File.class;
+    public final static Class <Void>DIRECTORY = Void.class;
     
     private boolean optional;
     private Object defaultValue;

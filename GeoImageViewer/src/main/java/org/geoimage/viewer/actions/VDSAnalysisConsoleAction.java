@@ -143,18 +143,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
-                BlackBorderAnalysis blackBorderAnalysis=null;
-                if(gir instanceof Sentinel1){
-	                MaskVectorLayer mv=null;
-	           	 	if(bufferedMask!=null&&bufferedMask.length>0)
-	           	 		mv=(MaskVectorLayer)bufferedMask[0];
-	           	 	if(mv!=null)
-	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
-	           	 	else 
-	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
-                } 	
+               
                 
-                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,blackBorderAnalysis,0);
+                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,0);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);

@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -124,7 +124,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue()).intersection(imageP);
-	                    Attributes at = Attributes.createAttributes(schema, types);
+	                    AttributesLayer at = AttributesLayer.createAttributes(schema, types);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }
@@ -141,7 +141,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue());
-	                    Attributes at = Attributes.createAttributes(schema, types);
+	                    AttributesLayer at = AttributesLayer.createAttributes(schema, types);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }

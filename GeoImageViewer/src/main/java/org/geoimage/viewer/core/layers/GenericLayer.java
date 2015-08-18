@@ -14,7 +14,6 @@ import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
@@ -340,7 +339,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	public int[] getHistogram(int numClasses) {
         if (threshable) {
             int[] out = new int[numClasses];
-            for (Attributes att : glayer.getAttributes()) {
+            for (AttributesLayer att : glayer.getAttributes()) {
                 double temp = new Double("" + att.get(VDSSchema.SIGNIFICANCE));
                 int classe = (int) ((numClasses - 1) * (temp - minThresh) / (maxThresh - minThresh));
                 out[classe]++;
