@@ -148,7 +148,7 @@ public class VDSAnalysis{
             }
             
             xLeftTile = 0;				 
-            xRightTile = gir.getWidth(); 
+            xRightTile = 0;//gir.getWidth(); 
             yTopTile = rowIndex * sizeY;
             yBottomTile = yTopTile + sizeY+dy; //dx is always 0 except on the last tile
             
@@ -199,7 +199,7 @@ public class VDSAnalysis{
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
                 if(containsMinPixelValid||rastermask==null){
                     // if there are pixels to estimate, calculate statistics using the mask
-                    kdist.setImageData(gir, xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band,blackBorderAnalysis);
+                    kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band);
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     
                     kdist.estimate(rastermask,data);

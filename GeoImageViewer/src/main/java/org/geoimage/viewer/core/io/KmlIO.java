@@ -29,7 +29,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.Attributes;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -201,7 +201,7 @@ public class KmlIO extends AbstractVectorIO {
             at.rotate(gir.getImageAzimuth() * Math.PI / 180, 32, 32);
             //extraction of boat attributes
             for (Geometry geom : glayer.getGeometries()) {
-                Attributes atts = glayer.getAttributes(geom);
+                AttributesLayer atts = glayer.getAttributes(geom);
                 pm = new Placemark();
                 //pm.setName(atts.get(schema[0]).toString());
                 /*Float length = new Float(atts.get(schema[7]).toString());

@@ -11,10 +11,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.io.GenericCSVIO;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
@@ -59,7 +59,7 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
                 glayer.clear();
                 while (rs.next()) {
                     Geometry geom = wkt.read(rs.getString("geom"));
-                    Attributes att = Attributes.createAttributes(schema, types);
+                    AttributesLayer att = AttributesLayer.createAttributes(schema, types);
                     for (String key : schema) {
                         att.set(key, rs.getString(key));
                     }

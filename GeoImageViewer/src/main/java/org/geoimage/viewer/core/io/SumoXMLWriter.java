@@ -21,7 +21,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.VDSFields;
 import org.geoimage.viewer.core.io.sumoxml.Analysis;
 import org.geoimage.viewer.core.io.sumoxml.Boat;
@@ -30,6 +29,7 @@ import org.geoimage.viewer.core.io.sumoxml.Gcps;
 import org.geoimage.viewer.core.io.sumoxml.SatImageMetadata;
 import org.geoimage.viewer.core.io.sumoxml.VdsAnalysis;
 import org.geoimage.viewer.core.io.sumoxml.VdsTarget;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -90,7 +90,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 						}
 					}
 					Polygon frame = gf.createPolygon(gf.createLinearRing(coords), null);
-					Attributes atts = Attributes.createAttributes(schema, types);
+					AttributesLayer atts = AttributesLayer.createAttributes(schema, types);
 					layer.put(frame.convexHull(), atts);
 				}
 			}
@@ -103,7 +103,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 					if (obj instanceof Element) {
 						Element boat = (Element) obj;
 						if (boat.getName().equals("boat")) {
-							Attributes atts = Attributes.createAttributes(
+							AttributesLayer atts = AttributesLayer.createAttributes(
 									schema, types);
 							double lon = Double.parseDouble(boat
 									.getChild("lon").getValue());
@@ -237,7 +237,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
 		for (Geometry geom : layer.getGeometriclayer().getGeometries()) {
-			Attributes att = layer.getGeometriclayer().getAttributes(geom);
+			AttributesLayer att = layer.getGeometriclayer().getAttributes(geom);
 
 			/**Boat section **/
 			// create new boat

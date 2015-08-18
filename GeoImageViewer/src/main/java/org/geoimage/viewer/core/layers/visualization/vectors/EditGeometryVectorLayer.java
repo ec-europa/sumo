@@ -11,13 +11,13 @@ import java.util.Vector;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
@@ -45,7 +45,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
     protected boolean move = false;
     protected Vector<Geometry> toBeRemoved = new Vector<Geometry>();
     protected Vector<Geometry> removed = new Vector<Geometry>();
-    protected Vector<Attributes> attrRemoved = new Vector<Attributes>();
+    protected Vector<AttributesLayer> attrRemoved = new Vector<AttributesLayer>();
     protected GeometryFactory gf;
     protected boolean undo=false;
     
@@ -117,7 +117,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         if (undo) {
             if(removed.size()>0){
             	Geometry undo=removed.remove(0);
-            	Attributes add=attrRemoved.remove(0);
+            	AttributesLayer add=attrRemoved.remove(0);
             	glayer.put(undo,add);
             }
             undo=false;

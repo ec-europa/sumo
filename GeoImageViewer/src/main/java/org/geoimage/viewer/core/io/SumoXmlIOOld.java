@@ -15,8 +15,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.VDSFields;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -80,7 +80,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                         }
                     }
                     Polygon frame = gf.createPolygon(gf.createLinearRing(coords), null);
-                    Attributes atts = Attributes.createAttributes(schema, types);
+                    AttributesLayer atts = AttributesLayer.createAttributes(schema, types);
                     layer.put(frame.convexHull(), atts);
                 }
             }
@@ -93,7 +93,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                     if (obj instanceof Element) {
                         Element boat = (Element) obj;
                         if (boat.getName().equals("boat")) {
-                            Attributes atts = Attributes.createAttributes(schema, types);
+                            AttributesLayer atts = AttributesLayer.createAttributes(schema, types);
                             double lon = Double.parseDouble(boat.getChild("lon").getValue());
                             double lat = Double.parseDouble(boat.getChild("lat").getValue());
                             Geometry geom = gf.createPoint(new Coordinate(lon, lat));
@@ -174,7 +174,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
 	        int number=0;
 	        for (Geometry geom : glayer.getGeometries()) {
 	
-	            Attributes att = glayer.getAttributes(geom);
+	            AttributesLayer att = glayer.getAttributes(geom);
 	            String[] atts = att.getSchema();
 	            Element boat = new Element("boat");
 	            Element xPixel = new Element("xPixel");

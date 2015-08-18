@@ -16,10 +16,10 @@ import javax.swing.table.DefaultTableModel;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
@@ -164,7 +164,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             winGeom.add(gf.createLinearRing(coordinates));
             // generate the geometry for the boat shape
             List<Geometry> boatGeom = new ArrayList<Geometry>();
-            Attributes boatattributes = gl.getAttributes(geom);
+            AttributesLayer boatattributes = gl.getAttributes(geom);
             double[] pixelsize = il.getImageReader().getGeoTransform().getPixelSize();
             double boatwidth =0;
             double boatlength=0;
@@ -201,7 +201,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     }
 
     public void editSelection(int selectionLine) {
-        Attributes atts = gl.getAttributes(gl.getGeometries().get(selectionLine));
+        AttributesLayer atts = gl.getAttributes(gl.getGeometries().get(selectionLine));
         AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
         ae.setAttributes(atts);
         ae.setVisible(true);
