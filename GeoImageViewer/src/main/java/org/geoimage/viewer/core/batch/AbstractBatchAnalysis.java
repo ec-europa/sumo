@@ -120,19 +120,7 @@ public abstract class AbstractBatchAnalysis {
      * @return
      */
     public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
-        
-        BlackBorderAnalysis blackBorderAnalysis=null;
-        if(reader instanceof Sentinel1){
-            MaskVectorLayer mv=null;
-       	 	if(bufferedMask!=null&&bufferedMask.length>0)
-       	 		mv=(MaskVectorLayer)bufferedMask[0];
-       	 	if(mv!=null)
-       	 		blackBorderAnalysis= new BlackBorderAnalysis(reader,mv.getGeometries());
-       	 	else 
-       		    blackBorderAnalysis= new BlackBorderAnalysis(reader,null);
-        } 	
-        
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,blackBorderAnalysis,1250000);
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,1250000);
         ap.run();
         return ap.getResultLayers();
     }

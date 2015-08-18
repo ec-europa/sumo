@@ -24,11 +24,12 @@ import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.Attributes;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.layers.AttributesLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -48,7 +49,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private String[] thresholds;
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
-		private BlackBorderAnalysis blackBorderAnalysis=null;
 		private GeoImageReader gir;
 		private boolean stop=false;
 		private double neighbouringDistance;
@@ -96,11 +96,10 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		 * @param blackBorderAnalysis
 		 * @param numLimitPoint   num max of point that we can analize (0=all) 
 		 */
-		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,BlackBorderAnalysis blackBorderAnalysis,int numLimitPoint) {
+		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,int numLimitPoint) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 			this.bufferedMask=bufferedMask;
-			this.blackBorderAnalysis=blackBorderAnalysis;
 			this.thresholds=thresholds;
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
@@ -123,17 +122,31 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			notifyStartProcessListener();
 			SarImageReader reader=((SarImageReader)gir);
 			
-			//run the black border analysis 
+			//run the blackborder analysis for the s1 images
+			BlackBorderAnalysis blackBorderAnalysis=null;
+            if(gir instanceof Sentinel1){
+	                MaskVectorLayer mv=null;
+	           	 	if(bufferedMask!=null&&bufferedMask.length>0)
+	           	 		mv=(MaskVectorLayer)bufferedMask[0];
+	           	 	if(mv!=null)
+	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+	           	 	else 
+	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+             } 	
              if(blackBorderAnalysis!=null){
             	 blackBorderAnalysis.analyse(5);
-             }	 
+             }
+             //end blackborder analysis
+             
              // list of bands
              int numberofbands = gir.getNBand();
              int[] bands = new int[numberofbands];
 
              
              // create K distribution
-             final KDistributionEstimation kdist = new KDistributionEstimation(ENL);
+             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,blackBorderAnalysis);
+             
+             
              DetectedPixels mergePixels = new DetectedPixels(reader);
              DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
              
@@ -155,7 +168,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              try{
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
 	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
-	            	 
 	            	 
 	            	 int vTiles=analysis.getVerTiles();
 	            	 notifyVDSAnalysis("Performing VDS Analysis",vTiles);
@@ -193,7 +205,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                        	 break;
 	                         
 	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
-	                         		 new int[]{band},(bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+	                         		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,band);
 	                     }
 	                     
 	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
@@ -254,7 +266,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     mergePixels.computeBoatsAttributes();
 	                 } else {
 	                     // method neighbours used
-	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, bands, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist);
+	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,bands);
 	                 }
 	
 	                 if(stop){
@@ -277,10 +289,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), true);
 	                 }
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
-	
 	                 
 	                 vdsanalysisLayer.addGeometries(ComplexEditVDSVectorLayer.AMBIGUITY_TAG, Color.RED, 5, GeometricLayer.POINT,allAmbiguities , display);
-
 	                 
 	                 //if(!Platform.isBatchMode())
 	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
@@ -312,7 +322,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	        long runid = System.currentTimeMillis();
 	        int count=0;
 	        for (DetectedPixels.Boat boat : pixels.getBoats()) {
-	            Attributes atts = Attributes.createAttributes(VDSSchema.schema, VDSSchema.types);
+	            AttributesLayer atts = AttributesLayer.createAttributes(VDSSchema.schema, VDSSchema.types);
 	            atts.set(VDSSchema.ID, count++);
 	            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getValue());
 	            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());

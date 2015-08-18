@@ -86,8 +86,8 @@ public class DetectedPixels {
     	private double heading;
     	private double value;
     	private double tileAvg;
-    	private double tileStd;
-    	private double threshold;
+    	private List<Double> tileStd;
+    	private List<Double> threshold;
     	private double band;
     	private double id;
     	private boolean isAmbiguity=false;
@@ -95,7 +95,7 @@ public class DetectedPixels {
     	
 
 		public Boat(double id,double x,double y,double size,double length,double width,double heading,
-				double value,double tileAvg,double tileStd,double threshold, double band){
+				double value,double tileAvg,List<Double> tileStd,List<Double> threshold, double band){
     		this.id=id;
 			this.posx=x;
     		this.posy=y;
@@ -110,6 +110,23 @@ public class DetectedPixels {
             this.band = band;
     	}
 		
+		public Boat(double id,double x,double y,double size,double length,double width,double heading,
+				double value,double tileAvg,double tileStd,double threshold, int band){
+    		this.id=id;
+			this.posx=x;
+    		this.posy=y;
+    		this.size=size;
+    		this.length=length;
+    		this.width=width;
+    		this.heading=heading;
+    		this.value = value;
+            this.tileAvg = tileAvg;
+            this.tileStd = new ArrayList<Double>();
+            this.tileStd.add(band,tileStd);
+            this.threshold = new ArrayList<Double>();
+            this.tileStd.add(band,threshold);
+            this.band = band;
+    	}
 		
 
 		public double getId() {
@@ -148,25 +165,25 @@ public class DetectedPixels {
 
 
 
-		public double getTileStd() {
+		public List<Double> getTileStd() {
 			return tileStd;
 		}
 
 
 
-		public void setTileStd(double tileStd) {
+		public void setTileStd(List<Double> tileStd) {
 			this.tileStd = tileStd;
 		}
 
 
 
-		public double getThreshold() {
+		public List<Double> getThreshold() {
 			return threshold;
 		}
 
 
 
-		public void setThreshold(double threshold) {
+		public void setThreshold(List<Double> threshold) {
 			this.threshold = threshold;
 		}
 
@@ -453,12 +470,15 @@ public class DetectedPixels {
                     }
                 }
             	
+                
                 // add pixel to the list
-                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize], thresholdvalues);
-                boatpixel.setMeanValue((statistics[0][1] + statistics[0][2] + statistics[0][3] + statistics[0][4]) / 4);
-                boatpixel.setStdValue(statistics[0][0]);
-                boatpixel.setThresholdValue(detectedPix.threshold);
+                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize]);
+                for(int i=0;i<numberbands;i++){
+                	boatpixel.putMeanValue(i,(statistics[0][1] + statistics[0][2] + statistics[0][3] + statistics[0][4]) / 4);
+                	boatpixel.putThresholdValue(i,detectedPix.threshold);
+                }	
                 listboatneighbours.add(boatpixel);
+                
                 // start list of aggregated pixels
                 List<int[]> boataggregatedpixels = new ArrayList<int[]>();
                 int[] imagemap = new int[tilesize * tilesize];
@@ -514,7 +534,7 @@ public class DetectedPixels {
         double[][] imagestat = new double[numberofbands][5];
         for (int i = 0; i < numberofbands; i++) {
             int band = bands[i];
-            kdist.setImageData(gir, cornerx,cornery, width, height,0,0,band,null);
+            kdist.setImageData(cornerx,cornery, width, height,0,0,band);
             kdist.estimate(null,data[i]);
             double[] thresh = kdist.getDetectThresh();
             imagestat[i][0] = thresh[0];
@@ -646,7 +666,7 @@ public class DetectedPixels {
      * @param kdist
      * @throws IOException
      */
-    public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
+    public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, IMask mask, KDistributionEstimation kdist,int... bands)throws IOException {
         aggregate((int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
     }
 
@@ -753,9 +773,11 @@ public class DetectedPixels {
         for (BoatPixel boat : list) {
             boat.computeValues(pixsam,pixrec);
             if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
+            	
+            	//TODO: Adattare il codice a gestire tutte le bande
             	Boat b=new Boat(boat.getId(),(int)boat.getBoatposition()[0], (int)boat.getBoatposition()[1],(int)boat.getBoatnumberofpixels(),
-            			(int)boat.getBoatlength(),(int)boat.getBoatwidth(),(int)boat.getBoatheading(),boat.getMaximumValue(),boat.getMeanValue(),
-            			boat.getStdValue(),boat.getThresholdValue(),0);
+            			(int)boat.getBoatlength(),(int)boat.getBoatwidth(),(int)boat.getBoatheading(),boat.getMaximumValue(),boat.getMeanValueBand(0),
+            			boat.getStdValue(),boat.getThresholdValueBand(0),0);
             	
             	boatsTemp.add(b);
             }
