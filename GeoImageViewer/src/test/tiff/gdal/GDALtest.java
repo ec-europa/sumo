@@ -356,16 +356,12 @@ public class GDALtest extends JFrame implements ActionListener{
 			
 			reader.dispose();
 		} catch (DataSourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchAuthorityCodeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FactoryException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
 		

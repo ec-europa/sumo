@@ -44,7 +44,7 @@ public class DetectedPixels {
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
     private SarImageReader gir = null;
-
+    private double[] thresholdAnalysisParams;
     
     ArrayList<BoatPixel> listboatneighbours = new ArrayList<BoatPixel>();
 
@@ -269,11 +269,12 @@ public class DetectedPixels {
     }
     
 
-    public DetectedPixels(SarImageReader gir) {
+    public DetectedPixels(SarImageReader gir,double[] thresholdParams) {
         this.gir = gir;
         // get the image pixel size
         this.pixsam = gir.getRangeSpacing();
         this.pixrec = gir.getAzimuthSpacing();
+        this.thresholdAnalysisParams=thresholdParams;
 
         // calculate search window size using pixel size
         if (SEARCHWINDOW > pixsam) {
@@ -432,8 +433,9 @@ public class DetectedPixels {
         		logger.error(e.getMessage());
         		throw e;
         	}
+            
             // calculate thresholds
-            double[][] statistics = calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
+            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
             
             double[][] thresholdvalues = new double[numberbands][2];
             int maxvalue = 0;
@@ -443,6 +445,8 @@ public class DetectedPixels {
                 // average the tile mean values
                 double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
                 
+
+                //TODO CHEK if is true....this is the thresholds for the agglomeration. Change in the output with the trheshold calculated by the anlysis
                 // aggregate value is mean + 3 * std
                 thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
                 // clip value is mean + 5 * std
@@ -474,7 +478,12 @@ public class DetectedPixels {
                 // add pixel to the list
                 BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize]);
                 for(int i=0;i<numberbands;i++){
-                	boatpixel.putMeanValue(i,(statistics[0][1] + statistics[0][2] + statistics[0][3] + statistics[0][4]) / 4);
+                	Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
+                	kdist.setImageData(sizeX, sizeY, sizeTileX, sizeTileY, row, col, band);
+                	kdist.estimate(rastermask, data);
+	            	//TODO  for each band,calculate here the "trheshold tile " to put in the xml for the new tile 
+                	double threshWindowsVals[]=calcThreshWindowVals(thresholdAnalysisParams, thresh);
+                	boatpixel.putMeanValue(i,(statistics[i][1] + statistics[i][2] + statistics[i][3] + statistics[i][4]) / 4);
                 	boatpixel.putThresholdValue(i,detectedPix.threshold);
                 }	
                 listboatneighbours.add(boatpixel);
@@ -515,37 +524,11 @@ public class DetectedPixels {
         }
         // generate statistics and values for boats
         computeBoatsAttributesAndStatistics(listboatneighbours);
+        
     }
 
 
-    /**
-     *  calculate new statistics using tile centered around pixel
-     * @param cornerx
-     * @param cornery
-     * @param width
-     * @param height
-     * @param bands
-     * @param data
-     * @param kdist
-     * @return
-     */
-    public double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height, int[] bands,int data[][], KDistributionEstimation kdist) {
-        int numberofbands = bands.length;
-        double[][] imagestat = new double[numberofbands][5];
-        for (int i = 0; i < numberofbands; i++) {
-            int band = bands[i];
-            kdist.setImageData(cornerx,cornery, width, height,0,0,band);
-            kdist.estimate(null,data[i]);
-            double[] thresh = kdist.getDetectThresh();
-            imagestat[i][0] = thresh[0];
-            imagestat[i][1] = thresh[1] / thresh[5];
-            imagestat[i][2] = thresh[2] / thresh[5];
-            imagestat[i][3] = thresh[3] / thresh[5];
-            imagestat[i][4] = thresh[4] / thresh[5];
-        }
-
-        return imagestat;
-    }
+    
 
     /**
      * 
@@ -774,7 +757,8 @@ public class DetectedPixels {
             boat.computeValues(pixsam,pixrec);
             if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
             	
-            	//TODO: Adattare il codice a gestire tutte le bande
+            	//TODO: Adattare il codice a gestire tutte le bande 
+            	//TODO: calcolare i significance qui!!
             	Boat b=new Boat(boat.getId(),(int)boat.getBoatposition()[0], (int)boat.getBoatposition()[1],(int)boat.getBoatnumberofpixels(),
             			(int)boat.getBoatlength(),(int)boat.getBoatwidth(),(int)boat.getBoatheading(),boat.getMaximumValue(),boat.getMeanValueBand(0),
             			boat.getStdValue(),boat.getThresholdValueBand(0),0);
