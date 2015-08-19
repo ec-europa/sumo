@@ -73,7 +73,6 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
                 
             }
         }
-        //TODO try to change the polynomial degree???
         pix2geo = new WarpTransform2D(src, dst, i < 6 ? 1 : 2);
         try {
 			geo2pix = (WarpTransform2D) pix2geo.inverse();

@@ -832,7 +832,6 @@ public class Radarsat1Image extends SarImageReader {
 
 	@Override
 	public File getOverviewFile() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

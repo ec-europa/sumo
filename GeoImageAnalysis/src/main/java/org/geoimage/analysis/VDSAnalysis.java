@@ -115,11 +115,11 @@ public class VDSAnalysis{
     /**
      * 
      * @param kdist
-     * @param thresholdBand
+     * @param thresholdBandParams
      * @return
      * @throws IOException 
      */
-    private DetectedPixels analyse(KDistributionEstimation kdist, float thresholdBand,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
+    private DetectedPixels analyse(KDistributionEstimation kdist, float thresholdBandParams,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
         int horTiles = gir.getWidth() / this.tileSize;
@@ -207,7 +207,7 @@ public class VDSAnalysis{
                     double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
                     
-                    double threshWindowsVals[]=calcThreshWindowVals(thresholdBand, thresh);
+                    double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBandParams, thresh);
 
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
@@ -232,14 +232,19 @@ public class VDSAnalysis{
 
                                 // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                                 if (pix > threshWindowsVals[subwindow-1]) {
+                                	
                                 	double tileAvg=thresh[subwindow] / thresh[5];
+                                	
                                 	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
-                                    dpixels.add(h + xLeftTile,//x
+
+                                	dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue 
                                     		    tileAvg,
                                     		    tileStdDev,//tile standard deviation normalized 
                                     		    thresh[5], band);
+                                	
+                                	
                                 }
                             }
                         }
@@ -262,21 +267,7 @@ public class VDSAnalysis{
 		this.verTiles = verTiles;
 	}
 
-	/**
-     * 
-     * @param significance
-     * @param thresh
-     * @return
-     */
-    private double[] calcThreshWindowVals(double significance,double[] thresh){
-    	double threshWindowsVals[]=new double[4];
-    	threshWindowsVals[0]=(significance * (thresh[5] - 1.0) + 1.0) * thresh[1] / thresh[5];
-    	threshWindowsVals[1]=(significance * (thresh[5] - 1.0) + 1.0) * thresh[2] / thresh[5];
-    	threshWindowsVals[2]=(significance * (thresh[5] - 1.0) + 1.0) * thresh[3] / thresh[5];
-    	threshWindowsVals[3]=(significance * (thresh[5] - 1.0) + 1.0) * thresh[4] / thresh[5];
-    	
-    	return threshWindowsVals;
-    }
+	
     
     /**
      * 

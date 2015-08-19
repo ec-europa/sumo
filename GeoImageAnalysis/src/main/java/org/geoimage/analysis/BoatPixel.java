@@ -19,7 +19,6 @@ public class BoatPixel {
         
         
         private double stdvalue = 0.0;
-        private boolean isMergedBoat=false;
         
         
         private List<Double> thresholdvalue = new ArrayList<>();
@@ -42,6 +41,11 @@ public class BoatPixel {
             return connectedpixels.get(new StringBuilder().append(x).append(" ").append(y).toString()) != null;
         }
 
+        /**
+         * 
+         * @param pixsam
+         * @param pixrec
+         */
         public void computeValues(double pixsam,double pixrec) {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
