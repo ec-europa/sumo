@@ -561,7 +561,6 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.exit(0);

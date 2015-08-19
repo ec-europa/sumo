@@ -581,7 +581,6 @@ public class S1GeoCodingImpl implements GeoCoding {
 			//double r[]=gc.forward(-100.0,11104.0);
 			//logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 		} catch (MathException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

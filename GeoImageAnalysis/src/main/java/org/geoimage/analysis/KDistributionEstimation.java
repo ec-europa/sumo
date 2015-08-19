@@ -212,10 +212,13 @@ public class KDistributionEstimation {
 				clippingThresh = lookUpTable.getClippingThreshFromClippedStd(statData[0]);
 			} else {
 				double threshTemp = lookUpTable.getDetectThreshFromClippedStd(statData[0]);
+				//fill elements from 1-4 : tile areas
 				for (int k = 1; k < 5; k++) {
 					detectThresh[k] = threshTemp * statData[k];
 				}
+				//standard deviation
 				detectThresh[0] = statData[0];
+				//treshold
 				detectThresh[5] = threshTemp;
 			}
 		}

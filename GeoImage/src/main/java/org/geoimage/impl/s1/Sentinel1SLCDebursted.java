@@ -52,13 +52,10 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
 				t.refreshBounds();
 			}
 			} catch (JDOMException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
 		return init;

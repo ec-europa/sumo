@@ -336,8 +336,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            timeStampStart=timeStampStart.replace("Z", "");
 	            atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
 	            atts.set(VDSSchema.VS, 0);
-	            //compute the direction of the vessel considering the azimuth of the image
-	            //result is between 0 and 180 degree
+	            //compute the direction of the vessel considering the azimuth of the image result is between 0 and 180 degree
 	            double degree = boat.getHeading() + 90 + azimuth;
 	            if (degree > 180) {
 	                degree = degree - 180;

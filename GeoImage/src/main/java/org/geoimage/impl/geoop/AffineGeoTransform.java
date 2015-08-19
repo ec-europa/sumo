@@ -190,7 +190,6 @@ public class AffineGeoTransform implements GeoTransform {
 	@Override
 	public List<double[]> getPixelFromGeo(Coordinate[] coords)
 			throws GeoTransformException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

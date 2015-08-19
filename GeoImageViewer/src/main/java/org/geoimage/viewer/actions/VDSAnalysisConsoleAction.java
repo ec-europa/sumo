@@ -135,7 +135,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                /* try {
 					SimpleShapefile.exportGeometriesToShapeFile(bufferedMask[0].getGeometries(),new File("F:\\SumoImgs\\export\\aaa.shp") ,"Polygon");
 				} catch (IOException | SchemaException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}*/
                 
