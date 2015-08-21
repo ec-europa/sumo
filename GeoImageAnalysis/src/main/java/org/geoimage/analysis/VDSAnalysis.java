@@ -286,7 +286,7 @@ public class VDSAnalysis{
     private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
         int id = 0;
         // scan through list of detected pixels
-        Pixel pixels[]=detPixels.getAllDetectedPixels().toArray(new Pixel[0]);
+        Pixel pixels[]=detPixels.getAllDetectedPixelsValues().toArray(new Pixel[0]);
         int count=0;
         
         //loop on all detected pixel
