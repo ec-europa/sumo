@@ -5,7 +5,6 @@
 package org.geoimage.analysis;
 
 import java.awt.image.Raster;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.utils.IMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +42,6 @@ public class DetectedPixels {
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
     private SarImageReader gir = null;
-    private double[] thresholdAnalysisParams;
     
     ArrayList<BoatPixel> listboatneighbours = new ArrayList<BoatPixel>();
 
@@ -269,12 +266,11 @@ public class DetectedPixels {
     }
     
 
-    public DetectedPixels(SarImageReader gir,double[] thresholdParams) {
+    public DetectedPixels(SarImageReader gir) {
         this.gir = gir;
         // get the image pixel size
         this.pixsam = gir.getRangeSpacing();
         this.pixrec = gir.getAzimuthSpacing();
-        this.thresholdAnalysisParams=thresholdParams;
 
         // calculate search window size using pixel size
         if (SEARCHWINDOW > pixsam) {
@@ -384,7 +380,7 @@ public class DetectedPixels {
      * @param mask
      * @param kdist
      * @throws IOException
-     */
+     *
     private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
         int id = 0;
         // scan through list of detected pixels
@@ -525,7 +521,7 @@ public class DetectedPixels {
         // generate statistics and values for boats
         computeBoatsAttributesAndStatistics(listboatneighbours);
         
-    }
+    }*/
 
 
     
@@ -639,19 +635,7 @@ public class DetectedPixels {
     //computeBoatsAttributes();
     }
     
-    /**
-     * 
-     * @param distance
-     * @param tilesize
-     * @param removelandconnectedpixels
-     * @param bands
-     * @param mask
-     * @param kdist
-     * @throws IOException
-     */
-    public void agglomerateNeighbours(double distance, int tilesize, boolean removelandconnectedpixels, IMask mask, KDistributionEstimation kdist,int... bands)throws IOException {
-        aggregate((int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
-    }
+    
 
     /**
      * 
@@ -749,7 +733,7 @@ public class DetectedPixels {
      * AG inserted a test to filter boats by length
      * @param list
      */
-    private void computeBoatsAttributesAndStatistics(List<BoatPixel> list) {
+    protected void computeBoatsAttributesAndStatistics(List<BoatPixel> list) {
     	 List <Boat> boatsTemp=new ArrayList<Boat>();
     	 
         // compute attributes and statistics values on boats
