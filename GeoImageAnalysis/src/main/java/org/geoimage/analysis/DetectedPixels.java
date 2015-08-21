@@ -800,20 +800,9 @@ public class DetectedPixels {
         boatArray=boatsTemp.toArray(new Boat[0]);
     }
 
-    /**
-     * 
-     * @return
-     */
-    public double[] getValues() {
-        double[] values = new double[2 * boatArray.length];
-        int i = 0;
-        for (Boat boat : boatArray) {
-            values[i++] = boat.getPosx();//val[1];
-            values[i++] = boat.getPosy();//val[2];
-        }
-        return values;
+    public Collection<Pixel> getAllDetectedPixelsValues() {
+    	return allDetectedPixels.values();
     }
-
     
     /**
      * 
