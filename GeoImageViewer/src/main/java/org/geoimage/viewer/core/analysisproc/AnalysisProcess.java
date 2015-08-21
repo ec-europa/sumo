@@ -204,7 +204,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                         if(stop)
 	                        	 break;
 	                         
-	                         banddetectedpixels[band].agglomerateNeighbours(neighbouringDistance, tilesize,removelandconnectedpixels, 
+	                         analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, tilesize,removelandconnectedpixels, 
 	                         		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,band);
 	                     }
 	                     
@@ -266,7 +266,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     mergePixels.computeBoatsAttributes();
 	                 } else {
 	                     // method neighbours used
-	                     mergePixels.agglomerateNeighbours(neighbouringDistance, tilesize, removelandconnectedpixels, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,bands);
+	                	 analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, tilesize, removelandconnectedpixels, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,bands);
 	                 }
 	
 	                 if(stop){

@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geoimage.analysis.DetectedPixels.Pixel;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -38,6 +41,7 @@ public class VDSAnalysis{
     private final double MIN_TRESH_FOR_ANALYSIS=0.7;
     
     private List<ProgressListener>progressListener=null;
+    private Logger logger= LoggerFactory.getLogger(VDSAnalysis.class);
 
     /**
      *
@@ -181,7 +185,7 @@ public class VDSAnalysis{
                     int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                     //float[] maskdata2 = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (float[])null);
                     int inValidPixelCount = 0;
-                    //double firstMaskLength=maskdata.length;
+                    
                     for(int count = 0; count < maskdata.length; count++)
                         inValidPixelCount += maskdata[count];
                     
@@ -243,8 +247,6 @@ public class VDSAnalysis{
                                     		    tileAvg,
                                     		    tileStdDev,//tile standard deviation normalized 
                                     		    thresh[5], band);
-                                	
-                                	
                                 }
                             }
                         }
@@ -257,6 +259,172 @@ public class VDSAnalysis{
         return dpixels;
     }
 
+    /**
+     * 
+     * @param distance
+     * @param tilesize
+     * @param removelandconnectedpixels
+     * @param bands
+     * @param mask
+     * @param kdist
+     * @throws IOException
+     */
+    public void agglomerateNeighbours(DetectedPixels detPixels,double distance, int tilesize, boolean removelandconnectedpixels, IMask mask, KDistributionEstimation kdist,int... bands)throws IOException {
+        aggregate(detPixels,(int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
+    }
+    
+    /**
+     *  aggregate using the neighbours within tilesize
+     * @param neighboursdistance
+     * @param tilesize
+     * @param removelandconnectedpixels
+     * @param bands
+     * @param mask
+     * @param kdist
+     * @throws IOException
+     */
+    private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
+        int id = 0;
+        // scan through list of detected pixels
+        Pixel pixels[]=detPixels.getAllDetectedPixels().toArray(new Pixel[0]);
+        int count=0;
+        
+        //loop on all detected pixel
+        for (Pixel detectedPix: pixels) {
+        	count++;
+        	
+            int xx = detectedPix.x;
+            int yy = detectedPix.y;
+            
+            if((count % 100)==0)
+            	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
+            
+            // check pixels is not aggregated
+            boolean checked = false;
+            for (BoatPixel boatpixel : detPixels.listboatneighbours) {
+                if (boatpixel.containsPixel(xx, yy)) {
+                    checked = true;
+                    break;
+                }
+            }
+
+            if (checked) {
+                continue;
+            }
+
+            // get image data in tile
+            int cornerx = Math.min(Math.max(0, xx - tilesize / 2), gir.getWidth() - tilesize);
+            int cornery = Math.min(Math.max(0, yy - tilesize / 2), gir.getHeight() - tilesize);
+            
+            // boat relative coordinates
+            int boatx = xx - cornerx;
+            int boaty = yy - cornery;
+            int numberbands = bands.length;
+
+            //read the area for the bands
+            int[][] data = new int[numberbands][];
+            try{
+	            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
+	            	data[bandcounter] = gir.read(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
+	            }	
+            }catch(IOException e){
+        		logger.error(e.getMessage());
+        		throw e;
+        	}
+            
+            // calculate thresholds
+            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
+            
+            double[][] thresholdvalues = new double[numberbands][2];
+            int maxvalue = 0;
+            boolean pixelabove = false;
+            
+            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
+                // average the tile mean values
+                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
+                
+
+                //TODO CHEK if is true....this is the thresholds for the agglomeration. Change in the output with the trheshold calculated by the anlysis
+                // aggregate value is mean + 3 * std
+                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
+                // clip value is mean + 5 * std
+                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
+                // check the pixel is still above the new threshold
+                int value = data[bandcounter][boatx + boaty * tilesize];
+                if (value > thresholdvalues[bandcounter][1]) {
+                    pixelabove = true;
+                }
+                // find maximum value amongst bands
+                if (value > maxvalue) {
+                    maxvalue = data[bandcounter][boatx + boaty * tilesize];
+                }
+            }
+            
+            // add pixel only if above new threshold
+            if (pixelabove) {
+            	// check if there is land in tile
+                Raster rastermask = null;
+                if (mask != null) {
+                    // check if land in tile
+                    if (mask.intersects(cornerx, cornery, tilesize, tilesize)) {
+                        // create raster mask
+                        rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
+                    }
+                }
+            	
+                
+                // add pixel to the list
+                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize]);
+                for(int i=0;i<numberbands;i++){
+                //	Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
+                //	kdist.setImageData(sizeX, sizeY, sizeTileX, sizeTileY, row, col, band);
+                //	kdist.estimate(rastermask, data);
+//TODO  for each band,calculate here the "trheshold tile " to put in the xml for the new tile 
+                //	double threshWindowsVals[]=calcThreshWindowVals(thresholdAnalysisParams, thresh);
+                	boatpixel.putMeanValue(i,(statistics[i][1] + statistics[i][2] + statistics[i][3] + statistics[i][4]) / 4);
+                	boatpixel.putThresholdValue(i,detectedPix.threshold);
+                }	
+                detPixels.listboatneighbours.add(boatpixel);
+                
+                // start list of aggregated pixels
+                List<int[]> boataggregatedpixels = new ArrayList<int[]>();
+                int[] imagemap = new int[tilesize * tilesize];
+                for (int i = 0; i < tilesize * tilesize; i++) {
+                    imagemap[i] = 0;
+                }
+                
+                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data, thresholdvalues, new int[]{boatx, boaty}, neighboursdistance, tilesize, rastermask);
+                
+                // set flag for touching land
+                boatpixel.setLandMask(result);
+                
+                // shift pixels by cornerx and cornery and store in boat list
+                //Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
+                for (int[] pixel : boataggregatedpixels) {
+                    boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
+                }
+            } else {
+            }
+            
+        }
+
+        // if remove connected to land pixels flag
+        if (removelandconnectedpixels) {
+            // remove all boats connecting to land
+        	//List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
+            for (int i=0;i<detPixels.listboatneighbours.size();i++) {
+            	BoatPixel boat = detPixels.listboatneighbours.get(i);
+                if (boat.touchesLand()) {
+                	detPixels.listboatneighbours.remove(boat);
+                    //toRemove.add(boat);
+                }
+            }
+        }
+        // generate statistics and values for boats
+        detPixels.computeBoatsAttributesAndStatistics(detPixels.listboatneighbours);
+        
+    }
+    
     
     
     public int getVerTiles() {
