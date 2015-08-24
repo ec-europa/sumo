@@ -14,7 +14,7 @@ import javax.media.opengl.GL2;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
@@ -135,7 +135,7 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
         Date[] out = new Date[2];
         out[1] = new Date(0);
         out[0] = new Date(Long.MAX_VALUE);
-        for (AttributesLayer at : glayer.getAttributes()) {
+        for (AttributesGeometry at : glayer.getAttributes()) {
             Date temp = (Date) at.get(timeColumn);
             if (out[0].after(temp)) {
                 out[0] = temp;

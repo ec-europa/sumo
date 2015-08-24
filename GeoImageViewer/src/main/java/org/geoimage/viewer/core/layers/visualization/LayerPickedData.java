@@ -13,7 +13,7 @@ import java.util.Vector;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.wwj.VectorObject;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -24,11 +24,11 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class LayerPickedData {
     
-    static private Map<Geometry,AttributesLayer> data=new HashMap<Geometry, AttributesLayer>();
+    static private Map<Geometry,AttributesGeometry> data=new HashMap<Geometry, AttributesGeometry>();
     private static VectorObject topOject;
     private static List<ChangeListener> listeners=new Vector<ChangeListener>();
     
-    public static void put(Geometry geom, AttributesLayer att){
+    public static void put(Geometry geom, AttributesGeometry att){
         if(data.isEmpty()){
             LayerPickedData.topOject=new VectorObject(geom, att);
         }

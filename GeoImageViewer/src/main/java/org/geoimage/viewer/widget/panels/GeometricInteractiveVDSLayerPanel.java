@@ -19,7 +19,7 @@ import javax.swing.event.TableModelListener;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 
@@ -55,7 +55,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
     private GeometricInteractiveVDSLayerModel glm;
     private boolean display = true;
     private List<Geometry> deleted = new ArrayList<Geometry>();
-    private List<AttributesLayer> attrDeleted = new ArrayList<AttributesLayer>();
+    private List<AttributesGeometry> attrDeleted = new ArrayList<AttributesGeometry>();
     private ILayer layer;
     
     private FlagtableModel debugTableModel = new FlagtableModel(
@@ -228,7 +228,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             	if (e.isControlDown()){  
             		if(deleted.size()>0){
             			Geometry geom=deleted.remove(0);
-            			AttributesLayer attr=attrDeleted.remove(0);
+            			AttributesGeometry attr=attrDeleted.remove(0);
             			GeometricLayer gl=((ComplexEditVDSVectorLayer)layer).getGeometriclayer();
             			gl.put(geom,attr);
             			((ComplexEditVDSVectorLayer)layer).setSelectedGeometry(geom);

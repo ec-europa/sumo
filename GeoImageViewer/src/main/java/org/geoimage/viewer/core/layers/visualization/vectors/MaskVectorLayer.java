@@ -20,7 +20,7 @@ import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.util.PolygonOp;
@@ -99,7 +99,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     private void calculateMaxMinTresh() {
         minThresh = Double.MAX_VALUE;
         maxThresh = Double.MIN_VALUE;
-        for (AttributesLayer att : glayer.getAttributes()) {
+        for (AttributesGeometry att : glayer.getAttributes()) {
             double temp = new Double("" + att.get(VDSSchema.SIGNIFICANCE));
             if (temp < minThresh) {
                 minThresh = temp;

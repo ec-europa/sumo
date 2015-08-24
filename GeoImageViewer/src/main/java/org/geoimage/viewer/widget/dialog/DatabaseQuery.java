@@ -8,7 +8,7 @@ package org.geoimage.viewer.widget.dialog;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -84,7 +84,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 glayer = new GeometricLayer(GeometricLayer.LINESTRING);
             }
             glayer.setName(jTextArea1.getText());
-            AttributesLayer att = AttributesLayer.createAttributes(schema, types);
+            AttributesGeometry att = AttributesGeometry.createAttributes(schema, types);
             for (String key : schema) {
                 att.set(key, rs.getObject(key));
             }
@@ -99,7 +99,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 } catch (Exception e) {
                     continue;
                 }
-                att = AttributesLayer.createAttributes(schema, types);
+                att = AttributesGeometry.createAttributes(schema, types);
                 for (String key : schema) {
                     att.set(key, rs.getObject(key));
                 }
