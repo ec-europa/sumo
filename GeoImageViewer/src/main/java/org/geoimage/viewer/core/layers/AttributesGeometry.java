@@ -16,7 +16,7 @@ import java.util.Map;
  * can access one instanciated class
  * @author thoorfr
  */
-public class AttributesLayer implements Cloneable{
+public class AttributesGeometry implements Cloneable{
 
     private Map<String, Object> attributes;
     private String[] schema;
@@ -31,8 +31,8 @@ public class AttributesLayer implements Cloneable{
      * @param types ordered
      * @return
      */
-    public static AttributesLayer createAttributes(String[] schema, String[] types) {
-        AttributesLayer att = new AttributesLayer();
+    public static AttributesGeometry createAttributes(String[] schema, String[] types) {
+        AttributesGeometry att = new AttributesGeometry();
         att.schema = schema;
         att.types = types;
         att.attributes = new HashMap<String, Object>();
@@ -62,8 +62,8 @@ public class AttributesLayer implements Cloneable{
      * @return a new instance of Attributes with full copy of data
      */
     @Override
-    public AttributesLayer clone(){
-        AttributesLayer out=AttributesLayer.createAttributes(schema, types);
+    public AttributesGeometry clone(){
+        AttributesGeometry out=AttributesGeometry.createAttributes(schema, types);
         out.attributes.putAll(attributes);
         return out;
     }

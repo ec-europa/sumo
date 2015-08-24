@@ -45,7 +45,7 @@ public class GeometricLayer implements Cloneable{
     public final static String LINESTRING = "linestring";
     
     private List<Geometry> geoms;
-    private List<AttributesLayer> atts;
+    private List<AttributesGeometry> atts;
     private String type;
     private String name;
     private String projection;
@@ -161,7 +161,7 @@ public class GeometricLayer implements Cloneable{
 								public Object[][] call() {
 									List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
 									try {
-										AttributesLayer at = AttributesLayer.createAttributes(schema, types);
+										AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
@@ -201,7 +201,7 @@ public class GeometricLayer implements Cloneable{
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			out.put((Geometry)o[i][0],(AttributesLayer)o[i][1]);
+	                			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
 	                	/*		List<Geometry>gs=new ArrayList<>();
 	                			gs.add((Geometry)o[i][0]);
 	                			SimpleShapefile.exportGeometriesToShapeFile(gs, new File("F:\\SumoImgs\\export\\gg"+i+System.currentTimeMillis()+".shp"), "Polygon");*/
@@ -220,7 +220,7 @@ public class GeometricLayer implements Cloneable{
                 try{
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
-	                    AttributesLayer at = AttributesLayer.createAttributes(schema, types);
+	                    AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i],f.getProperty(schema[i]).getValue());
 	                    }
@@ -276,7 +276,7 @@ public class GeometricLayer implements Cloneable{
 							public Object[][] call() {
 								List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
 								try {
-									AttributesLayer at = AttributesLayer.createAttributes(schema, types);
+									AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
 			                        for (int i = 0; i < f.getProperties().size(); i++) {
 			                        	if(f.getProperty(schema[i])!=null)
 			                        		at.set(schema[i], f.getProperty(schema[i]).getValue());
@@ -304,7 +304,7 @@ public class GeometricLayer implements Cloneable{
 	            	Object o[][]=f.get();
 	            	if(o!=null){
 	            		for(int i=0;i<o.length;i++){
-	            			out.put((Geometry)o[i][0],(AttributesLayer)o[i][1]);
+	            			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
 	            		}	
 	            	}	
 	            }
@@ -346,7 +346,7 @@ public class GeometricLayer implements Cloneable{
 							public Object[][] call() {
 								List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
 								try {
-									AttributesLayer at = AttributesLayer.createAttributes(schema, types);
+									AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
 			                        for (int i = 0; i < f.getProperties().size(); i++) {
 			                        	if(f.getProperty(schema[i])!=null)
 			                        		at.set(schema[i], f.getProperty(schema[i]).getValue());
@@ -374,7 +374,7 @@ public class GeometricLayer implements Cloneable{
 	            	Object o[][]=f.get();
 	            	if(o!=null){
 	            		for(int i=0;i<o.length;i++){
-	            			out.put((Geometry)o[i][0],(AttributesLayer)o[i][1]);
+	            			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
 	            		}	
 	            	}	
 	            }
@@ -390,7 +390,7 @@ public class GeometricLayer implements Cloneable{
     
     public GeometricLayer(String type) {
         geoms = new ArrayList<Geometry>();
-        atts = new ArrayList<AttributesLayer>();
+        atts = new ArrayList<AttributesGeometry>();
         this.type=type;
     }
     
@@ -428,7 +428,7 @@ public class GeometricLayer implements Cloneable{
      * @param geom
      * @return
      */
-    public AttributesLayer getAttributes(Geometry geom) {
+    public AttributesGeometry getAttributes(Geometry geom) {
         int i = geoms.indexOf(geom);
         if(i<0) return null;
         return atts.get(i);
@@ -438,8 +438,8 @@ public class GeometricLayer implements Cloneable{
      *
      * @return a SHALLOW COPY of the attributes for Thread safe use
      */
-    public List<AttributesLayer> getAttributes() {
-       return new ArrayList<AttributesLayer>(atts);
+    public List<AttributesGeometry> getAttributes() {
+       return new ArrayList<AttributesGeometry>(atts);
     }
 
     /**
@@ -482,7 +482,7 @@ public class GeometricLayer implements Cloneable{
      * @return
      */
     public boolean addColumn(String name, String type){
-        for(AttributesLayer att:atts){
+        for(AttributesGeometry att:atts){
             att.addColumn(name, type);
         }
         return true;
@@ -524,7 +524,7 @@ public class GeometricLayer implements Cloneable{
      * @param geom
      * @param att
      */
-    public void put(Geometry geom, AttributesLayer att) {
+    public void put(Geometry geom, AttributesGeometry att) {
         geoms.add(geom);
         atts.add(att);
     }
@@ -535,7 +535,7 @@ public class GeometricLayer implements Cloneable{
      * @param geo
      */
     public void put(Geometry geo){
-        this.put(geo, AttributesLayer.createAttributes(getSchema(), getSchemaTypes()));
+        this.put(geo, AttributesGeometry.createAttributes(getSchema(), getSchemaTypes()));
     }
 
     /**
