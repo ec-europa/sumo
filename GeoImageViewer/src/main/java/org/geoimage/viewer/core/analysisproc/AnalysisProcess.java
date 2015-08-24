@@ -26,7 +26,7 @@ import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -322,7 +322,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	        long runid = System.currentTimeMillis();
 	        int count=0;
 	        for (DetectedPixels.Boat boat : pixels.getBoats()) {
-	            AttributesLayer atts = AttributesLayer.createAttributes(VDSSchema.schema, VDSSchema.types);
+	            AttributesGeometry atts = AttributesGeometry.createAttributes(VDSSchema.schema, VDSSchema.types);
 	            atts.set(VDSSchema.ID, count++);
 	            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getValue());
 	            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());

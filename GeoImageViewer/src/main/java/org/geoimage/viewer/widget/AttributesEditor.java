@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 
 /**
  *
@@ -27,7 +27,7 @@ import org.geoimage.viewer.core.layers.AttributesLayer;
 public class AttributesEditor extends javax.swing.JDialog {
 
     private HashMap<String, JTextField> map = new HashMap<String, JTextField>();
-    private AttributesLayer attributes;
+    private AttributesGeometry attributes;
 
     /** Creates new form AttributesEditor */
     public AttributesEditor(java.awt.Frame parent, boolean modal) {
@@ -35,7 +35,7 @@ public class AttributesEditor extends javax.swing.JDialog {
         initComponents();
     }
 
-    public void setAttributes(AttributesLayer atts) {
+    public void setAttributes(AttributesGeometry atts) {
         this.attributes = atts;
         ((GridLayout) paramPanel.getLayout()).setRows(atts.getSchema().length);
         for (int i = 0; i < atts.getSchema().length; i++) {
@@ -148,7 +148,7 @@ public class AttributesEditor extends javax.swing.JDialog {
 
             public void run() {
                 AttributesEditor dialog = new AttributesEditor(new javax.swing.JFrame(), true);
-                AttributesLayer atts = AttributesLayer.createAttributes(VDSSchema.schema, VDSSchema.types);//VDSSchema.getSchema(), VDSSchema.getTypes());
+                AttributesGeometry atts = AttributesGeometry.createAttributes(VDSSchema.schema, VDSSchema.types);//VDSSchema.getSchema(), VDSSchema.getTypes());
                 dialog.setAttributes(atts);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override

@@ -19,7 +19,7 @@ import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
@@ -96,6 +96,9 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             return Geometry.class;
         } else {
             String c = gl.getSchemaTypes()[columnIndex - 1];
+            if (c.contains("Double[]")) {
+                return ArrayList.class;
+            }
             if (c.contains("Double")) {
                 return Double.class;
             }
@@ -164,7 +167,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             winGeom.add(gf.createLinearRing(coordinates));
             // generate the geometry for the boat shape
             List<Geometry> boatGeom = new ArrayList<Geometry>();
-            AttributesLayer boatattributes = gl.getAttributes(geom);
+            AttributesGeometry boatattributes = gl.getAttributes(geom);
             double[] pixelsize = il.getImageReader().getGeoTransform().getPixelSize();
             double boatwidth =0;
             double boatlength=0;
@@ -201,7 +204,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     }
 
     public void editSelection(int selectionLine) {
-        AttributesLayer atts = gl.getAttributes(gl.getGeometries().get(selectionLine));
+        AttributesGeometry atts = gl.getAttributes(gl.getGeometries().get(selectionLine));
         AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
         ae.setAttributes(atts);
         ae.setVisible(true);

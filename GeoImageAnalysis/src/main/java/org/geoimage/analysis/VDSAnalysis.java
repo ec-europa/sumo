@@ -411,14 +411,15 @@ public class VDSAnalysis{
         // if remove connected to land pixels flag
         if (removelandconnectedpixels) {
             // remove all boats connecting to land
-        	//List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
+        	List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
             for (int i=0;i<detPixels.listboatneighbours.size();i++) {
             	BoatPixel boat = detPixels.listboatneighbours.get(i);
                 if (boat.touchesLand()) {
-                	detPixels.listboatneighbours.remove(boat);
-                    //toRemove.add(boat);
+                	//detPixels.listboatneighbours.remove(boat);
+                    toRemove.add(boat);
                 }
             }
+            detPixels.listboatneighbours.removeAll(toRemove);
         }
         // generate statistics and values for boats
         detPixels.computeBoatsAttributesAndStatistics(detPixels.listboatneighbours);

@@ -14,7 +14,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.api.VDSFields;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -74,7 +74,7 @@ public class GmlIO extends AbstractVectorIO {
                             Namespace vd=Namespace.getNamespace("vd", "http://cweb.ksat.no/cweb/schema/vessel");
                             Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
                             Element vessel = feature.getChild("feature",vd).getChild("vessel",vd);
-                            AttributesLayer atts = AttributesLayer.createAttributes(schema, types);
+                            AttributesGeometry atts = AttributesGeometry.createAttributes(schema, types);
                             String point[] = vessel.getChild("Point",gml).getChild("pos",gml).getText().split(" ");
                             double lon = Double.parseDouble(point[0]);                            
                             double lat = Double.parseDouble(point[1]);
@@ -122,7 +122,7 @@ public class GmlIO extends AbstractVectorIO {
 	        root.setAttribute(schemaLocation);
 	        int c = 1;
 	        for (Geometry geom : glayer.getGeometries()) {
-	            AttributesLayer att = glayer.getAttributes(geom);
+	            AttributesGeometry att = glayer.getAttributes(geom);
 	            String[] atts = att.getSchema();
 	            Element featureMember = new Element("featureMember", gml);
 	            double[] posA = transform.getGeoFromPixel(geom.getCoordinate().x, geom.getCoordinate().y);

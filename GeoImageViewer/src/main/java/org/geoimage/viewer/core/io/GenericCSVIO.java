@@ -15,7 +15,7 @@ import java.util.Vector;
 import org.apache.commons.lang3.ArrayUtils;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +143,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            WKTReader parser=new WKTReader(factory);
 	            
 	            while ((line = fss.readLine()) != null) {
-	                AttributesLayer atts = AttributesLayer.createAttributes(attributes, types);
+	                AttributesGeometry atts = AttributesGeometry.createAttributes(attributes, types);
 	                String[] val = line.split(",");
 
 	                Geometry geom=null;
@@ -252,7 +252,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 						fis.write(",");
 					}
 					
-					AttributesLayer atts = glayer.getAttributes(geom);
+					AttributesGeometry atts = glayer.getAttributes(geom);
 					for (int ii = 0; ii < schema.length; ii++) {
 						String s = "";
 						if (atts.get(schema[ii]) != null) {
@@ -334,7 +334,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	        WKTWriter wkt = new WKTWriter();
 	        for (Geometry geom : glayer.getGeometries()) {
 	            fw.append("\"" + wkt.writeFormatted(geom) + "\",");
-	            AttributesLayer att = glayer.getAttributes(geom);
+	            AttributesGeometry att = glayer.getAttributes(geom);
 	            if (att == null || att.getSchema().length==0) {
 	                fw.append("\n");
 	                continue;

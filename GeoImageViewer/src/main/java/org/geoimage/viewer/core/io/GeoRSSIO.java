@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.viewer.core.layers.AttributesLayer;
+import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 
 import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
@@ -52,7 +52,7 @@ public class GeoRSSIO extends AbstractVectorIO {
 	        for (Geometry geom : glayer.getGeometries()) {
 	            SyndEntry entry;
 	            SyndContent description;
-	            AttributesLayer att = glayer.getAttributes(geom);
+	            AttributesGeometry att = glayer.getAttributes(geom);
 	            entry = new SyndEntryImpl();
 	            entry.setAuthor("geoimage");
 	            entry.setTitle("" + id++);
