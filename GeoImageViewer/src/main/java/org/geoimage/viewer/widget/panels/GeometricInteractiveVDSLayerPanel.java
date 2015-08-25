@@ -27,8 +27,10 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 
-final class FlagtableModel extends javax.swing.table.DefaultTableModel {
-    FlagtableModel(Object[][] object, String[] string) {
+final class FlagTableModel extends javax.swing.table.DefaultTableModel {
+	private static final long serialVersionUID = 1L;
+
+	FlagTableModel(Object[][] object, String[] string) {
         super(object, string);
     }
 
@@ -43,40 +45,44 @@ final class FlagtableModel extends javax.swing.table.DefaultTableModel {
 }
 
 
+
+
 /**
  *
  * @author  leforth
  */
 public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implements KeyListener{
+	class FlagTable extends JTable{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+	    public void valueChanged(ListSelectionEvent e){
+	        super.valueChanged(e);
+	        if(getSelectedRow()>=0){
+	        	if(dataModel instanceof GeometricInteractiveVDSLayerModel)
+	        		((GeometricInteractiveVDSLayerModel)dataModel).changeSelection(getSelectedRow(), display);
+	        }	
+	    }
+	   
+	};
+	
 	private javax.swing.JScrollPane jScrollPaneTableData;
     private javax.swing.JTable tableDataLayer;
-    private javax.swing.JTable flagTable = new jTable();
-	
+    
+    private javax.swing.JTable flagTable = new FlagTable();
     private GeometricInteractiveVDSLayerModel glm;
     private boolean display = true;
     private List<Geometry> deleted = new ArrayList<Geometry>();
     private List<AttributesGeometry> attrDeleted = new ArrayList<AttributesGeometry>();
     private ILayer layer;
     
-    private FlagtableModel debugTableModel = new FlagtableModel(
+    private FlagTableModel debugTableModel = new FlagTableModel(
     		new Object [][] {},
             new String [] {"Debug Layer", "Status"}
      );
     
     
-    private class jTable extends JTable  
-    {
-        @Override
-        public void valueChanged(ListSelectionEvent e)
-        {
-            super.valueChanged(e);
-            if(getSelectedRow()>=0){
-            	if(dataModel instanceof GeometricInteractiveVDSLayerModel)
-            		((GeometricInteractiveVDSLayerModel)dataModel).changeSelection(getSelectedRow(), display);
-            }	
-        }
-       
-    };
+    
         
     
     /** Creates new form GeometricInteractiveVDSLayerPanel */
@@ -84,7 +90,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         this.layer = layer;
         initComponents();
         glm=new GeometricInteractiveVDSLayerModel(layer);
-        ((jTable)tableDataLayer).setModel(glm);
+        ((FlagTable)tableDataLayer).setModel(glm);
         tableDataLayer.addKeyListener(this);
         
     }
@@ -104,7 +110,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         
         javax.swing.JScrollPane jScrollPaneCheckboxFlag = new javax.swing.JScrollPane();
 
-        tableDataLayer = new jTable();
+        tableDataLayer = new FlagTable();
         tableDataLayer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -173,7 +179,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
     }
 
     public void keyPressed(KeyEvent e) {
-    	jTable t=(jTable)e.getSource();
+    	FlagTable t=(FlagTable)e.getSource();
         switch(e.getKeyCode())
         {
         	
@@ -267,7 +273,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
     }
 
     public void keyReleased(KeyEvent e) {
-    	jTable t=(jTable)e.getSource();
+    	FlagTable t=(FlagTable)e.getSource();
         int id = e.getID();
         if(id == e.KEY_RELEASED && e.getKeyChar() == e.VK_BACK_SPACE)
         {

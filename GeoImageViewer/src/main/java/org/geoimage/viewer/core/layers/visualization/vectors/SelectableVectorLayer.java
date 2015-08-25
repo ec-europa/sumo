@@ -55,11 +55,12 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
                 ResultSet rs = stat.executeQuery("SELECT * FROM \"" + glayer.getName() + "\" WHERE " + whereClause);
                 WKTReader wkt = new WKTReader();
                 String[] schema = glayer.getSchema();
-                String[] types = glayer.getSchemaTypes();
+                //TODO:schema type problem check!!
+                //String[] types = glayer.getSchemaTypes();
                 glayer.clear();
                 while (rs.next()) {
                     Geometry geom = wkt.read(rs.getString("geom"));
-                    AttributesGeometry att = AttributesGeometry.createAttributes(schema, types);
+                    AttributesGeometry att = new AttributesGeometry(schema);
                     for (String key : schema) {
                         att.set(key, rs.getString(key));
                     }
