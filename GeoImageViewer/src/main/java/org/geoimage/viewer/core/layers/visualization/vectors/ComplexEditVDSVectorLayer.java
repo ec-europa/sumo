@@ -248,7 +248,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         // change the layer fields to match the vds table layout
         for (Geometry geom : glayer.getGeometries()) {
             AttributesGeometry attributes = glayer.getAttributes(geom);
-            AttributesGeometry tableattributes = AttributesGeometry.createAttributes(
+            AttributesGeometry tableattributes = new AttributesGeometry(
                     new String[]{
                         "id",
                         "detectime",
@@ -268,7 +268,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
                         "size_classification",
                         "target_time",
                         "reliability",
-                        "comment"},
+                        "comment"});/*,
                     new String[]{
                         "Integer",
                         "String",
@@ -289,6 +289,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
                         "Integer",
                         "Integer",
                         "String"}); // new String[]{"integer", "time stamp without time zone", "character varying(32)", "character varying(32)", "smallint", "integer", "real", "real", "real", "character varying(12)", "smallint"}
+                        */
             //tableattributes.set("id", new Integer(270100 + id));
             tableattributes.set("detectime", date);
             
@@ -365,7 +366,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     protected void performAdd(java.awt.Point imagePosition, OpenGLContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-            final AttributesGeometry atts = AttributesGeometry.createAttributes(glayer.getSchema(), glayer.getSchemaTypes());
+            final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
             atts.set(VDSSchema.SIGNIFICANCE, 100.0d);
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
             ae.setAttributes(atts);

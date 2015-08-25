@@ -143,7 +143,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            WKTReader parser=new WKTReader(factory);
 	            
 	            while ((line = fss.readLine()) != null) {
-	                AttributesGeometry atts = AttributesGeometry.createAttributes(attributes, types);
+	                AttributesGeometry atts = new AttributesGeometry(attributes, types);
 	                String[] val = line.split(",");
 
 	                Geometry geom=null;

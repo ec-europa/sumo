@@ -43,6 +43,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     
     private Color azimuthGeometrycolor = null;
     private int azimuthGeometrylinewidth;
+    private boolean display=true;
 
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometricInteractiveVDSLayerModel.class);
     
@@ -95,7 +96,9 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         if (columnIndex == 0) {
             return Geometry.class;
         } else {
-            String c = gl.getSchemaTypes()[columnIndex - 1];
+        	return super.getColumnClass(columnIndex);
+            //TODO:remove this code
+             /* *String c = gl.getSchemaTypes()[columnIndex - 1];
             if (c.contains("Double[]")) {
                 return ArrayList.class;
             }
@@ -115,7 +118,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
                 return Date.class;
             } else {
                 return String.class;
-            }
+            }*/
         }
     }
 

@@ -124,7 +124,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue()).intersection(imageP);
-	                    AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
+	                    AttributesGeometry at = new AttributesGeometry(schema, types);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }
@@ -141,7 +141,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue());
-	                    AttributesGeometry at = AttributesGeometry.createAttributes(schema, types);
+	                    AttributesGeometry at = new AttributesGeometry(schema, types);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }

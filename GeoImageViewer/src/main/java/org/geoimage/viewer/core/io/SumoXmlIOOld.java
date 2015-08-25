@@ -15,7 +15,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.VDSFields;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdom.Document;
@@ -58,8 +57,6 @@ public class SumoXmlIOOld extends AbstractVectorIO {
 
             
             GeometryFactory gf = new GeometryFactory();
-            String[] schema = VDSFields.getSchema();
-            String[] types = VDSFields.getTypes();
             Element root = doc.getRootElement().getChild("image");
             if (root != null) {
                 layer.setGeometryType(GeometricLayer.MIXED);
@@ -80,7 +77,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                         }
                     }
                     Polygon frame = gf.createPolygon(gf.createLinearRing(coords), null);
-                    AttributesGeometry atts = AttributesGeometry.createAttributes(schema, types);
+                    AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema, VDSSchema.types);
                     layer.put(frame.convexHull(), atts);
                 }
             }
@@ -93,7 +90,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                     if (obj instanceof Element) {
                         Element boat = (Element) obj;
                         if (boat.getName().equals("boat")) {
-                            AttributesGeometry atts = AttributesGeometry.createAttributes(schema, types);
+                            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema, VDSSchema.types);
                             double lon = Double.parseDouble(boat.getChild("lon").getValue());
                             double lat = Double.parseDouble(boat.getChild("lat").getValue());
                             Geometry geom = gf.createPoint(new Coordinate(lon, lat));

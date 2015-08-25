@@ -1,0 +1,1 @@
+java -jar plantuml-dependency-cli-1.4.0-jar-with-dependencies.jar -b "../Sumo/GeoImageViewer/src/main/java/org.geoimage.analysis" -o plant_class_diagram.txt
