@@ -84,7 +84,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 glayer = new GeometricLayer(GeometricLayer.LINESTRING);
             }
             glayer.setName(jTextArea1.getText());
-            AttributesGeometry att = AttributesGeometry.createAttributes(schema, types);
+            AttributesGeometry att = new AttributesGeometry(schema);
             for (String key : schema) {
                 att.set(key, rs.getObject(key));
             }
@@ -99,7 +99,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 } catch (Exception e) {
                     continue;
                 }
-                att = AttributesGeometry.createAttributes(schema, types);
+                att = new AttributesGeometry(schema);
                 for (String key : schema) {
                     att.set(key, rs.getObject(key));
                 }

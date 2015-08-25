@@ -40,7 +40,8 @@ public class FactoryLayer {
 	 */            	//TODO: implement another way to understand the type of the layer
 	public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
-        String[] types = layer.getSchemaTypes();
+       //TODO: check if works after developments for the schema
+        //String[] types = layer.getSchemaTypes();
         boolean timestamplayer = false;
         String timecolumnname = "";
         if (type.equals(TYPE_COMPLEX)) {
@@ -58,7 +59,8 @@ public class FactoryLayer {
             }
 
         } else {
-            for (int i = 0; i < types.length; i++) {
+        	// TODO:
+           /* for (int i = 0; i < types.length; i++) {
                 String t = types[i];
                 // TODO: check if this type of layer is used!!!
                 if (t.equals(TYPE_DATE) || t.equals(TYPE_TIMESTAMP)) {
@@ -66,7 +68,7 @@ public class FactoryLayer {
                     timecolumnname = schema[i];
                     break;
                 }
-            }
+            }*/
             if (!timestamplayer) {
             	//TODO: implement another way to understand the type of the layer
                 //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);

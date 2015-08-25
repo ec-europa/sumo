@@ -4,10 +4,8 @@
  */
 package org.geoimage.viewer.widget.panels;
 
-import java.util.Date;
-
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 import org.geoimage.viewer.core.layers.GeometricLayer;
 
@@ -17,7 +15,7 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  * @author thoorfr
  */
-public class GeometricLayerModel implements TableModel {
+public class GeometricLayerModel extends DefaultTableModel {
 
     private GeometricLayer gl;
 
@@ -41,10 +39,12 @@ public class GeometricLayerModel implements TableModel {
         }
     }
 
+    /* TODO: schema type problem, check!!!
     public Class<?> getColumnClass(int columnIndex) {
         if (columnIndex == 0) {
             return Geometry.class;
         } else {
+        	
             String c = gl.getSchemaTypes()[columnIndex - 1];
             if (c.contains("Double")) {
                 return Double.class;
@@ -65,7 +65,7 @@ public class GeometricLayerModel implements TableModel {
                 return String.class;
             }
         }
-    }
+    }*/
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;

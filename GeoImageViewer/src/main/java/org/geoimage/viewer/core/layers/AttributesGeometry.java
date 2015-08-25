@@ -4,7 +4,6 @@
  */
 package org.geoimage.viewer.core.layers;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,50 +19,35 @@ public class AttributesGeometry implements Cloneable{
 
     private Map<String, Object> attributes;
     private String[] schema;
-    private String[] types;
+    
+    
+    public AttributesGeometry(String[] attributesSchema) {
+    	this.schema=attributesSchema;
+    	attributes=new HashMap<String, Object>();
+	}
 
     /**
-     * create an instance of the class providing a schema. For instance a schema like:
-     * ["name", "length", "width", "releaseDate"] will have the following types:
-     * ["java.lang.String", "java.lang.Double", "java.lang.Double", "java.lang.Date"]. Only "Double", String", "Integer", "Long" and "Date"
-     * are supported so far. Respect Case.
-     * @param schema ordered
-     * @param types ordered
-     * @return
+     * Set the attributes value giving the schema name.
+     * @param att
+     * @param value
+     * @return true if successfully added, false if not or ignored
      */
-    public static AttributesGeometry createAttributes(String[] schema, String[] types) {
-        AttributesGeometry att = new AttributesGeometry();
-        att.schema = schema;
-        att.types = types;
-        att.attributes = new HashMap<String, Object>();
-        for (int i = 0; i < schema.length; i++) {
-            if (types[i].contains("Double")) {
-                att.attributes.put(schema[i], Double.NaN);
-            }
-            else if (types[i].contains("String")) {
-                att.attributes.put(schema[i], new String());
-            }
-            else if (types[i].contains("Integer")) {
-                att.attributes.put(schema[i], new Integer(-1));
-            }
-            else if (types[i].contains("Long")) {
-                att.attributes.put(schema[i], new Long(-1));
-            }
-            else if (types[i].contains("Date")) {
-                att.attributes.put(schema[i], new Timestamp(System.currentTimeMillis()));
-            } else {
-                att.attributes.put(schema[i], null);
-            }
+    public boolean set(String att, Object value) {
+        if (!attributes.containsKey(att)) {
+            return false;
+        } else {
+            attributes.put(att, value);
+            return true;
         }
-        return att;
     }
+    
     /**
      * Deep copy of the attibutes data
      * @return a new instance of Attributes with full copy of data
      */
     @Override
     public AttributesGeometry clone(){
-        AttributesGeometry out=AttributesGeometry.createAttributes(schema, types);
+        AttributesGeometry out=new AttributesGeometry(schema);
         out.attributes.putAll(attributes);
         return out;
     }
@@ -81,20 +65,7 @@ public class AttributesGeometry implements Cloneable{
         return out;
     }
 
-    /**
-     * Set the attributes value giving the schema name.
-     * @param att
-     * @param value
-     * @return true if successfully added, false if not or ignored
-     */
-    public boolean set(String att, Object value) {
-        if (!attributes.containsKey(att)) {
-            return false;
-        } else {
-            attributes.put(att, value);
-            return true;
-        }
-    }
+    
 
     /**
      * 
@@ -113,13 +84,6 @@ public class AttributesGeometry implements Cloneable{
         return schema;
     }
 
-    /**
-     *
-     * @return the types of the Atributes in the same order of the schema
-     */
-    public String[] getTypes() {
-        return types;
-    }
 
     /**
      * add a new column at the end of the schema. THIS IS NOT RECOMMENDED. Prefer
@@ -134,10 +98,12 @@ public class AttributesGeometry implements Cloneable{
         System.arraycopy(schema, 0, temp, 0, schema.length);
         schema=temp;
         schema[schema.length-1]=name;
-        temp=new String[types.length+1];
+        
+        //TODO:remove
+/*        temp=new String[types.length+1];
         System.arraycopy(types, 0, temp, 0, types.length);
         types=temp;
-        types[types.length-1]=type;
+        types[types.length-1]=type;*/
         return true;
     }
     

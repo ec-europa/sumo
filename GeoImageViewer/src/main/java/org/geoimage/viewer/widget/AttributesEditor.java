@@ -12,6 +12,7 @@ package org.geoimage.viewer.widget;
 
 import java.awt.GridLayout;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
@@ -26,7 +27,7 @@ import org.geoimage.viewer.core.layers.AttributesGeometry;
  */
 public class AttributesEditor extends javax.swing.JDialog {
 
-    private HashMap<String, JTextField> map = new HashMap<String, JTextField>();
+    private HashMap<String, Object> map = new HashMap<String, Object>();
     private AttributesGeometry attributes;
 
     /** Creates new form AttributesEditor */
@@ -40,8 +41,9 @@ public class AttributesEditor extends javax.swing.JDialog {
         ((GridLayout) paramPanel.getLayout()).setRows(atts.getSchema().length);
         for (int i = 0; i < atts.getSchema().length; i++) {
             String att = atts.getSchema()[i];
-            JLabel l = new JLabel(att + " (" + atts.getTypes()[i] + "):");
-            JTextField t = new JTextField("" + atts.get(att));
+            Object o=atts.get(att);
+            JLabel l = new JLabel(att + " (" + o.getClass().getName() + "):");
+            JTextField t = new JTextField("" + o);
             map.put(att, t);
             paramPanel.add(l);
             paramPanel.add(t);
@@ -111,24 +113,28 @@ public class AttributesEditor extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      for (int i = 0; i < attributes.getSchema().length; i++) {
+      Object[] vals=attributes.getValues();	
+      for (int i = 0; i <vals.length ; i++) {
             String att = attributes.getSchema()[i];
-            if (map.get(att).getText().equals("null")) {
+            if (map.get(att).toString().equals("null")) {
                 continue;
             }
-            String type = attributes.getTypes()[i];
-            if (type.equals("Double")) {
-                attributes.set(att, Double.valueOf(map.get(att).getText()));
-            } else if (type.equals("String")) {
-                attributes.set(att, map.get(att).getText());
-            } else if (type.equals("Date")) {
-                attributes.set(att, Timestamp.valueOf(map.get(att).getText()));
-            } else if (type.equals("Integer")) {
-                attributes.set(att, Integer.valueOf(map.get(att).getText()));
-            } else if (type.equals("Boolean")) {
-                attributes.set(att, Boolean.valueOf(map.get(att).getText()));
-            } else if (type.equals("Boolean")) {
-                attributes.set(att, Boolean.valueOf(map.get(att).getText()));
+            //String type = attributes.getTypes()[i];
+            Object val=vals[i];
+            if (val instanceof Double){//type.equals("Double")) {
+                attributes.set(att, (Double)(map.get(att)));
+            } else if (val instanceof String){//(type.equals("String")) {
+                attributes.set(att, (String)map.get(att));
+            } else if(val instanceof Date){//if (type.equals("Date")) {
+                attributes.set(att, (Date)map.get(att));
+            } else if(val instanceof Timestamp){//if (type.equals("Date")) {
+                attributes.set(att, (Timestamp)map.get(att));
+            } else if (val instanceof Integer){
+                attributes.set(att, (Integer)map.get(att));
+            } else if (val instanceof Boolean){
+                attributes.set(att, (Boolean)map.get(att));
+            }else if (val instanceof double[]){
+                attributes.set(att, (Double)map.get(att));
             }
         }
         setVisible(false);
@@ -148,7 +154,7 @@ public class AttributesEditor extends javax.swing.JDialog {
 
             public void run() {
                 AttributesEditor dialog = new AttributesEditor(new javax.swing.JFrame(), true);
-                AttributesGeometry atts = AttributesGeometry.createAttributes(VDSSchema.schema, VDSSchema.types);//VDSSchema.getSchema(), VDSSchema.getTypes());
+                AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
                 dialog.setAttributes(atts);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override

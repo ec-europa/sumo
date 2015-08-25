@@ -13,7 +13,6 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.api.VDSFields;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jdom.Attribute;
@@ -58,8 +57,6 @@ public class GmlIO extends AbstractVectorIO {
             Document doc = builder.build(input);
 
             GeometryFactory gf = new GeometryFactory();
-            String[] schema = VDSFields.getSchema();
-            String[] types = VDSFields.getTypes();
             Element root = doc.getRootElement();
                        
             if (root != null) {
@@ -74,7 +71,7 @@ public class GmlIO extends AbstractVectorIO {
                             Namespace vd=Namespace.getNamespace("vd", "http://cweb.ksat.no/cweb/schema/vessel");
                             Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
                             Element vessel = feature.getChild("feature",vd).getChild("vessel",vd);
-                            AttributesGeometry atts = AttributesGeometry.createAttributes(schema, types);
+                            AttributesGeometry atts = new  AttributesGeometry(VDSSchema.schema, VDSSchema.types);
                             String point[] = vessel.getChild("Point",gml).getChild("pos",gml).getText().split(" ");
                             double lon = Double.parseDouble(point[0]);                            
                             double lat = Double.parseDouble(point[1]);

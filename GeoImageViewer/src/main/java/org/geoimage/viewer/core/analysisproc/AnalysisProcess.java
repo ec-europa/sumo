@@ -322,7 +322,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	        long runid = System.currentTimeMillis();
 	        int count=0;
 	        for (DetectedPixels.Boat boat : pixels.getBoats()) {
-	            AttributesGeometry atts = AttributesGeometry.createAttributes(VDSSchema.schema, VDSSchema.types);
+	            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);//, VDSSchema.types);
 	            atts.set(VDSSchema.ID, count++);
 	            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getValue());
 	            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());
