@@ -96,29 +96,10 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         if (columnIndex == 0) {
             return Geometry.class;
         } else {
-        	return super.getColumnClass(columnIndex);
-            //TODO:remove this code
-             /* *String c = gl.getSchemaTypes()[columnIndex - 1];
-            if (c.contains("Double[]")) {
-                return ArrayList.class;
-            }
-            if (c.contains("Double")) {
-                return Double.class;
-            }
-            if (c.contains("String")) {
-                return String.class;
-            }
-            if (c.contains("Integer")) {
-                return Integer.class;
-            }
-            if (c.contains("Long")) {
-                return Long.class;
-            }
-            if (c.contains("Date")) {
-                return Date.class;
-            } else {
-                return String.class;
-            }*/
+        	
+        	String attr = gl.getSchema()[columnIndex - 1];
+        	AttributesGeometry attrGeom=gl.getAttributes().get(0);
+        	return attrGeom.get(attr).getClass();
         }
     }
 
