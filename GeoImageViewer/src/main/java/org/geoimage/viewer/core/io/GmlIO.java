@@ -71,7 +71,7 @@ public class GmlIO extends AbstractVectorIO {
                             Namespace vd=Namespace.getNamespace("vd", "http://cweb.ksat.no/cweb/schema/vessel");
                             Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");
                             Element vessel = feature.getChild("feature",vd).getChild("vessel",vd);
-                            AttributesGeometry atts = new  AttributesGeometry(VDSSchema.schema, VDSSchema.types);
+                            AttributesGeometry atts = new  AttributesGeometry(VDSSchema.schema);
                             String point[] = vessel.getChild("Point",gml).getChild("pos",gml).getText().split(" ");
                             double lon = Double.parseDouble(point[0]);                            
                             double lat = Double.parseDouble(point[1]);

@@ -77,7 +77,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                         }
                     }
                     Polygon frame = gf.createPolygon(gf.createLinearRing(coords), null);
-                    AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema, VDSSchema.types);
+                    AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
                     layer.put(frame.convexHull(), atts);
                 }
             }
@@ -90,7 +90,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
                     if (obj instanceof Element) {
                         Element boat = (Element) obj;
                         if (boat.getName().equals("boat")) {
-                            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema, VDSSchema.types);
+                            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
                             double lon = Double.parseDouble(boat.getChild("lon").getValue());
                             double lat = Double.parseDouble(boat.getChild("lat").getValue());
                             Geometry geom = gf.createPoint(new Coordinate(lon, lat));
