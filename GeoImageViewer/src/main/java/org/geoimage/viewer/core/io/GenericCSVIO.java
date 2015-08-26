@@ -143,7 +143,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            WKTReader parser=new WKTReader(factory);
 	            
 	            while ((line = fss.readLine()) != null) {
-	                AttributesGeometry atts = new AttributesGeometry(attributes, types);
+	                AttributesGeometry atts = new AttributesGeometry(attributes);
 	                String[] val = line.split(",");
 
 	                Geometry geom=null;
@@ -229,7 +229,9 @@ public class GenericCSVIO extends AbstractVectorIO{
 			} else {
 				fis.write("geom,lat,lon," + glayer.getSchema(',') + "\n");
 			}
-			fis.write(glayer.getGeometryType()+",Double,Double,"+glayer.getSchemaTypes(',') + "\n");
+			
+			//TODO: text the export and import csv after the schema modification
+			fis.write(glayer.getGeometryType()+ "\n");//+",Double,Double,"+glayer.getSchemaTypes(',') + "\n");
 			String[] schema = glayer.getSchema();
 			for (Geometry geom : glayer.getGeometries()) {
 				Geometry geomGeo=transform.transformGeometryGeoFromPixel(geom);
