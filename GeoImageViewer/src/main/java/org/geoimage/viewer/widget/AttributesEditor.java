@@ -119,7 +119,7 @@ public class AttributesEditor extends javax.swing.JDialog {
             if (map.get(att).toString().equals("null")) {
                 continue;
             }
-            //String type = attributes.getTypes()[i];
+            //TODO: check if this works fine after the schema/types changes
             Object val=vals[i];
             if (val instanceof Double){//type.equals("Double")) {
                 attributes.set(att, (Double)(map.get(att)));
@@ -135,6 +135,8 @@ public class AttributesEditor extends javax.swing.JDialog {
                 attributes.set(att, (Boolean)map.get(att));
             }else if (val instanceof double[]){
                 attributes.set(att, (Double)map.get(att));
+            }else{
+            	attributes.set(att, map.get(att).getClass());
             }
         }
         setVisible(false);

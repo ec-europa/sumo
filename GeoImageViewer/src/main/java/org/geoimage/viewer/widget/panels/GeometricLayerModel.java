@@ -39,34 +39,6 @@ public class GeometricLayerModel extends DefaultTableModel {
         }
     }
 
-    /* TODO: schema type problem, check!!!
-    public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 0) {
-            return Geometry.class;
-        } else {
-        	
-            String c = gl.getSchemaTypes()[columnIndex - 1];
-            if (c.contains("Double")) {
-                return Double.class;
-            }
-            if (c.contains("String")) {
-                return String.class;
-            }
-            if (c.contains("Integer")) {
-                return Integer.class;
-            }
-            if (c.contains("Long")) {
-                return Long.class;
-            }
-            if (c.contains("Date")) {
-                return Date.class;
-            }
-            else{
-                return String.class;
-            }
-        }
-    }*/
-
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
     }
