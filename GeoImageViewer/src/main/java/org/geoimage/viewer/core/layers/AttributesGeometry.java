@@ -33,12 +33,12 @@ public class AttributesGeometry implements Cloneable{
      * @return true if successfully added, false if not or ignored
      */
     public boolean set(String att, Object value) {
-        if (!attributes.containsKey(att)) {
+        /*if (!attributes.containsKey(att)) {
             return false;
-        } else {
+        } else {*/
             attributes.put(att, value);
             return true;
-        }
+        //}
     }
     
     /**
