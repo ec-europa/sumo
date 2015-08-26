@@ -24,8 +24,7 @@ public final class VDSSchema {
     public static final String DATE="date";
     public static final String VS="vs";
 
-    public static final String[] schema={ID, 	 MAXIMUM_VALUE, TILE_AVERAGE, TILE_STANDARD_DEVIATION, THRESHOLD, NUMBER_OF_AGGREGATED_PIXELS, RUN_ID, ESTIMATED_LENGTH, ESTIMATED_WIDTH, ESTIMATED_HEADING, SIGNIFICANCE, DATE, VS};
-//    public static final String[] types={"Double", "Double",     "Double",       "Double", "Double", "Double", "String", "Double", "Double", "Double", "Double","Date", "Double"};
+    public static final String[] schema={ID,MAXIMUM_VALUE, TILE_AVERAGE, TILE_STANDARD_DEVIATION, THRESHOLD, NUMBER_OF_AGGREGATED_PIXELS, RUN_ID, ESTIMATED_LENGTH, ESTIMATED_WIDTH, ESTIMATED_HEADING, SIGNIFICANCE, DATE, VS};
     
 
 }
