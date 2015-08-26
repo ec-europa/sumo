@@ -52,6 +52,7 @@
 				<xs:element name="heading_range"  type="xs:double"/>
 				<xs:element name="heading_north" type="xs:double"/>
 				<xs:element name="lwh_reliability"  type="xs:boolean"/>
+				<xs:element name="manual_add" type="xs:boolean"/>
 
 				<xs:element name="rcs" type="xs:string"/>
 				<xs:element name="bgnd_mean" type="xs:string"/>
