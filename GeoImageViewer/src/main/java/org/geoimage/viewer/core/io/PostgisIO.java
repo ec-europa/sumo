@@ -124,7 +124,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue()).intersection(imageP);
-	                    AttributesGeometry at = new AttributesGeometry(schema, types);
+	                    AttributesGeometry at = new AttributesGeometry(schema);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }
@@ -141,7 +141,7 @@ public class PostgisIO extends AbstractVectorIO {
 	                while (fi.hasNext()) {
 	                    Feature f = fi.next();
 	                    Geometry p2 = ((Geometry)f.getDefaultGeometryProperty().getValue());
-	                    AttributesGeometry at = new AttributesGeometry(schema, types);
+	                    AttributesGeometry at = new AttributesGeometry(schema);
 	                    for (int i = 0; i < f.getProperties().size(); i++) {
 	                        at.set(schema[i], f.getProperty(schema[i]).getValue());
 	                    }
@@ -260,12 +260,12 @@ public class PostgisIO extends AbstractVectorIO {
          collection.add(simplefeature);
          return collection;
     }
-	/**
+	/* TODO:check if we need this function
      *
      * @param name
      * @param glayer
      * @return
-     */
+     *
     public static SimpleFeatureType createFeatureType(String name, GeometricLayer glayer) {
         try {
 
@@ -273,7 +273,7 @@ public class PostgisIO extends AbstractVectorIO {
             // Shapefile handle only : Point, MultiPoint, MultiLineString, MultiPolygon
             String sch = "";
             String[] schema = glayer.getSchema();
-            String[] types = glayer.getSchemaTypes();
+           // String[] types = glayer.getSchemaTypes();
             for (int i = 0; i < schema.length; i++) {
                 sch += "," + schema[i] + ":" + types[i];
             }
