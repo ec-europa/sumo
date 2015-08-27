@@ -7,14 +7,16 @@ public class AnalysisUtil {
 	/**
      * @param thresholdParams threshold values setted as parameters 
      * @param threshTile[4] contains the threshold values for a tile divided into 4 areas 
+     * 							kdist.estimate(rastermask,data);
+     * 							double[] thresh = kdist.getDetectThresh() //this are valid input params
      * @return thresholds for the tile
      */
-    public static double[] calcThreshWindowVals(double thresholdParams,double[] threshTile){
+    public static double[] calcThreshWindowVals(double thresholdParams,double[] detectedTreshTile){
     	double threshWindowsVals[]=new double[4];
-    	threshWindowsVals[0]=(thresholdParams * (threshTile[5] - 1.0) + 1.0) * threshTile[1] / threshTile[5];
-    	threshWindowsVals[1]=(thresholdParams * (threshTile[5] - 1.0) + 1.0) * threshTile[2] / threshTile[5];
-    	threshWindowsVals[2]=(thresholdParams * (threshTile[5] - 1.0) + 1.0) * threshTile[3] / threshTile[5];
-    	threshWindowsVals[3]=(thresholdParams * (threshTile[5] - 1.0) + 1.0) * threshTile[4] / threshTile[5];
+    	threshWindowsVals[0]=(thresholdParams * (detectedTreshTile[5] - 1.0) + 1.0) * detectedTreshTile[1] / detectedTreshTile[5];
+    	threshWindowsVals[1]=(thresholdParams * (detectedTreshTile[5] - 1.0) + 1.0) * detectedTreshTile[2] / detectedTreshTile[5];
+    	threshWindowsVals[2]=(thresholdParams * (detectedTreshTile[5] - 1.0) + 1.0) * detectedTreshTile[3] / detectedTreshTile[5];
+    	threshWindowsVals[3]=(thresholdParams * (detectedTreshTile[5] - 1.0) + 1.0) * detectedTreshTile[4] / detectedTreshTile[5];
     	
     	return threshWindowsVals;
     }
