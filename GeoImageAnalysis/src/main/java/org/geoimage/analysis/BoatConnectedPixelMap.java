@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-public class BoatPixel {
+/**
+ * 
+ * @author argenpo
+ *this class manage the connection between the Boat and the pixels
+ *
+ */
+public class BoatConnectedPixelMap {
 
         private Map<String, int[]> connectedpixels = new HashMap<String, int[]>();
         private double boatnumberofpixels = 0.0;
@@ -14,7 +19,7 @@ public class BoatPixel {
         private double boatlength = 0.0;
         private double boatheading = 0.0;
         private int id = 0;
-        private double boatmaximumvalue = 0.0;
+        private double maxValue = 0.0;
         private boolean touchlandmask = false;
         
         
@@ -25,11 +30,11 @@ public class BoatPixel {
         private List<Double> meanvalue = new ArrayList<>();
         
 
-        public BoatPixel(int x, int y, int id, int value) {
+        public BoatConnectedPixelMap(int x, int y, int id, int value) {
             // add initial pixel, clipped value is always set to 1
             connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, 1});
             this.boatposition = new double[]{x, y};
-            this.boatmaximumvalue = value;
+            this.maxValue = value;
             this.id = id;
         }
 
@@ -55,8 +60,8 @@ public class BoatPixel {
                     clust.add(pixel);
                 }
                 // look for maximum value in pixels
-                if (pixel[2] > boatmaximumvalue) {
-                    boatmaximumvalue = pixel[2];
+                if (pixel[2] > maxValue) {
+                    maxValue = pixel[2];
                 }
             }
             // calculate length and width for cluster
@@ -94,7 +99,7 @@ public class BoatPixel {
         }
 
         protected double getMaximumValue() {
-            return boatmaximumvalue;
+            return maxValue;
         }
 
         protected void putMeanValue(int band,double meanvalue) {

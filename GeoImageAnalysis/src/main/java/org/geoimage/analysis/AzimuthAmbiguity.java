@@ -4,7 +4,6 @@
  */
 package org.geoimage.analysis;
 
-import org.geoimage.analysis.DetectedPixels.Boat;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

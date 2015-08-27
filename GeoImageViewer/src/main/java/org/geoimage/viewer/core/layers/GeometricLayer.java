@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -16,11 +17,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.geoimage.analysis.Boat;
+import org.geoimage.analysis.DetectedPixels;
+import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geotools.data.DataStore;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.Feature;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
@@ -50,7 +53,7 @@ public class GeometricLayer implements Cloneable{
     private String name;
     private String projection;
  //   private SimpleFeatureSource featureSource =null;
-    private FeatureCollection featureCollection =null;
+    private FeatureCollection<?,?> featureCollection =null;
     
     
     
@@ -62,6 +65,47 @@ public class GeometricLayer implements Cloneable{
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	/**
+	 * 
+	 * @param timeStampStart
+	 * @param azimuth
+	 * @param pixels
+	 * @return
+	 */
+	public GeometricLayer(String name,String type,String timeStampStart,double azimuth, DetectedPixels pixels) {
+		this.type=type;
+		this.name=name;
+        //GeometricLayer out = new GeometricLayer("point");
+        //setName("VDS Analysis");
+        GeometryFactory gf = new GeometryFactory();
+        long runid = System.currentTimeMillis();
+        int count=0;
+        for (Boat boat : pixels.getBoats()) {
+            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);//, VDSSchema.types);
+            atts.set(VDSSchema.ID, count++);
+            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getMaxValue());
+            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());
+            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat.getTileStd());
+            atts.set(VDSSchema.THRESHOLD, boat.getThreshold());
+            atts.set(VDSSchema.RUN_ID, runid + "");
+            atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat.getSize());
+            atts.set(VDSSchema.ESTIMATED_LENGTH, boat.getLength());
+            atts.set(VDSSchema.ESTIMATED_WIDTH, boat.getWidth());
+            atts.set(VDSSchema.SIGNIFICANCE, (boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
+            timeStampStart=timeStampStart.replace("Z", "");
+            atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
+            atts.set(VDSSchema.VS, 0);
+            //compute the direction of the vessel considering the azimuth of the image result is between 0 and 180 degree
+            double degree = boat.getHeading() + 90 + azimuth;
+            if (degree > 180) {
+                degree = degree - 180;
+            }
+         
+            atts.set(VDSSchema.ESTIMATED_HEADING, degree);
+            put(gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy())), atts);
+        }
+    }
 
 	/**
      * 

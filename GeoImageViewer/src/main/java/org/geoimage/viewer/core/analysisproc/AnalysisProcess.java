@@ -211,7 +211,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
 	                     
 	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
-	                    		 "point", createGeometricLayer(timeStampStart,azimuth, banddetectedpixels[band]),
+	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, banddetectedpixels[band]),
 	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
 
 	                     vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
@@ -276,7 +276,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
-	                		 																	"point", createGeometricLayer(timeStampStart,azimuth, mergePixels),
+	                		 																	"point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, mergePixels),
 	                		 																	thresholds,ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = Platform.getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
@@ -308,45 +308,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
            removeAllProcessListener();
 		}
 		
-		/**
-		 * 
-		 * @param timeStampStart
-		 * @param azimuth
-		 * @param pixels
-		 * @return
-		 */
-		public GeometricLayer createGeometricLayer(String timeStampStart,double azimuth, DetectedPixels pixels) {
-	        GeometricLayer out = new GeometricLayer("point");
-	        out.setName("VDS Analysis");
-	        GeometryFactory gf = new GeometryFactory();
-	        long runid = System.currentTimeMillis();
-	        int count=0;
-	        for (DetectedPixels.Boat boat : pixels.getBoats()) {
-	            AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);//, VDSSchema.types);
-	            atts.set(VDSSchema.ID, count++);
-	            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getValue());
-	            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());
-	            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat.getTileStd());
-	            atts.set(VDSSchema.THRESHOLD, boat.getThreshold());
-	            atts.set(VDSSchema.RUN_ID, runid + "");
-	            atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat.getSize());
-	            atts.set(VDSSchema.ESTIMATED_LENGTH, boat.getLength());
-	            atts.set(VDSSchema.ESTIMATED_WIDTH, boat.getWidth());
-	            atts.set(VDSSchema.SIGNIFICANCE, (boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
-	            timeStampStart=timeStampStart.replace("Z", "");
-	            atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
-	            atts.set(VDSSchema.VS, 0);
-	            //compute the direction of the vessel considering the azimuth of the image result is between 0 and 180 degree
-	            double degree = boat.getHeading() + 90 + azimuth;
-	            if (degree > 180) {
-	                degree = degree - 180;
-	            }
-	         
-	            atts.set(VDSSchema.ESTIMATED_HEADING, degree);
-	            out.put(gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy())), atts);
-	        }
-	        return out;
-	    }
+		
 		
 		/**
 		 * 

@@ -38,6 +38,7 @@ public class VDSAnalysis{
     private IMask[] mask;
     private int tileSize;
     private int verTiles=0;
+    private int horTiles=0;
     private final double MIN_TRESH_FOR_ANALYSIS=0.7;
     
     private List<ProgressListener>progressListener=null;
@@ -69,6 +70,7 @@ public class VDSAnalysis{
         if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
         
         this.verTiles = gir.getHeight() / this.tileSize;
+        this.horTiles = gir.getWidth() / this.tileSize;
         
         progressListener=new ArrayList<ProgressListener>();
     }
@@ -126,8 +128,6 @@ public class VDSAnalysis{
     private DetectedPixels analyse(KDistributionEstimation kdist, float thresholdBandParams,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
         
-        int horTiles = gir.getWidth() / this.tileSize;
-
         // the real size of tiles
         int sizeX = gir.getWidth() / horTiles;
         int sizeY = gir.getHeight() / verTiles;
@@ -301,7 +301,7 @@ public class VDSAnalysis{
             
             // check pixels is not aggregated
             boolean checked = false;
-            for (BoatPixel boatpixel : detPixels.listboatneighbours) {
+            for (BoatConnectedPixelMap boatpixel : detPixels.listboatneighbours) {
                 if (boatpixel.containsPixel(xx, yy)) {
                     checked = true;
                     break;
@@ -342,9 +342,6 @@ public class VDSAnalysis{
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
                 // average the tile mean values
                 double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
-                
-
-                //TODO CHEK if is true....this is the thresholds for the agglomeration. Change in the output with the trheshold calculated by the anlysis
                 // aggregate value is mean + 3 * std
                 thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
                 // clip value is mean + 5 * std
@@ -374,15 +371,18 @@ public class VDSAnalysis{
             	
                 
                 // add pixel to the list
-                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize]);
-                for(int i=0;i<numberbands;i++){
-                //	Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
-                //	kdist.setImageData(sizeX, sizeY, sizeTileX, sizeTileY, row, col, band);
-                //	kdist.estimate(rastermask, data);
-//TODO  for each band,calculate here the "trheshold tile " to put in the xml for the new tile 
-                //	double threshWindowsVals[]=calcThreshWindowVals(thresholdAnalysisParams, thresh);
-                	boatpixel.putMeanValue(i,(statistics[i][1] + statistics[i][2] + statistics[i][3] + statistics[i][4]) / 4);
-                	boatpixel.putThresholdValue(i,detectedPix.threshold);
+                BoatConnectedPixelMap boatpixel = new BoatConnectedPixelMap(xx, yy, id++, data[0][boatx + boaty * tilesize]);
+                double[] thpa={thresholdHH,thresholdHV,thresholdVH,thresholdVV};
+                for(int iBand=0;iBand<numberbands;iBand++){
+                	int row=(cornery+1)/this.verTiles;
+                	int col=(cornerx+1)/this.horTiles;
+                	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
+                	int[] newdata = gir.readTile(cornerx, cornery, tilesize, tilesize,iBand);
+                	kdist.estimate(rastermask, newdata);
+ 
+                	double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thpa[iBand], kdist.getDetectThresh());
+                	boatpixel.putMeanValue(iBand,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
+                	boatpixel.putThresholdValue(iBand,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
                 }	
                 detPixels.listboatneighbours.add(boatpixel);
                 
@@ -411,9 +411,9 @@ public class VDSAnalysis{
         // if remove connected to land pixels flag
         if (removelandconnectedpixels) {
             // remove all boats connecting to land
-        	List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
+        	List<BoatConnectedPixelMap> toRemove=new ArrayList<BoatConnectedPixelMap>();
             for (int i=0;i<detPixels.listboatneighbours.size();i++) {
-            	BoatPixel boat = detPixels.listboatneighbours.get(i);
+            	BoatConnectedPixelMap boat = detPixels.listboatneighbours.get(i);
                 if (boat.touchesLand()) {
                 	//detPixels.listboatneighbours.remove(boat);
                     toRemove.add(boat);

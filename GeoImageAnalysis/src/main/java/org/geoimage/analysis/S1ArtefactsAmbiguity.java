@@ -3,7 +3,7 @@ package org.geoimage.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.geoimage.analysis.DetectedPixels.Boat;
+import org.geoimage.analysis.Boat;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.slf4j.Logger;
