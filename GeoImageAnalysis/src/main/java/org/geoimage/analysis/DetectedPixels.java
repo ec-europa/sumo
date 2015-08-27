@@ -43,7 +43,7 @@ public class DetectedPixels {
     private int searchwindowHeight = 1;
     private SarImageReader gir = null;
     
-    ArrayList<BoatPixel> listboatneighbours = new ArrayList<BoatPixel>();
+    ArrayList<BoatConnectedPixelMap> listboatneighbours = new ArrayList<BoatConnectedPixelMap>();
 
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
 
@@ -71,200 +71,7 @@ public class DetectedPixels {
     }
     
     
-    public class Boat{
-    	public final static int AMBIGUITY_TYPE_AZIMUTH=1;
-    	public final static int AMBIGUITY_TYPE_ARTEFACTS=2;
-    	
-    	private double posx;
-    	private double posy;
-    	private double size;
-    	private double length;
-    	private double width;
-    	private double heading;
-    	private double value;
-    	private double tileAvg;
-    	private List<Double> tileStd;
-    	private List<Double> threshold;
-    	private double band;
-    	private double id;
-    	private boolean isAmbiguity=false;
-    	private int ambiguityType=0;
-    	
-
-		public Boat(double id,double x,double y,double size,double length,double width,double heading,
-				double value,double tileAvg,List<Double> tileStd,List<Double> threshold, double band){
-    		this.id=id;
-			this.posx=x;
-    		this.posy=y;
-    		this.size=size;
-    		this.length=length;
-    		this.width=width;
-    		this.heading=heading;
-    		this.value = value;
-            this.tileAvg = tileAvg;
-            this.tileStd = tileStd;
-            this.threshold = threshold;
-            this.band = band;
-    	}
-		
-		public Boat(double id,double x,double y,double size,double length,double width,double heading,
-				double value,double tileAvg,double tileStd,double threshold, int band){
-    		this.id=id;
-			this.posx=x;
-    		this.posy=y;
-    		this.size=size;
-    		this.length=length;
-    		this.width=width;
-    		this.heading=heading;
-    		this.value = value;
-            this.tileAvg = tileAvg;
-            this.tileStd = new ArrayList<Double>();
-            this.tileStd.add(band,tileStd);
-            this.threshold = new ArrayList<Double>();
-            this.tileStd.add(band,threshold);
-            this.band = band;
-    	}
-		
-
-		public double getId() {
-			return id;
-		}
-
-
-
-		public void setId(double id) {
-			this.id = id;
-		}
-
-
-
-		public double getValue() {
-			return value;
-		}
-
-
-
-		public void setValue(double value) {
-			this.value = value;
-		}
-
-
-
-		public double getTileAvg() {
-			return tileAvg;
-		}
-
-
-
-		public void setTileAvg(double tileAvg) {
-			this.tileAvg = tileAvg;
-		}
-
-
-
-		public List<Double> getTileStd() {
-			return tileStd;
-		}
-
-
-
-		public void setTileStd(List<Double> tileStd) {
-			this.tileStd = tileStd;
-		}
-
-
-
-		public List<Double> getThreshold() {
-			return threshold;
-		}
-
-
-
-		public void setThreshold(List<Double> threshold) {
-			this.threshold = threshold;
-		}
-
-
-
-		public double getBand() {
-			return band;
-		}
-
-
-
-		public void setBand(double band) {
-			this.band = band;
-		}
-
-		public int getAmbiguityType() {
-			return ambiguityType;
-		}
-
-		public void setAmbiguityType(int ambiguityType) {
-			this.ambiguityType = ambiguityType;
-		}
-
-		public double getPosx() {
-			return posx;
-		}
-
-		public void setPosx(double posx) {
-			this.posx = posx;
-		}
-
-		public double getPosy() {
-			return posy;
-		}
-
-		public void setPosy(double posy) {
-			this.posy = posy;
-		}
-
-		public double getSize() {
-			return size;
-		}
-
-		public void setSize(double size) {
-			this.size = size;
-		}
-
-		public double getLength() {
-			return length;
-		}
-
-		public void setLength(double length) {
-			this.length = length;
-		}
-
-		public double getWidth() {
-			return width;
-		}
-
-		public void setWidth(double width) {
-			this.width = width;
-		}
-
-		public double getHeading() {
-			return heading;
-		}
-
-		public void setHeading(double heading) {
-			this.heading = heading;
-		}
-		
-		public boolean isAmbiguity() {
-			return isAmbiguity;
-		}
-
-
-
-		public void setAmbiguity(boolean isAmbiguity) {
-			this.isAmbiguity = isAmbiguity;
-		}
-
-
-    }
-    
+   
 
     public DetectedPixels(SarImageReader gir) {
         this.gir = gir;
@@ -293,9 +100,9 @@ public class DetectedPixels {
      * @param band
      */
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
-        Pixel boat = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
+        Pixel boatPixel = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
         StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
-        allDetectedPixels.put(point.toString(), boat);
+        allDetectedPixels.put(point.toString(), boatPixel);
 
     }
 
@@ -330,7 +137,7 @@ public class DetectedPixels {
         }
     }
 
-    public DetectedPixels.Boat[] getBoats() {
+    public Boat[] getBoats() {
         return boatArray;
     }
 
@@ -350,17 +157,17 @@ public class DetectedPixels {
             for (int i = xx - this.searchwindowWidth; i < xx + this.searchwindowWidth + 1; i++) {
                 for (int j = yy - this.searchwindowHeight; j < yy + this.searchwindowHeight + 1; j++) {
                 	String key = new StringBuilder().append(i).append(" ").append(j).toString();
-                    Pixel boat = allDetectedPixels.get(key);
-                    if (boat != null && !(i == xx && j == yy)) {
+                    Pixel pixel = allDetectedPixels.get(key);
+                    if (pixel != null && !(i == xx && j == yy)) {
                         if (aggregatedPixels.get(key) == null) {
-                            boat.id=idd;
+                            pixel.id=idd;
                             List<int[]> agBoat = aggregatedBoats.get(idd);
                             if (agBoat == null) {
                                 agBoat = new ArrayList<int[]>();
                             }
                             agBoat.add(new int[]{i, j});
                             aggregatedBoats.put(idd, agBoat);
-                            aggregatedPixels.put(key, boat);
+                            aggregatedPixels.put(key, pixel);
                             list.add(new int[]{i, j, idd});
                         }
                     }
@@ -371,157 +178,7 @@ public class DetectedPixels {
 
     
 
-    /**
-     *  aggregate using the neighbours within tilesize
-     * @param neighboursdistance
-     * @param tilesize
-     * @param removelandconnectedpixels
-     * @param bands
-     * @param mask
-     * @param kdist
-     * @throws IOException
-     *
-    private void aggregate(int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
-        int id = 0;
-        // scan through list of detected pixels
-        Pixel pixels[]=allDetectedPixels.values().toArray(new Pixel[0]);
-        int count=0;
-        
-        //loop on all detected pixel
-        for (Pixel detectedPix: pixels) {
-        	count++;
-        	
-            int xx = detectedPix.x;
-            int yy = detectedPix.y;
-            
-            if((count % 100)==0)
-            	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
-            
-            // check pixels is not aggregated
-            boolean checked = false;
-            for (BoatPixel boatpixel : listboatneighbours) {
-                if (boatpixel.containsPixel(xx, yy)) {
-                    checked = true;
-                    break;
-                }
-            }
-
-            if (checked) {
-                continue;
-            }
-
-            // get image data in tile
-            int cornerx = Math.min(Math.max(0, xx - tilesize / 2), gir.getWidth() - tilesize);
-            int cornery = Math.min(Math.max(0, yy - tilesize / 2), gir.getHeight() - tilesize);
-            
-            // boat relative coordinates
-            int boatx = xx - cornerx;
-            int boaty = yy - cornery;
-            int numberbands = bands.length;
-
-            //read the area for the bands
-            int[][] data = new int[numberbands][];
-            try{
-	            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-	            	data[bandcounter] = gir.read(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
-	            }	
-            }catch(IOException e){
-        		logger.error(e.getMessage());
-        		throw e;
-        	}
-            
-            // calculate thresholds
-            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
-            
-            double[][] thresholdvalues = new double[numberbands][2];
-            int maxvalue = 0;
-            boolean pixelabove = false;
-            
-            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-                // average the tile mean values
-                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
-                
-
-                //TODO CHEK if is true....this is the thresholds for the agglomeration. Change in the output with the trheshold calculated by the anlysis
-                // aggregate value is mean + 3 * std
-                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
-                // clip value is mean + 5 * std
-                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
-                // check the pixel is still above the new threshold
-                int value = data[bandcounter][boatx + boaty * tilesize];
-                if (value > thresholdvalues[bandcounter][1]) {
-                    pixelabove = true;
-                }
-                // find maximum value amongst bands
-                if (value > maxvalue) {
-                    maxvalue = data[bandcounter][boatx + boaty * tilesize];
-                }
-            }
-            
-            // add pixel only if above new threshold
-            if (pixelabove) {
-            	// check if there is land in tile
-                Raster rastermask = null;
-                if (mask != null) {
-                    // check if land in tile
-                    if (mask.intersects(cornerx, cornery, tilesize, tilesize)) {
-                        // create raster mask
-                        rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
-                    }
-                }
-            	
-                
-                // add pixel to the list
-                BoatPixel boatpixel = new BoatPixel(xx, yy, id++, data[0][boatx + boaty * tilesize]);
-                for(int i=0;i<numberbands;i++){
-                	Raster rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
-                	kdist.setImageData(sizeX, sizeY, sizeTileX, sizeTileY, row, col, band);
-                	kdist.estimate(rastermask, data);
-	            	//TODO  for each band,calculate here the "trheshold tile " to put in the xml for the new tile 
-                	double threshWindowsVals[]=calcThreshWindowVals(thresholdAnalysisParams, thresh);
-                	boatpixel.putMeanValue(i,(statistics[i][1] + statistics[i][2] + statistics[i][3] + statistics[i][4]) / 4);
-                	boatpixel.putThresholdValue(i,detectedPix.threshold);
-                }	
-                listboatneighbours.add(boatpixel);
-                
-                // start list of aggregated pixels
-                List<int[]> boataggregatedpixels = new ArrayList<int[]>();
-                int[] imagemap = new int[tilesize * tilesize];
-                for (int i = 0; i < tilesize * tilesize; i++) {
-                    imagemap[i] = 0;
-                }
-                
-                boolean result = checkNeighbours(boataggregatedpixels, imagemap, data, thresholdvalues, new int[]{boatx, boaty}, neighboursdistance, tilesize, rastermask);
-                
-                // set flag for touching land
-                boatpixel.setLandMask(result);
-                
-                // shift pixels by cornerx and cornery and store in boat list
-                //Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
-                for (int[] pixel : boataggregatedpixels) {
-                    boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
-                }
-            } else {
-            }
-            
-        }
-
-        // if remove connected to land pixels flag
-        if (removelandconnectedpixels) {
-            // remove all boats connecting to land
-        	List<BoatPixel> toRemove=new ArrayList<BoatPixel>();
-            for (int i=0;i<listboatneighbours.size();i++) {
-            	BoatPixel boat = listboatneighbours.get(i);
-                if (boat.touchesLand()) {
-                    toRemove.add(boat);
-                }
-            }
-            listboatneighbours.removeAll(toRemove);
-        }
-        // generate statistics and values for boats
-        computeBoatsAttributesAndStatistics(listboatneighbours);
-        
-    }*/
+    
 
 
     
@@ -568,12 +225,13 @@ public class DetectedPixels {
                         imagemap[i + j * tilesize] = 1;
                         // check if pixel is in sea
                         if ((rastermask == null) || (rastermask.getSample(i, j, 0) == 0)) {
-                            //if(rastermask != null) System.out.println(i + " " + j + "mask value is" + rastermask.getSample(i, j, 0));
-                            //else System.out.println(i + " " + j);
-                            // check if pixel is above threshold in one of the bands
-                            boolean aggregated = false;
+
+                        	
+                        	boolean aggregated = false;
                             boolean clipped = false;
                             int value = 0;
+                            
+                            //calculate the max pixel value for all bands --> Here we use only one value!!!! 
                             for (int band = 0; band < numberofbands; band++) {
                                 int pixelvalue = imagedata[band][i + tilesize * j];
 
@@ -668,8 +326,8 @@ public class DetectedPixels {
                     pixel = it[i];
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                     Pixel boat = aggregatedPixels.get(key);
-                    if (boat.value > boatValue.getValue()) {
-                    	boatValue.setValue(boat.value);
+                    if (boat.value > boatValue.getMaxValue()) {
+                    	boatValue.setMaxValue(boat.value);
                     }
                 }
                 
@@ -683,120 +341,52 @@ public class DetectedPixels {
                 }
             }
         }
-
-        // create new array
-        Map<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
-        // list for keys
-        List<Integer> keys = new ArrayList<Integer>();
-        // sort the list by position
-        for (Boat boat : boatsTemp) {
-            // if entry does not exist in the hashtable create it
-            if (hashtableBoat.get(new Integer((int) (boat.posy / 512))) == null) {
-                hashtableBoat.put(new Integer((int) (boat.posy / 512)), new ArrayList<Boat>());
-                keys.add((int) (boat.posy / 512));
-            }
-            // sort boat positions by stripes of 512
-            hashtableBoat.get(new Integer((int) (boat.posy / 512))).add(boat);
-        }
-
-        // clear the boatArray
         boatsTemp.clear();
-
-        // for each stripe sort the boats by columns within each stripe
-        Collections.sort(keys);
-        for (Integer key : keys) {
-            // get the boats in the stripe
-            List<Boat> boatsinStripe = hashtableBoat.get(key);
-            if (boatsinStripe != null) {
-                for (int i = 1; i < boatsinStripe.size(); i++) {
-                    double positionX = boatsinStripe.get(i).posx;
-                    for (int j = 0; j < i; j++) {
-                        if (positionX < boatsinStripe.get(j).posx) {
-                            // insert element at the right position
-                            boatsinStripe.add(j, boatsinStripe.get(i));
-                            // remove element from its previous position increased by one position
-                            boatsinStripe.remove(i + 1);
-                            break;
-                        }
-                    }
-                }
-            }
-            // add the sorted boats to the table
-            for (Boat boat : boatsinStripe) {
-            	boatsTemp.add(boat);
-            }
-        }
-        boatArray=boatsTemp.toArray(new Boat[0]);			//new double[boatsTemp.size()][];
+        boatsTemp=sortBoats(boatsTemp);
+        boatArray=boatsTemp.toArray(new Boat[0]);			
     }
 
+   
+    
+    
     /**
      * AG inserted a test to filter boats by length
      * @param list
      */
-    protected void computeBoatsAttributesAndStatistics(List<BoatPixel> list) {
+    protected void computeBoatsAttributesAndStatistics(List<BoatConnectedPixelMap> list) {
     	 List <Boat> boatsTemp=new ArrayList<Boat>();
     	 
         // compute attributes and statistics values on boats
-        for (BoatPixel boat : list) {
-            boat.computeValues(pixsam,pixrec);
-            if(boat.getBoatlength()>this.filterminSize && boat.getBoatlength()<this.filtermaxSize){
+        for (BoatConnectedPixelMap boatPxMap : list) {
+            boatPxMap.computeValues(pixsam,pixrec);
+            if(boatPxMap.getBoatlength()>this.filterminSize && boatPxMap.getBoatlength()<this.filtermaxSize){
             	
             	//TODO: Adattare il codice a gestire tutte le bande 
             	//TODO: calcolare i significance qui!!
-            	Boat b=new Boat(boat.getId(),(int)boat.getBoatposition()[0], (int)boat.getBoatposition()[1],(int)boat.getBoatnumberofpixels(),
-            			(int)boat.getBoatlength(),(int)boat.getBoatwidth(),(int)boat.getBoatheading(),boat.getMaximumValue(),boat.getMeanValueBand(0),
-            			boat.getStdValue(),boat.getThresholdValueBand(0),0);
+            	
+    			//double value,double tileAvg,double tileStd,double threshold, int band
+            	Boat b=new Boat(boatPxMap.getId()						//id
+            			,(int)boatPxMap.getBoatposition()[0]				//x
+            			, (int)boatPxMap.getBoatposition()[1]			//y
+            			,(int)boatPxMap.getBoatnumberofpixels()			//size
+            			,(int)boatPxMap.getBoatlength()					//length
+            			,(int)boatPxMap.getBoatwidth()					//width
+            			,(int)boatPxMap.getBoatheading());				//heading
+            	
+    			List<Double> thresholdsTile=boatPxMap.getThresholdValue();
+    			double max=boatPxMap.getMaximumValue();
+    			for(Double t:thresholdsTile){
+    				
+    			}
+            	
+            			//,boat.getMaximumValue(),boat.getMeanValueBand(0),
+            			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
             	
             	boatsTemp.add(b);
             }
         }
-
-        // sort the boats array by positions to facilitate navigation
-        HashMap<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
-        // list for keys
-        List<Integer> keys = new ArrayList<Integer>();
-        // sort the list by position
-        for (Boat boat : boatsTemp) {
-            // if entry does not exist in the hashtable create it
-            if (hashtableBoat.get(new Integer((int) (boat.getPosy() / 512))) == null) {
-                hashtableBoat.put(new Integer((int) (boat.getPosy() / 512)), new ArrayList<Boat>());
-                keys.add((int) (boat.getPosy() / 512));
-            }
-            // sort boat positions by stripes of 512
-            hashtableBoat.get(new Integer((int) (boat.getPosy() / 512))).add(boat);
-        }
-
-        // clear the boatArray
         boatsTemp.clear();
-
-        // for each stripe sort the boats by columns within each stripe
-        Collections.sort(keys);
-        for (Integer key : keys) {
-            // get the boats in the stripe
-            List<Boat> boatsinStripe = hashtableBoat.get(key);
-            if (boatsinStripe != null) {
-                for (int i = 1; i < boatsinStripe.size(); i++) {
-                    double positionX = boatsinStripe.get(i).getPosx();
-                    for (int j = 0; j < i; j++) {
-                        if (positionX < boatsinStripe.get(j).getPosy()) {
-                            // insert element at the right position
-                            boatsinStripe.add(j, boatsinStripe.get(i));
-                            // remove element from its previous position increased by one position
-                            boatsinStripe.remove(i + 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            int id = 0;
-            // add the sorted boats to the table
-            for (Boat boat : boatsinStripe) {
-                // update the ID
-                boat.setId(id++);
-                boatsTemp.add(boat);
-            }
-        }
+        boatsTemp=sortBoats(boatsTemp);
         boatArray=boatsTemp.toArray(new Boat[0]);
     }
 
@@ -823,7 +413,7 @@ public class DetectedPixels {
     public List<Geometry> getThresholdclipPixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        for (BoatPixel boat : listboatneighbours) {
+        for (BoatConnectedPixelMap boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdclipPixels();
             for (int[] position : positions) {
                 out.add(gf.createPoint(new Coordinate(position[0], position[1])));
@@ -836,7 +426,7 @@ public class DetectedPixels {
     public List<Geometry> getThresholdaggregatePixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        for (BoatPixel boat : listboatneighbours) {
+        for (BoatConnectedPixelMap boat : listboatneighbours) {
             List<int[]> positions = boat.getThresholdaggregatePixels();
             for (int[] position : positions) {
                 out.add(gf.createPoint(new Coordinate(position[0], position[1])));
@@ -845,4 +435,62 @@ public class DetectedPixels {
 
         return out;
     }
-};
+    
+    /**
+     * 
+     * @param boats
+     * @return
+     */
+    private List<Boat> sortBoats(List <Boat> boats){
+    	ArrayList<Boat> sorted=new ArrayList<>();
+    	// sort the boats array by positions to facilitate navigation
+        HashMap<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
+        // list for keys
+        List<Integer> keys = new ArrayList<Integer>();
+
+        // sort the list by position
+        for (Boat boat : boats) {
+        	Integer posyKey=new Integer((int) (boat.getPosy() / 512));
+
+        	// if entry does not exist in the hashtable create it
+            if (hashtableBoat.get(posyKey) == null) {
+                hashtableBoat.put(posyKey, new ArrayList<Boat>());
+                keys.add((int) posyKey);
+            }
+            // sort boat positions by stripes of 512
+            hashtableBoat.get(posyKey).add(boat);
+        }
+
+        // for each stripe sort the boats by columns within each stripe
+        Collections.sort(keys);
+        for (Integer key : keys) {
+            // get the boats in the stripe
+            List<Boat> boatsinStripe = hashtableBoat.get(key);
+            if (boatsinStripe != null) {
+                for (int i = 1; i < boatsinStripe.size(); i++) {
+                    double positionX = boatsinStripe.get(i).getPosx();
+                    for (int j = 0; j < i; j++) {
+                        if (positionX < boatsinStripe.get(j).getPosy()) {
+                            // insert element at the right position
+                            boatsinStripe.add(j, boatsinStripe.get(i));
+                            // remove element from its previous position increased by one position
+                            boatsinStripe.remove(i + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            int id = 0;
+            
+            // add the sorted boats to the table
+            for (Boat boat : boatsinStripe) {
+                // update the ID
+                boat.setId(id++);
+                sorted.add(boat);
+            }
+        }
+        return sorted;
+    }
+    
+}

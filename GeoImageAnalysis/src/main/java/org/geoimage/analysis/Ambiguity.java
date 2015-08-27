@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geoimage.analysis.DetectedPixels.Boat;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
