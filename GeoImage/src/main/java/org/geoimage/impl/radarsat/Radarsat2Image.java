@@ -42,7 +42,7 @@ public class Radarsat2Image extends SarImageReader {
     protected Document doc;
     protected Namespace ns = Namespace.getNamespace("http://www.rsi.ca/rs2/prod/xml/schemas");
     protected Map<String, TIFF> tiffImages;
-    protected Vector<String> bands;
+    protected String[] bands;
     protected String timestampStart;
     protected String timestampStop;
     private String overviewImage;
@@ -53,7 +53,7 @@ public class Radarsat2Image extends SarImageReader {
 
     @Override
     public int getNBand() {
-        return bands.size();
+        return bands.length;
     }
 
     @Override
@@ -223,7 +223,7 @@ public class Radarsat2Image extends SarImageReader {
 
     @Override
     public String getBandName(int band) {
-        return bands.get(band);
+        return bands[band];
     }
 
     
@@ -241,15 +241,16 @@ public class Radarsat2Image extends SarImageReader {
     private Map<String, TIFF> getImages() {
         List<?> elements = doc.getRootElement().getChild("imageAttributes", ns).getChildren("fullResolutionImageData", ns);
         Map<String, TIFF> tiffs = new HashMap<String, TIFF>();
-        bands=new Vector<String>();
+        
         for (Object o : elements) {
             if (o instanceof Element) {
                 File f = new File(productxml.getParent(), ((Element) o).getText());
                 String polarisation = ((Element) o).getAttribute("pole").getValue();
                 tiffs.put(polarisation, new TIFF(f,0));
-                bands.add(polarisation);
+                //bands.add(polarisation);
             }
         }
+        bands=tiffs.keySet().toArray(new String[0]);
         return tiffs;
     }
 
@@ -510,7 +511,7 @@ public class Radarsat2Image extends SarImageReader {
 
     @Override
     public int getType(boolean oneBand) {
-        if(oneBand || bands.size()<2) return BufferedImage.TYPE_USHORT_GRAY;
+        if(oneBand || bands.length<2) return BufferedImage.TYPE_USHORT_GRAY;
         else return BufferedImage.TYPE_INT_RGB;
     }
 

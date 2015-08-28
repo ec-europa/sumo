@@ -690,11 +690,10 @@ public class EnvisatImage extends SarImageReader {
 		return displayName;
 	}
 	public double getPRF(int x,int y){
-      
         return getPRF();
-
-
     }
 
-
+	public String[] getBands(){
+		return new String[]{(String)getMetadata("MDS1_TX_RX_POLAR") , (String)getMetadata("MDS2_TX_RX_POLAR")};
+	}
 }

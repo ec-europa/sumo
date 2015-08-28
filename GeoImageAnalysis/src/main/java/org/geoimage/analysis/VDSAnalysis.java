@@ -336,7 +336,7 @@ public class VDSAnalysis{
             double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
             
             double[][] thresholdvalues = new double[numberbands][2];
-            int maxvalue = 0;
+            int[] maxvalue = new int[numberbands];
             boolean pixelabove = false;
             
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
@@ -352,8 +352,8 @@ public class VDSAnalysis{
                     pixelabove = true;
                 }
                 // find maximum value amongst bands
-                if (value > maxvalue) {
-                    maxvalue = data[bandcounter][boatx + boaty * tilesize];
+                if (value > maxvalue[bandcounter]) {
+                    maxvalue[bandcounter] = data[bandcounter][boatx + boaty * tilesize];
                 }
             }
             
@@ -368,11 +368,10 @@ public class VDSAnalysis{
                         rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
                     }
                 }
-            	
-                
                 // add pixel to the list
                 BoatConnectedPixelMap boatpixel = new BoatConnectedPixelMap(xx, yy, id++, data[0][boatx + boaty * tilesize]);
                 double[] thpa={thresholdHH,thresholdHV,thresholdVH,thresholdVV};
+
                 for(int iBand=0;iBand<numberbands;iBand++){
                 	int row=(cornery+1)/this.verTiles;
                 	int col=(cornerx+1)/this.horTiles;
@@ -399,13 +398,11 @@ public class VDSAnalysis{
                 boatpixel.setLandMask(result);
                 
                 // shift pixels by cornerx and cornery and store in boat list
-                //Collection<int[]> aggregatedpixels = boataggregatedpixels.values();
                 for (int[] pixel : boataggregatedpixels) {
                     boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
                 }
             } else {
             }
-            
         }
 
         // if remove connected to land pixels flag
@@ -415,7 +412,6 @@ public class VDSAnalysis{
             for (int i=0;i<detPixels.listboatneighbours.size();i++) {
             	BoatConnectedPixelMap boat = detPixels.listboatneighbours.get(i);
                 if (boat.touchesLand()) {
-                	//detPixels.listboatneighbours.remove(boat);
                     toRemove.add(boat);
                 }
             }
@@ -423,7 +419,6 @@ public class VDSAnalysis{
         }
         // generate statistics and values for boats
         detPixels.computeBoatsAttributesAndStatistics(detPixels.listboatneighbours);
-        
     }
     
     
