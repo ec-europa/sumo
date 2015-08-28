@@ -66,7 +66,9 @@
 				<!-- format 0.000,0.000,0.000,0.000  threshold values for the tile for each polarization -->
 				<xs:element name="threshold_tile" type="xs:string"/>
 				
-				<xs:element name="max_value" type="xs:int"/>
+				<!-- format 0.000,0.000,0.000,0.000  max pixel values for each polarization -->
+				<xs:element name="max_value" type="xs:string"/>
+				
 				<xs:element name="min_detectable_rcs" type="xs:string"/>
 				
 				<!--  only for compatibility with the old code -->

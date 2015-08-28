@@ -58,7 +58,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     final int defaultMargin=100;
     protected Polygon bbox=null;
     
-    
+    protected String[] bands;
     
 
 	public SarImageReader(File manifest){
@@ -81,6 +81,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public abstract String getDisplayName(int band); 
 	@Override
     public abstract int getWidth();
+	
+	/**
+	 * return an array contains the image bands HH,HV,VV,VH
+	 * @return
+	 */
+	public abstract String[] getBands();
 
     @Override
     public abstract int getHeight();

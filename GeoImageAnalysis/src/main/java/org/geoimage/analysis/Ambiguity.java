@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.geoimage.def.SarImageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +61,6 @@ class Window{
 }
 
 /**
- *  
- * 
  * @author Pietro Argentieri 
  *
  */
@@ -182,12 +182,13 @@ public abstract class Ambiguity {
        // logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
         int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band);
         
-        if(maxVal>(boat.getValue()*AZIMUT_FACTOR)){
+        int boatMaxValue=NumberUtils.max(boat.getMaxValue());
+        if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
         	return true;
         }else{
         	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,false);
         	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band);
-        	if(maxVal>(boat.getValue()*AZIMUT_FACTOR)){
+        	if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
             	return true;
         	}	
         }	

@@ -850,7 +850,9 @@ public class Radarsat1Image extends SarImageReader {
 	public int getNBand() {
 		return 1;
 	}
-
+	public String[] getBands(){
+		return new String[]{"HH"};
+	}
 
 
 
