@@ -41,7 +41,6 @@ public class DetectedPixels {
     private double pixrec;//azimuth
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
-    private SarImageReader gir = null;
     
     ArrayList<BoatConnectedPixelMap> listboatneighbours = new ArrayList<BoatConnectedPixelMap>();
 
@@ -72,9 +71,11 @@ public class DetectedPixels {
     
     
    
-
+    /**
+     * 
+     * @param gir
+     */
     public DetectedPixels(SarImageReader gir) {
-        this.gir = gir;
         // get the image pixel size
         this.pixsam = gir.getRangeSpacing();
         this.pixrec = gir.getAzimuthSpacing();
@@ -120,7 +121,10 @@ public class DetectedPixels {
             allDetectedPixels.put(point.toString(), boat);
         }
     }
-
+    /**
+     * 
+     * @param pixels
+     */
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
     	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
@@ -144,7 +148,13 @@ public class DetectedPixels {
     private Map<String, Pixel> getDetectedPixels() {
         return allDetectedPixels;
     }
-
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param id
+     */
     private void aggregate(int x, int y, int id) {
         int[] seed = {x, y, id};
         ArrayList<int[]> list = new ArrayList<int[]>();
@@ -175,13 +185,6 @@ public class DetectedPixels {
             }
         }
     }
-
-    
-
-    
-
-
-    
 
     /**
      * 
@@ -318,16 +321,18 @@ public class DetectedPixels {
                 Pixel pixelValue = aggregatedPixels.get(id);
                 
                 //boatvalues[0]=number of pixel boatvalues[1-2]= posx e posy  boatvalues[3-4-5]=length,width,heading
-                Boat boatValue=new Boat(pixelValue.id, boatvalues[1], boatvalues[2], boatvalues[0], boatvalues[3], boatvalues[4], boatvalues[5],
-                		pixelValue.value,pixelValue.tileAvg,pixelValue.tileStd,pixelValue.threshold,pixelValue.band);
+                Boat boatValue=new Boat(pixelValue.id, boatvalues[1], boatvalues[2], boatvalues[0],
+                						boatvalues[3], boatvalues[4], boatvalues[5],
+                						new int[]{pixelValue.value},pixelValue.tileAvg,pixelValue.tileStd,
+                						pixelValue.threshold,pixelValue.band);
   
                 // look for maximum value in agglomerate
                 for (int i=1;i<it.length;i++) {
                     pixel = it[i];
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
-                    Pixel boat = aggregatedPixels.get(key);
-                    if (boat.value > boatValue.getMaxValue()) {
-                    	boatValue.setMaxValue(boat.value);
+                    Pixel pxBoat = aggregatedPixels.get(key);
+                    if (pxBoat.value > boatValue.getMaxValue()[0]) {
+                    	boatValue.setMaxValue(new int[]{pxBoat.value});
                     }
                 }
                 
@@ -364,14 +369,17 @@ public class DetectedPixels {
             	//TODO: Adattare il codice a gestire tutte le bande 
             	//TODO: calcolare i significance qui!!
             	
-    			//double value,double tileAvg,double tileStd,double threshold, int band
             	Boat b=new Boat(boatPxMap.getId()						//id
-            			,(int)boatPxMap.getBoatposition()[0]				//x
+            			,(int)boatPxMap.getBoatposition()[0]			//x
             			, (int)boatPxMap.getBoatposition()[1]			//y
             			,(int)boatPxMap.getBoatnumberofpixels()			//size
             			,(int)boatPxMap.getBoatlength()					//length
             			,(int)boatPxMap.getBoatwidth()					//width
             			,(int)boatPxMap.getBoatheading());				//heading
+
+    			//,boat.getMaximumValue(),boat.getMeanValueBand(0),
+    			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
+
             	
     			List<Double> thresholdsTile=boatPxMap.getThresholdValue();
     			double max=boatPxMap.getMaximumValue();
@@ -379,8 +387,6 @@ public class DetectedPixels {
     				
     			}
             	
-            			//,boat.getMaximumValue(),boat.getMeanValueBand(0),
-            			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
             	
             	boatsTemp.add(b);
             }

@@ -356,6 +356,10 @@ public class CosmoSkymedImage extends SarImageReader {
         return getPolarization();
     }
 
+    public String[] getBands() {
+        return new String[]{getPolarization()};
+    }
+    
 	@Override
 	public int[] read(int x, int y, int width, int height, int band) throws IOException {
 		return readTile(x, y, width, height, band);

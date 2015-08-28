@@ -13,7 +13,7 @@ public class Boat{
 	private double length;
 	private double width;
 	private double heading;
-	private double maxValue;
+	private int[] maxValue;
 	private double tileAvg;
 	private List<Double> tileStd;
 	private List<Double> threshold;
@@ -39,7 +39,7 @@ public class Boat{
 	}
 	
 	public Boat(double id,double x,double y,double size,double length,double width,double heading,
-			double value,double tileAvg,double tileStd,double threshold, int band){
+			int value[],double tileAvg,double tileStd,double threshold, int band){
 		this.id=id;
 		this.posx=x;
 		this.posy=y;
@@ -69,13 +69,13 @@ public class Boat{
 
 
 
-	public double getMaxValue() {
+	public int[] getMaxValue() {
 		return maxValue;
 	}
 
 
 
-	public void setMaxValue(double value) {
+	public void setMaxValue(int[] value) {
 		this.maxValue = value;
 	}
 
