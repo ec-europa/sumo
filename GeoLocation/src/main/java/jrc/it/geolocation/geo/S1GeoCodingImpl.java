@@ -564,8 +564,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
-				r = gc.pixelFromGeo(2.17235, 41.31749);
-				//r = gc.geoFromPixel(4623,7445);
+				//r = gc.pixelFromGeo(2.17235, 41.31749);
+				r = gc.geoFromPixel(4623,7445);
 				System.out.println(""+r[1]+"--- "+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);
