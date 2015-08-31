@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:UML="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style" xmi:id="_rfq_oC7DEeWt_4yo8pCvBw" selectedViews="_tSoyEC7DEeWt_4yo8pCvBw _tSxU8C7DEeWt_4yo8pCvBw _tS4CoC7DEeWt_4yo8pCvBw _tS530C7DEeWt_4yo8pCvBw _tS-JQC7DEeWt_4yo8pCvBw _tlgDsC7DEeWt_4yo8pCvBw _toNZcC7DEeWt_4yo8pCvBw" version="10.0.0.201505222000">
   <semanticResources>Sumo.uml</semanticResources>
+  <semanticResources>bundleentry://2129.fwk1243779480/cache/www.w3.org/2001/XMLSchema-instance.xsd</semanticResources>
+  <semanticResources>bundleentry://2129.fwk1243779480/cache/www.w3.org/2001/XMLSchema.xsd</semanticResources>
+  <semanticResources>bundleentry://2129.fwk1243779480/cache/www.w3.org/2001/MagicXMLSchema.xsd</semanticResources>
+  <semanticResources>http://www.w3.org/2001/xml.xsd</semanticResources>
+  <semanticResources>../GeoLocation/target/classes/META-INF/maven/GeoLocation/GeoLocation/pom.xml</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/META-INF/maven/SafeReader/SafeReader/pom.xml</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/annotation/annotation.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/customization.xml</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-level-1-calibration.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-object-types.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-level-1-measurement.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-level-1-noise.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-level-1-product.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-level-1-quicklook.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-map-overlay.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/s1/s1-product-preview.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/safe/gml.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/safe/manifest.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/safe/s1.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/safe/s1sarl1.xsd</semanticResources>
+  <semanticResources>../SentinelXMLReader/target/classes/xsd/safe/xfdu.xsd</semanticResources>
   <ownedViews xmi:type="viewpoint:DRepresentationContainer" xmi:id="_tSoyEC7DEeWt_4yo8pCvBw">
     <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Extend']"/>
   </ownedViews>
