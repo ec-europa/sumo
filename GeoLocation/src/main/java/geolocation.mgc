@@ -41,6 +41,17 @@
         <Communication destinationClassName="jrc.it.geolocation.common.MathUtil"/>
     </Class>
     <Class
+        name="jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox"
+        x="15" y="7">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
         name="jrc.it.geolocation.metadata.IMetadata.CoordinateConversion"
         x="-19" y="237">
         <AttributesDisplayFilter public-accepted="true"
@@ -51,9 +62,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class
-        name="jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox"
-        x="72" y="20">
+    <Class name="jrc.it.geolocation.metadata.IMetadata" x="424" y="17">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -63,15 +72,6 @@
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
     <Class name="jrc.it.geolocation.geo.GeoCoding" x="711" y="456">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="jrc.it.geolocation.metadata.IMetadata" x="424" y="17">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>

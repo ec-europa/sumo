@@ -140,6 +140,8 @@ public class Radarsat2Image extends SarImageReader {
     
 	@Override
 	public int[] read(int x, int y, int w, int h, int band) throws IOException {
+		//TODO: check 
+		
 		/*Rectangle rect = new Rectangle(x, y, w, h);
         rect = rect.intersection(bounds);
         int[] data= new int[h*w];

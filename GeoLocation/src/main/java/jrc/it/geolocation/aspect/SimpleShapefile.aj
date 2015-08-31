@@ -1,7 +1,5 @@
 package jrc.it.geolocation.aspect;
 
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
 

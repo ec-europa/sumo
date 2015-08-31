@@ -187,28 +187,30 @@ public class GeoUtils {
 	 * @param lon
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
-	 *
-	public static double  getGeoidH_old(double lon,double lat){
+	 */
+	public static double  getGeoidH(double lon,double lat){
+	    double h=0;
+	    double minDist =1000;
 		//first value
-		Geoid g=geoidPoints[0];
-		double minDist = distance(lon,lat,g.lon,g.lat);
-	    
-	    double h=g.h;
-		for(int i=1;i<geoidPoints.length&&minDist>115;){//i++){
-			i=i+(new Double(minDist).intValue()/115);
-			g=geoidPoints[i];
-			//geoidPoints
-		    double dist =distance(lon,lat,g.lon,g.lat);
-		    if(minDist >dist){ 
-		    	minDist=dist;
-		    	h=g.h;
-		    }	
-		    
+		for(int i=0;i<geoidPoints.length&&minDist>50;i++){
+			Geoid g=geoidPoints[i][0];
+			minDist = distance(lon,lat,g.lon,g.lat);
+		    h=g.h;
+			for(int j=1;j<geoidPoints[i].length;j++){
+				//i=i+(new Double(minDist).intValue()/115);
+				g=geoidPoints[i][j];
+				//geoidPoints
+			    double dist =distance(lon,lat,g.lon,g.lat);
+			    if(minDist >dist){ 
+			    	minDist=dist;
+			    	h=g.h;
+			    }
+			}   
 		}
-		 System.out.println("-->H:"+h);
+		//System.out.println("-->H:"+h);
 		return h;
 		
-	}*/
+	}
 	
 	
 	/**
@@ -218,7 +220,7 @@ public class GeoUtils {
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
 	 */
-	public static double  getGeoidH(final double lon,final double lat){
+	public static double  getGeoidHX(final double lon,final double lat){
 		double h=0;
 		
 		double lonRad=lon*FastMath.PI/180;
@@ -432,12 +434,12 @@ public class GeoUtils {
 		return longitude+l; 
 	}
 	
-	/*
+	
 	public static void main(String[] args){
-		GeoUtils.getGeoidH(6.027,43.155);
+		System.out.println("H:"+GeoUtils.getGeoidH(2.17235,41.31749));
 		//GeoUtils.distance(6.027,43.155,-8.625,-27.5);
 		
-		
+	}	
 		/*<referenceEllipsoidParameters>
 		<ellipsoidName>WGS84</ellipsoidName>
 		<semiMajorAxis units="m">6.378137000000000e+06</semiMajorAxis>
