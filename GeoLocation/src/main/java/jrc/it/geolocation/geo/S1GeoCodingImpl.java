@@ -3,7 +3,6 @@ package jrc.it.geolocation.geo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -532,7 +531,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="F:\\\\\\\\SumoImgs\\\\\\\\test_geo_loc\\\\\\\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="F:\\Sumo_test\\geolocation\\S1A_IW_GRDH_1SDV_20141018T171315_20141018T171340_002887_003449_936A.SAFE\\annotation\\s1a-iw-grd-vv-20141018t171315-20141018t171340-002887-003449-001.xml";
+		String metaF="F:\\SumoImgs\\carlos tests\\geocoding problems\\S1A_EW_GRDM_1SDH_20150105T060017_20150105T060121_004032_004DC8_BE6F.SAFE\\annotation\\s1a-ew-grd-hh-20150105t060017-20150105t060121-004032-004dc8-001.xml";
 		
 		
 		/*
@@ -565,8 +564,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
-				r = gc.pixelFromGeo(9.430058984747808, 41.21278292694313);
-				//r = gc.geoFromPixel(3762.5,12687.5);
+				r = gc.pixelFromGeo(2.17235, 41.31749);
+				//r = gc.geoFromPixel(4623,7445);
 				System.out.println(""+r[1]+"--- "+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);

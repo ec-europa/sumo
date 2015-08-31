@@ -167,8 +167,10 @@ public class S1Metadata extends AbstractMetadata {
 				
 				GregorianCalendar gc=ot.getTime().toGregorianCalendar();
 				pv.time=gc.getTimeInMillis()/1000.0;
-				
-				pv.timeStampInitSeconds=gc.get(GregorianCalendar.MINUTE)*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000.0);
+				int minutes=gc.get(GregorianCalendar.MINUTE);
+				if(minutes==0)
+					minutes=60;
+				pv.timeStampInitSeconds=minutes*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000.0);
 				orbitStatePosVelox.add(pv);
 			}
 			
@@ -195,19 +197,13 @@ public class S1Metadata extends AbstractMetadata {
 			}
 			
 			//PRF and PRF mean
-			List<DownlinkInformationType> links=annotationReader.getDownLinkInformationList();
+			//List<DownlinkInformationType> links=annotationReader.getDownLinkInformationList();
 			/*for(DownlinkInformationType info:links){
 				samplingf+=info.getPrf().getValue();
 			}
 			samplingf=samplingf/links.size();*/
 			samplingf=7000/annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
-			
-			
 			numberOfSamplesPerLine=annotationReader.getImageInformation().getNumberOfSamples().getValue().doubleValue();
-			
-			
-			
-			
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}	
