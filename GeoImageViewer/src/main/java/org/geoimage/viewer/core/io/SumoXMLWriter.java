@@ -271,8 +271,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				b.setReliability(0);
 			}
 			Double max=(Double)att.get(VDSSchema.MAXIMUM_VALUE);
-			if(max!=null)
-				b.setMaxValue(max.intValue());
+			//TODO: change in array
+			//if(max!=null)
+				//b.setMaxValue(max.intValue());
 			
 			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
 			b.setLength(lenght);
@@ -474,8 +475,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				
 				b.setReliability(3);
 				b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
-
-				b.setMaxValue(0);
+				//TODO:change in array
+				//b.setMaxValue(0);
 				
 				double lenght=0;
 				b.setLength(lenght);

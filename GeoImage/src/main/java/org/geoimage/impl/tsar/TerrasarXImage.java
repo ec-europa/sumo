@@ -531,7 +531,14 @@ public class TerrasarXImage extends SarImageReader {
     public String getBandName(int band) {
         return bands.get(band);
     }
-
+    /**
+     * 
+     * @return
+     */
+    public String[] getBands(){
+    	return bands.toArray(new String[0]);
+    }
+    
   /*  @Override
     public void setBand(int band) {
         this.band = band;
