@@ -479,6 +479,11 @@ public class GeotiffImage extends SarImageReader {
 		return displayName;
 	}
 
+	@Override
+	public String[] getBands() {
+		return new String[0];
+	}
+
 
 
 }

@@ -43,7 +43,7 @@ public class Radarsat2Image extends SarImageReader {
     protected Namespace ns = Namespace.getNamespace("http://www.rsi.ca/rs2/prod/xml/schemas");
     protected Map<String, TIFF> tiffImages;
     protected String[] bands;
-    protected String timestampStart;
+	protected String timestampStart;
     protected String timestampStop;
     private String overviewImage;
     	
@@ -79,7 +79,9 @@ public class Radarsat2Image extends SarImageReader {
         return getPRF();
 
     }
-    
+    public String[] getBands() {
+		return bands;
+	}
     
     @Override
     public boolean initialise() {
@@ -89,9 +91,6 @@ public class Radarsat2Image extends SarImageReader {
     		SAXBuilder builder = new SAXBuilder();
     		setFile(manifestFile);
     		doc = builder.build(productxml);
-    	
-    		
-    		
     		tiffImages = getImages();
     		if(tiffImages==null) return false;
     		

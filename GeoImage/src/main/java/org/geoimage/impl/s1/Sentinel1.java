@@ -59,8 +59,10 @@ public abstract class Sentinel1 extends SarImageReader {
     
     protected Map<String, TIFF> tiffImages;
 
-    protected List<String> bands = new ArrayList<String>();
-
+    //protected List<String> bands = new ArrayList<String>();
+    private List<String> polarizations=null;
+    
+    
 	protected double xposition = 0;
     protected double yposition = 0;
     protected double zposition = 0;
@@ -74,7 +76,7 @@ public abstract class Sentinel1 extends SarImageReader {
 	private String files[]=new String[1];
     private List<GeolocationGridPointType> points=null;
     private List<String> tiffs=null;
-    private List<String> polarizations=null;
+    
     private String safeFilePath=null;
     private String instumentationMode="";
     
@@ -102,7 +104,7 @@ public abstract class Sentinel1 extends SarImageReader {
     
     @Override
     public int getNBand() {
-        return bands.size();
+        return polarizations.size();
     }
 
     public int getIpfVersion() {
@@ -336,7 +338,7 @@ public abstract class Sentinel1 extends SarImageReader {
     			}
     		}
     	}
-    	bands=polarizations;
+    	//bands=polarizations;
         return tiffsMap;
     }
 
@@ -362,7 +364,10 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public String getBandName(int band) {
-        return bands.get(band);
+        return polarizations.get(band);
+    }
+    public String[] getBands(){
+    	return polarizations.toArray(new String[0]);
     }
 
     /**
@@ -447,7 +452,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public int getType(boolean oneBand) {
-        if(oneBand || bands.size()<2) return BufferedImage.TYPE_USHORT_GRAY;
+        if(oneBand || polarizations.size()<2) return BufferedImage.TYPE_USHORT_GRAY;
         else return BufferedImage.TYPE_INT_RGB;
     }
 

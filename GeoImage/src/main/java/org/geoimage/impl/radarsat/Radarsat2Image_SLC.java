@@ -126,7 +126,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
 
     @Override
     public int getType(boolean oneBand) {
-        if (oneBand || bands.size() < 2) {
+        if (oneBand || bands.length < 2) {
             return BufferedImage.TYPE_USHORT_GRAY;
         } else {
             return BufferedImage.TYPE_INT_RGB;
