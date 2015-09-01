@@ -142,8 +142,6 @@ public class GeoUtils {
 			this.h = h;
 		}
 	}
-
-	
 	private static  Geoid[][] geoidPoints=new Geoid[360][180];
 
 	/**
@@ -189,7 +187,7 @@ public class GeoUtils {
 	 * @return the geoid Height for a point (lon,lat)
 	 */
 	public static double  getGeoidH(double lon,double lat){
-	    double h=0;
+	    /*double h=0;
 	    double minDist =1000;
 		//first value
 		for(int i=0;i<geoidPoints.length&&minDist>50;i++){
@@ -209,7 +207,8 @@ public class GeoUtils {
 		}
 		//System.out.println("-->H:"+h);
 		return h;
-		
+		*/
+		return getGeoidHOptimized(lon, lat);
 	}
 	
 	
@@ -220,7 +219,7 @@ public class GeoUtils {
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
 	 */
-	public static double  getGeoidHX(final double lon,final double lat){
+	public static double  getGeoidHOptimized(final double lon,final double lat){
 		double h=0;
 		
 		double lonRad=lon*FastMath.PI/180;
@@ -233,7 +232,7 @@ public class GeoUtils {
 			Geoid geoRow[]=geoidPoints[row];
 			//first value
 			Geoid g=geoRow[middle];
-			double middleDist = distance(lonRad,latRad,g.lonRad,g.latRad);
+			double middleDist = distanceRad(lonRad,latRad,g.lonRad,g.latRad);
 		    if(middleDist<50){
 		    	h= g.h;
 		    }else{
@@ -244,8 +243,8 @@ public class GeoUtils {
 					int middleLeft=(left+middle)/2;
 					int middleRight=middle+(right-middle)/2;
 					
-					double middleDistL = distance(lonRad,latRad,geoRow[middleLeft].lonRad,geoRow[middleLeft].latRad);
-					double middleDistR = distance(lonRad,latRad,geoRow[middleRight].lonRad,geoRow[middleRight].latRad);
+					double middleDistL = distanceRad(lonRad,latRad,geoRow[middleLeft].lonRad,geoRow[middleLeft].latRad);
+					double middleDistR = distanceRad(lonRad,latRad,geoRow[middleRight].lonRad,geoRow[middleRight].latRad);
 					if(middleDistL<middleDistR){
 						right=middle;
 						middle=left+(right-left)/2;
@@ -260,14 +259,11 @@ public class GeoUtils {
 				    	finded=true;
 				    	break;
 				    }
-					
-					
 				}
 		    }
 		}    
 	    //System.out.println("H:"+h);
 		return h;
-		
 	}
 	
 	/**

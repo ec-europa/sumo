@@ -124,6 +124,19 @@ public class S1Metadata extends AbstractMetadata {
 		this.azimuthTimeInterval = azimuthTimeInterval;
 	}
 
+	
+	private long getSecondInDay(GregorianCalendar c){
+		long millis=c.getTimeInMillis();
+		GregorianCalendar ctemp=(GregorianCalendar) c.clone();
+		ctemp.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		ctemp.set(GregorianCalendar.MINUTE, 0);
+		ctemp.set(GregorianCalendar.SECOND, 0);
+		ctemp.set(GregorianCalendar.MILLISECOND, 0);
+		long passed = (millis - ctemp.getTimeInMillis())/1000;
+		
+		return passed;
+	}
+	
 	/**
 	 * 
 	 */
@@ -133,12 +146,10 @@ public class S1Metadata extends AbstractMetadata {
 			super.antennaPointing="Right";
 			super.setPixelTimeOrderingAscending(true);//IS K in the matlab code!!
 			
-			
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
 			ImageInformationType imgInformation =annotationReader.getImageInformation();
 			XMLGregorianCalendar  firstLineUtc=imgInformation.getProductFirstLineUtcTime();
 			XMLGregorianCalendar  lastLineUtc=imgInformation.getProductLastLineUtcTime();
-
 			
 			this.productType=annotationReader.getHeader().getProductType().name();
 			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
@@ -167,10 +178,7 @@ public class S1Metadata extends AbstractMetadata {
 				
 				GregorianCalendar gc=ot.getTime().toGregorianCalendar();
 				pv.time=gc.getTimeInMillis()/1000.0;
-				int minutes=gc.get(GregorianCalendar.MINUTE);
-				if(minutes==0)
-					minutes=60;
-				pv.timeStampInitSeconds=minutes*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000.0);
+				pv.timeStampInitSeconds=getSecondInDay(gc);//minutes*60+gc.get(GregorianCalendar.SECOND)+(gc.get(GregorianCalendar.MILLISECOND)/1000.0);
 				orbitStatePosVelox.add(pv);
 			}
 			
@@ -189,13 +197,9 @@ public class S1Metadata extends AbstractMetadata {
 				coordinateConversion[i]=cc;
 				XMLGregorianCalendar xmlGc=ccType.getAzimuthTime();
 				cc.azimuthTime=xmlGc.toGregorianCalendar().getTimeInMillis();
-				int minutes=xmlGc.getMinute();
-				if(minutes==0)
-					minutes=60;
-				cc.groundToSlantRangePolyTimesSeconds=minutes*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
+				cc.groundToSlantRangePolyTimesSeconds=getSecondInDay(xmlGc.toGregorianCalendar());//minutes*60+xmlGc.getSecond()+(xmlGc.getMillisecond()/1000.0);
 				i++;
 			}
-			
 			//PRF and PRF mean
 			//List<DownlinkInformationType> links=annotationReader.getDownLinkInformationList();
 			/*for(DownlinkInformationType info:links){
