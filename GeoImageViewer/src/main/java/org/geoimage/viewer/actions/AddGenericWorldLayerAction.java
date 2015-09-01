@@ -4,20 +4,14 @@
  */
 package org.geoimage.viewer.actions;
 
-import java.awt.Color;
 import java.io.File;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.Platform;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
-import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
