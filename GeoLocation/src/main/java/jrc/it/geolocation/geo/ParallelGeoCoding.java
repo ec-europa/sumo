@@ -26,6 +26,11 @@ public class ParallelGeoCoding {
 		private double l = 0;
 		private double p = 0;
 
+		/**
+		 * 
+		 * @param l l=line=y
+		 * @param p p=pixel=x
+		 */
 		ParallelForward(double l, double p) {
 			this.l = l;
 			this.p = p;
@@ -93,7 +98,7 @@ public class ParallelGeoCoding {
 
 		List<Callable<double[]>> tasks = new ArrayList<Callable<double[]>>();
 		for (final Coordinate c : coords) {
-			tasks.add(new ParallelForward(c.x, c.y));
+			tasks.add(new ParallelForward(c.y,c.x));
 		}
 		List<Future<double[]>> results = executor.invokeAll(tasks);
 		executor.shutdown();
