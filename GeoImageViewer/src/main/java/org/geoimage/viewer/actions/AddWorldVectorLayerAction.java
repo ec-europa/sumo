@@ -7,9 +7,6 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.Platform;
@@ -21,7 +18,6 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
