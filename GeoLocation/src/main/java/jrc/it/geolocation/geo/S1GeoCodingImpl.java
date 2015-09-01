@@ -231,7 +231,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 *@see In Matlab forwardgeolocation
 	 */
 	@Override
-	public double[] geoFromPixel(final double p, final double l) throws GeoLocationException{
+	public double[] geoFromPixel(final double l, final double p) throws GeoLocationException{
 		try{
 			double[] results=new double[2];
 			
@@ -343,7 +343,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			    }
 			    double tmpD = distance - meta.getGroundRangeOrigin();
 			    double[] pows=MathUtil.powValue2Coeffs(tmpD,vExps);
-			    double sRdist = MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
+			    double sRdist =MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
 			    logger.debug("sRdist:"+sRdist);
 	
 			    //norma for pt0 vector
@@ -524,14 +524,14 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	public static void main(String args[]){
 		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		//String metaF="C:\\\\\\\\tmp\\\\\\\\sumo_images\\\\\\\\carlos tests\\\\\\\\pixel analysis\\\\\\\\S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE\\\\\\\\annotation\\\\\\\\s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
+		//String metaF="C:////////////////tmp////////////////sumo_images////////////////carlos tests////////////////pixel analysis////////////////S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE////////////////annotation////////////////s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		//String metaF="C:\\\\\\\\tmp\\\\\\\\sumo_images\\\\\\\\carlos tests\\\\\\\\geoloc\\\\\\\\S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE\\\\\\\\annotation\\\\\\\\s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
+		//String metaF="C:////////////////tmp////////////////sumo_images////////////////carlos tests////////////////geoloc////////////////S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE////////////////annotation////////////////s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
 		//String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		//String metaF="F:\\\\\\\\SumoImgs\\\\\\\\test_geo_loc\\\\\\\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
+		//String metaF="F:////////////////SumoImgs////////////////test_geo_loc////////////////S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="F:\\SumoImgs\\carlos tests\\geocoding problems\\S1A_EW_GRDM_1SDH_20150105T060017_20150105T060121_004032_004DC8_BE6F.SAFE\\annotation\\s1a-ew-grd-hh-20150105t060017-20150105t060121-004032-004dc8-001.xml";
+		String metaF="Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
 		
 		
 		/*
@@ -564,8 +564,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
-				//r = gc.pixelFromGeo(2.17235, 41.31749);
-				r = gc.geoFromPixel(4623,7445);
+				r = gc.pixelFromGeo(30.69116,-27.49984);
+				//r = gc.geoFromPixel(16809,372);
 				System.out.println(""+r[1]+"--- "+r[0]);
 				
 				//r =gc.pixelFromGeo(9.6081,40.9034);
