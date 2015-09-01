@@ -531,8 +531,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="F:////////////////SumoImgs////////////////test_geo_loc////////////////S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
-		
+		//String metaF="Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
+		String metaF="H:/sat/S1A_IW_GRDH_1SDV_20150401T145242_20150401T145301_005291_006B16_EDD7.SAFE/annotation/s1a-iw-grd-vv-20150401t145242-20150401t145301-005291-006b16-001.xml";
 		
 		/*
 		 * The geographic coordinates of this point are:
@@ -564,7 +564,10 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
-				r = gc.pixelFromGeo(30.69116,-27.49984);
+				r = gc.pixelFromGeo(55.55,-21.12);
+				System.out.println(""+r[1]+"--- "+r[0]);
+				r = gc.geoFromPixel(2907.080,19312.507);
+				//r = gc.pixelFromGeo(30.69116,-27.49984);
 				//r = gc.geoFromPixel(16809,372);
 				System.out.println(""+r[1]+"--- "+r[0]);
 				
