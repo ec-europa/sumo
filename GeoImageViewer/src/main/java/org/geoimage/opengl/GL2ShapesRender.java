@@ -82,41 +82,45 @@ public class GL2ShapesRender {
 		GL2 gl = context.getGL().getGL2();
         float[] c = color.brighter().getColorComponents(null);
         gl.glColor3f(c[0], c[1], c[2]);
-		for (Geometry temp : geometries) {
-	        gl.glLineWidth(temp == selectedGeometry ? renderWidth * 2 : renderWidth);
-	        Coordinate point = new Coordinate(temp.getCoordinate());
-	        point.x = (point.x - context.getX()) / zoomWidth;
-	        point.y = 1 - (point.y - context.getY()) / zoomHeight;
-	        double rectwidth = 0.01;
-	        gl.glBegin(GL.GL_LINE_STRIP);
-	        gl.glVertex2d(point.x - rectwidth, point.y);
-	        gl.glVertex2d(point.x + rectwidth, point.y);
-	        gl.glEnd();
-	        gl.glBegin(GL.GL_LINE_STRIP);
-	        gl.glVertex2d(point.x, point.y - rectwidth);
-	        gl.glVertex2d(point.x, point.y + rectwidth);
-	        gl.glEnd();
-	        gl.glFlush();
-	    }
+        if(geometries!=null){
+			for (Geometry temp : geometries) {
+		        gl.glLineWidth(temp == selectedGeometry ? renderWidth * 2 : renderWidth);
+		        Coordinate point = new Coordinate(temp.getCoordinate());
+		        point.x = (point.x - context.getX()) / zoomWidth;
+		        point.y = 1 - (point.y - context.getY()) / zoomHeight;
+		        double rectwidth = 0.01;
+		        gl.glBegin(GL.GL_LINE_STRIP);
+		        gl.glVertex2d(point.x - rectwidth, point.y);
+		        gl.glVertex2d(point.x + rectwidth, point.y);
+		        gl.glEnd();
+		        gl.glBegin(GL.GL_LINE_STRIP);
+		        gl.glVertex2d(point.x, point.y - rectwidth);
+		        gl.glVertex2d(point.x, point.y + rectwidth);
+		        gl.glEnd();
+		        gl.glFlush();
+		    }
+        }	
 	}
 	public static void renderTriangle(OpenGLContext context,float zoomWidth,float zoomHeight,List<Geometry>geometries,Geometry selectedGeometry,float renderWidth,Color color){
 		GL2 gl = context.getGL().getGL2();
         float[] c = color.brighter().getColorComponents(null);
         gl.glColor3f(c[0], c[1], c[2]);
-		for (Geometry temp : geometries) {
-	        gl.glLineWidth(temp == selectedGeometry ? renderWidth * 2 : renderWidth);
-	        Coordinate point = new Coordinate(temp.getCoordinate());
-	        point.x = (point.x - context.getX()) / zoomWidth;
-	        point.y = 1 - (point.y - context.getY()) / zoomHeight;
-	        double rectwidth = 0.01;
-	        gl.glBegin(GL.GL_LINE_STRIP);
-	        gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	        gl.glVertex2d(point.x, point.y + rectwidth);
-	        gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
-	        gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
-	        gl.glEnd();
-	        gl.glFlush();
-	    }
+        if(geometries!=null){
+			for (Geometry temp : geometries) {
+		        gl.glLineWidth(temp == selectedGeometry ? renderWidth * 2 : renderWidth);
+		        Coordinate point = new Coordinate(temp.getCoordinate());
+		        point.x = (point.x - context.getX()) / zoomWidth;
+		        point.y = 1 - (point.y - context.getY()) / zoomHeight;
+		        double rectwidth = 0.01;
+		        gl.glBegin(GL.GL_LINE_STRIP);
+		        gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
+		        gl.glVertex2d(point.x, point.y + rectwidth);
+		        gl.glVertex2d(point.x + rectwidth, point.y - rectwidth);
+		        gl.glVertex2d(point.x - rectwidth, point.y - rectwidth);
+		        gl.glEnd();
+		        gl.glFlush();
+		    }
+        }	
 	}	
 	
 	public static void renderCircle(OpenGLContext context,float zoomWidth,float zoomHeight,List<Geometry>geometries,float size,Color color){
