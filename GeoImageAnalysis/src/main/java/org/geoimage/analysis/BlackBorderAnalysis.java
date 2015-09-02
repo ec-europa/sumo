@@ -123,9 +123,6 @@ public class BlackBorderAnalysis {
 	 * @return
 	 */
 	public boolean checkIfTileIsOnLand(double top,double left,double bottom,double right){
-		
-		
-		
 		boolean isOnLand=false;
 		if(land!=null){
 			GeometryFactory fact = new GeometryFactory();
