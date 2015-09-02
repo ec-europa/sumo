@@ -7,8 +7,11 @@ package org.geoimage.analysis;
 import java.awt.image.Raster;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.geoimage.analysis.DetectedPixels.Pixel;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -29,11 +32,7 @@ public class VDSAnalysis{
 	
     private SarImageReader gir;
     private String enl = "010";
-    private float thresholdHH = 1.5f;
-    private float thresholdHV = 1.2f;
-    private float thresholdVH = 1.5f;
-    private float thresholdVV = 1.5f;
-    private float threshold = 1.5f;    
+    private Map<String, Float> thresholdsBandParams=new HashMap<String, Float>();
     private DetectedPixels pixels;
     private IMask[] mask;
     private int tileSize;
@@ -60,10 +59,12 @@ public class VDSAnalysis{
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
         }
-        this.thresholdHH = thresholdHH;
-        this.thresholdHV = thresholdHV;
-        this.thresholdVV = thresholdVV;
-        this.thresholdVH = thresholdVH;
+        
+        thresholdsBandParams.put("HH", thresholdHH);
+        thresholdsBandParams.put("HV", thresholdHV);
+        thresholdsBandParams.put("VH", thresholdVH);
+        thresholdsBandParams.put("VV", thresholdVV);
+        
         this.gir = gir;
         this.mask = mask;
         this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getGeoTransform().getPixelSize()[0]);
@@ -98,26 +99,7 @@ public class VDSAnalysis{
     		pl.startRowProcesseing(row);
     }
     
-    
-    /*support of different thresholds for different bands
-     * 
-     * 
-     */
-    public DetectedPixels run(KDistributionEstimation kdist, BlackBorderAnalysis blackBorderAnalysis,int band) throws IOException {
-        if(gir.getBandName(band).equals("HH")||gir.getBandName(band).equals("H/H")){
-            pixels = analyse(kdist, thresholdHH,band,blackBorderAnalysis);
-        }else if(gir.getBandName(band).equals("HV")||gir.getBandName(band).equals("H/V")){
-            pixels = analyse(kdist, thresholdHV,band,blackBorderAnalysis);
-        }else if(gir.getBandName(band).equals("VH")||gir.getBandName(band).equals("V/H")){
-            pixels = analyse(kdist, thresholdVH,band,blackBorderAnalysis);
-        }else if(gir.getBandName(band).equals("VV")||gir.getBandName(band).equals("V/V")){
-            pixels = analyse(kdist, thresholdVV,band,blackBorderAnalysis);
-        }else{
-            pixels = analyse(kdist, threshold,band,blackBorderAnalysis);
-        }
-        return pixels;
-    }
-    
+     
     /**
      * 
      * @param kdist
@@ -125,8 +107,10 @@ public class VDSAnalysis{
      * @return
      * @throws IOException 
      */
-    private DetectedPixels analyse(KDistributionEstimation kdist, float thresholdBandParams,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
+    public DetectedPixels analyse(KDistributionEstimation kdist,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir);
+        String bb=((SarImageReader)gir).getBands()[band];
+        float thresholdBand=this.thresholdsBandParams.get(bb);
         
         // the real size of tiles
         int sizeX = gir.getWidth() / horTiles;
@@ -211,7 +195,7 @@ public class VDSAnalysis{
                     double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
                     
-                    double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBandParams, thresh);
+                    double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
 
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
@@ -370,16 +354,19 @@ public class VDSAnalysis{
                 }
                 // add pixel to the list
                 BoatConnectedPixelMap boatpixel = new BoatConnectedPixelMap(xx, yy, id++, data[0][boatx + boaty * tilesize]);
-                double[] thpa={thresholdHH,thresholdHV,thresholdVH,thresholdVV};
+                //double[] thpa={thresholdHH,thresholdHV,thresholdVH,thresholdVV};
 
                 for(int iBand=0;iBand<numberbands;iBand++){
+                	String bb=((SarImageReader)gir).getBands()[iBand];
+                    float thresholdBand=this.thresholdsBandParams.get(bb);
+                	
                 	int row=(cornery+1)/this.verTiles;
                 	int col=(cornerx+1)/this.horTiles;
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
                 	int[] newdata = gir.readTile(cornerx, cornery, tilesize, tilesize,iBand);
                 	kdist.estimate(rastermask, newdata);
  
-                	double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thpa[iBand], kdist.getDetectThresh());
+                	double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, kdist.getDetectThresh());
                 	boatpixel.putMeanValue(iBand,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
                 	boatpixel.putThresholdValue(iBand,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
                 }	

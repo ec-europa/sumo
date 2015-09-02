@@ -7,7 +7,6 @@ import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditG
 import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
 import org.geoimage.analysis.S1ArtefactsAmbiguity;
 import org.geoimage.analysis.VDSAnalysis;
-import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
@@ -26,15 +24,12 @@ import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 
 /**
@@ -46,7 +41,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
 		private IMask[] bufferedMask=null;
-		private String[] thresholds;
+		//private String[] thresholds;
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
@@ -96,11 +91,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		 * @param blackBorderAnalysis
 		 * @param numLimitPoint   num max of point that we can analize (0=all) 
 		 */
-		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,String[] thresholds,int buffer,int numLimitPoint) {
+		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,int buffer,int numLimitPoint) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 			this.bufferedMask=bufferedMask;
-			this.thresholds=thresholds;
+			//this.thresholds=thresholds;
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
@@ -142,10 +137,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              int numberofbands = gir.getNBand();
              int[] bands = new int[numberofbands];
 
-             
              // create K distribution
              final KDistributionEstimation kdist = new KDistributionEstimation(ENL,blackBorderAnalysis);
-             
              
              DetectedPixels mergePixels = new DetectedPixels(reader);
              DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
@@ -174,8 +167,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	 analysis.addProgressListener(this);
 
 	            	 //identify probably target
-	            	 analysis.run(kdist,blackBorderAnalysis,band);
-	            	 banddetectedpixels[band]=analysis.getPixels();
+	            	 banddetectedpixels[band]=analysis.analyse(kdist,band,blackBorderAnalysis);
+	            	 //banddetectedpixels[band]=analysis.getPixels();
 	            	 
 	            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
 	            		 logger.warn("Too much points. Stop Image analysis!!!");
@@ -189,7 +182,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	}
 	            	 
 	            	 bands[band] = band;
-	            	 String trheshString=thresholds[getPolIdx(gir.getBandName(band))];
+	            	 String trheshString=reader.getBands()[band];
 	                 
 	                 if (numberofbands < 1 || displaybandanalysis) {
 	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
@@ -212,7 +205,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     
 	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, banddetectedpixels[band]),
-	                    		 thresholds,ENL,buffer,bufferedMaskName,""+band);
+	                    		 reader.getBands(),ENL,buffer,bufferedMaskName,""+band);
 
 	                     vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
@@ -279,7 +272,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
 	                		 																	"point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, mergePixels),
-	                		 																	thresholds,ENL,buffer,bufferedMaskName,"Merged");
+	                		 																	reader.getBands(),ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = Platform.getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
 	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);
