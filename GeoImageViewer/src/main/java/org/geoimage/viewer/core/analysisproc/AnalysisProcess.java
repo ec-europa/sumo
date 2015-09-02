@@ -302,27 +302,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
            notifyEndProcessListener();
            removeAllProcessListener();
 		}
-		
-		
-		
-		/**
-		 * 
-		 * @param polarization
-		 * @return
-		 */
-		 protected int getPolIdx(String polarization){
-	    	 int pol=0;
-	    	 if (polarization.equals("HH") || polarization.equals("H/H")) {
-	            pol=0;
-	         } else if (polarization.equals("HV") || polarization.equals("H/V")) {
-	        	pol=1;
-	         } else if (polarization.equals("VH") || polarization.equals("V/H")) {
-	        	pol=2;
-	         } else if (polarization.equals("VV") || polarization.equals("V/V")) {
-	        	pol=3;
-	         }
-	    	 return pol;
-	    }
 		 
 		/**
 		 *  

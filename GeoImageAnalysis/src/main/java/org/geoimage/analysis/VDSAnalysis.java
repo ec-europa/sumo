@@ -337,6 +337,7 @@ public class VDSAnalysis{
                 }
                 // find maximum value amongst bands
                 if (value > maxvalue[bandcounter]) {
+                	//TODO:save the max value for each band in the boat objects
                     maxvalue[bandcounter] = data[bandcounter][boatx + boaty * tilesize];
                 }
             }
