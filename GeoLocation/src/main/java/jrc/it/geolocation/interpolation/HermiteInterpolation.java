@@ -87,7 +87,7 @@ public class HermiteInterpolation {//implements IInterpolation{
 			double[][] vtvec=new double[1][powerMax+1];
 			for(int i=0;i<=powerMax;i++){
 				ptvec[0][i]=FastMath.pow(interTime[idx],powerMax-i);
-				vtvec[0][i]=FastMath.pow((interTime[idx]),FastMath.abs(i-1));
+				vtvec[0][i]=FastMath.pow((interTime[idx]),FastMath.abs(powerMax-i-1));
 			
 			}	
 			for(int i=0;i<=powerMax;i++){

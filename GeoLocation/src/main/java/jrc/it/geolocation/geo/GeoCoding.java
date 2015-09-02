@@ -9,7 +9,7 @@ public interface GeoCoding {
 	 * @param lat
 	 * @param lon
 	 */
-	public abstract double[] pixelFromGeo(double lat, double lon)throws GeoLocationException;
+	public abstract double[] pixelFromGeo(double lon, double lat)throws GeoLocationException;
 	/**
 	 * in Matlab is forward
 	 * @param l
