@@ -44,19 +44,7 @@ public class MathUtil {
 		return r;
 	}
 	
-	/**
-	 * return the inner product of this Vector a and b
-	 * @param a   1xN array
-	 * @param b   Nx1 array
-	 * @return
-	 */
-	public static double vectorProd1XN(double a[],double b[] ){
-		double  prod=0;
-		for(int i=0;i<a.length;i++){
-			prod=prod+a[i]*b[i];
-		}
-		return prod;
-	}
+	
 	
 	 /**
 	  *  return the Euclidean norm of this Vector
