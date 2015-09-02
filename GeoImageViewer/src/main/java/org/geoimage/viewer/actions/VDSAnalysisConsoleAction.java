@@ -140,11 +140,11 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV);
                 
-                final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
+                //final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
                
                 
-                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask, thresholds,bufferingDistance,0);
+                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask,bufferingDistance,0);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);

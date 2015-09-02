@@ -120,7 +120,7 @@ public abstract class AbstractBatchAnalysis {
      * @return
      */
     public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, thresholds, buffer,1250000);
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, buffer,1250000);
         ap.run();
         return ap.getResultLayers();
     }
