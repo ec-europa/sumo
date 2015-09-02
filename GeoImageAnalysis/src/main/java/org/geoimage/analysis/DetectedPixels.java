@@ -332,6 +332,7 @@ public class DetectedPixels {
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                     Pixel pxBoat = aggregatedPixels.get(key);
                     if (pxBoat.value > boatValue.getMaxValue()[0]) {
+                    	//TODO: modify for each band
                     	boatValue.setMaxValue(new int[]{pxBoat.value});
                     }
                 }
@@ -346,7 +347,7 @@ public class DetectedPixels {
                 }
             }
         }
-        boatsTemp.clear();
+        //boatsTemp.clear();
         boatsTemp=sortBoats(boatsTemp);
         boatArray=boatsTemp.toArray(new Boat[0]);			
     }
@@ -379,10 +380,12 @@ public class DetectedPixels {
 
     			//,boat.getMaximumValue(),boat.getMeanValueBand(0),
     			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
-
+            	
+            	
             	
     			List<Double> thresholdsTile=boatPxMap.getThresholdValue();
-    			double max=boatPxMap.getMaximumValue();
+    			int max=boatPxMap.getMaximumValue();
+    			b.setMaxValue(new int[]{max});
     			for(Double t:thresholdsTile){
     				
     			}

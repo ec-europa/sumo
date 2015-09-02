@@ -99,6 +99,10 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         	
         	String attr = gl.getSchema()[columnIndex - 1];
         	AttributesGeometry attrGeom=gl.getAttributes().get(0);
+        	Object o=attrGeom.get(attr);
+        	if(o==null)
+        		return String.class;
+        	
         	return attrGeom.get(attr).getClass();
         }
     }

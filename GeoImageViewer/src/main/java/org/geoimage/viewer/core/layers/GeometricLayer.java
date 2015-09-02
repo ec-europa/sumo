@@ -78,6 +78,8 @@ public class GeometricLayer implements Cloneable{
 		this.name=name;
         //GeometricLayer out = new GeometricLayer("point");
         //setName("VDS Analysis");
+		geoms=new ArrayList<>();
+		atts=new ArrayList<>();
         GeometryFactory gf = new GeometryFactory();
         long runid = System.currentTimeMillis();
         int count=0;
