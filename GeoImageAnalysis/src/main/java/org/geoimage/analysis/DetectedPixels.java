@@ -391,7 +391,7 @@ public class DetectedPixels {
             	boatsTemp.add(b);
             }
         }
-        boatsTemp.clear();
+        //boatsTemp.clear();
         boatsTemp=sortBoats(boatsTemp);
         boatArray=boatsTemp.toArray(new Boat[0]);
     }
