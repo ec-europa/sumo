@@ -19,7 +19,7 @@ public class BoatConnectedPixelMap {
         private double boatlength = 0.0;
         private double boatheading = 0.0;
         private int id = 0;
-        private double maxValue = 0.0;
+        private int maxValue = 0;
         private boolean touchlandmask = false;
         
         
@@ -98,7 +98,7 @@ public class BoatConnectedPixelMap {
             return boatwidth;
         }
 
-        protected double getMaximumValue() {
+        protected int getMaximumValue() {
             return maxValue;
         }
 
