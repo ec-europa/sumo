@@ -42,9 +42,9 @@ public class GeoTransformOrbitState implements GeoTransform{
 	}
 	
 	@Override
-	public double[] getPixelFromGeo(double xgeo, double ygeo)throws GeoTransformException {
+	public double[] getPixelFromGeo(double lon, double lat)throws GeoTransformException {
 		try{
-			double[] coo=geocoding.pixelFromGeo(xgeo, ygeo);
+			double[] coo=geocoding.pixelFromGeo(lon, lat);
 			return coo;
 		}catch(GeoLocationException ge){
 			throw new GeoTransformException(ge.getMessage());

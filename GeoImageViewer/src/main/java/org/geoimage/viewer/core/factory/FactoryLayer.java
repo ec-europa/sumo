@@ -59,7 +59,7 @@ public class FactoryLayer {
             }
 
         } else {
-        	// TODO:
+        	// TODO: check if this part of the code is necessary
            /* for (int i = 0; i < types.length; i++) {
                 String t = types[i];
                 // TODO: check if this type of layer is used!!!

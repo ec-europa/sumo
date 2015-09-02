@@ -343,17 +343,17 @@ public class S1GeoCodingImpl implements GeoCoding {
 			    }
 			    double tmpD = distance - meta.getGroundRangeOrigin();
 			    double[] pows=MathUtil.powValue2Coeffs(tmpD,vExps);
-			    double sRdist =MathUtil.vectorProd1XN(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
+			    double sRdist =MathUtil.dot(groundToSlantRangeCoefficientsInterp, pows); // This polynomial transforms from slant range (in metres) to ground range (in metres)       
 			    logger.debug("sRdist:"+sRdist);
 	
 			    //norma for pt0 vector
 			    double normPt0=MathUtil.norm(pT0);
 			    
 				// Find the tangent of the angle ? between the zero Doppler plane and the vertical direction, which is the same as the ratio between the radial and tangential components of the sensor velocity
-				double vRadial = MathUtil.vectorProd1XN(vT0, pT0) / normPt0;
+				double vRadial = MathUtil.dot(vT0, pT0) / normPt0;
 				double vTangential = FastMath.sqrt(FastMath.pow(MathUtil.norm(vT0),2) - FastMath.pow(vRadial,2));
 				double tanPsi = vRadial/vTangential;
-	
+
 	
 				// Define a satellite coordinate system centred on the sensor position, where the Z axis points towards the Earth centre, the X axis points along the tangential component of the sensor velocity, and the Y axis completes the right-handed coordinate system
 				double[] zsUnit =MathUtil.divVectByVal(pT0,-normPt0);
@@ -531,8 +531,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="F:////////////////SumoImgs////////////////test_geo_loc////////////////S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		//String metaF="Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
-		String metaF="H:/sat/S1A_IW_GRDH_1SDV_20150401T145242_20150401T145301_005291_006B16_EDD7.SAFE/annotation/s1a-iw-grd-vv-20150401t145242-20150401t145301-005291-006b16-001.xml";
+		String metaF="Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
+		//String metaF="H:/sat/S1A_IW_GRDH_1SDV_20150401T145242_20150401T145301_005291_006B16_EDD7.SAFE/annotation/s1a-iw-grd-vv-20150401t145242-20150401t145301-005291-006b16-001.xml";
 		
 		/*
 		 * The geographic coordinates of this point are:
@@ -555,8 +555,12 @@ public class S1GeoCodingImpl implements GeoCoding {
 		GeoCoding gc;
 		try {
 			gc = new S1GeoCodingImpl(metaF);
-			double lat = 36.950;
-			double lon = -3.6315;
+			
+			double lat = -27.49984;
+			double lon = 30.69116;
+
+			double pixel=370.5;
+			double line=16482.2;
 			double r[];
 			try {
 				  //Line: 12687.5  Col: 3762.5
@@ -564,22 +568,18 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
-				r = gc.pixelFromGeo(55.55,-21.12);
-				System.out.println(""+r[1]+"--- "+r[0]);
-				r = gc.geoFromPixel(2907.080,19312.507);
-				//r = gc.pixelFromGeo(30.69116,-27.49984);
-				//r = gc.geoFromPixel(16809,372);
-				System.out.println(""+r[1]+"--- "+r[0]);
+				//r = gc.pixelFromGeo(lon,lat);
+				//System.out.println(""+r[1]+" --- "+r[0]);
 				
-				//r =gc.pixelFromGeo(9.6081,40.9034);
-				//System.out.println("Line:"+r[1]+"--- Col:"+r[0]);
+				//r = gc.geoFromPixel(r[1],r[0]);
+				//System.out.println(""+r[1]+" --- "+r[0]);
 				
+				
+				r = gc.geoFromPixel(line,pixel);
+				System.out.println(""+r[1]+" --- "+r[0]);
 			} catch (GeoLocationException e) {
 				e.printStackTrace();
 			}
-			
-			
-			
 			//double r[]=gc.forward(-100.0,11104.0);
 			//logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
 		} catch (MathException e1) {
