@@ -28,7 +28,7 @@ public class BoatConnectedPixelMap {
         
         private List<Double> thresholdvalue = new ArrayList<>();
         private List<Double> meanvalue = new ArrayList<>();
-        
+        private int[] maxValues = null;
 
         public BoatConnectedPixelMap(int x, int y, int id, int value) {
             // add initial pixel, clipped value is always set to 1
@@ -98,13 +98,14 @@ public class BoatConnectedPixelMap {
             return boatwidth;
         }
 
-        protected int getMaximumValue() {
-            return maxValue;
+        protected int[] getMaximumValueS() {
+            return maxValues;
         }
-
-        protected void putMeanValue(int band,double meanvalue) {
-            this.meanvalue.add(band,meanvalue);
+        
+        protected void setMaxValues(int band,int[] maxValues) {
+            this.maxValues=maxValues;
         }
+        
         protected void setMeanValue(List<Double> meanvalue) {
             this.meanvalue = meanvalue;
         }

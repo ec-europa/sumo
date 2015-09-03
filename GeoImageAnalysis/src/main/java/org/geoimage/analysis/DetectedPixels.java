@@ -266,14 +266,12 @@ public class DetectedPixels {
                 }
             }
         }
-
         /*
         // go through list
         for(int[] pixel : localpixels)
         if(checkNeighbours(pixels, imagemap, imagedata, thresholdaggregate, pixel, neighboursdistance, tilesize, rastermask))
         result = true;
          */
-
         return result;
     }
 
@@ -295,8 +293,6 @@ public class DetectedPixels {
         }
     //computeBoatsAttributes();
     }
-    
-    
 
     /**
      * 
@@ -378,20 +374,11 @@ public class DetectedPixels {
             			,(int)boatPxMap.getBoatwidth()					//width
             			,(int)boatPxMap.getBoatheading());				//heading
 
-    			//,boat.getMaximumValue(),boat.getMeanValueBand(0),
+    			b.setMaxValue(boatPxMap.getMaximumValuesBand().toArray(new int[0]));
+            	//,boat.getMaximumValue(),boat.getMeanValueBand(0),
     			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
-            	
-            	
-            	
-    			List<Double> thresholdsTile=boatPxMap.getThresholdValue();
-    			int max=boatPxMap.getMaximumValue();
-    			b.setMaxValue(new int[]{max});
-    			for(Double t:thresholdsTile){
-    				
-    			}
-            	
-            	
-            	boatsTemp.add(b);
+
+    			boatsTemp.add(b);
             }
         }
         //boatsTemp.clear();
