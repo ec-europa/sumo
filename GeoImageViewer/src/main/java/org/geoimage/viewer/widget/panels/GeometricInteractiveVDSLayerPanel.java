@@ -6,6 +6,7 @@
 
 package org.geoimage.viewer.widget.panels;
 
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -15,7 +16,10 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
@@ -82,7 +86,16 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
      );
     
     
-    
+    private class CellRender extends DefaultTableCellRenderer {
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			String val=StringUtils.join((Double[])value,',');
+			setValue(val);
+			return this;
+		}
+	};
         
     
     /** Creates new form GeometricInteractiveVDSLayerPanel */
@@ -92,7 +105,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         glm=new GeometricInteractiveVDSLayerModel(layer);
         ((FlagTable)tableDataLayer).setModel(glm);
         tableDataLayer.addKeyListener(this);
-        
+        tableDataLayer.setDefaultRenderer(double[].class,new CellRender());
     }
 
     /** This method is called from within the constructor to
