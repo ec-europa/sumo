@@ -44,7 +44,7 @@ public class AzimuthAmbiguity extends Ambiguity{
 	            //is already in pixel
 	            deltaAzimuth =sumoImage.getAmbiguityCorrection(xPos,yPos);
 	            
-	            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
+	            double[] pixSize=sumoImage.getPixelsize();
 	            
 	            //first check to dAzimuth
 	            if(isAmbiguity(myBoat,xPos, yPos, deltaAzimuth[0],pixSize[0] ,pixSize[1])){

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -211,11 +212,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setRunTime(format.format(new Date()));
 
 		//TODO: modify the gui to add this fields
-		vdsA.setRunVersion("");
+		vdsA.setRunVersion("SUMO_1.2.0");
 		vdsA.setRunVersionNum(1);
 		
 		vdsA.setLandMaskRead(landmask);
-		
 
 		List<Geometry> ambiguity=new ArrayList<>();
 		Additionalgeometries amb=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG);
@@ -270,11 +270,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				//is a target
 				b.setReliability(0);
 			}
-			Double max=(Double)att.get(VDSSchema.MAXIMUM_VALUE);
-			//TODO: change in array
-			//if(max!=null)
-				//b.setMaxValue(max.intValue());
-			
+			int[] max=(int[])att.get(VDSSchema.MAXIMUM_VALUE);
+			if(max!=null){
+				String s=StringUtils.join(max,',');
+				b.setMaxValue(s);
+			}
 			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
 			b.setLength(lenght);
 			b.setWidth(Precision.round((Double) att.get(VDSSchema.ESTIMATED_WIDTH),1));
@@ -292,9 +292,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			b.setHeadingNorth(hn);
 			
 			
-			//TODO: add significance and thresholdtile
-			b.setSignificance("");
-			b.setThresholdTile("");
+			double[] significance=(double[])att.get(VDSSchema.SIGNIFICANCE);
+			if(significance!=null)
+				b.setSignificance(StringUtils.join(significance,','));
+			
+			double[] trhtile=(double[])att.get(VDSSchema.THRESHOLD);
+			if(significance!=null)
+				b.setThresholdTile(StringUtils.join(trhtile,','));
 			
 			target.getBoat().add(b);
 		}

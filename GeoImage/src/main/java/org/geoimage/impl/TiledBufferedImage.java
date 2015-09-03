@@ -444,4 +444,10 @@ public class TiledBufferedImage implements GeoImageReader {
 		return "";
 	}
 
+	@Override
+	public double[] getPixelsize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
