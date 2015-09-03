@@ -250,7 +250,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	 return;
 	             }	 
 	             
-	             
 	             // create the merged Layers if we have more than one band
 	             if (bands.length > 1) {
 	                 notifyAgglomerating("VDS: agglomerating detections...");

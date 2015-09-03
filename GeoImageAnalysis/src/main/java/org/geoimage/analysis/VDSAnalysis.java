@@ -291,11 +291,9 @@ public class VDSAnalysis{
                     break;
                 }
             }
-
             if (checked) {
                 continue;
             }
-
             // get image data in tile
             int cornerx = Math.min(Math.max(0, xx - tilesize / 2), gir.getWidth() - tilesize);
             int cornery = Math.min(Math.max(0, yy - tilesize / 2), gir.getHeight() - tilesize);
@@ -370,7 +368,9 @@ public class VDSAnalysis{
                 	double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, kdist.getDetectThresh());
                 	boatpixel.putMeanValue(iBand,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
                 	boatpixel.putThresholdValue(iBand,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
+                	boatpixel.putMaxValue(iBand, maxvalue[iBand]);
                 }	
+                
                 detPixels.listboatneighbours.add(boatpixel);
                 
                 // start list of aggregated pixels
