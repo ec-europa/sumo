@@ -1,8 +1,5 @@
 package org.geoimage.analysis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Boat{
 	public final static int AMBIGUITY_TYPE_AZIMUTH=1;
 	public final static int AMBIGUITY_TYPE_ARTEFACTS=2;
@@ -14,12 +11,11 @@ public class Boat{
 	private double width;
 	private double heading;
 	private int[] maxValue;
-	private double tileAvg;
-	private List<Double> tileStd;
-	private List<Double> threshold;
-	private List<Double> significance;
-	
-
+	private double[] tileAvg={0.0,0.0,0.0,0.0};
+	private double[] tileStd={0.0,0.0,0.0,0.0};
+	private double[] threshold={0.0,0.0,0.0,0.0};
+	private double[] significance={0.0,0.0,0.0,0.0};
+	private double[] meanValue={0.0,0.0,0.0,0.0};
 
 
 	private double band;
@@ -48,11 +44,9 @@ public class Boat{
 		this.width=width;
 		this.heading=heading;
 		this.maxValue = value;
-        this.tileAvg = tileAvg;
-        this.tileStd = new ArrayList<Double>();
-        this.tileStd.add(band,tileStd);
-        this.threshold = new ArrayList<Double>();
-        this.tileStd.add(band,threshold);
+        this.tileAvg[band] = tileAvg;
+        this.tileStd[band]=tileStd;
+        this.tileStd[band]=threshold;
         this.band = band;
 	}
 	
@@ -81,45 +75,45 @@ public class Boat{
 
 
 
-	public double getTileAvg() {
+	public double[] getTileAvg() {
 		return tileAvg;
 	}
 
 
 
-	public void setTileAvg(double tileAvg) {
+	public void setTileAvg(double tileAvg[]) {
 		this.tileAvg = tileAvg;
 	}
 
 
 
-	public List<Double> getTileStd() {
+	public double[] getTileStd() {
 		return tileStd;
 	}
 
 
 
-	public void setTileStd(List<Double> tileStd) {
+	public void setTileStd(double[] tileStd) {
 		this.tileStd = tileStd;
 	}
 
 
 
-	public List<Double> getThreshold() {
+	public double[] getThreshold() {
 		return threshold;
 	}
 
 
 
-	public void setThreshold(List<Double> threshold) {
+	public void setThreshold(double[] threshold) {
 		this.threshold = threshold;
 	}
 
-	public List<Double> getSignificance() {
+	public double[] getSignificance() {
 		return significance;
 	}
 
-	public void setSignificance(List<Double> significance) {
+	public void setSignificance(double[] significance) {
 		this.significance = significance;
 	}
 
@@ -199,5 +193,13 @@ public class Boat{
 		this.isAmbiguity = isAmbiguity;
 	}
 
+
+	public double[] getMeanValue() {
+		return meanValue;
+	}
+
+	public void setMeanValue(double[] meanValue) {
+		this.meanValue = meanValue;
+	}
 
 }

@@ -216,6 +216,7 @@ public class CosmoSkymedImage extends SarImageReader {
                 } else if (a.getName().equals("Column Spacing")) {
                     double[] val = (double[]) a.getValue();
                     setRangeSpacing(new Float(val[0]));
+                    pixelsize[0]=getRangeSpacing();
                 } else if (a.getName().equals("Far Incidence Angle")) {
                     double[] val = (double[]) a.getValue();
                     setIncidenceFar(new Float(val[0]));
@@ -225,6 +226,7 @@ public class CosmoSkymedImage extends SarImageReader {
                 } else if (a.getName().equals("Line Spacing")) {
                     double[] val = (double[]) a.getValue();
                     setAzimuthSpacing(new Float(val[0]));
+                    pixelsize[1]=getAzimuthSpacing();
                 } else if (a.getName().equals("Look Side")) {
                     String[] val = (String[]) a.getValue();
                     setLookDirection(val[0]);
@@ -460,8 +462,8 @@ public class CosmoSkymedImage extends SarImageReader {
             double slantRange = getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+            double sampleDistAzim = getPixelsize()[0];
+            double sampleDistRange =getPixelsize()[1];
 
             temp = (getRadarWaveLenght() * slantRange * prf) /
                     (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
@@ -478,7 +480,9 @@ public class CosmoSkymedImage extends SarImageReader {
         }
         return output;
     }
-	
+	public double[] getPixelsize(){
+		return pixelsize;
+	}
 	
  	public String getGroup() {
 		return group;

@@ -73,7 +73,7 @@ public class S1ArtefactsAmbiguity extends Ambiguity{
 			            	deltaAzimuth=(int)o;
 			            }
 			            
-			            double[] pixSize=sumoImage.getGeoTransform().getPixelSize();
+			            double[] pixSize=sumoImage.getPixelsize();
 			            deltaAzimuth=(int)(deltaAzimuth/pixSize[1]);
 			            if(isAmbiguity(myBoat,xPos, yPos, deltaAzimuth,pixSize[0] ,pixSize[1])){
 			            	ambiguityboatlist.add(myBoat);

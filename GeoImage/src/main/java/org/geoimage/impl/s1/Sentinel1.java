@@ -195,6 +195,10 @@ public abstract class Sentinel1 extends SarImageReader {
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
 			//read the ground control points
         	points= annotationReader.getGridPoints();
+
+        	super.pixelsize[0]=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
+        	super.pixelsize[1]=annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
+
 			
             List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
             List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
@@ -222,7 +226,7 @@ public abstract class Sentinel1 extends SarImageReader {
             }
             String geoloc=Platform.getConfiguration().getS1GeolocationAlgorithm();
             if(geoloc.equalsIgnoreCase(Constant.GEOLOCATION_ORBIT)&& this instanceof Sentinel1GRD){
-                   geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
+                   geotransform = GeoTransformFactory.createFromOrbitVector(annotationReader);
             }else{       
             	String epsg = "EPSG:4326";
             	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
@@ -290,7 +294,6 @@ public abstract class Sentinel1 extends SarImageReader {
 	   return s.getName();
    }
    
-   
    /**
     * 
     * @param x
@@ -322,9 +325,6 @@ public abstract class Sentinel1 extends SarImageReader {
 	   return s;
    } 
     
-    
-    
-    
    /**
     * 
     * @return
@@ -341,9 +341,6 @@ public abstract class Sentinel1 extends SarImageReader {
     	//bands=polarizations;
         return tiffsMap;
     }
-
-   
-
     
     @Override
     public int readPixel(int x, int y,int band) {
@@ -483,40 +480,6 @@ public abstract class Sentinel1 extends SarImageReader {
     @Override
     public double calcSatelliteSpeed(){
     	return satelliteSpeed;
-    }
-    
-    @Override
-    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-	    orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-
-        double temp, deltaAzimuth, deltaRange;
-        int[] output = new int[2];
-
-        try {
-        	// already in radian
-            double incidenceAngle = getIncidence(xPos);
-            double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
-            double slantRange = ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lonlat[0], lonlat[1]);
-          //  double sold=getSlantRange(xPos,incidenceAngle);
-            double prf = getPRF(xPos,yPos);
-
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
-
-            temp = (getRadarWaveLenght() * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
-
-            //azimuth and delta in number of pixels
-            deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
-
-            output[0] = (int) FastMath.floor(deltaAzimuth);
-            output[1] = (int) FastMath.floor(deltaRange);
-            
-        } catch (Exception ex) {
-        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage(),ex);
-        }
-        return output;
     }
         
     public String getInternalImage() {

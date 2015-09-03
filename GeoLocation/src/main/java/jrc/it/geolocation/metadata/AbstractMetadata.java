@@ -8,7 +8,10 @@ public abstract class AbstractMetadata implements IMetadata{
 	
 	//for S1 is rangePixelSpacing
     protected float samplePixelSpacing;
-    //for S1 always 0
+    protected float azimuthPixelSpacing;
+    
+
+	//for S1 always 0
     protected double groundRangeOrigin=0; 
     protected double numberOfSamplesPerLine=0;
     protected String antennaPointing;
@@ -16,7 +19,7 @@ public abstract class AbstractMetadata implements IMetadata{
     
     public abstract String getAntennaPointing();
 
-	public abstract void initMetaData(String filePath);
+	public abstract void initMetaData();
 	
 	public abstract double getNumberOfSamplesPerLine();
 	
@@ -72,6 +75,12 @@ public abstract class AbstractMetadata implements IMetadata{
 		this.numberOfSamplesPerLine = numberOfSamplesPerLine;
 	}
 
-	
+	public float getAzimuthPixelSpacing() {
+		return azimuthPixelSpacing;
+	}
+
+	public void setAzimuthPixelSpacing(float azimuthPixelSpacing) {
+		this.azimuthPixelSpacing = azimuthPixelSpacing;
+	}
 	
 }

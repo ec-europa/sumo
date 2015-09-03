@@ -15,6 +15,8 @@ import org.geoimage.impl.geoop.AffineGeoTransform;
 import org.geoimage.impl.geoop.GcpsGeoTransform;
 import org.geoimage.impl.geoop.GeoTransformOrbitState;
 
+import jrc.it.xml.wrapper.SumoAnnotationReader;
+
 /**
  * Simple class that contains factory methods that return the appropriate
  * implementation of the GeoTransform interface
@@ -31,6 +33,10 @@ public class GeoTransformFactory {
     }
     
     public static GeoTransform createFromOrbitVector(String annotationFile) throws GeoTransformException {
+        return new GeoTransformOrbitState(annotationFile);
+    }
+    
+    public static GeoTransform createFromOrbitVector(SumoAnnotationReader annotationFile) throws GeoTransformException {
         return new GeoTransformOrbitState(annotationFile);
     }
 }

@@ -25,6 +25,7 @@ public class S1Metadata extends AbstractMetadata {
 	private double linesPerBurst=0;
 	private double azimuthTimeInterval=0;
 	private String productType;
+	private SumoAnnotationReader annotationReader=null;
 	
 	public int getNlines() {
 		return nLines;
@@ -89,7 +90,12 @@ public class S1Metadata extends AbstractMetadata {
 		this.productType = productType;
 	}
 
-	public S1Metadata() {
+	public S1Metadata(String annotationFilePath) throws JAXBException{
+			this.annotationReader=new SumoAnnotationReader(annotationFilePath);
+	}
+	
+	public S1Metadata(SumoAnnotationReader annotationReader) {
+			this.annotationReader=annotationReader;
 	}
 	
 	/**
@@ -140,27 +146,32 @@ public class S1Metadata extends AbstractMetadata {
 	/**
 	 * 
 	 */
-	public void initMetaData(String annotationFilePath){
+	public void initMetaData(){
 		try {
 			super.type="S1";
 			super.antennaPointing="Right";
 			super.setPixelTimeOrderingAscending(true);//IS K in the matlab code!!
 			
-			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
+			
 			ImageInformationType imgInformation =annotationReader.getImageInformation();
+			
 			XMLGregorianCalendar  firstLineUtc=imgInformation.getProductFirstLineUtcTime();
 			XMLGregorianCalendar  lastLineUtc=imgInformation.getProductLastLineUtcTime();
 			
 			this.productType=annotationReader.getHeader().getProductType().name();
-			super.samplePixelSpacing=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
+
+			//pixel size in range and azimuth direction 
+			super.samplePixelSpacing=imgInformation.getRangePixelSpacing().getValue();
+			super.azimuthPixelSpacing=imgInformation.getAzimuthPixelSpacing().getValue();
+			
 			super.mode=annotationReader.getHeader().getMode().name();
 			linesPerBurst=annotationReader.getBurstInformation().getLinePerBust();
-			azimuthTimeInterval= annotationReader.getImageInformation().getAzimuthTimeInterval().getValue();
+			azimuthTimeInterval= imgInformation.getAzimuthTimeInterval().getValue();
 			
 			zeroDopplerTimeFirstLineSeconds=firstLineUtc.toGregorianCalendar();
 			zeroDopplerTimeLastLineSeconds=lastLineUtc.toGregorianCalendar();
 			
-			nLines=annotationReader.getImageInformation().getNumberOfLines().getValue().intValue();
+			nLines=imgInformation.getNumberOfLines().getValue().intValue();
 			
 			List<OrbitType>  orbits=annotationReader.getOrbits();
 			
@@ -208,7 +219,7 @@ public class S1Metadata extends AbstractMetadata {
 			samplingf=samplingf/links.size();*/
 			samplingf=7000/annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
 			numberOfSamplesPerLine=annotationReader.getImageInformation().getNumberOfSamples().getValue().doubleValue();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}	
 	}

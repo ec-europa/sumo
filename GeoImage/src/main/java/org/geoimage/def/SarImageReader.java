@@ -15,6 +15,7 @@ import org.apache.commons.math3.util.FastMath;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.geoop.GeoTransformOrbitState;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
 import org.geoimage.utils.IProgress;
@@ -58,6 +59,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     final int defaultMargin=100;
     protected Polygon bbox=null;
     
+    protected double[] pixelsize={0.0,0.0};
+    
     
 
 	public SarImageReader(File manifest){
@@ -80,6 +83,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public abstract String getDisplayName(int band); 
 	@Override
     public abstract int getWidth();
+	@Override
+	public abstract double[] getPixelsize();
+	
 	
 	/**
 	 * return an array contains the image bands HH,HV,VV,VH
@@ -90,7 +96,41 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     @Override
     public abstract int getHeight();
     
-    public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
+   // public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
+    
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+	    orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+
+        double temp, deltaAzimuth, deltaRange;
+        int[] output = new int[2];
+
+        try {
+        	// already in radian
+            double incidenceAngle = getIncidence(xPos);
+            double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
+            double slantRange = ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lonlat[0], lonlat[1]);
+          //  double sold=getSlantRange(xPos,incidenceAngle);
+            double prf = getPRF(xPos,yPos);
+
+            double sampleDistAzim = getPixelsize()[1];
+            double sampleDistRange= getPixelsize()[0];
+
+            temp = (getRadarWaveLenght() * slantRange * prf) /
+                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
+
+            //azimuth and delta in number of pixels
+            deltaAzimuth = temp / sampleDistAzim;
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
+            
+        } catch (Exception ex) {
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage(),ex);
+        }
+        return output;
+    }
     
     public void dispose(){
     	overViewImage=null;
@@ -327,12 +367,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return imageP;
 	}
     
-    
-    
-   
-    
     /**
-     * 
+     * Calculate the incidence angle
      */
     public double getIncidence(int position) {
         double incidenceangle = 0.0;
@@ -340,7 +376,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
         double sataltitude=getSatelliteAltitude();
         
-        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
+        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * this.getPixelsize()[0];
         incidenceangle = FastMath.atan(distancerange / sataltitude);
         return incidenceangle;
     }

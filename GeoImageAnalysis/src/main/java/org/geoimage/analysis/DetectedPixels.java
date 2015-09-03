@@ -308,7 +308,7 @@ public class DetectedPixels {
             // look for maximum brightness point in cluster
             int[][] it = agBoat.toArray(new int[0][]);
         
-            // get teh first boat in teh aggregate
+            // get the first boat in the aggregate
             int[] pixel = null;
             if (it.length>0) {
                 pixel = it[0];
@@ -328,7 +328,6 @@ public class DetectedPixels {
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                     Pixel pxBoat = aggregatedPixels.get(key);
                     if (pxBoat.value > boatValue.getMaxValue()[0]) {
-                    	//TODO: modify for each band
                     	boatValue.setMaxValue(new int[]{pxBoat.value});
                     }
                 }
@@ -363,9 +362,6 @@ public class DetectedPixels {
             boatPxMap.computeValues(pixsam,pixrec);
             if(boatPxMap.getBoatlength()>this.filterminSize && boatPxMap.getBoatlength()<this.filtermaxSize){
             	
-            	//TODO: Adattare il codice a gestire tutte le bande 
-            	//TODO: calcolare i significance qui!!
-            	
             	Boat b=new Boat(boatPxMap.getId()						//id
             			,(int)boatPxMap.getBoatposition()[0]			//x
             			, (int)boatPxMap.getBoatposition()[1]			//y
@@ -374,9 +370,12 @@ public class DetectedPixels {
             			,(int)boatPxMap.getBoatwidth()					//width
             			,(int)boatPxMap.getBoatheading());				//heading
 
-    			b.setMaxValue(boatPxMap.getMaximumValuesBand().toArray(new int[0]));
-            	//,boat.getMaximumValue(),boat.getMeanValueBand(0),
-    			//boat.getStdValue(),boat.getThresholdValueBand(0),0);
+    			b.setMaxValue(boatPxMap.getMaximumValues());
+            	b.setMeanValue(boatPxMap.getMeanValues());
+            	b.setThreshold(boatPxMap.getThresholdValue());
+            	b.setSignificance(boatPxMap.getSignificanceValues());
+            	b.setTileStd(boatPxMap.getStDevValues());
+            	b.setTileAvg(boatPxMap.getAvgValues());
 
     			boatsTemp.add(b);
             }

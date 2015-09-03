@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.DetectedPixels;
@@ -41,7 +42,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
 		private IMask[] bufferedMask=null;
-		//private String[] thresholds;
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
@@ -95,7 +95,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			this.ENL=ENL;
 			this.analysis=analysis;
 			this.bufferedMask=bufferedMask;
-			//this.thresholds=thresholds;
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=new ArrayList<VDSAnalysisProcessListener>();
@@ -116,6 +115,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		public void run() {
 			notifyStartProcessListener();
 			SarImageReader reader=((SarImageReader)gir);
+			
+			String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
 			
 			//run the blackborder analysis for the s1 images
 			BlackBorderAnalysis blackBorderAnalysis=null;
@@ -182,7 +183,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	}
 	            	 
 	            	 bands[band] = band;
-	            	 String trheshString=reader.getBands()[band];
+	            	 String polarization=reader.getBands()[band];
 	                 
 	                 if (numberofbands < 1 || displaybandanalysis) {
 	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
@@ -201,11 +202,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                         		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,band);
 	                     }
 	                     
-	                     String layerName=new StringBuilder("VDS analysis ").append(gir.getBandName(band)).append(" ").append(trheshString).toString();
+	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(thresholdsString[band]).toString();
 	                     
 	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, banddetectedpixels[band]),
-	                    		 reader.getBands(),ENL,buffer,bufferedMaskName,""+band);
+	                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
 
 	                     vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
@@ -271,7 +272,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
 	                		 																	"point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, mergePixels),
-	                		 																	reader.getBands(),ENL,buffer,bufferedMaskName,"Merged");
+	                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = Platform.getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
 	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);

@@ -191,7 +191,7 @@ public interface GeoImageReader  {
     public int[] getAmbiguityCorrection(int xPos,int yPos);
 
     
-    
+    public abstract double[] getPixelsize();
     
 }
 

@@ -266,7 +266,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         // estimation of incidence angle based on near and range distance values
         double nearincidence = Math.toRadians(Double.parseDouble((String) getMetadata(INCIDENCE_NEAR)));
         double sataltitude = Double.parseDouble((String) getMetadata(SATELLITE_ALTITUDE));
-        double distancerange = sataltitude * Math.tan(nearincidence) + position * getGeoTransform().getPixelSize()[1];
+        double distancerange = sataltitude * Math.tan(nearincidence) + position * getPixelsize()[1];
         incidenceangle = Math.atan(distancerange / sataltitude);
         return incidenceangle;
     }

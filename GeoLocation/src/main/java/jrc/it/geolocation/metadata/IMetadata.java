@@ -21,7 +21,7 @@ public interface IMetadata {
 		public double groundToSlantRangePolyTimesSeconds;
 	};
 	
-	public abstract void initMetaData(String annotationFilePath);
+	public abstract void initMetaData();
 
 	public abstract String getType();
 

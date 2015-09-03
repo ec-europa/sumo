@@ -126,7 +126,7 @@ public class SumoAnnotationReader {
 		List<ReplicaInformationType> replicas= replicaList.getReplicaInformation();
 		return replicas;
 	}
-	
+
 	
 	/**
 	 * read the coordinateConversion information

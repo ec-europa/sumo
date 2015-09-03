@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import jrc.it.geolocation.interpolation.OrbitInterpolation;
 import jrc.it.geolocation.metadata.IMetadata;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 import jrc.it.geolocation.metadata.S1Metadata;
+import jrc.it.xml.wrapper.SumoAnnotationReader;
 
 public class S1GeoCodingImpl implements GeoCoding {
 	
@@ -34,10 +37,31 @@ public class S1GeoCodingImpl implements GeoCoding {
 	 * 
 	 * @param metaFile
 	 * @throws MathException
+	 * @throws JAXBException 
 	 */
-	public S1GeoCodingImpl(String metaFile) throws MathException{
-		meta =new S1Metadata();
-		meta.initMetaData(metaFile);
+	public S1GeoCodingImpl(String metaFile) throws MathException, JAXBException{
+		meta =new S1Metadata(metaFile);
+		meta.initMetaData();
+		
+		double zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000.0;
+		double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
+		
+		orbitInterpolation=new OrbitInterpolation();
+		List<OrbitStatePosVelox> l=new ArrayList<>();
+		l.addAll( meta.getOrbitStatePosVelox());
+		orbitInterpolation.orbitInterpolation(l,zTimeFirstInSeconds,zTimeLastInSeconds,meta.getSamplingf(),iSafetyBufferAz);
+		coordConv=meta.getCoordinateConversion();
+		statepVecInterp=Collections.unmodifiableList(orbitInterpolation.getStatepVecInterp());
+		statevVecInterp=Collections.unmodifiableList(orbitInterpolation.getStatevVecInterp());
+	}
+	/**
+	 * 
+	 * @param metaFile
+	 * @throws MathException
+	 */
+	public S1GeoCodingImpl(SumoAnnotationReader annotationReader) throws MathException{
+		meta =new S1Metadata(annotationReader);
+		meta.initMetaData();
 		
 		double zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000.0;
 		double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
@@ -582,7 +606,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 			}
 			//double r[]=gc.forward(-100.0,11104.0);
 			//logger.debug("lon:"+r[0]+"---  lat:"+r[1]);
-		} catch (MathException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		

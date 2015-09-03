@@ -21,19 +21,26 @@ public class BoatConnectedPixelMap {
         private int id = 0;
         private int maxValue = 0;
         private boolean touchlandmask = false;
+        private int[] corners;
         
         
-        private double stdvalue = 0.0;
-        
-        
-        private List<Double> thresholdvalue = new ArrayList<>();
-        private List<Double> meanvalue = new ArrayList<>();
-        private int[] maxValues = null;
 
-        public BoatConnectedPixelMap(int x, int y, int id, int value) {
+		private double stdvalue = 0.0;
+        
+        //HH,HV,VH,VV 
+        private double[] thresholdvalue = {0,0,0,0};
+        private double[] meanvalue = {0,0,0,0};
+        private int[] maxValues = {0,0,0,0};
+        private double[] significance = {0,0,0,0};
+        private double[] average = {0,0,0,0};
+        
+        private double[] stDev = {0,0,0,0};
+
+        public BoatConnectedPixelMap(int cornerx,int cornery,int x, int y, int id, int value) {
             // add initial pixel, clipped value is always set to 1
             connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new int[]{x, y, value, 1});
             this.boatposition = new double[]{x, y};
+            this.corners=new int[]{cornerx,cornery};
             this.maxValue = value;
             this.id = id;
         }
@@ -73,6 +80,14 @@ public class BoatConnectedPixelMap {
             boatwidth = result[4];
             boatheading = result[5];
         }
+        
+        public int[] getCorners() {
+			return corners;
+		}
+
+		public void setCorners(int[] corners) {
+			this.corners = corners;
+		}
 
         public int getId() {
             return id;
@@ -98,23 +113,66 @@ public class BoatConnectedPixelMap {
             return boatwidth;
         }
 
-        protected int[] getMaximumValueS() {
+        protected int[] getMaximumValues() {
             return maxValues;
         }
         
-        protected void setMaxValues(int band,int[] maxValues) {
+        protected void setMaxValues(int[] maxValues) {
             this.maxValues=maxValues;
         }
+        protected void putMaxValue(int band,int maxValue) {
+            this.maxValues[band]=maxValue;
+        }
         
-        protected void setMeanValue(List<Double> meanvalue) {
+        
+        
+        protected void setStdValues(double[] stDev) {
+            this.stDev=stDev;
+        }
+        protected void putStDevValue(int band,double stDev) {
+            this.stDev[band]=stDev;
+        }
+        protected double[] getStDevValues() {
+            return stDev;
+        }
+        
+        protected void setAvgValues(double[] avgVals) {
+            this.average=avgVals;
+        }
+        protected void putAvgValue(int band,double avgVals) {
+            this.average[band]=avgVals;
+        }
+        protected double[] getAvgValues() {
+            return average;
+        }
+        
+        
+        protected void setSignificanceValues(double[] sign) {
+            this.significance=sign;
+        }
+        protected void putSignificanceValue(int band,double sign) {
+            this.significance[band]=sign;
+        }
+        protected double[] getSignificanceValues() {
+            return significance;
+        }
+        
+        protected void setMeanValue(double[] meanvalue) {
             this.meanvalue = meanvalue;
         }
-        protected List<Double> getMeanValue(int band) {
+        protected double getMeanValue(int band) {
+            return meanvalue[band];
+        }
+        protected double[] getMeanValues() {
             return meanvalue;
         }
         
+        protected void putMeanValue(int band,double meanvalue) {
+            this.meanvalue[band]=meanvalue;
+        }
+        
         protected double getMeanValueBand(int band) {
-            return this.meanvalue.get(band);
+            return this.meanvalue[band];
         }
         
         protected void setStdValue(double stdvalue) {
@@ -125,19 +183,19 @@ public class BoatConnectedPixelMap {
             return stdvalue;
         }
 
-        protected void setThresholdValue(List<Double> thresholdvalue) {
+        protected void setThresholdValue(double[] thresholdvalue) {
             this.thresholdvalue = thresholdvalue;
         }
 
-        protected List<Double> getThresholdValue() {
+        protected double[] getThresholdValue() {
             return thresholdvalue;
         }
         protected void putThresholdValue(int band,double thresholdvalue) {
-            this.thresholdvalue.add(band,thresholdvalue);
+            this.thresholdvalue[band]=thresholdvalue;
         }
 
         protected double getThresholdValueBand(int band) {
-            return thresholdvalue.get(band);
+            return thresholdvalue[band];
         }
 
 
@@ -165,7 +223,7 @@ public class BoatConnectedPixelMap {
             return clust;
         }
 
-        protected void setLandMask(boolean touchlandmask) {
+        protected void setTouchesLandMask(boolean touchlandmask) {
             this.touchlandmask = touchlandmask;
         }
 

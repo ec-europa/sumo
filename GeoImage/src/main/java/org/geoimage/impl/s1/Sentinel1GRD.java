@@ -237,6 +237,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         }
     }
 	
+	public double[] getPixelsize() {
+		return super.pixelsize;
+	}
 	
 	  
 

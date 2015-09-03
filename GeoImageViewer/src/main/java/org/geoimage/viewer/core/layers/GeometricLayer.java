@@ -94,7 +94,7 @@ public class GeometricLayer implements Cloneable{
             atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat.getSize());
             atts.set(VDSSchema.ESTIMATED_LENGTH, boat.getLength());
             atts.set(VDSSchema.ESTIMATED_WIDTH, boat.getWidth());
-            atts.set(VDSSchema.SIGNIFICANCE, (boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
+            atts.set(VDSSchema.SIGNIFICANCE, boat.getSignificance());//(boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
             timeStampStart=timeStampStart.replace("Z", "");
             atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
             atts.set(VDSSchema.VS, 0);
