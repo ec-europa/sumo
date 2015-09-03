@@ -237,6 +237,10 @@ public class Radarsat1Image extends SarImageReader {
             byte[] RangeString = new byte[16];
             lea.read(RangeString, 0, 16);
             setRangeSpacing(Float.parseFloat(new String(RangeString)));
+            
+            pixelsize[0]=getRangeSpacing();
+            pixelsize[1]=getAzimuthSpacing();
+            
             lea.seek(offset_processingparam + 4649 - 1);
             byte[] radialsatString = new byte[16];
             lea.read(radialsatString, 0, 16);
@@ -677,7 +681,7 @@ public class Radarsat1Image extends SarImageReader {
     @Override
     public double getSlantRange(int pos_range,double incidenceAngle) {
         double slant_range = 0;
-        double sampleDistRange = getGeoTransform().getPixelSize()[1];
+        double sampleDistRange = getPixelsize()[0];
         int j = 0;
 
         if (nearRangeFirst) {
@@ -707,8 +711,6 @@ public class Radarsat1Image extends SarImageReader {
         denominator = 2 * slant_range * earthradial;
         incidence = (Math.acos(numerator / denominator));
 
-        // Calculate the beam elevation angle
-        //double elevationAngle = Math.asin(Math.sin(incidence * Math.PI / 180) * (earthradial / (earthradial + h)));
 
         return incidence;
     }
@@ -789,8 +791,8 @@ public class Radarsat1Image extends SarImageReader {
             double slantRange = getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+            double sampleDistAzim = getPixelsize()[0];
+            double sampleDistRange =getPixelsize()[1];
 
             temp = (getRadarWaveLenght() * slantRange * prf) /
                     (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
@@ -852,6 +854,11 @@ public class Radarsat1Image extends SarImageReader {
 	}
 	public String[] getBands(){
 		return new String[]{"HH"};
+	}
+
+	@Override
+	public double[] getPixelsize() {
+		return pixelsize;
 	}
 
 

@@ -389,16 +389,17 @@ public class OrbitInterpolation {
 
 
 	public static void main(String args[]){
-		S1Metadata meta =new S1Metadata();
-		//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\S1_PRF_SWATH_DEVEL\\\\S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
-		//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\test_interpolation\\\\S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml");
-		//meta.initMetaData("G:\\\\sat\\\\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE\\\\annotation\\\\s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml");
-		meta.initMetaData("F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml");
-		//meta.initMetaData("H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml");
-
-		
-		OrbitInterpolation orbitInterpolation=new OrbitInterpolation();
 		try {
+			S1Metadata meta =new S1Metadata("F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml");
+			//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\S1_PRF_SWATH_DEVEL\\\\S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
+			//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\test_interpolation\\\\S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml");
+			//meta.initMetaData("G:\\\\sat\\\\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE\\\\annotation\\\\s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml");
+			meta.initMetaData();
+			//meta.initMetaData("H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml");
+	
+			
+			OrbitInterpolation orbitInterpolation=new OrbitInterpolation();
+		
 			
 			double zTimeFirstInSeconds=meta.getZeroDopplerTimeFirstLineSeconds().getTimeInMillis()/1000.0;
 			double zTimeLastInSeconds=meta.getZeroDopplerTimeLastLineSeconds().getTimeInMillis()/1000.0;
@@ -409,7 +410,7 @@ public class OrbitInterpolation {
 					meta.getSamplingf(),500);
 			//System.out.println(""+orbitInterpolation.getStatepVecInterp().get(113315)[0]);
 			System.out.println(""+orbitInterpolation.getStatepVecInterp().size());
-		} catch (MathException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

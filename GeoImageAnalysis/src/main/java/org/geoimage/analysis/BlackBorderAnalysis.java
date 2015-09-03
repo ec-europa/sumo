@@ -70,7 +70,7 @@ public class BlackBorderAnalysis {
 		
 		if(tSize==0){
 			//define the size of the tiles
-			tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getGeoTransform().getPixelSize()[0]);
+			tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
 			if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
 		}else{
 			this.tileSize=tSize;

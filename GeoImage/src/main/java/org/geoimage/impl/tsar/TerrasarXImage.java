@@ -81,7 +81,11 @@ public class TerrasarXImage extends SarImageReader {
     public int getNBand() {
         return bands.size();
     }
-
+    
+    public double[] getPixelsize() {
+		return super.pixelsize;
+	}
+    
     @Override
     /**gcps are computed atrting from the georef.xml file and the mapping_grid.bin file. Thats because the pixel positions are related to time
     / (t,tau) and not to (lon,lat) directly
@@ -597,9 +601,13 @@ public class TerrasarXImage extends SarImageReader {
             setMetaHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String w=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
             setMetaWidth(Integer.parseInt(w) );
+            
             setRangeSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
             setAzimuthSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
-
+            
+            pixelsize[0]=getRangeSpacing();
+            pixelsize[1]=getAzimuthSpacing();
+            
             setNumberOfBytes(new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
             setENL(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());
           
@@ -695,43 +703,6 @@ public class TerrasarXImage extends SarImageReader {
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
-    }
-
-    
-    @Override
-    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-    	if(satelliteSpeed==0){
-	    	satelliteSpeed = calcSatelliteSpeed();
-	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-    	}    
-
-        double temp, deltaAzimuth, deltaRange;
-        int[] output = new int[2];
-
-        try {
-
-        	// already in radian
-            double incidenceAngle = getIncidence(xPos);
-            double slantRange = getSlantRange(xPos,incidenceAngle);
-            double prf = getPRF(xPos,yPos);
-
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
-
-            temp = (getRadarWaveLenght() * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
-
-            //azimuth and delta in number of pixels
-            deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
-
-            output[0] = (int) FastMath.floor(deltaAzimuth);
-            output[1] = (int) FastMath.floor(deltaRange);
-           
-        } catch (Exception ex) {
-        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
-        }
-        return output;
     }
     
     @Override

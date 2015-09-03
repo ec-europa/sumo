@@ -181,6 +181,9 @@ public class EnvisatImage extends SarImageReader {
             if(val!=null)
             	setRangeSpacing(Float.parseFloat(val));
             
+            pixelsize[0]=getRangeSpacing();
+            pixelsize[1]=getAzimuthSpacing();
+            
             setMode("");//getMetadata("SPH_DESCRIPTOR"));
             if(getMetadata("SPH_DESCRIPTOR").equals("Image Mode Medium Res Image")){
                 //if IMM then set the ENL to 18
@@ -595,8 +598,8 @@ public class EnvisatImage extends SarImageReader {
             double slantRange = getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+            double sampleDistAzim = getPixelsize()[0];
+            double sampleDistRange =getPixelsize()[1];
 
             temp = (getRadarWaveLenght() * slantRange * prf) /
                     (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
@@ -695,5 +698,9 @@ public class EnvisatImage extends SarImageReader {
 
 	public String[] getBands(){
 		return new String[]{(String)getMetadata("MDS1_TX_RX_POLAR") , (String)getMetadata("MDS2_TX_RX_POLAR")};
+	}
+	
+	public double[] getPixelsize(){
+		return pixelsize;
 	}
 }

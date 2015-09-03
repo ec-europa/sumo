@@ -183,7 +183,7 @@ public class ParallelGeoCoding {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}*/
-		} catch (MathException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 

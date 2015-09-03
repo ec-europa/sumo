@@ -56,7 +56,7 @@ public class ViewTilesAction extends AbstractAction{
 	                        try {
 	                        	GeoImageReader gir=l.getImageReader();
 	                        	if(tileSize==0){
-	                        		tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getGeoTransform().getPixelSize()[0]);
+	                        		tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
 	                        		if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
 	                        	}	
 	                    		

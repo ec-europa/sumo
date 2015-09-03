@@ -289,7 +289,11 @@ public class Radarsat2Image extends SarImageReader {
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
             
             float pixSpace=(Float)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Float.class);
-            setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Float.class);
+            float rangeSpace=(Float)setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Float.class);
+            
+            pixelsize[0]=rangeSpace;
+            pixelsize[1]=pixSpace;
+            
             String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns,String.class);
             
             // geolocationgrid
@@ -434,8 +438,7 @@ public class Radarsat2Image extends SarImageReader {
             setMetadataXML(atts, "passDirection", ORBIT_DIRECTION, ns,String.class);
             // calculate satellite speed using state vectors
             atts = atts.getChild("stateVector", ns);
-            if(atts != null)
-            {
+            if(atts != null){
                 double xvelocity = Double.valueOf(atts.getChildText("xVelocity", ns));
                 double yvelocity = Double.valueOf(atts.getChildText("yVelocity", ns));
                 double zvelocity = Double.valueOf(atts.getChildText("zVelocity", ns));
@@ -472,14 +475,13 @@ public class Radarsat2Image extends SarImageReader {
         int[] output = new int[2];
 
         try {
-
         	// already in radian
             double incidenceAngle = getIncidence(xPos);
             double slantRange = getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
-            double sampleDistAzim = getGeoTransform().getPixelSize()[0];
-            double sampleDistRange = getGeoTransform().getPixelSize()[1];
+            double sampleDistAzim = getPixelsize()[0];
+            double sampleDistRange =getPixelsize()[1];
 
             temp = (getRadarWaveLenght() * slantRange * prf) /
                     (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
@@ -549,7 +551,11 @@ public class Radarsat2Image extends SarImageReader {
 	public String getDisplayName(int band) {
 		return displayName;
 	}
-
+	
+	@Override
+	public double[] getPixelsize() {
+		return pixelsize;
+	}
 
 }
 

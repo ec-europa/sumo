@@ -269,11 +269,13 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
         return dest;
     }
 
+    
+    //TODO:move it on the georeader
     /**
      *  get pixel size, returns the pixel size in both directions
      *  @return return the pixelsize in metres in the range and azimuth direction [x,y]
      */
-    public double[] getPixelSize()
+    /*public double[] getPixelSize()
     {
         double[] pixelsize = {0.0, 0.0};
         // should be in the image reader class
@@ -290,7 +292,7 @@ public class GcpsGeoTransform implements IGcpsGeoTransform {
         pixelsize[1] = gc.getOrthodromicDistance() / 100;
         
         return pixelsize;
-    }
+    }*/
 
 	@Override
 	public List<double[]> getPixelFromGeo(Coordinate[] coords)

@@ -14,6 +14,7 @@ import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.geo.ParallelGeoCoding;
 import jrc.it.geolocation.geo.S1GeoCodingImpl;
+import jrc.it.xml.wrapper.SumoAnnotationReader;
 /**
  * 
  * @author Pietro Argentieri
@@ -23,7 +24,8 @@ public class GeoTransformOrbitState implements GeoTransform{
 	//private String annotationFile="";
 	private S1GeoCodingImpl geocoding=null;
 	private ParallelGeoCoding pGeo=null;
-	private double[] pixelsize = {0.0, 0.0};
+    
+		
 	
 	/**
 	 * 
@@ -35,7 +37,20 @@ public class GeoTransformOrbitState implements GeoTransform{
 			//this.annotationFile=annotationFile;
 			geocoding=new S1GeoCodingImpl(annotationFile);
 			pGeo=new ParallelGeoCoding(geocoding);
-			calcPixelSize();
+		}catch(Exception e){
+			throw new GeoTransformException(e.getMessage());
+		}	
+	}
+	
+	/**
+	 * 
+	 * @param annotationFile
+	 * @throws GeoTransformException
+	 */
+	public GeoTransformOrbitState(SumoAnnotationReader annotationFile) throws GeoTransformException{
+		try{
+			geocoding=new S1GeoCodingImpl(annotationFile);
+			pGeo=new ParallelGeoCoding(geocoding);
 		}catch(MathException e){
 			throw new GeoTransformException(e.getMessage());
 		}	
@@ -112,6 +127,7 @@ public class GeoTransformOrbitState implements GeoTransform{
 	/**
 	 * 
 	 */
+	/*
 	private void calcPixelSize(){
 		try{
 	        // should be in the image reader class
@@ -130,13 +146,8 @@ public class GeoTransformOrbitState implements GeoTransform{
 		}catch(GeoTransformException ge){
 			pixelsize = new double[]{0.0, 0.0};
 		}    
-	}
+	}*/
 	
-	
-	@Override
-	public double[] getPixelSize() {
-        return pixelsize;
-	}
-	
+
 
 }

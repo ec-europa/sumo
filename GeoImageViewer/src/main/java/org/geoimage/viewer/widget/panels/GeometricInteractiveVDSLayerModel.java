@@ -103,6 +103,9 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         	if(o==null)
         		return String.class;
         	
+        	if(o instanceof double[])
+        		return double[].class;
+        	
         	return attrGeom.get(attr).getClass();
         }
     }
@@ -156,7 +159,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             // generate the geometry for the boat shape
             List<Geometry> boatGeom = new ArrayList<Geometry>();
             AttributesGeometry boatattributes = gl.getAttributes(geom);
-            double[] pixelsize = il.getImageReader().getGeoTransform().getPixelSize();
+            double[] pixelsize = il.getImageReader().getPixelsize();
             double boatwidth =0;
             double boatlength=0;
             double boatheading =0;
@@ -227,7 +230,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 				
 					radius = 6400 * 1000 * Math.cos(2 * Math.PI * il.getImageReader().getGeoTransform().getGeoFromPixel(posX, posY)[1] / 360.0);
 	                // calculate the range azimuth pixel speed due to the rotation of the earth
-	                double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getGeoTransform().getPixelSize()[0];
+	                double rangepixelspeed = earthangularSpeed * radius / il.getImageReader().getPixelsize()[0];
 	                // calculate the pixels delta value
 	                double azi=((SarImageReader)il.getImageReader()).getImageAzimuth();
 	                double pixeldelta = 1 / (Math.cos(azi * 2 * Math.PI / 360.0) / (azimuthpixelspeed / rangepixelspeed - Math.sin(azi * 2 * Math.PI / 360.0)));

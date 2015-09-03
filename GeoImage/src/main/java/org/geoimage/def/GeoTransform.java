@@ -25,5 +25,4 @@ public interface GeoTransform {
     public Geometry transformGeometryPixelFromGeo(Geometry geo)throws GeoTransformException;
     public Geometry transformGeometryGeoFromPixel(Geometry geo)throws GeoTransformException;
     
-    public double[] getPixelSize();
 }
