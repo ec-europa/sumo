@@ -105,6 +105,20 @@ public class PlatformConfiguration {
         }
 
     }
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public int getNumTileBBAnalysis(){
+        try {
+            return prefDB.getTileSize(10);
+        } catch (NumberFormatException e) {
+            return 10;
+        }
+
+    }
+    
     
     /**
      * 
