@@ -455,7 +455,10 @@ public class GeotiffImage extends SarImageReader {
 		return null;
 	}
 
-
+	@Override
+	public String getSensor() {
+		return "-";
+	}
 
 }
 

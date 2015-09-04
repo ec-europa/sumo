@@ -862,7 +862,10 @@ public class Radarsat1Image extends SarImageReader {
 	}
 
 
-
+	@Override
+	public String getSensor() {
+		return "R1";
+	}
 	
 }
 

@@ -143,10 +143,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			double finalValue = Math.round( val * 1000.0 ) / 1000.0;
 			String strFinalVal=""+finalValue;
 			String milli=strFinalVal.length()>5?(""+finalValue).substring(2,5):strFinalVal.substring(2);
-			
 			date=date.substring(0, date.indexOf(".")+1)+milli;
-			
-			//System.out.println(millis+"   "+val+ "  "+finalValue+"  "+date);
 		}	
 		
 		

@@ -556,6 +556,9 @@ public class Radarsat2Image extends SarImageReader {
 	public double[] getPixelsize() {
 		return pixelsize;
 	}
-
+	@Override
+	public String getSensor() {
+		return "R2";
+	}
 }
 

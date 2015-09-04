@@ -92,9 +92,9 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     	setMetadata(GeoMetadata.HEADING_ANGLE,data);
     }
     
-    public String getSensor(){
+    public abstract String getSensor();/*{
     	return (String)getMetadata(GeoMetadata.SENSOR);
-    }
+    }*/
     public void setSensor(String data){
     	setMetadata(GeoMetadata.SENSOR,data);
     }

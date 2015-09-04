@@ -703,4 +703,8 @@ public class EnvisatImage extends SarImageReader {
 	public double[] getPixelsize(){
 		return pixelsize;
 	}
+	@Override
+	public String getSensor() {
+		return "EV";
+	}
 }

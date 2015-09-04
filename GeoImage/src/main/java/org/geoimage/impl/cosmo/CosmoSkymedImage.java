@@ -531,5 +531,10 @@ public class CosmoSkymedImage extends SarImageReader {
 
     }
 
+	@Override
+	public String getSensor() {
+		return "CS";
+	}
+
 	
 }
