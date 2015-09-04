@@ -370,5 +370,8 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
       }
     
 	   */
-	
+		@Override
+		public String getSensor() {
+			return "S1";
+		}
 }
