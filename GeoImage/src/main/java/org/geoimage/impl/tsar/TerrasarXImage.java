@@ -769,5 +769,8 @@ public class TerrasarXImage extends SarImageReader {
 	}
 
 	
-
+	@Override
+	public String getSensor() {
+		return "TX";
+	}
 }
