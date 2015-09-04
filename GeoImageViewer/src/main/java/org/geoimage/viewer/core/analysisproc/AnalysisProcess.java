@@ -130,7 +130,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
              } 	
              if(blackBorderAnalysis!=null){
-            	 blackBorderAnalysis.analyse(5);
+            	 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis());
              }
              //end blackborder analysis
              
@@ -186,7 +186,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	 String polarization=reader.getBands()[band];
 	                 
 	                 if (numberofbands < 1 || displaybandanalysis) {
-	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(gir.getBandName(band)).toString());
+	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(polarization).toString());
 
 		            	 //merge pixel to build the "boats"
 	                     if (agglomerationMethodology.startsWith("d")) {
@@ -202,7 +202,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                         		 (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,band);
 	                     }
 	                     
-	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(thresholdsString[band]).toString();
+	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
 	                     
 	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
 	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, banddetectedpixels[band]),

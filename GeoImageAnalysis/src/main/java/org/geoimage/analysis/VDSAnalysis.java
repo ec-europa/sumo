@@ -103,6 +103,9 @@ public class VDSAnalysis{
     	return (Float[])thresholdsBandParams.values().toArray(new Float[0]);
     }
      
+    public Float getThresholdParam(String polarization){
+    	return thresholdsBandParams.get(polarization);
+    }
     /**
      * 
      * @param kdist
@@ -124,7 +127,6 @@ public class VDSAnalysis{
         int xRightTile=0;
         int yTopTile=0;
         int yBottomTile=0;
-        
         
         double[][][] tileStat = new double[verTiles][horTiles][5];
 
@@ -180,7 +182,7 @@ public class VDSAnalysis{
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     if(!containsMinPixelValid){
                     	//try to read more pixels (out of the current tile) to have more pixels for the statistics
-                    	rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx+30, sizeY+dy+30, -xLeftTile-30, -yTopTile-30, 1.0)).getData();
+                    	rastermask = (mask[0].rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0)).getData();
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                         
