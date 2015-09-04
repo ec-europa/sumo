@@ -169,6 +169,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         return "Analysis/VDS";
     }
 
+    /**
+     * 
+     */
     public List<Argument> getArgumentTypes() {
         Argument a1 = new Argument("algorithm", Argument.STRING, false, "k-dist");
         a1.setPossibleValues(new Object[]{"k-dist"});

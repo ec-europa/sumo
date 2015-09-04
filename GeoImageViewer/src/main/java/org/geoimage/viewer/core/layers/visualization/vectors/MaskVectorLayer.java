@@ -293,9 +293,11 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
      */
     public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor) {
-        // create the buffered image of the size of the Rectangle
+
+    	// create the buffered image of the size of the Rectangle
         BufferedImage image = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_BYTE_BINARY);
         GeometryFactory gf = new GeometryFactory();
+        
         // define the clipping region in full scale
         Coordinate[] coords = new Coordinate[]{
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
@@ -303,8 +305,11 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
             new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),};
-        Polygon geom = gf.createPolygon(gf.createLinearRing(coords), null);
+        
+        Polygon geom = gf.createPolygon(gf.createLinearRing(coords));
+        
         Graphics g2d = image.getGraphics();
+        
         g2d.setColor(Color.WHITE);
         for (Geometry p : glayer.getGeometries()) {
             if (p.intersects(geom)) {
@@ -321,6 +326,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         }
         g2d.dispose();
         return image;
+        
     }
 
     public Area getShape(int width, int height) {
