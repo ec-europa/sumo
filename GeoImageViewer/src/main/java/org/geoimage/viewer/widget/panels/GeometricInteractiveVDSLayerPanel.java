@@ -17,7 +17,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.geoimage.opengl.OpenGLContext;
@@ -91,7 +90,11 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
-			String val=StringUtils.join((Double[])value,',');
+			String val="";
+			if(value instanceof double[])
+				val=StringUtils.join((double[])value,',');
+			if(value instanceof int[])
+				val=StringUtils.join((int[])value,',');
 			setValue(val);
 			return this;
 		}
@@ -106,6 +109,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         ((FlagTable)tableDataLayer).setModel(glm);
         tableDataLayer.addKeyListener(this);
         tableDataLayer.setDefaultRenderer(double[].class,new CellRender());
+        tableDataLayer.setDefaultRenderer(int[].class,new CellRender());
     }
 
     /** This method is called from within the constructor to
