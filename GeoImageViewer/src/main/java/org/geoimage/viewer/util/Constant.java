@@ -34,7 +34,7 @@ public class Constant {
   public static final String PREF_TARGETS_SYMBOL_BAND_3= "VDS Analaysis - Target Symbol - Band 3";
   public static final String PREF_TARGETS_SYMBOL_BAND_MERGED = "VDS Analaysis - Target Symbol - Band Merged";
   
-  
+  public static final String PREF_NUM_TILES_BB_ANALYSIS = "Black border analysis tiles";
   
   
   public static final String PREF_BUFFERING_DISTANCE = "VDS Analaysis - Buffering Distance in pixels";
