@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
-import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -20,7 +18,6 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -33,7 +30,7 @@ class AnalysisParams {
 	public String pathImg[]=null;
 	public String shapeFile="";
 	public String outputFolder="";
-	public float enl=1;
+	public float enl=0;
 	public int buffer=0;
 	public String epsg="EPSG:4326";	
 	public Date startDate;

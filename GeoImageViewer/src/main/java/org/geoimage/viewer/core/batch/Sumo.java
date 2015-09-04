@@ -100,6 +100,7 @@ public class Sumo {
 				conf=new ConfigurationFile(confFile);
 				params.shapeFile=conf.getShapeFile();
 				params.buffer=conf.getBuffer();
+				params.enl=conf.getENL();
 				params.thresholdArrayValues=conf.getThresholdArray();
 				params.pathImg=conf.getInputFolder();
 				params.outputFolder=conf.getOutputFolder();
