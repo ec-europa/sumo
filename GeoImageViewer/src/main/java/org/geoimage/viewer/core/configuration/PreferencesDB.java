@@ -156,6 +156,8 @@ public class PreferencesDB {
         insertIfNotExistRow(Constant.PREF_COASTLINE_DEFAULT_LAND_MASK,"./resources/coastline/default/Global GSHHS Land Mask.shp");
         insertIfNotExistRow(Constant.PREF_COASTLINES_FOLDER, "./resources/coastline");
         
+        insertIfNotExistRow(Constant.PREF_NUM_TILES_BB_ANALYSIS, "10");
+        
         
         //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
         //check pixel for analysis
@@ -202,6 +204,15 @@ public class PreferencesDB {
      */
     public int getTileSize(int defaultValue){
         return Integer.parseInt(readRow(PREF_NEIGHBOUR_TILESIZE));
+    }
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public int getNumTileForBBAnalysis(int defaultValue){
+        return Integer.parseInt(readRow(Constant.PREF_NUM_TILES_BB_ANALYSIS));
     }
     
     /**
