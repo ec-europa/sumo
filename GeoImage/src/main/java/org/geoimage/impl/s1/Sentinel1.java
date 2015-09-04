@@ -524,7 +524,10 @@ public abstract class Sentinel1 extends SarImageReader {
 		return img;
 	}
 
-	
+	@Override
+	public String getSensor() {
+		return "S1";
+	}
 }
 
 
