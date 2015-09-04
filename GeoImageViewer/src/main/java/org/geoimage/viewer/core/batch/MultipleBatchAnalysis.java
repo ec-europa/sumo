@@ -27,9 +27,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 * 
 	 */
 	public void startAnalysis(){
-			//File mainFolder=new File(super.params.pathImg);
-			
-			//List<File>filesImg=SarFileUtil.scanFolderForImages(mainFolder,confFile.getFilterFolder());
 			List<File>filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
 			
 			for (File image:filesImg){
@@ -47,8 +44,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 					
 					
 					boolean forceAnalysis=confFile.forceNewAnalysis();
-					
-					
 					
 					//check if already analized
 					boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
@@ -69,9 +64,11 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						for(GeoImageReader r:readers){
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
-						
-							String enl=reader.getENL();
-							activeParams.enl=Float.parseFloat(enl);
+							
+							if(activeParams.enl==0){
+								String enl=reader.getENL();
+								activeParams.enl=Float.parseFloat(enl);
+							}	
 							GeometricLayer gl=null;
 							if(activeParams.shapeFile!=null)
 								gl=readShapeFile(reader);
@@ -120,6 +117,9 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 					if(v!=-1)
 						params.thresholdArrayValues[i]=v;
 				}
+			}
+			if(localConf.getENL()!=0){
+				params.enl=localConf.getENL();
 			}
 			
 		}catch(Exception e){

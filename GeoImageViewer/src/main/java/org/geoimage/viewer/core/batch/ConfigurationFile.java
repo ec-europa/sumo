@@ -23,6 +23,8 @@ public class ConfigurationFile {
 	public static  final String TRESH_VH_PARAM="tvh";
 	public static  final String TRESH_VV_PARAM="tvv";
 	
+	public static  final String ENL_PARAM="enl";
+	
 	public static  final String SHP_FILE="shape_file";
 	public static  final String BUFFER_PARAM="buffer";
 	public static  final String INPUT_FOLD_PARAM="input_folder";
@@ -144,6 +146,11 @@ public class ConfigurationFile {
 		public boolean forceNewAnalysis(){
 			String tmp= prop.getProperty(FORCE_NEW_ANALYSIS,"false");
 			return Boolean.parseBoolean(tmp);
+		}
+		
+		public float getENL(){
+			String tmp= prop.getProperty(ENL_PARAM,"0.0");
+			return Float.parseFloat(tmp);
 		}
 		
 		public int getMaxDetections(){
