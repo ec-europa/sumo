@@ -88,14 +88,18 @@ public abstract class AbstractBatchAnalysis {
 	 */
 	public void analizeImage(SarImageReader reader,IMask[] masks,AnalysisParams params){
 		
+        java.util.HashMap<String,Float> thresholdsMap = new java.util.HashMap<>();
+
+        thresholdsMap.put("HH", params.thresholdArrayValues[0]);
+        thresholdsMap.put("HV", params.thresholdArrayValues[1]);
+        thresholdsMap.put("VH", params.thresholdArrayValues[2]);
+        thresholdsMap.put("VV", params.thresholdArrayValues[3]);
 		
         analysis = new VDSAnalysis(reader,
         		masks, 
         		params.enl, 
-        		params.thresholdArrayValues[0], 
-        		params.thresholdArrayValues[1], 
-        		params.thresholdArrayValues[2], 
-        		params.thresholdArrayValues[3]);
+        		thresholdsMap
+        		);
   
         
         final String[] thresholds={""+params.thresholdArrayValues[0], 

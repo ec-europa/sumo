@@ -112,7 +112,7 @@ public class PlatformConfiguration {
      */
     public int getNumTileBBAnalysis(){
         try {
-            return prefDB.getTileSize(10);
+            return prefDB.getNumTileForBBAnalysis(10);
         } catch (NumberFormatException e) {
             return 10;
         }
