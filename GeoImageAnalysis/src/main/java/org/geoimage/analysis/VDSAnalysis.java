@@ -27,7 +27,6 @@ public class VDSAnalysis{
 	public interface ProgressListener{
 		public void startRowProcesseing(int row);
 		public void endRowProcesseing(int row);
-		
 	}
 	
 	
@@ -55,17 +54,13 @@ public class VDSAnalysis{
      * @param thresholdVV
      * @param progressBar
      */
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, float thresholdHH, float thresholdHV, float thresholdVH, float thresholdVV) {
+    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, Map<String, Float> trhresholdMap) {
         this.enl = "" + (int) (enlf * 10);
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
         }
-        
-        thresholdsBandParams.put("HH", thresholdHH);
-        thresholdsBandParams.put("HV", thresholdHV);
-        thresholdsBandParams.put("VH", thresholdVH);
-        thresholdsBandParams.put("VV", thresholdVV);
-        
+                
+        this.thresholdsBandParams=trhresholdMap;
         this.gir = gir;
         this.mask = mask;
         this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
@@ -320,7 +315,9 @@ public class VDSAnalysis{
         	}
             
             // calculate thresholds
-            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize, bands, data, kdist);
+            int row=(cornery+1)/this.verTiles;
+        	int col=(cornerx+1)/this.horTiles;
+            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize,row,col, bands, data, kdist);
             
             double[][] thresholdvalues = new double[numberbands][2];
             int[] maxValue = new int[numberbands];
@@ -362,8 +359,6 @@ public class VDSAnalysis{
                 	String bb=((SarImageReader)gir).getBands()[iBand];
                     float thresholdBand=this.thresholdsBandParams.get(bb);
                 	
-                	int row=(cornery+1)/this.verTiles;
-                	int col=(cornerx+1)/this.horTiles;
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
                 	int[] newdata = gir.readTile(cornerx, cornery, tilesize, tilesize,iBand);
                 	kdist.estimate(rastermask, newdata);

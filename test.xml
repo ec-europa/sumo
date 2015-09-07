@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysis xmlns:ns0="">
+   <sat_image_metadata>
+      <timestampStart>2014-12-12 13:00:44.123</timestampStart>
+      <gcps/>
+   </sat_image_metadata>
+   <vds_analysis>
+      <run_time>2015-09-07 10:53:17.032</run_time>
+      <run_version></run_version>
+      <run_version_num>1</run_version_num>
+      <detector_version></detector_version>
+      <algorithm>k-dist</algorithm>
+      <parameters></parameters>
+      <nr_detections>0</nr_detections>
+      <buffer>0</buffer>
+      <land_mask_read></land_mask_read>
+   </vds_analysis>
+   <vds_target>
+      <boat>
+         <target_number>1</target_number>
+         <lon>0.0</lon>
+         <lat>0.0</lat>
+         <xpixel>0.0</xpixel>
+         <ypixel>0.0</ypixel>
+         <detecttime>2014-12-12 13:00:44.123</detecttime>
+         <inc_ang>0.0</inc_ang>
+         <reliability>3</reliability>
+         <false_alarm_cause>AA</false_alarm_cause>
+         <nr_pixels>0</nr_pixels>
+         <length>0.0</length>
+         <width>0.0</width>
+         <size_class>S</size_class>
+         <heading_range>0.0</heading_range>
+         <heading_north>0.0</heading_north>
+         <lwh_reliability>false</lwh_reliability>
+         <manual_add>false</manual_add>
+         <noise>0</noise>
+         <significance></significance>
+         <threshold_tile></threshold_tile>
+      </boat>
+      <boat>
+         <target_number>2</target_number>
+         <lon>0.0</lon>
+         <lat>0.0</lat>
+         <xpixel>0.0</xpixel>
+         <ypixel>0.0</ypixel>
+         <detecttime>2014-12-12 13:00:44.123</detecttime>
+         <inc_ang>0.0</inc_ang>
+         <reliability>3</reliability>
+         <false_alarm_cause>AA</false_alarm_cause>
+         <nr_pixels>0</nr_pixels>
+         <length>0.0</length>
+         <width>0.0</width>
+         <size_class>S</size_class>
+         <heading_range>0.0</heading_range>
+         <heading_north>0.0</heading_north>
+         <lwh_reliability>false</lwh_reliability>
+         <manual_add>false</manual_add>
+         <noise>0</noise>
+         <significance></significance>
+         <threshold_tile></threshold_tile>
+      </boat>
+      <boat>
+         <target_number>3</target_number>
+         <lon>0.0</lon>
+         <lat>0.0</lat>
+         <xpixel>0.0</xpixel>
+         <ypixel>0.0</ypixel>
+         <detecttime>2014-12-12 13:00:44.123</detecttime>
+         <inc_ang>0.0</inc_ang>
+         <reliability>3</reliability>
+         <false_alarm_cause>AA</false_alarm_cause>
+         <nr_pixels>0</nr_pixels>
+         <length>0.0</length>
+         <width>0.0</width>
+         <size_class>S</size_class>
+         <heading_range>0.0</heading_range>
+         <heading_north>0.0</heading_north>
+         <lwh_reliability>false</lwh_reliability>
+         <manual_add>false</manual_add>
+         <noise>0</noise>
+         <significance></significance>
+         <threshold_tile></threshold_tile>
+      </boat>
+   </vds_target>
+</analysis>
