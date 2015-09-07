@@ -89,27 +89,24 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
                 //this part mange the different thresholds for different bands
                 //in particular is also looking for which band is available and leave the threshold to 0 for the not available bands
-                float thrHH = 0;
-                float thrHV = 0;
-                float thrVH = 0;
-                float thrVV = 0;
+                java.util.HashMap<String,Float> thresholds = new java.util.HashMap<>();
                 
                 int numberofbands = gir.getNBand();
+                thresholds.put("HH",0.0f);
+                thresholds.put("HV",0.0f);
+                thresholds.put("VH",0.0f);
+                thresholds.put("VV",0.0f);
                 for (int bb = 0; bb < numberofbands; bb++) {
                     if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-                        thrHH = Float.parseFloat(args[bb + 1]);
+                    	thresholds.put("HH", Float.parseFloat(args[bb+1]));
                     } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-                        thrHV = Float.parseFloat(args[bb + 1]);
+                    	thresholds.put("HV", Float.parseFloat(args[bb+1]));
                     } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-                        thrVH = Float.parseFloat(args[bb + 1]);
+                    	thresholds.put("VH", Float.parseFloat(args[bb+1]));
                     } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-                        thrVV = Float.parseFloat(args[bb + 1]);
+                    	thresholds.put("VV", Float.parseFloat(args[bb+1]));
                     }
                 }
-                final float thresholdHH = thrHH;
-                final float thresholdHV = thrHV;
-                final float thresholdVH = thrVH;
-                final float thresholdVV = thrVV;
 
                 //read the land mask
                 mask = new ArrayList<IMask>();
@@ -138,7 +135,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 					e.printStackTrace();
 				}*/
                 
-                final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholdHH, thresholdHV, thresholdVH, thresholdVV);
+                final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholds);
                 
                 //final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
                 
