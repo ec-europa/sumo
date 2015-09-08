@@ -33,8 +33,8 @@ public class OrbitInterpolation {
 			
 		this.iSafetyBufferAz=iSafetyBufferAz;
 		
-		double deltaT = 1/samplingf;
-		double deltaTinv = 1/deltaT;
+		double deltaT = 1.0/samplingf;
+		double deltaTinv = 1.0d/deltaT;
 		int nPoints=vpList.size();
 		
 		double reftime=0;
