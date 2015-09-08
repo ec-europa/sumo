@@ -187,7 +187,7 @@ public class GeoUtils {
 	 * @return the geoid Height for a point (lon,lat)
 	 */
 	public static double  getGeoidH(double lon,double lat){
-	    /*double h=0;
+	    double h=0;
 	    double minDist =1000;
 		//first value
 		for(int i=0;i<geoidPoints.length&&minDist>50;i++){
@@ -207,8 +207,8 @@ public class GeoUtils {
 		}
 		//System.out.println("-->H:"+h);
 		return h;
-		*/
-		return getGeoidHOptimized(lon, lat);
+		
+		//return getGeoidHOptimized(lon, lat);
 	}
 	
 	

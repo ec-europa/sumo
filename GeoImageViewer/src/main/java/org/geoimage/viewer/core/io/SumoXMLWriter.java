@@ -227,7 +227,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
-		for (Geometry geom : layer.getGeometriclayer().getGeometries()) {
+		
+		List<Geometry> gg=layer.getGeometriclayer().getGeometries();
+		vdsA.setNrDetections(gg.size());
+		for (Geometry geom : gg) {
 			AttributesGeometry att = layer.getGeometriclayer().getAttributes(geom);
 
 			/**Boat section **/
@@ -448,6 +451,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 			vdsA.setRunVersion("");
 			vdsA.setRunVersionNum(1);
+			
 			
 			vdsA.setLandMaskRead("");
 			

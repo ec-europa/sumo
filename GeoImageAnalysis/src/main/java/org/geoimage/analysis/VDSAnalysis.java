@@ -95,7 +95,10 @@ public class VDSAnalysis{
     		pl.startRowProcesseing(row);
     }
     public Float[] getThresholdsParams(){
-    	return (Float[])thresholdsBandParams.values().toArray(new Float[0]);
+    	return new Float[]{thresholdsBandParams.get("HH"),
+    			thresholdsBandParams.get("HV"),
+    			thresholdsBandParams.get("VH"),
+    			thresholdsBandParams.get("VV")};
     }
      
     public Float getThresholdParam(String polarization){
@@ -335,7 +338,7 @@ public class VDSAnalysis{
                 if (value > thresholdvalues[bandcounter][1]) {
                     pixelabove = true;
                 }
-                // find maximum value amongst bands
+                // find maximum value for each band
                 if (value > maxValue[bandcounter]) {
                     maxValue[bandcounter] = data[bandcounter][boatx + boaty * tilesize];
                 }
