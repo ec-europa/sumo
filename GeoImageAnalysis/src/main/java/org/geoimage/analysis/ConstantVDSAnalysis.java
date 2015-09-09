@@ -15,5 +15,11 @@ public class ConstantVDSAnalysis {
 	  public static final int TILESIZE = 1000;
 	  // Minimum Tile Size for VDS analysis in pixels
 	  public static final int TILESIZEPIXELS = 200;
+	  
+	  // filter size of boats in meters
+	  public static final double FILTERminSIZE = 3;
+	  public static final double FILTERmaxSIZE = 1000;
+	  public static final double filterminSize = FILTERminSIZE;
+	  public static final double filtermaxSize = FILTERmaxSIZE;
 
 }

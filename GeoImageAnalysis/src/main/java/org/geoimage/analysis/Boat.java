@@ -1,5 +1,6 @@
 package org.geoimage.analysis;
 
+
 public class Boat{
 	public final static int AMBIGUITY_TYPE_AZIMUTH=1;
 	public final static int AMBIGUITY_TYPE_ARTEFACTS=2;
@@ -10,19 +11,21 @@ public class Boat{
 	private double length;
 	private double width;
 	private double heading;
-	private int[] maxValue;
-	private double[] tileAvg={0.0,0.0,0.0,0.0};
-	private double[] tileStd={0.0,0.0,0.0,0.0};
-	private double[] threshold={0.0,0.0,0.0,0.0};
-	private double[] significance={0.0,0.0,0.0,0.0};
-	private double[] meanValue={0.0,0.0,0.0,0.0};
-
-
+	private int maxValue;
 	private double band;
 	private double id;
 	private boolean isAmbiguity=false;
 	private int ambiguityType=0;
 	
+	private BoatStatisticMapPolarization statMap;
+
+	public BoatStatisticMapPolarization getStatMap() {
+		return statMap;
+	}
+
+	public void setStatMap(BoatStatisticMapPolarization statMap) {
+		this.statMap = statMap;
+	}
 
 	public Boat(double id,double x,double y,double size,double length,double width,double heading){
 		this.id=id;
@@ -32,10 +35,13 @@ public class Boat{
 		this.length=length;
 		this.width=width;
 		this.heading=heading;
+		
+		statMap=new BoatStatisticMapPolarization();
 	}
 	
 	public Boat(double id,double x,double y,double size,double length,double width,double heading,
-			int value[],double tileAvg,double tileStd,double threshold, int band){
+			int value,double tileAvg,double tileStd,double threshold, int band,String pol){
+		
 		this.id=id;
 		this.posx=x;
 		this.posy=y;
@@ -43,12 +49,15 @@ public class Boat{
 		this.length=length;
 		this.width=width;
 		this.heading=heading;
-		this.maxValue = value;
-        this.tileAvg[band] = tileAvg;
-        this.tileStd[band]=tileStd;
-        this.tileStd[band]=threshold;
+		
+		statMap=new BoatStatisticMapPolarization();
+		statMap.setMaxValue(value,pol);
+		statMap.setTileAvg(tileAvg,pol);
+		statMap.setTileStd(tileStd,pol);
+		statMap.setTreshold(threshold,pol);
         this.band = band;
 	}
+	
 	
 
 	public double getId() {
@@ -62,60 +71,6 @@ public class Boat{
 	}
 
 
-
-	public int[] getMaxValue() {
-		return maxValue;
-	}
-
-
-
-	public void setMaxValue(int[] value) {
-		this.maxValue = value;
-	}
-
-
-
-	public double[] getTileAvg() {
-		return tileAvg;
-	}
-
-
-
-	public void setTileAvg(double tileAvg[]) {
-		this.tileAvg = tileAvg;
-	}
-
-
-
-	public double[] getTileStd() {
-		return tileStd;
-	}
-
-
-
-	public void setTileStd(double[] tileStd) {
-		this.tileStd = tileStd;
-	}
-
-
-
-	public double[] getThreshold() {
-		return threshold;
-	}
-
-
-
-	public void setThreshold(double[] threshold) {
-		this.threshold = threshold;
-	}
-
-	public double[] getSignificance() {
-		return significance;
-	}
-
-	public void setSignificance(double[] significance) {
-		this.significance = significance;
-	}
 
 	public double getBand() {
 		return band;
@@ -183,23 +138,56 @@ public class Boat{
 		this.heading = heading;
 	}
 	
+	public int getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+	
 	public boolean isAmbiguity() {
 		return isAmbiguity;
 	}
-
-
 
 	public void setAmbiguity(boolean isAmbiguity) {
 		this.isAmbiguity = isAmbiguity;
 	}
 
-
-	public double[] getMeanValue() {
-		return meanValue;
+	public int[] getAllMaxValue(){
+		return this.statMap.getAllMaxValue();
 	}
-
-	public void setMeanValue(double[] meanValue) {
-		this.meanValue = meanValue;
+	public double[] getAllTileAvg(){
+		return this.statMap.getAllTileAvg();
 	}
-
+	public double[] getAllTrhesh(){
+		return this.statMap.getAllTrhesh();
+	}
+	public double[] getAllTileStd(){
+		return this.statMap.getAllTileStd();
+	}
+	public double[] getAllSignificance(){
+		return this.statMap.getAllSignificance();
+	}
+	
+	public void setTileAvg(String pol,double value){
+		this.statMap.setTileAvg(value, pol);
+	}
+	public void setTresh(String pol,double value){
+		this.statMap.setTreshold(value, pol);
+	}
+	public void setTileStd(String pol,double value){
+		this.statMap.setTileStd(value, pol);
+	}
+	public void setSignificance(String pol,double value){
+		this.statMap.setSignificance(value, pol);
+	}
+	public void setMaxVal(String pol,int value){
+		this.statMap.setMaxValue(value, pol);
+	}
+	
+	
+	
+	
+	
 }

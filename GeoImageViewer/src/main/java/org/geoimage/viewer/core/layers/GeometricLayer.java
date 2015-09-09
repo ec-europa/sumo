@@ -73,7 +73,7 @@ public class GeometricLayer implements Cloneable{
 	 * @param pixels
 	 * @return
 	 */
-	public GeometricLayer(String name,String type,String timeStampStart,double azimuth, DetectedPixels pixels) {
+	public GeometricLayer(String name,String type,String timeStampStart,double azimuth, Boat[] boats) {
 		this.type=type;
 		this.name=name;
         //GeometricLayer out = new GeometricLayer("point");
@@ -83,18 +83,18 @@ public class GeometricLayer implements Cloneable{
         GeometryFactory gf = new GeometryFactory();
         long runid = System.currentTimeMillis();
         int count=0;
-        for (Boat boat : pixels.getBoats()) {
+        for (Boat boat : boats) {
             AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);//, VDSSchema.types);
             atts.set(VDSSchema.ID, count++);
-            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getMaxValue());
-            atts.set(VDSSchema.TILE_AVERAGE, boat.getTileAvg());
-            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat.getTileStd());
-            atts.set(VDSSchema.THRESHOLD, boat.getThreshold());
+            atts.set(VDSSchema.MAXIMUM_VALUE, boat.getAllMaxValue());
+            atts.set(VDSSchema.TILE_AVERAGE, boat.getAllTileAvg());
+            atts.set(VDSSchema.TILE_STANDARD_DEVIATION, boat.getAllTileStd());
+            atts.set(VDSSchema.THRESHOLD, boat.getAllTrhesh());
             atts.set(VDSSchema.RUN_ID, runid + "");
             atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS, boat.getSize());
             atts.set(VDSSchema.ESTIMATED_LENGTH, boat.getLength());
             atts.set(VDSSchema.ESTIMATED_WIDTH, boat.getWidth());
-            atts.set(VDSSchema.SIGNIFICANCE, boat.getSignificance());//(boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
+            atts.set(VDSSchema.SIGNIFICANCE, boat.getAllSignificance());//(boat.getLength() - boat.getWidth()) / (boat.getWidth() * boat.getHeading()));
             timeStampStart=timeStampStart.replace("Z", "");
             atts.set(VDSSchema.DATE, Timestamp.valueOf(timeStampStart));
             atts.set(VDSSchema.VS, 0);

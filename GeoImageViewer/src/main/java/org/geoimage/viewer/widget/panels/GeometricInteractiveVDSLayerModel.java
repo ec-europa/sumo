@@ -43,7 +43,6 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     
     private Color azimuthGeometrycolor = null;
     private int azimuthGeometrylinewidth;
-    private boolean display=true;
 
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeometricInteractiveVDSLayerModel.class);
     
