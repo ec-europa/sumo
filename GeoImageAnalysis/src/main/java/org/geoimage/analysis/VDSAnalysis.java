@@ -8,12 +8,15 @@ import java.awt.image.Raster;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.geoimage.analysis.DetectedPixels.Pixel;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.util.MathUtils;
+import org.geoimage.analysis.BoatConnectedPixelMap.ConPixel;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.slf4j.Logger;
@@ -112,7 +115,7 @@ public class VDSAnalysis{
      * @throws IOException 
      */
     public DetectedPixels analyse(KDistributionEstimation kdist,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
-        DetectedPixels dpixels = new DetectedPixels(gir);
+        DetectedPixels dpixels = new DetectedPixels(gir.getRangeSpacing(),gir.getAzimuthSpacing());
         String bb=((SarImageReader)gir).getBands()[band];
         float thresholdBand=this.thresholdsBandParams.get(bb);
         
@@ -256,8 +259,18 @@ public class VDSAnalysis{
      * @param kdist
      * @throws IOException
      */
-    public void agglomerateNeighbours(DetectedPixels detPixels,double distance, int tilesize, boolean removelandconnectedpixels, IMask mask, KDistributionEstimation kdist,int... bands)throws IOException {
-        aggregate(detPixels,(int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
+    public Boat[] agglomerateNeighbours(DetectedPixels detPixels,
+    		double distance, 
+    		int tilesize, 
+    		boolean removelandconnectedpixels, 
+    		IMask mask, 
+    		KDistributionEstimation kdist,
+    		String polarization,
+    		int... bands)throws IOException {
+        
+    	aggregate(detPixels,(int) distance, tilesize, removelandconnectedpixels, bands, mask, kdist);
+        // generate statistics and values for boats
+        return computeBoatsAttributesAndStatistics(detPixels.listboatneighbours,polarization);
     }
     
     /**
@@ -273,11 +286,11 @@ public class VDSAnalysis{
     private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, IMask mask, KDistributionEstimation kdist)throws IOException {
         int id = 0;
         // scan through list of detected pixels
-        Pixel pixels[]=detPixels.getAllDetectedPixelsValues().toArray(new Pixel[0]);
+        DetectedPixels.BoatPixel pixels[]=detPixels.getAllDetectedPixelsValues().toArray(new DetectedPixels.BoatPixel[0]);
         int count=0;
         
         //loop on all detected pixel
-        for (Pixel detectedPix: pixels) {
+        for (DetectedPixels.BoatPixel detectedPix: pixels) {
         	count++;
         	
             int xx = detectedPix.x;
@@ -323,7 +336,6 @@ public class VDSAnalysis{
             double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize,row,col, bands, data, kdist);
             
             double[][] thresholdvalues = new double[numberbands][2];
-            int[] maxValue = new int[numberbands];
             boolean pixelabove = false;
             
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
@@ -337,10 +349,6 @@ public class VDSAnalysis{
                 int value = data[bandcounter][boatx + boaty * tilesize];
                 if (value > thresholdvalues[bandcounter][1]) {
                     pixelabove = true;
-                }
-                // find maximum value for each band
-                if (value > maxValue[bandcounter]) {
-                    maxValue[bandcounter] = data[bandcounter][boatx + boaty * tilesize];
                 }
             }
             
@@ -374,15 +382,10 @@ public class VDSAnalysis{
                 	double tileAvg=threshTotal / treshTile[5];
                 	double tileStdDev=treshTile[0] * threshTotal / treshTile[5];
                 	
-                	int idxBand=idxOn4Band(bb);
-                	boatpixel.putMeanValue(idxBand,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
-                	boatpixel.putThresholdValue(idxBand,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
-                	boatpixel.putMaxValue(idxBand, maxValue[iBand]);
-                	
-                	boatpixel.putStDevValue(idxBand,tileStdDev );
-                	double significance=(maxValue[iBand]-tileAvg)/tileStdDev;
-                	boatpixel.putSignificanceValue(idxBand, significance);
-                	boatpixel.putAvgValue(idxBand, tileAvg);
+                	//boatpixel.putMeanValue(bb,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
+                	boatpixel.putThresholdValue(bb,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
+                	boatpixel.putStDevValue(bb,tileStdDev );
+                	boatpixel.putAvgValue(bb, tileAvg);
                 }	
                 detPixels.listboatneighbours.add(boatpixel);
                 
@@ -397,9 +400,6 @@ public class VDSAnalysis{
                 // set flag for touching land
                 boatpixel.setTouchesLandMask(result);
               
-                //if (!result || !removelandconnectedpixels)
-                //	detPixels.listboatneighbours.add(boatpixel);
-                
                 // shift pixels by cornerx and cornery and store in boat list
                 for (int[] pixel : boataggregatedpixels) {
                     boatpixel.addConnectedPixel(pixel[0] + cornerx, pixel[1] + cornery, pixel[2], pixel[3] == 1 ? true : false);
@@ -419,9 +419,122 @@ public class VDSAnalysis{
             }
             detPixels.listboatneighbours.removeAll(toRemove);
         }
-        // generate statistics and values for boats
-        detPixels.computeBoatsAttributesAndStatistics(detPixels.listboatneighbours);
     }
+    
+    /**
+     * AG inserted a test to filter boats by length
+     * @param list
+     */
+    protected Boat[] computeBoatsAttributesAndStatistics(List<BoatConnectedPixelMap> list,String band) {
+    	 List <Boat> boatsTemp=new ArrayList<Boat>();
+    	 
+        // compute attributes and statistics values on boats
+        for (BoatConnectedPixelMap boatPxMap : list) {
+            boatPxMap.computeValues(gir.getRangeSpacing(),gir.getAzimuthSpacing());
+            
+            if(boatPxMap.getBoatlength()>ConstantVDSAnalysis.filterminSize && boatPxMap.getBoatlength()<ConstantVDSAnalysis.filtermaxSize){
+            	
+            	Boat b=new Boat(boatPxMap.getId()						//id
+            			,(int)boatPxMap.getBoatposition()[0]			//x
+            			,(int)boatPxMap.getBoatposition()[1]			//y
+            			,(int)boatPxMap.getBoatnumberofpixels()			//size
+            			,(int)boatPxMap.getBoatlength()					//length
+            			,(int)boatPxMap.getBoatwidth()					//width
+            			,(int)boatPxMap.getBoatheading());				//heading
+
+            	//code for single band
+            	if(!band.equalsIgnoreCase("merge")){
+	            	b.setStatMap(boatPxMap.getStatMap());
+	            	b.setMaxVal(band,boatPxMap.getMaxValue());
+	            	double significance=(boatPxMap.getMaxValue()-boatPxMap.getStatMap().getTileAvg(band))/boatPxMap.getStatMap().getTileStd(band);
+	            	b.setSignificance(band,significance);
+	    			boatsTemp.add(b);
+            	}else{
+            		Collection<ConPixel> pixels=boatPxMap.getConnectedpixels();
+            		List<Integer> pixelValues=new ArrayList<>();
+            		String[] bb=gir.getBands();
+            		for(int i=0;i<bb.length;i++){
+            			for(ConPixel pixel:pixels){
+            				int x=pixel.x;
+            				int y=pixel.y;
+            				int[] val;
+							try {
+								val = gir.read(x, y, 1, 1,i);
+								pixelValues.add(val[0]);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+            			}
+            			int max=Collections.max(pixelValues);
+            			b.setMaxVal(bb[i], max);
+                    	double significance=(max-b.getStatMap().getTileAvg(bb[i]))/b.getStatMap().getTileStd(bb[i]);
+                    	b.setSignificance(bb[i], significance);
+            		}
+            	}	
+            }
+        }
+        boatsTemp=sortBoats(boatsTemp);
+        Boat[] boatArray=boatsTemp.toArray(new Boat[0]);
+        return boatArray;
+    }
+    /**
+     * 
+     * @param boats
+     * @return
+     */
+    private List<Boat> sortBoats(List <Boat> boats){
+    	ArrayList<Boat> sorted=new ArrayList<>();
+    	// sort the boats array by positions to facilitate navigation
+        HashMap<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
+        // list for keys
+        List<Integer> keys = new ArrayList<Integer>();
+
+        // sort the list by position
+        for (Boat boat : boats) {
+        	Integer posyKey=new Integer((int) (boat.getPosy() / 512));
+
+        	// if entry does not exist in the hashtable create it
+            if (hashtableBoat.get(posyKey) == null) {
+                hashtableBoat.put(posyKey, new ArrayList<Boat>());
+                keys.add((int) posyKey);
+            }
+            // sort boat positions by stripes of 512
+            hashtableBoat.get(posyKey).add(boat);
+        }
+
+        // for each stripe sort the boats by columns within each stripe
+        Collections.sort(keys);
+        for (Integer key : keys) {
+            // get the boats in the stripe
+            List<Boat> boatsinStripe = hashtableBoat.get(key);
+            if (boatsinStripe != null) {
+                for (int i = 1; i < boatsinStripe.size(); i++) {
+                    double positionX = boatsinStripe.get(i).getPosx();
+                    for (int j = 0; j < i; j++) {
+                        if (positionX < boatsinStripe.get(j).getPosy()) {
+                            // insert element at the right position
+                            boatsinStripe.add(j, boatsinStripe.get(i));
+                            // remove element from its previous position increased by one position
+                            boatsinStripe.remove(i + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            int id = 0;
+            
+            // add the sorted boats to the table
+            for (Boat boat : boatsinStripe) {
+                // update the ID
+                boat.setId(id++);
+                sorted.add(boat);
+            }
+        }
+        return sorted;
+    }
+    
     
     private int idxOn4Band(String polar){
     	int idx=0;//HH

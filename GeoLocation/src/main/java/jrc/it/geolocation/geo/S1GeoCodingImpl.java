@@ -526,6 +526,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 		    double w[]=new double[nWindowLength];
 		    Arrays.fill(w,1.0/nWindowLength);
 
+		    
+		    
+		    ///TODO: problema con distMinSmooth diverso da Matlab!!! Probabilmente va controllata la convoluzione
 		    double[] vdistSmooth=MathUtil.linearConvolutionMatlabValid(vDistOptimization, w);//MathArrays.convolve(vDistOptimization, w);
 		    double distMinSmooth=vdistSmooth[0];
 		    int idxMinSmoothW=0;

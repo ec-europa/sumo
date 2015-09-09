@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.geoimage.def.SarImageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,20 +24,36 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @author thoorfr
  */
 public class DetectedPixels {
+	public class BoatPixel {
 
-    private Map<String, Pixel> allDetectedPixels = new HashMap<String, Pixel>();
-    private Map<String, Pixel> aggregatedPixels = new HashMap<String, Pixel>();
+	    public int x;
+	    public int y;
+	    public int value;
+	    public double tileAvg;
+	    public double tileStd;
+	    public double threshold;
+	    public int band;
+	    public int id;
+
+	    public BoatPixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
+	        this.x = x;
+	        this.y = y;
+	        this.value = value;
+	        this.tileAvg = tileAvg;
+	        this.tileStd = tileStd;
+	        this.threshold = threshold;
+	        this.band = band;
+	    }
+	}
+    private Map<String, BoatPixel> allDetectedPixels = new HashMap<String, BoatPixel>();
+    private Map<String, BoatPixel> aggregatedPixels = new HashMap<String, BoatPixel>();
     private Map<Integer, List<int[]>> aggregatedBoats = new HashMap<Integer, List<int[]>>();
-    private Boat[] boatArray = null;
+   // private Boat[] boatArray = null;
     // size of the search window in meters
     private final int SEARCHWINDOW = 50;
-    // filter size of boats in meters
-    private final double FILTERminSIZE = 3;
-    private final double FILTERmaxSIZE = 1000;
-    private final double filterminSize = FILTERminSIZE;
-    private final double filtermaxSize = FILTERmaxSIZE;
+   
     private double pixsam;//range
-    private double pixrec;//azimuth
+	private double pixrec;//azimuth
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
     
@@ -47,38 +62,24 @@ public class DetectedPixels {
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
 
     
-    public class Pixel {
+    public double getPixsam() {
+		return pixsam;
+	}
 
-        public int x;
-        public int y;
-        public int value;
-        public double tileAvg;
-        public double tileStd;
-        public double threshold;
-        public int band;
-        public int id;
 
-        public Pixel(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
-            this.x = x;
-            this.y = y;
-            this.value = value;
-            this.tileAvg = tileAvg;
-            this.tileStd = tileStd;
-            this.threshold = threshold;
-            this.band = band;
-        }
-    }
-    
+	public void setPixsam(double pixsam) {
+		this.pixsam = pixsam;
+	}
     
    
     /**
      * 
      * @param gir
      */
-    public DetectedPixels(SarImageReader gir) {
+    public DetectedPixels(double pixsam,double pixrec) {
         // get the image pixel size
-        this.pixsam = gir.getRangeSpacing();
-        this.pixrec = gir.getAzimuthSpacing();
+        this.pixsam = pixsam;
+        this.pixrec = pixrec;
 
         // calculate search window size using pixel size
         if (SEARCHWINDOW > pixsam) {
@@ -101,7 +102,7 @@ public class DetectedPixels {
      * @param band
      */
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
-        Pixel boatPixel = new Pixel(x, y, value, tileAvg, tileStd, threshold, band);
+        BoatPixel boatPixel = new BoatPixel(x, y, value, tileAvg, tileStd, threshold, band);
         StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
         allDetectedPixels.put(point.toString(), boatPixel);
 
@@ -112,10 +113,10 @@ public class DetectedPixels {
      * @param pixels
      */
     public void addAll(DetectedPixels pixels) {
-    	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
-    	Collection<Pixel> boats = BoatPixel.values();
+    	Map<String, BoatPixel> BoatPixel = pixels.getDetectedPixels();
+    	Collection<BoatPixel> boats = BoatPixel.values();
     	StringBuilder point=new StringBuilder();
-        for (Pixel boat:boats) {
+        for (BoatPixel boat:boats) {
         	point.setLength(0);
         	point=point.append(boat.x).append(" ").append(boat.y);
             allDetectedPixels.put(point.toString(), boat);
@@ -127,10 +128,10 @@ public class DetectedPixels {
      */
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
-    	Map<String, Pixel> BoatPixel = pixels.getDetectedPixels();
-    	Collection<Pixel> boats = BoatPixel.values();
+    	Map<String, BoatPixel> BoatPixel = pixels.getDetectedPixels();
+    	Collection<BoatPixel> boats = BoatPixel.values();
     	StringBuilder position = new StringBuilder();
-        for (Pixel boat:boats) {
+        for (BoatPixel boat:boats) {
         	position.setLength(0);
             // do not add if position already exists
             position = position.append(boat.x).append(" ").append(boat.y); 
@@ -141,11 +142,11 @@ public class DetectedPixels {
         }
     }
 
-    public Boat[] getBoats() {
+/*    public Boat[] getBoats() {
         return boatArray;
     }
-
-    private Map<String, Pixel> getDetectedPixels() {
+*/
+    private Map<String, BoatPixel> getDetectedPixels() {
         return allDetectedPixels;
     }
     
@@ -167,7 +168,7 @@ public class DetectedPixels {
             for (int i = xx - this.searchwindowWidth; i < xx + this.searchwindowWidth + 1; i++) {
                 for (int j = yy - this.searchwindowHeight; j < yy + this.searchwindowHeight + 1; j++) {
                 	String key = new StringBuilder().append(i).append(" ").append(j).toString();
-                    Pixel pixel = allDetectedPixels.get(key);
+                    BoatPixel pixel = allDetectedPixels.get(key);
                     if (pixel != null && !(i == xx && j == yy)) {
                         if (aggregatedPixels.get(key) == null) {
                             pixel.id=idd;
@@ -185,6 +186,26 @@ public class DetectedPixels {
             }
         }
     }
+    
+    public void agglomerate() {
+    	BoatPixel[] boats = allDetectedPixels.values().toArray(new BoatPixel[0]);
+        int id = -1;
+        for (BoatPixel boat:boats) {
+            List<int[]> agBoat = new ArrayList<int[]>();
+            int x = boat.x;
+            int y = boat.y;
+            String position = new StringBuilder().append(x).append(" ").append(y).toString();
+            agBoat.add(new int[]{x, y});
+            if (aggregatedPixels.get(position) == null) {
+                boat.id=++id;
+                aggregatedBoats.put(id, agBoat);
+                aggregatedPixels.put(position, boat);
+                aggregate(x, y, id);
+            }
+        }
+    //computeBoatsAttributes();
+    }
+
 
     /**
      * 
@@ -275,29 +296,11 @@ public class DetectedPixels {
         return result;
     }
 
-    public void agglomerate() {
-    	Pixel[] boats = allDetectedPixels.values().toArray(new Pixel[0]);
-        int id = -1;
-        for (Pixel boat:boats) {
-            List<int[]> agBoat = new ArrayList<int[]>();
-            int x = boat.x;
-            int y = boat.y;
-            String position = new StringBuilder().append(x).append(" ").append(y).toString();
-            agBoat.add(new int[]{x, y});
-            if (aggregatedPixels.get(position) == null) {
-                boat.id=++id;
-                aggregatedBoats.put(id, agBoat);
-                aggregatedPixels.put(position, boat);
-                aggregate(x, y, id);
-            }
-        }
-    //computeBoatsAttributes();
-    }
-
+  
     /**
      * 
      */
-    public void computeBoatsAttributes() {
+    public void computeBoatsAttributes(String polarization) {
         Collection<List<int[]>> enumeration = aggregatedBoats.values();
         List <Boat> boatsTemp=new ArrayList<Boat>();
         
@@ -314,78 +317,45 @@ public class DetectedPixels {
                 pixel = it[0];
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
                 String id=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
-                Pixel pixelValue = aggregatedPixels.get(id);
+                BoatPixel pixelValue = aggregatedPixels.get(id);
                 
                 //boatvalues[0]=number of pixel boatvalues[1-2]= posx e posy  boatvalues[3-4-5]=length,width,heading
                 Boat boatValue=new Boat(pixelValue.id, boatvalues[1], boatvalues[2], boatvalues[0],
                 						boatvalues[3], boatvalues[4], boatvalues[5],
-                						new int[]{pixelValue.value},pixelValue.tileAvg,pixelValue.tileStd,
-                						pixelValue.threshold,pixelValue.band);
+                						pixelValue.value,pixelValue.tileAvg,pixelValue.tileStd,
+                						pixelValue.threshold,pixelValue.band,polarization);
   
                 // look for maximum value in agglomerate
                 for (int i=1;i<it.length;i++) {
                     pixel = it[i];
                     String key=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
-                    Pixel pxBoat = aggregatedPixels.get(key);
-                    if (pxBoat.value > boatValue.getMaxValue()[0]) {
-                    	boatValue.setMaxValue(new int[]{pxBoat.value});
+                    BoatPixel pxBoat = aggregatedPixels.get(key);
+                    if (pxBoat.value > boatValue.getMaxValue()) {
+                    	boatValue.setMaxValue(pxBoat.value);
                     }
                 }
                 
                 // check if agglomerated boat has a width or a length larger than filterSize
-                if (boatValue.getLength() > this.filterminSize && boatValue.getWidth() > this.filterminSize) { //AG changed || to &&
+                if (boatValue.getLength() > ConstantVDSAnalysis.filterminSize && boatValue.getWidth() > ConstantVDSAnalysis.filterminSize) { //AG changed || to &&
 
                     // check if agglomerated boat has a width or a length lower than filterSize
-                    if (boatValue.getLength() < this.filtermaxSize && boatValue.getWidth() < this.filtermaxSize) {
+                    if (boatValue.getLength() < ConstantVDSAnalysis.filtermaxSize && boatValue.getWidth() < ConstantVDSAnalysis.filtermaxSize) {
                     	boatsTemp.add(boatValue);
                     }
                 }
             }
         }
         //boatsTemp.clear();
-        boatsTemp=sortBoats(boatsTemp);
-        boatArray=boatsTemp.toArray(new Boat[0]);			
+        //boatsTemp=sortBoats(boatsTemp);
+       // boatArray=boatsTemp.toArray(new Boat[0]);			
     }
 
    
     
     
-    /**
-     * AG inserted a test to filter boats by length
-     * @param list
-     */
-    protected void computeBoatsAttributesAndStatistics(List<BoatConnectedPixelMap> list) {
-    	 List <Boat> boatsTemp=new ArrayList<Boat>();
-    	 
-        // compute attributes and statistics values on boats
-        for (BoatConnectedPixelMap boatPxMap : list) {
-            boatPxMap.computeValues(pixsam,pixrec);
-            if(boatPxMap.getBoatlength()>this.filterminSize && boatPxMap.getBoatlength()<this.filtermaxSize){
-            	
-            	Boat b=new Boat(boatPxMap.getId()						//id
-            			,(int)boatPxMap.getBoatposition()[0]			//x
-            			, (int)boatPxMap.getBoatposition()[1]			//y
-            			,(int)boatPxMap.getBoatnumberofpixels()			//size
-            			,(int)boatPxMap.getBoatlength()					//length
-            			,(int)boatPxMap.getBoatwidth()					//width
-            			,(int)boatPxMap.getBoatheading());				//heading
+   
 
-    			b.setMaxValue(boatPxMap.getMaximumValues());
-            	b.setMeanValue(boatPxMap.getMeanValues());
-            	b.setThreshold(boatPxMap.getThresholdValue());
-            	b.setSignificance(boatPxMap.getSignificanceValues());
-            	b.setTileStd(boatPxMap.getStDevValues());
-            	b.setTileAvg(boatPxMap.getAvgValues());
-
-    			boatsTemp.add(b);
-            }
-        }
-        //boatsTemp.clear();
-        boatsTemp=sortBoats(boatsTemp);
-        boatArray=boatsTemp.toArray(new Boat[0]);
-    }
-
-    public Collection<Pixel> getAllDetectedPixelsValues() {
+    public Collection<BoatPixel> getAllDetectedPixelsValues() {
     	return allDetectedPixels.values();
     }
     
@@ -397,8 +367,8 @@ public class DetectedPixels {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         
-        Pixel[] enumeration = allDetectedPixels.values().toArray(new Pixel[0]);
-        for (Pixel pixel:enumeration) {
+        BoatPixel[] enumeration = allDetectedPixels.values().toArray(new BoatPixel[0]);
+        for (BoatPixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
         }
 
@@ -431,61 +401,8 @@ public class DetectedPixels {
         return out;
     }
     
-    /**
-     * 
-     * @param boats
-     * @return
-     */
-    private List<Boat> sortBoats(List <Boat> boats){
-    	ArrayList<Boat> sorted=new ArrayList<>();
-    	// sort the boats array by positions to facilitate navigation
-        HashMap<Integer, List<Boat>> hashtableBoat = new HashMap<Integer, List<Boat>>();
-        // list for keys
-        List<Integer> keys = new ArrayList<Integer>();
-
-        // sort the list by position
-        for (Boat boat : boats) {
-        	Integer posyKey=new Integer((int) (boat.getPosy() / 512));
-
-        	// if entry does not exist in the hashtable create it
-            if (hashtableBoat.get(posyKey) == null) {
-                hashtableBoat.put(posyKey, new ArrayList<Boat>());
-                keys.add((int) posyKey);
-            }
-            // sort boat positions by stripes of 512
-            hashtableBoat.get(posyKey).add(boat);
-        }
-
-        // for each stripe sort the boats by columns within each stripe
-        Collections.sort(keys);
-        for (Integer key : keys) {
-            // get the boats in the stripe
-            List<Boat> boatsinStripe = hashtableBoat.get(key);
-            if (boatsinStripe != null) {
-                for (int i = 1; i < boatsinStripe.size(); i++) {
-                    double positionX = boatsinStripe.get(i).getPosx();
-                    for (int j = 0; j < i; j++) {
-                        if (positionX < boatsinStripe.get(j).getPosy()) {
-                            // insert element at the right position
-                            boatsinStripe.add(j, boatsinStripe.get(i));
-                            // remove element from its previous position increased by one position
-                            boatsinStripe.remove(i + 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            int id = 0;
-            
-            // add the sorted boats to the table
-            for (Boat boat : boatsinStripe) {
-                // update the ID
-                boat.setId(id++);
-                sorted.add(boat);
-            }
-        }
-        return sorted;
-    }
     
+    
+    
+   
 }
