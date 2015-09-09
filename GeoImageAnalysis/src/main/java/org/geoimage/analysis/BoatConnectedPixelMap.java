@@ -32,6 +32,7 @@ public class BoatConnectedPixelMap {
             public int value;
             public boolean clippedValue=true;
 
+            public ConPixel(){}
             public ConPixel(int x, int y, int value, boolean clipped) {
                 this.x = x;
                 this.y = y;
@@ -180,10 +181,11 @@ public class BoatConnectedPixelMap {
         protected List<int[]> getThresholdclipPixels() {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
-            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
-            for (int[] pixel:pixels) {
-                if (pixel[3] == 1) {
-                	clust.add(pixel);
+            //int[][] pixels = connectedpixels.values().toArray(new int[0][]);
+            ConPixel[] pixels = connectedpixels.values().toArray(new ConPixel[0]);
+            for (ConPixel pixel:pixels) {
+                if (pixel.clippedValue) {
+                	clust.add(new int[]{pixel.x,pixel.y,pixel.value,pixel.clippedValue?1:0});
                 }
             }
 
@@ -193,9 +195,9 @@ public class BoatConnectedPixelMap {
         protected List<int[]> getThresholdaggregatePixels() {
             // clip all values below thresholdclip
             List<int[]> clust = new ArrayList<int[]>();
-            int[][] pixels = connectedpixels.values().toArray(new int[0][]);
-            for (int[] pixel:pixels) {
-                clust.add(pixel);
+            ConPixel[] pixels = connectedpixels.values().toArray(new ConPixel[0]);
+            for (ConPixel pixel:pixels) {
+                clust.add(new int[]{pixel.x,pixel.y,pixel.value,pixel.clippedValue?1:0});
             }
 
             return clust;
