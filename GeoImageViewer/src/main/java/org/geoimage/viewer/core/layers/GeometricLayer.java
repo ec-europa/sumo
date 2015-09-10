@@ -526,13 +526,13 @@ public class GeometricLayer implements Cloneable{
      * @param name
      * @param type
      * @return
-     */
+     *
     public boolean addColumn(String name, String type){
         for(AttributesGeometry att:atts){
             att.addColumn(name, type);
         }
         return true;
-    }
+    }*/
     
     /**
      * 

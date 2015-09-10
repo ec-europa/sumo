@@ -38,17 +38,17 @@ public class S1ArtefactsAmbiguity extends Ambiguity{
 
 	}
 	
-	public S1ArtefactsAmbiguity(Boat[] boatList, SarImageReader image,int band) {
+	public S1ArtefactsAmbiguity(Boat[] boatList, SarImageReader image,int... band) {
     	super(boatList,image,band);
     }
     
-    public S1ArtefactsAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps,int band) {
+    public S1ArtefactsAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps,int... band) {
     	super(boatList,image,windowSize,numSteps,band);
     }
     
 
 	@Override
-	protected void process() {
+	public void process() {
 	    int deltaAzimuth=0;
 	    Sentinel1 s1=(Sentinel1)sumoImage;
         try{

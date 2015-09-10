@@ -19,18 +19,18 @@ public class AzimuthAmbiguity extends Ambiguity{
     private Logger logger= LoggerFactory.getLogger(AzimuthAmbiguity.class);
 
     
-    public AzimuthAmbiguity(Boat[] boatList, SarImageReader image,int band) {
+    public AzimuthAmbiguity(Boat[] boatList, SarImageReader image,int... band) {
     	super(boatList,image,band);
     }
     
-    public AzimuthAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps, int band) {
+    public AzimuthAmbiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps, int... band) {
     	super(boatList,image,windowSize,numSteps,band);
     }
     
   
     
     @Override
-    protected void process() {
+    public void process() {
         int[] deltaAzimuth;
 
         try{

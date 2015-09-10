@@ -145,12 +145,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              DetectedPixels mergePixels = new DetectedPixels(reader.getRangeSpacing(),reader.getAzimuthSpacing());
              DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
              
-             
-             AzimuthAmbiguity[] azimuthAmbiguity =new AzimuthAmbiguity[numberofbands];
-             S1ArtefactsAmbiguity[] arAmbiguity =new S1ArtefactsAmbiguity[numberofbands];
-             
-             List<Geometry>allAmbiguities=new ArrayList<>();
-             
              //landmask name
              String bufferedMaskName="";
              if(bufferedMask!=null && bufferedMask.length>0){
@@ -210,28 +204,28 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, boats),
 	                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
 
-	                     vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, banddetectedpixels[band].getAllDetectedPixels(), display);
+	                     vdsanalysisLayer.addDetectedPixels(banddetectedpixels[band].getAllDetectedPixels(), display);
 	                     
 	                     if (!agglomerationMethodology.startsWith("d")) {
-	                         vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdaggregatePixels(), display);
-	                         vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, banddetectedpixels[band].getThresholdclipPixels(), display);
+	                         vdsanalysisLayer.addThreshAggPixels(banddetectedpixels[band].getThresholdaggregatePixels(), display);
+	                         vdsanalysisLayer.addThresholdPixels(banddetectedpixels[band].getThresholdclipPixels(), display);
 	                     }
 	                     
 	                     //Azimuth Ambiguities
 	                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                     azimuthAmbiguity[band] = new AzimuthAmbiguity(boats, (SarImageReader) gir,band);
-	                     List<Geometry> az=azimuthAmbiguity[band].getAmbiguityboatgeometry();
-                         allAmbiguities.addAll(az);
-	                     vdsanalysisLayer.addGeometries(AZIMUTH_AMBIGUITY_TAG,Color.RED,5, GeometricLayer.POINT, az, display);
-
+	                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,band);
+	                     azimuthAmbiguity.process();
+	                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
+	                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
+	                     
 	                     //Azimuth Ambiguities ONLY FOR S1
 	                     if(gir instanceof Sentinel1){
 	                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
 			                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
-			                     arAmbiguity[band]  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,band);	
-			                     List<Geometry> artefactsA=arAmbiguity[band].getAmbiguityboatgeometry();
-			                     allAmbiguities.addAll(artefactsA);
-			                     vdsanalysisLayer.addGeometries(ARTEFACTS_AMBIGUITY_TAG,Color.CYAN,5, GeometricLayer.POINT, artefactsA, display);
+			                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,band);	
+			                     arAmbiguity.process();
+			                     List<Geometry> artefactsA=arAmbiguity.getAmbiguityboatgeometry();
+			                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
 	                    	 }    
 	                     }    
                          
@@ -240,10 +234,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     }
 	                     //leave display params forced to false
 	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
-	                     
 	
-	                     //if(!Platform.isBatchMode())
-	                    	 //Platform.getLayerManager().addLayer(vdsanalysis);
 	                     notifyLayerReady(vdsanalysisLayer); 
 	                     resultLayers.add(vdsanalysisLayer);
 	                 }
@@ -277,20 +268,36 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = Platform.getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
-	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_AGG_TAG, new Color(0x0000FF), 1, GeometricLayer.POINT, mergePixels.getThresholdaggregatePixels(), display);
-	                     vdsanalysisLayer.addGeometries(TRESHOLD_PIXELS_TAG, new Color(0x00FFFF), 1, GeometricLayer.POINT, mergePixels.getThresholdclipPixels(), display);
+	                     vdsanalysisLayer.addThreshAggPixels(mergePixels.getThresholdaggregatePixels(), display);
+	                     vdsanalysisLayer.addThresholdPixels(mergePixels.getThresholdclipPixels(), display);
 	                 }
-	                 vdsanalysisLayer.addGeometries(DETECTED_PIXELS_TAG, new Color(0x00FF00), 1, GeometricLayer.POINT, mergePixels.getAllDetectedPixels(), display);
+	                 vdsanalysisLayer.addDetectedPixels(mergePixels.getAllDetectedPixels(), display);
 	                 
 	                 if ((bufferedMask != null) && (bufferedMask.length > 0)) {
 	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, bufferedMask[0].getGeometries(), true);
 	                 }
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 	                 
-	                 vdsanalysisLayer.addGeometries(ComplexEditVDSVectorLayer.AMBIGUITY_TAG, Color.RED, 5, GeometricLayer.POINT,allAmbiguities , display);
 	                 
-	                 //if(!Platform.isBatchMode())
-	                 //	 Platform.getLayerManager().addLayer(vdsanalysisLayer);
+	               //Azimuth Ambiguities
+                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,bands);
+                     azimuthAmbiguity.process();
+                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
+                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
+                     
+                     //Azimuth Ambiguities ONLY FOR S1
+                     if(gir instanceof Sentinel1){
+                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
+		                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
+		                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,bands);	
+		                     arAmbiguity.process();
+		                     List<Geometry> artefactsA=arAmbiguity.getAmbiguityboatgeometry();
+		                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
+                    	 }    
+                     }    
+	                 
+
 	                 notifyLayerReady(vdsanalysisLayer);
 	                 resultLayers.add(vdsanalysisLayer);
 	             }

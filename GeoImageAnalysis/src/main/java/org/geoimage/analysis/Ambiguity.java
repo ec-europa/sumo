@@ -85,22 +85,18 @@ public abstract class Ambiguity {
     public static final int Y_WINDOW_SIZE=250; 
     
     private Logger logger= LoggerFactory.getLogger(Ambiguity.class);
-    protected int band=0;
+    protected int band[]=null;
     
-    public Ambiguity(Boat[] boatList, SarImageReader image,int band) {
+    public Ambiguity(Boat[] boatList, SarImageReader image,int... band) {
     	this.boatArray=boatList;
     	this.sumoImage=image;
-    	process();
     	this.band=band;
-    	
     }
     
-    public Ambiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps,int band) {
+    public Ambiguity(Boat[]boatList, SarImageReader image, int windowSize, int numSteps,int... band) {
     	this.boatArray=boatList;
     	this.sumoImage=image;
-    	process();
-        this.band=band;
-        
+    	this.band=band;
     }
     
     /**
@@ -165,6 +161,12 @@ public abstract class Ambiguity {
 	    return highest;
     } 
     
+    protected boolean isAmbiguity(Boat boat,int xPos, int yPos,int deltaAzimuth,double pxSize ,double pySize) throws IOException{
+    	if(band.length==1)
+    		return isAmbiguitySingleBand(boat, xPos, yPos, deltaAzimuth, pxSize, pySize);
+    	else
+    		return isAmbiguityMultipleBand(boat, xPos, yPos, deltaAzimuth, pxSize, pySize);
+    }	
     /**
      * 
      * @param boat
@@ -176,31 +178,63 @@ public abstract class Ambiguity {
      * @return
      * @throws IOException
      */
-    protected boolean isAmbiguity(Boat boat,int xPos, int yPos,int deltaAzimuth,double pxSize ,double pySize) throws IOException{
+    protected boolean isAmbiguitySingleBand(Boat boat,int xPos, int yPos,int deltaAzimuth,double pxSize ,double pySize) throws IOException{
     	Window winUp=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,true);
        // logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
-        int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band);
+        int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band[0]);
         
-        int boatMaxValue=NumberUtils.max(boat.getMaxValue());
+        String bb=sumoImage.getBandName(band[0]);
+        int boatMaxValue=NumberUtils.max(boat.getStatMap().getMaxValue(bb));
         if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
         	return true;
         }else{
         	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,false);
-        	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band);
+        	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band[0]);
         	if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
             	return true;
         	}	
         }	
         return false;
     }
-    
+    /**
+     * 
+     * @param boat
+     * @param xPos
+     * @param yPos
+     * @param deltaAzimuth azimuth correction in pixels
+     * @param pxSize
+     * @param pySize
+     * @return
+     * @throws IOException
+     */
+    protected boolean isAmbiguityMultipleBand(Boat boat,int xPos, int yPos,int deltaAzimuth,double pxSize ,double pySize) throws IOException{
+    	for(int i=0;i<band.length;i++){
+	    	Window winUp=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,true);
+	       // logger.info(new StringBuffer().append("\nSearch Window start from: ").append(winUp.x).append(" ").append(winUp.sizeY).append("  D Azimuth:").append(deltaAzimuth).toString());
+	        int maxVal=getWindowMaxPixelValue(winUp.x,winUp.y,winUp.sizeX,winUp.sizeY,band[i]);
+	        
+	        String bb=sumoImage.getBandName(band[i]);
+	        int boatMaxValue=NumberUtils.max(boat.getStatMap().getMaxValue(bb));
+	        if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
+	        	return true;
+	        }else{
+	        	Window winDown=Window.createWindowFromAzimuth(xPos, yPos, deltaAzimuth,pxSize ,pySize,false);
+	        	maxVal=getWindowMaxPixelValue(winDown.x,winDown.y,winDown.sizeX,winDown.sizeY,band[i]);
+	        	if(maxVal>(boatMaxValue*AZIMUT_FACTOR)){
+	            	return true;
+	        	}	
+	        }	
+	     
+    	}
+    	return false;
+    }
     
     /**
      * 
      * @param boatList
      * @param image
      */
-    protected abstract void process(); 
+    public abstract void process(); 
     
     
     

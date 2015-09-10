@@ -5,14 +5,22 @@
 package org.geoimage.viewer.core.layers.visualization.vectors;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
@@ -24,6 +32,7 @@ import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
@@ -63,7 +72,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         
     }
 	
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String[] thresholds,double enl,int buffer,String landMask,String band) {
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,
+			String[] thresholds,double enl,int buffer,String landMask,String band) {
         super(parent,layername, type, layer);
         this.thresholds=thresholds;
         this.enl=enl;
@@ -85,7 +95,32 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     public boolean anyDections(){
     	return (glayer!=null && !glayer.getGeometries().isEmpty());
     }
-        
+
+    
+    public void addAzimuthAmbiguities(List<Geometry> azimuthGeoms,boolean display){
+    	super.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED,5, GeometricLayer.POINT, azimuthGeoms, display);
+    	
+    }
+    
+    public void addArtefactsAmbiguities(List<Geometry> artGeoms,boolean display){
+    	super.addGeometries(ARTEFACTS_AMBIGUITY_TAG, Color.CYAN,5, GeometricLayer.POINT, artGeoms, display);
+    	
+    }
+    
+    public void addDetectedPixels(List<Geometry> pixgeoms,boolean display){
+    	super.addGeometries(DETECTED_PIXELS_TAG,  new Color(0x00FF00),1, GeometricLayer.POINT, pixgeoms, display);
+    }
+    
+    public void addThreshAggPixels(List<Geometry> threshAgg,boolean display){
+    	super.addGeometries(TRESHOLD_PIXELS_AGG_TAG,  new Color(0x0000FF),1, GeometricLayer.POINT, threshAgg, display);
+    }
+    
+    public void addThresholdPixels(List<Geometry> pixgeoms,boolean display){
+    	super.addGeometries(TRESHOLD_PIXELS_TAG,  new Color(0x00FFFF),1, GeometricLayer.POINT, pixgeoms, display);
+    }
+    
+    
+    
     @Override
     public void save(String file, int formattype, String projection) {
     	GeoImageReader reader=Platform.getCurrentImageReader();//((IImageLayer)super.parent).getImageReader();
@@ -366,12 +401,85 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     protected void performAdd(java.awt.Point imagePosition, OpenGLContext context) {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-            final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
-            atts.set(VDSSchema.SIGNIFICANCE, 100.0d);
+            //final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
+            AttributesGeometry source=glayer.getAttributes().get(0);
+            AttributesGeometry atts=source.emptyCloneAttributes();
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
             ae.setAttributes(atts);
-            glayer.put(selectedGeometry,atts);
             ae.setVisible(true);
+        	HashMap<String,Object>newMapVals=ae.getAttributesValues();
+            atts=setNewAttributeValues(atts,newMapVals);
+            glayer.put(selectedGeometry,atts);
+
+            ae.addWindowListener(new WindowAdapter() {
+            	public void windowClosed(WindowEvent e) {
+                    try {
+                    	/*HashMap<String,Object>newMapVals=ae.getAttributesValues();
+                        atts=setNewAttributeValues(atts,newMapVals);
+                        glayer.put(selectedGeometry,atts);*/
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }                
+                }
+			});
+            
+            
+           
         }
     }
+    
+    
+    
+   protected AttributesGeometry setNewAttributeValues(AttributesGeometry attr,HashMap<String,Object> map){
+    Collection<String>keys=map.keySet();	
+    SimpleDateFormat df=new SimpleDateFormat("dd-MM-YYYY");
+    for (int i = 0; i <keys.size() ; i++) {
+          String att = attr.getSchema()[i];
+          Class type = attr.getType(attr.getSchema()[i]);
+          String val=((String)map.get(att));
+          
+          if (type == Double.class){//type.equals("Double")) {
+        	  attr.set(att, Double.parseDouble(val));
+          } else if (type == String.class){//(type.equals("String")) {
+        	  attr.set(att, val);
+          } else if(type == Date.class){//if (type.equals("Date")) {
+              try {
+            	  attr.set(att, df.parse(val));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+          } else if(type == Timestamp.class){//if (type.equals("Date")) {
+          	Date d;
+				try {
+					d = df.parse(val);
+					attr.set(att, new Timestamp(d.getTime()));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+          } else if (type == Integer.class){
+        	  attr.set(att, Integer.parseInt(val));
+          } else if (type == Boolean.class){
+        	  attr.set(att, Boolean.parseBoolean(val));
+          }else if (type.isArray()){
+        	//TODO: cambiare questa m...a   
+        	int bb=Integer.parseInt(band);
+          	if(type==int[].class){
+          		int[] a=new int[4];
+          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(Platform.getCurrentImageReader().getBandName(bb));
+          		a[id]=Integer.parseInt(val);
+          		attr.set(att,a);
+          	}	
+          	if(type==double[].class){
+          		double[] a=new double[4];
+          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(Platform.getCurrentImageReader().getBandName(bb));
+          		a[id]=Double.parseDouble(val);
+          		attr.set(att,a);
+
+          	}
+          }else{
+        	  attr.set(att, val);
+          }
+      }
+      return attr;
+   }
 };
