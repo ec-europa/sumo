@@ -135,47 +135,7 @@ public class BoatConnectedPixelMap {
             return boatwidth;
         }
 
-        protected int[] getMaximumValues() {
-            return statMap.getAllMaxValue();
-        }
-        
-        protected void putMaxValue(String polarization,int maxValue) {
-            this.statMap.setMaxValue(maxValue, polarization);
-        }
-        
-        protected void putStDevValue(String polarization,double stDev) {
-            this.statMap.setTileStd(stDev, polarization); 
-        }
-        protected double[] getStDevValues() {
-            return statMap.getAllTileStd();
-        }
-        
-        protected void putAvgValue(String polarization,double avgVals) {
-            this.statMap.setTileAvg(avgVals, polarization);
-        }
-        protected double[] getAvgValues() {
-            return statMap.getAllTileAvg();
-        }
-        
-        
-        protected void setStdValue(double stdvalue) {
-            this.stdvalue = stdvalue;
-        }
-
-        protected double getStdValue() {
-            return stdvalue;
-        }
-
-        protected double[] getThresholdValue() {
-            return statMap.getAllTrhesh();
-        }
-        protected void putThresholdValue(String polarization,double thresholdvalue) {
-            this.statMap.setTreshold(thresholdvalue, polarization);
-        }
-
-        protected double getThresholdValueBand(String polarization) {
-            return statMap.getTileThreshold(polarization);
-        }
+       
 
 
         protected List<int[]> getThresholdclipPixels() {

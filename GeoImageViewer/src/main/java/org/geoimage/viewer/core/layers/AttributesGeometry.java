@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.geoimage.viewer.core.layers;
 
 import java.util.HashMap;
@@ -18,12 +14,15 @@ import java.util.Map;
 public class AttributesGeometry implements Cloneable{
 
     private Map<String, Object> attributes;
+    private Map<String, Class>  types;
     private String[] schema;
     
     
     public AttributesGeometry(String[] attributesSchema) {
     	this.schema=attributesSchema;
     	attributes=new HashMap<String, Object>();
+    	types=new HashMap<String, Class>();
+    	types.put("id",Integer.class);
 	}
 
     /**
@@ -33,12 +32,9 @@ public class AttributesGeometry implements Cloneable{
      * @return true if successfully added, false if not or ignored
      */
     public boolean set(String att, Object value) {
-        /*if (!attributes.containsKey(att)) {
-            return false;
-        } else {*/
-            attributes.put(att, value);
-            return true;
-        //}
+       attributes.put(att, value);
+       types.put(att,value.getClass());    
+       return true;
     }
     
     /**
@@ -49,9 +45,26 @@ public class AttributesGeometry implements Cloneable{
     public AttributesGeometry clone(){
         AttributesGeometry out=new AttributesGeometry(schema);
         out.attributes.putAll(attributes);
+        out.types.putAll(types);
         return out;
     }
 
+    /**
+     * 
+     * @param source
+     * @return
+     */
+    public AttributesGeometry emptyCloneAttributes(){
+    	AttributesGeometry out=new AttributesGeometry(getSchema());
+    	for(int i=0;i<schema.length;i++){
+    		if(getValues()!=null){
+    			out.attributes.put(schema[i],null);
+    			out.types.put(schema[i],get(schema[i]).getClass());
+    		}	
+    	}
+    	return out;
+    }
+    
     /**
      *
      * @return the values of the Attributes in the schema order (getSchema())
@@ -65,6 +78,9 @@ public class AttributesGeometry implements Cloneable{
         return out;
     }
 
+    public Class getType(String attr){
+    	return types.get(attr);
+    }
     
 
     /**
@@ -92,7 +108,7 @@ public class AttributesGeometry implements Cloneable{
      * @param name
      * @param type
      * @return
-     */
+     *
     public boolean addColumn(String name, String type){
         String[] temp=new String[schema.length+1];
         System.arraycopy(schema, 0, temp, 0, schema.length);
@@ -100,12 +116,12 @@ public class AttributesGeometry implements Cloneable{
         schema[schema.length-1]=name;
         
         //TODO:remove
-/*        temp=new String[types.length+1];
+//        temp=new String[types.length+1];
         System.arraycopy(types, 0, temp, 0, types.length);
         types=temp;
-        types[types.length-1]=type;*/
+        types[types.length-1]=type;/
         return true;
-    }
+    }*/
     
     /**
      * 
