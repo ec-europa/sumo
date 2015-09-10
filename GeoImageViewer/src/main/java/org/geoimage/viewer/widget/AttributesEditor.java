@@ -12,6 +12,8 @@ package org.geoimage.viewer.widget;
 
 import java.awt.GridLayout;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -42,8 +44,12 @@ public class AttributesEditor extends javax.swing.JDialog {
         for (int i = 0; i < atts.getSchema().length; i++) {
             String att = atts.getSchema()[i];
             Object o=atts.get(att);
-            JLabel l = new JLabel(att + " (" + o.getClass().getName() + "):");
-            JTextField t = new JTextField("" + o);
+            JLabel l = new JLabel(att + " (" + atts.getType(att) + "):");
+            JTextField t = new JTextField();
+            if(o!=null)
+            	t.setText(o.toString());
+            else
+            	t.setText("");
             map.put(att, t);
             paramPanel.add(l);
             paramPanel.add(t);
@@ -113,36 +119,21 @@ public class AttributesEditor extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      Object[] vals=attributes.getValues();	
-      for (int i = 0; i <vals.length ; i++) {
-            String att = attributes.getSchema()[i];
-            if (map.get(att).toString().equals("null")) {
-                continue;
-            }
-            //TODO: check if this works fine after the schema/types changes
-            Object val=vals[i];
-            if (val instanceof Double){//type.equals("Double")) {
-                attributes.set(att, (Double)(map.get(att)));
-            } else if (val instanceof String){//(type.equals("String")) {
-                attributes.set(att, (String)map.get(att));
-            } else if(val instanceof Date){//if (type.equals("Date")) {
-                attributes.set(att, (Date)map.get(att));
-            } else if(val instanceof Timestamp){//if (type.equals("Date")) {
-                attributes.set(att, (Timestamp)map.get(att));
-            } else if (val instanceof Integer){
-                attributes.set(att, (Integer)map.get(att));
-            } else if (val instanceof Boolean){
-                attributes.set(att, (Boolean)map.get(att));
-            }else if (val instanceof double[]){
-                attributes.set(att, (Double)map.get(att));
-            }else{
-            	attributes.set(att, map.get(att).getClass());
-            }
-        }
+	      for(int i=0;i<attributes.getSchema().length;i++){
+	    	  String att=attributes.getSchema()[i];
+	    	  String val=((JTextField)map.get(att)).getText();
+	    	  map.put(att,val);
+	      }	
+      
         setVisible(false);
         this.getOwner().dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    public HashMap<String, Object> getAttributesValues(){
+    	return this.map;
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         setVisible(false);
         this.getOwner().dispose();

@@ -33,6 +33,22 @@ public class PlatformConfiguration {
 			return false;
 		}	
 	}
+	/**
+	 * 
+	 * @param polar
+	 * @return
+	 */
+	public int getIdPolarization(String polar){
+    	int idx=0;//HH
+    	if(polar.equalsIgnoreCase("HV")){
+    		idx=1;
+    	}else if(polar.equalsIgnoreCase("VH")){
+    		idx=2;
+    	}else if(polar.equalsIgnoreCase("VV")){
+    		idx=3;
+    	}
+    	return idx;
+	}
 	
 	
 	public String getCachePrefFolder(){

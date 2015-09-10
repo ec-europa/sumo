@@ -170,7 +170,7 @@ public class Boat{
 		return this.statMap.getAllSignificance();
 	}
 	
-	public void setTileAvg(String pol,double value){
+	/*public void setTileAvg(String pol,double value){
 		this.statMap.setTileAvg(value, pol);
 	}
 	public void setTresh(String pol,double value){
@@ -185,7 +185,7 @@ public class Boat{
 	public void setMaxVal(String pol,int value){
 		this.statMap.setMaxValue(value, pol);
 	}
-	
+	*/
 	
 	
 	

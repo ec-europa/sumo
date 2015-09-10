@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.StatUtils;
-import org.apache.commons.math3.util.MathUtils;
+import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.BoatConnectedPixelMap.ConPixel;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -367,7 +365,8 @@ public class VDSAnalysis{
                 BoatConnectedPixelMap boatpixel = new BoatConnectedPixelMap(cornerx, cornery,xx, yy, id++, data[0][boatx + boaty * tilesize]);
                 
                 for(int iBand=0;iBand<numberbands;iBand++){
-                	String bb=((SarImageReader)gir).getBands()[iBand];
+                	//String bb=((SarImageReader)gir).getBands()[iBand];
+                	String bb=gir.getBandName(bands[iBand]);
                     float thresholdBand=this.thresholdsBandParams.get(bb);
                 	
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
@@ -383,9 +382,9 @@ public class VDSAnalysis{
                 	double tileStdDev=treshTile[0] * threshTotal / treshTile[5];
                 	
                 	//boatpixel.putMeanValue(bb,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
-                	boatpixel.putThresholdValue(bb,(threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4);
-                	boatpixel.putStDevValue(bb,tileStdDev );
-                	boatpixel.putAvgValue(bb, tileAvg);
+                	boatpixel.getStatMap().setTreshold(Precision.round((threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4,3),bb);
+                	boatpixel.getStatMap().setTileStd(Precision.round(tileStdDev,3),bb);
+                	boatpixel.getStatMap().setTileAvg(Precision.round(tileAvg,3),bb);
                 }	
                 detPixels.listboatneighbours.add(boatpixel);
                 
@@ -442,12 +441,12 @@ public class VDSAnalysis{
             			,(int)boatPxMap.getBoatwidth()					//width
             			,(int)boatPxMap.getBoatheading());				//heading
 
+            	b.setStatMap(boatPxMap.getStatMap());
             	//code for single band
             	if(!band.equalsIgnoreCase("merge")){
-	            	b.setStatMap(boatPxMap.getStatMap());
-	            	b.setMaxVal(band,boatPxMap.getMaxValue());
-	            	double significance=(boatPxMap.getMaxValue()-boatPxMap.getStatMap().getTileAvg(band))/boatPxMap.getStatMap().getTileStd(band);
-	            	b.setSignificance(band,significance);
+	            	b.getStatMap().setMaxValue(boatPxMap.getMaxValue(),band);
+	            	double significance=Precision.round((boatPxMap.getMaxValue()-boatPxMap.getStatMap().getTileAvg(band))/boatPxMap.getStatMap().getTileStd(band),3);
+	            	b.getStatMap().setSignificance(significance,band);
 	    			boatsTemp.add(b);
             	}else{
             		Collection<ConPixel> pixels=boatPxMap.getConnectedpixels();
@@ -467,9 +466,10 @@ public class VDSAnalysis{
 							}
             			}
             			int max=Collections.max(pixelValues);
-            			b.setMaxVal(bb[i], max);
-                    	double significance=(max-b.getStatMap().getTileAvg(bb[i]))/b.getStatMap().getTileStd(bb[i]);
-                    	b.setSignificance(bb[i], significance);
+            			b.getStatMap().setMaxValue(max,bb[i]);
+                    	double significance=Precision.round((max-b.getStatMap().getTileAvg(bb[i]))/b.getStatMap().getTileStd(bb[i]),3);
+                    	b.getStatMap().setSignificance( significance,bb[i]);
+                    	boatsTemp.add(b);
             		}
             	}	
             }
@@ -536,17 +536,7 @@ public class VDSAnalysis{
     }
     
     
-    private int idxOn4Band(String polar){
-    	int idx=0;//HH
-    	if(polar.equalsIgnoreCase("HV")){
-    		idx=1;
-    	}else if(polar.equalsIgnoreCase("VH")){
-    		idx=2;
-    	}else if(polar.equalsIgnoreCase("VV")){
-    		idx=3;
-    	}
-    	return idx;
-    }
+   
     
     public int getVerTiles() {
 		return verTiles;
