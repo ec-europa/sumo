@@ -370,15 +370,27 @@ public class VDSAnalysis{
                     float thresholdBand=this.thresholdsBandParams.get(bb);
                 	
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
-                	int[] newdata = gir.readTile(cornerx, cornery, tilesize, tilesize,iBand);
+                	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,iBand);
                 	kdist.estimate(rastermask, newdata);
  
                 	double[] treshTile=kdist.getDetectThresh();
                 	double threshTotal=treshTile[0]+treshTile[1]+treshTile[2]+treshTile[3];
                 	
                 	double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, treshTile);
-
-                	double tileAvg=threshTotal / treshTile[5];
+                	
+                	double tileAvg=0;
+                	int i=0;
+                	int y=-1;
+                	for(;i<data[iBand].length;i++){
+                		int x=i%200;
+                		if(x==0)
+                			y++;
+                		if(rastermask==null||rastermask.getSample(x, y, 0)==0){
+                			tileAvg=tileAvg+data[iBand][i];
+                		}	
+                	}
+                	tileAvg=tileAvg/i;
+                	
                 	double tileStdDev=treshTile[0] * threshTotal / treshTile[5];
                 	
                 	//boatpixel.putMeanValue(bb,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
@@ -450,9 +462,10 @@ public class VDSAnalysis{
 	    			boatsTemp.add(b);
             	}else{
             		Collection<ConPixel> pixels=boatPxMap.getConnectedpixels();
-            		List<Integer> pixelValues=new ArrayList<>();
+            		List<Integer> pixelValues=null;
             		String[] bb=gir.getBands();
             		for(int i=0;i<bb.length;i++){
+            			pixelValues=new ArrayList<>();
             			for(ConPixel pixel:pixels){
             				int x=pixel.x;
             				int y=pixel.y;
@@ -469,8 +482,8 @@ public class VDSAnalysis{
             			b.getStatMap().setMaxValue(max,bb[i]);
                     	double significance=Precision.round((max-b.getStatMap().getTileAvg(bb[i]))/b.getStatMap().getTileStd(bb[i]),3);
                     	b.getStatMap().setSignificance( significance,bb[i]);
-                    	boatsTemp.add(b);
             		}
+            		boatsTemp.add(b);
             	}	
             }
         }

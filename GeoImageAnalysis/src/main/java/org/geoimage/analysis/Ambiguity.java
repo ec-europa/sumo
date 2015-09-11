@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.geoimage.analysis;
 
 import java.io.IOException;
@@ -61,6 +57,9 @@ class Window{
 
 /**
  * @author Pietro Argentieri 
+ *
+ *this class is used to search for ambiguity. Is an abstract class because the method process
+ *depends on which type of ambiguity we are searching.
  *
  */
 public abstract class Ambiguity {

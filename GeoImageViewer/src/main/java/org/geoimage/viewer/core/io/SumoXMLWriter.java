@@ -183,7 +183,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setAlgorithm("k-dist");
 		
 		vdsA.setBuffer(buffer);
-		vdsA.setDetectorVersion("");
+		vdsA.setDetectorVersion("SUMO_1.2.0");
 
 		/// fields removed in the last xml version
 		//add thresholds in order
@@ -209,7 +209,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setRunTime(format.format(new Date()));
 
 		//TODO: modify the gui to add this fields
-		vdsA.setRunVersion("SUMO_1.2.0");
+		vdsA.setRunVersion("");
 		vdsA.setRunVersionNum(1);
 		
 		vdsA.setLandMaskRead(landmask);
@@ -285,7 +285,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			else if(lenght>120)
 				b.setSizeClass("L");
 			
-			//b.setNrPixels();
+			b.setNrPixels((Integer)att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS));
 			//b.setHeadingRange(null);
 			//b.setNoise(null);
 			double hn=Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR);
@@ -443,7 +443,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			vdsA.setAlgorithm("k-dist");
 			
 			vdsA.setBuffer(0);
-			vdsA.setDetectorVersion("");
+			vdsA.setDetectorVersion("SUMO_1.2.0");
 			
 			
 			vdsA.setParameters("");

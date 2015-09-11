@@ -256,12 +256,10 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     // method neighbours used
 	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, tilesize, removelandconnectedpixels, (bufferedMask != null) && (bufferedMask.length != 0) ? bufferedMask[0] : null, kdist,"merge",bands);
 	                 }
-	
 	                 if(stop){
 	                     stop();
 	                	 return;
 	                 }
-	                 
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
 	                		 																	"point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, boats),
