@@ -20,12 +20,12 @@ public class BlackBorderAnalysis {
 	
 	
 	public class TileAnalysis{
-		int[] horizLeftCutOffArray=null;
-		int[] horizRightCutOffArray=null;
-		int[] verTopCutOffArray=null;
-		int[] verBottomOffArray=null;
-		boolean bIsBorder=false;
-		boolean fullAnalysis=false;
+		public int[] horizLeftCutOffArray=null;
+		public int[] horizRightCutOffArray=null;
+		public int[] verTopCutOffArray=null;
+		public int[] verBottomOffArray=null;
+		public boolean bIsBorder=false;
+		public boolean fullAnalysis=false;
 
 	}
 	
@@ -246,7 +246,7 @@ public class BlackBorderAnalysis {
 	
 	/**
 	 * 	
-	 * @param top true start from left margin , false start from right  margin 
+	 * @param top true start from top margin , false start from bottom  margin 
 	 *  analyze first/last numTilesMargin(default 5) tiles
 	 **/
 	public void vertAnalysis(boolean top) {

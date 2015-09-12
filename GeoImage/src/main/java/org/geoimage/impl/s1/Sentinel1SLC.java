@@ -109,8 +109,7 @@ public class Sentinel1SLC extends Sentinel1 {
     }
 
     
-    @Override
-	public int[] read(int x, int y, int w, int h, int band) throws IOException {
+	public int[] readData(int x, int y, int w, int h, int band) throws IOException {
         TIFF tiff=getImage(band);
         
         int length=w*h;
