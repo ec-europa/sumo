@@ -66,7 +66,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         int bufferingDistance = Double.valueOf((Platform.getConfiguration()).getBufferingDistance()).intValue();
         Platform.getMain().addStopListener(this);
         
-        
         if (args.length < 2) {
             return true;
         } else {
@@ -104,7 +103,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                     	thresholds.put("VV", Float.parseFloat(args[bb+1]));
                     }
                 }
-
                 //read the land mask
                 mask = new ArrayList<IMask>();
                 for (ILayer l : Platform.getLayerManager().getChilds(cl)) {
@@ -112,7 +110,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                         mask.add((IMask) l);
                     }
                 }
-
                 //read the buffer distance
                 bufferingDistance = Integer.parseInt(args[numberofbands + 2]);
                 final float ENL = Float.parseFloat(args[numberofbands + 3]);
@@ -125,28 +122,15 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
                 }
                 
-                //for test only
-               /* try {
-					SimpleShapefile.exportGeometriesToShapeFile(bufferedMask[0].getGeometries(),new File("F:\\SumoImgs\\export\\aaa.shp") ,"Polygon");
-				} catch (IOException | SchemaException e) {
-					e.printStackTrace();
-				}*/
-                
                 final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholds);
-                
-                //final String[] thresholds = {""+thrHH,""+thrHV,""+thrVH,""+thrVV};
-                
-               
-                
+
                 proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask,bufferingDistance,0);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);
                 t.setName("VDS_analysis_"+gir.getDisplayName(0));
                 t.start();
-                
             }
-
             return true;
         }
     }

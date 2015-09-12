@@ -162,40 +162,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         return val;
     }
     
-    /**
-	  * 
-	  * @param x
-	  * @param y
-	  * @param width
-	  * @param height
-	  * @param band
-	  * @return
-	  */
-   public int[] read(int x, int y,int w,int h, int band) {
-       Rectangle rect = new Rectangle(x, y, w, h);
-       int data[]=null;
 
-        TIFF tiff=getImage(band);
-        TIFFImageReader reader=tiff.reader;
-        try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
-            tirp.setSourceRegion(rect);
-        	BufferedImage bi=null;
-    		bi=reader.read(0, tirp);
-    		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
-    		short[] b=raster.getData();
-    		data=new int[b.length];
-        	for(int i=0;i<b.length;i++)
-        		data[i]=b[i];
-    		
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(),ex);
-        }finally{
-        	reader.dispose();
-        }
-       
-       return data;
-   }
 
 	
 	public  void preloadLineTile(int y, int length,int band) {

@@ -3,11 +3,16 @@ package org.geoimage.viewer.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.geoimage.analysis.BlackBorderAnalysis;
+import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
+import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +36,32 @@ public class TileAnalysisAction extends AbstractAction{
 		return "Tools/CheckTile";
 	}
 
+	private void runBBAnalysis(){
+		//run the blackborder analysis for the s1 images
+		BlackBorderAnalysis blackBorderAnalysis=null;
+		GeoImageReader gir=Platform.getCurrentImageReader();
+        if(gir instanceof Sentinel1){
+                /*MaskVectorLayer mv=null;
+           	 	if(bufferedMask!=null&&bufferedMask.length>0)
+           	 		mv=(MaskVectorLayer)bufferedMask[0];
+           	 	if(mv!=null)
+           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
+           	 	else*/ 
+           	blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+         } 	
+         if(blackBorderAnalysis!=null){
+        	 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis());
+        	 int numTileH=gir.getWidth()/ConstantVDSAnalysis.TILESIZEPIXELS;
+        	 for(int i=0;i<numTileH;i++){
+        		 TileAnalysis ta=blackBorderAnalysis.getAnalysisTile(0,i);
+        		 String vals=StringUtils.join(ta.verTopCutOffArray,',');
+        		 System.out.println("Tile:"+i+"  -  vals:"+vals);
+        	 }	 
+         }
+         //end blackborder analysis
+	}
+	
+	
 	@Override
 	public boolean execute(String[] args) {
 		try {
@@ -45,6 +76,8 @@ public class TileAnalysisAction extends AbstractAction{
 				
 				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer().getImageReader(),0,null);
 				borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
+			}else if(args.length==0){
+				runBBAnalysis();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
