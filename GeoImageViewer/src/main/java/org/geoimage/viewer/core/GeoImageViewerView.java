@@ -315,7 +315,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   
 	                    	   int val=0;
 	                    	   try{
-	                    	      val=gir.readPixel(p.x, p.y, imgL.getActiveBand());
+	                    		  if(p.x>=0&&p.y>=0&&p.x<gir.getWidth()-1&&p.y<gir.getHeight()-1)
+	                    			  val=gir.readPixel(p.x, p.y, imgL.getActiveBand());
 	                    	   }catch(Exception ex){
 	                    		   val=0;
 	                    	   }

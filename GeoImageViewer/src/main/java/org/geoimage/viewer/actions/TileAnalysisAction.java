@@ -12,7 +12,6 @@ import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,12 +49,17 @@ public class TileAnalysisAction extends AbstractAction{
            	blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
          } 	
          if(blackBorderAnalysis!=null){
-        	 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis());
+        	 int nTile=Platform.getConfiguration().getNumTileBBAnalysis();
+        	 blackBorderAnalysis.analyse(nTile);
         	 int numTileH=gir.getWidth()/ConstantVDSAnalysis.TILESIZEPIXELS;
-        	 for(int i=0;i<numTileH;i++){
-        		 TileAnalysis ta=blackBorderAnalysis.getAnalysisTile(0,i);
-        		 String vals=StringUtils.join(ta.verTopCutOffArray,',');
-        		 System.out.println("Tile:"+i+"  -  vals:"+vals);
+        	 for(int j=0;j<nTile;j++){
+        		 for(int i=0;i<numTileH;i++){
+	        		 TileAnalysis ta=blackBorderAnalysis.getAnalysisTile(j,i);
+	        		 if(ta!=null&&ta.verTopCutOffArray!=null){
+	        			 String vals=StringUtils.join(ta.verTopCutOffArray,',');
+	        			 System.out.println("Tile:"+i+"  -  vals:"+vals);
+	        		 } 
+        		 }	 
         	 }	 
          }
          //end blackborder analysis
@@ -71,9 +75,6 @@ public class TileAnalysisAction extends AbstractAction{
 				String direction="H"; //h= horizontal v=vertical
 				if(args.length==3)
 					direction=args[2];
-				
-				
-				
 				BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageLayer().getImageReader(),0,null);
 				borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 			}else if(args.length==0){
