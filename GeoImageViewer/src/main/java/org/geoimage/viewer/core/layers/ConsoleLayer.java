@@ -115,15 +115,11 @@ public class ConsoleLayer extends GenericLayer {
     						actions.add(action);
     						break;
     					}
-    					
     				}
-    				
     			}
     		}
-    		
     	}
     	return actions;
-    	
     }
 
     public void execute(String[] arguments) {
@@ -167,9 +163,7 @@ public class ConsoleLayer extends GenericLayer {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
         try {
             if (message.startsWith("level")) {
                 for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
@@ -180,7 +174,6 @@ public class ConsoleLayer extends GenericLayer {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 

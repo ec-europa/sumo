@@ -313,10 +313,18 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   double lon=FastMath.floor(geo[0]*100000)/100000;
 	                    	   double lat=FastMath.floor(geo[1]*100000)/100000;
 	                    	   
+	                    	   int val=0;
+	                    	   try{
+	                    	      val=gir.readPixel(p.x, p.y, imgL.getActiveBand());
+	                    	   }catch(Exception ex){
+	                    		   val=0;
+	                    	   }
+	                    	   
 	                    	   StringBuilder infopos=new StringBuilder("  Lon:")
 	                    	   		.append(lon).append("  Lat:")
 	                    	   		.append(lat).append("           x:")
-	                    	   		.append(p.x).append("  y:").append(p.y);
+	                    	   		.append(p.x).append("  y:").append(p.y)
+	                    	   		.append("  value:").append(val);
 	                    	   
 	                    	   positionLabel.setText(infopos.toString());
 	                       }

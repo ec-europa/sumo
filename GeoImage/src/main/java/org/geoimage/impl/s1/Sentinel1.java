@@ -3,6 +3,7 @@ package org.geoimage.impl.s1;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
@@ -344,21 +346,58 @@ public abstract class Sentinel1 extends SarImageReader {
     
     @Override
     public int readPixel(int x, int y,int band) {
-        TIFFImageReadParam t = new TIFFImageReadParam();
+       /* TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=null;
         try {
         	String b=getBandName(band);
         	tiff=tiffImages.get(b);
-            return tiff.getReader().read(0, t).getRGB(x, y);
+            return tiff.getReader().read(0, t).getRGB(0, 0);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }finally{
         }
        
-        return -1;
+        return -1;*/
+    	return read(x,y,1,1,band)[0];
     }
 
+    /**
+	  * 
+	  * @param x
+	  * @param y
+	  * @param width
+	  * @param height
+	  * @param band
+	  * @return
+	  */
+   public int[] read(int x, int y,int w,int h, int band) {
+       Rectangle rect = new Rectangle(x, y, w, h);
+       int data[]=null;
+
+        TIFF tiff=getImage(band);
+        TIFFImageReader reader=tiff.reader;
+        try {
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+            tirp.setSourceRegion(rect);
+        	BufferedImage bi=null;
+    		bi=reader.read(0, tirp);
+    		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
+    		short[] b=raster.getData();
+    		data=new int[b.length];
+        	for(int i=0;i<b.length;i++)
+        		data[i]=b[i];
+    		
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(),ex);
+        }finally{
+        	reader.dispose();
+        }
+       
+       return data;
+   }
+    
+    
     @Override
     public String getBandName(int band) {
         return polarizations.get(band);

@@ -35,11 +35,7 @@ public class Sentinel1GRDTest {
 	@Test
 	public void testRead() {
 		int[] data=null;
-		try {
 			data = reader.read(10, 10, 10,10, 0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		assertNotNull(data);
 		
 	}
