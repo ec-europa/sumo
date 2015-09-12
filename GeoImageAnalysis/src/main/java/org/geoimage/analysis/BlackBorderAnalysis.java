@@ -67,7 +67,6 @@ public class BlackBorderAnalysis {
 				}
 			}
 		}
-		
 		if(tSize==0){
 			//define the size of the tiles
 			tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
@@ -415,8 +414,6 @@ public class BlackBorderAnalysis {
 		int[][] dataRow=new int[nRowSamples][];
 		
 		for(int idxSamples=0;idxSamples<nRowSamples;idxSamples++){
-			
-			
 			//leggo i dati di 1 riga o di 1 colonna
 			if(horizontalAnalysis){
 				//riga di campionamento 1 al 10% al 50% e al 90%
@@ -434,8 +431,6 @@ public class BlackBorderAnalysis {
 			if(!normalDirection){
 				ArrayUtils.reverse(dataRow[idxSamples]);
 			}
-			
-			
 			double sStart=0;
 			double sEnd=0;
 			for(int i=0;i<iNPixExtremes;i++){
@@ -452,7 +447,6 @@ public class BlackBorderAnalysis {
 					&& dAvEtreme2[idxSamples]>=ConstantVDSAnalysis.THRESH_IS_BORDER
 					&& dAvEtreme1[idxSamples]<ConstantVDSAnalysis.THRESH_VALUE_SAFE;
 		}	
-
 		boolean bBtoWBorder=bBtoWBorderV[0]||bBtoWBorderV[1]||bBtoWBorderV[2];
 		boolean bIsBorderV[]={false,false,false};
 		boolean bIsBorder=false;
@@ -474,7 +468,6 @@ public class BlackBorderAnalysis {
 			
 			double dThresValue[]={max1*ConstantVDSAnalysis.THRESH_MAX_FACTOR,max2*ConstantVDSAnalysis.THRESH_MAX_FACTOR,max3*ConstantVDSAnalysis.THRESH_MAX_FACTOR};
 			
-			
 			//loop for each array of samples
 			for(int arraySamplesId=0;arraySamplesId<nRowSamples;arraySamplesId++){
 				boolean stop=false;
@@ -491,7 +484,6 @@ public class BlackBorderAnalysis {
 					}
 				}
 			}
-			
 			//if the difference is too high we calculate the Cutoffpoint for each row
 			if(NumberUtils.max(viCutOffColTemp)-NumberUtils.min(viCutOffColTemp)>3){
 				result.fullAnalysis=true;
@@ -500,17 +492,19 @@ public class BlackBorderAnalysis {
 				int dataTile[]=gir.readTile(iniX, iniY, tileWidth,tileHeight,bandAnalysis);
 				viCutOffColTemp=new int[vCutOffSize];
 
+				int subElements=tileWidth;
 				if(!horizontalAnalysis){
 					dataTile=traspone(dataTile, tileWidth,tileHeight);
+					subElements=tileHeight;
 				}
 				
 				//loop on each element of the data readed if stop is false
 				for(int arraySamplesId=0;arraySamplesId<vCutOffSize;arraySamplesId++){
 					try{
 						//calcolo la posizione sul vettore come se fosse una matrice
-						int posStart=arraySamplesId*tileWidth;
+						int posStart=arraySamplesId*subElements;
 						//leggo la riga del tile (il tile e' mem come array)
-						int[] singleRow=ArrayUtils.subarray(dataTile,posStart,posStart+tileWidth);
+						int[] singleRow=ArrayUtils.subarray(dataTile,posStart,posStart+subElements);
 						
 						if(!normalDirection){
 							ArrayUtils.reverse(singleRow);
@@ -531,7 +525,7 @@ public class BlackBorderAnalysis {
 										if(normalDirection){
 											viCutOffColTemp[arraySamplesId]=idCutOffElement;
 										}else{
-											viCutOffColTemp[arraySamplesId]=tileWidth-idCutOffElement;
+											viCutOffColTemp[arraySamplesId]=subElements-idCutOffElement;
 										}	
 										stop=true;
 								}
