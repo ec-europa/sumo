@@ -18,7 +18,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.geoimage.analysis.Boat;
-import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
@@ -65,6 +64,31 @@ public class GeometricLayer implements Cloneable{
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	
+	/**
+	 * 
+	 * @param timeStampStart
+	 * @param azimuth
+	 * @param pixels
+	 * @return
+	 */
+	public GeometricLayer(String name,String type,List<Coordinate>geoms) {
+		this.type=type;
+		this.name=name;
+
+		this.geoms=new ArrayList<>();
+		atts=new ArrayList<>();
+        GeometryFactory gf = new GeometryFactory();
+        for(Coordinate c:geoms){
+        	AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
+        	att.set("x",c.x);
+        	att.set("y",c.y);
+        	Geometry gg=gf.createPoint(c);
+        	put(gg, att);
+        }
+    }
+	
 	
 	/**
 	 * 
@@ -465,8 +489,10 @@ public class GeometricLayer implements Cloneable{
      * Clears all the data but keep schema and geometric types
      */
     public void clear(){
-        geoms.clear();
-        atts.clear();
+    	if(geoms!=null)
+    		geoms.clear();
+        if(atts!=null)
+        	atts.clear();
     }
     
     /**

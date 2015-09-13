@@ -76,12 +76,12 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	        if (glayer != null) {
 	        	List<Geometry> geomList=glayer.getGeometries();
 
-	        	if (!threshable) {
+	        	if (!threshable&&geomList!=null) {
 	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
 	                    switch (this.displaysymbol) {
 	                        case point: {
 	                        	GL2ShapesRender.renderPolygons(context, width, height, geomList, this.renderWidth, color);
-	                            if (selectedGeometry != null) {
+	                        	if (selectedGeometry != null) {
 	                            	GL2ShapesRender.renderPoint(context, width, height, selectedGeometry.getCoordinate(), this.renderWidth, color);
 	                            }
 	                        }
@@ -166,7 +166,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                    }
 	                }
 	            } else {
-	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)) {
+	                if (getType().equalsIgnoreCase(GeometricLayer.POINT)&&geomList!=null) {
 	                	List<Geometry> toVisualize=new ArrayList<>();
                     	for (Geometry temp : geomList) {
                             if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {

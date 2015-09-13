@@ -12,8 +12,13 @@ import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 public class TileAnalysisAction extends AbstractAction{
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
@@ -51,7 +56,7 @@ public class TileAnalysisAction extends AbstractAction{
          if(blackBorderAnalysis!=null){
         	 int nTile=Platform.getConfiguration().getNumTileBBAnalysis();
         	 blackBorderAnalysis.analyse(nTile);
-        	 int numTileH=gir.getWidth()/ConstantVDSAnalysis.TILESIZEPIXELS;
+        	 /*int numTileH=gir.getWidth()/ConstantVDSAnalysis.TILESIZEPIXELS;
         	 for(int j=0;j<nTile;j++){
         		 for(int i=0;i<numTileH;i++){
 	        		 TileAnalysis ta=blackBorderAnalysis.getAnalysisTile(j,i);
@@ -60,7 +65,18 @@ public class TileAnalysisAction extends AbstractAction{
 	        			 System.out.println("Tile:"+i+"  -  vals:"+vals);
 	        		 } 
         		 }	 
-        	 }	 
+        	 }	*/ 
+        	 
+        	 List<Coordinate>cc=blackBorderAnalysis.getCoordinatesThresholds();
+        	 GeometricLayer bbanal=new GeometricLayer("BBAnalysis",
+        			 GeometricLayer.POINT,
+        			 cc
+        			 );
+        	 LayerManager.addLayerInThread(
+        			 GeometricLayer.POINT, 
+        			 bbanal, 
+        			 Platform.getCurrentImageLayer());
+        	 
          }
          //end blackborder analysis
 	}
