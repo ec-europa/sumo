@@ -1,8 +1,10 @@
 package org.geoimage.analysis;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -139,13 +141,62 @@ public class BlackBorderAnalysis {
 	            	break;
 	            }
  	        }
-
-
 		}
-		
 		return isOnLand;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Coordinate> getCoordinatesThresholds(){
+		Set<String> keys=mapAnalysis.keySet();
+		List<Coordinate>allTrhesholds=new ArrayList<>();
+		for(String k:keys){
+			String[] val=k.split("_");
+			int rowTile=Integer.parseInt(val[0]);
+			int colTile=Integer.parseInt(val[1]);
+			TileAnalysis ta=mapAnalysis.get(k);
+			int[]hLeftCut=ta.horizLeftCutOffArray;
+			int[]hRightCut=ta.horizRightCutOffArray;
+			int[]vTopCut=ta.verTopCutOffArray;
+			int[]vBottCut=ta.verBottomOffArray;
+			if(hLeftCut!=null){
+				for(int i=0;i<hLeftCut.length;i++){
+					int x=colTile*sizeX+hLeftCut[i];
+					int y=rowTile*sizeY+i;
+					Coordinate c=new Coordinate(x,y);
+					allTrhesholds.add(c);
+				}
+			}
+			if(hRightCut!=null){
+				for(int i=0;i<hRightCut.length;i++){
+					int x=colTile*sizeX+hRightCut[i];
+					int y=rowTile*sizeY+i;
+					Coordinate c=new Coordinate(x,y);
+					allTrhesholds.add(c);
+				}
+			}
+			if(vTopCut!=null){
+				for(int i=0;i<vTopCut.length;i++){
+					int x=colTile*sizeX+i;
+					int y=rowTile*sizeY+vTopCut[i];
+					Coordinate c=new Coordinate(x,y);
+					allTrhesholds.add(c);
+				}
+
+			}
+			if(vBottCut!=null){
+				for(int i=0;i<vBottCut.length;i++){
+					int x=colTile*sizeX+i;
+					int y=rowTile*sizeY+vBottCut[i];
+					Coordinate c=new Coordinate(x,y);
+					allTrhesholds.add(c);
+				}
+
+			}
+		}
+		return allTrhesholds;
+	}
 	
 	
 	/**
