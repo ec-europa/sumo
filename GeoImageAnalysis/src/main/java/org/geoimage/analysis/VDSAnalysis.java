@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.math3.util.Precision;
+import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.analysis.BoatConnectedPixelMap.ConPixel;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
@@ -37,41 +38,99 @@ public class VDSAnalysis{
     private DetectedPixels pixels;
     private IMask[] mask;
     private int tileSize;
-    private int verTiles=0;
-    private int horTiles=0;
-    private final double MIN_TRESH_FOR_ANALYSIS=0.7;
+    private int verTilesImage=0;
+    private int horTilesImage=0;
+    
+	private final double MIN_TRESH_FOR_ANALYSIS=0.7;
     
     private List<ProgressListener>progressListener=null;
     private Logger logger= LoggerFactory.getLogger(VDSAnalysis.class);
+    private BlackBorderAnalysis blackBorderAnalysis;
+    
+    private boolean analyseSingleTile=false;
+    private int xTileToAnalyze=0;
+    private int yTileToAnalyze=0;
+	
+	
+	public boolean isAnalyseSingleTile() {
+		return analyseSingleTile;
+	}
+	public void setAnalyseSingleTile(boolean analyseSingleTile) {
+		this.analyseSingleTile = analyseSingleTile;
+	}
+	public int getxTileToAnalyze() {
+		return xTileToAnalyze;
+	}
+	public void setxTileToAnalyze(int xTileToAnalyze) {
+		this.xTileToAnalyze = xTileToAnalyze;
+	}
+	public int getyTileToAnalyze() {
+		return yTileToAnalyze;
+	}
+	public void setyTileToAnalyze(int yTileToAnalyze) {
+		this.yTileToAnalyze = yTileToAnalyze;
+	}
+	public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, Float[] trhreshold ) {
+		HashMap<String,Float>thresholdsBandParams=new HashMap<>();
+		thresholdsBandParams.put("HH",trhreshold[0]);
+		thresholdsBandParams.put("HV",trhreshold[1]);
+		thresholdsBandParams.put("VH",trhreshold[2]);
+		thresholdsBandParams.put("VV",trhreshold[3]);
+		this.thresholdsBandParams=thresholdsBandParams;
+        this.gir = gir;
+        this.mask = mask;
+        init(enlf);
+	}
+	 public BlackBorderAnalysis getBlackBorderAnalysis() {
+			return blackBorderAnalysis;
+	}
 
-    /**
-     *
-     * @param gir
-     * @param mask
-     * @param enlf
-     * @param thresholdHH
-     * @param thresholdHV
-     * @param thresholdVH
-     * @param thresholdVV
-     * @param progressBar
-     */
-    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, Map<String, Float> trhresholdMap) {
-        this.enl = "" + (int) (enlf * 10);
+	public void setBlackBorderAnalysis(BlackBorderAnalysis blackBorderAnalysis) {
+		this.blackBorderAnalysis = blackBorderAnalysis;
+	}
+	
+	public int getHorTiles() {
+		return horTilesImage;
+	}
+	public void setHorTiles(int horTiles) {
+		this.horTilesImage = horTiles;
+	}
+	
+	 public int getVerTiles() {
+			return verTilesImage;
+		}
+
+		public void setVerTiles(int verTiles) {
+			this.verTilesImage = verTiles;
+		}
+	/**
+	 * 
+	 * @param gir
+	 * @param mask
+	 * @param enlf
+	 * @param trhresholdMap
+	 */
+    public VDSAnalysis(SarImageReader gir, IMask[] mask, float enlf, Map<String, Float> trhresholdMap ) {
+    	this.thresholdsBandParams=trhresholdMap;
+        this.gir = gir;
+        this.mask = mask;
+        init(enlf);
+    }
+    private void init(float enlf ){
+    	this.enl = "" + (int) (enlf * 10);
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
         }
-                
-        this.thresholdsBandParams=trhresholdMap;
-        this.gir = gir;
-        this.mask = mask;
         this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
         if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
         
-        this.verTiles = gir.getHeight() / this.tileSize;
-        this.horTiles = gir.getWidth() / this.tileSize;
+        this.horTilesImage = gir.getHeight() / this.tileSize;
+        this.verTilesImage = gir.getWidth() / this.tileSize;
+        
         
         progressListener=new ArrayList<ProgressListener>();
     }
+    
 
     public DetectedPixels getPixels() {
         return pixels;
@@ -112,14 +171,14 @@ public class VDSAnalysis{
      * @return
      * @throws IOException 
      */
-    public DetectedPixels analyse(KDistributionEstimation kdist,int band, BlackBorderAnalysis blackBorderAnalysis ) throws IOException {
+    public DetectedPixels analyse(KDistributionEstimation kdist,int band) throws IOException {
         DetectedPixels dpixels = new DetectedPixels(gir.getRangeSpacing(),gir.getAzimuthSpacing());
         String bb=((SarImageReader)gir).getBands()[band];
         float thresholdBand=this.thresholdsBandParams.get(bb);
         
         // the real size of tiles
-        int sizeX = gir.getWidth() / horTiles;
-        int sizeY = gir.getHeight() / verTiles;
+        int sizeX = gir.getWidth() / horTilesImage;
+        int sizeY = gir.getHeight() / verTilesImage;
         
         
         int xLeftTile=0;
@@ -127,16 +186,21 @@ public class VDSAnalysis{
         int yTopTile=0;
         int yBottomTile=0;
         
-        double[][][] tileStat = new double[verTiles][horTiles][5];
+        double[][][] tileStat = new double[verTilesImage][horTilesImage][5];
 
         int dy=0;
         
-        for (int rowIndex = 0; rowIndex < verTiles; rowIndex++) {
+        for (int rowIndex = 0; rowIndex < verTilesImage; rowIndex++) {
+        	if(isAnalyseSingleTile()){
+        		if(rowIndex!=yTileToAnalyze)
+        			continue;
+        	}
+        	
             notifyStartNextRowProcessing(rowIndex);
 
-        	if(rowIndex==verTiles-1){
+        	if(rowIndex==verTilesImage-1){
             	//the last tiles have more pixels so we need to calculate the real size
-            	dy=gir.getHeight()-((verTiles-1)*sizeY)-sizeY;
+            	dy=gir.getHeight()-((verTilesImage-1)*sizeY)-sizeY;
             }
             
             xLeftTile = 0;				 
@@ -146,10 +210,14 @@ public class VDSAnalysis{
             
             int dx=0;
             
-            for (int colIndex = 0; colIndex < horTiles; colIndex++) {
-            	if(colIndex==horTiles-1){
+            for (int colIndex = 0; colIndex < horTilesImage; colIndex++) {
+            	if(isAnalyseSingleTile()){
+            		if(colIndex!=xTileToAnalyze)
+            			continue;
+            	}
+            	if(colIndex==horTilesImage-1){
             		//the last tiles have more pixels so we need to calculate the real size
-                	dx=(gir.getWidth()-((horTiles-1)*sizeX))-sizeX;
+                	dx=(gir.getWidth()-((horTilesImage-1)*sizeX))-sizeX;
                 }
             	
                 xLeftTile = colIndex * sizeX;   //x start tile 
@@ -191,7 +259,10 @@ public class VDSAnalysis{
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
                 if(containsMinPixelValid||rastermask==null){
                     // if there are pixels to estimate, calculate statistics using the mask
-                    kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,rowIndex,colIndex,band);
+                	TileAnalysis bbAnalysis=null;
+            		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(rowIndex,colIndex);
+
+                    kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,band,bbAnalysis);
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     
                     kdist.estimate(rastermask,data);
@@ -241,11 +312,125 @@ public class VDSAnalysis{
                     }
 	            }
 	        }
-            System.out.println(rowIndex + "/" + verTiles);
+            System.out.println(rowIndex + "/" + verTilesImage);
         }
         System.out.println("Detected Pixels Total :"+dpixels.getAllDetectedPixels().size());
         return dpixels;
     }
+    
+    /*
+    public DetectedPixels analyseSingleTile(int colTile, int rowTile,int band,float enl ) throws IOException {
+    	 // the real size of tiles
+        int sizeX = gir.getWidth() / horTiles;
+        int sizeY = gir.getHeight() / verTiles;
+        int x=colTile*sizeX;
+        int y=rowTile*sizeY;
+        KDistributionEstimation k=new KDistributionEstimation(enl);
+    	return analyseArea(x,y, sizeX,sizeY,k, band );
+    	
+    }
+    
+    public DetectedPixels analyseArea(int xLeftTile, int yTopTile, int width,int heigth,
+    		KDistributionEstimation kdist,int band ) throws IOException {
+    	
+        DetectedPixels dpixels = new DetectedPixels(gir.getRangeSpacing(),gir.getAzimuthSpacing());
+        String bb=((SarImageReader)gir).getBands()[band];
+        float thresholdBand=this.thresholdsBandParams.get(bb);
+        
+        // the real size of tiles
+        int sizeX = width;
+        int sizeY = heigth;
+        
+        
+        int xRightTile=xLeftTile+width;
+        int yBottomTile=yTopTile+heigth;
+        
+
+        if(xRightTile<gir.getWidth()&&yBottomTile<gir.getHeight()){
+                Raster rastermask =null;
+                boolean containsMinPixelValid=false;
+                
+                if (mask == null || mask.length == 0 || mask[0] == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
+                	rastermask =null;
+                }else{
+                	// compute different statistics if the tile intersects the land mask
+                    // check if there is sea pixels in the tile area
+                    if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
+                        return null;
+                    
+                    // create raster mask //dx and dy are for tile on the border that have different dimensions
+                    rastermask = (mask[0].rasterize(xLeftTile, yTopTile, width, heigth, -xLeftTile, -yTopTile, 1.0)).getData();
+
+                    //Read pixels for the area and check there are enough sea pixels
+                    int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                    int inValidPixelCount = 0;
+                    
+                    for(int count = 0; count < maskdata.length; count++)
+                        inValidPixelCount += maskdata[count];
+                    
+                    double oldInValidPixelCount=inValidPixelCount;
+                    containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                    //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
+                    if(!containsMinPixelValid){
+                    	//try to read more pixels (out of the current tile) to have more pixels for the statistics
+                    	rastermask = (mask[0].rasterize(xLeftTile-30, yTopTile-30, sizeX+30, sizeY+30, -xLeftTile, -yTopTile, 1.0)).getData();
+                        //Read pixels for the area and check there are enough sea pixels
+                        maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                        
+                        containsMinPixelValid=((double)oldInValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                    }
+                }	
+               
+                if(containsMinPixelValid||rastermask==null){
+                    // if there are pixels to estimate, calculate statistics using the mask
+                    kdist.setImageData(xLeftTile, yTopTile,sizeX, sizeY,band,null);
+                    int[] data = gir.readTile(xLeftTile, yTopTile, sizeX, sizeY,band);
+                    kdist.estimate(rastermask,data);
+                    
+                    double[] thresh = kdist.getDetectThresh();
+                    double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
+
+                    for (int k = 0; k < (sizeY); k++) {
+                        for (int h = 0; h < (sizeX); h++) {
+                            // check pixel is in the sea
+                            if(rastermask==null||(rastermask.getSample(h, k, 0) == 0)){
+                                int subwindow = 1;
+                                if (h < (sizeX) / 2) {
+                                    if (k < (sizeY) / 2) {
+                                        subwindow = 1;
+                                    } else {
+                                        subwindow = 3;
+                                    }
+                                } else {
+                                    if (k < (sizeY)/ 2) {
+                                        subwindow = 2;
+                                    } else {
+                                        subwindow = 4;
+                                    }
+                                }
+                                int pix = data[k * (sizeX) + h];
+                                // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
+                                if (pix > threshWindowsVals[subwindow-1]) {
+                                	double tileAvg=thresh[subwindow] / thresh[5];
+                                	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
+
+                                	dpixels.add(h + xLeftTile,//x
+                                    		    k + yTopTile, //y
+                                    		    pix,//pixelvalue 
+                                    		    tileAvg,
+                                    		    tileStdDev,//tile standard deviation normalized 
+                                    		    thresh[5], band);
+                                }
+                            }
+                        }
+                    }
+	            }
+	        }
+        System.out.println("Detected Pixels Total :"+dpixels.getAllDetectedPixels().size());
+        return dpixels;
+    }
+    */
+    
 
     /**
      * 
@@ -329,9 +514,14 @@ public class VDSAnalysis{
         	}
             
             // calculate thresholds
-            int row=(cornery+1)/this.verTiles;
-        	int col=(cornerx+1)/this.horTiles;
-            double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize,row,col, bands, data, kdist);
+            int row=(cornery+1)/this.verTilesImage;
+        	int col=(cornerx+1)/this.horTilesImage;
+        	
+        	TileAnalysis ta=null;
+        	if(this.blackBorderAnalysis!=null)
+        		ta=this.blackBorderAnalysis.getAnalysisTile(row, col);
+            
+        	double[][] statistics = AnalysisUtil.calculateImagemapStatistics(cornerx, cornery, tilesize, tilesize,row,col, bands, data, kdist,ta);
             
             double[][] thresholdvalues = new double[numberbands][2];
             boolean pixelabove = false;
@@ -368,8 +558,11 @@ public class VDSAnalysis{
                 	//String bb=((SarImageReader)gir).getBands()[iBand];
                 	String bb=gir.getBandName(bands[iBand]);
                     float thresholdBand=this.thresholdsBandParams.get(bb);
+                    
+                    TileAnalysis bbAnalysis=null;
+            		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(row,col);
                 	
-                	kdist.setImageData(cornerx, cornery, tilesize, tilesize, row, col, iBand);
+                	kdist.setImageData(cornerx, cornery, tilesize, tilesize, iBand,bbAnalysis);
                 	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,iBand);
                 	kdist.estimate(rastermask, newdata);
  
@@ -547,20 +740,10 @@ public class VDSAnalysis{
         }
         return sorted;
     }
-    
-    
    
     
-    public int getVerTiles() {
-		return verTiles;
-	}
+   
 
-	public void setVerTiles(int verTiles) {
-		this.verTiles = verTiles;
-	}
-
-	
-    
     /**
      * 
      * @param xLeftTile
@@ -577,7 +760,6 @@ public class VDSAnalysis{
             if (m.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
                 return true;
             }
-
         }
         return false;
     }
@@ -602,12 +784,27 @@ public class VDSAnalysis{
         }
         return false;
     }
-
   
     public int getTileSize() {
 		return tileSize;
 	}
-
-	
     
+    
+    public void dispose(){
+    	try {
+			if(blackBorderAnalysis!=null){
+	    		blackBorderAnalysis=null;
+	    	}
+	    	if(this.progressListener.size()>0){
+	    		this.progressListener.clear();
+	    		this.progressListener=null;
+	    	}
+	    	if(this.pixels!=null)
+	    		this.pixels=null;
+	    	if(this.gir!=null)
+	    		gir=null;
+		} catch (Throwable e) {
+			logger.error(e.getMessage());
+		}
+    }
 }
