@@ -1,11 +1,5 @@
 package org.geoimage.viewer.core.analysisproc;
 
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.ARTEFACTS_AMBIGUITY_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.AZIMUTH_AMBIGUITY_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.DETECTED_PIXELS_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_AGG_TAG;
-import static org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.TRESHOLD_PIXELS_TAG;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,12 +129,14 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              }
              //end blackborder analysis
              
+             analysis.setBlackBorderAnalysis(blackBorderAnalysis);
+             
              // list of bands
              int numberofbands = gir.getNBand();
              int[] bands = new int[numberofbands];
 
              // create K distribution
-             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,blackBorderAnalysis);
+             final KDistributionEstimation kdist = new KDistributionEstimation(ENL);
              
              DetectedPixels mergePixels = new DetectedPixels(reader.getRangeSpacing(),reader.getAzimuthSpacing());
              DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
@@ -163,7 +159,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	            	 analysis.addProgressListener(this);
 
 	            	 //identify probably target
-	            	 banddetectedpixels[band]=analysis.analyse(kdist,band,blackBorderAnalysis);
+	            	 banddetectedpixels[band]=analysis.analyse(kdist,band);
 	            	 //banddetectedpixels[band]=analysis.getPixels();
 	            	 
 	            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
@@ -294,8 +290,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
                     	 }    
                      }    
-	                 
-
 	                 notifyLayerReady(vdsanalysisLayer);
 	                 resultLayers.add(vdsanalysisLayer);
 	             }
@@ -324,63 +318,57 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		public void removeProcessListener(VDSAnalysisProcessListener listener){
 			this.listeners.remove(listener);
 		}
-
 		public void removeAllProcessListener(){
 			this.listeners.clear();
 		}
-		
 		public void notifyEndProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.endAnalysis();
 			}
 		} 
-		 
 		public void notifyStartProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.startAnalysis();
 			}
 		} 
-		
 		public void notifyVDSAnalysis(String message,int maxSteps){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.performVDSAnalysis(message,maxSteps);
 			}
 		}
-		
 		public void notifyAgglomerating(String message){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.agglomerating(message);
 			}
 		}
-		
 		public void notifyLayerReady(ILayer layer){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.layerReady(layer);
 			}
 		}
-		
 		public void notifyAnalysisBand(String message){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.startAnalysisBand(message);
 			}
 		}
-		
 		public void notifyCalcAzimuth(String message){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.calcAzimuthAmbiguity(message);
 			}
 		}
-
 		@Override
 		public void startRowProcesseing(int step) {
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.nextVDSAnalysisStep(step);
 			}
 		}
-
 		@Override
 		public void endRowProcesseing(int row) {
 		}
 		
+		
+		public void dispose(){
+			analysis.dispose();
+		}
      }
 

@@ -218,7 +218,13 @@ public class DetectedPixels {
      * @param rastermask
      * @return
      */
-    public boolean checkNeighbours(List<int[]> pixels, int[] imagemap, int[][] imagedata, double[][] thresholdaggregate, int[] position, int neighboursdistance, int tilesize, Raster rastermask) {
+    public boolean checkNeighbours(List<int[]> pixels, int[] imagemap, 
+    		int[][] imagedata, 
+    		double[][] thresholdaggregate, 
+    		int[] position, int neighboursdistance, 
+    		int tilesize, 
+    		Raster rastermask) {
+    	
         int numberofbands = thresholdaggregate.length;
         // touches land flag
         boolean result = false;
