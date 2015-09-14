@@ -1,5 +1,7 @@
 package org.geoimage.analysis;
 
+import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
+
 public class AnalysisUtil {
 
 	
@@ -32,12 +34,23 @@ public class AnalysisUtil {
      * @param kdist
      * @return
      */
-    public static double[][] calculateImagemapStatistics(int cornerx, int cornery, int width,int height,int row,int col, int[] bands,int data[][], KDistributionEstimation kdist) {
+    public static double[][] calculateImagemapStatistics(
+    		int cornerx, 
+    		int cornery, 
+    		int width,
+    		int height,
+    		int row,
+    		int col, 
+    		int[] bands,
+    		int data[][], 
+    		KDistributionEstimation kdist,TileAnalysis ta) {
+    	
+    	
         int numberofbands = bands.length;
         double[][] imagestat = new double[numberofbands][5];
         for (int i = 0; i < numberofbands; i++) {
             int band = bands[i];
-            kdist.setImageData(cornerx,cornery, width, height,row,col,band);
+            kdist.setImageData(cornerx,cornery, width, height,band,ta);
             kdist.estimate(null,data[i]);
             double[] thresh = kdist.getDetectThresh();
             imagestat[i][0] = thresh[0];

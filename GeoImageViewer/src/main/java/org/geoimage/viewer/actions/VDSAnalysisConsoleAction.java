@@ -39,15 +39,12 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     private int maximum = 3;
     private boolean done = false;
     private boolean indeterminate;
-	//private boolean running = false;
     private GeoImageReader gir = null;
     private List<IMask> mask = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
    
-    public VDSAnalysisConsoleAction() {
-        
-    }
+    public VDSAnalysisConsoleAction() {  }
 
     public String getName() {
         return "vds";
@@ -135,10 +132,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         }
     }
     
-    
-    
-    
-   
 	/**
 	 *
 	 * @return
@@ -293,6 +286,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 	public void endAnalysis() {
 		setDone(true);
 		Platform.getMain().removeStopListener(this);
+		if(proc!=null)
+			proc.dispose();
 	}
 
 	@Override

@@ -66,9 +66,10 @@ public class KDistributionEstimation {
 	private int yMarginCheck = 0;
 	private int minPixelVal = 0;*/
 
-	private BlackBorderAnalysis borderAnalysis;
-	private int rowTile;
-	private int colTile;
+	//private BlackBorderAnalysis borderAnalysis;
+	private TileAnalysis blackTileAnalysis;
+	//private int rowTile;
+	//private int colTile;
 	//private int band=0;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
@@ -82,9 +83,7 @@ public class KDistributionEstimation {
 
 	// CONSTRUCTOR
 	/** the cinstructor */
-	public KDistributionEstimation(float enlf,BlackBorderAnalysis blackBorderAnalysis) {
-		this.borderAnalysis=blackBorderAnalysis;
-
+	public KDistributionEstimation(float enlf) {
 		String enl = "" + (int) (enlf * 10);
 		if (enl.length() == 2) {
 			enl = "0" + enl;
@@ -160,15 +159,16 @@ public class KDistributionEstimation {
 	 *  
 	 */
 	public void setImageData(int sizeX, int sizeY,
-							 int sizeTileX, int sizeTileY,
-							 int row,int col,int band) {
+							 int sizeTileX, int sizeTileY,int band,TileAnalysis blackTyleAnalysis){
+							 //int row,int col,int band) {
 		startTile[0] = sizeX;
 		startTile[1] = sizeY;
 		this.sizeTileX = sizeTileX;
 		this.sizeTileY = sizeTileY;
 		N = sizeTileX * sizeTileY / 2;
-		this.rowTile=row;
-		this.colTile=col;
+		this.blackTileAnalysis=blackTyleAnalysis;
+		//this.rowTile=row;
+		//this.colTile=col;
 	}
 
 	/**
@@ -367,8 +367,7 @@ public class KDistributionEstimation {
 		
 		boolean estimate=true;
 		//check the black border analysis for the first 5 tile on rows
-		TileAnalysis black=null;
-		if(this.borderAnalysis!=null)black=this.borderAnalysis.getAnalysisTile(rowTile,colTile);
+		TileAnalysis black=blackTileAnalysis;
 		
 		if(black!=null){
 			if(black.bIsBorder)
