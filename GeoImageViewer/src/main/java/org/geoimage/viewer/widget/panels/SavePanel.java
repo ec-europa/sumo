@@ -13,12 +13,15 @@ import java.io.IOException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geotools.referencing.CRS;
 import org.slf4j.LoggerFactory;
@@ -51,14 +54,9 @@ public class SavePanel extends javax.swing.JPanel {
         	public void setSelectedItem(final Object item){
         		super.setSelectedItem(item);
         	}
-        	
-        	
         };
         
         this.comboSaveFormat.setModel(modelComboFormat);
-        		
-        
-        
         this.jComboBox2.setModel(new DefaultComboBoxModel(CRS.getSupportedCodes("EPSG").toArray()));
         this.jComboBox2.getModel().setSelectedItem("4326");
         this.jComboBox2.addItemListener(new ItemListener() {
@@ -73,7 +71,18 @@ public class SavePanel extends javax.swing.JPanel {
             	if (opt==null)
             		opt=comboSaveFormat.getItemAt(0);
                 jTextField1.setText(((ImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
-            }    
+            }
+        if(layer instanceof ComplexEditVDSVectorLayer){
+        	labelRunVersion.setVisible(true);
+        	labelRunVersionNumber.setVisible(true);
+        	txtRunVersion.setVisible(true);
+        	txtRunVersionNumber.setVisible(true);
+        }else{
+        	labelRunVersion.setVisible(false);
+        	labelRunVersionNumber.setVisible(false);
+        	txtRunVersion.setVisible(false);
+        	txtRunVersionNumber.setVisible(false);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -92,7 +101,11 @@ public class SavePanel extends javax.swing.JPanel {
         comboSaveFormat = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
-
+        labelRunVersion = new javax.swing.JLabel();
+        labelRunVersionNumber=new JLabel();
+        txtRunVersion=new JTextField();
+        txtRunVersionNumber=new JTextField();
+        
         setName("Save"); // NOI18N
 
         jLabel1.setText("File:");
@@ -120,6 +133,11 @@ public class SavePanel extends javax.swing.JPanel {
             }
         });
 
+        
+        labelRunVersion.setText("Run version :");
+        
+        labelRunVersionNumber.setText("Run version Number:");
+        
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setText("Projection:");
@@ -135,7 +153,9 @@ public class SavePanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(labelRunVersion)
+                            .addComponent(labelRunVersionNumber))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -143,7 +163,9 @@ public class SavePanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
                             .addComponent(jComboBox2, 0, 329, Short.MAX_VALUE)
-                            .addComponent(comboSaveFormat, 0, 329, Short.MAX_VALUE)))
+                            .addComponent(comboSaveFormat, 0, 329, Short.MAX_VALUE)
+                            .addComponent(txtRunVersion, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                            .addComponent(txtRunVersionNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(314, 314, 314)
                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))
@@ -167,6 +189,14 @@ public class SavePanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelRunVersion)
+                        .addComponent(txtRunVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelRunVersionNumber)
+                            .addComponent(txtRunVersionNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -222,5 +252,12 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField jTextField1;
+    private JLabel labelRunVersion;
+    private JLabel labelRunVersionNumber;
+    private javax.swing.JTextField txtRunVersion;
+    private javax.swing.JTextField txtRunVersionNumber;
+    
+    
+    
     // End of variables declaration//GEN-END:variables
 }
