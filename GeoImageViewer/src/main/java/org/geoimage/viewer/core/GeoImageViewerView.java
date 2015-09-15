@@ -1043,6 +1043,9 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 	public void performVDSAnalysis(String message, int numSteps) {
 	}
 	@Override
+	public void startBlackBorederAnalysis(String message) {
+	}
+	@Override
 	public void nextVDSAnalysisStep(int numSteps) {
 	}
 }

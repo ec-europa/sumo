@@ -16,10 +16,16 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 
+
+
 public class BlackBorderAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BlackBorderAnalysis.class);
 
-	
+	public static final int ANALYSE_ALL=0;  
+	public static final int ANALYSE_LEFT=1;
+	public static final int ANALYSE_TOP=2;
+	public static final int ANALYSE_RIGHT=3;
+	public static final int ANALYSE_BOTTOM=4;
 	
 	public class TileAnalysis{
 		public int[] horizLeftCutOffArray=null;
@@ -92,6 +98,37 @@ public class BlackBorderAnalysis {
 		
 	public BlackBorderAnalysis(GeoImageReader gir,List<Geometry> land) {
 		this(gir,0,land);
+	}
+	/**
+	 * 
+	 */
+	public void analyse(int numTilesMargin, int...side) {
+		if(side.length==1&&side[0]==ANALYSE_ALL){
+			this.numTilesMargin=numTilesMargin;
+			//first five tiles
+			horizAnalysis(true);
+			//last five tiles
+			horizAnalysis(false);
+			
+			//top five row tiles
+			vertAnalysis(true);
+			//bottom five row tiles
+			vertAnalysis(false);
+		}else for(int i=0;i<side.length;i++){
+			if(side[i]==ANALYSE_LEFT){
+				//first five tiles
+				horizAnalysis(true);
+			}else if(side[i]==ANALYSE_RIGHT){
+				//last five tiles
+				horizAnalysis(false);
+			}else if(side[i]==ANALYSE_TOP){	
+				//top five row tiles
+				vertAnalysis(true);
+			}else if(side[i]==ANALYSE_BOTTOM){	
+				//bottom five row tiles
+				vertAnalysis(false);
+			}	
+		}
 	}
 	
 	/**
@@ -199,21 +236,7 @@ public class BlackBorderAnalysis {
 	}
 	
 	
-	/**
-	 * 
-	 */
-	public void analyse(int numTilesMargin) {
-		this.numTilesMargin=numTilesMargin;
-		//first five tiles
-		horizAnalysis(true);
-		//last five tiles
-		horizAnalysis(false);
-		
-		//top five row tiles
-		vertAnalysis(true);
-		//bottom five row tiles
-		vertAnalysis(false);
-	}
+	
 
 	/**
 	 * 	
@@ -475,6 +498,7 @@ public class BlackBorderAnalysis {
 			}else{
 				//riga di campionamento 1 al 10% al 50% e al 90%
 				int col=iniX+((ConstantVDSAnalysis.ROW_TILE_SAMPLES_ARRAY[idxSamples]*sizeX)/100);
+				//TODO: check problems reading from the image here
 				dataRow[idxSamples]=gir.readTile(col, iniY, 1,tileHeight,bandAnalysis);
 				vCutOffSize=tileWidth;
 			}	

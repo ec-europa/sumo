@@ -43,7 +43,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     private List<IMask> mask = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
-   
+    
     public VDSAnalysisConsoleAction() {  }
 
     public String getName() {
@@ -119,9 +119,9 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
                 }
                 
-                final VDSAnalysis analysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholds);
+                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholds);
 
-                proc=new AnalysisProcess(reader,ENL, analysis, bufferedMask,bufferingDistance,0);
+                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferedMask,bufferingDistance,0);
                 proc.addProcessListener(this);
                 
                 Thread t=new Thread(proc);
@@ -149,7 +149,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         Argument a2 = new Argument("thresholdHH", Argument.FLOAT, false, 1.5);
         Argument a21 = new Argument("thresholdHV", Argument.FLOAT, false, 1.2);
         Argument a22 = new Argument("thresholdVH", Argument.FLOAT, false, 1.5);
-        Argument a23 = new Argument("thresholdVV", Argument.FLOAT, false, 1.5);
+        Argument a23 = new Argument("thresholdVV", Argument.FLOAT, false, 1.2);
 
         Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
         ArrayList<String> vectors = new ArrayList<String>();
@@ -251,7 +251,14 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 			this.message=message;
 		}	
 	}
-
+	@Override
+	public void startBlackBorederAnalysis(String message) {
+		if(!stopping){
+			setCurrent(1);
+			this.message=message;
+		}	
+		
+	}
 	@Override
 	public void startAnalysisBand(String message) {
 		if(!stopping){
@@ -286,6 +293,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 	public void endAnalysis() {
 		setDone(true);
 		Platform.getMain().removeStopListener(this);
+		
 		if(proc!=null)
 			proc.dispose();
 	}

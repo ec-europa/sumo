@@ -48,8 +48,10 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
             return tile;
         }
 
-        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.y*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
+        }else{
+        	//logger.debug("using preloaded data");
         }
 
         int yOffset = getImage(band).xSize;
