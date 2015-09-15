@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysis>
+  <image_information>
+    <name>manifest.safe</name>
+    <type>org.geoimage.impl.s1.Sentinel1GRD</type>
+    <mode />
+    <polarisation>VV</polarisation>
+    <timestampStart>2015-04-01 14:52:42.983627</timestampStart>
+    <timestampStop>2015-04-01 14:53:01.749703</timestampStop>
+    <resolutionRange>10.0</resolutionRange>
+    <resolutionAzimuth>10.0</resolutionAzimuth>
+    <width>25214</width>
+    <height>12667</height>
+    <heading />
+    <gcps>
+      <gcp>
+        <row>0</row>
+        <column>0</column>
+        <lon>53.809714372269326</lon>
+        <lat>-21.80329665118579</lat>
+      </gcp>
+      <gcp>
+        <row>0</row>
+        <column>25214</column>
+        <lon>56.17014080426189</lon>
+        <lat>-21.2468458467611</lat>
+      </gcp>
+      <gcp>
+        <row>12667</row>
+        <column>0</column>
+        <lon>53.51991153492182</lon>
+        <lat>-20.65701607980856</lat>
+      </gcp>
+      <gcp>
+        <row>12667</row>
+        <column>25214</column>
+        <lon>55.86332250025451</lon>
+        <lat>-20.105920295908074</lat>
+      </gcp>
+    </gcps>
+  </image_information>
+  <boatlist />
+</analysis>
+

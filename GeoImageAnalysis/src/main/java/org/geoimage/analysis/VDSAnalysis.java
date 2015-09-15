@@ -124,8 +124,8 @@ public class VDSAnalysis{
         this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
         if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
         
-        this.horTilesImage = gir.getHeight() / this.tileSize;
-        this.verTilesImage = gir.getWidth() / this.tileSize;
+        this.horTilesImage = gir.getWidth() / this.tileSize;
+        this.verTilesImage = gir.getHeight() / this.tileSize;
         
         
         progressListener=new ArrayList<ProgressListener>();
@@ -563,7 +563,7 @@ public class VDSAnalysis{
             		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(row,col);
                 	
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, iBand,bbAnalysis);
-                	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,iBand);
+                	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,bands[iBand]);
                 	kdist.estimate(rastermask, newdata);
  
                 	double[] treshTile=kdist.getDetectThresh();
