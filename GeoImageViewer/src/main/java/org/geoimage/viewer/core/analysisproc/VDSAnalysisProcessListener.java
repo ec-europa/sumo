@@ -7,6 +7,7 @@ public interface VDSAnalysisProcessListener {
 	public void startAnalysis();
 	public void performVDSAnalysis(String message,int numSteps);
 	public void nextVDSAnalysisStep(int numSteps);
+	public void startBlackBorederAnalysis(String message);
 	public void startAnalysisBand(String message);
 	public void calcAzimuthAmbiguity(String message);
 	public void agglomerating(String message);

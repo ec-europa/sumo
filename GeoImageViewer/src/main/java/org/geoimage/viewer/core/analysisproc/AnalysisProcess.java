@@ -2,6 +2,8 @@ package org.geoimage.viewer.core.analysisproc;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -92,7 +94,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			this.bufferedMask=bufferedMask;
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
-			listeners=new ArrayList<VDSAnalysisProcessListener>();
+			listeners=Collections.synchronizedList(new ArrayList<VDSAnalysisProcessListener>());
 			this.gir=gir;//.clone();
 			this.numPointLimit=numLimitPoint;
 			
@@ -125,7 +127,22 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
              } 	
              if(blackBorderAnalysis!=null){
-            	 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis());
+            	 notifyBBAnalysis("Start BB Analysis");
+            	 if(!analysis.isAnalyseSingleTile()){
+            		 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis(),BlackBorderAnalysis.ANALYSE_ALL);
+            	 }else{
+            		 int[] sideToAnalyze=new int[]{-1 ,-1 ,-1 ,-1};
+            		 if(analysis.getxTileToAnalyze()<Platform.getConfiguration().getNumTileBBAnalysis())
+            			 sideToAnalyze[0]=BlackBorderAnalysis.ANALYSE_LEFT;
+            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/tilesize-Platform.getConfiguration().getNumTileBBAnalysis()-1))
+            			 sideToAnalyze[1]=BlackBorderAnalysis.ANALYSE_RIGHT;
+            		 if(analysis.getyTileToAnalyze()<Platform.getConfiguration().getNumTileBBAnalysis())
+            			 sideToAnalyze[2]=BlackBorderAnalysis.ANALYSE_TOP;
+            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/tilesize-Platform.getConfiguration().getNumTileBBAnalysis()-1))
+            			 sideToAnalyze[3]=BlackBorderAnalysis.ANALYSE_BOTTOM;
+            		 
+            		 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis(),sideToAnalyze);
+            	 }
              }
              //end blackborder analysis
              
@@ -308,17 +325,17 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		 *  
 		 * @param listener
 		 */
-		public void addProcessListener(VDSAnalysisProcessListener listener){
+		public synchronized void addProcessListener(VDSAnalysisProcessListener listener){
 			this.listeners.add(listener);
 		} 
 		/**
 		 * 
 		 * @param listener
 		 */
-		public void removeProcessListener(VDSAnalysisProcessListener listener){
+		public synchronized void removeProcessListener(VDSAnalysisProcessListener listener){
 			this.listeners.remove(listener);
 		}
-		public void removeAllProcessListener(){
+		public synchronized void removeAllProcessListener(){
 			this.listeners.clear();
 		}
 		public void notifyEndProcessListener(){
@@ -329,6 +346,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		public void notifyStartProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
 				listener.startAnalysis();
+			}
+		} 
+		public void notifyBBAnalysis(String msg){
+			for(VDSAnalysisProcessListener listener:listeners){
+				listener.startBlackBorederAnalysis(msg);
 			}
 		} 
 		public void notifyVDSAnalysis(String message,int maxSteps){
@@ -369,6 +391,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		
 		public void dispose(){
 			analysis.dispose();
+			//this.removeAllProcessListener();
+			//this.listeners.clear();
 		}
      }
 
