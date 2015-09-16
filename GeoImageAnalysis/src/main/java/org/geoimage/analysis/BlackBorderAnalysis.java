@@ -421,6 +421,9 @@ public class BlackBorderAnalysis {
 	
 	
 	/**
+	 * this function consider the lineMatrix array as a Matrix(numberOfCols x numberOfRows) 
+	 * and calculate the transpose matrix  
+	 * 
 	 * 
 	 * @param lineMatrix
 	 * @param numberOfCols
@@ -428,7 +431,22 @@ public class BlackBorderAnalysis {
 	 * @return
 	 */
 	public int[] traspone(int lineMatrix[],int numberOfCols,int numberOfRows){
-	    int matrix[][]=new int[numberOfRows][numberOfCols];
+		int newid=0;
+		int traspostaInlineOpt2[]=new int[lineMatrix.length];
+		newid=0;
+		int old=0;
+		for(int idx2=0;idx2<numberOfCols;idx2++){
+			for(int idx=0;idx<numberOfRows ;idx++){
+					//calculate the newid to put the element as in transpose matrix 
+					newid=((old%numberOfRows)*numberOfCols)+idx2;
+				//	System.out.println(newid);
+					traspostaInlineOpt2[newid]=lineMatrix[old];
+					old++;
+			}
+		}
+		
+		/*
+		int matrix[][]=new int[numberOfRows][numberOfCols];
 	    
 	    // da array a matrice
 	    int col=0;
@@ -462,9 +480,9 @@ public class BlackBorderAnalysis {
 	    	//System.out.println("x:"+x);
           }	
         }
+        */
         
-        
-		return traspostaInline;
+		return traspostaInlineOpt2;
 	} 
 	
 	/**
@@ -672,5 +690,26 @@ public class BlackBorderAnalysis {
 		return result;
 	}
 	
-	
+	public static void main(String args[]){
+		int col=5;
+		int row=4;
+		int lineMatrix[]=new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};//matrice 4x5
+		int traspostaInlineOpt2[]=new int[20];
+		
+		int newid=0;
+		int old=0;
+		
+		for(int idx2=0;idx2<col;idx2++){
+			for(int idx=0;idx<row;idx++){
+					newid=((old%row)*col)+idx2;
+					System.out.println(newid);
+					traspostaInlineOpt2[newid]=lineMatrix[old];
+					
+					old++;
+			}
+		}
+		System.out.println("------------------");
+		for (int i=0;i<row*col;i++)
+			System.out.println(traspostaInlineOpt2[i]);
+	}
 }

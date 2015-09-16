@@ -163,7 +163,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param enl
 	 * @param landmask
 	 */
-	public static void saveNewXML(File output,ComplexEditVDSVectorLayer layer, String projection,SarImageReader gir,float[] thresholds,int buffer,float enl,String landmask) {
+	public static void saveNewXML(File output,ComplexEditVDSVectorLayer layer, 
+			String projection,SarImageReader gir,
+			float[] thresholds,int buffer,float enl,
+			String landmask,String runVersion,Integer runVersionNumber) {
+		
 		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 		
 		String start=gir.getTimeStampStart();
@@ -209,8 +213,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setRunTime(format.format(new Date()));
 
 		//TODO: modify the gui to add this fields
-		vdsA.setRunVersion("");
-		vdsA.setRunVersionNum(1);
+		vdsA.setRunVersion(runVersion);
+		vdsA.setRunVersionNum(runVersionNumber);
 		
 		vdsA.setLandMaskRead(landmask);
 
