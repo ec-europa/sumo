@@ -527,17 +527,21 @@ public class VDSAnalysis{
             boolean pixelabove = false;
             
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-                // average the tile mean values
-                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
-                // aggregate value is mean + 3 * std
-                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
-                // clip value is mean + 5 * std
-                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
-                // check the pixel is still above the new threshold
-                int value = data[bandcounter][boatx + boaty * tilesize];
-                if (value > thresholdvalues[bandcounter][1]) {
-                    pixelabove = true;
-                }
+            	try{
+	                // average the tile mean values
+	                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
+	                // aggregate value is mean + 3 * std
+	                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
+	                // clip value is mean + 5 * std
+	                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
+	                // check the pixel is still above the new threshold
+	                int value = data[bandcounter][boatx + boaty * tilesize];
+	                if (value > thresholdvalues[bandcounter][1]) {
+	                    pixelabove = true;
+	                }
+            	}catch(Exception e){
+            		pixelabove=false;
+            	}    
             }
             
             // add pixel only if above new threshold

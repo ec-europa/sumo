@@ -10,11 +10,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.text.NumberFormatter;
 
 import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.Platform;
@@ -104,7 +107,17 @@ public class SavePanel extends javax.swing.JPanel {
         labelRunVersion = new javax.swing.JLabel();
         labelRunVersionNumber=new JLabel();
         txtRunVersion=new JTextField();
-        txtRunVersionNumber=new JTextField();
+        
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        formatter.setCommitsOnValidEdit(true);
+        
+        txtRunVersionNumber=new JFormattedTextField(formatter);
+        txtRunVersionNumber.setValue(new Integer(1));
         
         setName("Save"); // NOI18N
 
@@ -203,7 +216,14 @@ public class SavePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     	OptionMenu opt=(OptionMenu)comboSaveFormat.getSelectedItem();
-        saveLayer.save(jTextField1.getText(),opt.getOptionId() , "EPSG:"+epsg);        
+    	if(saveLayer instanceof ComplexEditVDSVectorLayer && opt.getOptionId()==ISave.OPT_EXPORT_XML_SUMO ){
+    		String runversion=this.txtRunVersion.getText();
+    		Integer runId=(Integer)this.txtRunVersionNumber.getValue();
+    		((ComplexEditVDSVectorLayer)saveLayer).saveNewXML(jTextField1.getText(),opt.getOptionId() , "EPSG:"+epsg,runversion,runId);
+    	}else{
+    		saveLayer.save(jTextField1.getText(),opt.getOptionId() , "EPSG:"+epsg);
+    	}	
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -255,7 +275,7 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private JLabel labelRunVersion;
     private JLabel labelRunVersionNumber;
     private javax.swing.JTextField txtRunVersion;
-    private javax.swing.JTextField txtRunVersionNumber;
+    private javax.swing.JFormattedTextField txtRunVersionNumber;
     
     
     

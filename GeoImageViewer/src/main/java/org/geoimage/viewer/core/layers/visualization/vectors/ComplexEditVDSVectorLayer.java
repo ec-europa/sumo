@@ -117,11 +117,34 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     	super.addGeometries(TRESHOLD_PIXELS_TAG,  new Color(0x00FFFF),1, GeometricLayer.POINT, pixgeoms, display);
     }
     
-    
+    public void saveNewXML(String file, int formattype, String projection,String runVersion,Integer runVersionNumber) {
+    	try{
+        	SarImageReader sar=((SarImageReader)Platform.getCurrentImageReader());
+	    	if (!file.endsWith(".xml")) {
+	            file = file.concat(".xml");
+	        }
+	        float[] ts=new float[thresholds.length];
+	        for(int i=0;i<thresholds.length;i++){
+	        	ts[i]=Float.parseFloat(thresholds[i]);
+	        }
+	        SumoXMLWriter.saveNewXML(new File(file),this,
+	        		//FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
+	        		projection,
+	        		sar,ts,buffer,new Float(enl),landMask,runVersion,runVersionNumber);
+	        
+		    if(!Platform.isBatchMode())
+		    	JOptionPane.showMessageDialog(null,"The VDS has been correctly saved into Sumo XML format","XML Saved", JOptionPane.INFORMATION_MESSAGE);
+		    else 
+		    	logger.info("The VDS has been correctly saved into Sumo XML format");
+    	}catch(Exception e){
+    			JOptionPane.showMessageDialog(null,"Error saving XML:"+e.getMessage(),"Error", JOptionPane.INFORMATION_MESSAGE);
+    			logger.error(e.getMessage());
+    	}
+    }
     
     @Override
     public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=Platform.getCurrentImageReader();//((IImageLayer)super.parent).getImageReader();
+    	GeoImageReader reader=Platform.getCurrentImageReader();
     	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
         
@@ -175,7 +198,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            break;
 	        }
 	        case ISave.OPT_EXPORT_XML_SUMO: {
-	
+	        	/*
 	            if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
@@ -187,7 +210,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            		//FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
 	            		projection,
 	            		sar,ts,buffer,new Float(enl),landMask);
-	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
+	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";*/
 	            
 	            break;
 	        }

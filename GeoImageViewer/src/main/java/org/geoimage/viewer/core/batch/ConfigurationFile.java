@@ -36,6 +36,9 @@ public class ConfigurationFile {
 	public static  final String FILTER_FOLDER="filter";
 	public static final String MAX_DETECTIONS_ALLOWED="max_detections_allowed";
 	
+	public static  final String RUN_VERSION="run_version";
+	public static  final String RUN_VERSION_NUMBER="run_version_number";
+	
 	private String confFile;
 	private Properties prop = new Properties();
 	
@@ -65,6 +68,13 @@ public class ConfigurationFile {
 			return prop.getProperty(property);
 		}
 		
+		public String getRunVersion(){
+			return prop.getProperty(RUN_VERSION,"BATCH");
+		}
+		
+		public Integer getRunVersionNumber(){
+			return Integer.parseInt(prop.getProperty(RUN_VERSION_NUMBER,"1"));
+		}
 		
 		/***
 		 * 
