@@ -46,6 +46,9 @@ public abstract class AbstractBatchAnalysis {
 	private VDSAnalysis analysis;
 	protected GeoImageReader currentReader;
 	
+	private int runVersionNumber=1;
+	private String runVersion="BATCH";
+	
 	public AbstractBatchAnalysis(AnalysisParams analysisParams){
 		params= analysisParams;
 		layerResults=null;//new ArrayList<ComplexEditVDSVectorLayer>();
@@ -65,6 +68,26 @@ public abstract class AbstractBatchAnalysis {
 	}
 	
 	
+	public int getRunVersionNumber() {
+		return runVersionNumber;
+	}
+
+
+	public void setRunVersionNumber(int runVersionNumber) {
+		this.runVersionNumber = runVersionNumber;
+	}
+
+
+	public String getRunVersion() {
+		return runVersion;
+	}
+
+
+	public void setRunVersion(String runVersion) {
+		this.runVersion = runVersion;
+	}
+
+
 	/**
 	 * 
 	 * @param reader
@@ -161,7 +184,9 @@ public abstract class AbstractBatchAnalysis {
 	            }
            
     		   //GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
-    		   SumoXMLWriter.saveNewXML(new File(file),l,params.epsg,reader,params.thresholdArrayValues,params.buffer,params.enl,params.shapeFile);
+    		   SumoXMLWriter.saveNewXML(new File(file),l,
+    				   params.epsg,reader,params.thresholdArrayValues,
+    				   params.buffer,params.enl,params.shapeFile,runVersion,runVersionNumber);
     		   
     		   //save the bound box as shape file
     		   try{

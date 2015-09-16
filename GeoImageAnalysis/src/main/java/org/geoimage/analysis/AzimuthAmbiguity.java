@@ -56,6 +56,10 @@ public class AzimuthAmbiguity extends Ambiguity{
 	            	ambiguityboatlist.add(myBoat);
 	            	myBoat.setAmbiguity(true);
 	            	myBoat.setAmbiguityType(Boat.AMBIGUITY_TYPE_AZIMUTH);
+	            }else if(isAmbiguity(myBoat,xPos, yPos, (deltaAzimuth[0]*3),pixSize[0] ,pixSize[1])){
+	            	ambiguityboatlist.add(myBoat);
+	            	myBoat.setAmbiguity(true);
+	            	myBoat.setAmbiguityType(Boat.AMBIGUITY_TYPE_AZIMUTH);
 	            }
 	        }
         }catch(Exception e){

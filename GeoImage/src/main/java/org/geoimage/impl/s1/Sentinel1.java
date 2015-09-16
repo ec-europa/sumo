@@ -389,7 +389,7 @@ public abstract class Sentinel1 extends SarImageReader {
         		data[i]=b[i];
     		
         } catch (Exception ex) {
-            logger.error(ex.getMessage(),ex);
+            logger.warn(ex.getMessage());
         }finally{
         	reader.dispose();
         }

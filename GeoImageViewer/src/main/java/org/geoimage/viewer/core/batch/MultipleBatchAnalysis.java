@@ -21,6 +21,8 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	public MultipleBatchAnalysis(AnalysisParams analysisParams,ConfigurationFile conf) {
 		super(analysisParams);
 		confFile=conf;
+		super.setRunVersion(conf.getRunVersion());
+		super.setRunVersionNumber(conf.getRunVersionNumber());
 	}
 
 	/**

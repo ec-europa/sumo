@@ -38,7 +38,7 @@ public class LayerWidget extends Container {
 		this.layer = layer;
 	}
 
-	//private static Map<ILayer, LayerDialog> dialogs = new HashMap<ILayer, LayerDialog>();
+	private static Map<ILayer, LayerDialog> dialogs = new HashMap<ILayer, LayerDialog>();
 
     public LayerWidget(ILayer layer) {
         this.layer = layer;
@@ -62,12 +62,11 @@ public class LayerWidget extends Container {
                     	Platform.refresh();
                 	}
                 } else if (e.getButton() == MouseButton.RIGHT) {
-                    /*LayerDialog dialog = dialogs.get(layer);
+                    LayerDialog dialog = dialogs.get(layer);
                     if (dialog == null) {
                         dialog = new LayerDialog(null, true, layer);
                         dialogs.put(layer, dialog);
-                    }*/
-                    LayerDialog dialog = new LayerDialog(null, true, layer);
+                    }
                     dialog.setVisible(true);
                 } else if (e.getButton() == MouseButton.MIDDLE) {
                     if (layer instanceof IThreshable && ((IThreshable) layer).isThreshable()) {
