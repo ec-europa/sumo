@@ -27,7 +27,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -80,9 +80,9 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         this.band=band;
         
         // set the color and symbol values for the VDS layer
-   	 	int widthstring=Platform.getConfiguration().getTargetsSizeBand(""+band);
-   	 	String colorString=Platform.getConfiguration().getTargetsColorStringBand(""+band);
-   	 	String symbolString=Platform.getConfiguration().getTargetsSymbolBand(""+band);
+   	 	int widthstring=SumoPlatform.getApplication().getConfiguration().getTargetsSizeBand(""+band);
+   	 	String colorString=SumoPlatform.getApplication().getConfiguration().getTargetsColorStringBand(""+band);
+   	 	String symbolString=SumoPlatform.getApplication().getConfiguration().getTargetsSymbolBand(""+band);
         
         setWidth(widthstring);
         Color colordisplay = new Color(Integer.decode(colorString));
@@ -119,7 +119,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     
     public void saveNewXML(String file, int formattype, String projection,String runVersion,Integer runVersionNumber) {
     	try{
-        	SarImageReader sar=((SarImageReader)Platform.getCurrentImageReader());
+        	SarImageReader sar=((SarImageReader)SumoPlatform.getApplication().getCurrentImageReader());
 	    	if (!file.endsWith(".xml")) {
 	            file = file.concat(".xml");
 	        }
@@ -132,7 +132,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	        		projection,
 	        		sar,ts,buffer,new Float(enl),landMask,runVersion,runVersionNumber);
 	        
-		    if(!Platform.isBatchMode())
+		    if(!SumoPlatform.isBatchMode())
 		    	JOptionPane.showMessageDialog(null,"The VDS has been correctly saved into Sumo XML format","XML Saved", JOptionPane.INFORMATION_MESSAGE);
 		    else 
 		    	logger.info("The VDS has been correctly saved into Sumo XML format");
@@ -144,7 +144,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     
     @Override
     public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=Platform.getCurrentImageReader();
+    	GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
     	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
         
@@ -237,7 +237,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	    }
         if(msgResult[0]==null||msgResult[0].equals(""))
         		msgResult[0]=file+" created";
-        if(!Platform.isBatchMode())
+        if(!SumoPlatform.isBatchMode())
         	JOptionPane.showMessageDialog(null,msgResult[0], msgResult[1],JOptionPane.INFORMATION_MESSAGE);
         else 
         	logger.info(msgResult[0]);
@@ -486,13 +486,13 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         	int bb=Integer.parseInt(band);
           	if(type==int[].class){
           		int[] a=new int[4];
-          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(Platform.getCurrentImageReader().getBandName(bb));
+          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
           		a[id]=Integer.parseInt(val);
           		attr.set(att,a);
           	}	
           	if(type==double[].class){
           		double[] a=new double[4];
-          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(Platform.getCurrentImageReader().getBandName(bb));
+          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
           		a[id]=Double.parseDouble(val);
           		attr.set(att,a);
 

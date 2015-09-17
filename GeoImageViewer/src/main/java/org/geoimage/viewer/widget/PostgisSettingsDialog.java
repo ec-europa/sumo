@@ -8,7 +8,7 @@ package org.geoimage.viewer.widget;
 
 import java.util.HashMap;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 
 /**
@@ -31,7 +31,7 @@ public class PostgisSettingsDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         // create the preferences fields in the database
-        PlatformConfiguration preferences = Platform.getConfiguration();
+        PlatformConfiguration preferences = SumoPlatform.getApplication().getConfiguration();
 
         
         // set the preferred values in teh dialog

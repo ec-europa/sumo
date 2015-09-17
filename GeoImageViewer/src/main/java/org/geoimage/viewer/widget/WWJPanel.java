@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.GeoImageViewer;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -167,7 +167,7 @@ public class WWJPanel extends javax.swing.JPanel {
                                     if (lm == null) {
                                         GeoImageViewer.main(new String[]{"-i", an.getText()});
                                     } else {
-                                        Platform.getConsoleLayer().execute(new String[]{"image", "image", "file=" + an.getText()});
+                                        SumoPlatform.getApplication().getConsoleLayer().execute(new String[]{"image", "image", "file=" + an.getText()});
                                     }
                                 }
                             }

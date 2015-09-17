@@ -15,9 +15,10 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
@@ -44,11 +45,11 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
     public AddImageConsoleAction() {
         
-        if(Platform.getConfiguration().getLastImage().equals("")){
+        if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
-            lastDirectory = Platform.getConfiguration().getImageFolder();
+            lastDirectory = SumoPlatform.getApplication().getConfiguration().getImageFolder();
         }else{
-            lastDirectory = new File(Platform.getConfiguration().getLastImage()).getAbsolutePath();
+            lastDirectory = new File(SumoPlatform.getApplication().getConfiguration().getLastImage()).getAbsolutePath();
         }
         fileChooser = new JFileChooser(lastDirectory);
     }
@@ -126,7 +127,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             	temp=tempList.get(0);
             }
             // save the file name in the preferences
-            Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
+            SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
             if (tempList==null||tempList.isEmpty()) {
                 this.done = true;
@@ -138,7 +139,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             		temp=tempList.get(i);
 	             
             		ImageLayer newImage = new ImageLayer(temp);
-	                Platform.getLayerManager().addLayer(newImage,i==0);
+	                SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
 	                try {
 	                    Thread.sleep(5000);
 	                } catch (InterruptedException ex) {
@@ -146,16 +147,16 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	                }
             	}
             	try {
-                    Platform.refresh();
+                    SumoPlatform.getApplication().refresh();
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(),ex);
                 }
-            	Platform.getConsoleLayer().execute("home");
+            	SumoPlatform.getApplication().getConsoleLayer().execute("home");
             }
 
         } else {
             //part used by the graphical interface
-            if (lastDirectory.equals(Platform.getConfiguration().getImageFolder())) {
+            if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
                 if (fileChooser == null) {
                     fileChooser = new JFileChooser(lastDirectory);
                 }
@@ -187,22 +188,22 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
                 for(int i=0;i<tempList.size();i++){
             		temp=tempList.get(i);
 	                // save the file name in the preferences
-	                Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
+	                SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
 
-	                Platform.getGeoContext().setX(0);
-	                Platform.getGeoContext().setY(0);
+	                SumoPlatform.getApplication().getGeoContext().setX(0);
+	                SumoPlatform.getApplication().getGeoContext().setY(0);
 	                //Platform.getGeoContext().setZoom(temp.getWidth() / Platform.getGeoContext().getWidth() + 1);
 	                ImageLayer newImage = new ImageLayer( temp);
-	                Platform.getLayerManager().addLayer(newImage);
+	                LayerManager.getIstanceManager().addLayer(newImage);
 	                try {
 	                    Thread.sleep(1000);
 	                } catch (InterruptedException ex) {
 	                	logger.error(ex.getMessage(),ex);
 	                }
-	                Platform.getConsoleLayer().execute("home");
+	                SumoPlatform.getApplication().getConsoleLayer().execute("home");
 
 	                try {
-	                    Platform.refresh();
+	                    SumoPlatform.refresh();
 	                } catch (Exception ex) {
 	                	logger.error(ex.getMessage(),ex);
 	                }
@@ -274,10 +275,10 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	        	try{
 			        GeometricLayer positions = old.readLayer();
 			        if (positions.getProjection() == null) {
-			            Platform.getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
+			            SumoPlatform.getApplication().getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
 			        } else {
 			            ThumbnailsLayer tm = new ThumbnailsLayer(null, positions, positions.getProjection(), "id", new ThumbnailsManager(lastDirectory));
-			            Platform.getLayerManager().addLayer(tm);
+			            SumoPlatform.getApplication().getLayerManager().addLayer(tm);
 			        }
 	        	}catch(Exception e){
 	        		logger.error(e.getMessage());
@@ -285,7 +286,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 	        	
 	        }    
 	        try {
-	            Platform.refresh();
+	            SumoPlatform.getApplication().refresh();
 	        } catch (Exception ex) {
 	        	logger.error(ex.getMessage(),ex);
 	        }

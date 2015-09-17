@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
@@ -32,7 +32,7 @@ public class DeleteConsoleAction extends AbstractAction {
     }
 
     public boolean execute(String[] args) {
-        ILayerManager lm = Platform.getLayerManager();
+        ILayerManager lm = SumoPlatform.getApplication().getLayerManager();
         for (ILayer l : lm.getAllLayers()) {
             // delete command
             if (args==null||args.length == 0)

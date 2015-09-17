@@ -17,6 +17,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -26,6 +28,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
+import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -33,6 +36,9 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
@@ -52,6 +58,7 @@ import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
+import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
 import org.geoimage.viewer.core.gui.manager.WidgetManager;
@@ -65,6 +72,7 @@ import org.geoimage.viewer.widget.PluginManagerDialog;
 import org.geoimage.viewer.widget.PreferencesDialog;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.geoimage.viewer.widget.WWJPanel;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.geoimage.viewer.widget.dialog.InfoDialog;
 import org.geoimage.viewer.widget.dialog.TimeBarDialog;
 import org.jdesktop.application.Action;
@@ -143,7 +151,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         mainCanvas = new GLCanvas(glcapabilities);
         mainCanvas.addGLEventListener(this);
 
-        final FPSAnimator animator = new FPSAnimator(mainCanvas, 60, true);
+        final FPSAnimator animator = new FPSAnimator(mainCanvas, 45, true);
 	    animator.start();
 
         initComponents();
@@ -256,7 +264,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         
         infod = new InfoDialog(null, false);
 
-        cl.setMenus(getMenuBar());
+        setMenus(getMenuBar());
         cl.updateTab(jTabbedPane1);
         if (worldwindpanelenabled) {
             wwjPanel = new WWJPanel();
@@ -306,7 +314,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                        lm.mouseMoved(p, geoContext);
 	                        
 	                       // public void setImagePosition(Point imagePosition) {
-	                       ImageLayer imgL=Platform.getCurrentImageLayer();
+	                       ImageLayer imgL=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                       if(imgL!=null){
 	                    	   GeoImageReader gir=imgL.getImageReader();
 	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y);
@@ -630,17 +638,17 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
-            JFrame mainFrame = GeoImageViewer.getApplication().getMainFrame();
+            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
             aboutBox = new GeoImageViewerAboutBox(mainFrame);
             aboutBox.setLocationRelativeTo(mainFrame);
         }
-        GeoImageViewer.getApplication().show(aboutBox);
+        SumoPlatform.getApplication().show(aboutBox);
     }
 
     @Action
     public void showTimeSlider() {
         if (timeSlider == null || !timeSlider.isVisible()) {
-            JFrame mainFrame = GeoImageViewer.getApplication().getMainFrame();
+            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
             timeSlider = new TimeBarDialog(mainFrame, false);
             timeSlider.setLocationRelativeTo(mainFrame);
             timeSlider.setVisible(true);
@@ -652,7 +660,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
      */
     @Action
     public void openLastImage() {
-        final String lastImage = Platform.getConfiguration().getLastImage();
+        final String lastImage = SumoPlatform.getApplication().getConfiguration().getLastImage();
         if (lastImage != null) {
             new Thread(new Runnable() {
 
@@ -679,7 +687,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     }
 
     /**
-     * open the preferences dialog to set some parameters
+     * open the plugin dialog to set some parameters
      */
     @Action
     public void callPluginManager() {
@@ -968,6 +976,71 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setMenus(JMenuBar menubar) {
+        Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
+        // fill with existing menu items
+        for (int i = 0; i < menubar.getMenuCount(); i++) {
+            JMenu menu = menubar.getMenu(i);
+            String menutext = menu.getText() + "/";
+            menus.put(menutext, menu);
+            for (int j = 0; j < menu.getMenuComponentCount(); j++) {
+                if (menu.getMenuComponent(j) instanceof JMenu) {
+                    JMenu submenu = (JMenu) menu.getMenuComponent(j);
+                    menus.put(menutext + submenu.getText() + "/", submenu);
+                }
+            }
+        }
+        JMenuItem temp = null;
+        PluginsManager pl=SumoPlatform.getApplication().getPluginsManager();
+        for (final IAction action : pl.getActions().values()) {
+            if (!pl.getPlugins().get(action.getName()).isActive()) {
+                continue;
+            }
+            //final IConsoleAction action = instanciate(p);
+            if (action == null) {
+                continue;
+            }
+            if (action.getPath().startsWith("$")) {
+                continue;
+            }
+            String[] path = action.getPath().split("/");
+            JMenuItem mitem = null;
+            String mediumpath = "";
+            for (int i = 0; i < path.length; i++) {
+                mediumpath = new StringBuilder(mediumpath).append(path[i]).append("/").toString();
+                if (menus.containsKey(mediumpath)) {
+                    temp = menus.get(mediumpath);
+                } else {
+
+                    if (i == path.length - 1) {
+                        temp = new JMenuItem(new AbstractAction(path[i]) {
+
+                            public void actionPerformed(ActionEvent e) {
+                                if (action.getArgumentTypes() != null) {
+                                    new ActionDialog(JFrame.getFrames()[0], true, action).setVisible(true);
+                                } else {
+                                    action.execute(null);
+                                }
+                            }
+                        });
+                    } else {
+                        temp = new JMenu(path[i]);
+                    }
+                    menus.put(mediumpath, temp);
+                }
+
+                if (mitem == null) {
+                    mitem = temp;
+                    menubar.add((JMenu) temp);
+                } else {
+                    mitem.add(temp);
+                    mitem = temp;
+                }
+            }
+        }
+
+    }
+    
 private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focusGained
     refresh();
 }//GEN-LAST:event_focusGained

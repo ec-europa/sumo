@@ -15,7 +15,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.visualization.ZoomWindowLayer;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +107,7 @@ public class ZoomDialog extends javax.swing.JDialog {
 
             public void windowClosing(WindowEvent e) {
                 layer.setActive(false);
-                Platform.refresh();
+                SumoPlatform.refresh();
             }
 
             public void windowClosed(WindowEvent e) {
@@ -139,7 +139,8 @@ public class ZoomDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gLCanvas1 = new GLCanvas(null, null, org.geoimage.viewer.core.Platform.getMainCanvas().getContext(), null);
+    	//TODO:check how to repleace this deprecated method
+        gLCanvas1 = new GLCanvas(null, null, org.geoimage.viewer.core.SumoPlatform.getApplication().getMainCanvas().getContext(), null);
         jCheckBox1 = new javax.swing.JCheckBox();
 
         setTitle("Zoom");

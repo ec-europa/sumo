@@ -35,8 +35,9 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.Plugins;
+import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
@@ -53,73 +54,19 @@ public class ConsoleLayer extends GenericLayer {
 
     private String message = "";
     private String oldMessage = "";
-    private Map<String, IAction> actions;
-    private Map<String, Plugins> plugins;
+    
+   
     private String[] commands;
     private IProgress currentAction = null;
-    private final EntityManagerFactory emf;
+    private PluginsManager pl;
+    
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ConsoleLayer.class);
-
     
     public ConsoleLayer(ILayer parent) {
     	super(parent,"Console",null,null);
-        emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
-        
-        actions = new HashMap<String, IAction>();
-        plugins = new HashMap<String, Plugins>();
-        
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Query q = em.createQuery("select p from Plugins p");
-        List<Plugins> plugins = q.getResultList();
-        em.getTransaction().commit();
-
-        if (plugins.size() == 0) {
-            populateDatabase();
-        }
-        em.getTransaction().begin();
-        plugins = q.getResultList();
-        em.getTransaction().commit();
-
-        em.close();
-        List<IAction> landActions=getDynamicActionForLandmask();
-        parseActions(plugins);
-        parseActionsLandMask(landActions);
-        
         super.init(parent);
-    }
-    
-    /**
-     * Create and return new actions dinamically for the land mask import options  
-     */
-    private List<IAction> getDynamicActionForLandmask(){
-    	List<IAction> actions=new ArrayList<IAction>();
-    	String folder=Platform.getConfiguration().getCoastlinesFolder();
-    	
-    	File folderShapes=new File(folder);
-    	if(folderShapes.exists()&&folderShapes.isDirectory()){
-    		//cerco nelle sottocartelle altre shape files
-    		File[] childs=folderShapes.listFiles();
-    		for(File f:childs){
-    			//controllo se sono cartelle e se contengono uno shape file . In questo caso creo la nuova action 
-    			if(f.isDirectory()){
-    				File[] files=f.listFiles();
-    				for(File ff:files){
-    					String ext=FilenameUtils.getExtension(ff.getName());
-    					if(ext.equals("shp")){
-    						//creo la nuova azione da aggiungere
-    						AddGenericWorldLayerAction action=new AddGenericWorldLayerAction(f.getName(),ff);
-    						Plugins p=new Plugins(action.getClass().getName());
-    						p.setActive(Boolean.TRUE);
-    	                    p.setJarUrl(action.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
-    						actions.add(action);
-    						break;
-    					}
-    				}
-    			}
-    		}
-    	}
-    	return actions;
+        pl=SumoPlatform.getApplication().getPluginsManager();
+        commands=pl.getCommands();
     }
 
     public void execute(String[] arguments) {
@@ -130,10 +77,10 @@ public class ConsoleLayer extends GenericLayer {
                     args[i - 1] = arguments[i];
                 }
                 try {
-                    if (!plugins.get(c).isActive()) {
+                    if (!pl.getPlugins().get(c).isActive()) {
                         return;
                     }
-                    Object a = actions.get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
+                    Object a = pl.getActions().get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
                     if (!(a instanceof IAction)) {
                         return;
                     }
@@ -151,7 +98,7 @@ public class ConsoleLayer extends GenericLayer {
 
         try {
             if (message.startsWith("google")) {
-                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+                for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                     if (l instanceof ImageLayer) {
                         GeoImageReader gir = ((ImageLayer) l).getImageReader();
                         double[] x0 = gir.getGeoTransform().getGeoFromPixel(0, 0);
@@ -166,7 +113,7 @@ public class ConsoleLayer extends GenericLayer {
         }
         try {
             if (message.startsWith("level")) {
-                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+                for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                     if (l instanceof ImageLayer) {
                         ((ImageLayer) l).level(Integer.parseInt(message.split(" ")[1]));
                     }
@@ -190,7 +137,7 @@ public class ConsoleLayer extends GenericLayer {
 	                        args[i - 1] = command[i];
 	                    }
 	                    try {
-	                        Object a = actions.get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
+	                        Object a = pl.getActions().get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
 	                        if (!(a instanceof IConsoleAction)) {
 	                            return;
 	                        }
@@ -224,7 +171,7 @@ public class ConsoleLayer extends GenericLayer {
     public void runScriptString(String script) throws Exception {
         String[] actionsscript = script.split("\n");
         for (int index = 0; index < actionsscript.length; index++) {
-            String[] command = parseActions(actionsscript[index]);
+            String[] command = parseCommandLineAction(actionsscript[index]);
             if ((command.length != 0) && !command[0].isEmpty()) {
                 for (String c : commands) {
                     if (c.startsWith(command[0])) {
@@ -234,7 +181,7 @@ public class ConsoleLayer extends GenericLayer {
                         }
                         try {
 
-                            Object a = Class.forName(plugins.get(c).getClassName(), true, new URLClassLoader(new URL[]{new URL(plugins.get(c).getJarUrl())}, ClassLoader.getSystemClassLoader()));
+                            Object a = Class.forName(pl.getPlugins().get(c).getClassName(), true, new URLClassLoader(new URL[]{new URL(pl.getPlugins().get(c).getJarUrl())}, ClassLoader.getSystemClassLoader()));
                             if (!(a instanceof IConsoleAction)) {
                                 return;
                             }
@@ -263,38 +210,7 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-    private void parseActions(List<Plugins> plugins) {
-        for (Plugins p : plugins) {
-            try {
-                Object temp = instanciate(p);
-                if (temp instanceof IAction) {
-                    IAction action = (IAction) temp;
-                    getActions().put(action.getName(), action);
-                    getPlugins().put(action.getName(), p);
-                    System.out.println(temp.toString() + " added");
-                }
-            } catch (Exception ex) {
-                //Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        commands = getActions().keySet().toArray(new String[getActions().size()]);
-    }
     
-    private void parseActionsLandMask(List<IAction> acts) {
-        for (IAction act : acts) {
-            try {
-            	Plugins p=new Plugins(act.getClass().getName());
-				p.setActive(Boolean.TRUE);
-                p.setJarUrl(act.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
-                getPlugins().put(act.getName(), p);
-                getActions().put(act.getName(), act);
-                System.out.println(act.toString() + " added");
-            } catch (Exception ex) {
-                //Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        commands = getActions().keySet().toArray(new String[getActions().size()]);
-    }
 
     public String getName() {
         return message;
@@ -307,36 +223,20 @@ public class ConsoleLayer extends GenericLayer {
     public void render(OpenGLContext context) {
         if (currentAction != null) {
             if (currentAction.isDone()) {
-                Platform.setInfo(((IAction) currentAction).getName() + " done", 10000);
+                SumoPlatform.setInfo(((IAction) currentAction).getName() + " done", 10000);
                 currentAction = null;
             } else {
                 if (currentAction.isIndeterminate()) {
-                    Platform.setInfo(currentAction.getMessage());
+                    SumoPlatform.getApplication().setInfo(currentAction.getMessage());
                 } else {
-                    Platform.setInfo(currentAction.getCurrent() + "/" + currentAction.getMaximum() + " " + currentAction.getMessage());
+                    SumoPlatform.getApplication().setInfo(currentAction.getCurrent() + "/" + currentAction.getMaximum() + " " + currentAction.getMessage());
                 }
 
             }
         }
     }
 
-    private IAction instanciate(Plugins p) {
-        try {
-            ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
-            return (IAction) Class.forName(p.getClassName()).newInstance();
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(),ex);
-        }
-        return null;
-    }
-
-    public boolean isActive() {
-        return true;
-    }
-
-    public void setActive(boolean active) {
-    }
-
+ 
     public boolean isRadio() {
         return false;
     }
@@ -362,21 +262,21 @@ public class ConsoleLayer extends GenericLayer {
             this.message += c;
         }
         try {
-            Platform.refresh();
+            SumoPlatform.refresh();
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }
     }
 
     public void execute(String message) {
-        execute(parseActions(message));
+        execute(parseCommandLineAction(message));
     }
 
     public JMenuBar getMenuBar() {
         JMenuBar bar = new JMenuBar();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (final IAction act : getActions().values()) {
+        for (final IAction act : pl.getActions().values()) {
            // final IConsoleAction action = instanciate(p);
             String[] path = act.getPath().split("/");
             JMenuItem mitem = null;
@@ -426,7 +326,7 @@ public class ConsoleLayer extends GenericLayer {
         List<JMenu> out = new Vector<JMenu>();
         Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         JMenuItem temp = null;
-        for (final IAction action : getActions().values()) {
+        for (final IAction action : pl.getActions().values()) {
            // final IConsoleAction action = instanciate(p);
             String[] path = action.getPath().split("/");
             JMenuItem mitem = null;
@@ -467,76 +367,12 @@ public class ConsoleLayer extends GenericLayer {
         return out;
     }
 
-    public void setMenus(JMenuBar menubar) {
-        Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
-        // fill with existing menu items
-        for (int i = 0; i < menubar.getMenuCount(); i++) {
-            JMenu menu = menubar.getMenu(i);
-            String menutext = menu.getText() + "/";
-            menus.put(menutext, menu);
-            for (int j = 0; j < menu.getMenuComponentCount(); j++) {
-                if (menu.getMenuComponent(j) instanceof JMenu) {
-                    JMenu submenu = (JMenu) menu.getMenuComponent(j);
-                    menus.put(menutext + submenu.getText() + "/", submenu);
-                }
-            }
-        }
-        JMenuItem temp = null;
-        for (final IAction action : getActions().values()) {
-            if (!plugins.get(action.getName()).isActive()) {
-                continue;
-            }
-            //final IConsoleAction action = instanciate(p);
-            if (action == null) {
-                continue;
-            }
-            if (action.getPath().startsWith("$")) {
-                continue;
-            }
-            String[] path = action.getPath().split("/");
-            JMenuItem mitem = null;
-            String mediumpath = "";
-            for (int i = 0; i < path.length; i++) {
-                mediumpath = new StringBuilder(mediumpath).append(path[i]).append("/").toString();
-                if (menus.containsKey(mediumpath)) {
-                    temp = menus.get(mediumpath);
-                } else {
-
-                    if (i == path.length - 1) {
-                        temp = new JMenuItem(new AbstractAction(path[i]) {
-
-                            public void actionPerformed(ActionEvent e) {
-                                if (action.getArgumentTypes() != null) {
-                                    new ActionDialog(JFrame.getFrames()[0], true, action).setVisible(true);
-                                } else {
-                                    action.execute(null);
-                                }
-                            }
-                        });
-                    } else {
-                        temp = new JMenu(path[i]);
-                    }
-                    menus.put(mediumpath, temp);
-                }
-
-                if (mitem == null) {
-                    mitem = temp;
-                    menubar.add((JMenu) temp);
-                } else {
-                    mitem.add(temp);
-                    mitem = temp;
-                }
-            }
-        }
-
-    }
+    
 
     public void dispose() {
-        getActions().clear();
-        actions = null;
     }
 
-    private String[] parseActions(String message) {
+    private String[] parseCommandLineAction(String message) {
         String[] stringarray = {};
         ArrayList<String> commandList = new ArrayList<String>();
         String[] commandfirst = message.split(" ");
@@ -560,8 +396,8 @@ public class ConsoleLayer extends GenericLayer {
     }
 
     public void updateTab(JTabbedPane jTabbedPane1) {
-        for (final IAction act : getActions().values()) {
-            if (!plugins.get(act.getName()).isActive()) {
+        for (final IAction act : pl.getActions().values()) {
+            if (!pl.getPlugins().get(act.getName()).isActive()) {
                 continue;
             }
             //final IConsoleAction action = instanciate(p);
@@ -580,43 +416,8 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-    /**
-     * @return the actions
-     */
-    public Map<String, IAction> getActions() {
-        return actions;
-    }
-
-    /**
-     * @return the actions
-     */
-    public Map<String, Plugins> getPlugins() {
-        return plugins;
-    }
     
-    private void populateDatabase() {
-        String[] classes = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("actions").split(",");
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        for (int i = 0; i < classes.length; i++) {
-            try {
-                Object temp = Class.forName(classes[i]).newInstance();
-                if (temp instanceof IAction) {
-                    Plugins p = new Plugins(classes[i]);
-                    p.setActive(Boolean.TRUE);
-                    p.setJarUrl(temp.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
-                    em.persist(p);
-                    IAction action = (IAction) temp;
-                    getPlugins().put(action.getName(), p);
-                    System.out.println(temp.toString() + " added");
-                }
-            } catch (Exception ex) {
-                //Logger.getLogger(ConsoleLayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        em.getTransaction().commit();
 
-        em.close();
-        commands = getActions().keySet().toArray(new String[getActions().size()]);
-    }
+   
+    
 }

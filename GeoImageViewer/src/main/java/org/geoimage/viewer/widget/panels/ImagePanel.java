@@ -7,7 +7,8 @@ package org.geoimage.viewer.widget.panels;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.CaretLayer;
@@ -255,45 +256,45 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void jSlider2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider2StateChanged
         layer.setBrightness(jSlider2.getValue());
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jSlider2StateChanged
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         layer.setContrast(jSlider1.getValue() / 10.0F);//TODO check the contrast
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(layer instanceof ImageLayer){
-            Platform.getLayerManager().addLayer(new ZoomWindowLayer(layer));
+            LayerManager.getIstanceManager().addLayer(new ZoomWindowLayer(layer));
         }
     /*    else if(layer instanceof ThumbnailsLayer){
         	Platform.getLayerManager().addLayer(new ThumbnailsSmallLayer((ThumbnailsLayer)layer));
         }*/
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    	Platform.getLayerManager().addLayer(new CaretLayer(layer));
-        Platform.refresh();
+    	LayerManager.getIstanceManager().addLayer(new CaretLayer(layer));
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    	Platform.getLayerManager().addLayer(new PositionLayer(layer));
-        Platform.refresh();
+    	LayerManager.getIstanceManager().addLayer(new PositionLayer(layer));
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    	Platform.getLayerManager().addLayer(
-    			new EditGeometryVectorLayer(Platform.getCurrentImageLayer(),
+    	LayerManager.getIstanceManager().addLayer(
+    			new EditGeometryVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
     					jTextField2.getText(),(String)jComboBox1.getSelectedItem(), 
     			new GeometricLayer((String)jComboBox1.getSelectedItem())));
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jSlider3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider3StateChanged
         layer.setMaximumCut(jSlider3.getValue());
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jSlider3StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

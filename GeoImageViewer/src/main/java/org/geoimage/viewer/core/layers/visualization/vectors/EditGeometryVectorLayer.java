@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.core.api.IKeyPressed;
@@ -106,9 +106,9 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
                 if(glayer.getGeometries().size()>0){
                 	selectedGeometry = glayer.getGeometries().get(0);
                 	//move the visualization on the new selected target
-                	Platform.getGeoContext().setX((int) (selectedGeometry.getCoordinate().x / 2));
-                    Platform.getGeoContext().setY((int) (selectedGeometry.getCoordinate().y  / 2));
-                    Platform.getGeoContext().setDirty(true);
+                	SumoPlatform.getApplication().getGeoContext().setX((int) (selectedGeometry.getCoordinate().x / 2));
+                    SumoPlatform.getApplication().getGeoContext().setY((int) (selectedGeometry.getCoordinate().y  / 2));
+                    SumoPlatform.getApplication().getGeoContext().setDirty(true);
                 }	
             }
 

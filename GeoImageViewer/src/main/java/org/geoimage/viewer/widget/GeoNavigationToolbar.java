@@ -29,8 +29,9 @@ import org.fenggui.render.Pixmap;
 import org.fenggui.util.Color;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,7 @@ public class GeoNavigationToolbar extends TransparentWidget {
             // check image has not changed
             {
                 boolean found=false;
-                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+                for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
                     if (l instanceof ImageLayer && l.isActive()) {
                         if (il != (ImageLayer) l) {
                             try {
@@ -176,14 +177,16 @@ public class GeoNavigationToolbar extends TransparentWidget {
             int positionY = evt.getDisplayY() - getDisplayY();
             int width = getSize().getWidth();
             int height = getSize().getHeight();
+            OpenGLContext glc=SumoPlatform.getApplication().getGeoContext();            
+            
             if(positionX < width / 3)
                 if(positionY > height / 3)
                     if(positionY < 2 * height / 3)
                     {
                         // clicked on the left arrow
                         System.out.println("left\n");
-                        if(Platform.getGeoContext() instanceof OpenGLContext)
-                            Platform.getGeoContext().setX((int)(Platform.getGeoContext().getX() - Platform.getGeoContext().getWidth() / 3));
+                        if(glc instanceof OpenGLContext)
+                            glc.setX((int)(glc.getX() - glc.getWidth() / 3));
                     }
             if(positionX > 2 * width / 3)
                 if(positionY > height / 3)
@@ -191,8 +194,8 @@ public class GeoNavigationToolbar extends TransparentWidget {
                     {
                         // clicked on the right arrow
                         System.out.println("right\n");
-                        if(Platform.getGeoContext() instanceof OpenGLContext)
-                            Platform.getGeoContext().setX((int)(Platform.getGeoContext().getX() + Platform.getGeoContext().getWidth() / 3));
+                        if(glc instanceof OpenGLContext)
+                            glc.setX((int)(glc.getX() + glc.getWidth() / 3));
                     }
             if(positionX > width / 3)
                 if(positionX < 2 * width / 3)
@@ -200,13 +203,13 @@ public class GeoNavigationToolbar extends TransparentWidget {
                     {
                         // clicked on the bottom arrow
                         System.out.println("bottom\n");
-                        if(Platform.getGeoContext() instanceof OpenGLContext)
-                            Platform.getGeoContext().setY((int)(Platform.getGeoContext().getY() + Platform.getGeoContext().getHeight() / 3));
+                        if(glc instanceof OpenGLContext)
+                            glc.setY((int)(glc.getY() + glc.getHeight() / 3));
                     } else if(positionY > 2 * height / 3) {                    
                         // clicked on the top arrow
                         System.out.println("top\n");
-                        if(Platform.getGeoContext() instanceof OpenGLContext)
-                            Platform.getGeoContext().setY((int)(Platform.getGeoContext().getY() - Platform.getGeoContext().getHeight() / 3));
+                        if(glc instanceof OpenGLContext)
+                            glc.setY((int)(glc.getY() - glc.getHeight() / 3));
                     }
         }
 
@@ -249,25 +252,25 @@ public class GeoNavigationToolbar extends TransparentWidget {
         
         @Override
         public void paint(org.fenggui.render.Graphics g) {
-
+        	OpenGLContext glc=SumoPlatform.getApplication().getGeoContext();
             // check image has not changed
             if ((il == null) || (!il.isActive())) {
                 il = null;
-                for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+                for (ILayer l :LayerManager.getIstanceManager().getLayers().keySet()) {
                     if (l instanceof ImageLayer && l.isActive()) {
                         il = (ImageLayer) l;
                         // update the max zoom value
-                        maxZoomLevel = ((int) Math.max(Math.log10(il.getImageReader().getWidth() / Platform.getGeoContext().getWidth()) / Math.log10(2), Math.log10(il.getImageReader().getHeight() / Platform.getGeoContext().getHeight()) / Math.log10(2))) + 1;
+                        maxZoomLevel = ((int) Math.max(Math.log10(il.getImageReader().getWidth() / glc.getWidth()) / Math.log10(2), Math.log10(il.getImageReader().getHeight() / glc.getHeight()) / Math.log10(2))) + 1;
                         break;
                     }
                 }
             }
 
             // set value to the current zoom value
-            if(zoom != Platform.getGeoContext().getZoom())
+            if(zoom != glc.getZoom())
             {
-                zoom = Platform.getGeoContext().getZoom();
-                if(Platform.getGeoContext() instanceof OpenGLContext)
+                zoom = glc.getZoom();
+                if(glc instanceof OpenGLContext)
                     setValue((zoom - 1) / Math.pow(2, maxZoomLevel));
             }
 
@@ -297,8 +300,8 @@ public class GeoNavigationToolbar extends TransparentWidget {
             addSliderMovedListener(new ISliderMovedListener() {
 
                 public void sliderMoved(SliderMovedEvent arg0) {
-                    if (Platform.getGeoContext() instanceof OpenGLContext) {
-                        OpenGLContext geoContext = Platform.getGeoContext();
+                    if (SumoPlatform.getApplication().getGeoContext() instanceof OpenGLContext) {
+                        OpenGLContext geoContext = SumoPlatform.getApplication().getGeoContext();
                         float zoom = (float) (1+(float) getValue() * Math.pow(2, maxZoomLevel));
                         int x = (int) (geoContext.getX() + geoContext.getWidth() * geoContext.getZoom() / 2);
                         int y = (int) (geoContext.getY() + geoContext.getHeight() * geoContext.getZoom() / 2);

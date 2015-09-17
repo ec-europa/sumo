@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IKeyPressed;
@@ -51,7 +51,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 	private  ConsoleLayer consoleLayer=null;
 	private  BaseLayer baseLayer=null;
     protected List<ILayer> remove = new ArrayList<ILayer>();
-    protected List<ILayer> add = new ArrayList<ILayer>();
+    protected List<ILayer> added = new ArrayList<ILayer>();
     private static LayerManager manager=null;
     
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(LayerManager.class);
@@ -69,8 +69,8 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     public void render(final OpenGLContext context) {
-        if (this.add.size() > 0) {
-        	for(ILayer l:add){
+        if (this.added.size() > 0) {
+        	for(ILayer l:added){
         		if(l.getParent()==null){
         			List<ILayer> childs=layers.get(l);
         			if(childs==null){
@@ -88,9 +88,9 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         		}
         		notifyLayerAdded(l);
         	}
-            add.clear();
+            added.clear();
             try {
-                Platform.refresh();
+                SumoPlatform.getApplication().refresh();
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
@@ -110,7 +110,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         	}	
             remove.clear();
             try {
-                Platform.refresh();
+                SumoPlatform.getApplication().refresh();
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
@@ -163,29 +163,6 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
     }
 
-    /** 
-     * add a layer	
-     */
-    public void addLayer(ILayer layer) {
-        // if we are adding an image layer turn off all the other image active layers
-        if (layer instanceof ImageLayer) {
-            // look for other image layers active
-            for (ILayer il : layers.keySet()) {
-                if (il instanceof ImageLayer) {
-                    if (il.isActive()) {
-                        il.setActive(false);
-                    }
-                }
-            }
-        }
-        // now add layer
-        this.add.add(layer);
-        if (layer instanceof ITime) {
-            TimeComponent.getTimeLayers().add((ITime) layer);
-            TimeComponent.setDirty(true);
-        }
-    }
-
     /**
      * 
      * @param layer
@@ -204,7 +181,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
         layer.setActive(needActive);
         // now add layer
-        this.add.add(layer);
+        this.added.add(layer);
         if (layer instanceof ITime) {
             TimeComponent.getTimeLayers().add((ITime) layer);
             TimeComponent.setDirty(true);
@@ -313,6 +290,22 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
   	
   	return null;		
   }  
+  
+
+  public ImageLayer getCurrentImageLayer() {
+  	if(!SumoPlatform.isBatchMode()){
+	        for (ILayer l : getLayers().keySet()) {
+	            if (l instanceof ImageLayer && l.isActive()) {
+	                try {
+	                    return (ImageLayer) l;
+	                } catch (Exception ex) {
+	                	logger.error(ex.getMessage(),ex);
+	                }
+	            }
+	        }
+  	}    
+      return null;
+  }
     
     /**
      * return the list of childs layers for a layer
@@ -342,6 +335,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 		if(l.getParent()==null){
 			List<ILayer>childs=layers.get(l);
 			if(l.isActive()){
+				l.setActive(false);
 				//disable other layer
 				for(ILayer p:layers.keySet()){
 					if(!p.equals(l)){
@@ -351,16 +345,19 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 				}
 				if(childs!=null){
 					for(ILayer c:childs){
-						c.setActive(true);
+						c.setActive(false);
 					}
 				}	
 			}else{
+				l.setActive(true);
 				if(childs!=null){
 					for(ILayer c:childs){
-						c.setActive(false);
+						c.setActive(true);
 					}
 				}
 			}	
+		}else{
+			l.setActive(!l.isActive());
 		}
 	}
 
@@ -378,7 +375,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
                 	GenericLayer ivl = FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"");
                     ivl.setColor(Color.GREEN);
                     ivl.setWidth(5);
-                    Platform.getLayerManager().addLayer((ILayer) ivl);
+                    SumoPlatform.getApplication().getLayerManager().addLayer((ILayer) ivl);
                 }
             }).start();
             done=true;
@@ -410,5 +407,12 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 	public void setBaseLayer(BaseLayer baseLayer) {
 		this.baseLayer = baseLayer;
+	}
+
+
+	@Override
+	public void addLayer(ILayer layer) {
+		addLayer(layer, true);
+		
 	}
 }

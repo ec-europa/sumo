@@ -116,7 +116,7 @@ public class PlanningDialog extends javax.swing.JDialog {
         jTextArea1.setName("jTextArea1"); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(PlanningDialog.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(PlanningDialog.class);
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
@@ -146,7 +146,7 @@ public class PlanningDialog extends javax.swing.JDialog {
         jTextField6.setText(resourceMap.getString("jTextField6.text")); // NOI18N
         jTextField6.setName("jTextField6"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(PlanningDialog.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(PlanningDialog.class, this);
         jButton1.setAction(actionMap.get("OK")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 

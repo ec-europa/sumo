@@ -19,9 +19,10 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -98,23 +99,16 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			this.gir=gir;//.clone();
 			this.numPointLimit=numLimitPoint;
 			
-			neighbouringDistance=Platform.getConfiguration().getNeighbourDistance(1.0);
-            tilesize=Platform.getConfiguration().getTileSize(200);
+			neighbouringDistance=SumoPlatform.getApplication().getConfiguration().getNeighbourDistance(1.0);
+            tilesize=SumoPlatform.getApplication().getConfiguration().getTileSize(200);
             removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
-            display = Platform.getConfiguration().getDisplayPixel()&&!Platform.isBatchMode();
-            displaybandanalysis= Platform.getConfiguration().getDisplayBandAnalysis();
-            agglomerationMethodology = Platform.getConfiguration().getAgglomerationAlg();
+            display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel()&&!SumoPlatform.isBatchMode();
+            displaybandanalysis= SumoPlatform.getApplication().getConfiguration().getDisplayBandAnalysis();
+            agglomerationMethodology = SumoPlatform.getApplication().getConfiguration().getAgglomerationAlg();
 		}
    
-		/**
-		 *  Exec the analysis process
-		 */
-		public void run() {
-			notifyStartProcessListener();
-			SarImageReader reader=((SarImageReader)gir);
-			
-			String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
-			
+		
+		public BlackBorderAnalysis runBBAnalysis(){
 			//run the blackborder analysis for the s1 images
 			BlackBorderAnalysis blackBorderAnalysis=null;
             if(gir instanceof Sentinel1){
@@ -129,22 +123,35 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
              if(blackBorderAnalysis!=null){
             	 notifyBBAnalysis("Start BB Analysis");
             	 if(!analysis.isAnalyseSingleTile()){
-            		 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis(),BlackBorderAnalysis.ANALYSE_ALL);
+            		 blackBorderAnalysis.analyse(SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis(),BlackBorderAnalysis.ANALYSE_ALL);
             	 }else{
             		 int[] sideToAnalyze=new int[]{-1 ,-1 ,-1 ,-1};
-            		 if(analysis.getxTileToAnalyze()<Platform.getConfiguration().getNumTileBBAnalysis())
+            		 if(analysis.getxTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[0]=BlackBorderAnalysis.ANALYSE_LEFT;
-            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/tilesize-Platform.getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/tilesize-SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[1]=BlackBorderAnalysis.ANALYSE_RIGHT;
-            		 if(analysis.getyTileToAnalyze()<Platform.getConfiguration().getNumTileBBAnalysis())
+            		 if(analysis.getyTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[2]=BlackBorderAnalysis.ANALYSE_TOP;
-            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/tilesize-Platform.getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/tilesize-SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[3]=BlackBorderAnalysis.ANALYSE_BOTTOM;
             		 
-            		 blackBorderAnalysis.analyse(Platform.getConfiguration().getNumTileBBAnalysis(),sideToAnalyze);
+            		 blackBorderAnalysis.analyse(SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis(),sideToAnalyze);
             	 }
              }
              //end blackborder analysis
+             return blackBorderAnalysis;
+		}
+		
+		/**
+		 *  Exec the analysis process
+		 */
+		public void run() {
+			notifyStartProcessListener();
+			SarImageReader reader=((SarImageReader)gir);
+			
+			String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
+			
+			BlackBorderAnalysis blackBorderAnalysis=runBBAnalysis();
              
              analysis.setBlackBorderAnalysis(blackBorderAnalysis);
              
@@ -213,7 +220,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     
 	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
 	                     
-	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layerName,
+	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layerName,
 	                    		 "point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, boats),
 	                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
 
@@ -274,10 +281,10 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                	 return;
 	                 }
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
-	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),"VDS analysis all bands merged", 
+	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),"VDS analysis all bands merged", 
 	                		 																	"point", new GeometricLayer("VDS Analysis","point",timeStampStart,azimuth, boats),
 	                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
-	                 boolean display = Platform.getConfiguration().getDisplayPixel();
+	                 boolean display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
 	                     vdsanalysisLayer.addThreshAggPixels(mergePixels.getThresholdaggregatePixels(), display);
 	                     vdsanalysisLayer.addThresholdPixels(mergePixels.getThresholdclipPixels(), display);

@@ -7,10 +7,11 @@ package org.geoimage.viewer.actions;
 import java.util.List;
 import java.util.Vector;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
@@ -30,7 +31,7 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
     }
 
     public boolean execute(String[] args) {
-        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+        for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
             	ImageLayer imL=((ImageLayer) l);
             	
@@ -42,7 +43,7 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
             	imL.setActiveBand(bb);
             	
            		((ImageLayer)imL).setName(imL.getImageReader());
-                Platform.setInfo(imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()), 2000);
+                SumoPlatform.setInfo(imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()), 2000);
             }
         }
         return true;

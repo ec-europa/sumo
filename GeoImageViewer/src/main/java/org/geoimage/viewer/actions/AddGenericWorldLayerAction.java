@@ -7,7 +7,7 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -44,9 +44,9 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.setInfo("Importing land coastline "+name,-1);
+                SumoPlatform.setInfo("Importing land coastline "+name,-1);
                 try {
-                	ImageLayer  l=Platform.getCurrentImageLayer();
+                	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
                 	if(l!=null){
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
@@ -59,7 +59,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                 	}   
                 } catch (Exception e) {
                 }
-                Platform.setInfo(null);
+                SumoPlatform.getApplication().setInfo(null);
             }
         }).start();
         return true;

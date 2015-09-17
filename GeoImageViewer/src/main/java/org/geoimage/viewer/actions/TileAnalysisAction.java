@@ -12,7 +12,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.Argument;
@@ -21,6 +21,7 @@ import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +58,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 	private void runBBAnalysis(){
 		//run the blackborder analysis for the s1 images
 		BlackBorderAnalysis blackBorderAnalysis=null;
-		GeoImageReader gir=Platform.getCurrentImageReader();
+		GeoImageReader gir=SumoPlatform.getApplication().getCurrentImageReader();
         if(gir instanceof Sentinel1){
                 /*MaskVectorLayer mv=null;
            	 	if(bufferedMask!=null&&bufferedMask.length>0)
@@ -68,7 +69,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
            	blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
          } 	
          if(blackBorderAnalysis!=null){
-        	 int nTile=Platform.getConfiguration().getNumTileBBAnalysis();
+        	 int nTile=SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis();
         	 blackBorderAnalysis.analyse(nTile,BlackBorderAnalysis.ANALYSE_ALL);
         	 List<Coordinate>cc=blackBorderAnalysis.getCoordinatesThresholds();
         	 GeometricLayer bbanal=new GeometricLayer("BBAnalysis",
@@ -78,7 +79,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
         	 LayerManager.addLayerInThread(
         			 GeometricLayer.POINT, 
         			 bbanal, 
-        			 Platform.getCurrentImageLayer());
+        			 LayerManager.getIstanceManager().getCurrentImageLayer());
         	 
          }
          //end blackborder analysis
@@ -88,7 +89,10 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 	@Override
 	public boolean execute(String[] args) {
 		try {
-			if(Platform.getCurrentImageLayer()!=null && args.length>=2){
+			SarImageReader sar=(SarImageReader) SumoPlatform.getApplication().getCurrentImageReader();
+			ImageLayer layer=LayerManager.getIstanceManager().getCurrentImageLayer();
+			
+			if(layer!=null && args.length>=2){
 				if(args[0].equalsIgnoreCase("bb")){
 					if(args.length==2 && args[1].equalsIgnoreCase("test")){
 						runBBAnalysis();
@@ -98,11 +102,11 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 						String direction="H"; //h= horizontal v=vertical
 						if(args.length==4)
 							direction=args[2];
-						BlackBorderAnalysis borderAn=new BlackBorderAnalysis((GeoImageReader)Platform.getCurrentImageReader(),0,null);
+						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 					}	
 				}else if(args[0].equalsIgnoreCase("vds")){
-					SarImageReader sar=(SarImageReader) Platform.getCurrentImageReader();
+					
 					int row=Integer.parseInt(args[1]);
 					int col=Integer.parseInt(args[2]);
 					Float hh=Float.parseFloat(args[3]);
@@ -112,7 +116,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 					
 					//read the land mask
 					ArrayList<IMask> mask = new ArrayList<IMask>();
-	                for (ILayer l : Platform.getLayerManager().getChilds(Platform.getCurrentImageLayer())) {
+	                for (ILayer l : LayerManager.getIstanceManager().getChilds(layer)) {
 	                    if (l instanceof IMask ) {
 	                        mask.add((IMask) l);
 	                    }
@@ -131,7 +135,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis, bufferedMask,0,0);
 					proc.addProcessListener(this);
 					Thread t=new Thread(proc);
-	                t.setName("VDS_analysis_"+Platform.getCurrentImageReader().getDisplayName(0));
+	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
 	                t.start();
 				}
 			}
@@ -220,7 +224,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 	@Override
 	public void endAnalysis() {
 		setDone(true);
-		Platform.getMain().removeStopListener(this);
+		SumoPlatform.getApplication().getMain().removeStopListener(this);
 		
 		if(proc!=null)
 			proc.dispose();
@@ -231,15 +235,15 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 		if(proc!=null&&e.getActionCommand().equals("STOP")){
 			this.proc.setStop(true);
 			this.message="stopping";
-			Platform.getMain().removeStopListener(this);
+			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc=null;
 		}	
 	}
 
 	@Override
 	public void layerReady(ILayer layer) {
-		if(!Platform.isBatchMode()){
-			Platform.getLayerManager().addLayer(layer);
+		if(!SumoPlatform.isBatchMode()){
+			LayerManager.getIstanceManager().addLayer(layer);
 		}
 	}
 

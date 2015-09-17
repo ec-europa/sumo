@@ -21,11 +21,12 @@ import javax.swing.filechooser.FileFilter;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -102,7 +103,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             layer = ps.getTable();
             config = ps.getConfig();
         } else {
-            ImageLayer l=Platform.getCurrentImageLayer();
+            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
             if(l!=null){
                     try {
                         PostgisIO pio=new PostgisIO(l.getImageReader(),config);
@@ -119,7 +120,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
 
     private void addQuery(String[] args) {
         try {
-            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+            for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer && l.isActive()) {
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
@@ -164,7 +165,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                 return;
             }
         }
-        ImageLayer l=Platform.getCurrentImageLayer();
+        ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(l!=null){
                 try {
                 	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
@@ -179,7 +180,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
     private void addSimpleCSV(String[] args) {
         if (args.length == 4&&args[1].contains("=")) {
             String file=args[1].split("=")[3];
-            ImageLayer l=Platform.getCurrentImageLayer();
+            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
             if(l!=null){
             		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
                     GeometricLayer positions = csvio.readLayer();
@@ -199,7 +200,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    ImageLayer l=Platform.getCurrentImageLayer();
+                    ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
                     if(l!=null){
                     		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     		GeometricLayer positions = csvio.readLayer();
@@ -228,7 +229,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.getLayerManager().addLayer(createLayer(id, date, layer, il));
+                LayerManager.getIstanceManager().addLayer(createLayer(id, date, layer, il));
                 done = true;
             }
         }).start();

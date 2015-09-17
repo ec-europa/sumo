@@ -3,7 +3,7 @@ package org.geoimage.viewer.core.layers.image;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.slf4j.LoggerFactory;
 
 public class Cache {
@@ -13,14 +13,14 @@ public class Cache {
 
 		
 	    public Cache(String id) {
-	    	this.path = new File(new StringBuilder(Platform.getCachePath()).append("/").append(id).toString());
+	    	this.path = new File(new StringBuilder(SumoPlatform.getApplication().getCachePath()).append("/").append(id).toString());
 	    	this.id=id;
 	    	if(!path.exists())
 	        	 path.mkdirs();
 	    }
 		
 	    public Cache() {
-	    	this.path = new File(Platform.getCachePath());
+	    	this.path = new File(SumoPlatform.getApplication().getCachePath());
 	        if(!path.exists())
 	        	 path.mkdirs();
 	    }

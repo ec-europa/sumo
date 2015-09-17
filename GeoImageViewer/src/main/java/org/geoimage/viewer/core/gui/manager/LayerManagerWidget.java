@@ -12,7 +12,7 @@ import org.fenggui.Display;
 import org.fenggui.layout.FormAttachment;
 import org.fenggui.layout.FormData;
 import org.fenggui.layout.RowLayout;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.widget.LayerWidget;
 
@@ -64,24 +64,24 @@ public class LayerManagerWidget {
     public void buildWidget() {
     	wContainer.setLayoutManager(new RowLayout(true));
     	
-    	LayerWidget console=new LayerWidget(Platform.getLayerManager().getConsoleLayer());
+    	LayerWidget console=new LayerWidget(SumoPlatform.getApplication().getLayerManager().getConsoleLayer());
     	//console.setMinSize(20,20);
     	
     	
     	wContainer.addWidget(console);
     	
-    	Container parent=new LayerWidget(Platform.getLayerManager().getBaseLayer());
+    	Container parent=new LayerWidget(SumoPlatform.getApplication().getLayerManager().getBaseLayer());
     	wContainer.addWidget(parent,0);
     	parent.setLayoutManager(new RowLayout(false));
 
-    	Collection<ILayer> ll=Platform.getLayerManager().getLayers().keySet();
+    	Collection<ILayer> ll=SumoPlatform.getApplication().getLayerManager().getLayers().keySet();
     	
         for (final ILayer l : ll) {
       			LayerWidget lw=new LayerWidget(l);
       			lw.setLayoutManager(new RowLayout(false));
       			parent.addWidget(lw);
       			
-      			List<ILayer>childs= Platform.getLayerManager().getLayers().get(l);
+      			List<ILayer>childs= SumoPlatform.getApplication().getLayerManager().getLayers().get(l);
       			for(ILayer c:childs){
       				LayerWidget cw=new LayerWidget(c);
       				lw.addWidget(cw);

@@ -90,7 +90,7 @@ public class BatchAnalysisGUI extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(BatchAnalysisGUI.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(BatchAnalysisGUI.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
@@ -130,7 +130,7 @@ public class BatchAnalysisGUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(BatchAnalysisGUI.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(BatchAnalysisGUI.class, this);
         jButton2.setAction(actionMap.get("runAnalysis")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
@@ -278,7 +278,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     @Action
     public Task runAnalysis() {
-        return new RunAnalysisTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class));
+        return new RunAnalysisTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class));
     }
 
     private void tryCatalog() throws Exception {
@@ -557,7 +557,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     @Action
     public Task createKML() {
-        return new CreateKMLTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class));
+        return new CreateKMLTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class));
 
     }
 
