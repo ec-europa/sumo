@@ -14,7 +14,7 @@ import javax.media.opengl.GLBase;
 
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -57,7 +57,7 @@ public class ThumbnailsLayer extends GenericLayer {
         this.scale=thumbReader.getWidth()/(1f*thumbReader.getHeight())*(overview.getHeight()/(1f*overview.getWidth()));
         //this.size = this.tmanager.getImageSize();
 
-        Platform.getLayerManager().addLayer(new EditGeometryVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
+        SumoPlatform.getApplication().getLayerManager().addLayer(new EditGeometryVectorLayer(this,"analysis", this.glayer.getGeometryType(), this.glayer));
         setName("Thumbnails Image");
         super.init(parent);
     }
@@ -84,7 +84,7 @@ public class ThumbnailsLayer extends GenericLayer {
         context.setX(0);
         context.setY(0);
         context.setZoom(Math.max(thumbReader.getWidth() / context.getWidth(),thumbReader.getHeight() / context.getHeight()));
-        Platform.getLayerManager().render(context);
+        SumoPlatform.getApplication().getLayerManager().render(context);
     }
 
     public BufferedImage get(Point position) {

@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.PositionLayer;
 import org.geotools.referencing.CRS;
@@ -53,7 +53,7 @@ public class PositionDialog extends javax.swing.JDialog{
 
             public void windowClosing(WindowEvent e) {
                 layer.setActive(false);
-                Platform.refresh();
+                SumoPlatform.refresh();
             }
 
             public void windowClosed(WindowEvent e) {

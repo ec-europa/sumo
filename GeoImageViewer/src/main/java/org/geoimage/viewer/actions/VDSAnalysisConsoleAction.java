@@ -16,13 +16,14 @@ import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -60,8 +61,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
-        int bufferingDistance = Double.valueOf((Platform.getConfiguration()).getBufferingDistance()).intValue();
-        Platform.getMain().addStopListener(this);
+        int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
+        SumoPlatform.getApplication().getMain().addStopListener(this);
         
         if (args.length < 2) {
             return true;
@@ -70,7 +71,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             if (args[0].equals("k-dist")) {
                 done = false;
                 
-                ImageLayer cl=Platform.getCurrentImageLayer();
+                ImageLayer cl=LayerManager.getIstanceManager().getCurrentImageLayer();
                 GeoImageReader reader = ((ImageLayer) cl).getImageReader();
                 if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
                     gir = reader;
@@ -102,7 +103,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 }
                 //read the land mask
                 mask = new ArrayList<IMask>();
-                for (ILayer l : Platform.getLayerManager().getChilds(cl)) {
+                for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                         mask.add((IMask) l);
                     }
@@ -153,11 +154,11 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 
         Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
         ArrayList<String> vectors = new ArrayList<String>();
-        ImageLayer il=Platform.getCurrentImageLayer();
+        ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
-            for (ILayer l : Platform.getLayerManager().getAllLayers()) {
+            for (ILayer l : LayerManager.getIstanceManager().getAllLayers()) {
                 if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometricLayer.POINT)) {
                     vectors.add(l.getName());
                 }
@@ -166,7 +167,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         a3.setPossibleValues(vectors.toArray());
         List<Argument> out = new ArrayList<Argument>();
 
-        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, Platform.getConfiguration().getBufferingDistance());
+        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 
         //management of the different threshold in the VDS parameters panel
         out.add(a1);
@@ -292,7 +293,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 	@Override
 	public void endAnalysis() {
 		setDone(true);
-		Platform.getMain().removeStopListener(this);
+		SumoPlatform.getApplication().getMain().removeStopListener(this);
 		
 		if(proc!=null)
 			proc.dispose();
@@ -303,15 +304,15 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
 		if(proc!=null&&e.getActionCommand().equals("STOP")){
 			this.proc.setStop(true);
 			this.message="stopping";
-			Platform.getMain().removeStopListener(this);
+			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc=null;
 		}	
 	}
 
 	@Override
 	public void layerReady(ILayer layer) {
-		if(!Platform.isBatchMode()){
-			Platform.getLayerManager().addLayer(layer);
+		if(!SumoPlatform.isBatchMode()){
+			LayerManager.getIstanceManager().addLayer(layer);
 		}
 		
 	}

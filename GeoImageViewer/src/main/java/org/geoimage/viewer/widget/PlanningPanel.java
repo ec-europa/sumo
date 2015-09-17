@@ -187,7 +187,7 @@ public class PlanningPanel extends javax.swing.JPanel {
 
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(PlanningPanel.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(PlanningPanel.class);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
@@ -200,7 +200,7 @@ public class PlanningPanel extends javax.swing.JPanel {
 
         jScrollPane2.setViewportView(jScrollPane1);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(PlanningPanel.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(PlanningPanel.class, this);
         jButton1.setAction(actionMap.get("toggleScanning")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N

@@ -29,7 +29,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -167,11 +167,11 @@ public class ImageLayer implements ILayer  {
         xpadding = (((1 << levels) << 8) - gir.getWidth()) / 2;  // is equal to(int)((Math.pow(2,levels+8)- gir.getWidth())/2);
         ypadding = (((1 << levels) << 8) - gir.getHeight()) / 2; //			   (int)((Math.pow(2,levels+8)- gir.getHeight())/2);
         
-        String temp = Platform.getConfiguration().getMaxTileBuffer();
+        String temp = SumoPlatform.getApplication().getConfiguration().getMaxTileBuffer();
         int maxBuffer = Integer.parseInt(temp);
         tcm = new TextureCacheManager(maxBuffer);
         setInitialContrast();
-        maxnumberoftiles = Platform.getConfiguration().getMaxNumOfTiles();
+        maxnumberoftiles = SumoPlatform.getApplication().getConfiguration().getMaxNumOfTiles();
         createMatrixTileOrder();
         
         
@@ -388,7 +388,7 @@ public class ImageLayer implements ILayer  {
 		            }
 		        }
 	        displayDownloading(futures.size());
-	        Platform.refresh();
+	        SumoPlatform.getApplication().refresh();
 	        if (this.disposed) {
 	            disposeSync();
 	        }
@@ -398,9 +398,9 @@ public class ImageLayer implements ILayer  {
     private void displayDownloading(int size) {
         if (currentSize != size) {
             if (size == 0) {
-                Platform.setInfo("", -1);
+                SumoPlatform.setInfo("", -1);
             } else {
-                Platform.setInfo(new StringBuilder("loading ").append(size).toString());
+                SumoPlatform.getApplication().setInfo(new StringBuilder("loading ").append(size).toString());
             }
 
             currentSize = size;
@@ -632,7 +632,7 @@ public class ImageLayer implements ILayer  {
         	imagePool.dispose();
         	imagePool = null;
         }
-        Platform.getLayerManager().removeLayer(this);
+        SumoPlatform.getApplication().getLayerManager().removeLayer(this);
     }
 
     private void disposeSync() {
@@ -647,7 +647,7 @@ public class ImageLayer implements ILayer  {
         submitedTiles = null;
         imagePool.dispose();
         imagePool = null;
-        Platform.getLayerManager().removeLayer(this);
+        SumoPlatform.getApplication().getLayerManager().removeLayer(this);
     }
 
     public GeoImageReader getImageReader() {

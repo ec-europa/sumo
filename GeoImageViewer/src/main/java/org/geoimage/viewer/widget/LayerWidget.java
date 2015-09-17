@@ -16,7 +16,7 @@ import org.fenggui.event.mouse.MousePressedEvent;
 import org.fenggui.layout.FormAttachment;
 import org.fenggui.layout.FormData;
 import org.fenggui.util.Color;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.layers.BaseLayer;
@@ -52,14 +52,14 @@ public class LayerWidget extends Container {
             public void mousePressed(MousePressedEvent e) {
                 if (e.getButton() == MouseButton.LEFT) {
                 	if(!(layer instanceof ConsoleLayer || layer instanceof BaseLayer)){
-                		if(layer.getParent()==null)
+                		/*if(layer.getParent()==null)
                 			layer.setActive(!layer.isActive());
                 		else{
                 			if(layer.getParent().isActive())
                 				layer.setActive(!layer.isActive());
-                		}
-                    	Platform.getLayerManager().notifyLayerClicked(layer);
-                    	Platform.refresh();
+                		}*/
+                    	SumoPlatform.getApplication().getLayerManager().notifyLayerClicked(layer);
+                    	SumoPlatform.refresh();
                 	}
                 } else if (e.getButton() == MouseButton.RIGHT) {
                     LayerDialog dialog = dialogs.get(layer);
@@ -75,7 +75,7 @@ public class LayerWidget extends Container {
                         fd.left = new FormAttachment(0, 500);
                         fd.bottom = new FormAttachment(0, 0);
                         bar.setLayoutData(fd);
-                        Platform.addWidget(bar);
+                        SumoPlatform.getApplication().addWidget(bar);
                     }
 
                 }

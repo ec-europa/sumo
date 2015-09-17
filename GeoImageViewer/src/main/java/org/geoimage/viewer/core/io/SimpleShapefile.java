@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
@@ -227,7 +227,7 @@ public class SimpleShapefile extends AbstractVectorIO{
         
         //create new datastore to save the new shapefile
         FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-        File tmp=new File(Platform.getCachePath()+"\\tmpshape_"+System.currentTimeMillis()+".shp");
+        File tmp=new File(SumoPlatform.getApplication().getCachePath()+"\\tmpshape_"+System.currentTimeMillis()+".shp");
         Map<String, Serializable> params2 = new HashMap<String, Serializable>();
         params2.put("url", tmp.toURI().toURL());
         ShapefileDataStore newds=(ShapefileDataStore)factory.createNewDataStore(params2);

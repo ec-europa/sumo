@@ -19,7 +19,7 @@ import javax.swing.filechooser.FileFilter;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
@@ -53,10 +53,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     private String message = "Adding data. Please wait...";
 
     public AddVectorConsoleAction() {
-        if(Platform.getConfiguration().getLastVector().equals("")){
+        if(SumoPlatform.getApplication().getConfiguration().getLastVector().equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
-            lastDirectory = new File(Platform.getConfiguration().getLastVector()).getAbsolutePath();
+            lastDirectory = new File(SumoPlatform.getApplication().getConfiguration().getLastVector()).getAbsolutePath();
         }
     	fd = new JFileChooser(lastDirectory);
 
@@ -105,7 +105,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     }
 
     private void addGenericCSV(String[] args) {
-    	ImageLayer l=Platform.getCurrentImageLayer();
+    	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 //AG changed "noncomplexlayer" to "complexvds"
         if (args.length == 2) {
             if(l!=null){
@@ -129,7 +129,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
                     lastDirectory = fd.getSelectedFile().getParent();
-                    Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
+                    SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
                     GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     
                     
@@ -181,7 +181,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                 }
             }
         }
-        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+        for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
             if (l instanceof ImageLayer && l.isActive()) {
                 try {
                     DatabaseDialog dialog = new DatabaseDialog(null, false);
@@ -202,7 +202,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 
     private void addQuery(String[] args) {
         try {
-            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+            for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer && l.isActive()) {
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
@@ -240,7 +240,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 lastDirectory = fd.getSelectedFile().getParent();
-                Platform.getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
+                SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
                 file = fd.getSelectedFile();
             } catch (Exception ex) {
             	logger.error(ex.getMessage(), ex);
@@ -263,7 +263,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         	file=selectFile();
         }
         
-        ImageLayer imgLayer=Platform.getCurrentImageLayer();
+        ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
         		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
@@ -290,7 +290,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     	try {
 	        if (args.length == 2) {
 	            String file=args[1].split("=")[1];
-	            ImageLayer l=Platform.getCurrentImageLayer();
+	            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	            if(l!=null){
 	            		GenericCSVIO csv=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
 	                    GeometricLayer positions = csv.readLayer();
@@ -304,7 +304,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	        } else {
 	            int returnVal = fd.showOpenDialog(null);
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            		ImageLayer l=Platform.getCurrentImageLayer();
+	            		ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                    lastDirectory = fd.getSelectedFile().getParent();
 	                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
 	                    
@@ -336,7 +336,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     	try{
 	        if (args.length == 2) {
 	        	File f=new File(args[2].split("=")[3]);
-	        	ImageLayer l=Platform.getCurrentImageLayer();
+	        	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	            if(l!=null){
 	            		SumoXmlIOOld old=new SumoXmlIOOld(f);
 	            		GeometricLayer positions = old.readLayer();
@@ -353,7 +353,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	                try {
 	                    lastDirectory = fd.getSelectedFile().getParent();
 	                    SumoXmlIOOld old=new SumoXmlIOOld(fd.getSelectedFile());
-	                    ImageLayer l=Platform.getCurrentImageLayer();
+	                    ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                    if(l!=null){
 		                    GeometricLayer positions = old.readLayer();
 		                    if (positions.getProjection() == null) {
@@ -387,7 +387,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            try {
 	                lastDirectory = fd.getSelectedFile().getParent();
-	                ImageLayer l=Platform.getCurrentImageLayer();
+	                ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                if(l!=null){
 	                		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
 	                        GeometricLayer positions = gmlIO.readLayer();

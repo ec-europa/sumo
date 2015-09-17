@@ -12,9 +12,10 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IMouseMove;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.Positioning;
@@ -94,7 +95,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         if (active) {
         	try{
 	            if (initPosition != null) {
-	            	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+	            	GeodeticCalculator gc=Positioning.computeDistance(LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
 	    	        //pd.setDistance(""+Math.sqrt((init[0]-end[0])*(init[0]-end[0])+(init[1]-end[1])*(init[1]-end[1]))+" Meters");
 	    	        pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
 	
@@ -113,7 +114,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
             } else if (endPosition == null) {
                 endPosition = imagePosition;
                 try{
-                	GeodeticCalculator gc=Positioning.computeDistance(Platform.getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
+                	GeodeticCalculator gc=Positioning.computeDistance(LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader().getGeoTransform(),initPosition,endPosition,imagePosition);
                 	pd.setDistance("" + (float)(Math.round(gc.getOrthodromicDistance()*1000))/1000 + " Meters");
                 }catch(Exception e){
             		logger.warn(e.getMessage());

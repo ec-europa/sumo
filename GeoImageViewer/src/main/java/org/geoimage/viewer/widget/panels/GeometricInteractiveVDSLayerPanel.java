@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -197,8 +197,9 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
 
     public void keyPressed(KeyEvent e) {
     	FlagTable t=(FlagTable)e.getSource();
+    	OpenGLContext glc=SumoPlatform.getApplication().getGeoContext();
         switch(e.getKeyCode())
-        {
+        {	 
         	
             // toggle the display of the additional geometries
             case 'D':
@@ -211,39 +212,39 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             case 'B':
             case 'b':
             {
-                Platform.getConsoleLayer().execute("bs");
+                SumoPlatform.getApplication().getConsoleLayer().execute("bs");
             } break;
             // increase the contrast
             case KeyEvent.VK_C:
             {
                 if(e.isShiftDown())
-                    Platform.getConsoleLayer().execute("contrast +10");
+                    SumoPlatform.getApplication().getConsoleLayer().execute("contrast +10");
                 else
-                    Platform.getConsoleLayer().execute("contrast -10");
+                    SumoPlatform.getApplication().getConsoleLayer().execute("contrast -10");
             } break;
             // move image up
             case KeyEvent.VK_UP:
             {
                 if(e.isAltDown())
-                    Platform.getGeoContext().setY(Platform.getGeoContext().getY() - Platform.getGeoContext().getHeight() / 3);
+                    glc.setY(glc.getY() - glc.getHeight() / 3);
             } break;
             // move image down
             case KeyEvent.VK_DOWN:
             {
                 if(e.isAltDown())
-                    Platform.getGeoContext().setY(Platform.getGeoContext().getY() + Platform.getGeoContext().getHeight() / 3);
+                    glc.setY(glc.getY() + glc.getHeight() / 3);
             } break;
             // move image left
             case KeyEvent.VK_LEFT:
             {
                 if(e.isAltDown())
-                    Platform.getGeoContext().setX(Platform.getGeoContext().getX() - Platform.getGeoContext().getWidth() / 3);
+                    glc.setX(glc.getX() - glc.getWidth() / 3);
             } break;
             // move image right
             case KeyEvent.VK_RIGHT:
             {
                 if(e.isAltDown())
-                    Platform.getGeoContext().setX(Platform.getGeoContext().getX() + Platform.getGeoContext().getWidth() / 3);
+                    glc.setX(glc.getX() + glc.getWidth() / 3);
             } break;
             // zoom out image
             case KeyEvent.VK_Z:
@@ -259,7 +260,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             		}	
             		
             	}else{
-                    OpenGLContext geoContext = Platform.getGeoContext();
+                    OpenGLContext geoContext = glc;
                     float zoom = (float) geoContext.getZoom();
                     if(e.isShiftDown())
                     {

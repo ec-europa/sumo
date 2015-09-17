@@ -374,7 +374,7 @@ public class ImagePlanning {
                             // execute action script
                             logger.info("\naction\n" + action);
                             processingmessage = "Processing Image in SUMO";
-                            Platform.getConsoleLayer().runScriptString(action);
+                            SumoPlatform.getApplication().getConsoleLayer().runScriptString(action);
                             processingmessage = "Processed";
 
                             imagedownloaded = true;

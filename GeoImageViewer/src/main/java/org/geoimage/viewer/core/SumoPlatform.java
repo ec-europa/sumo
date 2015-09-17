@@ -6,38 +6,39 @@ package org.geoimage.viewer.core;
 
 
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JPopupMenu;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.TransparentWidget;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.SingleFrameApplication;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
-public class Platform {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(Platform.class);
+public class SumoPlatform extends SingleFrameApplication {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoPlatform.class);
 
     private static boolean batchMode=false;
+    private PluginsManager plManager=null;
+    private static int maxPBar = 0;
+    
+    
     /*private static Thread currentThreadRunning=null;
-    
-    
     public Thread getCurrentThreadRunning() {
 		return currentThreadRunning;
 	}
-
 	public static void setCurrentThreadRunning(Thread currentThread) {
 		currentThreadRunning = currentThread;
 	}
-
 	public static void stopCurrentThread(){
 		if(currentThreadRunning!=null&&currentThreadRunning.isAlive()){
 			try{
@@ -47,6 +48,38 @@ public class Platform {
 			}	
 		}
 	}*/
+    
+    
+    /**
+     * At startup create and show the main frame of the application.
+     */
+    @Override
+    protected void startup() {
+        try {
+        	plManager=new PluginsManager();
+            show(new GeoImageViewerView(this));
+        } catch (Throwable ex) {
+        	logger.error(ex.getMessage(), ex);
+        }
+    }
+
+    /**
+     * This method is to initialize the specified window by injecting resources.
+     * Windows shown in our application come fully initialized from the GUI
+     * builder, so this additional configuration is not needed.
+     */
+    @Override
+    protected void configureWindow(java.awt.Window root) {
+    }
+
+    /**
+     * A convenient static getter for the application instance.
+     * @return the instance of SumoPlatform
+     */
+    public static SumoPlatform getApplication() {
+        return Application.getInstance(SumoPlatform.class);
+    }
+    
 	
 	/**
      * 
@@ -71,42 +104,56 @@ public class Platform {
 		batchMode = false;
 	}
 
-	
+	public PluginsManager getPluginsManager(){
+		return this.plManager;
+	}
 
-    public static ConsoleLayer getConsoleLayer() {
-        return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getConsole();
+    public ConsoleLayer getConsoleLayer() {
+        return ((GeoImageViewerView) getApplication().getMainView()).getConsole();
     }
 
-    public static OpenGLContext getGeoContext() {
-        return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getGeoContext();
+    public OpenGLContext getGeoContext() {
+        return ((GeoImageViewerView) getApplication().getMainView()).getGeoContext();
     }
 
-    public static LayerManager getLayerManager() {
+    public LayerManager getLayerManager() {
         return LayerManager.getIstanceManager();
     }
 
-    public static GLCanvas getMainCanvas() {
-        return ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).getMainCanvas();
+    public GLCanvas getMainCanvas() {
+        return ((GeoImageViewerView) getApplication().getMainView()).getMainCanvas();
     }
     
-    public static GeoImageViewerView getMain() {
-        return (GeoImageViewerView) GeoImageViewer.getApplication().getMainView();
+    public GeoImageViewerView getMain() {
+        return (GeoImageViewerView) getApplication().getMainView();
+    }
+    
+    static void setCacheManager(CacheManager cacheManager) {
+        ((GeoImageViewerView) getApplication().getMainView()).setCacheManager(cacheManager);
+    }
+
+    public PlatformConfiguration getConfiguration() {
+        return PlatformConfiguration.getConfigurationInstance();
+    }
+
+    public void addWidget(TransparentWidget widget) {
+        ((GeoImageViewerView) getApplication().getMainView()).addWidget(widget);
     }
     
     
     public static void refresh() {
-        ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).refresh();
+        ((GeoImageViewerView) getApplication().getMainView()).refresh();
     }
-    private static int maxPBar = 0;
+    
 
-    public static void setInfo(String info) {
+    public void setInfo(String info) {
         setInfo(info, 10000);
     }
 
     public static void setInfo(String info, long timeout) {
         //AG progress bar management
         int progress = 0;//AG
-        GeoImageViewerView mainView=((GeoImageViewerView) GeoImageViewer.getApplication().getMainView());
+        GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
         if (info == null || "".equals(info)) {
         	mainView.setInfo("");
             maxPBar = 0;//AG
@@ -140,38 +187,12 @@ public class Platform {
         }
     }
 
-    static void setCacheManager(CacheManager cacheManager) {
-        ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).setCacheManager(cacheManager);
-    }
-
-    public static PlatformConfiguration getConfiguration() {
-        return PlatformConfiguration.getConfigurationInstance();
-    }
-
-    public static void addWidget(TransparentWidget widget) {
-        ((GeoImageViewerView) GeoImageViewer.getApplication().getMainView()).addWidget(widget);
-    }
-
-    public static ImageLayer getCurrentImageLayer() {
-    	if(!Platform.batchMode){
-	        for (ILayer l : getLayerManager().getLayers().keySet()) {
-	            if (l instanceof ImageLayer && l.isActive()) {
-	                try {
-	                    return (ImageLayer) l;
-	                } catch (Exception ex) {
-	                	logger.error(ex.getMessage(),ex);
-	                }
-	            }
-	        }
-    	}    
-        return null;
-    }
     
-    public static GeoImageReader getCurrentImageReader(){
+    public GeoImageReader getCurrentImageReader(){
     	if(isBatchMode()){
     		return Sumo.getCurrentReader();
     	}else{
-    		return getCurrentImageLayer().getImageReader();
+    		return LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader();
     	}
     	
     }
@@ -181,13 +202,19 @@ public class Platform {
      * search the cache in the DB, if it doesn't exist then read the properties file
      * even if the file is empty a default path is used
      */
-    public static String getCachePath() {
-        String cache = Platform.getConfiguration().getCachePrefFolder();
+    public String getCachePath() {
+        String cache = getConfiguration().getCachePrefFolder();
         return cache;
     }
     
     
     
-    
+    /**
+     * Main method launching the application.
+     */
+    public static void main(String[] args) {
+            JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+            launch(SumoPlatform.class, args);
+    }
    
 }

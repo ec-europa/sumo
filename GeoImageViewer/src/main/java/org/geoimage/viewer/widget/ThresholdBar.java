@@ -21,7 +21,7 @@ import org.fenggui.render.Binding;
 import org.fenggui.render.Graphics;
 import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.slf4j.LoggerFactory;
 
@@ -68,14 +68,14 @@ public class ThresholdBar extends TransparentWidget {
         ThresholdBar bar = new ThresholdBar(layer);
         final double min = layer.getMinimumThresh()-0.01;
         final double max = layer.getMaximumThresh()+0.01;
-        int classes=Integer.parseInt(Platform.getConfiguration().getNumHistgramClasses());
+        int classes=Integer.parseInt(SumoPlatform.getApplication().getConfiguration().getNumHistgramClasses());
         bar.setHistogram(layer.getHistogram(classes));
         bar.slider.setValue((layer.getThresh()-min)/(max-min));
         bar.addListener(new ISliderMovedListener() {
 
             public void sliderMoved(SliderMovedEvent sliderMovedEvent) {
                 layer.setThresh(min + (max - min) * sliderMovedEvent.getPosition());
-                Platform.refresh();
+                SumoPlatform.refresh();
             }
         });
         return bar;
@@ -95,8 +95,8 @@ public class ThresholdBar extends TransparentWidget {
         this.histogram = histogram;
         BufferedImage buf = null;
         try {
-            System.out.println(Platform.getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
-            buf = ImageIO.read(new URL(Platform.getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
+            System.out.println(SumoPlatform.getApplication().getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram));
+            buf = ImageIO.read(new URL(SumoPlatform.getApplication().getConfiguration().getGoogleChartApi()+"&chxr=0,"+layer.getMinimumThresh()+","+layer.getMaximumThresh()+"&chd=t:"+getValues(histogram)));
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }

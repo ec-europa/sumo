@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.slf4j.LoggerFactory;
 
 
@@ -61,7 +61,7 @@ public class Sumo {
 	
 	public Sumo(){
 		params=new AnalysisParams();
-		Platform.setInBatchMode();
+		SumoPlatform.setInBatchMode();
 		startDate=new Date();
 		params.startDate=startDate;
 	}
@@ -147,7 +147,7 @@ public class Sumo {
 	        	if(index!=-1){
 	        		params.buffer=Integer.parseInt(inputParams.get(index+1));
 	        	}else{
-	        		params.buffer=Integer.parseInt(Platform.getConfiguration().getBufferingDistance());
+	        		params.buffer=Integer.parseInt(SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 	        	}
 	
 	        	//set the treshold params
@@ -179,7 +179,7 @@ public class Sumo {
 	        		params.shapeFile=inputParams.get(index+1);
 	        	}else{
 	        		//search default shp file
-	        		params.shapeFile=Platform.getConfiguration().getDefaultLandMask();
+	        		params.shapeFile=SumoPlatform.getApplication().getConfiguration().getDefaultLandMask();
 	        	}
 	        } 	
         }

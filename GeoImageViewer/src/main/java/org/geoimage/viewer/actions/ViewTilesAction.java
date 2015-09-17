@@ -8,9 +8,10 @@ import javax.swing.SwingUtilities;
 import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.GeometryExtractor;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class ViewTilesAction extends AbstractAction{
 
 	            public void run() {
 	                try {
-	                	ImageLayer  l=Platform.getCurrentImageLayer();
+	                	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                	if(l!=null){
 	                        try {
 	                        	GeoImageReader gir=l.getImageReader();
@@ -71,7 +72,7 @@ public class ViewTilesAction extends AbstractAction{
 	                }finally{
 	                	done=true;
 	                }
-	                Platform.setInfo(null);
+	                SumoPlatform.getApplication().setInfo(null);
 	            }
 	        }).start();
 	        return true;
@@ -93,7 +94,7 @@ public class ViewTilesAction extends AbstractAction{
             new Thread(new Runnable() {
 
                 public void run() {
-                    Platform.getLayerManager().addLayer(layer);
+                    LayerManager.getIstanceManager().addLayer(layer);
                     done = true;
                 }
             }).start();

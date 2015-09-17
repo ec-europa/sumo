@@ -8,8 +8,9 @@ import java.util.List;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -40,8 +41,6 @@ public class FactoryLayer {
 	 */            	//TODO: implement another way to understand the type of the layer
 	public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
-       //TODO: check if works after developments for the schema
-        //String[] types = layer.getSchemaTypes();
         boolean timestamplayer = false;
         String timecolumnname = "";
         if (type.equals(TYPE_COMPLEX)) {
@@ -50,11 +49,11 @@ public class FactoryLayer {
                 layer.remove(frame);
                 List<Geometry> frames = new ArrayList<Geometry>();
                 frames.add(frame);
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(),  layer.getGeometryType(), layer,landMask);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(),  layer.getGeometryType(), layer,landMask);
                 clayer.addGeometries("image frame", Color.BLUE, 1, GeometricLayer.LINESTRING, frames, false);
                 return clayer;
             } else {
-                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer,landMask);
+                ComplexEditVDSVectorLayer clayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer,landMask);
                 return clayer;
             }
 
@@ -72,10 +71,10 @@ public class FactoryLayer {
             if (!timestamplayer) {
             	//TODO: implement another way to understand the type of the layer
                 //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
-                return new MaskVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
+                return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
             } else {
                 TimeComponent.setDirty(true);
-                return new TimeVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer, timecolumnname);
+                return new TimeVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer, timecolumnname);
             }
         }
     }
@@ -90,7 +89,7 @@ public class FactoryLayer {
 	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeometricLayer layer) {
 		 MaskVectorLayer mask = null;
         try {
-            mask = (new MaskVectorLayer(Platform.getCurrentImageLayer(),name, type, layer.clone()));
+            mask = (new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),name, type, layer.clone()));
            	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);

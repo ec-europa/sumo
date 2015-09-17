@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -49,12 +49,12 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.setInfo("Importing land mask from GSHHS shapefile...",-1);
+                SumoPlatform.setInfo("Importing land mask from GSHHS shapefile...",-1);
                 try {
-                	ImageLayer  l=Platform.getCurrentImageLayer();
+                	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
                 	if(l!=null){
                         try {
-                        	File shape=new File(Platform.getConfiguration().getDefaultLandMask());
+                        	File shape=new File(SumoPlatform.getApplication().getConfiguration().getDefaultLandMask());
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
                             //addLayerInThread(gl, (ImageLayer) l);
@@ -65,7 +65,7 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
                 	}   
                 } catch (Exception e) {
                 }
-                Platform.setInfo(null);
+                SumoPlatform.getApplication().setInfo(null);
             }
         }).start();
         return true;
