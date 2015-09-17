@@ -9,8 +9,9 @@ package org.geoimage.viewer.widget.panels;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.widget.dialog.LayerDialog;
 
 /**
@@ -146,19 +147,19 @@ public class LayerPanel extends JPanel {
                 jTextField1.setText(""+layer.getName());
             }
         }
-        Platform.refresh();        
+        SumoPlatform.refresh();        
     }//GEN-LAST:event_jTextField1KeyPressed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         layer.setActive(jCheckBox1.isSelected());
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         layer.dispose();
-       	Platform.getLayerManager().removeLayer(layer);
+        LayerManager.getIstanceManager().removeLayer(layer);
         ((JDialog)this.getParent().getParent().getParent().getParent().getParent()).dispose();
-        Platform.refresh();
+        SumoPlatform.refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked

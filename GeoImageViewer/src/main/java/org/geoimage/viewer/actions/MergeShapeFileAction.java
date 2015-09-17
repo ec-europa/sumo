@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -43,13 +43,12 @@ public class MergeShapeFileAction extends AbstractAction  {
         if(shpFile!=null)
 	        new Thread(new Runnable() {
 	            public void run() {
-	                Platform.setInfo("Building new coastline ",-1);
+	                SumoPlatform.setInfo("Building new coastline ",-1);
 	                try {
-	                	ImageLayer  l=Platform.getCurrentImageLayer();
+	                	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                	if(l!=null){
 	                        try {
-	                        	ImageLayer layer=Platform.getCurrentImageLayer();
-	                        	MaskVectorLayer ml=Platform.getLayerManager().getChildMaskLayer(layer);
+	                        	MaskVectorLayer ml=LayerManager.getIstanceManager().getChildMaskLayer(l);
 	                        	if(ml!=null){
 	                        		GeometricLayer gl = SimpleShapefile.addShape(ml.getGeometriclayer(), shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
@@ -61,7 +60,7 @@ public class MergeShapeFileAction extends AbstractAction  {
 	                	}   
 	                } catch (Exception e) {
 	                }
-	                Platform.setInfo(null);
+	                SumoPlatform.getApplication().setInfo(null);
 	            }
 	        }).start();
         return true;

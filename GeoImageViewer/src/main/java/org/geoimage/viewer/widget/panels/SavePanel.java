@@ -20,9 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
 import org.geoimage.viewer.common.OptionMenu;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -228,7 +229,7 @@ public class SavePanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String filename = null;
-        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+        for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
                 filename = ((ImageLayer) l).getName();
                 break;

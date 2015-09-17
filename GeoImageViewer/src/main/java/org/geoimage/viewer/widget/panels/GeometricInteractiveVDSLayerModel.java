@@ -15,10 +15,12 @@ import javax.swing.table.DefaultTableModel;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -50,7 +52,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         this.gl = ((EditGeometryVectorLayer) layer).getGeometriclayer();
         this.il = null;
 
-        for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+        for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer && l.isActive()) {
                 il = (ImageLayer) l;
                 break;
@@ -59,7 +61,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
         vdslayer = (IComplexVectorLayer) layer;
 
-        PlatformConfiguration configuration = Platform.getConfiguration();
+        PlatformConfiguration configuration = SumoPlatform.getApplication().getConfiguration();
         // set the preferences values
         try {
             String colorString = configuration.getAzimuthGeometryColor();
@@ -128,7 +130,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Geometry geom = gl.getGeometries().get(rowIndex);
         gl.getAttributes(geom).set(gl.getSchema()[columnIndex - 1], aValue);
-        Platform.getGeoContext().setDirty(true);
+        SumoPlatform.getApplication().getGeoContext().setDirty(true);
     }
 
     /**
@@ -137,13 +139,14 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
      * @param display
      */
     public void changeSelection(int selectionLine, boolean display) {
+    	OpenGLContext geoContext=SumoPlatform.getApplication().getGeoContext();
         if (selectionLine != -1&&gl.getGeometries().size()>0) {
             Geometry geom = gl.getGeometries().get(selectionLine);
             int posX = (int) geom.getCoordinate().x;
             int posY = (int) geom.getCoordinate().y;
-            Platform.getGeoContext().setX((int) (posX - Platform.getGeoContext().getWidth() / 2));
-            Platform.getGeoContext().setY((int) (posY - Platform.getGeoContext().getHeight() / 2));
-            Platform.getGeoContext().setZoom((float) 1.0);
+            geoContext.setX((int) (posX - geoContext.getWidth() / 2));
+            geoContext.setY((int) (posY - geoContext.getHeight() / 2));
+            geoContext.setZoom((float) 1.0);
             GeometryFactory gf = new GeometryFactory();
             // generate the geometry for the target shape
             List<Geometry> winGeom = new ArrayList<Geometry>();
@@ -184,12 +187,12 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             // add new geometries
             vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometricLayer.LINESTRING, winGeom, display);
             vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometricLayer.LINESTRING, boatGeom, display);
-            Platform.getGeoContext().setDirty(true);
+            geoContext.setDirty(true);
             System.out.println(selectionLine + " " + geom.getCoordinate().x + " " + geom.getCoordinate().y);
         } else {
             vdslayer.removeGeometriesByTag("boatshape");
             vdslayer.removeGeometriesByTag("target");
-            Platform.getGeoContext().setDirty(true);
+            geoContext.setDirty(true);
         }
     }
 
@@ -254,6 +257,6 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 				}   
             }
         }
-        Platform.getGeoContext().setDirty(true);
+        SumoPlatform.getApplication().getGeoContext().setDirty(true);
     }
 }

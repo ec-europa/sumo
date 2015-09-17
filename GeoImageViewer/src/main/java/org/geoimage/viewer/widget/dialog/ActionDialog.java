@@ -21,7 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.slf4j.LoggerFactory;
@@ -214,7 +214,7 @@ public class ActionDialog extends javax.swing.JDialog {
                     args[i++] = new Timestamp(((DateControl) c).getDate().getTime()).toString();
                 }*/
             }
-            Platform.getConsoleLayer().execute(args);
+            SumoPlatform.getApplication().getConsoleLayer().execute(args);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);      
         }

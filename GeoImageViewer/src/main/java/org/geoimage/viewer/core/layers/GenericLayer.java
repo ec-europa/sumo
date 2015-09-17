@@ -13,7 +13,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.common.OptionMenu;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
@@ -64,7 +64,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 
     @Override
 	public void render(OpenGLContext context){
-		  if (!context.isDirty()||Platform.isBatchMode()) {
+		  if (!context.isDirty()||SumoPlatform.isBatchMode()) {
 	            return;
 	        }
 	        int x = context.getX();
@@ -315,7 +315,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	}
 
 	public void save(String file, int formattype, String projection) {
-    	SarImageReader reader=(SarImageReader) Platform.getCurrentImageReader();
+    	SarImageReader reader=(SarImageReader) SumoPlatform.getApplication().getCurrentImageReader();
         if (formattype==ISave.OPT_EXPORT_CSV) {
             if (!file.endsWith(".csv")) {
                 file = file.concat(".csv");

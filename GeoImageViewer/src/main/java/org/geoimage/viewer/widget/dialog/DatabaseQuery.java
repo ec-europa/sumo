@@ -127,7 +127,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
 
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(DatabaseQuery.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(DatabaseQuery.class);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
@@ -139,7 +139,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
         jTextArea1.setName("jTextArea1"); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(DatabaseQuery.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(DatabaseQuery.class, this);
         jButton1.setAction(actionMap.get("runQuery")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
@@ -194,7 +194,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
 
     @Action
     public Task runQuery() {
-        return new RunQueryTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class));
+        return new RunQueryTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class));
     }
 
     private class RunQueryTask extends org.jdesktop.application.Task<ResultSet, Void> {

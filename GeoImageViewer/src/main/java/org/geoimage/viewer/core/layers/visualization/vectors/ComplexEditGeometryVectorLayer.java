@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -107,7 +107,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
         super.render(context);
         
         
-        if (!context.isDirty() || glayer == null||Platform.isBatchMode()) {
+        if (!context.isDirty() || glayer == null||SumoPlatform.isBatchMode()) {
             return;
         }
 
@@ -208,7 +208,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
     public void toggleGeometriesByTag(String geometrytag, boolean status) {
         if(tagExists(geometrytag))
             additionalGeometriesMap.get(geometrytag).setStatus(status);
-        Platform.getGeoContext().setDirty(true);
+        SumoPlatform.getApplication().getGeoContext().setDirty(true);
     }
 
 };

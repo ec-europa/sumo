@@ -6,7 +6,7 @@
 
 package org.geoimage.viewer.widget;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.jdesktop.application.Action;
 
@@ -27,7 +27,7 @@ public class VDSAnalysisVersionDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         // create the preferences fields in the database
-        PlatformConfiguration preferences = Platform.getConfiguration();
+        PlatformConfiguration preferences = SumoPlatform.getApplication().getConfiguration();
         // set the preferred values in teh dialog
         jTextField1.setText(preferences.getVersion());
     }
@@ -53,14 +53,14 @@ public class VDSAnalysisVersionDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(VDSAnalysisVersionDialog.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(VDSAnalysisVersionDialog.class);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
         jTextField1.setName("jTextField1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(VDSAnalysisVersionDialog.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(VDSAnalysisVersionDialog.class, this);
         jButton1.setAction(actionMap.get("OKVersion")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 

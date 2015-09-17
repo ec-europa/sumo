@@ -7,11 +7,13 @@ package org.geoimage.viewer.actions;
 import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerManager;
 import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**
@@ -31,13 +33,14 @@ public class HomeConsoleAction extends AbstractConsoleAction {
     }
 
     public boolean execute(String[] args) {
-        ILayerManager lm = Platform.getLayerManager();
+        ILayerManager lm = LayerManager.getIstanceManager();
+        OpenGLContext geoc=SumoPlatform.getApplication().getGeoContext();
         for (ILayer l : lm.getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
                GeoImageReader gir=((ImageLayer)l).getImageReader();
                
-               int x=(gir.getWidth()/Platform.getGeoContext().getWidth());
-               int y=gir.getHeight()/Platform.getGeoContext().getHeight();
+               int x=(gir.getWidth()/geoc.getWidth());
+               int y=gir.getHeight()/geoc.getHeight();
                int zoom=y;
                if(x>y)
             	   zoom=x;
@@ -45,10 +48,10 @@ public class HomeConsoleAction extends AbstractConsoleAction {
                zoom++;
                
                //Platform.getGeoContext().setX(-(Platform.getGeoContext().getWidth()*10-(gir.getWidth()/zoom))/2);
-               Platform.getGeoContext().setX(-(Platform.getGeoContext().getWidth())/2);
-               Platform.getGeoContext().setY(0);
+               geoc.setX(-(geoc.getWidth())/2);
+               geoc.setY(0);
                
-               Platform.getGeoContext().setZoom(zoom);
+               geoc.setZoom(zoom);
             }
         }
         return true;

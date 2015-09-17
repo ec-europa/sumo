@@ -11,13 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
-import org.geoimage.impl.geoop.GeoTransformOrbitState;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.util.Constant;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
@@ -226,7 +224,10 @@ public abstract class Sentinel1 extends SarImageReader {
                 dispose();
                 return false;
             }
-            String geoloc=Platform.getConfiguration().getS1GeolocationAlgorithm();
+            
+            //TODO: we need to remove this dependencies with the Geoimageviewver project
+            String geoloc=SumoPlatform.getApplication().getConfiguration().getS1GeolocationAlgorithm();
+            
             if(geoloc.equalsIgnoreCase(Constant.GEOLOCATION_ORBIT)&& this instanceof Sentinel1GRD){
                    geotransform = GeoTransformFactory.createFromOrbitVector(annotationReader);
             }else{       
@@ -373,6 +374,7 @@ public abstract class Sentinel1 extends SarImageReader {
 	  */
    public int[] read(int x, int y,int w,int h, int band) {
        Rectangle rect = new Rectangle(x, y, w, h);
+       rect = rect.intersection(getImage(band).bounds);
        int data[]=null;
 
         TIFF tiff=getImage(band);

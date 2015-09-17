@@ -9,9 +9,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.jdesktop.application.Action;
@@ -53,7 +54,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
         new Thread(new Runnable() {
 
             public void run() {
-                Platform.getLayerManager().addLayer((ILayer)(FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"")));
+                LayerManager.getIstanceManager().addLayer((ILayer)(FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"")));
             }
         }).start();
     }
@@ -76,9 +77,9 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
         databaseQuery1.setName("databaseQuery1"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getActionMap(DatabaseDialog.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getActionMap(DatabaseDialog.class, this);
         jButton1.setAction(actionMap.get("addDataToImage")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class).getContext().getResourceMap(DatabaseDialog.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class).getContext().getResourceMap(DatabaseDialog.class);
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
@@ -134,7 +135,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
     @Action
     public Task addDataToImage() {
-        return new AddDataToImageTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.GeoImageViewer.class));
+        return new AddDataToImageTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class));
     }
 
     private class AddDataToImageTask extends org.jdesktop.application.Task<GeometricLayer, Void> {

@@ -8,10 +8,11 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.ImageTiler;
 
@@ -31,7 +32,7 @@ public class TilerConsoleAction extends AbstractAction {
     }
 
     public boolean execute(String[] args) {
-        for (final ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+        for (final ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
                 new Thread(new Runnable() {
                     public void run() {

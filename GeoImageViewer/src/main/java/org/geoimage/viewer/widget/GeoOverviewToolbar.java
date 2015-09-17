@@ -22,7 +22,7 @@ import org.fenggui.util.Color;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.Platform;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -59,7 +59,7 @@ import org.geoimage.viewer.util.Constant;
             il = null;
             onbuilding = false;
             texture = null;
-            for (ILayer l : Platform.getLayerManager().getLayers().keySet()) {
+            for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer && l.isActive()) {
                     il = (ImageLayer) l;
                     break;
@@ -101,7 +101,7 @@ import org.geoimage.viewer.util.Constant;
                 g.setColor(new Color(0, 255, 0, bar.transparency));
 
                 // draw current view bounding rectangle in image
-                OpenGLContext ctx=Platform.getGeoContext(); 
+                OpenGLContext ctx=SumoPlatform.getApplication().getGeoContext(); 
                 int xmin=imagePosition.x + (int) (ctx.getX() / ratio);
                 int ymin=imagePosition.y + (int) ((gir.getHeight() - ctx.getY()) / ratio) - (int) (ctx.getHeight() * ctx.getZoom() / ratio);
                 int xmax= (int) (ctx.getWidth() * ctx.getZoom() / ratio);
@@ -132,8 +132,8 @@ import org.geoimage.viewer.util.Constant;
                 if (texture != null) {
                     if (new Rectangle(imagePosition.x, imagePosition.y, texture.getImageWidth() + 2, texture.getImageHeight() + 2).contains(new Point(evt.getLocalX(this), evt.getLocalY(this)))) {
                         // set the new area to where the mouse was pressed
-                        Platform.getGeoContext().setX((int) ((evt.getLocalX(this) - (imagePosition.x)) * ratio) - (int) (Platform.getGeoContext().getWidth() * Platform.getGeoContext().getZoom() / 2));
-                        Platform.getGeoContext().setY((int) (gir.getHeight() - (evt.getLocalY(this) - (imagePosition.y)) * ratio) - (int) (Platform.getGeoContext().getHeight() * Platform.getGeoContext().getZoom()) / 2);
+                        SumoPlatform.getApplication().getApplication().getGeoContext().setX((int) ((evt.getLocalX(this) - (imagePosition.x)) * ratio) - (int) (SumoPlatform.getApplication().getGeoContext().getWidth() * SumoPlatform.getApplication().getGeoContext().getZoom() / 2));
+                        SumoPlatform.getApplication().getApplication().getGeoContext().setY((int) (gir.getHeight() - (evt.getLocalY(this) - (imagePosition.y)) * ratio) - (int) (SumoPlatform.getApplication().getGeoContext().getHeight() * SumoPlatform.getApplication().getGeoContext().getZoom()) / 2);
                     }
                 }
             }

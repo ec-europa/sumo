@@ -60,7 +60,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected Polygon bbox=null;
     
     protected double[] pixelsize={0.0,0.0};
-    
+    private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
+
     
 
 	public SarImageReader(File manifest){
@@ -136,7 +137,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     	overViewImage=null;
     }
 
-    private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
 
     public List<Gcp> getGcps()throws GeoTransformException {
         return gcps;
