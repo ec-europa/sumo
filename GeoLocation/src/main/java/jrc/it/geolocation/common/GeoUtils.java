@@ -190,7 +190,7 @@ public class GeoUtils {
 	    double h=0;
 	    double minDist =1000;
 		//first value
-		for(int i=0;i<geoidPoints.length&&minDist>50;i++){
+		for(int i=0;i<geoidPoints.length&&minDist>120;i++){
 			Geoid g=geoidPoints[i][0];
 			minDist = distance(lon,lat,g.lon,g.lat);
 		    h=g.h;
@@ -205,10 +205,9 @@ public class GeoUtils {
 			    }
 			}   
 		}
+		//double hh=getGeoidHOptimized(lon, lat);
 		//System.out.println("-->H:"+h);
 		return h;
-		
-		//return getGeoidHOptimized(lon, lat);
 	}
 	
 	
@@ -233,7 +232,7 @@ public class GeoUtils {
 			//first value
 			Geoid g=geoRow[middle];
 			double middleDist = distanceRad(lonRad,latRad,g.lonRad,g.latRad);
-		    if(middleDist<50){
+		    if(middleDist<100){
 		    	h= g.h;
 		    }else{
 		    	int left=0;
@@ -254,7 +253,7 @@ public class GeoUtils {
 						middle=left+(right-left)/2;
 						middleDist=middleDistR;
 					}
-					if(middleDist<50){
+					if(middleDist<100){
 				    	h=geoRow[middle].h;
 				    	finded=true;
 				    	break;
