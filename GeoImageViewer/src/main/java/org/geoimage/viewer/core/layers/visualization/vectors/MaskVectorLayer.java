@@ -14,7 +14,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IMask;
@@ -32,10 +39,18 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.geom.Puntal;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
+import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
+import com.vividsolutions.jts.operation.union.PointGeometryUnion;
+import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
+
 
 /**
  *
@@ -365,41 +380,158 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     public void buffer(double bufferingDistance) {
         Geometry[] bufferedGeom=glayer.getGeometries().toArray(new Geometry[0]);
         
+        try {
+			bufferedGeom=parallelBuffer(bufferedGeom, bufferingDistance);
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+        
+        // then merge them
+        List<Geometry> newgeoms = new ArrayList<Geometry>();
+        List<Geometry> remove = new ArrayList<Geometry>();
+        if(bufferingDistance>0){
+	        //ciclo sulle nuove geometrie
+	        for (Geometry buffGeom : bufferedGeom) {
+	            boolean isnew = true;
+	            remove.clear();
+	            for (Geometry newg : newgeoms) {
+	                if (newg.contains(buffGeom)) { //se newg contiene g -> g deve essere rimossa
+	                    isnew = false;
+	                    break;
+	                } else if (buffGeom.contains(newg)) { //se g contiene newg -> newg deve essere rimossa
+	                    remove.add(newg);
+	                }
+	            }
+	            if (isnew) {
+	                newgeoms.add(buffGeom);
+	            }
+	            newgeoms.removeAll(remove);
+	        }
+	        glayer.clear();
+	
+	        // assign new value
+	        for (Geometry geom :newgeoms) {
+	            glayer.put(geom);
+	        }
+        }else{
+        	for (Geometry geom :bufferedGeom) {
+	            glayer.put(geom);
+	        }
+        }
+        
+       /* 
         for (int i=0;i<bufferedGeom.length;i++) {
         	//applico il buffer alla geometria
+        	/*if(bufferedGeom[i] instanceof Polygon){
+        		bufferedGeom[i] = ((Polygon)bufferedGeom[i]).getExteriorRing();
+        	}else if(bufferedGeom[i] instanceof MultiPolygon){
+        		Geometry g=bufferedGeom[i].getGeometryN(0);
+        		for(int ii=1;ii<((MultiPolygon)bufferedGeom[i]).getNumGeometries();ii++){
+        			g=g.union(bufferedGeom[i].getGeometryN(ii));
+        		}	
+        		bufferedGeom[i] = g;
+        	}else{
+        		bufferedGeom[i] =PolygonOp.removeInteriorRing(bufferedGeom[i]);
+        	}*/
+       /* 	bufferedGeom[i] =PolygonOp.removeInteriorRing(bufferedGeom[i]);
+        	bufferedGeom[i]=bufferedGeom[i].buffer(0);
             bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
-        	bufferedGeom[i] = PolygonOp.removeInteriorRing(bufferedGeom[i]);
+           
         }
         // then merge them
         List<Geometry> newgeoms = new ArrayList<Geometry>();
         List<Geometry> remove = new ArrayList<Geometry>();
         
-       
-        //ciclo sulle nuove geometrie
-        for (Geometry g : bufferedGeom) {
-            boolean isnew = true;
-            remove.clear();
-            for (Geometry newg : newgeoms) {
-                if (newg.contains(g)) { //se newg contiene g -> g deve essere rimossa
-                    isnew = false;
-                    break;
-                } else if (g.contains(newg)) { //se g contiene newg -> newg deve essere rimossa
-                    remove.add(newg);
-                }
-            }
-            if (isnew) {
-                newgeoms.add(g);
-            }
-            newgeoms.removeAll(remove);
-        }
-        glayer.clear();
-
-        // assign new value
-        for (Geometry geom :newgeoms) {
-            glayer.put(geom);
-        }
-        
+        if(bufferingDistance>0){
+	        //ciclo sulle nuove geometrie
+	        for (Geometry buffGeom : bufferedGeom) {
+	            boolean isnew = true;
+	            remove.clear();
+	            for (Geometry newg : newgeoms) {
+	                if (newg.contains(buffGeom)) { //se newg contiene g -> g deve essere rimossa
+	                    isnew = false;
+	                    break;
+	                } else if (buffGeom.contains(newg)) { //se g contiene newg -> newg deve essere rimossa
+	                    remove.add(newg);
+	                }
+	            }
+	            if (isnew) {
+	                newgeoms.add(buffGeom);
+	            }
+	            newgeoms.removeAll(remove);
+	        }
+	        glayer.clear();
+	
+	        // assign new value
+	        for (Geometry geom :newgeoms) {
+	            glayer.put(geom);
+	        }
+        }else{
+        	for (Geometry geom :bufferedGeom) {
+	            glayer.put(geom);
+	        }
+        }*/
     }
+    
+    
+    
+    class ParallelBuffer implements Callable<Geometry> {
+    	private Geometry bufferedGeom;
+    	private double bufferingDistance=0;
+		/**
+		 * 
+		 * @param 
+		 * @param 
+		 */
+		ParallelBuffer(Geometry bufferedGeom,double bufferingDistance) {
+			this.bufferedGeom=bufferedGeom;
+			this.bufferingDistance=bufferingDistance;
+		}
+
+		@Override
+		public Geometry call() {
+	        	//applico il buffer alla geometria
+	        	/*if(bufferedGeom instanceof Polygon){
+	        		bufferedGeom = ((Polygon)bufferedGeom).getExteriorRing();
+	        	}else if(bufferedGeom instanceof MultiPolygon){
+	        		Geometry g=bufferedGeom.getGeometryN(0);
+	        		for(int ii=1;ii<((MultiPolygon)bufferedGeom).getNumGeometries();ii++){
+	        			g=g.union(bufferedGeom.getGeometryN(ii));
+	        		}	
+	        		bufferedGeom = g;
+	        	}else{
+	        		bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
+	        	}*/
+	        	bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
+	        	bufferedGeom=bufferedGeom.buffer(0);
+	            bufferedGeom = EnhancedPrecisionOp.buffer(bufferedGeom, bufferingDistance);
+	           
+			return bufferedGeom;
+		}
+	}
+    
+    
+    
+    private Geometry[] parallelBuffer(Geometry[] bufferedGeom,double bufferDistance)throws InterruptedException, ExecutionException {
+		int processors = Runtime.getRuntime().availableProcessors();
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(2, processors, 5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
+
+		List<Callable<Geometry>> tasks = new ArrayList<Callable<Geometry>>();
+		for (int i=0;i<bufferedGeom.length;i++) {
+			tasks.add(new ParallelBuffer(bufferedGeom[i],bufferDistance));
+		}
+		List<Future<Geometry>> results = executor.invokeAll(tasks);
+		executor.shutdown();
+
+		List<Geometry> geoms = new ArrayList<Geometry>();
+		for (Future<Geometry> result : results) {
+			List<Geometry> l = Arrays.asList(result.get());
+			geoms.addAll(l);
+		}
+
+		return (Geometry[])geoms.toArray(new Geometry[0]);
+	}
+    
     
   
     
