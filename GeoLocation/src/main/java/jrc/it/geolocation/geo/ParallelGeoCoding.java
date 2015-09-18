@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-import jrc.it.geolocation.exception.MathException;
 
 public class ParallelGeoCoding {
 
