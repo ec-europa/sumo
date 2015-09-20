@@ -26,7 +26,7 @@ public class PolygonOp {
 	 * @return
 	 */
 	public static Geometry removeInteriorRing(Geometry geom){
-		PrecisionModel pm=new PrecisionModel(1);
+		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
 	    GeometryFactory gf = new GeometryFactory(pm);
 		Geometry buff=geom;
         if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
