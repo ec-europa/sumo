@@ -21,7 +21,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IMask;
@@ -40,16 +39,10 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.geom.Puntal;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
-import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
-import com.vividsolutions.jts.operation.union.PointGeometryUnion;
-import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
-import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 
 /**
@@ -378,7 +371,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
      * create the new buffered layer
      */
     public void buffer(double bufferingDistance) {
-        Geometry[] bufferedGeom=glayer.getGeometries().toArray(new Geometry[0]);
+        List<Geometry> bufferedGeom=glayer.getGeometries();
         
         try {
 			bufferedGeom=parallelBuffer(bufferedGeom, bufferingDistance);
@@ -411,10 +404,6 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	
 	        // assign new value
 	        for (Geometry geom :newgeoms) {
-	            glayer.put(geom);
-	        }
-        }else{
-        	for (Geometry geom :bufferedGeom) {
 	            glayer.put(geom);
 	        }
         }
@@ -502,23 +491,33 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	        	}else{
 	        		bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
 	        	}*/
-	        	bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
-	        	bufferedGeom=bufferedGeom.buffer(0);
-	            bufferedGeom = EnhancedPrecisionOp.buffer(bufferedGeom, bufferingDistance);
-	           
+				//
+				bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
+			    if(!bufferedGeom.isValid()){
+			    	//System.out.println(Arrays.toString(bufferedGeom.getCoordinates()));
+			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+				    GeometryFactory gf = new GeometryFactory(pm);
+				    Coordinate[]cc=new Coordinate[bufferedGeom.getCoordinates().length+1];
+				    for(int i=0;i<bufferedGeom.getCoordinates().length;i++){
+				    	cc[i]=bufferedGeom.getCoordinates()[i];
+				    }
+				    cc[cc.length-1]=cc[0];
+			    	bufferedGeom=gf.createPolygon(cc);
+			    }
+	            bufferedGeom =bufferedGeom.buffer(bufferingDistance);
 			return bufferedGeom;
 		}
 	}
     
     
     
-    private Geometry[] parallelBuffer(Geometry[] bufferedGeom,double bufferDistance)throws InterruptedException, ExecutionException {
+    private List<Geometry> parallelBuffer(List<Geometry> bufferedGeom,double bufferDistance)throws InterruptedException, ExecutionException {
 		int processors = Runtime.getRuntime().availableProcessors();
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(2, processors, 5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
 
 		List<Callable<Geometry>> tasks = new ArrayList<Callable<Geometry>>();
-		for (int i=0;i<bufferedGeom.length;i++) {
-			tasks.add(new ParallelBuffer(bufferedGeom[i],bufferDistance));
+		for (int i=0;i<bufferedGeom.size();i++) {
+			 tasks.add(new ParallelBuffer(bufferedGeom.get(i),bufferDistance));
 		}
 		List<Future<Geometry>> results = executor.invokeAll(tasks);
 		executor.shutdown();
@@ -529,7 +528,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 			geoms.addAll(l);
 		}
 
-		return (Geometry[])geoms.toArray(new Geometry[0]);
+		return geoms;
 	}
     
     

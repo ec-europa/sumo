@@ -1,8 +1,19 @@
 package jrc.it.geolocation.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.math3.util.FastMath;
+
 
 /**
  * 
@@ -180,33 +191,148 @@ public class GeoUtils {
 				inputStream.close();
 		}
 	}
+	
+	/**
+	 * 
+	 * @param lon1
+	 * @param lat1
+	 * @param lon2
+	 * @param lat2 
+	 * @return calculate the distance between 2 points
+	 */
+	public static double distance(double lon1, double lat1, double lon2, double lat2){
+		lon1=(lon1*FastMath.PI)/180;
+		lat1=(lat1*FastMath.PI)/180;
+		
+		lon2=(lon2*FastMath.PI)/180;
+		lat2=(lat2*FastMath.PI)/180;
+	    
+		return distanceRad(lon1,lat1,lon2,lat2);
+		
+	}
+	
+	/**
+	 * 
+	 * @author Pietro
+	 *
+	 */
+	static class GeoidDistance implements Callable<Double> {
+		Double h=null;
+		Geoid gpoints[][]=null;	
+    	double lon;
+    	double lat;
+    	double minDistance=0;
+    	
+    	public GeoidDistance(Geoid gpoints[][],
+    			double lon,
+    			double lat,double minDistance) {
+    		this.gpoints=gpoints;
+    		this.lon=lon;
+    		this.lat=lat;
+    		this.minDistance=minDistance;
+		}
+    	
+    	public double getH() {
+			return h;
+		}
+    	
+		@Override
+		public Double call() {
+			/*boolean find=false;
+			
+			for(int j=0;j<gpoints.length&&!find;j++){
+				Geoid g=gpoints[j];
+				//geoidPoints
+			    double dist =distance(lon,lat,g.lon,g.lat);
+			    if(minDistance >= dist){ 
+			    	h=g.h;
+			    	find=true;
+			    }
+			}  
+			return h;*/
+			return getGeoidHOptimized(gpoints,lon, lat);
+		}
+	};
+	
+	
 	/**
 	 * 
 	 * @param lon
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
 	 */
-	public static double  getGeoidH(double lon,double lat){
-	    double h=0;
-	    double minDist =1000;
+	public static double  parallelGetGeoidH(final double lon,final double lat){
+		Geoid[][]geoidPoints1=new Geoid[90][180];
+		Geoid[][]geoidPoints2=new Geoid[90][180];
+		Geoid[][]geoidPoints3=new Geoid[90][180];
+		Geoid[][]geoidPoints4=new Geoid[90][180];
+		
+		int processors = Runtime.getRuntime().availableProcessors();
+		
+		ExecutorService executor = new ThreadPoolExecutor(2, processors, 2, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>());
+		
+		ExecutorCompletionService<Double> compService
+		     = new ExecutorCompletionService<Double>(executor);
+		
+		Double h=0d;
+	    final List<Callable<Double>> tasks=new ArrayList<>();
 		//first value
-		for(int i=0;i<geoidPoints.length&&minDist>120;i++){
-			Geoid g=geoidPoints[i][0];
-			minDist = distance(lon,lat,g.lon,g.lat);
-		    h=g.h;
-			for(int j=1;j<geoidPoints[i].length;j++){
-				//i=i+(new Double(minDist).intValue()/115);
-				g=geoidPoints[i][j];
-				//geoidPoints
-			    double dist =distance(lon,lat,g.lon,g.lat);
-			    if(minDist >dist){ 
-			    	minDist=dist;
-			    	h=g.h;
-			    }
-			}   
+		for(int i=0;i<geoidPoints.length;i++){
+			if(i<90){
+				geoidPoints1[i]=geoidPoints[i];
+			}else if(i<180){
+				geoidPoints2[i-90]=geoidPoints[i];
+			}else if(i<270){
+				geoidPoints3[i-180]=geoidPoints[i];
+			}else if(i<360){
+				geoidPoints4[i-270]=geoidPoints[i];
+			}
 		}
-		//double hh=getGeoidHOptimized(lon, lat);
-		//System.out.println("-->H:"+h);
+		tasks.add(new GeoUtils.GeoidDistance(geoidPoints1, lon, lat,50));
+		tasks.add(new GeoUtils.GeoidDistance(geoidPoints2, lon, lat,50));
+		tasks.add(new GeoUtils.GeoidDistance(geoidPoints3, lon, lat,50));
+		tasks.add(new GeoUtils.GeoidDistance(geoidPoints4, lon, lat,50));
+		
+			//tasks.add(new GeoUtils.GeoidDistance(geoidPoints[i], lon, lat,50));
+		//executor.invokeAll(tasks);
+		int n=tasks.size();
+		List<Future<Double>> futures= new ArrayList<Future<Double>>(n);
+		
+		for (final Callable<Double> callable : tasks) {
+			futures.add(compService.submit(callable));
+		}
+		executor.shutdown();
+		/*for (Future<Double> result : tasks) {
+			Double l;
+			try {
+				l = result.get();
+				if(l!=null){
+					h=l;
+				}
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}*/
+		try{
+		 for (int i = 0; i < n; ++i) {       
+			 try { 
+				 Double r = compService.take().get();             
+				 if (r != null) {               
+					 h = r; //al primo disponibile esci                
+					 break;             
+				 }      
+			 } catch(ExecutionException|InterruptedException ignore) {}    
+			 }   
+		 }   // prova a cancellare i rimanenti       
+			// (eventualmente ancora in esecuzione)   
+		finally {     
+			for (Future<Double> f : futures){     
+				f.cancel(true);   
+			}
+		}
 		return h;
 	}
 	
@@ -218,7 +344,7 @@ public class GeoUtils {
 	 * @param lat
 	 * @return the geoid Height for a point (lon,lat)
 	 */
-	public static double  getGeoidHOptimized(final double lon,final double lat){
+	public static double  getGeoidHOptimized(Geoid[][] gpoints,final double lon,final double lat){
 		double h=0;
 		
 		double lonRad=lon*FastMath.PI/180;
@@ -232,7 +358,7 @@ public class GeoUtils {
 			//first value
 			Geoid g=geoRow[middle];
 			double middleDist = distanceRad(lonRad,latRad,g.lonRad,g.latRad);
-		    if(middleDist<100){
+		    if(middleDist<40){
 		    	h= g.h;
 		    }else{
 		    	int left=0;
@@ -253,7 +379,7 @@ public class GeoUtils {
 						middle=left+(right-left)/2;
 						middleDist=middleDistR;
 					}
-					if(middleDist<100){
+					if(middleDist<40){
 				    	h=geoRow[middle].h;
 				    	finded=true;
 				    	break;
@@ -265,24 +391,6 @@ public class GeoUtils {
 		return h;
 	}
 	
-	/**
-	 * 
-	 * @param lon1
-	 * @param lat1
-	 * @param lon2
-	 * @param lat2 
-	 * @return calculate the distance between 2 points
-	 */
-	public static double distance(double lon1, double lat1, double lon2, double lat2){
-		lon1=(lon1*FastMath.PI)/180;
-		lat1=(lat1*FastMath.PI)/180;
-		
-		lon2=(lon2*FastMath.PI)/180;
-		lat2=(lat2*FastMath.PI)/180;
-	    
-		return distanceRad(lon1,lat1,lon2,lat2);
-		
-	}
 	
 	/**
 	 * 
@@ -430,9 +538,84 @@ public class GeoUtils {
 	}
 	
 	
+	/**
+	 * 
+	 * @param lon
+	 * @param lat
+	 * @return the geoid Height for a point (lon,lat)
+	 */
+	public static Double  oldGetGeoidH(Geoid[][] geoidPoints,double lon,double lat){
+	    Double h=null;
+	    double dist =100;
+		//first value
+		for(int i=0;i<geoidPoints.length&&dist>50;i++){
+			for(int j=0;j<geoidPoints[i].length&&dist>50;j++){
+				Geoid g=geoidPoints[i][j];
+				//geoidPoints
+			    dist =distance(lon,lat,g.lon,g.lat);
+			    if(50 >dist){ 
+			    	h=g.h;
+			    }
+			}   
+		}
+		return h;
+	}
+	
+	/**
+	 * 
+	 * @param lon
+	 * @param lat
+	 * @return the geoid Height for a point (lon,lat)
+	 */
+	public static Double  getGeoidHTest(Geoid[][] geoidPoints,double lon,double lat){
+	    Double h=null;
+	    double minDist =50;
+		//first value
+		for(int i=0;i<geoidPoints.length;i++){
+			
+			for(int j=0;j<geoidPoints[i].length;j++){
+				Geoid g=geoidPoints[i][j];
+				//geoidPoints
+			    double dist =distance(lon,lat,g.lon,g.lat);
+			    if(minDist >dist){ 
+			    	minDist=dist;
+			    	h=g.h;
+			    	System.out.println("HH:"+h+"  DD:"+dist);
+			    }
+			}   
+		}
+		return h;
+	}
+	
+	
+	public static double  getGeoidH(double lon,double lat){
+		return getGeoidHOptimized(geoidPoints,lon, lat);
+	}
+	
 	public static void main(String[] args){
-		System.out.println("H:"+GeoUtils.getGeoidH(2.17235,41.31749));
-		//GeoUtils.distance(6.027,43.155,-8.625,-27.5);
+		double lon=178.625;
+		double lat=-1.5;
+		
+		GeoUtils g=new GeoUtils();
+	
+		for(int i=0;i<180;i++){
+			lon=lon+i;
+			lat=lat+i;
+		
+			
+			long start3=System.currentTimeMillis();
+			System.out.println("H:"+g.getGeoidHOptimized(geoidPoints,lon,lat));
+			long stop3=System.currentTimeMillis();
+			//System.out.println((stop3-start3));
+			
+			long start=System.currentTimeMillis();
+			System.out.println("H:"+g.oldGetGeoidH(geoidPoints, lon, lat));
+			long stop=System.currentTimeMillis();
+			//System.out.println((stop-start));
+		}
+		
+		//getGeoidHTest(geoidPoints,lon,lat);
+		System.exit(0);
 		
 	}	
 		/*<referenceEllipsoidParameters>

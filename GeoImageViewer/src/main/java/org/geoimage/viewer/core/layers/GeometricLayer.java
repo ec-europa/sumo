@@ -24,7 +24,11 @@ import org.geoimage.exception.GeoTransformException;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.Feature;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,13 +191,14 @@ public class GeometricLayer implements Cloneable{
     public static GeometricLayer createWorldProjectedLayer(GeometricLayer oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
     	GeometricLayer positions=oldPositions.clone();
         
-        positions.projection=projection;
+        //Coordinate previous=new Coordinate(0,0);
         for(Geometry geom:positions.geoms){
-            for(Coordinate pos:geom.getCoordinates()){
+        	geom=geoTransform.transformGeometryGeoFromPixel(geom);
+            /*for(Coordinate pos:geom.getCoordinates()){
                 double[] temp=geoTransform.getGeoFromPixel(pos.x, pos.y);
                 pos.x=temp[0];
                 pos.y=temp[1];
-            }
+            }*/
         }
         return positions;
     }
