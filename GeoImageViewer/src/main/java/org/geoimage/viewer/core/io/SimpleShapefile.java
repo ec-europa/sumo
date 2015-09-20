@@ -38,6 +38,7 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.process.geometry.GeometryFunctions;
 import org.geotools.process.vector.ClipProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -276,7 +277,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @param reader
      */
     public static void exportLayer(File output,GeometricLayer layer, String projection,GeoTransform transform) {
-        try {
+        try {//GeometryFunctions.si
         	if(transform!=null)
         		layer = GeometricLayer.createWorldProjectedLayer(layer, transform, projection);
             ShapefileDataStoreFactory dataStoreFactory = new ShapefileDataStoreFactory();
@@ -338,8 +339,12 @@ public class SimpleShapefile extends AbstractVectorIO{
                 SimpleFeature copy = writer.next();
                 copy.setAttributes( feature.getAttributes() );
                 Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                copy.setDefaultGeometry( geometry.buffer(0));                
-                writer.write();
+                if(geometry!=null){
+                	copy.setDefaultGeometry( geometry.buffer(0));      
+                	writer.write();
+                }else{
+                	logger.warn("Warning:geometry null");
+                }	
             }
             transaction.commit();
             logger.info("Export to shapefile complete" );
