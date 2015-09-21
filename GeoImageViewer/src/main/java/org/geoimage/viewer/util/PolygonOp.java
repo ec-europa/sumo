@@ -26,12 +26,15 @@ public class PolygonOp {
 	 * @return
 	 */
 	public static Geometry removeInteriorRing(Geometry geom){
-		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING);
 	    GeometryFactory gf = new GeometryFactory(pm);
 		Geometry buff=geom;
         if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
-        	LineString p=((Polygon) buff).getExteriorRing();
-        	buff = gf.createPolygon(p.getCoordinates());
+        	//LineString p=((Polygon) buff).getExteriorRing();
+        	//buff = gf.createPolygon(p.getCoordinates());
+        	for(int ii=0;ii<((Polygon) buff).getNumInteriorRing();ii++){
+        			LineString ll=((Polygon) buff).getInteriorRingN(ii);
+        	}
         }
         return buff;
 	}
@@ -78,28 +81,6 @@ public class PolygonOp {
 				builder=builder.append(x.x).append(" ").append(x.y).append(",");
 			else
 				builder=builder.append(xs[0][0].x).append(" ").append(xs[0][0].y).append("))");
-		}
-		
-		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
-		return imageP;
-	}
-	
-	
-	/**
-	 * 
-	 * @param xs
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static Polygon createPolygon(int[]...xs) throws ParseException{
-		StringBuilder builder =new StringBuilder("POLYGON((");
-		
-		for(int i=0;i<xs.length;i++){
-			int x[]=xs[i];
-			if(i<(xs.length-1))
-				builder=builder.append(x[0]).append(" ").append(x[1]).append(",");
-			else
-				builder=builder.append(x[0]).append(" ").append(x[1]).append("))");
 		}
 		
 		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
