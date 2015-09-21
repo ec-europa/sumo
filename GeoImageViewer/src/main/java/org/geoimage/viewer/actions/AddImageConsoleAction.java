@@ -161,8 +161,6 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
                     fileChooser = new JFileChooser(lastDirectory);
                 }
             } else {
-                // if preference has changed, create a new File Chooser
-                //lastDirectory = Platform.getPreferences().readRow(AddImageConsoleAction.IMAGE_FOLDER);
                 fileChooser = new JFileChooser(lastDirectory);
             }
 

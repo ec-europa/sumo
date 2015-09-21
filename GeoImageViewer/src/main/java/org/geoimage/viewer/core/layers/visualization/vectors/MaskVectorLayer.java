@@ -21,6 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.IMask;
@@ -167,10 +168,36 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
-        
+           // GeometryFactory builder = new GeometryFactory();
+            
             	if(glayer!=null){
             		for (int idx=0;idx<glayer.getGeometries().size()&&intersectLand==false;idx++) {
 		            	Geometry p=(Geometry) glayer.getGeometries().get(idx);
+		            	
+		            	
+	            		for(int i=0;i<p.getNumGeometries();i++){
+	            			Geometry g=p.getGeometryN(i);
+	            			
+	            			if(!g.isValid()){
+		            			 /*Coordinate[] cs=g.getCoordinates();
+			            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
+			            		 lcs.addAll(Arrays.asList(cs));
+			            		 lcs.add(cs[0]);
+			            		 
+			            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));*/
+	            				Geometry g2=g.buffer(0);
+
+			            		 if (g2.intersects(geom)) {
+			            			 intersectLand= true;
+			            		 }		
+		            		}else{
+		            			if (g.intersects(geom)) 
+		            				intersectLand=true;
+		            		}
+	            		}
+		            	
+		            	/*
+		            	
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
 		            		for(int i=0;i<mp.getNumGeometries();i++){
@@ -180,8 +207,9 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 				            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
 				            		 lcs.addAll(Arrays.asList(cs));
 				            		 lcs.add(cs[0]);
-				            		 GeometryFactory builder = new GeometryFactory();
-				            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+				            		 
+				            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+				            		 e=e.buffer(0);
 
 				            		 if (e.intersects(geom)) {
 				            			 intersectLand= true;
@@ -197,9 +225,8 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 			            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
 			            		 lcs.addAll(Arrays.asList(cs));
 			            		 lcs.add(cs[0]);
-			            		 GeometryFactory builder = new GeometryFactory();
-			            		 Polygon e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
-
+			            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+			            		 e=e.buffer(0);
 			            		 if (e.intersects(geom)) 
 			            			 intersectLand=true;
 		            		}else{
@@ -207,7 +234,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		            				intersectLand=true;
 		            		}
 		            	} 
-		            	  
+		            	  */
 		            }
             	}	
         } catch (ParseException ex) {
@@ -277,11 +304,15 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
             						.append(y).append("))");
             
             Geometry geom = wkt.read(polyStr.toString());
+            
             for (Geometry p : glayer.getGeometries()) {
-                if (geom.within(p)) {
-                	putInIncludesCache(x, y, width, height, true);
-                    return true;
-                }
+            	for(int i=0;i<p.getNumGeometries();i++){
+            		Geometry g=p.getGeometryN(i);
+	                if (geom.within(g)) {
+	                	putInIncludesCache(x, y, width, height, true);
+	                    return true;
+	                }
+            	}    
             }
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
@@ -495,7 +526,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 				bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
 			    if(!bufferedGeom.isValid()){
 			    	//System.out.println(Arrays.toString(bufferedGeom.getCoordinates()));
-			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING);
 				    GeometryFactory gf = new GeometryFactory(pm);
 				    Coordinate[]cc=new Coordinate[bufferedGeom.getCoordinates().length+1];
 				    for(int i=0;i<bufferedGeom.getCoordinates().length;i++){

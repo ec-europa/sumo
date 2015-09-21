@@ -118,13 +118,13 @@ public class TiledBufferedImage implements GeoImageReader {
     }
 
     public void applyScaleFactor(double scale, double offset,int band) {
-        File f = null;
+        //File f = null;
         RandomAccessFile fis = null;
         MappedByteBuffer tile = null;
         for (int y = 0; y < gir.getHeight() / tilesize; y++) {
             for (int x = 0; x < gir.getHeight() / tilesize; x++) {
                 try {
-                    f = tiles.get(band + "_" + x + "_" + y);
+                    //f = tiles.get(band + "_" + x + "_" + y);
                     fis = new RandomAccessFile(writingFile, "rwd");
                     tile = fis.getChannel().map(MapMode.READ_WRITE, 0, writingFile.length()).load();
                     for (int yt = 0; yt < tilesize; yt++) {
@@ -165,7 +165,6 @@ public class TiledBufferedImage implements GeoImageReader {
             writingTile.limit((int) writingFile.length());
         }
         int position = 4 * ((x % tilesize) + (y % tilesize) * tilesize);
-        //System.out.println(writingTile.limit());
         writingTile.putInt(position, value);
     }
 
@@ -194,8 +193,6 @@ public class TiledBufferedImage implements GeoImageReader {
                         f = tiles.get(band + "_" + xx + "_" + yy);
                     }
 
-                    //System.out.println(f.getAbsolutePath());
-
                     if (col == 0) {
                         FileInputStream fis = new FileInputStream(f);
                         long startpointer = (y % tilesize) * tilesize * 4;
@@ -213,7 +210,7 @@ public class TiledBufferedImage implements GeoImageReader {
                                 try {
                                     preloadedData[temp + i] = tile[j * tilesize + i];
                                 } catch (Exception e) {
-                                    //System.out.println(e);
+                                    logger.warn(e.getMessage());
                                 }
                             }
                         }
@@ -234,7 +231,7 @@ public class TiledBufferedImage implements GeoImageReader {
                                 try {
                                     preloadedData[temp + i] = tile[j * tilesize + i];
                                 } catch (Exception e) {
-                                    //System.out.println(e);
+                                	logger.warn(e.getMessage());
                                 }
                             }
                         }
@@ -403,26 +400,22 @@ public class TiledBufferedImage implements GeoImageReader {
     
 	@Override
 	public List<double[]> getFrameLatLon(int xSize, int ySize) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int[] readAndDecimateTile(int x, int y, int width, int height,
 			int outWidth, int outLength, int xSize, int ySize, boolean filter,int band) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public File getOverviewFile() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int[] getAmbiguityCorrection(int xPos, int yPos) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
