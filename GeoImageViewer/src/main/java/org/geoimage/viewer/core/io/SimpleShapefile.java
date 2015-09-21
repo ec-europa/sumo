@@ -158,16 +158,6 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            	
 	            ClipProcess clip=new ClipProcess();
 	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-	     
-	            
-	            /*FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-	            File tmp=new File(Platform.getCachePath()+"\\tmpshape_"+System.currentTimeMillis()+".shp");
-	            Map<String, Serializable> params2 = new HashMap<String, Serializable>();
-	            params2.put("url", tmp.toURI().toURL());
-	            ShapefileDataStore newds=(ShapefileDataStore)factory.createNewDataStore(params2);
-	            newds.createSchema(featureSource.getSchema());*/
-
-	            //exportToShapefile(newds,fc,featureSource.getSchema());
 
 	            if (fc.isEmpty()) {
 	                return null;
