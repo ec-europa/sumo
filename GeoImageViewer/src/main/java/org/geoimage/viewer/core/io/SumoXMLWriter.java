@@ -322,8 +322,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			
 			String sensor=gir.getSensor();
 			format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+			String imId=sensor+"_"+format.format(tStart);
 			
-			imageMeta.setImId(sensor+"_"+format.format(tStart));
+			imageMeta.setImId(imId);
 			imageMeta.setImageName(((SarImageReader)gir).getImgName());
 			
 			imageMeta.setSensor(sensor);

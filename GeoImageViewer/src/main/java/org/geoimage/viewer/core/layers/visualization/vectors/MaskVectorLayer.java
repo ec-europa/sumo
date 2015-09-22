@@ -168,24 +168,26 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
             
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
-           // GeometryFactory builder = new GeometryFactory();
+            GeometryFactory builder = new GeometryFactory();
             
             	if(glayer!=null){
             		for (int idx=0;idx<glayer.getGeometries().size()&&intersectLand==false;idx++) {
 		            	Geometry p=(Geometry) glayer.getGeometries().get(idx);
 		            	
 		            	
-	            		for(int i=0;i<p.getNumGeometries();i++){
+	            		/*for(int i=0;i<p.getNumGeometries();i++){
 	            			Geometry g=p.getGeometryN(i);
 	            			
-	            			if(!g.isValid()){
-		            			 /*Coordinate[] cs=g.getCoordinates();
+	            			if(!g.isValid()){*/
+	            				//TODO: change this part for performance
+		            			/* Coordinate[] cs=g.getCoordinates();
 			            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
 			            		 lcs.addAll(Arrays.asList(cs));
 			            		 lcs.add(cs[0]);
 			            		 
-			            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));*/
-	            				Geometry g2=g.buffer(0);
+			            		Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
+	            				*/
+	            	/*			Geometry g2=g.buffer(0);
 
 			            		 if (g2.intersects(geom)) {
 			            			 intersectLand= true;
@@ -194,9 +196,9 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		            			if (g.intersects(geom)) 
 		            				intersectLand=true;
 		            		}
-	            		}
+	            		}*/
 		            	
-		            	/*
+		            	
 		            	
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
@@ -207,7 +209,6 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 				            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
 				            		 lcs.addAll(Arrays.asList(cs));
 				            		 lcs.add(cs[0]);
-				            		 
 				            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 				            		 e=e.buffer(0);
 
@@ -234,7 +235,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		            				intersectLand=true;
 		            		}
 		            	} 
-		            	  */
+		            	  
 		            }
             	}	
         } catch (ParseException ex) {
@@ -303,16 +304,12 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
             						.append(x).append(" ")
             						.append(y).append("))");
             
-            Geometry geom = wkt.read(polyStr.toString());
-            
+            Geometry geom = wkt.read(polyStr.toString());       
             for (Geometry p : glayer.getGeometries()) {
-            	for(int i=0;i<p.getNumGeometries();i++){
-            		Geometry g=p.getGeometryN(i);
-	                if (geom.within(g)) {
-	                	putInIncludesCache(x, y, width, height, true);
-	                    return true;
-	                }
-            	}    
+                if (geom.within(p)) {
+                	putInIncludesCache(x, y, width, height, true);
+                    return true;
+                }
             }
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
@@ -413,7 +410,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         // then merge them
         List<Geometry> newgeoms = new ArrayList<Geometry>();
         List<Geometry> remove = new ArrayList<Geometry>();
-        if(bufferingDistance>0){
+       // if(bufferingDistance>0){
 	        //ciclo sulle nuove geometrie
 	        for (Geometry buffGeom : bufferedGeom) {
 	            boolean isnew = true;
@@ -432,65 +429,11 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	            newgeoms.removeAll(remove);
 	        }
 	        glayer.clear();
-	
 	        // assign new value
 	        for (Geometry geom :newgeoms) {
 	            glayer.put(geom);
 	        }
-        }
-        
-       /* 
-        for (int i=0;i<bufferedGeom.length;i++) {
-        	//applico il buffer alla geometria
-        	/*if(bufferedGeom[i] instanceof Polygon){
-        		bufferedGeom[i] = ((Polygon)bufferedGeom[i]).getExteriorRing();
-        	}else if(bufferedGeom[i] instanceof MultiPolygon){
-        		Geometry g=bufferedGeom[i].getGeometryN(0);
-        		for(int ii=1;ii<((MultiPolygon)bufferedGeom[i]).getNumGeometries();ii++){
-        			g=g.union(bufferedGeom[i].getGeometryN(ii));
-        		}	
-        		bufferedGeom[i] = g;
-        	}else{
-        		bufferedGeom[i] =PolygonOp.removeInteriorRing(bufferedGeom[i]);
-        	}*/
-       /* 	bufferedGeom[i] =PolygonOp.removeInteriorRing(bufferedGeom[i]);
-        	bufferedGeom[i]=bufferedGeom[i].buffer(0);
-            bufferedGeom[i] = EnhancedPrecisionOp.buffer(bufferedGeom[i], bufferingDistance);
-           
-        }
-        // then merge them
-        List<Geometry> newgeoms = new ArrayList<Geometry>();
-        List<Geometry> remove = new ArrayList<Geometry>();
-        
-        if(bufferingDistance>0){
-	        //ciclo sulle nuove geometrie
-	        for (Geometry buffGeom : bufferedGeom) {
-	            boolean isnew = true;
-	            remove.clear();
-	            for (Geometry newg : newgeoms) {
-	                if (newg.contains(buffGeom)) { //se newg contiene g -> g deve essere rimossa
-	                    isnew = false;
-	                    break;
-	                } else if (buffGeom.contains(newg)) { //se g contiene newg -> newg deve essere rimossa
-	                    remove.add(newg);
-	                }
-	            }
-	            if (isnew) {
-	                newgeoms.add(buffGeom);
-	            }
-	            newgeoms.removeAll(remove);
-	        }
-	        glayer.clear();
-	
-	        // assign new value
-	        for (Geometry geom :newgeoms) {
-	            glayer.put(geom);
-	        }
-        }else{
-        	for (Geometry geom :bufferedGeom) {
-	            glayer.put(geom);
-	        }
-        }*/
+      //  }
     }
     
     
@@ -535,7 +478,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 				    cc[cc.length-1]=cc[0];
 			    	bufferedGeom=gf.createPolygon(cc);
 			    }
-	            bufferedGeom =bufferedGeom.buffer(bufferingDistance);
+	            bufferedGeom =EnhancedPrecisionOp.buffer(bufferedGeom, bufferingDistance);
 			return bufferedGeom;
 		}
 	}
