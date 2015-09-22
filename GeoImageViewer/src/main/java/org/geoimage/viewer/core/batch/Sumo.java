@@ -105,6 +105,7 @@ public class Sumo {
 				params.pathImg=conf.getInputFolder();
 				params.outputFolder=conf.getOutputFolder();
 				params.maxDetections=conf.getMaxDetections();
+				params.xmlOutputFolder=conf.getXMLOutputFolder();
 				status=MULTI_IMG_ANALYSIS;
 			} catch (IOException e) {
 				e.printStackTrace();

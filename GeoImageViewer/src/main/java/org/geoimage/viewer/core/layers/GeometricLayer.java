@@ -33,10 +33,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 
 /**
@@ -240,7 +242,14 @@ public class GeometricLayer implements Cloneable{
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
 				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
+				                        //todo:check this part -> forse non serve
 				                        Geometry gbuff=g.buffer(0);
+				                       // Coordinate[] coords=CoordinateArrays.removeRepeatedPoints(geometry.getCoordinates());
+				                        
+				                        //gbuff=TopologyPreservingSimplifier.simplify(gbuff,0.0005);
+				                        if(!gbuff.isValid()){
+				                        	System.out.println("Warn invalid geometry");
+				                        }
 			                        	for (int i=0; i < gbuff.getNumGeometries(); i++) {
 					                        if(imageP.contains(gbuff)){
 					                        	Object[]o=new Object[2];
@@ -277,9 +286,6 @@ public class GeometricLayer implements Cloneable{
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
 	                			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
-	                	/*		List<Geometry>gs=new ArrayList<>();
-	                			gs.add((Geometry)o[i][0]);
-	                			SimpleShapefile.exportGeometriesToShapeFile(gs, new File("F:\\SumoImgs\\export\\gg"+i+System.currentTimeMillis()+".shp"), "Polygon");*/
 	                		}	
 	                	}	
 	                }

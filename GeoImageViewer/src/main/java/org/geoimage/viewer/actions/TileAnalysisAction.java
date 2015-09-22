@@ -109,11 +109,17 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 					
 					int row=Integer.parseInt(args[1]);
 					int col=Integer.parseInt(args[2]);
-					Float hh=Float.parseFloat(args[3]);
-					Float hv=Float.parseFloat(args[4]);
-					Float vh=Float.parseFloat(args[5]);
-					Float vv=Float.parseFloat(args[6]);
-					
+					Float buffer=Float.parseFloat(args[3]);
+					Float hh=1.5f;
+					Float hv=1.5f;
+					Float vh=1.5f;
+					Float vv=1.5f;
+					if(args.length>=5){
+						hh=Float.parseFloat(args[4]);
+						hv=Float.parseFloat(args[5]);
+						vh=Float.parseFloat(args[6]);
+						vv=Float.parseFloat(args[7]);
+					}
 					//read the land mask
 					ArrayList<IMask> mask = new ArrayList<IMask>();
 	                for (ILayer l : LayerManager.getIstanceManager().getChilds(layer)) {
@@ -125,7 +131,7 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 	                final IMask[] bufferedMask = new IMask[mask.size()];
 	                for (int i=0;i<mask.size();i++) {
 	                	IMask maskList = mask.get(i);
-	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), 0, ((MaskVectorLayer)maskList).getGeometriclayer());
+	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), buffer, ((MaskVectorLayer)maskList).getGeometriclayer());
 	                }
 					
 	                VDSAnalysis analysis = new VDSAnalysis(sar, null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
