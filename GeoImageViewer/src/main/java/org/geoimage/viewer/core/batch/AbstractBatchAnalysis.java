@@ -1,11 +1,14 @@
 package org.geoimage.viewer.core.batch;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
@@ -30,6 +33,7 @@ class AnalysisParams {
 	public String pathImg[]=null;
 	public String shapeFile="";
 	public String outputFolder="";
+	public String xmlOutputFolder="";
 	public float enl=0;
 	public int buffer=0;
 	public String epsg="EPSG:4326";	
@@ -166,6 +170,12 @@ public abstract class AbstractBatchAnalysis {
 		   if(!folder.exists())
 			   folder.mkdirs();
 		
+		   File xmlOutFolder=null;
+		   
+		    xmlOutFolder=new File(params.xmlOutputFolder);
+		    if(!xmlOutFolder.exists())
+		    	xmlOutFolder.mkdirs();
+		   
     	   for(ComplexEditVDSVectorLayer l:layerResults){
     		   StringBuilder outfile=new StringBuilder(outfolder).append(File.separator)
     				            .append(l.getName()).append("_")
@@ -182,11 +192,25 @@ public abstract class AbstractBatchAnalysis {
     		   if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
-           
-    		   //GeometricLayer threshLayer=FactoryLayer.createThresholdedLayer(l.getGeometriclayer(),l.getThresh(),l.isThreshable());
-    		   SumoXMLWriter.saveNewXML(new File(file),l,
+    		   File outFile=new File(file);
+    		   SumoXMLWriter.saveNewXML(outFile,l,
     				   params.epsg,reader,params.thresholdArrayValues,
     				   params.buffer,params.enl,params.shapeFile,runVersion,runVersionNumber);
+    		   
+    		   try{
+	    		   if(layerResults.size()==1||l.getBand().equals("Merged")){
+	    			   String start=reader.getTimeStampStart();
+	    				Timestamp tStart=Timestamp.valueOf(start);
+	    				
+	    				String sensor=reader.getSensor();
+	    				SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+	    				String imId=sensor+"_"+format.format(tStart);
+	    				
+	    			   FileUtils.copyFile(outFile,new File( params.xmlOutputFolder+"/"+imId+".xml"));
+	    		   }
+    	   	   }catch(Exception e){
+    	   		   logger.error("File xml not saved in the xmloutputfolder:",e);
+    	   	   }
     		   
     		   //save the bound box as shape file
     		   try{
@@ -215,7 +239,7 @@ public abstract class AbstractBatchAnalysis {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
     		   
-    		   if(!l.getBand().equals("Merged")){
+    		   if(l.getBand().equals("Merged")){
 	    		   try{
 	    			   String targetscsv=params.outputFolder+"\\targets.csv";
 	    			   List<Geometry> targets=new ArrayList<Geometry>(l.getGeometriclayer().getGeometries());
@@ -235,7 +259,6 @@ public abstract class AbstractBatchAnalysis {
 			    			   }
 		    			   }	   
 	    			   }	   
-	    			   //reader.getGeoTransform()
 	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,null,imageName,true);
 	    		   }catch(Exception e ){
 	    			   logger.error("Problem saving targets in csv:"+imageName,e);

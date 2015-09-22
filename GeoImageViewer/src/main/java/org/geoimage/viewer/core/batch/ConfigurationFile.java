@@ -29,6 +29,7 @@ public class ConfigurationFile {
 	public static  final String BUFFER_PARAM="buffer";
 	public static  final String INPUT_FOLD_PARAM="input_folder";
 	public static  final String OUTPUT_FOLD_PARAM="output_folder";
+	public static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
 	
 	public static  final String USE_LOCAL_CONF="use_local_conf";
 	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
@@ -127,6 +128,15 @@ public class ConfigurationFile {
 		public String getOutputFolder(){
 			return prop.getProperty(OUTPUT_FOLD_PARAM,"");
 		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public String getXMLOutputFolder(){
+			return prop.getProperty(XML_OUTPUT_FOLD_PARAM,"");
+		}
+		
 		/**
 		 * 
 		 * @return
