@@ -595,6 +595,8 @@ public class S1GeoCodingImpl implements GeoCoding {
 										  //41.21287665300109--- 9.430096036953463
 										  //41.21278292694313--- 9.430058984747808
 
+				System.out.println("Height:"+GeoUtils.getGeoidH(lon, lat));
+				
 				r = gc.pixelFromGeo(lon,lat);
 				System.out.println(""+r[1]+" --- "+r[0]);
 				
