@@ -76,7 +76,7 @@ public class ENL  {
         	String folder=new File(name).getParentFile().getAbsolutePath();
         	if(folder.contains("GRDF")){
         		enl=3.5F;
-        	}else if(folder.contains("GRDH")){
+        	}else if(folder.contains("_GRDH")){
         		if(folder.matches(".*S(.){1}_GRDH.*")){
         			enl=27F;
         		}else if(folder.contains("IW")){
