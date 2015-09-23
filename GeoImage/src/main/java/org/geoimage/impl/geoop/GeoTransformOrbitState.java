@@ -8,7 +8,9 @@ import org.geoimage.exception.GeoTransformException;
 import org.geotools.referencing.GeodeticCalculator;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
@@ -97,6 +99,7 @@ public class GeoTransformOrbitState implements GeoTransform{
                 coords[i].x=coordsConv.get(i)[0];
                 coords[i].y=coordsConv.get(i)[1];
             }   
+            
             return geom;
 		}catch(InterruptedException|ExecutionException ge){
 			throw new GeoTransformException(ge.getMessage());

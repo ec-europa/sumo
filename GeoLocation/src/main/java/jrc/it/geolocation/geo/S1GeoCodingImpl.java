@@ -559,7 +559,7 @@ public class S1GeoCodingImpl implements GeoCoding {
 		//String metaF="F:////////////////SumoImgs////////////////test_geo_loc////////////////S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
 
 		
-		String metaF="Z:/Radar-Images/S1PmarMase/S1/SM/S1A_S4_GRDH_1SDV_20150812T014643_20150812T014708_007223_009E1A_F587.SAFE/annotation/s1a-s4-grd-vv-20150812t014643-20150812t014708-007223-009e1a-001.xml";
+		String metaF="F:/SumoImgs/carlos tests/analysis on land/S1A_EW_GRDH_1SDV_20141019T064549_20141019T064649_002895_003478_47B4.SAFE/annotation/s1a-ew-grd-vv-20141019t064549-20141019t064649-002895-003478-001.xml";
 		//"Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDV_20150401T145242_20150401T145301_005291_006B16_EDD7.SAFE/annotation/s1a-iw-grd-vv-20150401t145242-20150401t145301-005291-006b16-001.xml";
 		
@@ -585,11 +585,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 		try {
 			gc = new S1GeoCodingImpl(metaF);
 			
-			double lat = -20.89153;
-			double lon = 55.53749;
+			double lat = 60;
+			double lon = 15;
 			
-			double pixel=370.5;
-			double line=16482.2;
 			double r[];
 			try {
 				  //Line: 12687.5  Col: 3762.5
