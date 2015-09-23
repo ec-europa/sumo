@@ -159,6 +159,10 @@ public class GeometricLayer implements Cloneable{
     	long startTime = System.currentTimeMillis();
     	for(Geometry geom:positions.geoms){
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
+            if(!geom.isValid()){
+            	logger.warn("Geometry is invalid after coordinate conversion");
+            }
+
         }
     	long endTime = System.currentTimeMillis();
         System.out.println("createImageProjectedLayer  " + (endTime - startTime) +  " milliseconds.");
@@ -244,12 +248,6 @@ public class GeometricLayer implements Cloneable{
 				                        }
 				                        //todo:check this part -> forse non serve
 				                        Geometry gbuff=g.buffer(0);
-				                       // Coordinate[] coords=CoordinateArrays.removeRepeatedPoints(geometry.getCoordinates());
-				                        
-				                        //gbuff=TopologyPreservingSimplifier.simplify(gbuff,0.0005);
-				                        if(!gbuff.isValid()){
-				                        	System.out.println("Warn invalid geometry");
-				                        }
 			                        	for (int i=0; i < gbuff.getNumGeometries(); i++) {
 					                        if(imageP.contains(gbuff)){
 					                        	Object[]o=new Object[2];
