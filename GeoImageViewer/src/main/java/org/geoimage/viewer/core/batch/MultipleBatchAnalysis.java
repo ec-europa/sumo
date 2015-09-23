@@ -67,10 +67,13 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
 							
-							if(activeParams.enl==0){
+							if(confFile.getENL()==0){
 								String enl=reader.getENL();
 								activeParams.enl=Float.parseFloat(enl);
+							}else{
+								activeParams.enl=confFile.getENL();
 							}	
+							
 							GeometricLayer gl=null;
 							if(activeParams.shapeFile!=null)
 								gl=readShapeFile(reader);
