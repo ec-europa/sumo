@@ -42,7 +42,6 @@
 				<xs:element name="ypixel" type="xs:double"/>
 				<xs:element name="detecttime" type="xs:string"/>
 				<xs:element name="inc_ang" type="xs:double"/>
-				<xs:element name="inc_angle" type="xs:decimal"/>
 				<xs:element name="reliability" type="xs:int"/>
 				<xs:element name="false_alarm_cause" type="xs:string"/>
 				<xs:element name="nr_pixels"  type="xs:int"/>
