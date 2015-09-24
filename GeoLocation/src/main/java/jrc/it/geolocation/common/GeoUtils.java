@@ -358,7 +358,8 @@ public class GeoUtils {
 			//first value
 			Geoid g=geoRow[middle];
 			double middleDist = distanceRad(lonRad,latRad,g.lonRad,g.latRad);
-		    if(middleDist<100){
+			double oldDist =middleDist; 
+		    if(middleDist<75){
 		    	h= g.h;
 		    }else{
 		    	int left=0;
@@ -379,15 +380,18 @@ public class GeoUtils {
 						middle=left+(right-left)/2;
 						middleDist=middleDistR;
 					}
-					if(middleDist<100){
+					if(middleDist<75&&oldDist>middleDist){
+					//if(oldDist>middleDist){
+						//finded=true;
+						oldDist=middleDist;
 				    	h=geoRow[middle].h;
-				    	finded=true;
+				    	//System.out.println("D:"+middleDist+" - H:"+h+" - lon,lat:"+geoRow[middle].lonRad+","+geoRow[middle].lonRad);
 				    	break;
 				    }
 				}
 		    }
 		}    
-	    //System.out.println("H:"+h);
+	 //   System.out.println("H:"+h);
 		return h;
 	}
 	
@@ -548,12 +552,12 @@ public class GeoUtils {
 	    Double h=null;
 	    double dist =100;
 		//first value
-		for(int i=0;i<geoidPoints.length&&dist>50;i++){
-			for(int j=0;j<geoidPoints[i].length&&dist>50;j++){
+		for(int i=0;i<geoidPoints.length&&dist>75;i++){
+			for(int j=0;j<geoidPoints[i].length&&dist>75;j++){
 				Geoid g=geoidPoints[i][j];
 				//geoidPoints
 			    dist =distance(lon,lat,g.lon,g.lat);
-			    if(50 >dist){ 
+			    if(75 >dist){ 
 			    	h=g.h;
 			    }
 			}   
@@ -593,25 +597,28 @@ public class GeoUtils {
 	}
 	
 	public static void main(String[] args){
-		double lon=178.625;
-		double lat=-1.5;
+		double lon=15;
+		double lat=60;
 		
 		GeoUtils g=new GeoUtils();
+		//System.out.println("H:"+g.getGeoidHOptimized(geoidPoints,lon,lat));
 	
 		for(int i=0;i<180;i++){
 			lon=lon+i;
 			lat=lat+i;
 		
-			
+			System.out.println("------------------------------------------------------------");
 			long start3=System.currentTimeMillis();
 			System.out.println("H:"+g.getGeoidHOptimized(geoidPoints,lon,lat));
 			long stop3=System.currentTimeMillis();
-			//System.out.println((stop3-start3));
+			System.out.println((stop3-start3));
 			
 			long start=System.currentTimeMillis();
 			System.out.println("H:"+g.oldGetGeoidH(geoidPoints, lon, lat));
 			long stop=System.currentTimeMillis();
-			//System.out.println((stop-start));
+			System.out.println((stop-start));
+			
+			System.out.println("------------------------------------------------------------");
 		}
 		
 		//getGeoidHTest(geoidPoints,lon,lat);
