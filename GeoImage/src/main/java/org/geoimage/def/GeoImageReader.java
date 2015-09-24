@@ -193,5 +193,7 @@ public interface GeoImageReader  {
     
     public abstract double[] getPixelsize();
     
+    
+    public abstract String getImId();
 }
 

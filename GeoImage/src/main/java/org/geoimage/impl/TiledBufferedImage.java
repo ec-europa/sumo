@@ -443,4 +443,10 @@ public class TiledBufferedImage implements GeoImageReader {
 		return null;
 	}
 
+	@Override
+	public String getImId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     
     protected double[] pixelsize={0.0,0.0};
     private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
-
     
 
 	public SarImageReader(File manifest){
@@ -75,6 +76,23 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setManifestFile(File manifestFile) {
 		this.manifestFile = manifestFile;
 	}
+	
+	public String getImId(){
+		String imId="";
+		try{
+			String start=getTimeStampStart();
+			Timestamp tStart=Timestamp.valueOf(start);
+			
+			String sensor=getSensor();
+			SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+			//base file name for the xml
+			imId=sensor+"_"+format.format(tStart);
+		}catch(Exception e){
+			imId=System.currentTimeMillis()+"";
+			logger.warn("Error calculating ImId",e.getMessage());
+		}	
+		return imId;
+	}	
     
     /**
      * used for XML
