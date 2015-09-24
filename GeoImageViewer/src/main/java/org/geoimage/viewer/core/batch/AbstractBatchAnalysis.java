@@ -177,36 +177,32 @@ public abstract class AbstractBatchAnalysis {
 		    	xmlOutFolder.mkdirs();
 		   
     	   for(ComplexEditVDSVectorLayer l:layerResults){
-    		   StringBuilder outfile=new StringBuilder(outfolder).append(File.separator)
-    				            .append(l.getName()).append("_")
-    				   			.append(dFormat.format(params.startDate));
+    		   StringBuilder outfileName=new StringBuilder(outfolder).append(File.separator)
+    				            .append(reader.getImId()).append("_");
+    		   if(l.getBand().equalsIgnoreCase("Merged")){
+    			   outfileName.append(l.getBand()); 
+    		   }else{
+    			   outfileName.append(reader.getBandName(Integer.valueOf(l.getBand())));
+    		   }
+    		   
+    			
     		   
 				if(reader.isContainsMultipleImage() && reader instanceof CosmoSkymedImage){
-					outfile=outfile.append("_").append(((CosmoSkymedImage)reader).getGroup());
+					outfileName=outfileName.append("_").append(((CosmoSkymedImage)reader).getGroup());
 				}
 
-    		   l.save(outfile.toString(),ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
+    		   l.save(outfileName.toString()+"_OLD",ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
     		   
     		   
-    		   String file=new String(outfile.append("_new").toString());
-    		   if (!file.endsWith(".xml")) {
-	                file = file.concat(".xml");
-	            }
-    		   File outFile=new File(file);
+    		   File outFile=new File(outfileName.toString()+".xml");
     		   SumoXMLWriter.saveNewXML(outFile,l,
     				   params.epsg,reader,params.thresholdArrayValues,
     				   params.buffer,params.enl,params.shapeFile,runVersion,runVersionNumber);
     		   
+    		   //copy the xml in the folder for ingestion => copy the merged for multiple band or the single xml
     		   try{
 	    		   if(layerResults.size()==1||l.getBand().equals("Merged")){
-	    			   String start=reader.getTimeStampStart();
-	    				Timestamp tStart=Timestamp.valueOf(start);
-	    				
-	    				String sensor=reader.getSensor();
-	    				SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd_HHmmss");
-	    				String imId=sensor+"_"+format.format(tStart);
-	    				
-	    			   FileUtils.copyFile(outFile,new File( params.xmlOutputFolder+"/"+imId+".xml"));
+	    			   FileUtils.copyFile(outFile,new File( params.xmlOutputFolder+"/"+reader.getImId()+".xml"));
 	    		   }
     	   	   }catch(Exception e){
     	   		   logger.error("File xml not saved in the xmloutputfolder:",e);
@@ -232,14 +228,14 @@ public abstract class AbstractBatchAnalysis {
     		   
     		   //save targets as shape file
     		   try{
-    			   String targets=outfolder+"\\"+l.getName()+".shp";
+    			   String targets=outfileName.append(".shp").toString();
     			  // l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
     			   SimpleShapefile.exportGeometriesToShapeFile(l.getGeometriclayer().getGeometries(), new File(targets),"Point",reader.getGeoTransform());
     		   } catch (Exception e) {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
     		   
-    		   if(l.getBand().equals("Merged")){
+    		   if(l.getBand().equals("Merged")||layerResults.size()==1){
 	    		   try{
 	    			   String targetscsv=params.outputFolder+"\\targets.csv";
 	    			   List<Geometry> targets=new ArrayList<Geometry>(l.getGeometriclayer().getGeometries());
