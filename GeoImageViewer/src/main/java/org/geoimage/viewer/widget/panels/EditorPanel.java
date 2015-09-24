@@ -19,6 +19,8 @@ public class EditorPanel extends javax.swing.JPanel {
     private IEditable layer;
     private SimpleEditorDialog ed;
     
+    
+    
     /** Creates new form EditorPanel */
     public EditorPanel(IEditable layer) {
         initComponents();

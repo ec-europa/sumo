@@ -5,6 +5,7 @@
  */
 package org.geoimage.viewer.widget.panels;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -16,7 +17,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.NumberFormatter;
 
 import org.geoimage.viewer.common.OptionMenu;
@@ -37,6 +40,32 @@ import org.slf4j.LoggerFactory;
  * @author  thoorfr
  */
 public class SavePanel extends javax.swing.JPanel {
+
+	class ItemRenderer extends BasicComboBoxRenderer{
+    	ItemRenderer(){
+    		super();
+    	}
+    	@Override
+    	 public Component getListCellRendererComponent(
+    	            JList list, Object value, int index,
+    	            boolean isSelected, boolean cellHasFocus){
+    	            
+    				super.getListCellRendererComponent(list, value, index,isSelected, cellHasFocus);
+    				if(value instanceof OptionMenu){
+	    	            if (value != null) {
+	    	            	OptionMenu item = (OptionMenu)value;
+	    	                setText( item.getOptionDesc());
+	    	            }
+	    	 
+	    	            if (index == -1){
+	    	            	OptionMenu item = (OptionMenu)value;
+	    	            	setText( item.getOptionDesc());
+	    	            }
+    				}    
+    	            return this;
+    	        }
+	}
+	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SavePanel.class);
 
     private ISave saveLayer;
@@ -59,16 +88,20 @@ public class SavePanel extends javax.swing.JPanel {
         		super.setSelectedItem(item);
         	}
         };
-        
+                
         this.comboSaveFormat.setModel(modelComboFormat);
+        this.comboSaveFormat.setRenderer(new ItemRenderer());
+        
         this.jComboBox2.setModel(new DefaultComboBoxModel(CRS.getSupportedCodes("EPSG").toArray()));
         this.jComboBox2.getModel().setSelectedItem("4326");
+        
         this.jComboBox2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 epsg=(String)comboSaveFormat.getModel().getSelectedItem();
                 epsg=epsg.replace("EPSG:", "");
             }
         });
+        
         if(layer instanceof MaskVectorLayer)
             if(((MaskVectorLayer)layer).getParent() instanceof ImageLayer){
             	OptionMenu opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
@@ -76,6 +109,7 @@ public class SavePanel extends javax.swing.JPanel {
             		opt=comboSaveFormat.getItemAt(0);
                 jTextField1.setText(((ImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
             }
+        
         if(layer instanceof ComplexEditVDSVectorLayer){
         	labelRunVersion.setVisible(true);
         	labelRunVersionNumber.setVisible(true);
@@ -108,6 +142,8 @@ public class SavePanel extends javax.swing.JPanel {
         labelRunVersion = new javax.swing.JLabel();
         labelRunVersionNumber=new JLabel();
         txtRunVersion=new JTextField();
+        
+        jTextField1.setText(SumoPlatform.getApplication().getCurrentImageReader().getImId());
         
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -237,12 +273,14 @@ public class SavePanel extends javax.swing.JPanel {
         }
         filename = jTextField1.getText();
         //System.out.println(filename);
-        JFileChooser fd = null;
-        if(filename.lastIndexOf(File.separator) != -1)
-             fd = new JFileChooser(filename.substring(0, filename.lastIndexOf(File.separator)));
-        else
-            fd = new JFileChooser("");
-        
+        JFileChooser fd = new JFileChooser();
+        if(!"".equalsIgnoreCase(filename)&&filename!=null){
+        	File f=new File(filename);
+        	if(f.getParentFile()!=null && f.getParentFile().exists())
+        		fd.setCurrentDirectory(f.getParentFile());
+        	
+        	fd.setSelectedFile(f);
+        }
         int returnVal = fd.showOpenDialog(Frame.getFrames()[0]);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -259,9 +297,11 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     int ii=filename.lastIndexOf(".");
     filename = filename.substring(0,ii!=-1?ii:filename.length()-1);
     
-    int id=(comboSaveFormat.getSelectedIndex()!=-1)?comboSaveFormat.getSelectedIndex():0;
-    OptionMenu opt=comboSaveFormat.getItemAt(id);
-    jTextField1.setText(filename + "." + opt.getOptionDesc());
+    String ext=((OptionMenu)comboSaveFormat.getSelectedItem()).getValue();
+    if(!filename.endsWith("."+ext)){
+    	filename=filename+"."+ext;
+    }    
+    jTextField1.setText(filename);
 }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

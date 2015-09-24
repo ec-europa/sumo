@@ -9,7 +9,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -280,10 +279,10 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     @Override
     public OptionMenu[] getFileFormatTypes() {
     	OptionMenu[] opts=new OptionMenu[8];
-    	opts[0]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD);
-    	opts[1]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO,ISave.STR_EXPORT_XML_SUMO);
-    	opts[2]=new OptionMenu(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
-    	opts[3]=new OptionMenu(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
+    	opts[0]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO,ISave.STR_EXPORT_XML_SUMO,"xml");
+    	opts[1]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD,"xml");
+    	opts[2]=new OptionMenu(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV,"csv"); 
+    	opts[3]=new OptionMenu(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP,"shp");
     	opts[4]=new OptionMenu(ISave.OPT_EXPORT_GML,ISave.STR_EXPORT_GML);
     	opts[5]=new OptionMenu(ISave.OPT_EXPORT_KMZ,ISave.STR_EXPORT_KMZ);
     	opts[6]=new OptionMenu(ISave.OPT_EXPORT_POSTGIS,ISave.STR_EXPORT_POSTGIS);
@@ -423,8 +422,20 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             //final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
+            int size=glayer.getAttributes().size();
+            
+            Integer maxVal=0;
+            for(int i=0;i<size;i++){
+            	Integer val=(Integer) glayer.getAttributes().get(i).get(VDSSchema.ID);
+            	//Integer val=Integer.parseInt(max);
+
+            	if(val>maxVal)
+            		maxVal=val;
+            }
+            maxVal++;
             AttributesGeometry source=glayer.getAttributes().get(0);
             AttributesGeometry atts=source.emptyCloneAttributes();
+            atts.set(VDSSchema.ID,maxVal);
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
             ae.setAttributes(atts);
             ae.setVisible(true);
@@ -456,50 +467,46 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     SimpleDateFormat df=new SimpleDateFormat("dd-MM-YYYY");
     for (int i = 0; i <keys.size() ; i++) {
           String att = attr.getSchema()[i];
-          Class type = attr.getType(attr.getSchema()[i]);
+          Class<?> type = attr.getType(attr.getSchema()[i]);
           String val=((String)map.get(att));
           
-          if (type == Double.class){//type.equals("Double")) {
-        	  attr.set(att, Double.parseDouble(val));
-          } else if (type == String.class){//(type.equals("String")) {
-        	  attr.set(att, val);
-          } else if(type == Date.class){//if (type.equals("Date")) {
-              try {
-            	  attr.set(att, df.parse(val));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-          } else if(type == Timestamp.class){//if (type.equals("Date")) {
-          	Date d;
-				try {
-					d = df.parse(val);
-					attr.set(att, new Timestamp(d.getTime()));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-          } else if (type == Integer.class){
-        	  attr.set(att, Integer.parseInt(val));
-          } else if (type == Boolean.class){
-        	  attr.set(att, Boolean.parseBoolean(val));
-          }else if (type.isArray()){
-        	//TODO: cambiare questa m...a   
-        	int bb=Integer.parseInt(band);
-          	if(type==int[].class){
-          		int[] a=new int[4];
-          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
-          		a[id]=Integer.parseInt(val);
-          		attr.set(att,a);
-          	}	
-          	if(type==double[].class){
-          		double[] a=new double[4];
-          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
-          		a[id]=Double.parseDouble(val);
-          		attr.set(att,a);
-
-          	}
-          }else{
-        	  attr.set(att, val);
-          }
+          if(val!=null&&!"".equals(val)){
+        	  try{
+		          if (type == Double.class){
+		        	  attr.set(att, Double.parseDouble(val));
+		          } else if (type == String.class){
+		        	  attr.set(att, val);
+		          } else if(type == Date.class){
+		        	  attr.set(att, df.parse(val));
+		          } else if(type == Timestamp.class){
+		          		Date d= df.parse(val);
+						attr.set(att, new Timestamp(d.getTime()));
+		          } else if (type == Integer.class){
+		        	  attr.set(att, Integer.parseInt(val));
+		          } else if (type == Boolean.class){
+		        	  attr.set(att, Boolean.parseBoolean(val));
+		          }else if (type.isArray()){
+		        	//TODO: cambiare questa m...a   
+		        	int bb=Integer.parseInt(band);
+		          	if(type==int[].class){
+		          		int[] a=new int[4];
+		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
+		          		a[id]=Integer.parseInt(val);
+		          		attr.set(att,a);
+		          	}	
+		          	if(type==double[].class){
+		          		double[] a=new double[4];
+		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
+		          		a[id]=Double.parseDouble(val);
+		          		attr.set(att,a);
+		          	}
+		          }else{
+		        	  attr.set(att, val);
+		          }
+        	  }catch(Exception e){
+        		  logger.error("Error setting attribute:"+att,e.getMessage());
+        	  }     
+          }   
       }
       return attr;
    }
