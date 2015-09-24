@@ -279,31 +279,33 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				String s=StringUtils.join(max,',');
 				b.setMaxValue(s);
 			}
-			double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
-			b.setLength(lenght);
-			b.setWidth(Precision.round((Double) att.get(VDSSchema.ESTIMATED_WIDTH),1));
+			if(att.get(VDSSchema.ESTIMATED_LENGTH)!=null){
+				double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
+				b.setLength(lenght);
+				b.setWidth(Precision.round((Double) att.get(VDSSchema.ESTIMATED_WIDTH),1));
+				
+				b.setSizeClass("S");//lenght<70
+				if(lenght>70 && lenght<=120)
+					b.setSizeClass("M");
+				else if(lenght>120)
+					b.setSizeClass("L");
+			}
+			if(att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS)!=null)
+				b.setNrPixels(((Double)att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS)).intValue());
+
+			if(att.get(VDSSchema.ESTIMATED_HEADING)!=null)
+				b.setHeadingNorth(Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR));
 			
-			b.setSizeClass("S");//lenght<70
-			if(lenght>70 && lenght<=120)
-				b.setSizeClass("M");
-			else if(lenght>120)
-				b.setSizeClass("L");
-			
-			b.setNrPixels(((Double)att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS)).intValue());
-			//b.setHeadingRange(null);
-			//b.setNoise(null);
-			double hn=Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR);
-			b.setHeadingNorth(hn);
-			
-			
-			double[] significance=(double[])att.get(VDSSchema.SIGNIFICANCE);
-			if(significance!=null)
-				b.setSignificance(StringUtils.join(significance,','));
-			
-			double[] trhtile=(double[])att.get(VDSSchema.THRESHOLD);
-			if(significance!=null)
-				b.setThresholdTile(StringUtils.join(trhtile,','));
-			
+			if(att.get(VDSSchema.SIGNIFICANCE)!=null){
+				double[] significance=(double[])att.get(VDSSchema.SIGNIFICANCE);
+				if(significance!=null)
+					b.setSignificance(StringUtils.join(significance,','));
+			}
+			if(att.get(VDSSchema.THRESHOLD)!=null){
+				double[] trhtile=(double[])att.get(VDSSchema.THRESHOLD);
+				if(trhtile!=null)
+					b.setThresholdTile(StringUtils.join(trhtile,','));
+			}
 			target.getBoat().add(b);
 		}
 		
