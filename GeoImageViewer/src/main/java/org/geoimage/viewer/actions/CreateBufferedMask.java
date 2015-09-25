@@ -5,13 +5,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
+import org.apache.commons.math3.distribution.GeometricDistribution;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geotools.geometry.jts.JTS;
 import org.slf4j.Logger;
@@ -42,11 +46,12 @@ public class CreateBufferedMask extends AbstractAction{
 	@Override
 	public boolean execute(String[] args) {
 		if(args.length>=1){
+			final GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
 			if(args[0].equalsIgnoreCase("test")){
 				FileWriter fw=null;
 				BufferedWriter bw=null;
 				try{
-					GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
+					
 					
 					File f=new File(reader.getFilesList()[0]);
 					fw = new FileWriter(f.getParent()+"\\invalidgeom.txt");
@@ -58,9 +63,11 @@ public class CreateBufferedMask extends AbstractAction{
 						Geometry g=geoms.get(i);
 						if(!g.isValid()){
 							System.out.println("Invalid geometry");
-							
+							Geometry geo=reader.getGeoTransform().transformGeometryGeoFromPixel(g);
 							fw.write(g.toText()+'\n');
-							System.out.println("Corrected?:"+g.isValid());
+						//	fw.write(geo.toText()+'\n');
+							fw.write('\n');
+							//System.out.println("Corrected?:"+g.isValid());
 						}	
 					}
 				}catch(Exception e){
@@ -72,6 +79,40 @@ public class CreateBufferedMask extends AbstractAction{
 					}catch(Exception e){
 					}	
 				}	
+				
+			}if(args[0].equalsIgnoreCase("testreload")){
+				String fname="F:\\SumoImgs\\coastline\\OSMLandPoly_20141001_250\\OSMLandPoly_20141001_250m.shp";
+					GeometricLayer shpLayer=null;
+					try{
+						 shpLayer=SimpleShapefile.createIntersectedLayer(new File(fname),((SarImageReader)reader).getBbox(100),reader.getGeoTransform());
+						final List<Geometry> geoms=shpLayer.getGeometries();
+						Thread check=new Thread(){
+							public void run(){
+								try {
+									for(int i=0;i<geoms.size();i++){
+										Geometry g=reader.getGeoTransform().transformGeometryPixelFromGeo(geoms.get(i));
+										if(!g.isValid()){
+											System.out.println("Invalid geometry");
+											Geometry simplify=TopologyPreservingSimplifier.simplify(geoms.get(i),0.003);
+											simplify=reader.getGeoTransform().transformGeometryPixelFromGeo(geoms.get(i));
+											System.out.println("Simplify:"+simplify.isValid());
+											if(!simplify.isValid()){
+												simplify=TopologyPreservingSimplifier.simplify(geoms.get(i),0.005);
+												simplify=reader.getGeoTransform().transformGeometryPixelFromGeo(geoms.get(i));
+												System.out.println("Simplify2 0.005:"+simplify.isValid());
+											}
+											//Geometry geo=reader.getGeoTransform().transformGeometryGeoFromPixel(g);
+											//fw.write(g.toText()+'\n');
+											//fw.write('\n');
+										}	
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}	
+						};
+						check.start();
+					}catch(Exception e){e.printStackTrace();}
 				
 			}else{
 				Integer bufferSize=Integer.parseInt(args[0]);

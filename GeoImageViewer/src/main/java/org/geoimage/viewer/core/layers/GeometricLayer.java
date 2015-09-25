@@ -153,29 +153,21 @@ public class GeometricLayer implements Cloneable{
      * @return
      * @throws GeoTransformException 
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
-    	GeometricLayer positions=oldPositions.clone();
-    	
+    public static GeometricLayer createImageProjectedLayer(GeometricLayer layer, GeoTransform geoTransform, String projection) throws GeoTransformException {
     	long startTime = System.currentTimeMillis();
-    	for(Geometry geom:positions.geoms){
+    	for(Geometry geom:layer.geoms){
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
-            if(!geom.isValid()){
-            	logger.warn("Geometry is invalid after coordinate conversion");
-            }
-
         }
     	long endTime = System.currentTimeMillis();
         System.out.println("createImageProjectedLayer  " + (endTime - startTime) +  " milliseconds.");
-        return positions;
+        return layer;
     }
     
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer oldPositions, AffineTransform geoTransform) {
-    	GeometricLayer positions=oldPositions.clone();
-    	
-        for(Geometry geom:positions.geoms){
+    public static GeometricLayer createImageProjectedLayer(GeometricLayer layer, AffineTransform geoTransform) {
+        for(Geometry geom:layer.geoms){
             for(Coordinate pos:geom.getCoordinates()){
                 Point2D.Double temp=new Point2D.Double();
                 try {
@@ -187,7 +179,7 @@ public class GeometricLayer implements Cloneable{
                 pos.y=temp.y;
             }
         }
-        return positions;
+        return layer;
     }
     
     /**
@@ -222,7 +214,9 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP,final String geoName,  FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
+    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP,final String geoName,  
+    		FeatureCollection fc, final String[] schema, 
+    		final String[] types, boolean applayTransformation,GeoTransform transform) throws IOException{
         GeometricLayer out=null;
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);//LINESTRING);//POLYGON);
@@ -283,7 +277,10 @@ public class GeometricLayer implements Cloneable{
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
+	                			Geometry g=(Geometry)o[i][0];
+	                			if(applayTransformation&&transform!=null)
+	                				g=transform.transformGeometryPixelFromGeo(g);
+	                			out.put(g,(AttributesGeometry)o[i][1]);
 	                		}	
 	                	}	
 	                }
@@ -305,13 +302,17 @@ public class GeometricLayer implements Cloneable{
 	                    }
 	                    Geometry p2 = ((Geometry) (f.getDefaultGeometryProperty().getValue())).intersection(imageP);
 	                    if (!p2.isEmpty()) {
+	                    	if(applayTransformation&&transform!=null)
+	                    		p2=transform.transformGeometryPixelFromGeo(p2);
 	                        out.put(p2, at);
 	                    }
 	
 	                }
-	            }finally{
-	            	fi.close();
-	            }  
+                }catch(Exception e){
+                	logger.error(e.getMessage(),e);
+                }finally{
+                	fi.close();
+                }       
             }
         return out;
     }
