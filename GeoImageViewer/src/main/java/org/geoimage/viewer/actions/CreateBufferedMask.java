@@ -63,7 +63,7 @@ public class CreateBufferedMask extends AbstractAction{
 						Geometry g=geoms.get(i);
 						if(!g.isValid()){
 							System.out.println("Invalid geometry");
-							Geometry geo=reader.getGeoTransform().transformGeometryGeoFromPixel(g);
+						//	Geometry geo=reader.getGeoTransform().transformGeometryGeoFromPixel(g);
 							fw.write(g.toText()+'\n');
 						//	fw.write(geo.toText()+'\n');
 							fw.write('\n');
@@ -80,7 +80,7 @@ public class CreateBufferedMask extends AbstractAction{
 					}	
 				}	
 				
-			}if(args[0].equalsIgnoreCase("testreload")){
+			}else if(args[0].equalsIgnoreCase("testreload")){
 				String fname="F:\\SumoImgs\\coastline\\OSMLandPoly_20141001_250\\OSMLandPoly_20141001_250m.shp";
 					GeometricLayer shpLayer=null;
 					try{
