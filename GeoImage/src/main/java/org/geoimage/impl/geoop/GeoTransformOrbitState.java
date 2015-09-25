@@ -107,7 +107,7 @@ public class GeoTransformOrbitState implements GeoTransform{
 	}
 	
 	@Override
-	public Geometry transformGeometryGeoFromPixel(Geometry geom)
+	public Geometry transformGeometryGeoFromPixel(final Geometry geom)
 			throws GeoTransformException {
 		try{
             Coordinate[] coords=geom.getCoordinates();

@@ -267,8 +267,10 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         if(imgLayer!=null){
         	try {
         		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-
+        		long start=System.currentTimeMillis();
                 GeometricLayer gl = SimpleShapefile.createIntersectedLayer(file,imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
+                long end=System.currentTimeMillis();
+                System.out.println("Shapefile loaded in:"+(end-start));
                 // if 5 args, set a specific name
                 if (args.length == 3) {
                     if (gl != null) {

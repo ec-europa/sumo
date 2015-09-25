@@ -38,7 +38,6 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.process.geometry.GeometryFunctions;
 import org.geotools.process.vector.ClipProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -166,9 +165,13 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            String[] types = createTypes(fc.getSchema().getDescriptors());
 	
 	            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
-	            GeometricLayer out=GeometricLayer.createFromSimpleGeometry(imageP, geoName, fc, schema, types);
-	            out.setName(shpInput.getName());
-	            glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
+	            
+	            boolean applayT=false; 
+	            if(transform!=null)
+	            	applayT=true;
+	            glout=GeometricLayer.createFromSimpleGeometry(imageP, geoName, fc, schema, types,applayT,transform);
+	            glout.setName(shpInput.getName());
+	            //glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
         	}
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
