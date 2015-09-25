@@ -91,7 +91,7 @@ public class HermiteInterpolation {//implements IInterpolation{
 			
 			}	
 			for(int i=0;i<=powerMax;i++){
-				vtvec[0][powerMax-i]=i*vtvec[0][i];
+				vtvec[0][i]=(powerMax-i)*vtvec[0][i];
 			}
 			interpPpointsOutput.add(idx-idxInitTime,MathUtil.multiplyMatrix(ptvec, vTmpPos)[0]);
 			interpVpointsOutput.add(idx-idxInitTime,MathUtil.multiplyMatrix(vtvec, vTmpVel)[0]);
