@@ -364,7 +364,6 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         return image;
         
     }
-
     public Area getShape(int width, int height) {
         Area maskArea = new Area();
         
@@ -437,7 +436,11 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     }
     
     
-    
+    /**
+     * 
+     * @author argenpo
+     *
+     */
     class ParallelBuffer implements Callable<Geometry> {
     	private Geometry bufferedGeom;
     	private double bufferingDistance=0;
@@ -453,23 +456,10 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 
 		@Override
 		public Geometry call() {
-	        	//applico il buffer alla geometria
-	        	/*if(bufferedGeom instanceof Polygon){
-	        		bufferedGeom = ((Polygon)bufferedGeom).getExteriorRing();
-	        	}else if(bufferedGeom instanceof MultiPolygon){
-	        		Geometry g=bufferedGeom.getGeometryN(0);
-	        		for(int ii=1;ii<((MultiPolygon)bufferedGeom).getNumGeometries();ii++){
-	        			g=g.union(bufferedGeom.getGeometryN(ii));
-	        		}	
-	        		bufferedGeom = g;
-	        	}else{
-	        		bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
-	        	}*/
-				//
 				bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
 			    if(!bufferedGeom.isValid()){
 			    	//System.out.println(Arrays.toString(bufferedGeom.getCoordinates()));
-			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING);
+			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
 				    GeometryFactory gf = new GeometryFactory(pm);
 				    Coordinate[]cc=new Coordinate[bufferedGeom.getCoordinates().length+1];
 				    for(int i=0;i<bufferedGeom.getCoordinates().length;i++){
@@ -484,7 +474,14 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	}
     
     
-    
+    /**
+     * 
+     * @param bufferedGeom
+     * @param bufferDistance
+     * @return
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     private List<Geometry> parallelBuffer(List<Geometry> bufferedGeom,double bufferDistance)throws InterruptedException, ExecutionException {
 		int processors = Runtime.getRuntime().availableProcessors();
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(2, processors, 5000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
