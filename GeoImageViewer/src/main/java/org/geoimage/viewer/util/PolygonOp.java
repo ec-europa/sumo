@@ -26,15 +26,12 @@ public class PolygonOp {
 	 * @return
 	 */
 	public static Geometry removeInteriorRing(Geometry geom){
-		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING);
+		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
 	    GeometryFactory gf = new GeometryFactory(pm);
 		Geometry buff=geom;
         if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
-        	//LineString p=((Polygon) buff).getExteriorRing();
-        	//buff = gf.createPolygon(p.getCoordinates());
-        	for(int ii=0;ii<((Polygon) buff).getNumInteriorRing();ii++){
-        			LineString ll=((Polygon) buff).getInteriorRingN(ii);
-        	}
+        	LineString p=((Polygon) buff).getExteriorRing();
+        	buff = gf.createPolygon(p.getCoordinates());
         }
         return buff;
 	}
