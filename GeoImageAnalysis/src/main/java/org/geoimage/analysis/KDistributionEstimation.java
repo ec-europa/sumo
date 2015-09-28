@@ -313,7 +313,12 @@ public class KDistributionEstimation {
 				for (int x = newStart; x < newEnd ; x += 2) {
 					
 					if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
-						val = data[y * sizeTileX + x];
+						try{
+							val = data[y * sizeTileX + x];
+						}catch(Exception e ){
+							logger.warn(e.getMessage());
+							break;
+						}	
 	
 						if (val > 0 && val < clipx) {
 							mux += val;

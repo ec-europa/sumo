@@ -295,7 +295,7 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     // remove the previous extension for the file
     String filename = jTextField1.getText();
     int ii=filename.lastIndexOf(".");
-    filename = filename.substring(0,ii!=-1?ii:filename.length()-1);
+    filename = filename.substring(0,ii!=-1?ii:filename.length());
     
     String ext=((OptionMenu)comboSaveFormat.getSelectedItem()).getValue();
     if(!filename.endsWith("."+ext)){
