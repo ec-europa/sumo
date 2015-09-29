@@ -231,39 +231,46 @@ public class GenericCSVIO extends AbstractVectorIO{
 			}
 			
 			//TODO: text the export and import csv after the schema modification
-			fis.write(glayer.getGeometryType()+ "\n");//+",Double,Double,"+glayer.getSchemaTypes(',') + "\n");
+			fis.write(glayer.getGeometryType()+ '\n');//+",Double,Double,"+glayer.getSchemaTypes(',') + '\n');
 			String[] schema = glayer.getSchema();
 			for (Geometry geom : glayer.getGeometries()) {
 				Geometry geomGeo=transform.transformGeometryGeoFromPixel(geom);
-				fis.write(geomGeo.toText()+",");
+				fis.write("\""+geomGeo.toText()+"\""+",");
 				Coordinate[] pos = geom.getCoordinates();
+				
+				StringBuffer cc=new StringBuffer("\"");
+				
 				for (int i = 0; i < pos.length; i++) {
 					if (projection == null) {
-						fis.write(pos[i].x + "," + pos[i].y);
+						cc.append(pos[i].x + "," + pos[i].y);
 					} else {
 						double[] temp;
 						try {
 							temp = transform.getGeoFromPixel(pos[i].x, pos[i].y);
-							fis.write(temp[1] + "," + temp[0]);
+							cc.append(temp[1] + "," + temp[0]);
 						} catch (GeoTransformException e) {
 							logger.warn("Can't write coordinates:"+ e.getMessage());
 						}
-
 					}
-					if (schema.length != 0) {
-						fis.write(",");
-					}
-					
-					AttributesGeometry atts = glayer.getAttributes(geom);
-					for (int ii = 0; ii < schema.length; ii++) {
-						String s = "";
-						if (atts.get(schema[ii]) != null) {
-							s = "\""+atts.get(schema[ii]).toString()+"\"";
-						}
-						fis.write(s + (ii == schema.length - 1 ? "" : ","));
-					}
-					fis.write("\n");
+					if(i!=pos.length-1)
+						cc.append(" ");
 				}
+				if (schema.length != 0) {
+					cc.append(",");
+				}
+				cc.append("\"");
+				fis.write(cc.toString());
+				
+				AttributesGeometry atts = glayer.getAttributes(geom);
+				for (int ii = 0; ii < schema.length; ii++) {
+					String s = "";
+					if (atts.get(schema[ii]) != null) {
+						s = "\""+atts.get(schema[ii]).toString()+"\"";
+					}
+					fis.write(s + (ii == schema.length - 1 ? "" : ","));
+				}
+
+				fis.write('\n');
 			}
 			
 		} catch (IOException ex) {
