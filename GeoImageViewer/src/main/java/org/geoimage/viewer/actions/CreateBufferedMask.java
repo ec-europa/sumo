@@ -51,8 +51,6 @@ public class CreateBufferedMask extends AbstractAction{
 				FileWriter fw=null;
 				BufferedWriter bw=null;
 				try{
-					
-					
 					File f=new File(reader.getFilesList()[0]);
 					fw = new FileWriter(f.getParent()+"\\invalidgeom.txt");
 					bw = new BufferedWriter(fw);
