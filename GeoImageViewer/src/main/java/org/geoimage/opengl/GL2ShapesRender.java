@@ -159,15 +159,19 @@ public class GL2ShapesRender {
         gl.glColor3f(c[0], c[1], c[2]);
     	gl.glLineWidth(rwidth);
         gl.glBegin(GL.GL_LINE_STRIP);
+        
+       // System.out.println("----------------------------------");
         for (int p = 0; p < cs.length; p++) {
         	double vx=(cs[p].x - x) / width;
         	double vy=1 - (cs[p].y - y) / height;
+        //	System.out.println(vx+"  "+vy+",");
             gl.glVertex2d(vx,vy);
         }
-       
+     //   System.out.println("----------------------------------");
         //close polygon
         Coordinate point = cs[0];
         gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
+        
         gl.glEnd();
         gl.glFlush();
     }
