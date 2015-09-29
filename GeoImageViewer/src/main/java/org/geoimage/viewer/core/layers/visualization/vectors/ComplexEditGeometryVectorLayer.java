@@ -136,7 +136,8 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 		                        if (polygon.getCoordinates().length < 1) {
 		                            continue;
 		                        }
-		                        int interior=polygon.getNumInteriorRing();
+		                        GL2ShapesRender.drawPoly(context,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth(),color);
+		                        /*int interior=polygon.getNumInteriorRing();
 	
 		                        if(interior>0){
 		                        	//draw external polygon
@@ -149,7 +150,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 		                        	}
 		                        }else{
 		                        	GL2ShapesRender.drawPoly(context,polygon.getCoordinates(),width,height,x,y,geometry.getLinewidth(),color);
-		                        }
+		                        }*/
 	                    }
                     }
                     
