@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.geotools.process.geometry.GeometryFunctions;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ParseException;
@@ -26,12 +28,23 @@ public class PolygonOp {
 	 * @return
 	 */
 	public static Geometry removeInteriorRing(Geometry geom){
-		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+		PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING);
 	    GeometryFactory gf = new GeometryFactory(pm);
 		Geometry buff=geom;
         if (buff instanceof Polygon && ((Polygon) buff).getNumInteriorRing() > 0) {
         	LineString p=((Polygon) buff).getExteriorRing();
         	buff = gf.createPolygon(p.getCoordinates());
+        }else if(buff instanceof MultiPolygon){
+        	Geometry union=null;
+        	for(int i=0;i<buff.getNumGeometries();i++){
+        		LineString p=((Polygon) buff.getGeometryN(i)).getExteriorRing();
+        		if(i==0){
+        			union = gf.createPolygon(p.getCoordinates());
+        		}	else{
+        			union=union.union(gf.createPolygon(p.getCoordinates()));
+        		}
+        	}	
+        	buff=union;
         }
         return buff;
 	}
