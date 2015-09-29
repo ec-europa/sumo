@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -21,24 +22,19 @@ import org.geoimage.analysis.Boat;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
 import org.opengis.feature.Feature;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 
 /**
@@ -53,7 +49,10 @@ public class GeometricLayer implements Cloneable{
     public final static String LINESTRING = "linestring";
     
     private List<Geometry> geoms;
-    private List<AttributesGeometry> atts;
+    //private List<AttributesGeometry> atts;
+    
+    private HashMap<Integer, AttributesGeometry>attsMap=null;
+    
     private String type;
     private String name;
     private String projection;
@@ -84,7 +83,7 @@ public class GeometricLayer implements Cloneable{
 		this.name=name;
 
 		this.geoms=new ArrayList<>();
-		atts=new ArrayList<>();
+		attsMap=new HashMap<>();
         GeometryFactory gf = new GeometryFactory();
         for(Coordinate c:geoms){
         	AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
@@ -109,7 +108,7 @@ public class GeometricLayer implements Cloneable{
         //GeometricLayer out = new GeometricLayer("point");
         //setName("VDS Analysis");
 		geoms=new ArrayList<>();
-		atts=new ArrayList<>();
+		attsMap=new HashMap<>();
         GeometryFactory gf = new GeometryFactory();
         long runid = System.currentTimeMillis();
         int count=0;
@@ -218,6 +217,7 @@ public class GeometricLayer implements Cloneable{
     		FeatureCollection fc, final String[] schema, 
     		final String[] types, boolean applayTransformation,GeoTransform transform) throws IOException{
         GeometricLayer out=null;
+        GeometryFactory gf=new GeometryFactory();
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
                 out = new GeometricLayer(GeometricLayer.POLYGON);//LINESTRING);//POLYGON);
                 //out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
@@ -238,11 +238,14 @@ public class GeometricLayer implements Cloneable{
 									try {
 										AttributesGeometry at = new AttributesGeometry(schema);
 				                        for (int i = 0; i < f.getProperties().size(); i++) {
-				                            at.set(schema[i], f.getProperty(schema[i]).getValue());
+				                        	if(f.getProperty(schema[i]).getValue()!=null)
+				                        		at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
+		                                
 				                        //todo:check this part -> forse non serve
+				                        g=PolygonOp.removeInteriorRing(g);
 				                        Geometry gbuff=g.buffer(0);
-			                        	for (int i=0; i < gbuff.getNumGeometries(); i++) {
+				                        
 					                        if(imageP.contains(gbuff)){
 					                        	Object[]o=new Object[2];
 					                        	o[0]=gbuff;
@@ -256,11 +259,11 @@ public class GeometricLayer implements Cloneable{
 						                                Object[]o=new Object[2];
 							                        	o[0]=p2.getGeometryN(ii);
 						                                o[1]=at;
+						                                
 						                                result.add(o);
 							                        }
 						                        }
 					                        }
-			                        	}    
 				                    } catch (Exception ex) {
 				                    	logger.error(ex.getMessage(),ex);
 				                    }
@@ -273,14 +276,16 @@ public class GeometricLayer implements Cloneable{
                 	List<Future<Object[][]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
 	                
+	                
 	                for(Future<Object[][]> f:results){
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			Geometry g=(Geometry)o[i][0];
+	                			Geometry g=gf.createGeometry((Geometry)o[i][0]);
 	                			if(applayTransformation&&transform!=null)
 	                				g=transform.transformGeometryPixelFromGeo(g);
 	                			out.put(g,(AttributesGeometry)o[i][1]);
+	                			System.out.println(g.toText());
 	                		}	
 	                	}	
 	                }
@@ -332,7 +337,10 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer createLayerFromFeatures(String geoName, DataStore dataStore, FeatureCollection fc, final String[] schema, final String[] types) throws IOException{
+    public static GeometricLayer createLayerFromFeatures(String geoName, DataStore dataStore, 
+    		FeatureCollection fc, final String[] schema, 
+    		final String[] types,boolean applayTransformation,GeoTransform transform) throws IOException{
+    	
         GeometricLayer out=null;
         if (geoName.contains("Polygon") || geoName.contains("Line")) 
                 out = new GeometricLayer(GeometricLayer.POLYGON);
@@ -384,7 +392,12 @@ public class GeometricLayer implements Cloneable{
 	            	Object o[][]=f.get();
 	            	if(o!=null){
 	            		for(int i=0;i<o.length;i++){
-	            			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
+	            			if(applayTransformation&&transform!=null){
+	                    		Geometry gg=transform.transformGeometryPixelFromGeo((Geometry)o[i][0]);
+	            				out.put(gg,(AttributesGeometry)o[i][1]);
+	            			}else{
+	            				out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
+	            			}
 	            		}	
 	            	}	
 	            }
@@ -410,7 +423,10 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer addGeomsToLayerFromFeatures(GeometricLayer layer,String geoName, DataStore dataStore, FeatureCollection addFc, final String[] schema, final String[] types) throws IOException{
+    public static GeometricLayer addGeomsToLayerFromFeatures(GeometricLayer layer,String geoName, 
+    		DataStore dataStore, FeatureCollection addFc, 
+    		final String[] schema, final String[] types,
+    		boolean applayTransformation,GeoTransform transform) throws IOException{
         GeometricLayer out=(GeometricLayer)layer.clone();
 
 	        FeatureIterator<?> fi = addFc.features();
@@ -454,7 +470,12 @@ public class GeometricLayer implements Cloneable{
 	            	Object o[][]=f.get();
 	            	if(o!=null){
 	            		for(int i=0;i<o.length;i++){
-	            			out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
+	            			if(applayTransformation&&transform!=null){
+	                    		Geometry gg=transform.transformGeometryPixelFromGeo((Geometry)o[i][0]);
+	            				out.put(gg,(AttributesGeometry)o[i][1]);
+	            			}else{
+	            				out.put((Geometry)o[i][0],(AttributesGeometry)o[i][1]);
+	            			}
 	            		}	
 	            	}	
 	            }
@@ -470,7 +491,7 @@ public class GeometricLayer implements Cloneable{
     
     public GeometricLayer(String type) {
         geoms = new ArrayList<Geometry>();
-        atts = new ArrayList<AttributesGeometry>();
+        attsMap = new HashMap<>();
         this.type=type;
     }
     
@@ -489,7 +510,7 @@ public class GeometricLayer implements Cloneable{
         for(int i=0;i<geoms.size();i++){
         	if(geoms.get(i)!=null){
         		out.geoms.add(i,(Geometry)geoms.get(i).clone());
-        		out.atts.add(i,atts.get(i).clone());
+        		out.attsMap.put(i,attsMap.get(i).clone());
         	}	
         }
         return out;
@@ -501,8 +522,8 @@ public class GeometricLayer implements Cloneable{
     public void clear(){
     	if(geoms!=null)
     		geoms.clear();
-        if(atts!=null)
-        	atts.clear();
+        if(attsMap!=null)
+        	attsMap.clear();
     }
     
     /**
@@ -513,7 +534,7 @@ public class GeometricLayer implements Cloneable{
     public AttributesGeometry getAttributes(Geometry geom) {
         int i = geoms.indexOf(geom);
         if(i<0) return null;
-        return atts.get(i);
+        	return attsMap.get(i);
     }
 
     /**
@@ -521,7 +542,7 @@ public class GeometricLayer implements Cloneable{
      * @return a SHALLOW COPY of the attributes for Thread safe use
      */
     public List<AttributesGeometry> getAttributes() {
-       return new ArrayList<AttributesGeometry>(atts);
+       return new ArrayList<AttributesGeometry>(attsMap.values());
     }
 
     /**
@@ -607,8 +628,9 @@ public class GeometricLayer implements Cloneable{
      * @param att
      */
     public void put(Geometry geom, AttributesGeometry att) {
-        geoms.add(geom);
-        atts.add(att);
+    	int id=geoms.size();
+        geoms.add(id,geom);
+        attsMap.put(id,att);
     }
 
     /**
@@ -630,7 +652,7 @@ public class GeometricLayer implements Cloneable{
         }
         int i = geoms.indexOf(geom);
         geoms.remove(i);
-        atts.remove(i);
+        attsMap.remove(i);
     }
 
     /**
@@ -647,12 +669,12 @@ public class GeometricLayer implements Cloneable{
             return;
         }
         int i = geoms.indexOf(geom);
-        atts.get(i).set(att, value);
+        attsMap.get(i).set(att, value);
     }
 
     public String[] getSchema() {
-        if (atts.size() > 0) {
-            return atts.get(0).getSchema();
+        if (attsMap.size() > 0) {
+            return attsMap.get(0).getSchema();
         } else {
             return new String[]{};
         }

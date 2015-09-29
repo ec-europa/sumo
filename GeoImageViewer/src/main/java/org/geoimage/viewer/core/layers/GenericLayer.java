@@ -135,6 +135,15 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                                continue;
 	                            }
 	                            float rWidth=mpolygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
+	                            /*
+	                            for(int i=0;i<mpolygon.getNumGeometries();i++){
+	                            	Geometry g=mpolygon.getGeometryN(i);
+	                            	if(g.getNumGeometries()>0){
+	                            		g=g.getBoundary();
+	                            	}
+	                            	GL2ShapesRender.drawPoly(context,g.getCoordinates(),width,height,x,y,rWidth,color);
+	                            }*/
+	                            
 	                            GL2ShapesRender.drawPoly(context,mpolygon.getCoordinates(),width,height,x,y,rWidth,color);
 
 	                    	}
