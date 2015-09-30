@@ -215,7 +215,7 @@ public abstract class AbstractBatchAnalysis {
     			
     			   try {
     	    		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
-    				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null,null,null);
+    				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",reader.getGeoTransform(),null,null);
     			   } catch (Exception e) {
     				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
     			   }
@@ -230,7 +230,8 @@ public abstract class AbstractBatchAnalysis {
     		   try{
     			   String targets=outfileName.append(".shp").toString();
     			  // l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
-    			   SimpleShapefile.exportGeometriesToShapeFile(l.getGeometriclayer().getGeometries(), new File(targets),"Point",reader.getGeoTransform(),null,null);
+    			   SimpleShapefile.exportGeometriesToShapeFile(l.getGeometriclayer().getGeometries(), 
+    					   new File(targets),"Point",reader.getGeoTransform(),null,null);
     		   } catch (Exception e) {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
@@ -248,14 +249,16 @@ public abstract class AbstractBatchAnalysis {
 		    			   ambi.addAll(l.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG).getGeometries());	   
 	    			  
 		    		   //remove ambiguities
+	    			   List<Geometry>toRemove=new ArrayList<>();
 	    			   if(!ambi.isEmpty()){
 		    			   for(Geometry geom:targets){
 			    			   if(ambi.contains(geom)){
-			    				   targets.remove(geom);
+			    				   toRemove.add(geom);
 			    			   }
 		    			   }	   
 	    			   }	   
-	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,null,imageName,true);
+	    			   targets.removeAll(toRemove);
+	    			   GenericCSVIO.geomCsv(new File(targetscsv),targets,reader.getGeoTransform(),imageName,true);
 	    		   }catch(Exception e ){
 	    			   logger.error("Problem saving targets in csv:"+imageName,e);
 	    		   }
