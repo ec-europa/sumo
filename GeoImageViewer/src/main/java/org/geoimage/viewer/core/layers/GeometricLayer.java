@@ -294,8 +294,8 @@ public class GeometricLayer implements Cloneable{
 	                			if(applayTransformation&&transform!=null)
 	                				g=transform.transformGeometryPixelFromGeo(g);
 	                			if(!g.isValid()){
-	                				if(!g.isSimple()){
-	                					Geometry b0=g.buffer(0);
+	                				Geometry b0=g.buffer(0);
+	                				if(!g.isSimple()&&(b0.getArea()/g.getArea())<0.75){
 	                					Coordinate[] cc=g.getCoordinates();
 	                					CoordinateList cl=new CoordinateList();
 	                					cl.add(cc, false);
@@ -305,13 +305,12 @@ public class GeometricLayer implements Cloneable{
 	                							cl.remove(ii);
 	                						}
 	                					}
+	                					cl.closeRing();
 	                					Geometry newGeom=gf.createPolygon(cl.toCoordinateArray());
 	                					g=newGeom.buffer(0);
+	                				}else{
+	                					g=b0;
 	                				}
-	                				
-	                				
-	                				
-	                				
 	                			}
 	                			out.put(g,(AttributesGeometry)o[i][1]);
 	                				
