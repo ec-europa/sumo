@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -18,6 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.swt.internal.C;
 import org.geoimage.analysis.Boat;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
@@ -26,15 +28,22 @@ import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.IsSimpleOp;
+import com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper;
+import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 
 /**
@@ -284,8 +293,28 @@ public class GeometricLayer implements Cloneable{
 	                			Geometry g=gf.createGeometry((Geometry)o[i][0]);
 	                			if(applayTransformation&&transform!=null)
 	                				g=transform.transformGeometryPixelFromGeo(g);
+	                			if(!g.isValid()){
+	                				if(!g.isSimple()){
+	                					Geometry b0=g.buffer(0);
+	                					Coordinate[] cc=g.getCoordinates();
+	                					CoordinateList cl=new CoordinateList();
+	                					cl.add(cc, false);
+	                					
+	                					for(int ii=0;ii<cl.size();ii++){
+	                						if(b0.contains(gf.createPoint(cl.getCoordinate(ii)))||b0.touches(gf.createPoint(cl.getCoordinate(ii)))){
+	                							cl.remove(ii);
+	                						}
+	                					}
+	                					Geometry newGeom=gf.createPolygon(cl.toCoordinateArray());
+	                					g=newGeom.buffer(0);
+	                				}
+	                				
+	                				
+	                				
+	                				
+	                			}
 	                			out.put(g,(AttributesGeometry)o[i][1]);
-	                			System.out.println(g.toText());
+	                				
 	                		}	
 	                	}	
 	                }
