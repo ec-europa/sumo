@@ -215,7 +215,7 @@ public abstract class AbstractBatchAnalysis {
     			
     			   try {
     	    		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
-    				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",reader.getGeoTransform(),null,null);
+    				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",reader.getGeoTransform(),null);
     			   } catch (Exception e) {
     				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
     			   }
@@ -231,7 +231,7 @@ public abstract class AbstractBatchAnalysis {
     			   String targets=outfileName.append(".shp").toString();
     			  // l.save(targets, ISave.OPT_EXPORT_SHP, "EPSG:4326");
     			   SimpleShapefile.exportGeometriesToShapeFile(l.getGeometriclayer().getGeometries(), 
-    					   new File(targets),"Point",reader.getGeoTransform(),null,null);
+    					   new File(targets),"Point",reader.getGeoTransform(),null);
     		   } catch (Exception e) {
  				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
  			   }
@@ -271,7 +271,7 @@ public abstract class AbstractBatchAnalysis {
 			
 			   try {
 	    		  ggBbox.add(reader.getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0)));
-				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null,null,null);
+				  SimpleShapefile.exportGeometriesToShapeFile(ggBbox, new File(bbox),"Polygon",null,null);
 			   } catch (Exception e) {
 				  logger.error("Problem exporting the bounding box:"+e.getLocalizedMessage(),e); 
 			   }
