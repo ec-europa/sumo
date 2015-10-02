@@ -348,7 +348,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	public int[] getHistogram(int numClasses) {
         if (threshable) {
             int[] out = new int[numClasses];
-            for (AttributesGeometry att : glayer.getAttributes()) {
+            for (Geometry g : glayer.getGeometries()) {
+            	AttributesGeometry att=(AttributesGeometry) g.getUserData();
                 double temp = new Double("" + att.get(VDSSchema.SIGNIFICANCE));
                 int classe = (int) ((numClasses - 1) * (temp - minThresh) / (maxThresh - minThresh));
                 out[classe]++;

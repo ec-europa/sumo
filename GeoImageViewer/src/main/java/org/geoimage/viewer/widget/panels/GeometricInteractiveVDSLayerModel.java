@@ -97,17 +97,20 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         if (columnIndex == 0) {
             return Geometry.class;
         } else {
-        	
-        	String attr = gl.getSchema()[columnIndex - 1];
-        	AttributesGeometry attrGeom=gl.getAttributes().get(0);
-        	Object o=attrGeom.get(attr);
-        	if(o==null)
+        	try{
+	        	String attr = gl.getSchema()[columnIndex - 1];
+	        	AttributesGeometry attrGeom=(AttributesGeometry) gl.getGeometries().get(0).getUserData();
+	        	Object o=attrGeom.get(attr);
+	        	if(o==null)
+	        		return String.class;
+	        	
+	        	if(o instanceof double[])
+	        		return double[].class;
+	        	
+	        	return attrGeom.get(attr).getClass();	
+        	}catch(Exception e){
         		return String.class;
-        	
-        	if(o instanceof double[])
-        		return double[].class;
-        	
-        	return attrGeom.get(attr).getClass();
+        	}	
         }
     }
 
@@ -123,7 +126,12 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
         if (columnIndex == 0) {
             return geom;
         } else {
-            return gl.getAttributes(geom).get(gl.getSchema()[columnIndex - 1]);
+        	try{
+        		Object o=gl.getAttributes(geom).get(gl.getSchema()[columnIndex - 1]);
+        		return o;
+        	}catch(Exception e){
+        		return null;
+        	}
         }
     }
 
@@ -165,28 +173,31 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
             double boatwidth =0;
             double boatlength=0;
             double boatheading =0;
-            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
-            	boatwidth = (Double) boatattributes.get(VDSSchema.ESTIMATED_WIDTH) / pixelsize[0];
-            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
-                boatlength = (Double) boatattributes.get(VDSSchema.ESTIMATED_LENGTH) / pixelsize[0];
-            if(boatattributes.get(VDSSchema.ESTIMATED_HEADING)!=null)
-            	boatheading = -(Double) boatattributes.get(VDSSchema.ESTIMATED_HEADING);
-            //get the image azimuth
-            double imageAz = ((SarImageReader)il.getImageReader()).getImageAzimuth();
-            boatheading = boatheading + 90 + imageAz;
-            Coordinate[] boatcoordinates = new Coordinate[5];
-            boatcoordinates[0] = new Coordinate(posX + boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY - boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
-            boatcoordinates[1] = new Coordinate(posX - boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY + boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
-            boatcoordinates[2] = new Coordinate(posX - boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY + boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
-            boatcoordinates[3] = new Coordinate(posX + boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY - boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
-            boatcoordinates[4] = boatcoordinates[0];
-            boatGeom.add(gf.createLinearRing(boatcoordinates));
-            // remove previous geometries
-            vdslayer.removeGeometriesByTag("boatshape");
-            vdslayer.removeGeometriesByTag("target");
-            // add new geometries
-            vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometricLayer.LINESTRING, winGeom, display);
-            vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometricLayer.LINESTRING, boatGeom, display);
+            if(boatattributes!=null){
+	            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
+	            	boatwidth = (Double) boatattributes.get(VDSSchema.ESTIMATED_WIDTH) / pixelsize[0];
+	            if(boatattributes.get(VDSSchema.ESTIMATED_WIDTH)!=null)
+	                boatlength = (Double) boatattributes.get(VDSSchema.ESTIMATED_LENGTH) / pixelsize[0];
+	            if(boatattributes.get(VDSSchema.ESTIMATED_HEADING)!=null)
+	            	boatheading = -(Double) boatattributes.get(VDSSchema.ESTIMATED_HEADING);
+		           
+		        //get the image azimuth
+		        double imageAz = ((SarImageReader)il.getImageReader()).getImageAzimuth();
+		        boatheading = boatheading + 90 + imageAz;
+		        Coordinate[] boatcoordinates = new Coordinate[5];
+		        boatcoordinates[0] = new Coordinate(posX + boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY - boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
+		        boatcoordinates[1] = new Coordinate(posX - boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY + boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) + boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
+		        boatcoordinates[2] = new Coordinate(posX - boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY + boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
+		        boatcoordinates[3] = new Coordinate(posX + boatlength / 2 * Math.cos(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.sin(Math.PI * boatheading / 180.0), posY - boatlength / 2 * Math.sin(Math.PI * boatheading / 180.0) - boatwidth / 2 * Math.cos(Math.PI * boatheading / 180.0));
+		        boatcoordinates[4] = boatcoordinates[0];
+		        boatGeom.add(gf.createLinearRing(boatcoordinates));
+		        // remove previous geometries
+		        vdslayer.removeGeometriesByTag("boatshape");
+		        vdslayer.removeGeometriesByTag("target");
+		        // add new geometries
+		        vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometricLayer.LINESTRING, winGeom, display);
+		        vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometricLayer.LINESTRING, boatGeom, display);
+            }    
             geoContext.setDirty(true);
             System.out.println(selectionLine + " " + geom.getCoordinate().x + " " + geom.getCoordinate().y);
         } else {

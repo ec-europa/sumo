@@ -38,6 +38,7 @@ import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.operation.IsSimpleOp;
 import com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper;
@@ -60,7 +61,7 @@ public class GeometricLayer implements Cloneable{
     private List<Geometry> geoms;
     //private List<AttributesGeometry> atts;
     
-    private HashMap<Integer, AttributesGeometry>attsMap=null;
+   // private HashMap<Integer, AttributesGeometry>attsMap=null;
     
     private String type;
     private String name;
@@ -92,7 +93,7 @@ public class GeometricLayer implements Cloneable{
 		this.name=name;
 
 		this.geoms=new ArrayList<>();
-		attsMap=new HashMap<>();
+		//attsMap=new HashMap<>();
         GeometryFactory gf = new GeometryFactory();
         for(Coordinate c:geoms){
         	AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
@@ -117,7 +118,7 @@ public class GeometricLayer implements Cloneable{
         //GeometricLayer out = new GeometricLayer("point");
         //setName("VDS Analysis");
 		geoms=new ArrayList<>();
-		attsMap=new HashMap<>();
+		//attsMap=new HashMap<>();
         GeometryFactory gf = new GeometryFactory();
         long runid = System.currentTimeMillis();
         int count=0;
@@ -143,7 +144,9 @@ public class GeometricLayer implements Cloneable{
             }
          
             atts.set(VDSSchema.ESTIMATED_HEADING, degree);
-            put(gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy())), atts);
+            Point p=gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy()));
+            p.setUserData(atts);
+            put(p);
         }
     }
 
@@ -519,7 +522,7 @@ public class GeometricLayer implements Cloneable{
     
     public GeometricLayer(String type) {
         geoms = new ArrayList<Geometry>();
-        attsMap = new HashMap<>();
+        //attsMap = new HashMap<>();
         this.type=type;
     }
     
@@ -537,8 +540,9 @@ public class GeometricLayer implements Cloneable{
         
         for(int i=0;i<geoms.size();i++){
         	if(geoms.get(i)!=null){
-        		out.geoms.add(i,(Geometry)geoms.get(i).clone());
-        		out.attsMap.put(i,attsMap.get(i).clone());
+        		Geometry g=(Geometry)geoms.get(i).clone();
+        		out.geoms.add(i,g);
+        		//out.attsMap.put(g.getSRID(),attsMap.get(i).clone());
         	}	
         }
         return out;
@@ -550,8 +554,8 @@ public class GeometricLayer implements Cloneable{
     public void clear(){
     	if(geoms!=null)
     		geoms.clear();
-        if(attsMap!=null)
-        	attsMap.clear();
+        //if(attsMap!=null)
+        //	attsMap.clear();
     }
     
     /**
@@ -560,18 +564,18 @@ public class GeometricLayer implements Cloneable{
      * @return
      */
     public AttributesGeometry getAttributes(Geometry geom) {
-        int i = geoms.indexOf(geom);
-        if(i<0) return null;
-        	return attsMap.get(i);
+        if(!geoms.contains(geom)) 
+        	return null;
+        return (AttributesGeometry)geom.getUserData();
     }
 
     /**
      *
      * @return a SHALLOW COPY of the attributes for Thread safe use
-     */
+     *
     public List<AttributesGeometry> getAttributes() {
        return new ArrayList<AttributesGeometry>(attsMap.values());
-    }
+    }*/
 
     /**
      * 
@@ -657,8 +661,10 @@ public class GeometricLayer implements Cloneable{
      */
     public void put(Geometry geom, AttributesGeometry att) {
     	int id=geoms.size();
+    	geom.setUserData(att);
         geoms.add(id,geom);
-        attsMap.put(id,att);
+        
+        //attsMap.put(geom.getSRID(),att);
     }
 
     /**
@@ -667,7 +673,7 @@ public class GeometricLayer implements Cloneable{
      * @param geo
      */
     public void put(Geometry geo){
-        this.put(geo, new AttributesGeometry(getSchema()));
+       geoms.add(geo);
     }
 
     /**
@@ -680,7 +686,7 @@ public class GeometricLayer implements Cloneable{
         }
         int i = geoms.indexOf(geom);
         geoms.remove(i);
-        attsMap.remove(i);
+        //attsMap.remove(geom.getSRID());
     }
 
     /**
@@ -696,13 +702,16 @@ public class GeometricLayer implements Cloneable{
         if (!geoms.contains(geom)) {
             return;
         }
-        int i = geoms.indexOf(geom);
-        attsMap.get(i).set(att, value);
+        geom.setUserData(att);
     }
 
     public String[] getSchema() {
-        if (attsMap.size() > 0) {
-            return attsMap.get(0).getSchema();
+        if (geoms.size() > 0) {
+        	AttributesGeometry attr=(AttributesGeometry)geoms.get(0).getUserData();
+        	if(attr!=null)
+        		return attr.getSchema();
+        	else
+        		return new String[]{};
         } else {
             return new String[]{};
         }
