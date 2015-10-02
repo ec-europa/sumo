@@ -42,25 +42,32 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         int yOffset =  getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
-        for (int i = 0; i < rect.height; i++) {
-            for (int j = 0; j < rect.width; j++) {
-                int temp = i * yOffset + j + rect.x;
-                long real=preloadedDataReal[temp];
-                long img=preloadedDataImg[temp];
-                tile[(i + yinit) * width + j + xinit] = (int)Math.sqrt(real*real+img*img);
-            }
-        }
+        int temp =0;
+        try{
+	        for (int i = 0; i < rect.height; i++) {
+	            for (int j = 0; j < rect.width; j++) {
+	                temp = (i * yOffset + j + rect.x);
+	                long real=preloadedDataReal[temp];
+	                long img=preloadedDataImg[temp];
+	                tile[(i + yinit) * width + j + xinit] = (int)Math.sqrt(real*real+img*img);
+	            }
+	        }
+        }catch(Exception e ){
+        	e.printStackTrace();
+        }    
         return tile;
     }
 
     @Override
     public int readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
-        t.setSourceRegion(new Rectangle(x, y, 1, 1));
+        Rectangle rect=new Rectangle(x, y, 1, 1);
+        rect = rect.intersection(bounds);
+        t.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {            
-            int img =  tiff.getReader().read(0, t).getRaster().getSample(x, y, 1);
-            int real =  tiff.getReader().read(0, t).getRaster().getSample(x, y, 0);
+            int img =  tiff.getReader().read(0, t).getRaster().getSample(0,0, 1);
+            int real =  tiff.getReader().read(0, t).getRaster().getSample(0, 0, 0);
             return (int) Math.sqrt(real * real + img * img);
 
         } catch (IOException ex) {
@@ -78,11 +85,14 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     public int[] read(int x, int y,int w,int h,int band) {
     	int[] data=new int[w*h];
         TIFFImageReadParam t = new TIFFImageReadParam();
-        t.setSourceRegion(new Rectangle(x, y, w, h));
+        Rectangle rect=new Rectangle(x, y, w, h);
+        rect = rect.intersection(bounds);
+        t.setSourceRegion(rect);
+        
         TIFF tiff=getImage(band);
         try {            
-            int[] img =  tiff.getReader().read(0, t).getRaster().getSamples(x, y,w,h, 1,(int[])null);
-            int[] real =  tiff.getReader().read(0, t).getRaster().getSamples(x, y,w,h, 0,(int[])null);
+            int[] img =  tiff.getReader().read(0, t).getRaster().getSamples(0,0,w,h, 1,(int[])null);
+            int[] real =  tiff.getReader().read(0, t).getRaster().getSamples(0,0,w,h, 0,(int[])null);
             for(int i=0;i<img.length;i++){
             	data[i]= (int) Math.sqrt(real[i] * real[i] + img[i] * img[i]);
             }
