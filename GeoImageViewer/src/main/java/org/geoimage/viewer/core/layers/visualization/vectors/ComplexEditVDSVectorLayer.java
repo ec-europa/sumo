@@ -422,18 +422,17 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         if (type.equals(GeometricLayer.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             //final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
-            int size=glayer.getAttributes().size();
+            int size=glayer.getGeometries().size();
             
             Integer maxVal=0;
             for(int i=0;i<size;i++){
-            	Integer val=(Integer) glayer.getAttributes().get(i).get(VDSSchema.ID);
-            	//Integer val=Integer.parseInt(max);
+            	Integer val=(Integer) ((AttributesGeometry)glayer.getGeometries().get(i).getUserData()).get(VDSSchema.ID);
 
             	if(val>maxVal)
             		maxVal=val;
             }
             maxVal++;
-            AttributesGeometry source=glayer.getAttributes().get(0);
+            AttributesGeometry source=(AttributesGeometry) glayer.getGeometries().get(0).getUserData();
             AttributesGeometry atts=source.emptyCloneAttributes();
             atts.set(VDSSchema.ID,maxVal);
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);

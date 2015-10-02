@@ -389,13 +389,18 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
      * Calculate the incidence angle
      */
     public double getIncidence(int position) {
-        double incidenceangle = 0.0;
-        // estimation of incidence angle based on near and range distance values
-        double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
-        double sataltitude=getSatelliteAltitude();
-        
-        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * this.getPixelsize()[0];
-        incidenceangle = FastMath.atan(distancerange / sataltitude);
+    	double incidenceangle = 0.0;
+    	try{
+	        
+	        // estimation of incidence angle based on near and range distance values
+	        double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
+	        double sataltitude=getSatelliteAltitude();
+	        
+	        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * this.getPixelsize()[0];
+	        incidenceangle = FastMath.atan(distancerange / sataltitude);
+    	}catch(Exception e){
+    		logger.warn("Error calculatiing incidence angle:"+e.getMessage());
+    	}    
         return incidenceangle;
     }
 
