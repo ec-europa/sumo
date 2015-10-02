@@ -442,7 +442,12 @@ public class VDSAnalysis{
                     }
                 }
                 // add pixel to the list
-                BoatConnectedPixelMap boatpixel = new BoatConnectedPixelMap(cornerx, cornery,xx, yy, id++, data[0][boatx + boaty * tilesize]);
+                BoatConnectedPixelMap boatpixel = null;
+                try{
+                	boatpixel = new BoatConnectedPixelMap(cornerx, cornery,xx, yy, id++, data[0][boatx + boaty * tilesize]);
+                }catch(Exception e){
+                	boatpixel = new BoatConnectedPixelMap(cornerx, cornery,xx, yy, id++, data[0][(boatx + boaty * tilesize)-1]);
+                }	
                 
                 for(int iBand=0;iBand<numberbands;iBand++){
                 	//String bb=((SarImageReader)gir).getBands()[iBand];
