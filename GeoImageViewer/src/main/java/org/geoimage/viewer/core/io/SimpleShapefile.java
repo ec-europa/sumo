@@ -285,8 +285,8 @@ public class SimpleShapefile extends AbstractVectorIO{
     public static void exportLayer(File output,GeometricLayer layer, String projection,GeoTransform transform) {
         try {
             String type=layer.getGeometries().get(0).getGeometryType();
-            SimpleFeatureType featureType =createFeatureType(layer.getGeometries().get(0).getClass(),layer.getAttributes().get(0));
-            exportGeometriesToShapeFile(layer.getGeometries(), output, type, transform,featureType,layer.getAttributes());
+            SimpleFeatureType featureType =createFeatureType(layer.getGeometries().get(0).getClass(),(AttributesGeometry)layer.getGeometries().get(0).getUserData());
+            exportGeometriesToShapeFile(layer.getGeometries(), output, type, transform,featureType);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }finally{
@@ -305,13 +305,16 @@ public class SimpleShapefile extends AbstractVectorIO{
       */
      public static void exportGeometriesToShapeFile(final List<Geometry> geoms,
     		 File fileOutput,String geomType,GeoTransform transform,
-    		 SimpleFeatureType featureType,List<AttributesGeometry>atts) throws IOException, SchemaException{
+    		 SimpleFeatureType featureType) throws IOException, SchemaException{
 
     	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
     	 Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
     	 DataStore data = factory.createNewDataStore( map );
-    	 if(featureType==null)
+    	 boolean addAttr=true;
+    	 if(featureType==null){
     		 featureType=DataUtilities.createType( "the_geom", "geom:"+geomType+",name:String,age:Integer,description:String" );
+    		 addAttr=false;
+    	 }	 
     	 data.createSchema( featureType );
     	 
     	 Transaction transaction = new DefaultTransaction();
@@ -332,19 +335,24 @@ public class SimpleShapefile extends AbstractVectorIO{
 	        	 SimpleFeature sfout=writer.next();
 	        	 sfout.setAttributes( sf.getAttributes() );
 	             //setting attributes geometry
-	             if(atts!=null&&!atts.isEmpty()){
-	            	 AttributesGeometry att=atts.get(fid-1);
-	            	 String sch[]=att.getSchema();
-	            	 for(int i=0;i<sch.length;i++){
-	            		 Object val=att.get(sch[i]);
-	            		 if(val.getClass().isArray()){
-	            			 Object o=ArrayUtils.toString(val);
-	            			 sfout.setAttribute(sch[i], o);
-	            		 }else{
-	            			 sfout.setAttribute(sch[i], val);
-	            		 }
-	            	 }
-	             }
+            	 AttributesGeometry att=(AttributesGeometry) g.getUserData();
+            	 try{
+	            	 if(att!=null&&addAttr){
+		            	 String sch[]=att.getSchema();
+		            	 for(int i=0;i<sch.length;i++){
+		            		 Object val=att.get(sch[i]);
+		            		 if(val.getClass().isArray()){
+		            			 Object o=ArrayUtils.toString(val);
+		            			 sfout.setAttribute(sch[i], o);
+		            		 }else{
+		            			 sfout.setAttribute(sch[i], val);
+		            		 }
+		            	 }
+	            	 }	 
+            	 }catch(Exception e ){
+            		 logger.warn("Error adding attributes to geometry:"+e.getMessage());
+            	 }	 
+
 	             sfout.setDefaultGeometry( clone);     
 	        	 writer.write();
 	    	 }
@@ -528,7 +536,7 @@ public class SimpleShapefile extends AbstractVectorIO{
     		Polygon p=PolygonOp.createPolygon(cc);
         	List<Geometry>geoms=new ArrayList<>();
         	geoms.add(p);
-			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null,null,null);
+			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null,null);
 		} catch (IOException | SchemaException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {

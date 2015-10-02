@@ -135,7 +135,8 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
         Date[] out = new Date[2];
         out[1] = new Date(0);
         out[0] = new Date(Long.MAX_VALUE);
-        for (AttributesGeometry at : glayer.getAttributes()) {
+        for (Geometry g : glayer.getGeometries()) {
+        	AttributesGeometry at=(AttributesGeometry)g.getUserData();
             Date temp = (Date) at.get(timeColumn);
             if (out[0].after(temp)) {
                 out[0] = temp;
