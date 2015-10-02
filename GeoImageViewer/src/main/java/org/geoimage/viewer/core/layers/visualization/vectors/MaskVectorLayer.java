@@ -108,7 +108,8 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     private void calculateMaxMinTresh() {
         minThresh = Double.MAX_VALUE;
         maxThresh = Double.MIN_VALUE;
-        for (AttributesGeometry att : glayer.getAttributes()) {
+        for (Geometry geoms : glayer.getGeometries()) {
+        	AttributesGeometry att=(AttributesGeometry) geoms.getUserData();
             double temp = new Double("" + att.get(VDSSchema.SIGNIFICANCE));
             if (temp < minThresh) {
                 minThresh = temp;
