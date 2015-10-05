@@ -66,14 +66,14 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         t.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {            
-            int img =  tiff.getReader().read(0, t).getRaster().getSample(0,0, 1);
+            int img =  tiff.getReader().readRaster(0, t).getSample(0, 0, 1);//read(0, t).getRaster().getSample(0,0, 1);
             int real =  tiff.getReader().read(0, t).getRaster().getSample(0, 0, 0);
             return (int) Math.sqrt(real * real + img * img);
 
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         } catch (ArrayIndexOutOfBoundsException ex) {
-        	logger.warn(ex.getMessage());
+        	logger.warn(ex.getMessage());ex.printStackTrace();
         }catch(IllegalArgumentException iae){
         	logger.warn(iae.getMessage());
         }finally{
@@ -121,8 +121,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedDataReal =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
-            preloadedDataImg =   tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
+            preloadedDataReal =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 0, (int[]) null);
+            preloadedDataImg =   tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 1, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
