@@ -5,6 +5,8 @@
 
 package org.geoimage.analysis;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author thoorfr
@@ -26,5 +28,5 @@ public final class VDSSchema {
 
     public static final String[] schema={ID,MAXIMUM_VALUE, TILE_AVERAGE, TILE_STANDARD_DEVIATION, THRESHOLD, NUMBER_OF_AGGREGATED_PIXELS, RUN_ID, ESTIMATED_LENGTH, ESTIMATED_WIDTH, ESTIMATED_HEADING, SIGNIFICANCE, DATE, VS};
     
-
+    public static final Class[]  types={Integer.class,Double[].class,Double[].class,Double[].class,Double[].class,Integer.class,Integer.class,Double.class,Double.class,Double.class,Double[].class,Timestamp.class,Double.class};
 }

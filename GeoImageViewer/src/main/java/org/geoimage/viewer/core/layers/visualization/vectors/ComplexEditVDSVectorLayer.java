@@ -432,8 +432,14 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
             		maxVal=val;
             }
             maxVal++;
-            AttributesGeometry source=(AttributesGeometry) glayer.getGeometries().get(0).getUserData();
-            AttributesGeometry atts=source.emptyCloneAttributes();
+            AttributesGeometry atts=null;
+            /*if(glayer.getGeometries().size()>0){
+            	AttributesGeometry source=(AttributesGeometry) glayer.getGeometries().get(0).getUserData();
+            	atts=source.emptyAttributes(VDSSchema.schema,VDSSchema.types);
+            }else{
+            	atts=new AttributesGeometry(VDSSchema.schema,VDSSchema.types);
+            }	*/
+            atts=new AttributesGeometry(VDSSchema.schema,VDSSchema.types);
             atts.set(VDSSchema.ID,maxVal);
             final AttributesEditor ae = new AttributesEditor(new java.awt.Frame(), true);
             ae.setAttributes(atts);
@@ -487,13 +493,13 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 		          }else if (type.isArray()){
 		        	//TODO: cambiare questa m...a   
 		        	int bb=Integer.parseInt(band);
-		          	if(type==int[].class){
+		          	if(type==int[].class||type==Integer[].class){
 		          		int[] a=new int[4];
 		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
 		          		a[id]=Integer.parseInt(val);
 		          		attr.set(att,a);
 		          	}	
-		          	if(type==double[].class){
+		          	if(type==double[].class||type==Double[].class){
 		          		double[] a=new double[4];
 		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
 		          		a[id]=Double.parseDouble(val);
