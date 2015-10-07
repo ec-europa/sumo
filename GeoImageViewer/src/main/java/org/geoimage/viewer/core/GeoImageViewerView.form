@@ -44,6 +44,15 @@
                 <Property name="name" type="java.lang.String" value="jMenuItem3" noResource="true"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemReloadPlugin">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="org.geoimage.viewer.core.GeoImageViewerView" id="reloadPlugins" methodName="reloadPlugins"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="jMenuItemReloadPlugin.text"/>
+                <Property name="name" type="java.lang.String" value="jMenuItemReloadPlugin" noResource="true"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">

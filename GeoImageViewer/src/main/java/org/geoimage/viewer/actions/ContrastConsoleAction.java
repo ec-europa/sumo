@@ -27,10 +27,10 @@ import org.geoimage.viewer.widget.Slider;
 public class ContrastConsoleAction extends AbstractConsoleAction {
 
     public String getName() {
-        return "contrast";
+        return "c";
     }
     public String getCommand() {
-        return "contrast";
+        return "c";
     }
 
     public String getDescription() {

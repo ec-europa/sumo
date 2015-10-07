@@ -135,12 +135,13 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
 
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
 
+       
         if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
-            GL2ShapesRender.renderPolygons(context, width, height,glayer.getGeometries(),width * 2,getColor());
+            GL2ShapesRender.renderPolygons(context, width, height,glayer.getGeometries(), 2,getColor());
         }
 
         if (editedPoint != null) {
-        	GL2ShapesRender.renderPoint(context,width,height,editedPoint,width * 3,getColor());
+        	GL2ShapesRender.renderPoint(context,width,height,editedPoint, 4,getColor());
         }    
     }
 
