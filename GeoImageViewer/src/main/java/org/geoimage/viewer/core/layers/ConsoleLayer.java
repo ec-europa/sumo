@@ -56,7 +56,7 @@ public class ConsoleLayer extends GenericLayer {
     private String oldMessage = "";
     
    
-    private String[] commands;
+    //private String[] commands;
     private IProgress currentAction = null;
     private PluginsManager pl;
     
@@ -66,11 +66,11 @@ public class ConsoleLayer extends GenericLayer {
     	super(parent,"Console",null,null);
         super.init(parent);
         pl=SumoPlatform.getApplication().getPluginsManager();
-        commands=pl.getCommands();
+        //commands=pl.getCommands();
     }
 
     public void execute(String[] arguments) {
-        for (String c : commands) {
+        for (String c : pl.getCommands()) {
             if (c.startsWith(arguments[0])) {
                 String[] args = new String[arguments.length - 1];
                 for (int i = 1; i < arguments.length; i++) {
@@ -130,7 +130,7 @@ public class ConsoleLayer extends GenericLayer {
         try{
 	        while ((line = raf.readLine()) != null) {
 	            String[] command = line.split(" ");
-	            for (String c : commands) {
+	            for (String c : pl.getCommands()) {
 	                if (c.startsWith(command[0])) {
 	                    String[] args = new String[command.length - 1];
 	                    for (int i = 1; i < command.length; i++) {
@@ -173,7 +173,7 @@ public class ConsoleLayer extends GenericLayer {
         for (int index = 0; index < actionsscript.length; index++) {
             String[] command = parseCommandLineAction(actionsscript[index]);
             if ((command.length != 0) && !command[0].isEmpty()) {
-                for (String c : commands) {
+                for (String c : pl.getCommands()) {
                     if (c.startsWith(command[0])) {
                         String[] args = new String[command.length - 1];
                         for (int i = 1; i < command.length; i++) {
