@@ -14,5 +14,5 @@ public abstract class AbstractConsoleAction extends AbstractAction implements IC
 
    @Override
    public abstract String getCommand();
-
+   //TODO: auto-update pluginspublic abstract long getLastUpdateTimeStamp(); 
 }

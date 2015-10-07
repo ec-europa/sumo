@@ -694,6 +694,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         PluginManagerDialog dialog = new PluginManagerDialog(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }
+    
+    /**
+     * reload plugins
+     */
+    @Action
+    public void reloadPlugins() {
+    	SumoPlatform.getApplication().getPluginsManager().reloadPlugins();
+    }
 
     /**
      * Method to create and put a widget "name" in the openGL display using the "fd" parameter
@@ -783,6 +791,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         javax.swing.JMenu jMenuSystem = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItemReloadPlugin= new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         jMenuImport = new javax.swing.JMenu();
         jMenuItemLastImage = new javax.swing.JMenuItem();
@@ -824,6 +833,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         jMenuSystem.add(jMenuItem3);
 
+        
+        jMenuItemReloadPlugin.setAction(actionMap.get("reloadPlugins")); // NOI18N
+        jMenuItemReloadPlugin.setText(resourceMap.getString("jMenuItemReloadPlugin.text")); // NOI18N
+        jMenuItemReloadPlugin.setName("jMenuItemReloadPlugin"); // NOI18N
+        jMenuSystem.add(jMenuItemReloadPlugin);
+        
         exitMenuItem.setAction(actionMap.get("quit"));
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         jMenuSystem.add(exitMenuItem);
@@ -1062,6 +1077,7 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private javax.swing.JMenuItem jMenuItemLastImage;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemReloadPlugin;
     private javax.swing.JMenu jMenuTools;
     private javax.swing.JTabbedPane jTabbedPane1;
     private GLCanvas mainCanvas;
