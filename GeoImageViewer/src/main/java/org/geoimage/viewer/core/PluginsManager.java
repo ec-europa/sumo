@@ -3,7 +3,6 @@ package org.geoimage.viewer.core;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,6 @@ public class PluginsManager {
      * 
      */
     private void populateDatabase(List<String> dbPlugins) {
-    	
 	    String[] classes = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("actions").split(",");
 	    if(dbPlugins.size()==0||dbPlugins.size()!=classes.length){   
 	        EntityManager em = emf.createEntityManager();
@@ -84,11 +82,11 @@ public class PluginsManager {
 		                    em.persist(p);
 		                    IAction action = (IAction) temp;
 		                    getPlugins().put(action.getName(), p);
-		                    System.out.println(temp.toString() + " added");
+		                    logger.info(temp.toString() + " added");
 		                }
 	            	}    
 	            } catch (Exception ex) {
-	            	logger.error(ex.getMessage());
+	            	logger.warn("Plugin not loaded:"+classes[i]);
 	            }
 	        }
 	        em.getTransaction().commit();
@@ -97,6 +95,36 @@ public class PluginsManager {
 	        commands = getActions().keySet().toArray(new String[getActions().size()]);
     	}   
     }
+    
+    /**
+     * 
+     */
+    public void reloadPlugins() {
+    	actions.clear();
+    	
+    	EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Query q = em.createQuery("delete from Plugins p");
+        int result=q.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+        
+        populateDatabase(new ArrayList<String>());
+        
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Query q2 = em.createQuery("select p from Plugins p");
+        List<Plugins> dbPlugins = q2.getResultList();
+        dbPlugins = q2.getResultList();
+        em.getTransaction().commit();
+
+        em.close();
+        List<IAction> landActions=getDynamicActionForLandmask();
+
+        parseActions(dbPlugins);
+        parseActionsLandMask(landActions);
+    }
+    
     
     private void parseActions(List<Plugins> plugins) {
         for (Plugins p : plugins) {
