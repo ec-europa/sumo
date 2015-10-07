@@ -123,12 +123,16 @@ public class GL2ShapesRender {
         }	
 	}	
 	
-	public static void renderCircle(OpenGLContext context,float zoomWidth,float zoomHeight,List<Geometry>geometries,float size,Color color){
+	public static void renderCircle(OpenGLContext context,float zoomWidth,float zoomHeight,List<Geometry>geometries,Geometry selectedGeometry,float size,Color color){
 		GL2 gl = context.getGL().getGL2();
+		float[] c = color.brighter().getColorComponents(null);
+        gl.glColor3f(c[0], c[1], c[2]);
 		gl.glBegin(GL.GL_POINTS);
-    	gl.glLineWidth(size);
+    	
     	for (int ii=0;ii<geometries.size();ii++) {
     	   Geometry temp =geometries.get(ii);
+    	   gl.glLineWidth(temp == selectedGeometry ? size * 2 : size);
+    	   gl.glPointSize(temp == selectedGeometry ? size * 2 : size);
            Coordinate point = temp.getCoordinate();
            double dx=(point.x - context.getX()) / zoomWidth;
            double dy=1 - (point.y - context.getY()) / zoomHeight;

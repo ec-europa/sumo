@@ -87,7 +87,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        }
 	                        break;
 	                        case circle: {
-	                        	GL2ShapesRender.renderCircle(context, width, height, geomList, this.renderWidth, color);
+	                        	GL2ShapesRender.renderCircle(context, width, height, geomList, selectedGeometry,this.renderWidth, color);
 	                        }
 	                        break;
 	                        case square: {
@@ -191,7 +191,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        }
 	                        break;
 	                        case circle: {
-	                        	GL2ShapesRender.renderCircle(context, width, height, toVisualize, this.renderWidth, color);
+	                        	GL2ShapesRender.renderCircle(context, width, height, toVisualize, selectedGeometry,this.renderWidth, color);
 	                        }
 	                        break;
 	                        case square: {
