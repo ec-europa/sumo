@@ -47,12 +47,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.math3.util.FastMath;
-import org.fenggui.Display;
-import org.fenggui.FengGUI;
-import org.fenggui.layout.FormAttachment;
-import org.fenggui.layout.FormData;
-import org.fenggui.render.jogl.EventBinding;
-import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -82,8 +76,12 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.TaskMonitor;
 import org.slf4j.LoggerFactory;
 
+import com.jogamp.newt.awt.NewtCanvasAWT;
+import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLReadBufferUtil;
+
+import de.lessvoid.nifty.renderer.jogl.input.JoglInputSystem;
 
 
 
@@ -113,6 +111,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     private boolean worldwindpanelenabled = true;
     private InfoDialog infod;
     private GLU glu;
+    
+    private static GLWindow window;
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
 
@@ -148,10 +148,16 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
-        mainCanvas = new GLCanvas(glcapabilities);
-        mainCanvas.addGLEventListener(this);
-
-        final FPSAnimator animator = new FPSAnimator(mainCanvas, 45, true);
+        
+        window = GLWindow.create(glcapabilities);
+        window.setAutoSwapBufferMode(true);
+        //window.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+        window.addGLEventListener(this);
+        window.setTitle("SUMO_1.3.0");
+        
+        mainCanvas = new NewtCanvasAWT(window);
+        
+        final FPSAnimator animator = new FPSAnimator(window, 45, true);
 	    animator.start();
 
         initComponents();
@@ -477,6 +483,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     }
 
     public void init(GLAutoDrawable drawable) {
+    	GLProfile.initSingleton();
     	Display display = FengGUI.createDisplay(new JOGLBinding(mainCanvas, mainCanvas.getGL()));
     	geoContext = new OpenGLContext(display);
         geoContext.initialize(drawable.getContext());
@@ -484,7 +491,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     	geoContext.setWidth(sumopanel.getWidth());
     	
         glu = new GLU();    // get GL Utilities
-
+        
         display.setLayoutManager(new org.fenggui.layout.FormLayout());
         display.setDepthTestEnabled(true);
         display.setSize(mainCanvas.getWidth(), mainCanvas.getHeight());
@@ -502,6 +509,18 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             fd.top = new FormAttachment(100, -10);
             addWidget("Overview", fd, "");
         }
+        
+        
+        
+        JoglInputSystem inputSystem = new JoglInputSystem();
+        inputSystem.startup();
+        Nifty nifty = new Nifty(
+        new LwjglRenderDevice(),
+        new NullSoundDevice(),
+        inputSystem,
+        new TimeProvider());
+        
+        
         geoContext.initialize(drawable.getContext());
     }
 
@@ -1080,7 +1099,7 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private javax.swing.JMenuItem jMenuItemReloadPlugin;
     private javax.swing.JMenu jMenuTools;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private GLCanvas mainCanvas;
+    private NewtCanvasAWT mainCanvas;
     private javax.swing.JMenuBar menuBar;
     public javax.swing.JProgressBar progressBar;
     private JButton stopThreadButton;
