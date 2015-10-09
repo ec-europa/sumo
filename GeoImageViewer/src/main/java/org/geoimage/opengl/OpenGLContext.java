@@ -11,6 +11,8 @@ import javax.media.opengl.glu.GLU;
 
 import org.fenggui.Display;
 
+import de.lessvoid.nifty.renderer.jogl.input.JoglInputSystem;
+
 /**
  * This class deals with the realtime status of the geolocation of the display.
  * PLEASE ONLY USE THE GETTERS AND NEVER CHANGE PARAMETERS (except setDirty()) UNLESS
@@ -29,6 +31,9 @@ public class OpenGLContext {
     private int x = 0;
     private GLContext glContext;
     private GLU glu = new GLU();
+
+    
+    
     
     
     /**
