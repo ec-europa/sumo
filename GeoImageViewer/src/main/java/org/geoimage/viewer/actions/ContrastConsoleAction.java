@@ -44,9 +44,9 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
         if (args.length != 1) {
             return false;
         }
+        
         //manage a slider for changing the contrast
-        if(args[0].equals("sl")){
-             for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
+      /*    for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer && l.isActive()) {
                 Slider slider = new Slider(true, Slider.CONTRAST);
                 slider.setSize(200, 40);
@@ -67,8 +67,7 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
                 SumoPlatform.getApplication().getGeoContext().getFenguiDisplay().layout();
                 return true;
             }
-        }
-        }
+        }*/
         // c +(number) to increase the actual contrast
         if (args[0].startsWith("+")) {
             float contrast = Float.parseFloat(args[0].substring(1));

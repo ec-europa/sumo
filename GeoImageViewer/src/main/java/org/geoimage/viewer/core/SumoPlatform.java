@@ -6,6 +6,7 @@ package org.geoimage.viewer.core;
 
 
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
 import org.geoimage.def.GeoImageReader;
@@ -49,7 +50,6 @@ public class SumoPlatform extends SingleFrameApplication {
 		}
 	}*/
     
-    
     /**
      * At startup create and show the main frame of the application.
      */
@@ -57,6 +57,8 @@ public class SumoPlatform extends SingleFrameApplication {
     protected void startup() {
         try {
         	plManager=new PluginsManager();
+        	JLabel label = new JLabel();
+            label.setName("SUMO_1.3.0");
             show(new GeoImageViewerView(this));
         } catch (Throwable ex) {
         	logger.error(ex.getMessage(), ex);
@@ -120,9 +122,6 @@ public class SumoPlatform extends SingleFrameApplication {
         return LayerManager.getIstanceManager();
     }
 
-    public GLCanvas getMainCanvas() {
-        return ((GeoImageViewerView) getApplication().getMainView()).getMainCanvas();
-    }
     
     public GeoImageViewerView getMain() {
         return (GeoImageViewerView) getApplication().getMainView();
