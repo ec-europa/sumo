@@ -6,7 +6,7 @@
 	<classpathentry kind="src" path="GeoLocation/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/java"/>
 	<classpathentry kind="src" path="GeoImage/src/main/java"/>
-	<classpathentry excluding="org/fenggui/" kind="src" path="GeoImageViewer/src/main/java"/>
+	<classpathentry kind="src" path="GeoImageViewer/src/main/java"/>
 	<classpathentry kind="src" path="SentinelXMLReader/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImageViewer/src/test"/>
 	<classpathentry kind="src" path="GeoImage/src/main/resources"/>
@@ -297,16 +297,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/ConcaveHull-0.2.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/eventbus-1.4.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/jglfont-core-1.4.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/jorbis-0.0.17.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-1.4.1.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-default-controls-1.4.1.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-1.4.1-javadoc.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-default-controls-1.4.1-javadoc.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-jogl-renderer-1.4.1-javadoc.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-jogl-renderer-1.4.1.jar"/>
-	<classpathentry kind="lib" path="/libs/nifty/nifty-style-black-1.4.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
