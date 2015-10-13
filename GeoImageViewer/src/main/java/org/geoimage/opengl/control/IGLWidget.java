@@ -1,6 +1,5 @@
 package org.geoimage.opengl.control;
 
-import org.fenggui.render.Graphics;
 
 public interface IGLWidget {
 
@@ -158,6 +157,6 @@ public interface IGLWidget {
 
 	public boolean isShrinkable();
 
-	public void paint(Graphics g);
+	public void paint();
 
 }

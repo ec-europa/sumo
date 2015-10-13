@@ -12,7 +12,9 @@ public class GLWidget implements IGLWidget{
 	
 	
 	
-	
+	public GLWidget(Dimension size){
+		this.size=size;
+	}
 
 	public void setMinSize(Dimension minSize) {
 		this.minSize = minSize;
@@ -196,8 +198,7 @@ public class GLWidget implements IGLWidget{
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
+	public void paint() {
 		
 	}
 

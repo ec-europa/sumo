@@ -17,7 +17,7 @@ import org.geoimage.viewer.core.SumoPlatform;
 import com.jogamp.opengl.util.gl2.GLUT;
  
 
-public class GLTextRender  implements GLEventListener{
+public class GLTextRender {
 		 
 	public class BitMapFont
 	{
@@ -26,7 +26,7 @@ public class GLTextRender  implements GLEventListener{
 	    GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
 	    GLCanvas canvas = new GLCanvas(glcapabilities);
-	    canvas.addGLEventListener(new GLTextRender());
+	    //canvas.addGLEventListener(new GLTextRender());
 	    frame.add(canvas);
 	    frame.setSize(400, 300);
 	   
@@ -79,7 +79,7 @@ public class GLTextRender  implements GLEventListener{
 	           
 	      gl.glMatrixMode (GL2.GL_PROJECTION); 
 	      gl.glClearColor (1.0f, 1.0f, 1.0f, 0.0f);   //set background to white
-	      glu.gluOrtho2D (0.0, 200.0, 0.0, 150.0);  // define drawing area
+	      //glu.gluOrtho2D (0.0, 200.0, 0.0, 150.0);  // define drawing area
 	      //gLDrawable.addKeyListener(this);
 	    }
 	   
@@ -100,6 +100,6 @@ public class GLTextRender  implements GLEventListener{
 	   
 	    public void keyTyped(KeyEvent e) {}
 	      }
-	 
+
 	 
 }
