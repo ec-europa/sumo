@@ -6,6 +6,7 @@
 package org.geoimage.viewer.core;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -29,6 +30,9 @@ public class Plugins implements Serializable {
     private String className;
     @Column(name = "ACTIVE")
     private Boolean active;
+    //@Column(name = "LAST_UPDATE")
+    //private Timestamp lastUpdate;
+    
     
     /*
     @Column(name = "NEED_PARAMS")
@@ -50,6 +54,16 @@ public class Plugins implements Serializable {
 
 	public void setParams(Object[] params) {
 		this.params = params;
+	}*/
+
+    
+    /*//TODO: auto-update plugins
+	public Timestamp getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Timestamp lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}*/
 
 	public Plugins() {
