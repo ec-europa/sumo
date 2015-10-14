@@ -11,11 +11,15 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 public class GLButton extends GLWidget{
 	private String text="";
 	private GL glContext=null;
+	private int posx=0;
+	private int posy=0;
 	
-	public GLButton(GL glContext,String textButton,Dimension size){
+	public GLButton(GL glContext,String textButton,Dimension size,int posx,int posy){
 		super(size);
 		this.text=textButton;
 		this.glContext=glContext;
+		this.posx=posx;
+		this.posy=posy;
 	}
 	
 
@@ -23,17 +27,19 @@ public class GLButton extends GLWidget{
 	public void paint(){
 		GL2 gl=glContext.getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glPolygonMode (GL2.GL_FRONT, GL2.GL_LINE_STRIP);
 	    gl.glColor3f(0.5f, 0.5f, 0.5f);
-	    gl.glRecti(20,20,25,25);
+	    gl.glRecti(this.posx,this.posy,80,20);
 		
-		TextRenderer textRenderer = new TextRenderer(new Font(Font.SERIF,0 , 30));
-		textRenderer.beginRendering(600,300);
+		
+		TextRenderer textRenderer = new TextRenderer(new Font(Font.SERIF,0 , 20));
+		textRenderer.beginRendering(700,300);//size
 		textRenderer.setColor(Color.WHITE);
 		textRenderer.setSmoothing(false);
-		textRenderer.draw("Hello world!!",10,10);
+		textRenderer.draw(this.text,this.posx,this.posy); //text and position
 		textRenderer.endRendering();
 		
-		
+		gl.glFlush();
 	}
 	
 	
