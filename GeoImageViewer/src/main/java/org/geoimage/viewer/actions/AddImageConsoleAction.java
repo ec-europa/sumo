@@ -210,55 +210,7 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
                 done = true;
             }
         }
-
-        //AGabban added the loading of the coast mask
-        /*new Thread(new Runnable() {
-
-        public void run() {
-        try {
-        for (ILayer l : Platform.getLayerManager().getLayers()) {
-        if (l instanceof IImageLayer & l.isActive()) {
-        try {
-        URL url = this.getClass().getResource("/org/geoimage/viewer/core/resources/shapefile/Global GSHHS Land Mask.shp");
-        Map config=new HashMap();
-        config.put("url", url);
-        VectorIO shpio = VectorIO.createVectorIO(VectorIO.SIMPLE_SHAPEFILE, config, ((IImageLayer) l).getImageReader());
-        GeometricLayer gl = shpio.read();
-        addLayerInThread(gl, (IImageLayer) l);
-        } catch (Exception ex) {
-        Logger.getLogger(AddWorldVectorLayerAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-        }
-        } catch (Exception e) {
-        }
-        }
-        }).start();*/
-
     }
-
- /*   public void addLayerInThread(final GeometricLayer layer, final IImageLayer il) {
-        if (layer != null) {
-            new Thread(new Runnable() {
-
-                public void run() {
-                    il.addLayer(new SimpleVectorLayer(layer.getName(), il, layer.getGeometryType(), layer));
-                    done = true;
-                }
-            }).start();
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    JOptionPane.showMessageDialog(null, "Empty layer, not added to layers", "Warning", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-            done = true;
-        }
-    }*/
-    //AGabban end of the new part
-
-
     private void addThumbnails(String[] args) {
     	 SumoXmlIOOld old=null;
         if (args.length == 2) {
