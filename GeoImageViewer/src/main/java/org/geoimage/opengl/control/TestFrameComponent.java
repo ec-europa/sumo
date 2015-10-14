@@ -7,12 +7,16 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+
+import com.jogamp.opengl.util.FPSAnimator;
 
 public class TestFrameComponent extends JFrame implements GLEventListener{
 	private GLCapabilities caps;
 	private GLCanvas canvas;
-	
+	private FPSAnimator animator;
+	private GLU glu;
 	
 	public TestFrameComponent() {
 		super("test");
@@ -46,7 +50,8 @@ public class TestFrameComponent extends JFrame implements GLEventListener{
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
-		new GLButton(gl,"Test", new Dimension(10,10)).paint(); 
+		setCamera(gl, glu, 100);
+		new GLButton(gl,"Test", new Dimension(10,10),0,0).paint(); 
 		
 		
 	    /* clear all pixels 
@@ -72,6 +77,24 @@ public class TestFrameComponent extends JFrame implements GLEventListener{
 		
 	}
 
+	private void setCamera(GL gl, GLU glu, float distance) {
+        GL2 gl2=gl.getGL2();
+		// Change to projection matrix.
+        gl2.glMatrixMode(GL2.GL_PROJECTION);
+        gl2.glLoadIdentity();
+        glu.gluOrtho2D(0,getWidth(),0,getHeight());
+        
+        // Perspective.
+       /* float widthHeightRatio = (float) getWidth() / (float) getHeight();
+        glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+        glu.gluLookAt(0, 0, distance, 0, 0, 0, 0, 1, 0);*/
+		
+        // Change back to model view matrix.
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+        gl2.glLoadIdentity();
+    }
+	
+	
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		//arg0.destroy();
@@ -80,7 +103,8 @@ public class TestFrameComponent extends JFrame implements GLEventListener{
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		 
+		glu = new GLU();
+		
 	    /* select clearing color (background) color */
 	    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	 
@@ -89,10 +113,15 @@ public class TestFrameComponent extends JFrame implements GLEventListener{
 	    gl.glLoadIdentity();
 	    gl.glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 		
+	 // Start animator (which should be a field).
+        animator = new FPSAnimator(drawable, 60);
+        animator.start();
 	}
 
 	@Override
-	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+	public void reshape(GLAutoDrawable drawable,int x, int y, int width, int height) {
+		GL gl = drawable.getGL();
+        gl.glViewport(0, 0, width, height);
 	}
 
 	
