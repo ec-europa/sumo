@@ -3,6 +3,8 @@ package org.geoimage.viewer.core.layers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.geoimage.analysis.VDSSchema;
+
 /**
  * This class deals wit attributes of GeometricLayer.
  * For optimisation purpose, the geometric data (ie to be displayed)
@@ -24,6 +26,14 @@ public class AttributesGeometry implements Cloneable{
     	types=new HashMap<String, Class>();
     	types.put("id",Integer.class);
 	}
+    public AttributesGeometry(String[] attributesSchema,Class[] typesAttr) {
+    	this.schema=attributesSchema;
+    	attributes=new HashMap<String, Object>();
+    	types=new HashMap<String, Class>();
+    	for(int i=0;i<attributesSchema.length;i++){
+    		types.put(attributesSchema[i],typesAttr[i]);
+    	}
+    }
 
     /**
      * Set the attributes value giving the schema name.
@@ -59,7 +69,8 @@ public class AttributesGeometry implements Cloneable{
     	for(int i=0;i<schema.length;i++){
     		if(getValues()!=null){
     			out.attributes.put(schema[i],null);
-    			out.types.put(schema[i],get(schema[i]).getClass());
+    			if(get(schema[i])!=null)
+    				out.types.put(schema[i],get(schema[i]).getClass());
     		}	
     	}
     	return out;
