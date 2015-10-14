@@ -1,19 +1,23 @@
 package org.geoimage.opengl.control;
 
-import org.fenggui.render.Graphics;
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
 
 public class GLWidget implements IGLWidget{
-	private Dimension size    = new Dimension(10, 10);
-	private Dimension minSize = new Dimension(10, 10);
+	
+	protected Dimension size    = new Dimension(10, 10);
+	protected Dimension minSize = new Dimension(10, 10);
 
-	private boolean shrinkable = true;
-	private boolean expandable = true;
-	private boolean visible = true;
+	protected boolean shrinkable = true;
+	protected boolean expandable = true;
+	protected boolean visible = true;
 	
 	
 	
 	public GLWidget(Dimension size){
 		this.size=size;
+		setCamera();
 	}
 
 	public void setMinSize(Dimension minSize) {
@@ -37,6 +41,22 @@ public class GLWidget implements IGLWidget{
 	public void mouseMoved(int displayX, int displayY) {
 		
 	}
+	
+	
+	private void setCamera() {
+        GLU glu=new GLU();
+        GL2 gl2=GLU.getCurrentGL().getGL2();
+        
+		// Change to projection matrix.
+        gl2.glMatrixMode(GL2.GL_PROJECTION);
+        gl2.glLoadIdentity();
+        glu.gluOrtho2D(0,gl2.getContext().getGLDrawable().getWidth(),0,gl2.getContext().getGLDrawable().getHeight());
+	
+        // Change back to model view matrix.
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+        gl2.glLoadIdentity();
+    }
+	
 	/*
 	@Override
 	public void mouseEntered(MouseEnteredEvent mouseEnteredEvent) {
