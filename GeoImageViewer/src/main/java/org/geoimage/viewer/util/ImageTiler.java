@@ -36,7 +36,7 @@ public class ImageTiler {
     }
 
     public void generateTiles(int band) {
-        System.out.println((1 << levels) + ";" + xpadding + "--" + ypadding);
+        logger.info((1 << levels) + ";" + xpadding + "--" + ypadding);
         int powerI = 1;
         int numI = 1 << levels;
         for (int i = levels - 1; i > -1; i--) {
@@ -63,7 +63,6 @@ public class ImageTiler {
 
     public static BufferedImage createImage(int[]tile, int width, int height, GeoImageReader gimage) {
         BufferedImage bufferedImage = new BufferedImage(width, height, gimage.getType(true));
-
         WritableRaster raster = bufferedImage.getRaster();
 
         // Put the pixels on the raster.
