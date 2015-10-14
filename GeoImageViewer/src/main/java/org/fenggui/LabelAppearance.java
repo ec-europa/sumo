@@ -102,35 +102,6 @@ public class LabelAppearance extends DecoratorAppearance
 	}
 
 	
-	/**
-	 * Updates the standard min. size for labels.
-	 * @param font the font of the widget
-	 * @param gap the gap between text and pixmap
-	 * @param text the text of the widget
-	 * @param pixmap the pixmap 
-	 */
-	/*
-	public static void updateMinInnerSize(Widget toBeSet, Font font, int gap, String text, Pixmap pixmap)
-	{
-		int width = 0;
-		int height = 0;
-
-		if (text != null && text.length() > 0)
-		{
-			width = font.getWidth(text);
-			height = font.getHeight();
-		}
-
-		if (pixmap != null)
-		{
-			width += pixmap.getWidth();
-			if (text != null && text.length() > 0) width += gap;
-			height = Math.max(pixmap.getHeight(), height);
-		}
-
-		toBeSet.setInnerMinSize(width, height);
-	}*/
-
 	public static Dimension getContentSizeHint(Font font, int gap, String text, Pixmap pixmap)
 	{
 		int width = 0;
