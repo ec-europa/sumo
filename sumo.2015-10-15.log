@@ -107,3 +107,1179 @@ java.lang.NullPointerException
 2015-10-15 02:33:30 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
 2015-10-15 02:39:39 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
 2015-10-15 02:40:14 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 23:24:29 DEBUG H4File:162 - show all is off
+2015-10-15 23:24:29 DEBUG FileFormat:237 - FILE_TYPE_HDF5 instance failure: 
+java.lang.UnsatisfiedLinkError: Invalid HDF5 library, H:\SUMO_W\Sumo\GeoImageViewer\lib\hdf5\jhdf5.dll
+	at ncsa.hdf.hdf5lib.H5.loadH5Lib(H5.java:322)
+	at ncsa.hdf.hdf5lib.H5.<clinit>(H5.java:270)
+	at ncsa.hdf.hdf5lib.HDF5Constants.<clinit>(HDF5Constants.java:28)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:98)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:129)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at java.lang.Class.newInstance(Class.java:379)
+	at ncsa.hdf.object.FileFormat.<clinit>(FileFormat.java:231)
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:78)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:143)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:77)
+	at org.geoimage.viewer.core.layers.ConsoleLayer.execute(ConsoleLayer.java:91)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.jButton1ActionPerformed(ActionDialog.java:217)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.access$1(ActionDialog.java:198)
+	at org.geoimage.viewer.widget.dialog.ActionDialog$3.actionPerformed(ActionDialog.java:157)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:154)
+	at java.awt.WaitDispatchSupport$2.run(WaitDispatchSupport.java:182)
+	at java.awt.WaitDispatchSupport$4.run(WaitDispatchSupport.java:221)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.awt.WaitDispatchSupport.enter(WaitDispatchSupport.java:219)
+	at java.awt.Dialog.show(Dialog.java:1082)
+	at java.awt.Component.show(Component.java:1655)
+	at java.awt.Component.setVisible(Component.java:1607)
+	at java.awt.Window.setVisible(Window.java:1014)
+	at java.awt.Dialog.setVisible(Dialog.java:1005)
+	at org.geoimage.viewer.core.GeoImageViewerView$13.actionPerformed(GeoImageViewerView.java:1053)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+2015-10-15 23:27:25 DEBUG H4File:162 - show all is off
+2015-10-15 23:27:25 DEBUG FileFormat:237 - FILE_TYPE_HDF5 instance failure: 
+java.lang.UnsatisfiedLinkError: Invalid HDF5 library, H:\SUMO_W\Sumo\libs\hdf5\jhdf5.dll
+	at ncsa.hdf.hdf5lib.H5.loadH5Lib(H5.java:322)
+	at ncsa.hdf.hdf5lib.H5.<clinit>(H5.java:270)
+	at ncsa.hdf.hdf5lib.HDF5Constants.<clinit>(HDF5Constants.java:28)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:98)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:129)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at java.lang.Class.newInstance(Class.java:379)
+	at ncsa.hdf.object.FileFormat.<clinit>(FileFormat.java:231)
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:78)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:143)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:77)
+	at org.geoimage.viewer.core.layers.ConsoleLayer.execute(ConsoleLayer.java:91)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.jButton1ActionPerformed(ActionDialog.java:217)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.access$1(ActionDialog.java:198)
+	at org.geoimage.viewer.widget.dialog.ActionDialog$3.actionPerformed(ActionDialog.java:157)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:154)
+	at java.awt.WaitDispatchSupport$2.run(WaitDispatchSupport.java:182)
+	at java.awt.WaitDispatchSupport$4.run(WaitDispatchSupport.java:221)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.awt.WaitDispatchSupport.enter(WaitDispatchSupport.java:219)
+	at java.awt.Dialog.show(Dialog.java:1082)
+	at java.awt.Component.show(Component.java:1655)
+	at java.awt.Component.setVisible(Component.java:1607)
+	at java.awt.Window.setVisible(Window.java:1014)
+	at java.awt.Dialog.setVisible(Dialog.java:1005)
+	at org.geoimage.viewer.core.GeoImageViewerView$13.actionPerformed(GeoImageViewerView.java:1053)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+2015-10-15 23:36:00 DEBUG H4File:162 - show all is off
+2015-10-15 23:36:00 DEBUG FileFormat:237 - FILE_TYPE_HDF5 instance failure: 
+java.lang.UnsatisfiedLinkError: Invalid HDF5 library, H:\SUMO_W\Sumo\libs\hdf5\jhdf5.dll
+	at ncsa.hdf.hdf5lib.H5.loadH5Lib(H5.java:322)
+	at ncsa.hdf.hdf5lib.H5.<clinit>(H5.java:270)
+	at ncsa.hdf.hdf5lib.HDF5Constants.<clinit>(HDF5Constants.java:28)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:98)
+	at ncsa.hdf.object.h5.H5File.<init>(H5File.java:129)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at java.lang.Class.newInstance(Class.java:379)
+	at ncsa.hdf.object.FileFormat.<clinit>(FileFormat.java:231)
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:78)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:143)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:77)
+	at org.geoimage.viewer.core.layers.ConsoleLayer.execute(ConsoleLayer.java:91)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.jButton1ActionPerformed(ActionDialog.java:217)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.access$1(ActionDialog.java:198)
+	at org.geoimage.viewer.widget.dialog.ActionDialog$3.actionPerformed(ActionDialog.java:157)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:154)
+	at java.awt.WaitDispatchSupport$2.run(WaitDispatchSupport.java:182)
+	at java.awt.WaitDispatchSupport$4.run(WaitDispatchSupport.java:221)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.awt.WaitDispatchSupport.enter(WaitDispatchSupport.java:219)
+	at java.awt.Dialog.show(Dialog.java:1082)
+	at java.awt.Component.show(Component.java:1655)
+	at java.awt.Component.setVisible(Component.java:1607)
+	at java.awt.Window.setVisible(Window.java:1014)
+	at java.awt.Dialog.setVisible(Dialog.java:1005)
+	at org.geoimage.viewer.core.GeoImageViewerView$13.actionPerformed(GeoImageViewerView.java:1053)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+2015-10-15 23:45:29 ERROR GeoImageReaderFactory:151 - Error reading:H:\sat\analysis on land\S1A_EW_GRDM_1SDH_20141008T184151_20141008T184251_002742_00313B_E1EF.SAFE\manifest.safe
+javax.xml.bind.UnmarshalException
+ - with linked exception:
+[Exception [EclipseLink-25004] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.XMLMarshalException
+Exception Description: An error occurred unmarshalling the document
+Internal Exception: java.io.FileNotFoundException: H:\sat\analysis on land\S1A_EW_GRDM_1SDH_20141008T184151_20141008T184251_002742_00313B_E1EF.SAFE\manifest.safe (Impossibile trovare il percorso specificato)]
+	at org.eclipse.persistence.jaxb.JAXBUnmarshaller.handleXMLMarshalException(JAXBUnmarshaller.java:827)
+	at org.eclipse.persistence.jaxb.JAXBUnmarshaller.unmarshal(JAXBUnmarshaller.java:296)
+	at jrc.it.xml.wrapper.SumoJaxbSafeReader.init(SumoJaxbSafeReader.java:72)
+	at jrc.it.xml.wrapper.SumoJaxbSafeReader.<init>(SumoJaxbSafeReader.java:62)
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:100)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:143)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:77)
+	at org.geoimage.viewer.core.layers.ConsoleLayer.execute(ConsoleLayer.java:91)
+	at org.geoimage.viewer.core.GeoImageViewerView$10.run(GeoImageViewerView.java:687)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: Exception [EclipseLink-25004] (Eclipse Persistence Services - 2.3.2.v20111125-r10461): org.eclipse.persistence.exceptions.XMLMarshalException
+Exception Description: An error occurred unmarshalling the document
+Internal Exception: java.io.FileNotFoundException: H:\sat\analysis on land\S1A_EW_GRDM_1SDH_20141008T184151_20141008T184251_002742_00313B_E1EF.SAFE\manifest.safe (Impossibile trovare il percorso specificato)
+	at org.eclipse.persistence.exceptions.XMLMarshalException.unmarshalException(XMLMarshalException.java:95)
+	at org.eclipse.persistence.internal.oxm.record.SAXUnmarshaller.unmarshal(SAXUnmarshaller.java:718)
+	at org.eclipse.persistence.internal.oxm.record.SAXUnmarshaller.unmarshal(SAXUnmarshaller.java:598)
+	at org.eclipse.persistence.oxm.XMLUnmarshaller.unmarshal(XMLUnmarshaller.java:594)
+	at org.eclipse.persistence.jaxb.JAXBUnmarshaller.unmarshal(JAXBUnmarshaller.java:294)
+	... 8 more
+Caused by: java.io.FileNotFoundException: H:\sat\analysis on land\S1A_EW_GRDM_1SDH_20141008T184151_20141008T184251_002742_00313B_E1EF.SAFE\manifest.safe (Impossibile trovare il percorso specificato)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:146)
+	at java.io.FileInputStream.<init>(FileInputStream.java:101)
+	at sun.net.www.protocol.file.FileURLConnection.connect(FileURLConnection.java:90)
+	at sun.net.www.protocol.file.FileURLConnection.getInputStream(FileURLConnection.java:188)
+	at com.sun.org.apache.xerces.internal.impl.XMLEntityManager.setupCurrentEntity(XMLEntityManager.java:619)
+	at com.sun.org.apache.xerces.internal.impl.XMLVersionDetector.determineDocVersion(XMLVersionDetector.java:189)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:812)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1140)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:660)
+	at org.eclipse.persistence.internal.oxm.record.XMLReader.parse(XMLReader.java:171)
+	at org.eclipse.persistence.internal.oxm.record.SAXUnmarshaller.unmarshal(SAXUnmarshaller.java:716)
+	... 11 more
+2015-10-15 23:46:56 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 23:48:54 INFO  VDSAnalysis:369 - Aggregating pixel Num:100  x:5036   y:9770
+2015-10-15 23:48:54 INFO  VDSAnalysis:369 - Aggregating pixel Num:200  x:3496   y:10298
+2015-10-15 23:48:55 INFO  VDSAnalysis:369 - Aggregating pixel Num:300  x:7187   y:10470
+2015-10-15 23:48:55 INFO  VDSAnalysis:369 - Aggregating pixel Num:400  x:7287   y:9449
+2015-10-15 23:48:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:500  x:2330   y:5387
+2015-10-15 23:48:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:600  x:3891   y:6799
+2015-10-15 23:48:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:700  x:7796   y:10652
+2015-10-15 23:48:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:800  x:2661   y:9609
+2015-10-15 23:48:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:900  x:3444   y:10272
+2015-10-15 23:48:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:1000  x:3869   y:10721
+2015-10-15 23:48:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:1100  x:5186   y:9272
+2015-10-15 23:48:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1200  x:7206   y:10513
+2015-10-15 23:48:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1300  x:3489   y:10358
+2015-10-15 23:48:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1400  x:2326   y:5390
+2015-10-15 23:48:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1500  x:2492   y:5525
+2015-10-15 23:48:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1600  x:2317   y:5387
+2015-10-15 23:48:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1700  x:4271   y:9664
+2015-10-15 23:48:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1800  x:3167   y:9474
+2015-10-15 23:48:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1900  x:3943   y:10415
+2015-10-15 23:48:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:2000  x:2811   y:5435
+2015-10-15 23:49:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2100  x:3233   y:3230
+2015-10-15 23:49:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2200  x:2318   y:5363
+2015-10-15 23:49:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2300  x:2318   y:5359
+2015-10-15 23:49:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2400  x:3636   y:9716
+2015-10-15 23:49:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2500  x:2395   y:9903
+2015-10-15 23:49:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2600  x:2319   y:5384
+2015-10-15 23:49:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2700  x:2440   y:5367
+2015-10-15 23:49:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2800  x:3929   y:9122
+2015-10-15 23:49:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2900  x:2485   y:5550
+2015-10-15 23:49:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:3000  x:3909   y:6781
+2015-10-15 23:49:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:3100  x:2256   y:5717
+2015-10-15 23:49:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:3200  x:2466   y:5553
+2015-10-15 23:49:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:3300  x:3907   y:6783
+2015-10-15 23:49:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:3400  x:1741   y:5501
+2015-10-15 23:49:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:3500  x:2317   y:5475
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3600  x:6632   y:8603
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3700  x:2628   y:9946
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3800  x:2576   y:5282
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3900  x:6387   y:8454
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:4000  x:2328   y:5382
+2015-10-15 23:49:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:4100  x:3889   y:6945
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4200  x:2422   y:5538
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4300  x:7481   y:9898
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4400  x:2223   y:5483
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4500  x:3175   y:9502
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4600  x:2184   y:5689
+2015-10-15 23:49:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:4700  x:3839   y:7016
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:4800  x:4240   y:9752
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:4900  x:3616   y:10283
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:5000  x:3889   y:6784
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:5100  x:2532   y:9834
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:5200  x:7207   y:10514
+2015-10-15 23:49:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:5300  x:3906   y:6782
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5400  x:3316   y:10343
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5500  x:3463   y:10298
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5600  x:3350   y:10364
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5700  x:7502   y:9902
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5800  x:4493   y:9642
+2015-10-15 23:49:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:5900  x:3112   y:5969
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6000  x:4379   y:7845
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6100  x:3906   y:6802
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6200  x:2624   y:9928
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6300  x:7319   y:9430
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6400  x:3217   y:2479
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6500  x:3307   y:10388
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6600  x:2508   y:9994
+2015-10-15 23:49:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:6700  x:1713   y:10595
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:6800  x:3397   y:10371
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:6900  x:2204   y:5690
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:7000  x:5183   y:9274
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:7100  x:2221   y:5473
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:7200  x:3480   y:3229
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:7300  x:3494   y:9602
+2015-10-15 23:49:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:7400  x:3646   y:9969
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:7500  x:4982   y:8403
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:7600  x:3887   y:6800
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:7700  x:2328   y:6181
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:7800  x:2496   y:5523
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:7900  x:3425   y:10250
+2015-10-15 23:49:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:8000  x:3638   y:10224
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8100  x:7483   y:9902
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8200  x:3740   y:6767
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8300  x:4249   y:9733
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8400  x:3736   y:10642
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8500  x:4570   y:7470
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8600  x:5253   y:8341
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8700  x:3140   y:10380
+2015-10-15 23:49:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:8800  x:3511   y:3223
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:8900  x:2480   y:5553
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9000  x:5177   y:10504
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9100  x:2464   y:5550
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9200  x:2421   y:5509
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9300  x:2235   y:5459
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9400  x:3911   y:6785
+2015-10-15 23:49:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:9500  x:4281   y:9626
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:9600  x:3732   y:6964
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:9700  x:3903   y:6767
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:9800  x:4134   y:9600
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:9900  x:3948   y:10391
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:10000  x:2684   y:9610
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:10100  x:2527   y:9787
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:10200  x:3729   y:10624
+2015-10-15 23:49:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:10300  x:2417   y:2129
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10400  x:7460   y:9898
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10500  x:7301   y:9440
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10600  x:3884   y:6774
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10700  x:7432   y:9886
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10800  x:2630   y:9612
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:10900  x:2920   y:9600
+2015-10-15 23:49:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:11000  x:2243   y:5695
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11100  x:3731   y:6771
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11200  x:2436   y:5367
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11300  x:3752   y:10613
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11400  x:7289   y:9439
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11500  x:3552   y:10275
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11600  x:2533   y:9834
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11700  x:4293   y:9911
+2015-10-15 23:49:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:11800  x:3837   y:10542
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11900  x:3892   y:6778
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:12000  x:3512   y:10300
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:12100  x:3585   y:10289
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:12200  x:3516   y:3193
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:12300  x:2479   y:5551
+2015-10-15 23:49:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:12400  x:3646   y:9699
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12500  x:2489   y:5552
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12600  x:3739   y:10679
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12700  x:3799   y:10523
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12800  x:3744   y:6948
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12900  x:3311   y:10394
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:13000  x:3888   y:6778
+2015-10-15 23:49:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:13100  x:2790   y:5450
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13200  x:2801   y:5446
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13300  x:3593   y:10296
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13400  x:3941   y:9815
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13500  x:2183   y:5457
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13600  x:5439   y:8105
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13700  x:2344   y:5355
+2015-10-15 23:49:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13800  x:3393   y:10375
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13900  x:3725   y:6777
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14000  x:3601   y:10284
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14100  x:4225   y:9771
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14200  x:3355   y:10363
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14300  x:5033   y:9771
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14400  x:3198   y:10393
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14500  x:4496   y:9496
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14600  x:7498   y:9907
+2015-10-15 23:49:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14700  x:2470   y:5548
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14800  x:3612   y:10301
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14900  x:3894   y:6776
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:15000  x:2316   y:5359
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:15100  x:3885   y:6789
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:15200  x:3614   y:10286
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:15300  x:4381   y:9567
+2015-10-15 23:49:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:15400  x:2803   y:5445
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15500  x:3897   y:6777
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15600  x:2229   y:5454
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15700  x:2413   y:5545
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15800  x:3755   y:6967
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15900  x:6411   y:8404
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16000  x:3429   y:10247
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16100  x:3389   y:9645
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16200  x:2546   y:9755
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16300  x:4233   y:9757
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16400  x:3185   y:9503
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16500  x:3455   y:10333
+2015-10-15 23:49:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:16600  x:5952   y:9995
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16700  x:3186   y:9544
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16800  x:5184   y:9271
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16900  x:3119   y:10369
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:17000  x:4254   y:9544
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:17100  x:3208   y:6092
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:17200  x:3282   y:9667
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:17300  x:7398   y:9875
+2015-10-15 23:49:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:17400  x:3282   y:9616
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17500  x:2416   y:5544
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17600  x:2473   y:9919
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17700  x:3205   y:5968
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17800  x:3317   y:9541
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17900  x:5960   y:9990
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:18000  x:7333   y:9426
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:18100  x:7307   y:9436
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:18200  x:2773   y:9710
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:18300  x:2857   y:10623
+2015-10-15 23:49:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:18400  x:7496   y:10172
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18500  x:2827   y:9526
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18600  x:3560   y:10257
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18700  x:3868   y:6782
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18800  x:3608   y:9708
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18900  x:3289   y:9559
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19000  x:3319   y:9530
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19100  x:3445   y:9597
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19200  x:3613   y:10286
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19300  x:3445   y:10267
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19400  x:3901   y:6769
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19500  x:3753   y:10613
+2015-10-15 23:49:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:19600  x:3293   y:9655
+2015-10-15 23:49:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19700  x:3893   y:6789
+2015-10-15 23:49:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19800  x:3841   y:10530
+2015-10-15 23:49:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19900  x:3602   y:10286
+2015-10-15 23:49:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:20000  x:3525   y:9601
+2015-10-15 23:49:46 INFO  VDSAnalysis:369 - Aggregating pixel Num:100  x:3015   y:9071
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:200  x:2021   y:863
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:300  x:3027   y:10142
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:400  x:3041   y:9641
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:500  x:3041   y:9678
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:600  x:3031   y:10087
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:700  x:3024   y:7952
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:800  x:3027   y:10226
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:900  x:3027   y:10698
+2015-10-15 23:49:47 INFO  VDSAnalysis:369 - Aggregating pixel Num:1000  x:3022   y:9523
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1100  x:3016   y:8278
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1200  x:3041   y:9740
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1300  x:3025   y:10598
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1400  x:3024   y:6532
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1500  x:467   y:7039
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1600  x:3025   y:8926
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1700  x:3025   y:10639
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1800  x:307   y:840
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:1900  x:3027   y:10034
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2000  x:3047   y:6906
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2100  x:4571   y:7493
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2200  x:3042   y:9073
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2300  x:3025   y:8629
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2400  x:3016   y:9673
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2500  x:3025   y:9705
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2600  x:2388   y:9558
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2700  x:198   y:895
+2015-10-15 23:49:48 INFO  VDSAnalysis:369 - Aggregating pixel Num:2800  x:6458   y:8474
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:2900  x:3018   y:9478
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3000  x:3043   y:6933
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3100  x:3015   y:9582
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3200  x:3025   y:10249
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3300  x:3031   y:8612
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3400  x:3041   y:8244
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3500  x:3018   y:9337
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3600  x:3016   y:9715
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3700  x:3034   y:10293
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3800  x:3031   y:8978
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:3900  x:3015   y:9273
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4000  x:3022   y:9609
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4100  x:3018   y:8173
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4200  x:3031   y:7897
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4300  x:3016   y:9542
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4400  x:3018   y:9624
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4500  x:3025   y:8551
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4600  x:3025   y:8598
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4700  x:3019   y:9105
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4800  x:3022   y:9767
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:4900  x:3027   y:9149
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5000  x:3020   y:6626
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5100  x:3023   y:10698
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5200  x:3040   y:8448
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5300  x:3023   y:10635
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5400  x:3028   y:9704
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5500  x:3015   y:9936
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5600  x:3019   y:10260
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5700  x:3042   y:10102
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5800  x:3017   y:9599
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:5900  x:3025   y:8341
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6000  x:3028   y:7616
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6100  x:3217   y:2476
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6200  x:3019   y:10160
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6300  x:3022   y:7153
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6400  x:6022   y:8790
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6500  x:4130   y:8522
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6600  x:3040   y:9785
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6700  x:3034   y:9019
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6800  x:3040   y:9726
+2015-10-15 23:49:49 INFO  VDSAnalysis:369 - Aggregating pixel Num:6900  x:3019   y:10018
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7000  x:3029   y:10002
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7100  x:3025   y:8177
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7200  x:3029   y:10096
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7300  x:3020   y:9678
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7400  x:3040   y:8129
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7500  x:3040   y:8151
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7600  x:3034   y:9121
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7700  x:3028   y:7143
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7800  x:3029   y:9687
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:7900  x:3029   y:10102
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8000  x:3029   y:8207
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8100  x:3024   y:8465
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8200  x:3024   y:9548
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8300  x:3034   y:8144
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8400  x:3036   y:10219
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8500  x:4051   y:7263
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8600  x:4570   y:7492
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8700  x:3024   y:8627
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8800  x:3021   y:9255
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:8900  x:3024   y:9687
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9000  x:3034   y:8260
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9100  x:3019   y:10534
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9200  x:3029   y:9445
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9300  x:3022   y:10162
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9400  x:3028   y:10209
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9500  x:3028   y:9948
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9600  x:3017   y:9624
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9700  x:3017   y:9640
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9800  x:3017   y:9681
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:9900  x:5955   y:9990
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10000  x:3026   y:8671
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10100  x:3029   y:8046
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10200  x:3025   y:9205
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10300  x:3034   y:8079
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10400  x:3040   y:9272
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10500  x:3040   y:9211
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10600  x:3026   y:10282
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10700  x:3039   y:10096
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10800  x:3024   y:8154
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:10900  x:3036   y:6651
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11000  x:3039   y:10004
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11100  x:3020   y:8503
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11200  x:3018   y:10054
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11300  x:3026   y:9709
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11400  x:1718   y:10670
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11500  x:3035   y:10123
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11600  x:3043   y:10038
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11700  x:128   y:853
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11800  x:3027   y:7893
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:11900  x:4891   y:8507
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12000  x:3038   y:10122
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12100  x:3033   y:9953
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12200  x:3024   y:10608
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12300  x:691   y:3048
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12400  x:3030   y:10233
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12500  x:3036   y:7923
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12600  x:3036   y:8978
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12700  x:3015   y:10480
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12800  x:4605   y:7416
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:12900  x:3034   y:8772
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13000  x:3034   y:8718
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13100  x:4603   y:7405
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13200  x:3038   y:9500
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13300  x:3020   y:10182
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13400  x:3017   y:10280
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13500  x:3039   y:9502
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13600  x:3018   y:10100
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13700  x:3020   y:10135
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13800  x:310   y:842
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:13900  x:3018   y:10180
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14000  x:3030   y:10197
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14100  x:3032   y:8086
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14200  x:3016   y:10088
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14300  x:3037   y:9879
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14400  x:3021   y:8901
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14500  x:3017   y:10187
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14600  x:3038   y:8159
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14700  x:326   y:832
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14800  x:6020   y:8795
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:14900  x:3027   y:9679
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15000  x:3035   y:8591
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15100  x:2419   y:2125
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15200  x:3042   y:7226
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15300  x:3023   y:8204
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15400  x:3039   y:9329
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15500  x:3033   y:9541
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15600  x:3027   y:9548
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15700  x:3024   y:10206
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15800  x:3032   y:8400
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:15900  x:3029   y:7672
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16000  x:3023   y:8131
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16100  x:3017   y:8027
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16200  x:3027   y:9409
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16300  x:3045   y:7848
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16400  x:3020   y:8749
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16500  x:4493   y:7585
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16600  x:3038   y:9092
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16700  x:3016   y:6606
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16800  x:3038   y:8066
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:16900  x:3034   y:7549
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17000  x:3020   y:8887
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17100  x:3033   y:9703
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17200  x:3030   y:7213
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17300  x:3035   y:8172
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17400  x:3030   y:9315
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17500  x:3033   y:10279
+2015-10-15 23:49:50 INFO  VDSAnalysis:369 - Aggregating pixel Num:17600  x:3040   y:7460
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:17700  x:3042   y:6619
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:17800  x:3043   y:8682
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:17900  x:6359   y:8466
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18000  x:3031   y:9681
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18100  x:5998   y:9366
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18200  x:3026   y:9035
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18300  x:3031   y:8154
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18400  x:3027   y:8098
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18500  x:3019   y:9518
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18600  x:3043   y:7218
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18700  x:3032   y:7717
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18800  x:3031   y:9728
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:18900  x:3057   y:6108
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19000  x:3044   y:8162
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19100  x:3019   y:9675
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19200  x:3035   y:9563
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19300  x:3040   y:10190
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19400  x:3019   y:8602
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19500  x:4448   y:7470
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19600  x:5182   y:9273
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19700  x:3034   y:9930
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19800  x:3035   y:9258
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:19900  x:3034   y:9945
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20000  x:3015   y:10243
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20100  x:4889   y:8501
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20200  x:3020   y:10271
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20300  x:3043   y:9724
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20400  x:3031   y:9239
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20500  x:3031   y:8557
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20600  x:3037   y:10165
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20700  x:3018   y:7111
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20800  x:3039   y:8142
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:20900  x:3019   y:8889
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21000  x:3030   y:7875
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21100  x:3016   y:10610
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21200  x:3035   y:9000
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21300  x:3025   y:7984
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21400  x:3035   y:9083
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21500  x:3039   y:8458
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21600  x:3042   y:9629
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21700  x:3031   y:9468
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21800  x:3035   y:9154
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:21900  x:3035   y:7697
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:22000  x:6023   y:8789
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:22100  x:3016   y:10514
+2015-10-15 23:49:51 INFO  VDSAnalysis:369 - Aggregating pixel Num:22200  x:4572   y:7471
+2015-10-15 23:49:55 INFO  VDSAnalysis:369 - Aggregating pixel Num:100  x:3018   y:9959
+2015-10-15 23:49:55 INFO  VDSAnalysis:369 - Aggregating pixel Num:200  x:2525   y:9689
+2015-10-15 23:49:55 INFO  VDSAnalysis:369 - Aggregating pixel Num:300  x:2849   y:10624
+2015-10-15 23:49:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:400  x:7287   y:9437
+2015-10-15 23:49:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:500  x:3041   y:8591
+2015-10-15 23:49:56 INFO  VDSAnalysis:369 - Aggregating pixel Num:600  x:2491   y:5546
+2015-10-15 23:49:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:700  x:3044   y:9692
+2015-10-15 23:49:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:800  x:3018   y:9850
+2015-10-15 23:49:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:900  x:3917   y:6792
+2015-10-15 23:49:57 INFO  VDSAnalysis:369 - Aggregating pixel Num:1000  x:3039   y:8601
+2015-10-15 23:49:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1100  x:3016   y:8225
+2015-10-15 23:49:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1200  x:103   y:827
+2015-10-15 23:49:58 INFO  VDSAnalysis:369 - Aggregating pixel Num:1300  x:7277   y:9432
+2015-10-15 23:49:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1400  x:2317   y:5358
+2015-10-15 23:49:59 INFO  VDSAnalysis:369 - Aggregating pixel Num:1500  x:3601   y:6616
+2015-10-15 23:50:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:1600  x:3615   y:10265
+2015-10-15 23:50:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:1700  x:3022   y:10629
+2015-10-15 23:50:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:1800  x:3905   y:6789
+2015-10-15 23:50:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:1900  x:3028   y:8096
+2015-10-15 23:50:00 INFO  VDSAnalysis:369 - Aggregating pixel Num:2000  x:3323   y:9609
+2015-10-15 23:50:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2100  x:3041   y:8462
+2015-10-15 23:50:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2200  x:3025   y:9771
+2015-10-15 23:50:01 INFO  VDSAnalysis:369 - Aggregating pixel Num:2300  x:3018   y:9518
+2015-10-15 23:50:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:2400  x:3041   y:8167
+2015-10-15 23:50:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:2500  x:3835   y:10544
+2015-10-15 23:50:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:2600  x:7402   y:9876
+2015-10-15 23:50:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:2700  x:3036   y:9140
+2015-10-15 23:50:02 INFO  VDSAnalysis:369 - Aggregating pixel Num:2800  x:3034   y:10165
+2015-10-15 23:50:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:2900  x:7321   y:9428
+2015-10-15 23:50:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3000  x:5228   y:10647
+2015-10-15 23:50:03 INFO  VDSAnalysis:369 - Aggregating pixel Num:3100  x:2417   y:5551
+2015-10-15 23:50:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:3200  x:3337   y:9553
+2015-10-15 23:50:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:3300  x:3889   y:6946
+2015-10-15 23:50:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:3400  x:3018   y:9767
+2015-10-15 23:50:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:3500  x:3913   y:6789
+2015-10-15 23:50:04 INFO  VDSAnalysis:369 - Aggregating pixel Num:3600  x:3559   y:10256
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:3700  x:3025   y:9940
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:3800  x:2819   y:9645
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:3900  x:3019   y:8197
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:4000  x:3018   y:9647
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:4100  x:3044   y:8535
+2015-10-15 23:50:05 INFO  VDSAnalysis:369 - Aggregating pixel Num:4200  x:3835   y:10461
+2015-10-15 23:50:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:4300  x:3479   y:9638
+2015-10-15 23:50:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:4400  x:3466   y:10283
+2015-10-15 23:50:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:4500  x:6024   y:8786
+2015-10-15 23:50:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:4600  x:2623   y:9938
+2015-10-15 23:50:06 INFO  VDSAnalysis:369 - Aggregating pixel Num:4700  x:2455   y:5433
+2015-10-15 23:50:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:4800  x:4250   y:9530
+2015-10-15 23:50:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:4900  x:3036   y:9555
+2015-10-15 23:50:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:5000  x:2785   y:5444
+2015-10-15 23:50:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:5100  x:3015   y:9909
+2015-10-15 23:50:07 INFO  VDSAnalysis:369 - Aggregating pixel Num:5200  x:3021   y:9615
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5300  x:3040   y:9412
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5400  x:2207   y:5706
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5500  x:3015   y:9601
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5600  x:3036   y:10164
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5700  x:3018   y:9277
+2015-10-15 23:50:08 INFO  VDSAnalysis:369 - Aggregating pixel Num:5800  x:2309   y:5744
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:5900  x:3040   y:9779
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6000  x:3034   y:9003
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6100  x:3036   y:9259
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6200  x:3015   y:9707
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6300  x:3222   y:9521
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6400  x:3029   y:9101
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6500  x:3021   y:9419
+2015-10-15 23:50:09 INFO  VDSAnalysis:369 - Aggregating pixel Num:6600  x:3036   y:10084
+2015-10-15 23:50:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:6700  x:2329   y:5361
+2015-10-15 23:50:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:6800  x:3040   y:9634
+2015-10-15 23:50:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:6900  x:3402   y:9513
+2015-10-15 23:50:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:7000  x:3029   y:10127
+2015-10-15 23:50:10 INFO  VDSAnalysis:369 - Aggregating pixel Num:7100  x:3022   y:10397
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7200  x:3444   y:9610
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7300  x:3040   y:9110
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7400  x:3036   y:9946
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7500  x:3040   y:9054
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7600  x:1999   y:10715
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7700  x:5246   y:8780
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7800  x:3036   y:10254
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:7900  x:3635   y:10285
+2015-10-15 23:50:11 INFO  VDSAnalysis:369 - Aggregating pixel Num:8000  x:2798   y:5441
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8100  x:3028   y:10189
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8200  x:2480   y:5553
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8300  x:3494   y:10295
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8400  x:3028   y:8467
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8500  x:3034   y:9541
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8600  x:3545   y:10274
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8700  x:3022   y:10099
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8800  x:3524   y:10267
+2015-10-15 23:50:12 INFO  VDSAnalysis:369 - Aggregating pixel Num:8900  x:3880   y:6798
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9000  x:3123   y:9396
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9100  x:3029   y:9586
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9200  x:3042   y:8044
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9300  x:4573   y:7472
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9400  x:3034   y:9558
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9500  x:3026   y:10080
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9600  x:3026   y:10049
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9700  x:2333   y:5353
+2015-10-15 23:50:13 INFO  VDSAnalysis:369 - Aggregating pixel Num:9800  x:3280   y:10293
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:9900  x:3017   y:8676
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10000  x:7331   y:9933
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10100  x:3017   y:8639
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10200  x:7296   y:9441
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10300  x:3718   y:10637
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10400  x:2254   y:5733
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10500  x:3027   y:6665
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10600  x:3489   y:9611
+2015-10-15 23:50:14 INFO  VDSAnalysis:369 - Aggregating pixel Num:10700  x:3039   y:10188
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:10800  x:7465   y:9899
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:10900  x:3039   y:10134
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11000  x:2903   y:10622
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11100  x:3038   y:9397
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11200  x:3043   y:6386
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11300  x:4282   y:9623
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11400  x:7283   y:9435
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11500  x:3024   y:9455
+2015-10-15 23:50:15 INFO  VDSAnalysis:369 - Aggregating pixel Num:11600  x:3024   y:9485
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:11700  x:3015   y:10570
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:11800  x:3026   y:9535
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:11900  x:2323   y:5412
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12000  x:3038   y:9407
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12100  x:3017   y:8320
+2015-10-15 23:50:16 INFO  VDSAnalysis:369 - Aggregating pixel Num:12200  x:3037   y:9701
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12300  x:3034   y:6442
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12400  x:2337   y:9918
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12500  x:3034   y:8613
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12600  x:3015   y:10427
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12700  x:3026   y:10467
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12800  x:3035   y:8618
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:12900  x:2473   y:9810
+2015-10-15 23:50:17 INFO  VDSAnalysis:369 - Aggregating pixel Num:13000  x:3043   y:8096
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13100  x:5252   y:8343
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13200  x:3299   y:10355
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13300  x:1742   y:5502
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13400  x:3207   y:6083
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13500  x:2419   y:2129
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13600  x:4450   y:10473
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13700  x:3017   y:8143
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13800  x:3728   y:10617
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:13900  x:3036   y:7746
+2015-10-15 23:50:18 INFO  VDSAnalysis:369 - Aggregating pixel Num:14000  x:3023   y:9402
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14100  x:3406   y:9508
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14200  x:3355   y:10374
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14300  x:3529   y:10277
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14400  x:3228   y:9502
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14500  x:3021   y:7670
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14600  x:3502   y:10291
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14700  x:3024   y:9060
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14800  x:3023   y:9562
+2015-10-15 23:50:19 INFO  VDSAnalysis:369 - Aggregating pixel Num:14900  x:3038   y:9087
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15000  x:3554   y:10278
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15100  x:3020   y:7742
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15200  x:3033   y:9765
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15300  x:3372   y:9533
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15400  x:3372   y:9596
+2015-10-15 23:50:20 INFO  VDSAnalysis:369 - Aggregating pixel Num:15500  x:3635   y:9698
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:15600  x:2255   y:5745
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:15700  x:3033   y:10292
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:15800  x:3959   y:9828
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:15900  x:3950   y:10390
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16000  x:2497   y:5550
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16100  x:3030   y:7142
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16200  x:3030   y:9406
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16300  x:3035   y:8285
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16400  x:3040   y:7589
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16500  x:3038   y:7157
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16600  x:3042   y:7680
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16700  x:3185   y:9498
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16800  x:3032   y:10284
+2015-10-15 23:50:21 INFO  VDSAnalysis:369 - Aggregating pixel Num:16900  x:2505   y:9802
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17000  x:3030   y:9505
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17100  x:3033   y:10059
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17200  x:3023   y:9209
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17300  x:3043   y:8469
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17400  x:3032   y:10167
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17500  x:3030   y:9692
+2015-10-15 23:50:22 INFO  VDSAnalysis:369 - Aggregating pixel Num:17600  x:3030   y:9646
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:17700  x:2565   y:5271
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:17800  x:3023   y:9134
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:17900  x:3019   y:8679
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18000  x:4563   y:7465
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18100  x:3035   y:6474
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18200  x:4448   y:7467
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18300  x:4269   y:9677
+2015-10-15 23:50:23 INFO  VDSAnalysis:369 - Aggregating pixel Num:18400  x:3018   y:8952
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:18500  x:3414   y:9522
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:18600  x:3027   y:8577
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:18700  x:5612   y:10594
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:18800  x:3433   y:9591
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:18900  x:3556   y:10284
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19000  x:3019   y:8801
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19100  x:3042   y:9514
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19200  x:2022   y:863
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19300  x:3721   y:6768
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19400  x:2212   y:5471
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19500  x:3041   y:8906
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19600  x:3017   y:6610
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19700  x:2240   y:5728
+2015-10-15 23:50:24 INFO  VDSAnalysis:369 - Aggregating pixel Num:19800  x:3030   y:9118
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:19900  x:3767   y:6567
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20000  x:7247   y:10149
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20100  x:3893   y:6768
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20200  x:3493   y:10281
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20300  x:3027   y:8713
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20400  x:3042   y:9783
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20500  x:7400   y:9877
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20600  x:3027   y:10518
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20700  x:3867   y:10592
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20800  x:3041   y:9652
+2015-10-15 23:50:25 INFO  VDSAnalysis:369 - Aggregating pixel Num:20900  x:5452   y:9781
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21000  x:3914   y:6815
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21100  x:3131   y:10367
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21200  x:3043   y:6554
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21300  x:3020   y:9054
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21400  x:3022   y:9535
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21500  x:3022   y:9574
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21600  x:3384   y:10369
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21700  x:313   y:880
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21800  x:2467   y:5540
+2015-10-15 23:50:26 INFO  VDSAnalysis:369 - Aggregating pixel Num:21900  x:4266   y:9639
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22000  x:7304   y:9434
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22100  x:3608   y:10288
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22200  x:6254   y:9437
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22300  x:3403   y:9522
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22400  x:3025   y:10623
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22500  x:5170   y:9271
+2015-10-15 23:50:27 INFO  VDSAnalysis:369 - Aggregating pixel Num:22600  x:2345   y:5356
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:22700  x:3025   y:8982
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:22800  x:4711   y:9718
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:22900  x:3820   y:10558
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23000  x:3174   y:6100
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23100  x:3015   y:8491
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23200  x:3724   y:6780
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23300  x:2485   y:5536
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23400  x:3929   y:9190
+2015-10-15 23:50:28 INFO  VDSAnalysis:369 - Aggregating pixel Num:23500  x:3025   y:10328
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:23600  x:3020   y:9504
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:23700  x:2482   y:5536
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:23800  x:3909   y:6801
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:23900  x:7278   y:9434
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24000  x:2434   y:9982
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24100  x:2415   y:5497
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24200  x:7193   y:10471
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24300  x:3909   y:6778
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24400  x:3044   y:7191
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24500  x:2796   y:5450
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24600  x:1788   y:10688
+2015-10-15 23:50:29 INFO  VDSAnalysis:369 - Aggregating pixel Num:24700  x:3320   y:9597
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:24800  x:3016   y:9457
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:24900  x:3175   y:9502
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25000  x:3022   y:9670
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25100  x:3022   y:9640
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25200  x:3946   y:10401
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25300  x:2547   y:9654
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25400  x:3616   y:10294
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25500  x:2560   y:9637
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25600  x:7312   y:9436
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25700  x:7312   y:9433
+2015-10-15 23:50:30 INFO  VDSAnalysis:369 - Aggregating pixel Num:25800  x:3024   y:8918
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:25900  x:3024   y:8988
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26000  x:3017   y:9377
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26100  x:2508   y:9799
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26200  x:3350   y:10370
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26300  x:3023   y:10605
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26400  x:3027   y:9269
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26500  x:3113   y:2693
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26600  x:4042   y:9807
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26700  x:2775   y:9650
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26800  x:6497   y:8497
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:26900  x:3280   y:9675
+2015-10-15 23:50:31 INFO  VDSAnalysis:369 - Aggregating pixel Num:27000  x:2528   y:9783
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27100  x:6045   y:10506
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27200  x:3017   y:9178
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27300  x:3028   y:9593
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27400  x:4718   y:10631
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27500  x:3028   y:9500
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27600  x:3015   y:8266
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27700  x:3037   y:7670
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27800  x:3022   y:7039
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:27900  x:4296   y:9523
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:28000  x:3017   y:9314
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:28100  x:7328   y:9429
+2015-10-15 23:50:32 INFO  VDSAnalysis:369 - Aggregating pixel Num:28200  x:3041   y:9199
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28300  x:4493   y:9499
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28400  x:3844   y:10457
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28500  x:3283   y:9672
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28600  x:4429   y:9500
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28700  x:2831   y:10347
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28800  x:3922   y:9178
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:28900  x:3840   y:10470
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29000  x:4165   y:9745
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29100  x:3026   y:9982
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29200  x:127   y:852
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29300  x:3021   y:10592
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29400  x:3032   y:9967
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29500  x:3511   y:3226
+2015-10-15 23:50:33 INFO  VDSAnalysis:369 - Aggregating pixel Num:29600  x:3181   y:9513
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:29700  x:3037   y:9171
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:29800  x:4438   y:9680
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:29900  x:3491   y:9608
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30000  x:3017   y:9658
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30100  x:3328   y:9595
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30200  x:3610   y:10265
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30300  x:2799   y:5376
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30400  x:2244   y:5457
+2015-10-15 23:50:34 INFO  VDSAnalysis:369 - Aggregating pixel Num:30500  x:3017   y:9700
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:30600  x:3017   y:9792
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:30700  x:2417   y:2129
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:30800  x:3039   y:9666
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:30900  x:3390   y:9644
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31000  x:5948   y:9992
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31100  x:3039   y:9629
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31200  x:3884   y:6795
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31300  x:3018   y:10049
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31400  x:2676   y:9608
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31500  x:2429   y:9979
+2015-10-15 23:50:35 INFO  VDSAnalysis:369 - Aggregating pixel Num:31600  x:3024   y:8059
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:31700  x:3020   y:8680
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:31800  x:3802   y:6777
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:31900  x:4986   y:8409
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32000  x:4375   y:9628
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32100  x:3722   y:6773
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32200  x:3024   y:8088
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32300  x:3030   y:10231
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32400  x:3039   y:9433
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32500  x:4482   y:9512
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32600  x:3729   y:6965
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32700  x:2321   y:5592
+2015-10-15 23:50:36 INFO  VDSAnalysis:369 - Aggregating pixel Num:32800  x:4303   y:9494
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:32900  x:3016   y:10181
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33000  x:2479   y:5539
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33100  x:3039   y:9546
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33200  x:3033   y:8219
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33300  x:3020   y:8441
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33400  x:3018   y:10158
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33500  x:3026   y:8182
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33600  x:3030   y:10181
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33700  x:3026   y:8105
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33800  x:3024   y:10156
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:33900  x:2658   y:9643
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:34000  x:3038   y:8195
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:34100  x:3039   y:9238
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:34200  x:3027   y:9641
+2015-10-15 23:50:37 INFO  VDSAnalysis:369 - Aggregating pixel Num:34300  x:3276   y:9629
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34400  x:3032   y:8623
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34500  x:3668   y:9706
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34600  x:3622   y:6957
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34700  x:2327   y:5382
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34800  x:3026   y:8334
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:34900  x:3039   y:9285
+2015-10-15 23:50:38 INFO  VDSAnalysis:369 - Aggregating pixel Num:35000  x:3027   y:9580
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35100  x:3833   y:10472
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35200  x:4225   y:9758
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35300  x:3638   y:9696
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35400  x:3035   y:9915
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35500  x:4328   y:9591
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35600  x:3821   y:10535
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35700  x:2470   y:5552
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35800  x:2826   y:6551
+2015-10-15 23:50:39 INFO  VDSAnalysis:369 - Aggregating pixel Num:35900  x:3024   y:10044
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36000  x:3032   y:8598
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36100  x:2806   y:5450
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36200  x:3034   y:7567
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36300  x:3725   y:10652
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36400  x:2420   y:5303
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36500  x:3030   y:8209
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36600  x:3043   y:7018
+2015-10-15 23:50:40 INFO  VDSAnalysis:369 - Aggregating pixel Num:36700  x:2413   y:5542
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:36800  x:2659   y:9659
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:36900  x:3035   y:7633
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37000  x:3642   y:9699
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37100  x:2417   y:5498
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37200  x:3555   y:10268
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37300  x:3406   y:10485
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37400  x:3016   y:9917
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37500  x:3035   y:9457
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37600  x:3031   y:9778
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37700  x:3037   y:8955
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37800  x:3019   y:9603
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:37900  x:3040   y:10156
+2015-10-15 23:50:41 INFO  VDSAnalysis:369 - Aggregating pixel Num:38000  x:3030   y:8118
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38100  x:3357   y:10268
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38200  x:3261   y:9517
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38300  x:3441   y:10389
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38400  x:3019   y:9729
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38500  x:3430   y:10259
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38600  x:3031   y:9157
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38700  x:3016   y:7561
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38800  x:3531   y:10271
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:38900  x:3020   y:8171
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:39000  x:3041   y:7933
+2015-10-15 23:50:42 INFO  VDSAnalysis:369 - Aggregating pixel Num:39100  x:3744   y:6767
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39200  x:203   y:740
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39300  x:3475   y:9620
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39400  x:3834   y:10504
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39500  x:2428   y:9996
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39600  x:3031   y:9305
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39700  x:3042   y:8165
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39800  x:3038   y:8757
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:39900  x:3016   y:10677
+2015-10-15 23:50:43 INFO  VDSAnalysis:369 - Aggregating pixel Num:40000  x:2836   y:10628
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40100  x:3819   y:10510
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40200  x:3836   y:10505
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40300  x:3035   y:9170
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40400  x:2407   y:9995
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40500  x:3440   y:10390
+2015-10-15 23:50:44 INFO  VDSAnalysis:369 - Aggregating pixel Num:40600  x:2810   y:5372
