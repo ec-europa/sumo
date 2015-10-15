@@ -26,6 +26,7 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.util.Constant;
+import org.geoimage.viewer.util.ImageTiler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -89,13 +90,26 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
     }
 
     private void addImage(String[] args) {
-
         // set the done flag to false
         this.done = false;
-
-        //part used by the batch mode
-        if (args.length == 3) {
-            String imagefile = "";
+        boolean tileBuff=false;
+        
+        String imagefile = "";
+        if(args.length!=3){//menu open image
+        	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
+                if (fileChooser == null) {
+                    fileChooser = new JFileChooser(lastDirectory);
+                }
+            } else {
+                fileChooser = new JFileChooser(lastDirectory);
+            }
+            int returnVal = fileChooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
+                imagefile=fileChooser.getSelectedFile().getAbsolutePath();
+            }   
+            tileBuff=args[1].equals("true"); 
+        }else{ //menu open last image
             String imagename = args[1].split("=")[1];
             final String imagenamefile = imagename.substring(imagename.lastIndexOf(File.separator) + 1);
             // check if a wildcard character is used
@@ -113,104 +127,58 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
             } else {
                 imagefile = imagename;
             }
-            GeoImageReader temp = null;
-            List<GeoImageReader> tempList = null;
-            if (args[2].split("=")[1].equals("true")) {
-                GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(imagefile).get(0);
-                temp = new TiledBufferedImage(new File(CacheManager.getRootCacheInstance().getPath(), gir1.getFilesList()[0] + "/data"), gir1);
-                if(temp!=null){
-                	tempList=new ArrayList<GeoImageReader>();
-                	tempList.add(temp);
-                }
-            } else {
-            	tempList = GeoImageReaderFactory.createReaderForName(imagefile);
-            	temp=tempList.get(0);
+            tileBuff=args[2].split("=")[1].equals("true");
+        }    
+        GeoImageReader temp = null;
+        List<GeoImageReader> tempList = null;
+        
+        if (tileBuff) {
+            GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(imagefile).get(0);
+            temp = new TiledBufferedImage(new File(CacheManager.getRootCacheInstance().getPath(), gir1.getFilesList()[0] + "/data"), gir1);
+            if(temp!=null){
+            	tempList=new ArrayList<GeoImageReader>();
+            	tempList.add(temp);
             }
-            // save the file name in the preferences
-            SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
-
-            if (tempList==null||tempList.isEmpty()) {
-                this.done = true;
-                this.setMessage("Could not open image file");
-                final String filename = args[1].split("=")[1];
-                errorWindow("Could not open image file\n" + filename);
-            } else {
-            	for(int i=0;i<tempList.size();i++){
-            		temp=tempList.get(i);
-	             
-            		ImageLayer newImage = new ImageLayer(temp);
-	                SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
-	                try {
-	                    Thread.sleep(5000);
-	                } catch (InterruptedException ex) {
-	                	logger.error(ex.getMessage(),ex);
-	                }
-            	}
-            	try {
-                    SumoPlatform.getApplication().refresh();
-                } catch (Exception ex) {
+        } else {
+        	tempList = GeoImageReaderFactory.createReaderForName(imagefile);
+        	temp=tempList.get(0);
+        }
+        // save the file name in the preferences
+        SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
+        SumoPlatform.getApplication().getGeoContext().setX(0);
+        SumoPlatform.getApplication().getGeoContext().setY(0);
+        
+        if (tempList==null||tempList.isEmpty()) {
+            this.done = true;
+            this.setMessage("Could not open image file");
+            final String filename = args[1].split("=")[1];
+            errorWindow("Could not open image file\n" + filename);
+        } else {
+        	for(int i=0;i<tempList.size();i++){
+        		temp=tempList.get(i);
+             
+        		//ImageTiler it = new ImageTiler(temp);
+                //it.generateAllTiles();
+        		
+        		ImageLayer newImage = new ImageLayer(temp);
+                SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
                 	logger.error(ex.getMessage(),ex);
                 }
-            	SumoPlatform.getApplication().getConsoleLayer().execute("home");
+        	}
+        	try {
+                SumoPlatform.getApplication().refresh();
+            } catch (Exception ex) {
+            	logger.error(ex.getMessage(),ex);
             }
-
-        } else {
-            //part used by the graphical interface
-            if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
-                if (fileChooser == null) {
-                    fileChooser = new JFileChooser(lastDirectory);
-                }
-            } else {
-                fileChooser = new JFileChooser(lastDirectory);
-            }
-
-            int returnVal = fileChooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
-                GeoImageReader temp = null;
-                List<GeoImageReader> tempList = null;
-                if (args[1].equals("true")) {
-                    GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(fileChooser.getSelectedFile().getAbsolutePath()).get(0);
-                    temp = new TiledBufferedImage(new File(CacheManager.getCacheInstance(gir1.getDisplayName(0)).getPath(), gir1.getFilesList()[0] + "/data"), gir1);
-                    if(temp!=null){
-                    	tempList=new ArrayList<GeoImageReader>();
-                    	tempList.add(temp);
-                    }
-                } else {
-                	tempList = GeoImageReaderFactory.createReaderForName(fileChooser.getSelectedFile().getAbsolutePath());
-                	temp=tempList.get(0);
-                }
-                if (temp == null) {
-                    done = true;
-                }
-                for(int i=0;i<tempList.size();i++){
-            		temp=tempList.get(i);
-	                // save the file name in the preferences
-	                SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
-
-	                SumoPlatform.getApplication().getGeoContext().setX(0);
-	                SumoPlatform.getApplication().getGeoContext().setY(0);
-	                //Platform.getGeoContext().setZoom(temp.getWidth() / Platform.getGeoContext().getWidth() + 1);
-	                ImageLayer newImage = new ImageLayer( temp);
-	                LayerManager.getIstanceManager().addLayer(newImage);
-	                try {
-	                    Thread.sleep(1000);
-	                } catch (InterruptedException ex) {
-	                	logger.error(ex.getMessage(),ex);
-	                }
-	                SumoPlatform.getApplication().getConsoleLayer().execute("home");
-
-	                try {
-	                    SumoPlatform.refresh();
-	                } catch (Exception ex) {
-	                	logger.error(ex.getMessage(),ex);
-	                }
-                }
-            } else {
-                done = true;
-            }
+        	SumoPlatform.getApplication().getConsoleLayer().execute("home");
         }
+        done = true;
     }
+    
+    
     private void addThumbnails(String[] args) {
     	 SumoXmlIOOld old=null;
         if (args.length == 2) {

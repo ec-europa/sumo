@@ -74,7 +74,7 @@ public class GeoImageReaderFactory {
         	File f=new File(file);
 	        String parent=f.getParent();
 	        //le cosmosky possono avere immagini multiple (mosaic)
-	        if(parent.contains("CSKS")||file.contains("CSKS")){
+	        if(parent!=null&&(parent.contains("CSKS")||file.contains("CSKS"))){
 	    		H5File h5file = new H5File(file, H5File.READ);
 	    		H5Group group=((H5Group)h5file.get("/"));
 	        	List<HObject>hObjs=group.getMemberList();

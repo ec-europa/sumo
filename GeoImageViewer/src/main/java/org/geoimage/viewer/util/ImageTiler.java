@@ -9,7 +9,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.eclipse.swt.internal.C;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.core.layers.image.Cache;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +24,12 @@ public class ImageTiler {
 
     private GeoImageReader gir;
     
-    private String cachePath;
     private int xpadding;
     private int ypadding;
     private int levels;
 
     public ImageTiler(GeoImageReader gir) {
         this.gir = gir;
-        this.cachePath = gir.getFilesList()[0];
         levels = (int) (Math.log(Math.max(gir.getWidth() / Constant.TILE_SIZE_IMG_LAYER, gir.getHeight() / Constant.TILE_SIZE_IMG_LAYER)) / Math.log(2)) + 1;
         xpadding = ((1 << levels) * Constant.OVERVIEW_SIZE - gir.getWidth()) / 2;
         ypadding = ((1 << levels) * Constant.OVERVIEW_SIZE - gir.getHeight()) / 2;
@@ -37,17 +37,19 @@ public class ImageTiler {
 
     public void generateTiles(int band) {
         logger.info((1 << levels) + ";" + xpadding + "--" + ypadding);
+        
+        Cache cache=CacheManager.getCacheInstance(gir.getDisplayName(band));
         int powerI = 1;
         int numI = 1 << levels;
         for (int i = levels - 1; i > -1; i--) {
             for (int h = 0; h < powerI; h++) {
                 for (int w = 0; w < powerI; w++) {
-                    String file = cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png";
+                    String file = cache.getPath() + "/" + i + "/" + band + "/" + w + "_" + h + ".png";
                     if (!CacheManager.getCacheInstance(gir.getDisplayName(band)).contains(file)) {
                         try {
                             int[] t = gir.readAndDecimateTile(w * numI * Constant.TILE_SIZE_IMG_LAYER - xpadding, h * numI * Constant.TILE_SIZE_IMG_LAYER - ypadding, 
                             		numI * Constant.TILE_SIZE_IMG_LAYER, numI * Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER,gir.getWidth(),gir.getHeight(), true,band);
-                            File f = CacheManager.getCacheInstance(gir.getDisplayName(band)).newFile(cachePath + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
+                            File f = CacheManager.getCacheInstance(gir.getDisplayName(band)).newFile(cache.getPath() + "/" + i + "/" + band + "/" + w + "_" + h + ".png");
                             ImageIO.write(createImage(t, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, gir), "png", f);
 
                         } catch (IOException ex) {
@@ -60,7 +62,15 @@ public class ImageTiler {
             powerI <<= 1;
         }
     }
-
+    public void generateAllTiles() {
+    	int nband=gir.getNBand();
+    	for(int i=0;i<nband;i++){
+    		generateTiles(i);
+    	}
+    }
+    
+    
+    
     public static BufferedImage createImage(int[]tile, int width, int height, GeoImageReader gimage) {
         BufferedImage bufferedImage = new BufferedImage(width, height, gimage.getType(true));
         WritableRaster raster = bufferedImage.getRaster();
@@ -104,13 +114,14 @@ public class ImageTiler {
     }
 
     private void saveLevels(Map<String, int[]> tiles, int L2, int line, int band) {
+    	Cache cache=CacheManager.getCacheInstance(gir.getDisplayName(band));
         for (int x = 0; x < L2 + 1; x++) {
             for (int l = 0; l < L2 + 1; l++) {
                 int posx = (x + xpadding) >> l;
                 int posy = (line + ypadding) >> l;
                 int[] temp = tiles.remove(l + "/" + posx + "/" + posy);
                 BufferedImage bi = createImage(temp, Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE, gir);
-                File f = new File(cachePath + "/" + l + "/" + band + "/" + posx + "_" + posy + ".png");
+                File f = new File(cache.getPath() + "/" + l + "/" + band + "/" + posx + "_" + posy + ".png");
                 try {
                     ImageIO.write(bi, "png", f);
                 } catch (IOException ex) {
