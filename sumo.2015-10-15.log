@@ -1,0 +1,109 @@
+2015-10-15 00:54:10 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 00:55:46 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:17:45 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:32:43 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:33:01 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:33:27 ERROR GeoImageReaderFactory:151 - Error reading:
+java.lang.NullPointerException
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:77)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:142)
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:76)
+	at org.geoimage.viewer.core.layers.ConsoleLayer.execute(ConsoleLayer.java:91)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.jButton1ActionPerformed(ActionDialog.java:217)
+	at org.geoimage.viewer.widget.dialog.ActionDialog.access$1(ActionDialog.java:198)
+	at org.geoimage.viewer.widget.dialog.ActionDialog$3.actionPerformed(ActionDialog.java:157)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:154)
+	at java.awt.WaitDispatchSupport$2.run(WaitDispatchSupport.java:182)
+	at java.awt.WaitDispatchSupport$4.run(WaitDispatchSupport.java:221)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.awt.WaitDispatchSupport.enter(WaitDispatchSupport.java:219)
+	at java.awt.Dialog.show(Dialog.java:1082)
+	at java.awt.Component.show(Component.java:1655)
+	at java.awt.Component.setVisible(Component.java:1607)
+	at java.awt.Window.setVisible(Window.java:1014)
+	at java.awt.Dialog.setVisible(Dialog.java:1005)
+	at org.geoimage.viewer.core.GeoImageViewerView$13.actionPerformed(GeoImageViewerView.java:1053)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3321)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+2015-10-15 01:33:36 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:35:43 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 01:46:47 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:04:52 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:11:40 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:13:01 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:16:40 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:20:55 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:26:27 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:30:07 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:31:43 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:33:30 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:39:39 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
+2015-10-15 02:40:14 INFO  GeoImageReaderFactory:118 - Successfully reading {0} as {1}...
