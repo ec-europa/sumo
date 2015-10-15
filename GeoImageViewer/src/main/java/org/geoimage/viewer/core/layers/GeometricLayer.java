@@ -310,6 +310,8 @@ public class GeometricLayer implements Cloneable{
 	                					}
 	                					cl.closeRing();
 	                					Geometry newGeom=gf.createPolygon(cl.toCoordinateArray());
+	                					if(!newGeom.isValid())
+	                						newGeom=TopologyPreservingSimplifier.simplify(newGeom, 0.0001);
 	                					g=newGeom.buffer(0);
 	                				}else{
 	                					g=b0;
