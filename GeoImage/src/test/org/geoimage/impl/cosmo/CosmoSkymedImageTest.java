@@ -17,7 +17,7 @@ import junit.framework.TestCase;
  * @version $Revision$
  */
 public class CosmoSkymedImageTest extends TestCase {
-	private static CosmoSkymedImage reader=null;
+	private static AbstractCosmoSkymedImage reader=null;
 	/**
 	 * Construct new test instance
 	 *
@@ -45,7 +45,7 @@ public class CosmoSkymedImageTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		reader=(CosmoSkymedImage) GeoImageReaderFactory.createReaderForName(
+		reader=(AbstractCosmoSkymedImage) GeoImageReaderFactory.createReaderForName(
 				"F:\\SumoImgs\\CSK\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903.h5").get(0);
 		reader.initialise();
 	}

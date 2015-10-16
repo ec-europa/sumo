@@ -12,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.cosmo.CosmoSkymedImage;
+import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.configuration.PlatformConfiguration;
@@ -187,8 +187,8 @@ public abstract class AbstractBatchAnalysis {
     		   
     			
     		   
-				if(reader.isContainsMultipleImage() && reader instanceof CosmoSkymedImage){
-					outfileName=outfileName.append("_").append(((CosmoSkymedImage)reader).getGroup());
+				if(reader.isContainsMultipleImage() && reader instanceof AbstractCosmoSkymedImage){
+					outfileName=outfileName.append("_").append(((AbstractCosmoSkymedImage)reader).getGroup());
 				}
 
     		   l.save(outfileName.toString()+"_OLD",ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
