@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.impl.cosmo.CosmoSkymedImage;
+import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
+import org.geoimage.impl.cosmo.CosmoSkyFactory;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
@@ -82,19 +83,22 @@ public class GeoImageReaderFactory {
 
 	        	while(it.hasNext()){
 	        		HObject obj=it.next();
-	        		CosmoSkymedImage cosmo;
-	        		if(obj.getName().equals("MBI"))
-	        			cosmo=new CosmoSkymedImage(f,obj.getName(),null);
-	        		else
-	        			cosmo=new CosmoSkymedImage(f,obj.getName()+"/SBI",obj.getName());
-
-	                if (cosmo.initialise()) {
-	                	girList.add(cosmo);
-	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,cosmo.getClass()});
-	                }
-	                if(girList.size()>1)
-	                	cosmo.setContainsMultipleImage(true);
-	                
+	        		AbstractCosmoSkymedImage cosmo=null;
+	        		if(obj.getName().equals("MBI")){
+	        			cosmo=CosmoSkyFactory.instanceCosmoSkymed(h5file,obj.getName(),null);
+	        		}else{
+	        			//complex images
+	        			if(h5file.get(obj.getName()+"/SBI")!=null)
+	        				cosmo=CosmoSkyFactory.instanceCosmoSkymed(h5file,obj.getName()+"/SBI",obj.getName());
+	        		}	
+	        		if(cosmo!=null){
+		                if (cosmo.initialise()) {
+		                	girList.add(cosmo);
+		                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,cosmo.getClass()});
+		                }
+		                if(girList.size()>1)
+		                	cosmo.setContainsMultipleImage(true);
+	        		}
 	        	}
 	        }else if(parent.contains("S1A")||parent.contains("S1B")){//sentinel 1
 	        	final SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());
