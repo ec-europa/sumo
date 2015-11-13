@@ -145,15 +145,17 @@ public class AlosProperties extends Properties {
 	 */
 	private void init(){
 		imageNames=new ArrayList<String>();
+		polarizations=new ArrayList<String>();
 		Enumeration<?> vals=this.propertyNames();
 		
 		while(vals.hasMoreElements()){
 			String propName=(String)vals.nextElement();
 			//search the image file names
 			if(propName.startsWith(PROP_L1_PRODUCT_FILE_NAMES)){
-				if(propName.endsWith("tif")||propName.endsWith("5RUD")){
-					imageNames.add(propName);
-					polarizations.add(propName.substring(4,6));
+				String val=(String)get(propName);
+				if(val.endsWith("tif")||val.endsWith("5RUD")){
+					imageNames.add(val);
+					polarizations.add(val.substring(4,6));
 				}
 			}
 		}

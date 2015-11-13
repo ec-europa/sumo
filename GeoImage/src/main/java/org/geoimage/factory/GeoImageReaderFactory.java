@@ -138,7 +138,7 @@ public class GeoImageReaderFactory {
 	        		gir=new Radarsat1Image(f);
 	        	}else if(parent.contains("ASA_")){
 	        		gir=new EnvisatImage_SLC(f);
-	        	}else if(file.equalsIgnoreCase("summary.txt")){
+	        	}else if(new File(file).getName().equalsIgnoreCase("summary.txt")){
 	        		gir=new Alos(f);
 	        	}else{
 	        		return null;

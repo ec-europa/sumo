@@ -1,6 +1,8 @@
 package org.geoimage.impl.alos;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -26,6 +28,8 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
@@ -41,8 +45,9 @@ import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 public class Alos extends SarImageReader {
 	private Logger logger= LoggerFactory.getLogger(Alos.class);
 
-	
-	
+	protected int[] preloadedInterval = new int[]{0, 0};
+	protected short[] preloadedData;
+
 	private AlosProperties props=null;
 	private List<String> polarizations=null;
 	protected Map<String, TIFF> alosImages;
@@ -70,7 +75,7 @@ public class Alos extends SarImageReader {
 
 	@Override
 	public String[] getFilesList() {
-		return new String[]{manifestFile.getName()};
+		return new String[]{manifestFile.getAbsolutePath()};
 	}
 
 	@Override
@@ -92,7 +97,7 @@ public class Alos extends SarImageReader {
         	}
             
             String bandName=getBandName(0);
-            String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
+            //String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
         	super.pixelsize[0]=props.getPixelSpacing();
         	super.pixelsize[1]=props.getPixelSpacing();
 
@@ -180,7 +185,7 @@ public class Alos extends SarImageReader {
 
 	@Override
 	public String getBandName(int band) {
-		return polarizations.get(band);
+		return "HH";//polarizations.get(band);
 	}
 	
 	@Override
@@ -261,8 +266,33 @@ public class Alos extends SarImageReader {
 	
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
-		// TODO Auto-generated method stub
-		return null;
+		Rectangle rect = new Rectangle(x, y, width, height);
+        rect = rect.intersection(getImage(band).bounds);
+        int[] tile = new int[height * width];
+        if (rect.isEmpty()) {
+            return tile;
+        }
+
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.y*rect.height-1)) {
+            preloadLineTile(rect.y, rect.height,band);
+        }else{
+        	//logger.debug("using preloaded data");
+        }
+
+        int yOffset = getImage(band).xSize;
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+                int temp = i * yOffset + j + rect.x;
+                try{
+                	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                }catch(ArrayIndexOutOfBoundsException e ){
+                	logger.warn("readTile function:"+e.getMessage());
+                }	
+            }
+            }
+        return tile;
 	}
 
 	@Override
@@ -274,8 +304,43 @@ public class Alos extends SarImageReader {
 	
 
 	@Override
-	public void preloadLineTile(int y, int height, int band) {
-		// TODO Auto-generated method stub
+	public void preloadLineTile(int y, int length, int band) {
+		if (y < 0) {
+            return;
+        }
+        preloadedInterval = new int[]{y, y + length};
+        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
+        
+        TIFF tiff=getImage(band);
+        rect=tiff.bounds.intersection(rect);
+        
+        try {
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+            tirp.setSourceRegion(rect);
+        	BufferedImage bi=null;
+        	TIFFImageReader reader=tiff.reader;
+        	try{
+
+        			bi=reader.read(0, tirp);
+
+        	}catch(Exception e){
+        		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
+        		try {
+    			    Thread.sleep(100);                 
+    			} catch(InterruptedException exx) {
+    			    Thread.currentThread().interrupt();
+    			}
+        		bi=reader.read(0, tirp);
+        	}	
+        	WritableRaster raster=bi.getRaster();
+        	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(),ex);
+        }finally{
+        	//tiff.reader.addIIOReadProgressListener(this);
+        	//readComplete=false;
+        	
+        }
 
 	}
 
