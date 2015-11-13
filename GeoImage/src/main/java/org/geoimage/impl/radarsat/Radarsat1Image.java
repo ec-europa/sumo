@@ -78,13 +78,6 @@ public class Radarsat1Image extends SarImageReader {
     
 
 
-    /**
-     *  Gets the access rights:<br>&quot;r&quot; = read only<br>&quot;rw&quot; = read/write
-     */
-    @Override
-    public String getAccessRights() {
-        return "r";
-    }
 
     @Override
     public String[] getFilesList() {

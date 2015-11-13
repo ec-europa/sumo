@@ -335,11 +335,6 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public String getAccessRights() {
-        return "r";
-    }
-
-    @Override
     public String[] getFilesList() {
         return files;
     }
