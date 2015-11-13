@@ -159,11 +159,6 @@ public abstract class Sentinel1 extends SarImageReader {
     
 
     @Override
-    public String getAccessRights() {
-        return "r";
-    }
-
-    @Override
     public String[] getFilesList() {
         return files;
     }

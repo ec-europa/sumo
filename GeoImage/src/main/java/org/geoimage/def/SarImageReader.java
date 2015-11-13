@@ -77,6 +77,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 		this.manifestFile = manifestFile;
 	}
 	
+	public double[] getPixelsize() {
+		return pixelsize;
+	}
+	
 	public String getImId(){
 		String imId="";
 		try{
@@ -102,8 +106,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public abstract String getDisplayName(int band); 
 	@Override
     public abstract int getWidth();
-	@Override
-	public abstract double[] getPixelsize();
 	
 	
 	/**

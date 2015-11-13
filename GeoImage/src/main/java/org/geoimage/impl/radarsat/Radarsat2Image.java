@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoMetadata;
@@ -62,11 +61,6 @@ public class Radarsat2Image extends SarImageReader {
             parseProductXML(productxml);
         }
         return gcps;
-    }
-
-    @Override
-    public String getAccessRights() {
-        return "r";
     }
 
     @Override
