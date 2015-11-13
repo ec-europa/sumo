@@ -81,11 +81,6 @@ public interface GeoImageReader  {
      */
     public List<Gcp> getGcps()throws GeoTransformException;
 
-    /**
-     *  Gets the access rights:<br>&quot;r&quot; = read only<br>&quot;rw&quot; = read/write
-     * @return
-     */
-    public String getAccessRights();
 
     /**
      *

@@ -164,9 +164,7 @@ public class Sentinel1SLC extends Sentinel1 {
         return getClass().getCanonicalName();
     }
 	
-    public double[] getPixelsize() {
-		return super.pixelsize;
-	}
+    
 	
 
 	@Override

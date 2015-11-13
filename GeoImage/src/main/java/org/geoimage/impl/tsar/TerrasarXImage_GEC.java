@@ -88,10 +88,6 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
         return Float.intBitsToFloat(accum);
     }
 
-    @Override
-    public String getAccessRights() {
-        return "r";
-    }
 
     @Override
     public boolean initialise() {

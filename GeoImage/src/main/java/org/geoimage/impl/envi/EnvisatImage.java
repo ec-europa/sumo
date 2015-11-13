@@ -89,11 +89,6 @@ public class EnvisatImage extends SarImageReader {
     }
 
     @Override
-    public String getAccessRights() {
-        return "r";
-    }
-
-    @Override
     public String[] getFilesList() {
         String out = "";
         try {

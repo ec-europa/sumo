@@ -77,10 +77,6 @@ public class GeotiffImage extends SarImageReader {
         return gcps;
     }
 
-    @Override
-    public String getAccessRights() {
-        return "r";
-    }
 
     @Override
     public String[] getFilesList() {
