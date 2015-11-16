@@ -2,10 +2,10 @@ package org.geoimage.impl.alos;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
 import org.geotools.referencing.CRS;
@@ -37,7 +36,7 @@ public class AlosCeos extends SarImageReader {
 
 	private AlosProperties props=null;
 	private List<String> polarizations=null;
-	protected Map<String, GDALTIFF> alosImages;
+	protected Map<String, TIFF> alosImages;
 	
 	public AlosCeos(File manifest){
 		super(manifest);
@@ -79,7 +78,7 @@ public class AlosCeos extends SarImageReader {
         	for(int i=0;i<imgNames.size();i++){
         		String img=imgNames.get(i);
         		File imgFile=new File(mainFolder.getAbsolutePath()+File.separator+img);
-        		GDALTIFF t=new GDALTIFF(imgFile,0);
+        		TIFF t=new TIFF(imgFile,0);
         		alosImages.put(img.substring(4,6),t);
         	}
             
@@ -233,8 +232,8 @@ public class AlosCeos extends SarImageReader {
 	}
 
 	
-	public GDALTIFF getImage(int band){
-		GDALTIFF img=null;
+	public TIFF getImage(int band){
+		TIFF img=null;
 		try{
 			img = alosImages.get(getBandName(band));
 		}catch(Exception e){ 
@@ -246,10 +245,41 @@ public class AlosCeos extends SarImageReader {
 	
 	//----------------------------------------------
 	
-	@Override
-	public int[] read(int x, int y, int width, int height, int band) throws IOException {
-		return null;
-	}
+ /**
+  * 
+  * @param x
+  * @param y
+  * @param width
+  * @param height
+  * @param band
+  * @return
+  */
+  public int[] read(int x, int y,int w,int h, int band) {
+      Rectangle rect = new Rectangle(x, y, w, h);
+      rect = rect.intersection(getImage(band).bounds);
+      int data[]=null;
+
+       TIFF tiff=getImage(band);
+       TIFFImageReader reader=tiff.reader;
+       try {
+           TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+           tirp.setSourceRegion(rect);
+       	BufferedImage bi=null;
+   		bi=reader.read(0, tirp);
+   		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
+   		short[] b=raster.getData();
+   		data=new int[b.length];
+       	for(int i=0;i<b.length;i++)
+       		data[i]=b[i];
+   		
+       } catch (Exception ex) {
+           logger.warn(ex.getMessage());
+       }finally{
+       	reader.dispose();
+       }
+      
+      return data;
+  }
 
 
 	
@@ -286,8 +316,7 @@ public class AlosCeos extends SarImageReader {
 
 	@Override
 	public int readPixel(int x, int y, int band) {
-		// TODO Auto-generated method stub
-		return 0;
+			return read(x,y,1,1,band)[0];
 	}
 
 	
@@ -300,13 +329,18 @@ public class AlosCeos extends SarImageReader {
         preloadedInterval = new int[]{y, y + length};
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         
-        GDALTIFF tiff=getImage(band);
+        TIFF tiff=getImage(band);
         rect=tiff.bounds.intersection(rect);
         
         try {
-        	short[] bi=null;
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+            tirp.setSourceRegion(rect);
+        	BufferedImage bi=null;
+        	TIFFImageReader reader=tiff.reader;
         	try{
-        			bi=tiff.readShortValues(0, y, getImage(band).xSize, length);
+
+        			bi=reader.read(0, tirp);
+
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -314,9 +348,10 @@ public class AlosCeos extends SarImageReader {
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=tiff.readShortValues(0, y, getImage(band).xSize, length);
+        		bi=reader.read(0, tirp);
         	}	
-        	preloadedData=bi;
+        	WritableRaster raster=bi.getRaster();
+        	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }finally{

@@ -2,6 +2,7 @@ package org.geoimage.impl.alos;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
@@ -245,10 +246,41 @@ public class Alos extends SarImageReader {
 	
 	//----------------------------------------------
 	
-	@Override
-	public int[] read(int x, int y, int width, int height, int band) throws IOException {
-		return null;
-	}
+ /**
+  * 
+  * @param x
+  * @param y
+  * @param width
+  * @param height
+  * @param band
+  * @return
+  */
+  public int[] read(int x, int y,int w,int h, int band) {
+      Rectangle rect = new Rectangle(x, y, w, h);
+      rect = rect.intersection(getImage(band).bounds);
+      int data[]=null;
+
+       TIFF tiff=getImage(band);
+       TIFFImageReader reader=tiff.reader;
+       try {
+           TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+           tirp.setSourceRegion(rect);
+       	BufferedImage bi=null;
+   		bi=reader.read(0, tirp);
+   		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
+   		short[] b=raster.getData();
+   		data=new int[b.length];
+       	for(int i=0;i<b.length;i++)
+       		data[i]=b[i];
+   		
+       } catch (Exception ex) {
+           logger.warn(ex.getMessage());
+       }finally{
+       	reader.dispose();
+       }
+      
+      return data;
+  }
 
 
 	
@@ -285,8 +317,7 @@ public class Alos extends SarImageReader {
 
 	@Override
 	public int readPixel(int x, int y, int band) {
-		// TODO Auto-generated method stub
-		return 0;
+			return read(x,y,1,1,band)[0];
 	}
 
 	
