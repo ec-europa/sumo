@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.impl.alos.Alos;
+import org.geoimage.impl.alos.AlosCeos;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
@@ -139,7 +139,7 @@ public class GeoImageReaderFactory {
 	        	}else if(parent.contains("ASA_")){
 	        		gir=new EnvisatImage_SLC(f);
 	        	}else if(new File(file).getName().equalsIgnoreCase("summary.txt")){
-	        		gir=new Alos(f);
+	        		gir=new AlosCeos(f);
 	        	}else{
 	        		return null;
 	        	}

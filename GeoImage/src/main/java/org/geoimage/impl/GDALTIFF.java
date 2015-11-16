@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -37,6 +38,7 @@ public class GDALTIFF {
     public int ySize = -1;
     public Rectangle bounds;
     private int buf_type ; 
+    private List gpcs=null;
     
     public Dataset getDataSet() {
 		return data;
@@ -49,28 +51,30 @@ public class GDALTIFF {
      * @param band form files with multiple band
      */
 	public GDALTIFF(File imageFile,int band) {
+		gdal.AllRegister();
     	this.imageFile=imageFile;
         try {
             Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("tiff");
             boolean worked=false;
+            TIFFImageReader reader=null;
             while(readers.hasNext()&&!worked){
             	Object obj=readers.next();
             	if( obj instanceof TIFFImageReader){
-            		
-            		//ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
-            		
-            		data = gdal.Open(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
-            		b = data.GetRasterBand(band+1);
-            		buf_type=b.getDataType();
-            		
-            		xSize=b.getXSize();
-            		ySize=b.getYSize();
-            		bounds=new Rectangle(0,0,xSize,ySize);
-            		worked=true;
-            	}else{
-            		
+            		reader=(TIFFImageReader)obj;
+            		break;
             	}
-            }
+            }	
+    		//ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
+    		
+    		data = gdal.Open(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
+    		b = data.GetRasterBand(band+1);
+    		gpcs=data.GetGCPs();//((GCP)gpcs.get(0)).getGCPX()
+    		buf_type=b.getDataType();
+    		
+    		xSize=b.getXSize();
+    		ySize=b.getYSize();
+    		bounds=new Rectangle(0,0,xSize,ySize);
+    		worked=true;
             if(!worked){
             	logger.warn("No reader avalaible for this image");
             }
