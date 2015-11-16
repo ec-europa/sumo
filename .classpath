@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="libs/gdal_lib_win64/bin/gdal/java/gdal.jar"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImage/src/test"/>
 	<classpathentry kind="src" path="resources"/>
@@ -68,8 +69,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/smtp.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/svgSalamander.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/toplink-grid.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/gdal_lib_win64/gdal/java/gdal.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/gdal_lib_win64/gdal.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/batik-transcoder-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/bridj-0.6-c-only.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/bufr-4.3.16.jar"/>
