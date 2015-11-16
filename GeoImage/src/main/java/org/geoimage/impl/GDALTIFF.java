@@ -54,17 +54,7 @@ public class GDALTIFF {
 		gdal.AllRegister();
     	this.imageFile=imageFile;
         try {
-            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("tiff");
             boolean worked=false;
-            TIFFImageReader reader=null;
-            while(readers.hasNext()&&!worked){
-            	Object obj=readers.next();
-            	if( obj instanceof TIFFImageReader){
-            		reader=(TIFFImageReader)obj;
-            		break;
-            	}
-            }	
-    		//ImageInputStream iis = ImageIO.createImageInputStream(imageFile);
     		
     		data = gdal.Open(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
     		b = data.GetRasterBand(band+1);
