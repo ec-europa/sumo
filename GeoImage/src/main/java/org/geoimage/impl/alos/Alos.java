@@ -15,10 +15,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
-import org.geoimage.impl.s1.Sentinel1GRD;
-import org.geoimage.impl.s1.Swath;
-import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.util.Constant;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -31,16 +27,6 @@ import org.slf4j.LoggerFactory;
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 import com.vividsolutions.jts.geom.Coordinate;
-
-import jrc.it.annotation.reader.jaxb.AdsHeaderType;
-import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
-import jrc.it.annotation.reader.jaxb.ImageInformationType;
-import jrc.it.annotation.reader.jaxb.OrbitType;
-import jrc.it.annotation.reader.jaxb.SwathMergeType;
-import jrc.it.annotation.reader.jaxb.VelocityType;
-import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
-import jrc.it.xml.wrapper.SumoAnnotationReader;
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 public class Alos extends SarImageReader {
 	private Logger logger= LoggerFactory.getLogger(Alos.class);
@@ -91,8 +77,8 @@ public class Alos extends SarImageReader {
         	
         	for(int i=0;i<imgNames.size();i++){
         		String img=imgNames.get(i);
-        		File imgFile=new File(mainFolder.getAbsolutePath()+File.pathSeparator+img);
-        		TIFF t=new TIFF(imgFile,i);
+        		File imgFile=new File(mainFolder.getAbsolutePath()+File.separator+img);
+        		TIFF t=new TIFF(imgFile,0);
         		alosImages.put(img.substring(4,6),t);
         	}
             
@@ -169,7 +155,9 @@ public class Alos extends SarImageReader {
             setAzimuthSpacing(new Float(props.getPixelSpacing()));
             setMetaHeight(props.getNumberOfLines());
             setMetaWidth(props.getNumberOfPixels());
-
+            setNumberBands(pols.size());
+            setNumberOfBytes(16);
+            
             //TODO:check this value
             //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL("2.3");//String.valueOf(enl));
