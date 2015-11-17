@@ -8,19 +8,15 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
+import org.gdal.gdal.GCP;
 import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 /**
  * This is a convenience class that warp a tiff image to easily use in the case
@@ -38,9 +34,19 @@ public class GDALTIFF {
     public int ySize = -1;
     public Rectangle bounds;
     private int buf_type ; 
-    private List gpcs=null;
+    private List<GCP> gpcs=null;
     
-    public Dataset getDataSet() {
+    public List<GCP> getGpcs() {
+		return gpcs;
+	}
+
+
+	public void setGpcs(List<GCP> gpcs) {
+		this.gpcs = gpcs;
+	}
+
+
+	public Dataset getDataSet() {
 		return data;
 	}
 
@@ -71,14 +77,6 @@ public class GDALTIFF {
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }	
-//        }finally{
-//        	if(iis!=null)
-//				try {
-//					iis.flush();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//        }
 	}
 	
 	

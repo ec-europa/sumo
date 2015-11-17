@@ -2,8 +2,6 @@ package org.geoimage.impl.alos;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferUShort;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -12,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.gdal.gdal.GCP;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -25,10 +23,6 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
-import com.vividsolutions.jts.geom.Coordinate;
 
 public class GDALAlosCeos extends SarImageReader {
 	private Logger logger = LoggerFactory.getLogger(GDALAlosCeos.class);
@@ -86,7 +80,6 @@ public class GDALAlosCeos extends SarImageReader {
 				alosImages.put(img.substring(4, 6), t);
 			}
 
-			String bandName = getBandName(0);
 			// String
 			// nameFirstFile=alosImages.get(bandName).getImageFile().getName();
 			super.pixelsize[0] = props.getPixelSpacing();
@@ -95,15 +88,20 @@ public class GDALAlosCeos extends SarImageReader {
 			// read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
 
-			Coordinate[] corners = props.getCorners();
-			int lines = props.getNumberOfLines();
-			int pix = props.getNumberOfPixels();
 			// we have only the corners
 			gcps = new ArrayList<>();
+			GDALTIFF tiff=alosImages.values().iterator().next();
+			List<GCP> gcpsGDAL=tiff.getGpcs();
+			for(GCP gcp:gcpsGDAL){
+				Gcp g=new Gcp(gcp.getGCPX(),gcp.getGCPY(),gcp.getGCPPixel(),gcp.getGCPLine());
+				gcps.add(g);
+			}
+			
+			/*
 			gcps.add(new Gcp(corners[0].x, corners[0].y, 0, 0));
 			gcps.add(new Gcp(corners[1].x, corners[1].y, pix, 0));
 			gcps.add(new Gcp(corners[2].x, corners[2].y, pix, lines));
-			gcps.add(new Gcp(corners[3].x, corners[3].y, 0, lines));
+			gcps.add(new Gcp(corners[3].x, corners[3].y, 0, lines));*/
 
 			String epsg = "EPSG:4326";
 			geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);

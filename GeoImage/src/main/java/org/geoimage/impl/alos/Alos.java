@@ -102,6 +102,7 @@ public class Alos extends SarImageReader {
             gcps.add(new Gcp(corners[2].x,corners[2].y,pix,lines));
             gcps.add(new Gcp(corners[3].x,corners[3].y,0,lines));
             
+            //String epsg = "EPSG:26921";
            	String epsg = "EPSG:4326";
            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
