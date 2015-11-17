@@ -97,10 +97,13 @@ public class Alos extends SarImageReader {
 			int pix=props.getNumberOfPixels();
             //we have only the corners
             gcps = new ArrayList<>();
-            gcps.add(new Gcp(corners[0].x,corners[0].y,0,0));
-            gcps.add(new Gcp(corners[1].x,corners[1].y,pix,0));
-            gcps.add(new Gcp(corners[2].x,corners[2].y,pix,lines));
-            gcps.add(new Gcp(corners[3].x,corners[3].y,0,lines));
+            gcps.add(new Gcp(0,0,corners[0].x,corners[0].y));
+            gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
+            gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
+            gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
+            
+            Coordinate center=props.getCenter();
+            gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
             
             //String epsg = "EPSG:26921";
            	String epsg = "EPSG:4326";
@@ -294,7 +297,7 @@ public class Alos extends SarImageReader {
             return tile;
         }
 
-        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.y*rect.height-1)) {
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
         	//logger.debug("using preloaded data");

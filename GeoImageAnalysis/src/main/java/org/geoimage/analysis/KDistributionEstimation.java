@@ -359,6 +359,7 @@ public class KDistributionEstimation {
 	 * @return the stats of each subtiles
 	 */
 	protected void computeStat(double clip, int iniX, int iniY,	Raster mask, int[] data,double[] statData) {
+		System.out.println("start compute stat");
 		//multiply the clip with the previous statData[]
 		double clip1 = statData[1] * clip;
 		double clip2 = statData[2] * clip;
@@ -459,6 +460,7 @@ public class KDistributionEstimation {
 					statData[3] = 100000;
 					statData[4] = 100000;
 			}	
+			System.out.println("End compute stat");
 		}catch(Exception e){
 			logger.error("Error computing statistics for iniX:"+iniX+"   iniY:"+iniY,e);
 			statData[0] = 0.001;
