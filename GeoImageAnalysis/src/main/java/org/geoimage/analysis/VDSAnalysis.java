@@ -274,7 +274,8 @@ public class VDSAnalysis{
                     
                     System.out.println("Calc Thresh Windows");
                     double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
-
+                    System.out.println("End Thresh Windows");
+                    
                     long start=System.currentTimeMillis();
                     
                     for (int k = 0; k < (sizeY+dy); k++) {
@@ -302,7 +303,7 @@ public class VDSAnalysis{
                                 	double tileAvg=thresh[subwindow] / thresh[5];
                                 	
                                 	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
-                                	System.out.println("Detected pixel");
+                    //            	System.out.println("Detected pixel");
                                 	dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue 
