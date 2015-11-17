@@ -40,6 +40,10 @@ public class AlosProperties extends Properties {
     public static final String PROP_LEFT_BOT_LON="Img_ImageSceneLeftBottomLongitude";
     public static final String PROP_RIGHT_BOT_LAT="Img_ImageSceneRightBottomLatitude";
     public static final String PROP_RIGHT_BOT_LON="Img_ImageSceneRightBottomLongitude";
+    public static final String PROP_CENTER_LAT="Img_ImageSceneCenterLatitude";
+    public static final String PROP_CENTER_LON="Img_ImageSceneCenterLongitude";
+    
+    
     
     public static final String PROP_BIT_X_PIX="Pdi_BitPixel";
     public static final String PROP_N_PIXELS="Pdi_NoOfPixels_0";
@@ -223,6 +227,13 @@ public class AlosProperties extends Properties {
 		return coor;
 	}
 	
+	public Coordinate getCenter(){
+		
+		String lat=getProperty(PROP_CENTER_LAT);
+		String lon=getProperty(PROP_CENTER_LON);
+		Coordinate coor=new Coordinate(Double.parseDouble(lon),Double.parseDouble(lat));
+		return coor;
+	}	
 	
 	
 	public static void main(String[] args){
