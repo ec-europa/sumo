@@ -151,7 +151,7 @@ public class AlosProperties extends Properties {
 			//search the image file names
 			if(propName.startsWith(PROP_L1_PRODUCT_FILE_NAMES)){
 				String val=(String)get(propName);
-				if(val.endsWith("tif")||val.endsWith("5RUD")){
+				if(val.startsWith("IMG-")){
 					imageNames.add(val);
 					polarizations.add(val.substring(4,6));
 				}
