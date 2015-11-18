@@ -6,6 +6,9 @@ package org.geoimage.analysis;
 
 import java.awt.image.Raster;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -276,6 +279,7 @@ public class VDSAnalysis{
                     double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
                     System.out.println("End Thresh Windows");
                     
+                    
                     long start=System.currentTimeMillis();
                     
                     for (int k = 0; k < (sizeY+dy); k++) {
@@ -314,6 +318,7 @@ public class VDSAnalysis{
                             }
                         }
                     }
+                    
                     long end=System.currentTimeMillis();
                     System.out.println("Elapsed:"+(end-start));
 	            }

@@ -5,6 +5,9 @@
 package org.geoimage.analysis;
 
 import java.awt.image.Raster;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,7 +62,8 @@ public class DetectedPixels {
     ArrayList<BoatConnectedPixelMap> listboatneighbours = new ArrayList<BoatConnectedPixelMap>();
 
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
-
+    final int MEGABYTE = (1024*1024);
+    MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
     
     public double getPixsam() {
 		return pixsam;
@@ -103,8 +107,15 @@ public class DetectedPixels {
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
         BoatPixel boatPixel = new BoatPixel(x, y, value, tileAvg, tileStd, threshold, band);
         StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
-        allDetectedPixels.put(point.toString(), boatPixel);
-
+        try{
+        	allDetectedPixels.put(point.toString(), boatPixel);
+        } catch (OutOfMemoryError e) {
+        	e.printStackTrace();
+            MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
+            long maxMemory = heapUsage.getMax() / MEGABYTE;
+            long usedMemory = heapUsage.getUsed() / MEGABYTE;
+            System.out.println(" : Memory Use :" + usedMemory + "M/" + maxMemory + "M");
+        }
     }
 
     /**
