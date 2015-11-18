@@ -15,6 +15,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.ITIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -24,7 +25,7 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GDALAlosCeos extends SarImageReader {
+public class GDALAlosCeos extends Alos {
 	private Logger logger = LoggerFactory.getLogger(GDALAlosCeos.class);
 
 	protected int[] preloadedInterval = new int[] { 0, 0 };
@@ -32,7 +33,7 @@ public class GDALAlosCeos extends SarImageReader {
 
 	private AlosProperties props = null;
 	private List<String> polarizations = null;
-	protected Map<String, GDALTIFF> alosImages;
+	protected Map<String, ITIFF> alosImages;
 
 	public GDALAlosCeos(File manifest) {
 		super(manifest);
@@ -61,6 +62,7 @@ public class GDALAlosCeos extends SarImageReader {
 	public String[] getFilesList() {
 		return new String[] { manifestFile.getAbsolutePath() };
 	}
+	
 
 	@Override
 	public boolean initialise() {
@@ -90,18 +92,13 @@ public class GDALAlosCeos extends SarImageReader {
 
 			// we have only the corners
 			gcps = new ArrayList<>();
-			GDALTIFF tiff=alosImages.values().iterator().next();
+			GDALTIFF tiff=(GDALTIFF)alosImages.values().iterator().next();
 			List<GCP> gcpsGDAL=tiff.getGpcs();
 			for(GCP gcp:gcpsGDAL){
-				Gcp g=new Gcp(gcp.getGCPX(),gcp.getGCPY(),gcp.getGCPPixel(),gcp.getGCPLine());
+				Gcp g=new Gcp(gcp.getGCPPixel(),gcp.getGCPLine(),gcp.getGCPX(),gcp.getGCPY());
 				gcps.add(g);
 			}
 			
-			/*
-			gcps.add(new Gcp(corners[0].x, corners[0].y, 0, 0));
-			gcps.add(new Gcp(corners[1].x, corners[1].y, pix, 0));
-			gcps.add(new Gcp(corners[2].x, corners[2].y, pix, lines));
-			gcps.add(new Gcp(corners[3].x, corners[3].y, 0, lines));*/
 
 			String epsg = "EPSG:4326";
 			geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
@@ -136,7 +133,7 @@ public class GDALAlosCeos extends SarImageReader {
 	 * @param annotationReader
 	 * @throws TransformException
 	 */
-	private void setXMLMetaData() {
+	protected void setXMLMetaData() {
 		setSatellite(new String("ALOS"));
 
 		// polarizations string
@@ -197,12 +194,12 @@ public class GDALAlosCeos extends SarImageReader {
 
 	@Override
 	public int getWidth() {
-		return getImage(0).xSize;
+		return getImage(0).getxSize();
 	}
 
 	@Override
 	public int getHeight() {
-		return getImage(0).ySize;
+		return getImage(0).getySize();
 	}
 
 	@Override
@@ -229,8 +226,8 @@ public class GDALAlosCeos extends SarImageReader {
 		return "ALOS";
 	}
 
-	public GDALTIFF getImage(int band) {
-		GDALTIFF img = null;
+	public ITIFF getImage(int band) {
+		ITIFF img = null;
 		try {
 			img = alosImages.get(getBandName(band));
 		} catch (Exception e) {
@@ -242,14 +239,14 @@ public class GDALAlosCeos extends SarImageReader {
 	// ----------------------------------------------
 
 	@Override
-	public int[] read(int x, int y, int width, int height, int band) throws IOException {
+	public int[] read(int x, int y, int width, int height, int band)  {
 		return null;
 	}
 
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
 		Rectangle rect = new Rectangle(x, y, width, height);
-		rect = rect.intersection(getImage(band).bounds);
+		rect = rect.intersection(getImage(band).getBounds());
 		int[] tile = new int[height * width];
 		if (rect.isEmpty()) {
 			return tile;
@@ -262,7 +259,7 @@ public class GDALAlosCeos extends SarImageReader {
 			// logger.debug("using preloaded data");
 		}
 
-		int yOffset = getImage(band).xSize;
+		int yOffset = getImage(band).getxSize();
 		int xinit = rect.x - x;
 		int yinit = rect.y - y;
 		for (int i = 0; i < rect.height; i++) {
@@ -281,10 +278,10 @@ public class GDALAlosCeos extends SarImageReader {
 	@Override
 	public int readPixel(int x, int y, int band) {
 		Rectangle rect = new Rectangle(x, y, 1, 1);
-		rect = rect.intersection(getImage(band).bounds);
+		rect = rect.intersection(getImage(band).getBounds());
 		short data[] = null;
 
-		GDALTIFF tiff = getImage(band);
+		GDALTIFF tiff = (GDALTIFF)getImage(band);
 		try {
 			data=tiff.readShortValues(x, y,1,1);
 		} finally {
@@ -299,16 +296,18 @@ public class GDALAlosCeos extends SarImageReader {
 		if (y < 0) {
 			return;
 		}
+		GDALTIFF tiff = (GDALTIFF)getImage(band);
+		
 		preloadedInterval = new int[] { y, y + length };
-		Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
-
-		GDALTIFF tiff = getImage(band);
+		Rectangle rect = new Rectangle(0, y, tiff.getxSize(), length);
+		
 		rect = tiff.bounds.intersection(rect);
 
 		try {
 			short[] bi = null;
 			try {
-				bi = tiff.readShortValues(0, y, getImage(band).xSize, length);
+				bi = tiff.readShortValues(0, y, rect.width, rect.height);
+				//bi = tiff.readShortValues(0, y, tiff.xSize, length);
 			} catch (Exception e) {
 				logger.warn("Problem reading image POS x:" + 0 + "  y: " + y + "   try to read again");
 				try {
@@ -316,7 +315,7 @@ public class GDALAlosCeos extends SarImageReader {
 				} catch (InterruptedException exx) {
 					Thread.currentThread().interrupt();
 				}
-				bi = tiff.readShortValues(0, y, getImage(band).xSize, length);
+				bi = tiff.readShortValues(0, y, rect.width, rect.height);
 			}
 			preloadedData = bi;
 		} catch (Exception ex) {

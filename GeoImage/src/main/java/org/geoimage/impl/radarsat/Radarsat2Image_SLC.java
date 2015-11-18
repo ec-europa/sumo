@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import org.geoimage.impl.ITIFF;
 import org.geoimage.impl.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -80,7 +80,7 @@ public class Sentinel1SLC extends Sentinel1 {
     	//System.out.println("read tile x:"+x+",y:"+y+",w:"+width+",h:"+height);
     	
         Rectangle rect = new Rectangle(x, y, width, height);
-        rect = rect.intersection(getImage(band).bounds);
+        rect = rect.intersection(getImage(band).getBounds());
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
@@ -132,7 +132,7 @@ public class Sentinel1SLC extends Sentinel1 {
         }
         
 		Rectangle rect = new Rectangle(x, y, w, h);
-        rect = rect.intersection(getImage(band).bounds);
+        rect = rect.intersection(getImage(band).getBounds());
 
         int yOffset = 4*x;
         int xinit = rect.x - x;
