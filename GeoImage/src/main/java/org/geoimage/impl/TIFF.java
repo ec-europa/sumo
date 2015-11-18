@@ -22,18 +22,23 @@ import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
  * of one geotiff per band (like radarsat 2 images)
  * @author thoorfr
  */
-public class TIFF {
+public class TIFF implements ITIFF {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TIFF.class);
 
 
     private File imageFile;
-    public TIFFImageReader reader;
-	public int xSize = -1;
+    private TIFFImageReader reader;
+    public int xSize = -1;
     public int ySize = -1;
-    public Rectangle bounds;
+    private Rectangle bounds;
+    
+    
 	ImageInputStream iis = null;
 
-    public TIFFImageReader getReader() {
+    /* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#getReader()
+	 */
+	public TIFFImageReader getReader() {
 		return reader;
 	}
 
@@ -87,33 +92,65 @@ public class TIFF {
 	}
 	
 	
-    public int getxSize() {
+    /* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#getxSize()
+	 */
+    @Override
+	public int getxSize() {
 		return xSize;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#setxSize(int)
+	 */
+	@Override
 	public void setxSize(int xSize) {
 		this.xSize = xSize;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#getySize()
+	 */
+	@Override
 	public int getySize() {
 		return ySize;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#setySize(int)
+	 */
+	@Override
 	public void setySize(int ySize) {
 		this.ySize = ySize;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#getBounds()
+	 */
+	@Override
 	public Rectangle getBounds() {
 		return bounds;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#setBounds(java.awt.Rectangle)
+	 */
+	@Override
 	public void setBounds(Rectangle bounds) {
 		this.bounds = bounds;
 	}
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#refreshBounds()
+	 */
+	@Override
 	public void refreshBounds() {
 		bounds=new Rectangle(0,0,xSize,ySize);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#dispose()
+	 */
+	@Override
 	public void dispose(){
 		reader.dispose();
 		imageFile=null;
@@ -124,10 +161,18 @@ public class TIFF {
 		} catch (IOException e) {
 		}
     }
-    public File getImageFile() {
+    /* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#getImageFile()
+	 */
+    @Override
+	public File getImageFile() {
 		return imageFile;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geoimage.impl.ITIFF#setImageFile(java.io.File)
+	 */
+	@Override
 	public void setImageFile(File imageFile) {
 		this.imageFile = imageFile;
 	}

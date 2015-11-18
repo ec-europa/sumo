@@ -237,7 +237,6 @@ public class VDSAnalysis{
                     if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
                         continue;
                     
-                    System.out.println("Create raster");
                     // create raster mask //dx and dy are for tile on the border that have different dimensions
                     rastermask = (mask[0].rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
 
@@ -269,22 +268,15 @@ public class VDSAnalysis{
                     kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,band,bbAnalysis);
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     
-                    System.out.println("Estimate");
                     kdist.estimate(rastermask,data);
                     
                     double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
                     
-                    System.out.println("Calc Thresh Windows");
                     double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
-                    System.out.println("End Thresh Windows");
-                    
-                    
-                    long start=System.currentTimeMillis();
                     
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
-                        //	System.out.println("Check pixel on the sea");
                             // check pixel is in the sea
                             if(rastermask==null||(rastermask.getSample(h, k, 0) == 0)){
                                 int subwindow = 1;
@@ -303,11 +295,10 @@ public class VDSAnalysis{
                                 }
                                 int pix = data[k * (sizeX+dx) + h];
                                 if (pix > threshWindowsVals[subwindow-1]) {
-                                	
                                 	double tileAvg=thresh[subwindow] / thresh[5];
                                 	
                                 	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
-                    //            	System.out.println("Detected pixel");
+                                		
                                 	dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue 
@@ -319,10 +310,7 @@ public class VDSAnalysis{
                         }
                     }
                     
-                    long end=System.currentTimeMillis();
-                    System.out.println("Elapsed:"+(end-start));
 	            }
-                
 	        }
             System.out.println(rowIndex + "/" + verTilesImage);
         }

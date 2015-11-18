@@ -6,7 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -14,6 +18,7 @@ import java.util.Scanner;
 
 import org.slf4j.LoggerFactory;
 
+import com.ibm.icu.text.SimpleDateFormat;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class AlosProperties extends Properties {
@@ -50,6 +55,9 @@ public class AlosProperties extends Properties {
     public static final String PROP_N_LINES="Pdi_NoOfLines_0";
     public static final String PROP_PROD_FORM="Pdi_ProductFormat";
     
+    public static final String PROP_START_DATE_TIME="Img_SceneStartDateTime";
+    public static final String PROP_END_DATE_TIME="Img_SceneEndDateTime";
+    
     
     
     		/*="PROCESS:JAPAN-JAXA-ALOS2-EICS  20151105 053647"
@@ -59,8 +67,6 @@ public class AlosProperties extends Properties {
     		Pds_OrbitDataPrecision="Precision"
     		Pds_AttitudeDataPrecision="Onboard"
     		Img_SceneCenterDateTime="20150422 09:02:36.377"
-    		Img_SceneStartDateTime="20150422 09:02:31.377"
-    		Img_SceneEndDateTime="20150422 09:02:41.377"
     		Img_ImageSceneCenterLatitude="-4.216"
     		Img_ImageSceneCenterLongitude="39.920"
     		Img_FrameSceneCenterLatitude="-4.218"
@@ -98,6 +104,8 @@ public class AlosProperties extends Properties {
 	private File propFile=null;
 	private List<String> imageNames;
 	private List<String> polarizations;
+	private SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");//"20150422 09:02:41.377");
+	
 	
 	public AlosProperties(String propFile){
 		this.propFile=new File(propFile);
@@ -196,6 +204,26 @@ public class AlosProperties extends Properties {
 		return val;
 	}
 	
+	public Date getStartDate(){
+		String val=this.getProperty(PROP_START_DATE_TIME);
+		Date d;
+		try {
+			d = df.parse(val);
+		} catch (ParseException e) {
+			d=new Date(0);
+		}
+		return d;
+	}
+	public Date getEndDate(){
+		String val=this.getProperty(PROP_END_DATE_TIME);
+		Date d;
+		try {
+			d = df.parse(val);
+		} catch (ParseException e) {
+			d=new Date(0);
+		}
+		return d;
+	}
 	
 	/**
 	 * return the list of the image names

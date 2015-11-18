@@ -42,7 +42,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
-        rect = rect.intersection(getImage(band).bounds);
+        rect = rect.intersection(getImage(band).getBounds());
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
@@ -144,9 +144,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
  	            val= 0;
         	}else{
 	 	        TIFF tiff=getImage(band);
-	 	        TIFFImageReader reader=tiff.reader;
+	 	        TIFFImageReader reader=tiff.getReader();
 	 	        try {
-	 	            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+	 	            TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
 	 	            tirp.setSourceRegion(rect);
 	 	        	BufferedImage bi=null;
  	        		bi=reader.read(0, tirp);
@@ -175,17 +175,16 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         
         TIFF tiff=getImage(band);
-        rect=tiff.bounds.intersection(rect);
+        rect=tiff.getBounds().intersection(rect);
         
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+        	TIFFImageReader reader=tiff.getReader();
+            TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
             tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	TIFFImageReader reader=tiff.reader;
+        	
         	try{
-
         			bi=reader.read(0, tirp);
-
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -343,4 +342,6 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 		public String getSensor() {
 			return "S1";
 		}
+
+	
 }

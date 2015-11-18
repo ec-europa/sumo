@@ -76,7 +76,12 @@ public class GeotiffImage extends SarImageReader {
         createGcpsFromCornerPoints();
         return gcps;
     }
-
+    
+    
+    @Override
+	public int[] getAmbiguityCorrection(int xPos, int yPos) {
+		return new int[]{0};
+	}
 
     @Override
     public String[] getFilesList() {
