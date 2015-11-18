@@ -5,12 +5,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geotools.referencing.GeodeticCalculator;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
@@ -122,6 +119,7 @@ public class GeoTransformOrbitState implements GeoTransform{
 		} 
 	}
 	
+	//TODO remove from here
 	public double getSlanteRangeDist(double lon,double lat){
 		return geocoding.getSlantRange(lon, lat);
 	}

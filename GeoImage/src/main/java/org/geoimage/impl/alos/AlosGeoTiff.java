@@ -6,13 +6,13 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.gdal.gdal.gdal;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.TIFF;
@@ -29,20 +29,36 @@ import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class AlosCeos extends Alos {
-	private Logger logger= LoggerFactory.getLogger(AlosCeos.class);
+public class AlosGeoTiff extends Alos {
+	private Logger logger= LoggerFactory.getLogger(AlosGeoTiff.class);
 
 	protected int[] preloadedInterval = new int[]{0, 0};
 	protected short[] preloadedData;
 
 	private AlosProperties props=null;
+	private List<String> polarizations=null;
 	protected Map<String, TIFF> alosImages;
 	
-	public AlosCeos(File manifest){
+	public AlosGeoTiff(File manifest){
 		super(manifest);
 		props=new AlosProperties(manifest);
 	}
 	
+	@Override
+	public int getNBand() {
+		return polarizations.size();
+	}
+
+	@Override
+	public String getFormat() {
+		return getClass().getCanonicalName();
+	}
+
+	@Override
+	public int getType(boolean oneBand) {
+		if(oneBand || polarizations.size()<2) return BufferedImage.TYPE_USHORT_GRAY;
+        else return BufferedImage.TYPE_INT_RGB;
+	}
 
 	@Override
 	public String[] getFilesList() {
@@ -81,11 +97,15 @@ public class AlosCeos extends Alos {
 			int pix=props.getNumberOfPixels();
             //we have only the corners
             gcps = new ArrayList<>();
-            gcps.add(new Gcp(corners[0].x,corners[0].y,0,0));
-            gcps.add(new Gcp(corners[1].x,corners[1].y,pix,0));
-            gcps.add(new Gcp(corners[2].x,corners[2].y,pix,lines));
-            gcps.add(new Gcp(corners[3].x,corners[3].y,0,lines));
+            gcps.add(new Gcp(0,0,corners[0].x,corners[0].y));
+            gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
+            gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
+            gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
             
+            Coordinate center=props.getCenter();
+            gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
+            
+            //String epsg = "EPSG:26921";
            	String epsg = "EPSG:4326";
            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             
@@ -122,7 +142,7 @@ public class AlosCeos extends Alos {
      * @param annotationReader
      * @throws TransformException
      */
-	protected void setXMLMetaData() {
+    protected void setXMLMetaData() {
         	setSatellite(new String("ALOS"));
         	
         	//polarizations string
@@ -148,17 +168,25 @@ public class AlosCeos extends Alos {
             setENL("2.3");//String.valueOf(enl));
 
             /*String start=header.getStartTime().toString().replace('T', ' ');	
-            String stop=header.getStopTime().toString().replace('T', ' ');
-            setTimeStampStart(start);//Timestamp.valueOf(start));
-            setTimeStampStop(stop);//Timestamp.valueOf(stop));
-            */
+            String stop=header.getStopTime().toString().replace('T', ' ');*/
             
+            Date st=props.getStartDate();
+            Date end=props.getEndDate();
+            Timestamp t=new Timestamp(st.getTime());
+            setTimeStampStart(t.toString());//Timestamp.valueOf(start));
+            t.setTime(end.getTime());
+            setTimeStampStop(t.toString());//Timestamp.valueOf(stop));
     }
-	
+    
+    //TODO 
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	return new int[]{0};
+    }
 
 	@Override
 	public String getBandName(int band) {
-		return "HH";//polarizations.get(band);
+		return polarizations.get(band);
 	}
 	
 	@Override
@@ -168,7 +196,6 @@ public class AlosCeos extends Alos {
 	
 	@Override
 	public String getImgName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -247,7 +274,7 @@ public class AlosCeos extends Alos {
        TIFF tiff=getImage(band);
        TIFFImageReader reader=tiff.getReader();
        try {
-           TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
+           TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
            tirp.setSourceRegion(rect);
        	BufferedImage bi=null;
    		bi=reader.read(0, tirp);
@@ -267,22 +294,17 @@ public class AlosCeos extends Alos {
   }
 
 
-	@Override
-	public int readPixel(int x, int y, int band) {
-			return read(x,y,1,1,band)[0];
-	}
 	
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
 		Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(getImage(band).getBounds());
-        
-        int[] tile = new int[height * width];        
+        int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
         }
 
-        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.y*rect.height-1)) {
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
         	logger.debug("using preloaded data");
@@ -305,6 +327,13 @@ public class AlosCeos extends Alos {
 	}
 
 	@Override
+	public int readPixel(int x, int y, int band) {
+			return read(x,y,1,1,band)[0];
+	}
+
+	
+
+	@Override
 	public void preloadLineTile(int y, int length, int band) {
 		if (y < 0) {
             return;
@@ -314,13 +343,12 @@ public class AlosCeos extends Alos {
         
         TIFF tiff=getImage(band);
         rect=tiff.getBounds().intersection(rect);
-
+        
         try {
-        	TIFFImageReader reader=tiff.getReader();
-            TIFFImageReadParam tirp =(TIFFImageReadParam)reader.getDefaultReadParam();
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
             tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	
+        	TIFFImageReader reader=tiff.getReader();
         	try{
 
         			bi=reader.read(0, tirp);

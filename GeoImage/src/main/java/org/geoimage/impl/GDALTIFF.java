@@ -18,18 +18,19 @@ import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
 
+
 /**
  * This is a convenience class that warp a tiff image to easily use in the case
  * of one geotiff per band (like radarsat 2 images)
  * @author thoorfr
  */
-public class GDALTIFF {
+public class GDALTIFF implements ITIFF{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GDALTIFF.class);
 
 
     private File imageFile;
     private Dataset data;
-    private Band b;
+    private Band band;
 	public int xSize = -1;
     public int ySize = -1;
     public Rectangle bounds;
@@ -56,19 +57,20 @@ public class GDALTIFF {
      * @param imageFile
      * @param band form files with multiple band
      */
-	public GDALTIFF(File imageFile,int band) {
+	public GDALTIFF(File imageFile,int bband) {
 		gdal.AllRegister();
     	this.imageFile=imageFile;
         try {
             boolean worked=false;
     		
     		data = gdal.Open(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
-    		b = data.GetRasterBand(band+1);
+    		band = data.GetRasterBand(bband+1);
     		gpcs=data.GetGCPs();//((GCP)gpcs.get(0)).getGCPX()
-    		buf_type=b.getDataType();
+    		buf_type=band.getDataType();
     		
-    		xSize=b.getXSize();
-    		ySize=b.getYSize();
+    		xSize=data.getRasterXSize();
+    		ySize=data.getRasterYSize();
+
     		bounds=new Rectangle(0,0,xSize,ySize);
     		worked=true;
             if(!worked){
@@ -84,12 +86,8 @@ public class GDALTIFF {
 		int pixels = xSize * offsetx;
 		int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 8;
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect(buf_size);
-		buffer.order(ByteOrder.nativeOrder());
-
 		short[] dd = new short[buf_size];
-		int ok = b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
-		buffer.clear();
+		int ok = band.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
 		return dd;
 	}
 	
@@ -132,7 +130,8 @@ public class GDALTIFF {
 	public void setImageFile(File imageFile) {
 		this.imageFile = imageFile;
 	}
-	
+
+
 		
 
 }

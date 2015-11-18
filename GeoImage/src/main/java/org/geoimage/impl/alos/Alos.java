@@ -6,37 +6,27 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.Gcp;
+import org.geoimage.impl.ITIFF;
 import org.geoimage.impl.TIFF;
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeocentricCRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
-import com.vividsolutions.jts.geom.Coordinate;
 
-public class Alos extends SarImageReader {
+public abstract class Alos extends SarImageReader {
 	private Logger logger= LoggerFactory.getLogger(Alos.class);
 
 	protected int[] preloadedInterval = new int[]{0, 0};
 	protected short[] preloadedData;
 
 	private AlosProperties props=null;
-	private List<String> polarizations=null;
+	protected List<String> polarizations=null;
 	protected Map<String, TIFF> alosImages;
 	
 	public Alos(File manifest){
@@ -66,74 +56,7 @@ public class Alos extends SarImageReader {
 	}
 
 	@Override
-	public boolean initialise() {
-		try {
-			File mainFolder=manifestFile.getParentFile();
-			
-        	polarizations=props.getPolarizations();
-        	
-        	//set image properties
-        	alosImages=new HashMap<>();
-        	List<String> imgNames=props.getImageNames();
-        	
-        	for(int i=0;i<imgNames.size();i++){
-        		String img=imgNames.get(i);
-        		File imgFile=new File(mainFolder.getAbsolutePath()+File.separator+img);
-        		TIFF t=new TIFF(imgFile,0);
-        		alosImages.put(img.substring(4,6),t);
-        	}
-            
-            String bandName=getBandName(0);
-            //String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
-        	super.pixelsize[0]=props.getPixelSpacing();
-        	super.pixelsize[1]=props.getPixelSpacing();
-
-			
-        	//read and set the metadata from the manifest and the annotation
-			setXMLMetaData();
-			
-			Coordinate[] corners=props.getCorners();
-			int lines=props.getNumberOfLines();
-			int pix=props.getNumberOfPixels();
-            //we have only the corners
-            gcps = new ArrayList<>();
-            gcps.add(new Gcp(0,0,corners[0].x,corners[0].y));
-            gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
-            gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
-            gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
-            
-            Coordinate center=props.getCenter();
-            gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
-            
-            //String epsg = "EPSG:26921";
-           	String epsg = "EPSG:4326";
-           	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
-            
-            
-            
-            double[] latlon = geotransform.getGeoFromPixel(0, 0);
-            double[] position = new double[3];
-            MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
-            convert.transform(latlon, 0, position, 0, 1);
-            
-
-            // get incidence angles from gcps
-            float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
-            float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
-            setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-
-            return true;
-        } catch (TransformException ex) {
-            logger.error(ex.getMessage(), ex);
-        } catch (FactoryException ex) {
-        	logger.error(ex.getMessage(), ex);
-        } catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
-        
-        return false;
-	}
+	public abstract boolean initialise();
 	
 	 /**
      * 
@@ -142,43 +65,17 @@ public class Alos extends SarImageReader {
      * @param annotationReader
      * @throws TransformException
      */
-    private void setXMLMetaData() {
-        	setSatellite(new String("ALOS"));
-        	
-        	//polarizations string
-        	List<String> pols=props.getPolarizations();
-        	String strPol="";
-            for (String p:pols) {
-            	strPol=strPol.concat(p).concat(" ");
-            }
-            setPolarization(strPol);
-            setSensor("ALOS");
-            
-            setSatelliteOrbitInclination(98.18);
+    protected abstract void setXMLMetaData();
 
-            setRangeSpacing(new Float(props.getPixelSpacing()));
-            setAzimuthSpacing(new Float(props.getPixelSpacing()));
-            setMetaHeight(props.getNumberOfLines());
-            setMetaWidth(props.getNumberOfPixels());
-            setNumberBands(pols.size());
-            setNumberOfBytes(16);
-            
-            //TODO:check this value
-            //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
-            setENL("2.3");//String.valueOf(enl));
-
-            /*String start=header.getStartTime().toString().replace('T', ' ');	
-            String stop=header.getStopTime().toString().replace('T', ' ');
-            setTimeStampStart(start);//Timestamp.valueOf(start));
-            setTimeStampStop(stop);//Timestamp.valueOf(stop));
-            */
-            
+    //TODO 
+    @Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	return new int[]{0};
     }
-	
 
 	@Override
 	public String getBandName(int band) {
-		return "HH";//polarizations.get(band);
+		return polarizations.get(band);
 	}
 	
 	@Override
@@ -188,7 +85,6 @@ public class Alos extends SarImageReader {
 	
 	@Override
 	public String getImgName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -203,13 +99,13 @@ public class Alos extends SarImageReader {
 
 	@Override
 	public int getWidth() {
-		return getImage(0).xSize;
+		return ((TIFF)getImage(0)).xSize;
 	}
 
 
 	@Override
 	public int getHeight() {
-		return getImage(0).ySize;
+		return ((TIFF)getImage(0)).ySize;
 	}
 
 	@Override
@@ -237,8 +133,8 @@ public class Alos extends SarImageReader {
 	}
 
 	
-	public TIFF getImage(int band){
-		TIFF img=null;
+	public ITIFF getImage(int band){
+		ITIFF img=null;
 		try{
 			img = alosImages.get(getBandName(band));
 		}catch(Exception e){ 
@@ -260,14 +156,14 @@ public class Alos extends SarImageReader {
   * @return
   */
   public int[] read(int x, int y,int w,int h, int band) {
+	  TIFF tiff=(TIFF)getImage(band);
       Rectangle rect = new Rectangle(x, y, w, h);
-      rect = rect.intersection(getImage(band).bounds);
+      rect = rect.intersection(tiff.getBounds());
       int data[]=null;
 
-       TIFF tiff=getImage(band);
-       TIFFImageReader reader=tiff.reader;
+       TIFFImageReader reader=tiff.getReader();
        try {
-           TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+           TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
            tirp.setSourceRegion(rect);
        	BufferedImage bi=null;
    		bi=reader.read(0, tirp);
@@ -290,8 +186,11 @@ public class Alos extends SarImageReader {
 	
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
+		TIFF tiff=(TIFF)getImage(band);
+		
 		Rectangle rect = new Rectangle(x, y, width, height);
-        rect = rect.intersection(getImage(band).bounds);
+        rect = rect.intersection(tiff.getBounds());
+        
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
@@ -300,10 +199,10 @@ public class Alos extends SarImageReader {
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
-        	//logger.debug("using preloaded data");
+        	logger.debug("using preloaded data");
         }
 
-        int yOffset = getImage(band).xSize;
+        int yOffset = tiff.xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -328,20 +227,21 @@ public class Alos extends SarImageReader {
 
 	@Override
 	public void preloadLineTile(int y, int length, int band) {
+		TIFF tiff=(TIFF)getImage(band);
 		if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
+        Rectangle rect = new Rectangle(0, y, tiff.xSize, length);
         
-        TIFF tiff=getImage(band);
-        rect=tiff.bounds.intersection(rect);
+        
+        rect=tiff.getBounds().intersection(rect);
         
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
+            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
             tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	TIFFImageReader reader=tiff.reader;
+        	TIFFImageReader reader=tiff.getReader();
         	try{
 
         			bi=reader.read(0, tirp);

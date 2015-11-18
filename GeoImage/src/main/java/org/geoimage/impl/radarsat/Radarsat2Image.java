@@ -14,6 +14,7 @@ import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.ITIFF;
 import org.geoimage.impl.TIFF;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -227,7 +228,7 @@ public class Radarsat2Image extends SarImageReader {
     public void dispose() {
     	super.dispose();
         if(tiffImages==null) return;
-        for(TIFF t:tiffImages.values()){
+        for(ITIFF t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;

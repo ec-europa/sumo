@@ -31,7 +31,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils-bean-collections.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-digester-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-lang3-3.4.jar"/>
@@ -76,7 +75,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-beanutils-1.7.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-cli-2.0-gt2-pre1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-codec-1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-dbcp-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-digester-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-httpclient-3.1.jar"/>
@@ -296,5 +294,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/ConcaveHull-0.2.jar"/>
+	<classpathentry kind="lib" path="libs/commons-collections4-4.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

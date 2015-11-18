@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.Alos;
 import org.geoimage.impl.alos.AlosCeos;
+import org.geoimage.impl.alos.AlosGeoTiff;
 import org.geoimage.impl.alos.AlosProperties;
 import org.geoimage.impl.alos.GDALAlosCeos;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
@@ -146,7 +147,7 @@ public class GeoImageReaderFactory {
 	        		if(props.getProductFormat().equalsIgnoreCase("CEOS")){
 	        			gir=new GDALAlosCeos(f);
 	        		}else{
-	        			gir=new Alos(f);
+	        			gir=new AlosGeoTiff(f);
 	        		}
 	        		
 	        	}else{
