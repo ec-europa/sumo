@@ -1,9 +1,9 @@
-package org.geoimage.impl;
+package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
 import java.io.File;
 
-public interface ITIFF {
+public interface IReader {
 
 	int getxSize();
 
@@ -24,5 +24,8 @@ public interface ITIFF {
 	File getImageFile();
 
 	void setImageFile(File imageFile);
+	
+	
+	
 
 }

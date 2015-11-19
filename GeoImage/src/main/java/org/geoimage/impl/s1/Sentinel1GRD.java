@@ -7,7 +7,7 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geoimage.utils.IProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,20 +144,15 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
  	            val= 0;
         	}else{
 	 	        TIFF tiff=getImage(band);
-	 	        TIFFImageReader reader=tiff.getReader();
 	 	        try {
-	 	            TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
-	 	            tirp.setSourceRegion(rect);
 	 	        	BufferedImage bi=null;
- 	        		bi=reader.read(0, tirp);
+ 	        		bi=tiff.read(0, rect);
  	        		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
  	        		short[] b=raster.getData();
 	 	        	//short[] data=(short[])raster.getDataElements(0, 0, width,height, null);
 	 	        	val=b[0];
 	 	        } catch (Exception ex) {
 	 	            logger.error(ex.getMessage(),ex);
-	 	        }finally{
-	 	        	reader.dispose();
 	 	        }
         	}  
         
@@ -178,13 +173,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         rect=tiff.getBounds().intersection(rect);
         
         try {
-        	TIFFImageReader reader=tiff.getReader();
-            TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
-            tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	
         	try{
-        			bi=reader.read(0, tirp);
+        			bi=tiff.read(0, rect);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -192,7 +183,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=reader.read(0, tirp);
+        		bi=tiff.read(0, rect);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);

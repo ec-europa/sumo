@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geoimage.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

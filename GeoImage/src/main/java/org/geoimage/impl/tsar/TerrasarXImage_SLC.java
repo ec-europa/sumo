@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geoimage.utils.ByteUtils;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;

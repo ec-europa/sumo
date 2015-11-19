@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.imgreader.PureGDALReader;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -49,7 +49,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
     protected double MGtTime = 0;
     protected double MGtauTime = 0;
     
-    protected Map<String, GDALTIFF> tiffImages;
+    protected Map<String, PureGDALReader> tiffImages;
 
     protected List<String> bands = new ArrayList<String>();
 
@@ -260,12 +260,12 @@ public abstract class GDALSentinel1 extends SarImageReader {
     * 
     * @return
     */
-    private Map<String, GDALTIFF> getImages() {
-        Map<String, GDALTIFF> tiffsMap = new HashMap<String, GDALTIFF>();
+    private Map<String, PureGDALReader> getImages() {
+        Map<String, PureGDALReader> tiffsMap = new HashMap<String, PureGDALReader>();
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
-    				tiffsMap.put(pol,new GDALTIFF(new File(tiff),0));
+    				tiffsMap.put(pol,new PureGDALReader(new File(tiff),0));
     			}
     		}
     	}
@@ -278,7 +278,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
     
     @Override
     public int readPixel(int x, int y,int band) {
-        GDALTIFF tiff=null;
+        PureGDALReader tiff=null;
         try {
         	String b=getBandName(band);
         	tiff=tiffImages.get(b);
@@ -311,7 +311,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(GDALTIFF t:tiffImages.values()){
+        for(PureGDALReader t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;
@@ -440,8 +440,8 @@ public abstract class GDALSentinel1 extends SarImageReader {
 	
 	
 
-	public GDALTIFF getImage(int band){
-		GDALTIFF img=null;
+	public PureGDALReader getImage(int band){
+		PureGDALReader img=null;
 		try{
 			img = tiffImages.get(getBandName(band));
 		}catch(Exception e){ 

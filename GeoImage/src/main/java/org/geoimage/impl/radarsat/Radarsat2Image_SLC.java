@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import org.geoimage.impl.ITIFF;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,8 +67,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         t.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {            
-            int img =  tiff.getReader().read(0, t).getRaster().getSample(0,0, 1);
-            int real =  tiff.getReader().read(0, t).getRaster().getSample(0, 0, 0);
+            int img =  tiff.read(0, t).getRaster().getSample(0,0, 1);
+            int real =  tiff.read(0, t).getRaster().getSample(0, 0, 0);
             return (int) Math.sqrt(real * real + img * img);
 
         } catch (IOException ex) {
@@ -92,8 +92,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         
         TIFF tiff=getImage(band);
         try {            
-            int[] img =  tiff.getReader().read(0, t).getRaster().getSamples(0,0,w,h, 1,(int[])null);
-            int[] real =  tiff.getReader().read(0, t).getRaster().getSamples(0,0,w,h, 0,(int[])null);
+            int[] img =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 1,(int[])null);
+            int[] real =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 0,(int[])null);
             for(int i=0;i<img.length;i++){
             	data[i]= (int) Math.sqrt(real[i] * real[i] + img[i] * img[i]);
             }
@@ -122,8 +122,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedDataReal =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
-            preloadedDataImg =   tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
+            preloadedDataReal =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
+            preloadedDataImg =   tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }

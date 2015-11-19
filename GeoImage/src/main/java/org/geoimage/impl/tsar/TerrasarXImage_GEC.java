@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -170,7 +170,7 @@ public class TerrasarXImage_GEC extends TerrasarXImage {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         try {
-            return image.getReader().read(0, t).getRGB(x, y);
+            return image.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         	
