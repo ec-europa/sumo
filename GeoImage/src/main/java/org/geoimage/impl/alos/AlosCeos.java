@@ -9,13 +9,10 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.gdal.gdal.gdal;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -25,22 +22,13 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class AlosCeos extends Alos {
 	private Logger logger= LoggerFactory.getLogger(AlosCeos.class);
-
-	protected int[] preloadedInterval = new int[]{0, 0};
-	protected short[] preloadedData;
-
-	private AlosProperties props=null;
-	protected Map<String, TIFF> alosImages;
 	
 	public AlosCeos(File manifest){
 		super(manifest);
-		props=new AlosProperties(manifest);
 	}
 	
 
@@ -67,8 +55,6 @@ public class AlosCeos extends Alos {
         		alosImages.put(img.substring(4,6),t);
         	}
             
-            String bandName=getBandName(0);
-            //String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
         	super.pixelsize[0]=props.getPixelSpacing();
         	super.pixelsize[1]=props.getPixelSpacing();
 
@@ -88,8 +74,6 @@ public class AlosCeos extends Alos {
             
            	String epsg = "EPSG:4326";
            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
-            
-            
             
             double[] latlon = geotransform.getGeoFromPixel(0, 0);
             double[] position = new double[3];
@@ -115,72 +99,8 @@ public class AlosCeos extends Alos {
         return false;
 	}
 	
-	 /**
-     * 
-     * @param productxml
-     * @param safeReader
-     * @param annotationReader
-     * @throws TransformException
-     */
-	protected void setXMLMetaData() {
-        	setSatellite(new String("ALOS"));
-        	
-        	//polarizations string
-        	List<String> pols=props.getPolarizations();
-        	String strPol="";
-            for (String p:pols) {
-            	strPol=strPol.concat(p).concat(" ");
-            }
-            setPolarization(strPol);
-            setSensor("ALOS");
-            
-            setSatelliteOrbitInclination(98.18);
 
-            setRangeSpacing(new Float(props.getPixelSpacing()));
-            setAzimuthSpacing(new Float(props.getPixelSpacing()));
-            setMetaHeight(props.getNumberOfLines());
-            setMetaWidth(props.getNumberOfPixels());
-            setNumberBands(pols.size());
-            setNumberOfBytes(16);
-            
-            //TODO:check this value
-            //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
-            setENL("2.3");//String.valueOf(enl));
-
-            /*String start=header.getStartTime().toString().replace('T', ' ');	
-            String stop=header.getStopTime().toString().replace('T', ' ');
-            setTimeStampStart(start);//Timestamp.valueOf(start));
-            setTimeStampStop(stop);//Timestamp.valueOf(stop));
-            */
-            
-    }
 	
-
-	@Override
-	public String getBandName(int band) {
-		return "HH";//polarizations.get(band);
-	}
-	
-	@Override
-	public String[] getBands() {
-		return polarizations.toArray(new String[0]);
-	}
-	
-	@Override
-	public String getImgName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDisplayName(int band) {
-		try{
-        	return alosImages.get(getBandName(band)).getImageFile().getName();
-    	}catch(Exception e){
-    		return "Alos-IMG-"+System.currentTimeMillis();
-    	}
-	}
-
 	@Override
 	public int getWidth() {
 		return getImage(0).xSize;
@@ -220,7 +140,7 @@ public class AlosCeos extends Alos {
 	public TIFF getImage(int band){
 		TIFF img=null;
 		try{
-			img = alosImages.get(getBandName(band));
+			img =(TIFF) alosImages.get(getBandName(band));
 		}catch(Exception e){ 
 			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
 		}
@@ -245,12 +165,9 @@ public class AlosCeos extends Alos {
       int data[]=null;
 
        TIFF tiff=getImage(band);
-       TIFFImageReader reader=tiff.getReader();
        try {
-           TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
-           tirp.setSourceRegion(rect);
        	BufferedImage bi=null;
-   		bi=reader.read(0, tirp);
+   		bi=tiff.read(0, rect);
    		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
    		short[] b=raster.getData();
    		data=new int[b.length];
@@ -260,7 +177,6 @@ public class AlosCeos extends Alos {
        } catch (Exception ex) {
            logger.warn(ex.getMessage());
        }finally{
-       	reader.dispose();
        }
       
       return data;
@@ -316,15 +232,9 @@ public class AlosCeos extends Alos {
         rect=tiff.getBounds().intersection(rect);
 
         try {
-        	TIFFImageReader reader=tiff.getReader();
-            TIFFImageReadParam tirp =(TIFFImageReadParam)reader.getDefaultReadParam();
-            tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	
         	try{
-
-        			bi=reader.read(0, tirp);
-
+        			bi=tiff.read(0, rect);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -332,7 +242,7 @@ public class AlosCeos extends Alos {
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=reader.read(0, tirp);
+        		bi=tiff.read(0, rect);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);

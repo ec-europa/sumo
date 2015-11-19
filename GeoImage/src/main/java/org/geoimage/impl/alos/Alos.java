@@ -6,18 +6,17 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.impl.ITIFF;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 public abstract class Alos extends SarImageReader {
 	private Logger logger= LoggerFactory.getLogger(Alos.class);
@@ -25,9 +24,9 @@ public abstract class Alos extends SarImageReader {
 	protected int[] preloadedInterval = new int[]{0, 0};
 	protected short[] preloadedData;
 
-	private AlosProperties props=null;
+	protected AlosProperties props=null;
 	protected List<String> polarizations=null;
-	protected Map<String, TIFF> alosImages;
+	protected Map<String, IReader> alosImages;
 	
 	public Alos(File manifest){
 		super(manifest);
@@ -58,14 +57,6 @@ public abstract class Alos extends SarImageReader {
 	@Override
 	public abstract boolean initialise();
 	
-	 /**
-     * 
-     * @param productxml
-     * @param safeReader
-     * @param annotationReader
-     * @throws TransformException
-     */
-    protected abstract void setXMLMetaData();
 
     //TODO 
     @Override
@@ -133,8 +124,8 @@ public abstract class Alos extends SarImageReader {
 	}
 
 	
-	public ITIFF getImage(int band){
-		ITIFF img=null;
+	public IReader getImage(int band){
+		IReader img=null;
 		try{
 			img = alosImages.get(getBandName(band));
 		}catch(Exception e){ 
@@ -161,22 +152,17 @@ public abstract class Alos extends SarImageReader {
       rect = rect.intersection(tiff.getBounds());
       int data[]=null;
 
-       TIFFImageReader reader=tiff.getReader();
        try {
-           TIFFImageReadParam tirp =(TIFFImageReadParam) reader.getDefaultReadParam();
-           tirp.setSourceRegion(rect);
-       	BufferedImage bi=null;
-   		bi=reader.read(0, tirp);
-   		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
-   		short[] b=raster.getData();
-   		data=new int[b.length];
-       	for(int i=0;i<b.length;i++)
-       		data[i]=b[i];
+	       	BufferedImage bi=null;
+	   		bi=tiff.read(0, rect);
+	   		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
+	   		short[] b=raster.getData();
+	   		data=new int[b.length];
+	       	for(int i=0;i<b.length;i++)
+	       		data[i]=b[i];
    		
        } catch (Exception ex) {
            logger.warn(ex.getMessage());
-       }finally{
-       	reader.dispose();
        }
       
       return data;
@@ -238,14 +224,9 @@ public abstract class Alos extends SarImageReader {
         rect=tiff.getBounds().intersection(rect);
         
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
-            tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	TIFFImageReader reader=tiff.getReader();
         	try{
-
-        			bi=reader.read(0, tirp);
-
+        			bi=tiff.read(0, rect);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -253,7 +234,7 @@ public abstract class Alos extends SarImageReader {
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=reader.read(0, tirp);
+        		bi=tiff.read(0, rect);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
@@ -267,6 +248,49 @@ public abstract class Alos extends SarImageReader {
 
 	}
 
+	 /**
+     * 
+     * @param productxml
+     * @param safeReader
+     * @param annotationReader
+     * @throws TransformException
+     */
+    protected void setXMLMetaData() {
+        	setSatellite(new String("ALOS"));
+        	
+        	//polarizations string
+        	List<String> pols=props.getPolarizations();
+        	String strPol="";
+            for (String p:pols) {
+            	strPol=strPol.concat(p).concat(" ");
+            }
+            setPolarization(strPol);
+            setSensor("ALOS");
+            
+            setSatelliteOrbitInclination(98.18);
+
+            setRangeSpacing(new Float(props.getPixelSpacing()));
+            setAzimuthSpacing(new Float(props.getPixelSpacing()));
+            setMetaHeight(props.getNumberOfLines());
+            setMetaWidth(props.getNumberOfPixels());
+            setNumberBands(pols.size());
+            setNumberOfBytes(16);
+            
+            //TODO:check this value
+            //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
+            setENL("1");//String.valueOf(enl));
+
+            /*String start=header.getStartTime().toString().replace('T', ' ');	
+            String stop=header.getStopTime().toString().replace('T', ' ');*/
+            
+            Date st=props.getStartDate();
+            Date end=props.getEndDate();
+            Timestamp t=new Timestamp(st.getTime());
+            setTimeStampStart(t.toString());//Timestamp.valueOf(start));
+            t.setTime(end.getTime());
+            setTimeStampStop(t.toString());//Timestamp.valueOf(stop));
+    }
+	
 	@Override
 	public String getInternalImage() {
 		// TODO Auto-generated method stub

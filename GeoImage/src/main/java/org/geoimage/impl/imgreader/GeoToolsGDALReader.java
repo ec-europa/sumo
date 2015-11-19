@@ -2,93 +2,94 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.impl;
+package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
+import org.gdal.gdal.Band;
+import org.gdal.gdal.Dataset;
+import org.gdal.gdal.GCP;
+import org.gdal.gdal.gdal;
+import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
+import it.geosolutions.imageio.gdalframework.GDALUtilities;
 
 /**
  * This is a convenience class that warp a tiff image to easily use in the case
  * of one geotiff per band (like radarsat 2 images)
  * @author thoorfr
  */
-public class TIFF implements ITIFF {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(TIFF.class);
+public class GeoToolsGDALReader implements IReader {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoToolsGDALReader.class);
 
 
     private File imageFile;
-    private TIFFImageReader reader;
     public int xSize = -1;
     public int ySize = -1;
     private Rectangle bounds;
-    
-    
+    private int band=1;
+    private Dataset data;
 	ImageInputStream iis = null;
 
-    /* (non-Javadoc)
-	 * @see org.geoimage.impl.ITIFF#getReader()
-	 */
-	public TIFFImageReader getReader() {
-		return reader;
-	}
-
-	public void setReader(TIFFImageReader reader) {
-		this.reader = reader;
-	}
+	
     
     /**
      * 
      * @param imageFile
      * @param band form files with multiple band
      */
-	public TIFF(File imageFile,int band) {
+	public GeoToolsGDALReader(File imageFile,int band) {
     	this.imageFile=imageFile;
         try {
-            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("tiff");
-            boolean worked=false;
-            while(readers.hasNext()&&!worked){
-            	Object obj=readers.next();
-            	if( obj instanceof TIFFImageReader){
-            		reader = (TIFFImageReader)obj;
-            		iis=ImageIO.createImageInputStream(imageFile);
-            		reader.setInput(iis);
-            		try{
-            			xSize=reader.getWidth(band);
-            			ySize=reader.getHeight(band);
-            			bounds=new Rectangle(0,0,xSize,ySize);
-            		}catch(Exception e){
-            			bounds=null;
-            			logger.warn("Problem reading size information");
-            		}	
-            		worked=true;
-            	}else{
-            		
-            	}
-            }
-            if(!worked){
-            	logger.warn("No reader avalaible for this image");
-            }
+        	boolean bb=GDALUtilities.isGDALAvailable();
+        	GDALUtilities.loadGDAL();
+
+/*        	GDALImageReaderSpi spi=null;
+        	IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
+            final Class<ImageReaderSpi> spiClass = ImageReaderSpi.class;
+            final Iterator<ImageReaderSpi> iter = iioRegistry.getServiceProviders(spiClass,true);
+            while (iter.hasNext()) {
+                final ImageReaderSpi provider = (ImageReaderSpi) iter.next();
+                if (provider instanceof GDALImageReaderSpi) {
+                	spi=(GDALImageReaderSpi)provider;
+                	break;
+                }
+            }*/
+        	this.band=band;
+        	data=GDALUtilities.acquireDataSet(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
+    		try{
+    			xSize=data.getRasterXSize();
+    			ySize=data.getRasterYSize();
+    			bounds=new Rectangle(0,0,xSize,ySize);
+    		}catch(Exception e){
+    			bounds=null;
+    			logger.warn("Problem reading size information");
+    		}	
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }	
-//        }finally{
-//        	if(iis!=null)
-//				try {
-//					iis.flush();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//        }
+	}
+	
+	public short[] readShortValues(int x,int y,int offsetx,int offsety){
+		int pixels = offsetx * offsety;
+		Band b=data.GetRasterBand(band);
+		int type=gdal.GetDataTypeSize(b.getDataType());
+		int buf_size = pixels;// * type ;
+
+		short[] dd = new short[buf_size];
+		int ok = b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
+		return dd;
+	}
+	
+	public List<GCP> getGCPS(){
+		return this.data.GetGCPs();
 	}
 	
 	
@@ -152,9 +153,8 @@ public class TIFF implements ITIFF {
 	 */
 	@Override
 	public void dispose(){
-		reader.dispose();
 		imageFile=null;
-		reader=null;
+		GDALUtilities.closeDataSet(data);
 		try {
 			iis.close();
 			iis=null;
@@ -176,6 +176,7 @@ public class TIFF implements ITIFF {
 	public void setImageFile(File imageFile) {
 		this.imageFile = imageFile;
 	}
+	
 	
 		
 

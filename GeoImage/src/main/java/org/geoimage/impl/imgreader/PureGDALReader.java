@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.impl;
+package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
  * of one geotiff per band (like radarsat 2 images)
  * @author thoorfr
  */
-public class GDALTIFF implements ITIFF{
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GDALTIFF.class);
+public class PureGDALReader implements IReader{
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PureGDALReader.class);
 
 
     private File imageFile;
@@ -57,7 +57,7 @@ public class GDALTIFF implements ITIFF{
      * @param imageFile
      * @param band form files with multiple band
      */
-	public GDALTIFF(File imageFile,int bband) {
+	public PureGDALReader(File imageFile,int bband) {
 		gdal.AllRegister();
     	this.imageFile=imageFile;
         try {
@@ -83,8 +83,8 @@ public class GDALTIFF implements ITIFF{
 	
 	
 	public short[] readShortValues(int x,int y,int offsetx,int offsety){
-		int pixels = xSize * offsetx;
-		int buf_size = pixels * gdal.GetDataTypeSize(buf_type) / 8;
+		int pixels = offsetx * offsety;
+		int buf_size = pixels;
 
 		short[] dd = new short[buf_size];
 		int ok = band.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);

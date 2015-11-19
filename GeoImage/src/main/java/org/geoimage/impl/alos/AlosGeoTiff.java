@@ -6,16 +6,13 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -25,19 +22,10 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class AlosGeoTiff extends Alos {
 	private Logger logger= LoggerFactory.getLogger(AlosGeoTiff.class);
-
-	protected int[] preloadedInterval = new int[]{0, 0};
-	protected short[] preloadedData;
-
-	private AlosProperties props=null;
-	private List<String> polarizations=null;
-	protected Map<String, TIFF> alosImages;
 	
 	public AlosGeoTiff(File manifest){
 		super(manifest);
@@ -135,48 +123,7 @@ public class AlosGeoTiff extends Alos {
         return false;
 	}
 	
-	 /**
-     * 
-     * @param productxml
-     * @param safeReader
-     * @param annotationReader
-     * @throws TransformException
-     */
-    protected void setXMLMetaData() {
-        	setSatellite(new String("ALOS"));
-        	
-        	//polarizations string
-        	List<String> pols=props.getPolarizations();
-        	String strPol="";
-            for (String p:pols) {
-            	strPol=strPol.concat(p).concat(" ");
-            }
-            setPolarization(strPol);
-            setSensor("ALOS");
-            
-            setSatelliteOrbitInclination(98.18);
-
-            setRangeSpacing(new Float(props.getPixelSpacing()));
-            setAzimuthSpacing(new Float(props.getPixelSpacing()));
-            setMetaHeight(props.getNumberOfLines());
-            setMetaWidth(props.getNumberOfPixels());
-            setNumberBands(pols.size());
-            setNumberOfBytes(16);
-            
-            //TODO:check this value
-            //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
-            setENL("2.3");//String.valueOf(enl));
-
-            /*String start=header.getStartTime().toString().replace('T', ' ');	
-            String stop=header.getStopTime().toString().replace('T', ' ');*/
-            
-            Date st=props.getStartDate();
-            Date end=props.getEndDate();
-            Timestamp t=new Timestamp(st.getTime());
-            setTimeStampStart(t.toString());//Timestamp.valueOf(start));
-            t.setTime(end.getTime());
-            setTimeStampStop(t.toString());//Timestamp.valueOf(stop));
-    }
+	
     
     //TODO 
     @Override
@@ -247,7 +194,7 @@ public class AlosGeoTiff extends Alos {
 	public TIFF getImage(int band){
 		TIFF img=null;
 		try{
-			img = alosImages.get(getBandName(band));
+			img = (TIFF)alosImages.get(getBandName(band));
 		}catch(Exception e){ 
 			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
 		}
@@ -272,12 +219,9 @@ public class AlosGeoTiff extends Alos {
       int data[]=null;
 
        TIFF tiff=getImage(band);
-       TIFFImageReader reader=tiff.getReader();
        try {
-           TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
-           tirp.setSourceRegion(rect);
        	BufferedImage bi=null;
-   		bi=reader.read(0, tirp);
+   		bi=tiff.read(0, rect);
    		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
    		short[] b=raster.getData();
    		data=new int[b.length];
@@ -287,7 +231,6 @@ public class AlosGeoTiff extends Alos {
        } catch (Exception ex) {
            logger.warn(ex.getMessage());
        }finally{
-       	reader.dispose();
        }
       
       return data;
@@ -343,16 +286,10 @@ public class AlosGeoTiff extends Alos {
         
         TIFF tiff=getImage(band);
         rect=tiff.getBounds().intersection(rect);
-        
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
-            tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	TIFFImageReader reader=tiff.getReader();
         	try{
-
-        			bi=reader.read(0, tirp);
-
+        			bi=tiff.read(0, rect);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -360,7 +297,7 @@ public class AlosGeoTiff extends Alos {
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=reader.read(0, tirp);
+        		bi=tiff.read(0, rect);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);

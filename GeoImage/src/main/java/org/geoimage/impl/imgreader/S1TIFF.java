@@ -2,11 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.impl.s1;
+package org.geoimage.impl.imgreader;
 
 import java.io.File;
-
-import org.geoimage.impl.TIFF;
 
 import jrc.it.safe.reader.xpath.object.wrapper.BurstInformation;
 
