@@ -473,8 +473,13 @@ public class VDSAnalysis{
                 		int x=i%200;
                 		if(x==0)
                 			y++;
-                		if(rastermask==null||rastermask.getSample(x, y, 0)==0){
-                			tileAvg=tileAvg+data[iBand][i];
+                		
+                		try{
+                			if(rastermask==null||rastermask.getSample(x, y, 0)==0){
+                				tileAvg=tileAvg+data[iBand][i];
+                			}
+                		}catch(Exception e ){
+                			System.out.println("X:"+x+"Y:"+y);
                 		}	
                 	}
                 	tileAvg=tileAvg/i;

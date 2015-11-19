@@ -15,9 +15,9 @@ import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.ITIFF;
-import org.geoimage.impl.TIFF;
 import org.geoimage.impl.geoop.GeoTransformOrbitState;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.util.Constant;
 import org.geotools.referencing.CRS;
@@ -376,12 +376,10 @@ public abstract class Sentinel1 extends SarImageReader {
        int data[]=null;
 
         TIFF tiff=getImage(band);
-        TIFFImageReader reader=tiff.getReader();
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.getReader().getDefaultReadParam();
-            tirp.setSourceRegion(rect);
+            
         	BufferedImage bi=null;
-    		bi=reader.read(0, tirp);
+    		bi=tiff.read(0, rect);
     		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
     		short[] b=raster.getData();
     		data=new int[b.length];
@@ -391,7 +389,6 @@ public abstract class Sentinel1 extends SarImageReader {
         } catch (Exception ex) {
             logger.warn(ex.getMessage());
         }finally{
-        	reader.dispose();
         }
        
        return data;
@@ -421,7 +418,7 @@ public abstract class Sentinel1 extends SarImageReader {
     public void dispose() {
     	super.dispose();
         if(tiffImages==null) return;
-        for(ITIFF t:tiffImages.values()){
+        for(IReader t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;

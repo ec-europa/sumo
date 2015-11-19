@@ -4,18 +4,16 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.gdal.gdal.GCP;
-import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.GDALTIFF;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.ITIFF;
+import org.geoimage.impl.imgreader.GeoToolsGDALReader;
+import org.geoimage.impl.imgreader.IReader;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -25,15 +23,9 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class GDALAlosCeos extends Alos {
 	private Logger logger = LoggerFactory.getLogger(GDALAlosCeos.class);
-
-	protected int[] preloadedInterval = new int[] { 0, 0 };
-	protected short[] preloadedData;
-
-	private AlosProperties props = null;
-	private List<String> polarizations = null;
-	protected Map<String, ITIFF> alosImages;
 
 	public GDALAlosCeos(File manifest) {
 		super(manifest);
@@ -78,7 +70,7 @@ public class GDALAlosCeos extends Alos {
 			for (int i = 0; i < imgNames.size(); i++) {
 				String img = imgNames.get(i);
 				File imgFile = new File(mainFolder.getAbsolutePath() + File.separator + img);
-				GDALTIFF t = new GDALTIFF(imgFile, 0);
+				GeoToolsGDALReader t = new GeoToolsGDALReader(imgFile, 1);
 				alosImages.put(img.substring(4, 6), t);
 			}
 
@@ -92,8 +84,8 @@ public class GDALAlosCeos extends Alos {
 
 			// we have only the corners
 			gcps = new ArrayList<>();
-			GDALTIFF tiff=(GDALTIFF)alosImages.values().iterator().next();
-			List<GCP> gcpsGDAL=tiff.getGpcs();
+			GeoToolsGDALReader image=(GeoToolsGDALReader)alosImages.values().iterator().next();
+			List<GCP> gcpsGDAL=image.getGCPS();
 			for(GCP gcp:gcpsGDAL){
 				Gcp g=new Gcp(gcp.getGCPPixel(),gcp.getGCPLine(),gcp.getGCPX(),gcp.getGCPY());
 				gcps.add(g);
@@ -126,62 +118,8 @@ public class GDALAlosCeos extends Alos {
 		return false;
 	}
 
-	/**
-	 * 
-	 * @param productxml
-	 * @param safeReader
-	 * @param annotationReader
-	 * @throws TransformException
-	 */
-	protected void setXMLMetaData() {
-		setSatellite(new String("ALOS"));
-
-		// polarizations string
-		List<String> pols = props.getPolarizations();
-		String strPol = "";
-		for (String p : pols) {
-			strPol = strPol.concat(p).concat(" ");
-		}
-		setPolarization(strPol);
-		setSensor("ALOS");
-
-		setSatelliteOrbitInclination(98.18);
-
-		setRangeSpacing(new Float(props.getPixelSpacing()));
-		setAzimuthSpacing(new Float(props.getPixelSpacing()));
-		setMetaHeight(props.getNumberOfLines());
-		setMetaWidth(props.getNumberOfPixels());
-		setNumberBands(pols.size());
-		setNumberOfBytes(16);
-
-		// TODO:check this value
-		// float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
-		setENL("2.3");// String.valueOf(enl));
-
-		/*
-		 * String start=header.getStartTime().toString().replace('T', ' ');
-		 * String stop=header.getStopTime().toString().replace('T', ' ');
-		 * setTimeStampStart(start);//Timestamp.valueOf(start));
-		 * setTimeStampStop(stop);//Timestamp.valueOf(stop));
-		 */
-
-	}
-
-	@Override
-	public String getBandName(int band) {
-		return "HH";// polarizations.get(band);
-	}
-
-	@Override
-	public String[] getBands() {
-		return polarizations.toArray(new String[0]);
-	}
-
-	@Override
-	public String getImgName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
 	@Override
 	public String getDisplayName(int band) {
@@ -226,8 +164,8 @@ public class GDALAlosCeos extends Alos {
 		return "ALOS";
 	}
 
-	public ITIFF getImage(int band) {
-		ITIFF img = null;
+	public IReader getImage(int band) {
+		IReader img = null;
 		try {
 			img = alosImages.get(getBandName(band));
 		} catch (Exception e) {
@@ -240,7 +178,22 @@ public class GDALAlosCeos extends Alos {
 
 	@Override
 	public int[] read(int x, int y, int width, int height, int band)  {
-		return null;
+	      int data[]=null;
+
+	      GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
+	       try {
+
+		   		short[] b=tiff.readShortValues(x, y, width,height);
+		   		data=new int[b.length];
+		       	for(int i=0;i<b.length;i++)
+		       		data[i]=b[i];
+		   		
+		       } catch (Exception ex) {
+		           logger.warn(ex.getMessage());
+		       }finally{
+		       }
+	      
+	      return data;
 	}
 
 	@Override
@@ -256,7 +209,7 @@ public class GDALAlosCeos extends Alos {
 				|| preloadedData.length < (rect.y * rect.height - 1)) {
 			preloadLineTile(rect.y, rect.height, band);
 		} else {
-			// logger.debug("using preloaded data");
+			 //logger.debug("using preloaded data");
 		}
 
 		int yOffset = getImage(band).getxSize();
@@ -281,9 +234,9 @@ public class GDALAlosCeos extends Alos {
 		rect = rect.intersection(getImage(band).getBounds());
 		short data[] = null;
 
-		GDALTIFF tiff = (GDALTIFF)getImage(band);
+		GeoToolsGDALReader img = (GeoToolsGDALReader)getImage(band);
 		try {
-			data=tiff.readShortValues(x, y,1,1);
+			data=img.readShortValues(x, y,1,1);
 		} finally {
 		}
 
@@ -296,12 +249,12 @@ public class GDALAlosCeos extends Alos {
 		if (y < 0) {
 			return;
 		}
-		GDALTIFF tiff = (GDALTIFF)getImage(band);
+		GeoToolsGDALReader tiff = (GeoToolsGDALReader)getImage(band);
 		
 		preloadedInterval = new int[] { y, y + length };
 		Rectangle rect = new Rectangle(0, y, tiff.getxSize(), length);
 		
-		rect = tiff.bounds.intersection(rect);
+		rect = tiff.getBounds().intersection(rect);
 
 		try {
 			short[] bi = null;
@@ -326,6 +279,12 @@ public class GDALAlosCeos extends Alos {
 
 	}
 
+	public void setXMLMetaData() {
+		super.setXMLMetaData();
+		
+	}
+	
+	
 	@Override
 	public String getInternalImage() {
 		return null;
@@ -334,7 +293,7 @@ public class GDALAlosCeos extends Alos {
 	public static void main(String args[]) {
 		File f = new File(
 				"F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
-		GDALTIFF gg = new GDALTIFF(f, 0);
+		GeoToolsGDALReader gg = new GeoToolsGDALReader(f, 0);
 
 		System.out.println("x:" + gg.xSize + " - y:" + gg.ySize);
 

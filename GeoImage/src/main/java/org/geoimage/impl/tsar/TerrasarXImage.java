@@ -19,8 +19,8 @@ import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.ITIFF;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -475,7 +475,7 @@ public class TerrasarXImage extends SarImageReader {
         TIFFImageReadParam tirp=new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
-        int[] rawData = tiff.getReader().read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        int[] rawData = tiff.read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
         
         int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
@@ -520,7 +520,7 @@ public class TerrasarXImage extends SarImageReader {
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
         try {
-            return  tiff.getReader().read(0, t).getRGB(x, y);
+            return  tiff.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -556,7 +556,7 @@ public class TerrasarXImage extends SarImageReader {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedData =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
+            preloadedData =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -566,7 +566,7 @@ public class TerrasarXImage extends SarImageReader {
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(ITIFF t:tiffImages.values()){
+        for(IReader t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;

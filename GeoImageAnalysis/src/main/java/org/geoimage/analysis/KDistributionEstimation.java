@@ -316,7 +316,7 @@ public class KDistributionEstimation {
 						try{
 							val = data[y * sizeTileX + x];
 						}catch(Exception e ){
-							logger.warn(e.getMessage());
+							logger.warn(e.toString(),e);
 							break;
 						}	
 	
