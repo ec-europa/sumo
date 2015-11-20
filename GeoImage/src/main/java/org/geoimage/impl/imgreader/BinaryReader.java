@@ -1,0 +1,103 @@
+package org.geoimage.impl.imgreader;
+
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+
+public class BinaryReader{
+	private File binFile=null;
+	private RandomAccessFile inputStream;
+	
+	public BinaryReader(File binary) throws FileNotFoundException{
+		binFile=binary;
+		inputStream=new RandomAccessFile(binFile,"r");
+	}
+	public BinaryReader(String pathBinary) throws FileNotFoundException{
+		binFile=new File(pathBinary);
+		inputStream=new RandomAccessFile(binFile,"r");
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] readBytes(int position,int numBytes) throws IOException{
+			inputStream.seek(position);
+			byte[] buff= new  byte[numBytes];
+			inputStream.read(buff, 0, numBytes);
+		return buff;
+	}
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public short[] readShort(int startPosition,int x,int y,int offsetx ,int offsety) throws IOException{
+		int buf_size = offsetx * offsety;
+		short[] dd = new short[buf_size];
+		
+		inputStream.seek(startPosition);
+		
+		for(int i=0;i<dd.length;i++){
+			dd[i]=(short)inputStream.readUnsignedShort();
+		}
+			//inputStream.seek(startPosition);
+			//int val=inputStream.readUnsignedShort();
+			//inputStream.read(buff, 0, numBytes);
+		return dd;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public void readCompleteImg() throws IOException{
+			inputStream.seek(720);
+			int val=inputStream.readUnsignedShort();
+			
+			while(val>=0){
+				System.out.println(val);
+				val=inputStream.readUnsignedShort();
+			}	
+		//return buff;
+	} 
+
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] readBytes(int numBytes) throws IOException{
+		byte[] buff= new  byte[numBytes];
+		inputStream.read(buff, 0, numBytes);
+		return buff;
+	} 
+	
+	public void dispose(){
+		if(inputStream!=null){
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				inputStream=null;
+			}
+		}	
+	}
+	
+	
+
+	
+}
