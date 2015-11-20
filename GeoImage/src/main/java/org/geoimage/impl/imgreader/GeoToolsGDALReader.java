@@ -7,7 +7,6 @@ package org.geoimage.impl.imgreader;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.imageio.stream.ImageInputStream;
@@ -15,7 +14,6 @@ import javax.imageio.stream.ImageInputStream;
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.GCP;
-import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
@@ -76,12 +74,19 @@ public class GeoToolsGDALReader implements IReader {
         	logger.error(ex.getMessage(),ex);
         }	
 	}
-	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param offsetx
+	 * @param offsety
+	 * @return
+	 */
 	public short[] readShortValues(int x,int y,int offsetx,int offsety){
 		int pixels = offsetx * offsety;
 		Band b=data.GetRasterBand(band);
-		int type=gdal.GetDataTypeSize(b.getDataType());
-		int buf_size = pixels;// * type ;
+		//int type=gdal.GetDataTypeSize(b.getDataType());
+		int buf_size = pixels;
 
 		short[] dd = new short[buf_size];
 		int ok = b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
