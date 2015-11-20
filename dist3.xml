@@ -63,9 +63,8 @@
         <copy file="${dir.buildfile}/libs/smtp.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/svgSalamander.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/toplink-grid.jar" todir="${dir.jarfile}/sumo_lib"/>
-        <copy file="${dir.buildfile}/libs/gdal_lib_win64/gdal/java/gdal.jar" todir="${dir.jarfile}/sumo_lib"/>
-        <copy file="${dir.buildfile}/libs/gdal_lib_win64/gdal.jar" todir="${dir.jarfile}/sumo_lib"/>
-        <copy file="${dir.buildfile}/libs/geotools-12.0/batik-transcoder-1.7.jar" todir="${dir.jarfile}/sumo_lib"/>
+        <copy file="${dir.buildfile}/libs/gdal_lib_win64/bin/gdal/java/gdal.jar" todir="${dir.jarfile}/sumo_lib"/>
+       
         <copy file="${dir.buildfile}/libs/geotools-12.0/bridj-0.6-c-only.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/geotools-12.0/bufr-4.3.16.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/geotools-12.0/common-2.6.0.jar" todir="${dir.jarfile}/sumo_lib"/>
@@ -287,5 +286,12 @@
         <copy file="${dir.buildfile}/libs/swing-worker-1.1.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/swing-layout-1.0.4.jar" todir="${dir.jarfile}/sumo_lib"/>
         <copy file="${dir.buildfile}/libs/ConcaveHull-0.2.jar" todir="${dir.jarfile}/sumo_lib"/>
+        
+        <!-- copy file="${dir.buildfile}/libs/geotools-12.0/batik-transcoder-1.7.jar" todir="${dir.jarfile}/sumo_lib"/ -->
+        <copy todir="${dir.jarfile}/sumo_lib/gdal_lib_win64/">
+    		<fileset dir="${dir.buildfile}/libs/gdal_lib_win64/">
+        		<include name="**/*"/>
+    		</fileset>
+		</copy>
     </target>
 </project>
