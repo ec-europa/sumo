@@ -33,7 +33,6 @@ public class CeosBinaryReader extends BinaryReader implements IReader{
 	}
 	
 	
-	
 	@Override
 	public int getxSize() {
 		return prop.getNumberOfPixels();

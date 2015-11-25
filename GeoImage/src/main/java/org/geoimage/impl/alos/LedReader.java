@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.geoimage.impl.imgreader.BinaryReader;
+import org.geoimage.impl.imgreader.CeosBinaryReader;
 
 /*
 1 File descriptor         720 
@@ -29,24 +30,7 @@ public class LedReader {
 	}
 	
 	
-	public int readB4(int pos,int len,boolean bigEndian) throws IOException{
-		byte[] b=reader.readBytes(pos,len);
-		int i=0;
-		/*int i= (b[0]<<24)&0xff000000|
-			       (b[1]<<16)&0x00ff0000|
-			       (b[2]<< 8)&0x0000ff00|
-			       (b[3]<< 0)&0x000000ff;
-		*/
-		if (bigEndian) {
-            i= (((b[0] & 0xFF) << 24) + ((b[1] & 0xFF) << 16)
-                    + ((b[2] & 0xFF) << 8) + ((b[3] & 0xFF)));
-        } else {
-            i= (((b[3] & 0xFF) << 24) + ((b[2] & 0xFF) << 16)
-                    + ((b[1] & 0xFF) << 8) + ((b[0] & 0xFF)));
-        }
-		
-		return i;
-	}
+	
 	
 	public String readString(int pos,int nbytes) throws IOException {
         final byte[] data=reader.readBytes(pos,nbytes);
@@ -54,11 +38,11 @@ public class LedReader {
     }
 	
 	public int readField1() throws IOException{
-		return readB4(FIELD_1[0], FIELD_1[1],true);
+		return reader.readB4(FIELD_1[0], FIELD_1[1],true);
 	}
 	
 	public int readField6() throws IOException{
-		return readB4(8, 4,true);
+		return reader.readB4(8, 4,true);
 	}
 	
 	
@@ -66,7 +50,7 @@ public class LedReader {
 		String sceneid=readString((719+21),32);
 		System.out.println(":"+sceneid);
 		
-		int first=readB4(719,4,false);
+		int first=reader.readB4(719,4,false);
 		System.out.println(":"+first);
 		
 		String ellipse=readString((719+165),16);

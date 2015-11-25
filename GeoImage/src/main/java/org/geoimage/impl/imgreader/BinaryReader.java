@@ -1,6 +1,5 @@
 package org.geoimage.impl.imgreader;
 
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,6 +18,26 @@ public class BinaryReader{
 		binFile=new File(pathBinary);
 		inputStream=new RandomAccessFile(binFile,"r");
 	}
+	
+	public int readB4(int pos,int len,boolean bigEndian) throws IOException{
+		byte[] b=readBytes(pos,len);
+		int i=0;
+		/*int i= (b[0]<<24)&0xff000000|
+			       (b[1]<<16)&0x00ff0000|
+			       (b[2]<< 8)&0x0000ff00|
+			       (b[3]<< 0)&0x000000ff;
+		*/
+		if (bigEndian) {
+            i= (((b[0] & 0xFF) << 24) + ((b[1] & 0xFF) << 16)
+                    + ((b[2] & 0xFF) << 8) + ((b[3] & 0xFF)));
+        } else {
+            i= (((b[3] & 0xFF) << 24) + ((b[2] & 0xFF) << 16)
+                    + ((b[1] & 0xFF) << 8) + ((b[0] & 0xFF)));
+        }
+		
+		return i;
+	}
+	
 	
 	/**
 	 * 
