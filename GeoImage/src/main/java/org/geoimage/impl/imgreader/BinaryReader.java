@@ -52,6 +52,18 @@ public class BinaryReader{
 			inputStream.read(buff, 0, numBytes);
 		return buff;
 	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] readBytes(int position,int numBytes,int offset) throws IOException{
+			return readBytes(position+offset, numBytes);
+	}
+	
 	/**
 	 * 
 	 * @param position
