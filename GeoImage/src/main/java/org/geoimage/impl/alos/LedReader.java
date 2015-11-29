@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.geoimage.impl.imgreader.BinaryReader;
-import org.geoimage.impl.imgreader.CeosBinaryReader;
 
 /*
 1 File descriptor         720 

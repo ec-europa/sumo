@@ -38,6 +38,27 @@ public class BinaryReader{
 		return i;
 	}
 	
+	 public int readB6(int pos,int len) throws IOException {
+		 	byte[] array=readBytes(pos,len);
+		 	  return 
+		 	  ((int)(array[0] & 0xff) << 40) |
+		      ((int)(array[1] & 0xff) << 32) |
+		      ((int)(array[2] & 0xff) << 24) |
+		      ((int)(array[3] & 0xff) << 16) |
+		      ((int)(array[4] & 0xff) << 8) |
+		      ((int)(array[5] & 0xff));
+    }
+	 
+	 public int readB3(int pos,int len) throws IOException {
+		 	byte[] array=readBytes(pos,len);
+		 	  return 
+		      ((int)(array[0] & 0xff) << 16) |
+		      ((int)(array[1] & 0xff) << 8) |
+		      ((int)(array[2] & 0xff));
+ } 
+	
+	
+	
 	
 	/**
 	 * 

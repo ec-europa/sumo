@@ -10,7 +10,7 @@ import org.geoimage.impl.alos.AlosProperties;
 
 public class CeosBinaryReader extends BinaryReader implements IReader{
 	AlosProperties prop=null;
-	public final int OFF_SET=720;
+	public final int OFF_SET=720+545;
 	
 	public CeosBinaryReader(File file,AlosProperties alosProp) throws FileNotFoundException{
 		super(file);
@@ -26,7 +26,7 @@ public class CeosBinaryReader extends BinaryReader implements IReader{
 	 * @throws IOException
 	 */
 	public short[] readShort(int x,int y,int width ,int height) throws IOException{
-		int position=this.getySize()*y+x+OFF_SET;
+		int position=(this.getxSize()-1)*(y-2)+x+OFF_SET;
 		short[] dd =super.readShort(position, x, y, width, height);
 		
 		return dd;

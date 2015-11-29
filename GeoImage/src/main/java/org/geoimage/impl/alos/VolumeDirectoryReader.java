@@ -156,7 +156,9 @@ public class VolumeDirectoryReader {
 	
 	public static void main(String[] args){
 		try {
-			VolumeDirectoryReader vol=new VolumeDirectoryReader(new File("F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/VOL-ALOS2049273700-150422-FBDR1.5RUD"));
+			String h="H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/VOL-ALOS2049273700-150422-FBDR1.5RUD";
+			String c="F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/VOL-ALOS2049273700-150422-FBDR1.5RUD";
+			VolumeDirectoryReader vol=new VolumeDirectoryReader(new File(h));
 			String xx=vol.getLogicVolumeId();
 			System.out.println(xx);
 			
