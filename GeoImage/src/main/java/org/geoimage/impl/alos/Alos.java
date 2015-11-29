@@ -83,7 +83,7 @@ public abstract class Alos extends SarImageReader {
 	public String getDisplayName(int band) {
 		try{
         	return alosImages.get(getBandName(band)).getImageFile().getName();
-    	}catch(Exception e){
+    	}catch(Exception e){//TODO this is a problem
     		return "Alos-IMG-"+System.currentTimeMillis();
     	}
 	}
