@@ -10,7 +10,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.AlosGeoTiff;
 import org.geoimage.impl.alos.AlosProperties;
 import org.geoimage.impl.alos.BinaryAlosCeos;
-import org.geoimage.impl.alos.GDALAlosCeos;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
