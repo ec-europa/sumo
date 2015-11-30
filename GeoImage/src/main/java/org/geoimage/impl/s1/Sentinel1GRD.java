@@ -140,7 +140,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         Rectangle rect = new Rectangle(x, y, 1, 1);
         int val=0;
 
-        	if (y < 0) {
+        	if (y < 0||y>this.getHeight()||x<0||x>this.getWidth()) {
  	            val= 0;
         	}else{
 	 	        TIFF tiff=getImage(band);
