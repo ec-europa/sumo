@@ -67,7 +67,7 @@ public class CosmoSkymedImage extends SarImageReader {
 			}
     	}
     	if(imagedata!=null){
-    		imagedata.close(0);
+    		imagedata.close(imagedata.getFID());
     		imagedata=null;
     	}
     }
@@ -132,8 +132,8 @@ public class CosmoSkymedImage extends SarImageReader {
             	selected[2]=2;
 
             //read image dimensions
-            xSize = (int) imagedata.getDims()[1];
-            ySize = (int) imagedata.getDims()[0];
+            ySize = (int) imagedata.getDims()[1];
+            xSize = (int) imagedata.getDims()[0];
 
             //
             stride = imagedata.getStride();
@@ -172,8 +172,8 @@ public class CosmoSkymedImage extends SarImageReader {
                     double[] val = (double[]) a.getValue();
                     Gcp gcp = new Gcp();
                     gcp.setXpix(0);
-                    gcp.setYpix(ySize);
                     gcp.setOriginalXpix(0.0);
+                    gcp.setYpix(ySize);
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
@@ -190,7 +190,7 @@ public class CosmoSkymedImage extends SarImageReader {
                     double[] val = (double[]) a.getValue();
                     Gcp gcp = new Gcp();
                     gcp.setXpix(0);
-                    gcp.setOriginalXpix(new Double(xSize));
+                    gcp.setOriginalXpix(new Double(0));//new Double(xSize));
                     gcp.setYpix(0);
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
