@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.geoimage.impl.alos.AlosProperties;
+import org.geoimage.impl.alos.BinaryAlosCeos;
 
 
 public class CeosBinaryReader extends BinaryReader implements IReader{
@@ -30,6 +31,24 @@ public class CeosBinaryReader extends BinaryReader implements IReader{
 		short[] dd =super.readShort(position, x, y, width, height);
 		
 		return dd;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public short readShort(int x,int y){
+		try{
+			int position=(this.getxSize())*(y)+x+OFF_SET;
+			short[] dd =super.readShort(position, x, y, 1, 1);
+			System.out.println("Val:"+dd[0]);
+			return dd[0];
+		}catch(Exception e){
+			return -1;
+		}	
 	}
 	
 	
@@ -61,11 +80,41 @@ public class CeosBinaryReader extends BinaryReader implements IReader{
 	
 	@Override
 	public File getImageFile() {
-		return null;
+		return super.getBinaryFile();
 	}
 	@Override
 	public void setImageFile(File imageFile) {
 		
+	}
+	
+	public void printByteImages(){
+		int x=0;
+		int y=0;
+		int val=0;
+		do{
+			val=readShort(x, y);
+			x++;
+			y++;
+		}while(val>=00);
+	}
+	
+	public static void main(String args[]) {
+	//	File f = new File(
+	//			"F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
+	//	File f2 = new File("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
+		
+		try {
+			CeosBinaryReader bin=new CeosBinaryReader(
+					new File("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD"),
+					new AlosProperties("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"));
+			bin.printByteImages();
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+
 	}
 	
 }
