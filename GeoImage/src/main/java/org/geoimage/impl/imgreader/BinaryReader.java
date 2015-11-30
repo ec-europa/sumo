@@ -7,16 +7,17 @@ import java.io.RandomAccessFile;
 
 
 public class BinaryReader{
-	private File binFile=null;
+	private File binaryFile=null;
+	
 	private RandomAccessFile inputStream;
 	
 	public BinaryReader(File binary) throws FileNotFoundException{
-		binFile=binary;
-		inputStream=new RandomAccessFile(binFile,"r");
+		binaryFile=binary;
+		inputStream=new RandomAccessFile(binaryFile,"r");
 	}
 	public BinaryReader(String pathBinary) throws FileNotFoundException{
-		binFile=new File(pathBinary);
-		inputStream=new RandomAccessFile(binFile,"r");
+		binaryFile=new File(pathBinary);
+		inputStream=new RandomAccessFile(binaryFile,"r");
 	}
 	
 	public int readB4(int pos,int len,boolean bigEndian) throws IOException{
@@ -138,6 +139,16 @@ public class BinaryReader{
 		inputStream.read(buff, 0, numBytes);
 		return buff;
 	} 
+	
+	
+	public File getBinaryFile() {
+		return binaryFile;
+	}
+	public void setBinaryFile(File binFile) {
+		this.binaryFile = binFile;
+	}
+
+	
 	
 	public void dispose(){
 		if(inputStream!=null){
