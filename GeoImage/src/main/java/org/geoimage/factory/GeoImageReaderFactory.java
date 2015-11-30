@@ -9,7 +9,7 @@ import java.util.Vector;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.AlosGeoTiff;
 import org.geoimage.impl.alos.AlosProperties;
-import org.geoimage.impl.alos.BinaryAlosCeos;
+import org.geoimage.impl.alos.GDALAlosCeos;
 import org.geoimage.impl.cosmo.CosmoSkymedImage;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
@@ -143,7 +143,7 @@ public class GeoImageReaderFactory {
 	        	}else if(new File(file).getName().equalsIgnoreCase("summary.txt")){
 	        		AlosProperties props=new AlosProperties(file);
 	        		if(props.getProductFormat().equalsIgnoreCase("CEOS")){
-	        			gir=new BinaryAlosCeos(f);//new GDALAlosCeos(f);
+	        			gir=new GDALAlosCeos(f);//new GDALAlosCeos(f);
 	        		}else{
 	        			gir=new AlosGeoTiff(f);
 	        		}
