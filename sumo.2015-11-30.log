@@ -2636,3 +2636,38 @@ ncsa.hdf.hdf5lib.exceptions.HDF5DataspaceInterfaceException: Out of range
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+2015-11-30 17:29:30 DEBUG H4File:162 - show all is off
+2015-11-30 17:29:30 INFO  H5:314 - HDF5 library: 
+2015-11-30 17:29:30 DEBUG H5:315 - C:\Workspaces_MyEclipse Professional 2014\Sumo\libs\hdf5\jhdf5.dll
+2015-11-30 17:29:30 INFO  H5:316 -  successfully loaded.
+2015-11-30 17:29:30 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:30 DEBUG H5ScalarDS:381 - init() tid=50332256 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:30 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:30 DEBUG H5ScalarDS:381 - init() tid=50332306 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:31 INFO  GeoImageReaderFactory:96 - Successfully reading {0} as {1}...
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /QLK/SBI
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /QLK/QLK
+2015-11-30 17:29:31 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:31 DEBUG H5ScalarDS:381 - init() tid=50332358 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:31 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:31 DEBUG H5ScalarDS:381 - init() tid=50332695 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /S01/SBI
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /S01/QLK
+2015-11-30 17:29:31 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:31 DEBUG H5ScalarDS:381 - init() tid=50332711 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /S02/SBI
+2015-11-30 17:29:31 DEBUG H5File:1237 - Exception finding obj /S02/QLK
+2015-11-30 17:29:31 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:31 DEBUG H5ScalarDS:381 - init() tid=50333128 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:32 DEBUG H5File:1237 - Exception finding obj /S03/SBI
+2015-11-30 17:29:32 DEBUG H5File:1237 - Exception finding obj /S03/QLK
+2015-11-30 17:29:32 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:32 DEBUG H5ScalarDS:381 - init() tid=50333545 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:32 DEBUG H5File:1237 - Exception finding obj /S04/SBI
+2015-11-30 17:29:32 DEBUG H5File:1237 - Exception finding obj /S04/QLK
+2015-11-30 17:29:32 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:32 DEBUG H5ScalarDS:381 - init() tid=50333962 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:32 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:32 DEBUG H5ScalarDS:381 - init() tid=50334711 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
+2015-11-30 17:29:32 DEBUG H5ScalarDS:1841 - Palette attribute search failed: Expected
+2015-11-30 17:29:32 DEBUG H5ScalarDS:381 - init() tid=50334761 is tclass=0 has isText=false : isVLEN=false : isEnum=false : isUnsigned=true : isRegRef=false
