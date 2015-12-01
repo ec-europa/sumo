@@ -64,6 +64,7 @@ public class CosmoSkymedImage extends SarImageReader {
 				h5file.close();
 	    		h5file=null;
 			} catch (HDF5Exception e) {
+				e.printStackTrace();
 			}
     	}
     	if(imagedata!=null){
@@ -120,11 +121,16 @@ public class CosmoSkymedImage extends SarImageReader {
             extractQuickLook();
             List<Object> metadata = new ArrayList<Object>();
             metadata.addAll(h5file.get("/").getMetadata());
-            metadata.addAll(h5file.get(internalImage.substring(0, 3)).getMetadata());
+            
 
             if(imagedata==null)
             	return false;
-        	metadata.addAll(imagedata.getMetadata());
+            
+            //List meta=h5file.get(internalImage.substring(0, 3)).getMetadata();
+            /*if(meta!=null&&!meta.isEmpty())
+            	metadata.addAll(meta);
+            else*/
+            metadata.addAll(imagedata.getMetadata());
         	
             long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
             selected[0]=1;
@@ -132,8 +138,8 @@ public class CosmoSkymedImage extends SarImageReader {
             	selected[2]=2;
 
             //read image dimensions
-            ySize = (int) imagedata.getDims()[1];
-            xSize = (int) imagedata.getDims()[0];
+            xSize = (int) imagedata.getDims()[1];
+            ySize = (int) imagedata.getDims()[0];
 
             //
             stride = imagedata.getStride();
