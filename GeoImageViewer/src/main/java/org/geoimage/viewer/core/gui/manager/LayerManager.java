@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author thoorfr
+ * @author thoorfr  
  */
 public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMouseDrag, IKeyPressed,ILayerListener{
 
@@ -97,12 +97,15 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
         if (this.remove.size() > 0) {
         	for(ILayer l:remove){
+        		//check if I removed a parent layer 
         		if(l.getParent()==null){
         			List<ILayer> removed=layers.remove(l);
+        			
         			if(removed!=null)
         				for (ILayer r : removed) {
         					notifyLayerRemoved(r);
         				}
+        			notifyLayerRemoved(l);
         		}else{
         			layers.get(l.getParent()).remove(l);
         			notifyLayerRemoved(l);
@@ -325,8 +328,15 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 	@Override
 	public void layerRemoved(ILayer l) {
-		// TODO Auto-generated method stub
-		
+		if(l instanceof ImageLayer){
+			ImageLayer il=(ImageLayer)l;
+			if(il!=null && il.getImageReader()!=null){
+				il.getImageReader().dispose();
+				il=null;
+			}	
+		}else{
+			l.dispose();
+		}
 	}
 
 
