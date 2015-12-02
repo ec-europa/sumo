@@ -553,15 +553,9 @@ public class S1GeoCodingImpl implements GeoCoding {
 	
 	
 	public static void main(String args[]){
-		//String metaF="C:/tmp/sumo_images/S1_PRF_SWATH_DEVEL/S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE/annotation/s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml";
-		//String metaF="C:////////////////tmp////////////////sumo_images////////////////carlos tests////////////////pixel analysis////////////////S1A_IW_GRDH_1SDV_20150215T171331_20150215T171356_004637_005B75_CFE1.SAFE////////////////annotation////////////////s1a-iw-grd-vv-20150215t171331-20150215t171356-004637-005b75-001.xml";
-		//String metaF="H:/sat/S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE/annotation/s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml";
-		//String metaF="C:////////////////tmp////////////////sumo_images////////////////carlos tests////////////////geoloc////////////////S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE////////////////annotation////////////////s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		//String metaF="H://Radar-Images//S1Med//S1//EW//S1A_EW_GRDH_1SDV_20141020T055155_20141020T055259_002909_0034C1_F8D5.SAFE//annotation//s1a-ew-grd-vv-20141020t055155-20141020t055259-002909-0034c1-001.xml";
-		//String metaF="F:////////////////SumoImgs////////////////test_geo_loc////////////////S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml";
-
-		
-		String metaF="F:/SumoImgs/carlos tests/analysis on land/S1A_EW_GRDH_1SDV_20141019T064549_20141019T064649_002895_003478_47B4.SAFE/annotation/s1a-ew-grd-vv-20141019t064549-20141019t064649-002895-003478-001.xml";
+		String metaF="F:/SumoImgs/carlos tests/new s1 problem with geoloc/"
+				+ "S1A_IW_GRDH_1SSV_20151129T081958_20151129T082027_008817_00C94D_93C4.SAFE/annotation/s1a-iw-grd-vv-20151129t081958-20151129t082027-008817-00c94d-001.xml";
+		//String metaF="F:/SumoImgs/carlos tests/analysis on land/S1A_EW_GRDH_1SDV_20141019T064549_20141019T064649_002895_003478_47B4.SAFE/annotation/s1a-ew-grd-vv-20141019t064549-20141019t064649-002895-003478-001.xml";
 		//"Z://Radar-Images//S1PmarMase//S1//IW//S1A_IW_GRDH_1SDV_20150401T162928_20150401T162953_005292_006B1C_01C1.SAFE//annotation//s1a-iw-grd-vv-20150401t162928-20150401t162953-005292-006b1c-001.xml";
 		//String metaF="H:/sat/S1A_IW_GRDH_1SDV_20150401T145242_20150401T145301_005291_006B16_EDD7.SAFE/annotation/s1a-iw-grd-vv-20150401t145242-20150401t145301-005291-006b16-001.xml";
 		

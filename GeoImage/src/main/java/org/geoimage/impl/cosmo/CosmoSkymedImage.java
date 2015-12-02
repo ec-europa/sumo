@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -23,7 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.object.Attribute;
+import ncsa.hdf.object.HObject;
 import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.object.h5.H5Group;
 import ncsa.hdf.object.h5.H5ScalarDS;
 
 /**
@@ -118,20 +121,28 @@ public class CosmoSkymedImage extends SarImageReader {
         	
         	h5file = new H5File(super.manifestFile.getAbsolutePath(), H5File.READ);
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
-            extractQuickLook();
-            List<Object> metadata = new ArrayList<Object>();
-            metadata.addAll(h5file.get("/").getMetadata());
-            
-
-            if(imagedata==null)
+        	if(imagedata==null)
             	return false;
-            
-            //List meta=h5file.get(internalImage.substring(0, 3)).getMetadata();
-            /*if(meta!=null&&!meta.isEmpty())
-            	metadata.addAll(meta);
-            else*/
-            metadata.addAll(imagedata.getMetadata());
         	
+            extractQuickLook();
+            HashMap<String,Object> metadata = new HashMap<>();
+            
+            
+            
+            //used to initialize metadata in the HObjects
+            List<Attribute>attrs=(imagedata.getMetadata());
+            attrs.addAll(h5file.get("/").getMetadata());
+        	
+            List<HObject>hobs=((H5Group)h5file.get("/")).getMemberList();
+
+            for(HObject ho:hobs){
+            	attrs.addAll(ho.getMetadata());
+            }
+            //to remove duplicate attributes add all attributes in the hashmap
+            for(Attribute att:attrs){
+            	metadata.put(att.getName(),att.getValue());
+            }
+            
             long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
             selected[0]=1;
             if(selected.length>2)
@@ -171,11 +182,10 @@ public class CosmoSkymedImage extends SarImageReader {
             	System.out.println(((Attribute)o).getName());
             }*/
             
-            for (Object o : metadata) {
-                Attribute a = (Attribute) o;
+            for (String a : metadata.keySet()) {
                 //System.out.println(a.getName() + "=" + a.getValue().toString());
-                if (a.getName().equals("Bottom Left Geodetic Coordinates")) {
-                    double[] val = (double[]) a.getValue();
+                if (a.equals("Bottom Left Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
                     Gcp gcp = new Gcp();
                     gcp.setXpix(0);
                     gcp.setOriginalXpix(0.0);
@@ -183,8 +193,8 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
-                } else if (a.getName().equals("Bottom Right Geodetic Coordinates")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Bottom Right Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
                     Gcp gcp = new Gcp();
                     gcp.setXpix(xSize);
                     gcp.setOriginalXpix(new Double(xSize));
@@ -192,8 +202,8 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
-                } else if (a.getName().equals("Top Left Geodetic Coordinates")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Top Left Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
                     Gcp gcp = new Gcp();
                     gcp.setXpix(0);
                     gcp.setOriginalXpix(new Double(0));//new Double(xSize));
@@ -201,8 +211,8 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
-                } else if (a.getName().equals("Top Right Geodetic Coordinates")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Top Right Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
                     Gcp gcp = new Gcp();
                     gcp.setXpix(xSize);
                     gcp.setOriginalXpix(new Double(xSize));
@@ -210,61 +220,61 @@ public class CosmoSkymedImage extends SarImageReader {
                     gcp.setXgeo(val[1]);
                     gcp.setYgeo(val[0]);
                     gcps.add(gcp);
-                } else if (a.getName().equals("Scene Sensing Start UTC")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Scene Sensing Start UTC")) {
+                    String[] val = (String[]) metadata.get(a);
                     setTimeStampStart(val[0]);
-                } else if (a.getName().equals("Scene Sensing Stop UTC")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Scene Sensing Stop UTC")) {
+                    String[] val = (String[]) metadata.get(a);
                     setTimeStampStop(val[0]);
-                } else if (a.getName().equals("Equivalent Number of Looks")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Equivalent Number of Looks")) {
+                    double[] val = (double[]) metadata.get(a);
                     setENL(String.valueOf(val[0]));
-                } else if (a.getName().equals("Column Spacing")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Column Spacing")) {
+                    double[] val = (double[]) metadata.get(a);
                     setRangeSpacing(new Float(val[0]));
                     pixelsize[0]=getRangeSpacing();
-                } else if (a.getName().equals("Far Incidence Angle")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Far Incidence Angle")) {
+                    double[] val = (double[]) metadata.get(a);
                     setIncidenceFar(new Float(val[0]));
-                } else if (a.getName().equals("Near Incidence Angle")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Near Incidence Angle")) {
+                    double[] val = (double[]) metadata.get(a);
                     setIncidenceNear(new Float(val[0]));
-                } else if (a.getName().equals("Line Spacing")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Line Spacing")) {
+                    double[] val = (double[]) metadata.get(a);
                     setAzimuthSpacing(new Float(val[0]));
                     pixelsize[1]=getAzimuthSpacing();
-                } else if (a.getName().equals("Look Side")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Look Side")) {
+                    String[] val = (String[]) metadata.get(a);
                     setLookDirection(val[0]);
-                } else if (a.getName().equals("Orbit Direction")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Orbit Direction")) {
+                    String[] val = (String[]) metadata.get(a);
                     setOrbitDirection(val[0]);
-                } else if (a.getName().equals("Processing Centre")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Processing Centre")) {
+                    String[] val = (String[]) metadata.get(a);
                     setProcessor(val[0]);
-                } else if (a.getName().equals("Radar Wavelength")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Radar Wavelength")) {
+                    double[] val = (double[]) metadata.get(a);
                     setRadarWaveLenght(val[0]);
-                } else if (a.getName().equals("Product Type")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Product Type")) {
+                    String[] val = (String[]) metadata.get(a);
                     setType(val[0]);
-                } else if (a.getName().equals("Satellite ID")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Satellite ID")) {
+                    String[] val = (String[]) metadata.get(a);
                     setSatellite(val[0]);
-                } else if (a.getName().equals("Satellite Height")) {
-                    double[] val = (double[]) a.getValue();
+                } else if (a.equals("Satellite Height")) {
+                    double[] val = (double[]) metadata.get(a);
                     setSatelliteAltitude(val[0]);
-                } else if (a.getName().equals("Polarisation")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Polarisation")) {
+                    String[] val = (String[]) metadata.get(a);
                     setPolarization(val[0]);
-                } else if (a.getName().equals("Multi-Beam ID")) {
-                    String[] val = (String[]) a.getValue();
+                } else if (a.equals("Multi-Beam ID")) {
+                    String[] val = (String[]) metadata.get(a);
                     setBeam(val[0]);
-                }else if (a.getName().equals("PRF")) {
-                	double[] val = (double[]) a.getValue();
+                }else if (a.equals("PRF")) {
+                	double[] val = (double[]) metadata.get(a);
                     setPRF(val[0]);
-                }else if (a.getName().equals("")) {
-                	double[] val = (double[]) a.getValue();
+                }else if (a.equals("")) {
+                	double[] val = (double[]) metadata.get(a);
                     setPRF(val[0]);
                 }
                 
