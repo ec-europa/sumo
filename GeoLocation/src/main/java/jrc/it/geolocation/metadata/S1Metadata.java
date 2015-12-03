@@ -9,7 +9,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import jrc.it.annotation.reader.jaxb.CoordinateConversionType;
-import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
