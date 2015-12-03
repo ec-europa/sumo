@@ -581,29 +581,24 @@ public class S1GeoCodingImpl implements GeoCoding {
 		try {
 			gc = new S1GeoCodingImpl(metaF);
 			
-			double lat = 54.81;
-			double lon = -5.81;
-			double p=6180.1;
-			double l=13476.0;
+			double lat = 7.900084;
+			double lon = 9.06636;
+			//double p=9432;
+			//double l=5000;
 			
 			try {
-				  //Line: 12687.5  Col: 3762.5
-				  // Computed coor.:   Lat: 41.21314  			  Lon: 9.43059
-										  //41.21287665300109--- 9.430096036953463
-										  //41.21278292694313--- 9.430058984747808
 
-				/*System.out.println("Height:"+GeoUtils.getGeoidH(lon, lat));
-				
+				System.out.println("Height:"+GeoUtils.getGeoidH(lon, lat));
 				double r[] = gc.pixelFromGeo(lon,lat); //r[o]=p r[1]=l
 				System.out.println("P:"+r[0]+" --- L:"+r[1]);
 				
-				double r2[] = gc.geoFromPixel(r[1],r[0]);//r[0]=lon r[1]=lat
+				/*double r2[] = gc.geoFromPixel(r[1],r[0]);//r[0]=lon r[1]=lat
 				System.out.println("LON:"+r2[0]+" --- LAT:"+r2[1]);
 				 */				
 				
-				double r3[] = gc.geoFromPixel(l,p);//r[0]=lon r[1]=lat
+				/*double r3[] = gc.geoFromPixel(l,p);//r[0]=lon r[1]=lat
 				System.out.println("LON:"+r3[0]+" --- LAT:"+r3[1]);
-				System.out.println("Height:"+GeoUtils.getGeoidH(r3[0],r3[1]));
+				System.out.println("Height:"+GeoUtils.getGeoidH(r3[0],r3[1]));*/
 			
 				//r = gc.geoFromPixel(line,pixel);
 				//System.out.println(""+r[1]+" --- "+r[0]);
