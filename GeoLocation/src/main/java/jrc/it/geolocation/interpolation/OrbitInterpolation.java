@@ -7,7 +7,9 @@ import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
 import jrc.it.geolocation.exception.MathException;
+import jrc.it.geolocation.metadata.AbstractMetadata;
 import jrc.it.geolocation.metadata.IMetadata;
+//import jrc.it.geolocation.metadata.S1Metadata;
 import jrc.it.geolocation.metadata.S1Metadata;
  
 
@@ -26,7 +28,7 @@ public class OrbitInterpolation {
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
 
-	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
+	public void orbitInterpolation(List<AbstractMetadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
 			double zeroDopplerTimeLastLineSeconds,
 			double samplingf,double iSafetyBufferAz) throws MathException{
@@ -53,7 +55,7 @@ public class OrbitInterpolation {
 		
 		//differences in seconds between the ref time and the positions time
 		secondsDiffFromRefTime=new double[vpList.size()]; // in matlab code is timeStampInitSecondsRef
-		for(S1Metadata.OrbitStatePosVelox vp:vpList){
+		for(AbstractMetadata.OrbitStatePosVelox vp:vpList){
 			secondsDiffFromRefTime[idx]= (vp.time-reftime);
 			idx++;
 		}
@@ -206,7 +208,7 @@ public class OrbitInterpolation {
 	            	}
 	            }				
 	            
-	            List<S1Metadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(idxStart,idxEnd+1);
+	            List<AbstractMetadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(idxStart,idxEnd+1);
 	             
 
 	            //Do the interpolation only in the portion of the section that is between zeroDopplerTimeInitSecondsRef and zeroDopplerTimeEndSecondsRef
@@ -275,7 +277,7 @@ public class OrbitInterpolation {
             	}
             }				
             
-            List<S1Metadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(vOrbPointsInit,vOrbPointsEnd+1);
+            List<AbstractMetadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(vOrbPointsInit,vOrbPointsEnd+1);
 	        
 
 	       ///////Do the interpolation only in the portion of the section that is between timeStampInitSecondsRef(vOrbPoints(end)) and zeroDopplerTimeEndSecondsRef   /////
