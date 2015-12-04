@@ -293,7 +293,7 @@ public class GeometricLayer implements Cloneable{
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			Geometry g=gf.createGeometry((Geometry)o[i][0]);
+	                			Geometry g=(Geometry)o[i][0];//gf.createGeometry((Geometry)o[i][0]);
 	                			if(applayTransformation&&transform!=null)
 	                				g=transform.transformGeometryPixelFromGeo(g);
 	                			if(!g.isValid()){
@@ -316,7 +316,6 @@ public class GeometricLayer implements Cloneable{
 	                				}
 	                			}
 	                			out.put(g,(AttributesGeometry)o[i][1]);
-	                				
 	                		}	
 	                	}	
 	                }
