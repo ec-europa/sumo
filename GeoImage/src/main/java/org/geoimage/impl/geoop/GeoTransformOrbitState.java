@@ -13,6 +13,7 @@ import jrc.it.geolocation.exception.GeoLocationException;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.geo.ParallelGeoCoding;
 import jrc.it.geolocation.geo.S1GeoCodingImpl;
+import jrc.it.geolocation.metadata.impl.S1Metadata;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 /**
  * 
@@ -34,7 +35,9 @@ public class GeoTransformOrbitState implements GeoTransform{
 	public GeoTransformOrbitState(String annotationFile) throws GeoTransformException{
 		try{
 			//this.annotationFile=annotationFile;
-			geocoding=new S1GeoCodingImpl(annotationFile);
+			S1Metadata meta =new S1Metadata(annotationFile);
+			meta.initMetaData();
+			geocoding=new S1GeoCodingImpl(meta);
 			pGeo=new ParallelGeoCoding(geocoding);
 		}catch(Exception e){
 			throw new GeoTransformException(e.getMessage());
@@ -48,9 +51,11 @@ public class GeoTransformOrbitState implements GeoTransform{
 	 */
 	public GeoTransformOrbitState(SumoAnnotationReader annotationFile) throws GeoTransformException{
 		try{
-			geocoding=new S1GeoCodingImpl(annotationFile);
+			S1Metadata meta =new S1Metadata(annotationFile);
+			meta.initMetaData();
+			geocoding=new S1GeoCodingImpl(meta);
 			pGeo=new ParallelGeoCoding(geocoding);
-		}catch(MathException e){
+		}catch(Exception e){
 			throw new GeoTransformException(e.getMessage());
 		}	
 	}

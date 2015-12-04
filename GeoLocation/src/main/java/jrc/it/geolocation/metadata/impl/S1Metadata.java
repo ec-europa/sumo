@@ -1,4 +1,4 @@
-package jrc.it.geolocation.metadata;
+package jrc.it.geolocation.metadata.impl;
 
 
 import java.util.ArrayList;
@@ -11,28 +11,21 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import jrc.it.annotation.reader.jaxb.CoordinateConversionType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
+import jrc.it.geolocation.metadata.AbstractMetadata;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 
 
 public class S1Metadata extends AbstractMetadata {
 	private GregorianCalendar zeroDopplerTimeFirstLineSeconds=null; //S1=productFirstLineUtcTime
 	private GregorianCalendar zeroDopplerTimeLastLineSeconds=null;	//S1=productLastLineUtcTime
-	private List<OrbitStatePosVelox> orbitStatePosVelox=null;
-	private CoordinateConversion[] coordinateConversion=null;
+	
 	private double samplingf=0;
-	private int nLines=0;
+	
 	private double linesPerBurst=0;
 	private double azimuthTimeInterval=0;
-	private String productType;
 	private SumoAnnotationReader annotationReader=null;
 	
-	public int getNlines() {
-		return nLines;
-	}
-
-	public void setnLines(int nLines) {
-		this.nLines = nLines;
-	}
+	
 
 	public GregorianCalendar getZeroDopplerTimeFirstLineSeconds() {
 		return zeroDopplerTimeFirstLineSeconds;
@@ -51,21 +44,6 @@ public class S1Metadata extends AbstractMetadata {
 			GregorianCalendar zeroDopplerTimeLastLineSeconds) {
 		this.zeroDopplerTimeLastLineSeconds = zeroDopplerTimeLastLineSeconds;
 	}
-
-	public List<OrbitStatePosVelox> getOrbitStatePosVelox() {
-		return orbitStatePosVelox;
-	}
-
-	public void setOrbitStatePosVelox(List<OrbitStatePosVelox> orbitStatePosVelox) {
-		this.orbitStatePosVelox = orbitStatePosVelox;
-	}
-
-	
-	public CoordinateConversion[] getCoordinateConversion(){
-		return this.coordinateConversion;
-	}
-	
-	
 	
 	public double getLinesPerBurst() {
 		return linesPerBurst;
@@ -74,20 +52,7 @@ public class S1Metadata extends AbstractMetadata {
 	public void setLinesPerBurst(double linesPerBurst) {
 		this.linesPerBurst = linesPerBurst;
 	}
-
-	public int getnLines() {
-		return nLines;
-	}
 	
-	
-
-	public String getProductType() {
-		return productType;
-	}
-
-	public void setProductType(String productType) {
-		this.productType = productType;
-	}
 
 	public S1Metadata(String annotationFilePath) throws JAXBException{
 			this.annotationReader=new SumoAnnotationReader(annotationFilePath);

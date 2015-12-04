@@ -11,7 +11,7 @@ import org.apache.commons.math3.util.FastMath;
 import jrc.it.geolocation.common.MathUtil;
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
-import jrc.it.geolocation.metadata.S1Metadata;
+import jrc.it.geolocation.metadata.impl.S1Metadata;
 
 
 public class HermiteInterpolation {//implements IInterpolation{
@@ -40,7 +40,12 @@ public class HermiteInterpolation {//implements IInterpolation{
 		hermiteMatrix=invertMatrix(hermiteMatrix);
 
 // Calculate the sampling period =periodo di campionamento calcolato con la media tra la differenza in secondi dei "tempi" nelle posizioni che interessano e il tref
-		double meanTimeRef=1;//mean(subTimesDiffRef);
+		double meanTimeRef=0d;
+		for(int i=0;i<subTimesDiffRef.length-1;i++){
+			double diff=subTimesDiffRef[i+1]-subTimesDiffRef[i];
+			meanTimeRef=meanTimeRef+diff;
+		}
+		meanTimeRef=meanTimeRef/(subTimesDiffRef.length-1);
 		
 		
 // Interleave position and velocity state vector components
