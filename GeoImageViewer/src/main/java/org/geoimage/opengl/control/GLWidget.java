@@ -50,7 +50,7 @@ public class GLWidget implements IGLWidget{
 		// Change to projection matrix.
         gl2.glMatrixMode(GL2.GL_PROJECTION);
         gl2.glLoadIdentity();
-        glu.gluOrtho2D(0,gl2.getContext().getGLDrawable().getWidth(),0,gl2.getContext().getGLDrawable().getHeight());
+        glu.gluOrtho2D(0,gl2.getContext().getGLDrawable().getSurfaceWidth(),0,gl2.getContext().getGLDrawable().getSurfaceHeight());
 	
         // Change back to model view matrix.
         gl2.glMatrixMode(GL2.GL_MODELVIEW);
