@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -19,7 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import ncsa.hdf.object.Attribute;
+import ncsa.hdf.object.HObject;
 import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.object.h5.H5Group;
 import ncsa.hdf.object.h5.H5ScalarDS;
 
 /**
@@ -52,8 +55,6 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     	this.group=group;
     }
 
-    @SuppressWarnings("unchecked")
-	public abstract boolean initialise();
 
     
     @Override
@@ -104,7 +105,190 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         return new String[]{h5file.getFilePath()};
     }
     
-    
+    @SuppressWarnings("unchecked")
+	public boolean initialise() {
+        try {
+        	this.imgName=super.manifestFile.getName();
+        	this.imgName=this.imgName.substring(0, this.imgName.lastIndexOf("."));
+        	this.displayName=super.manifestFile.getName();
+        	if(group!=null&&!group.equalsIgnoreCase(""))
+        		this.displayName=this.displayName+"_"+group;
+        	
+        	h5file = new H5File(super.manifestFile.getAbsolutePath(), H5File.READ);
+        	imagedata = (H5ScalarDS) h5file.get(internalImage);
+        	if(imagedata==null)
+            	return false;
+        	
+            extractQuickLook();
+            HashMap<String,Object> metadata = new HashMap<>();
+            
+            
+            
+            //used to initialize metadata in the HObjects
+            List<Attribute>attrs=(imagedata.getMetadata());
+            attrs.addAll(h5file.get("/").getMetadata());
+        	
+            List<HObject>hobs=((H5Group)h5file.get("/")).getMemberList();
+
+            for(HObject ho:hobs){
+            	attrs.addAll(ho.getMetadata());
+            }
+            //to remove duplicate attributes add all attributes in the hashmap
+            for(Attribute att:attrs){
+            	metadata.put(att.getName(),att.getValue());
+            }
+            
+            long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
+            selected[0]=1;
+            if(selected.length>2)
+            	selected[2]=2;
+
+            //read image dimensions
+            xSize = (int) imagedata.getDims()[1];
+            ySize = (int) imagedata.getDims()[0];
+
+            //
+            stride = imagedata.getStride();
+            //
+            dims = imagedata.getSelectedDims();
+
+            //
+            starts = imagedata.getStartDims();
+
+            
+            setMetaWidth(xSize);
+            setMetaHeight(ySize);
+            
+            bounds = new Rectangle(0, 0, xSize, ySize);
+            
+            gcps = new ArrayList<Gcp>();
+
+            
+
+           /* Object oo=CollectionUtils.find(metadata, new Predicate() {
+				
+				@Override
+				public boolean evaluate(Object o) {
+					 
+					return ((Attribute)o).getName().contains("Speed");
+				}
+			});
+            for (Object o : metadata) {
+            	System.out.println(((Attribute)o).getName());
+            }*/
+            
+            for (String a : metadata.keySet()) {
+                //System.out.println(a.getName() + "=" + a.getValue().toString());
+                if (a.equals("Bottom Left Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
+                    Gcp gcp = new Gcp();
+                    gcp.setXpix(0);
+                    gcp.setOriginalXpix(0.0);
+                    gcp.setYpix(ySize);
+                    gcp.setXgeo(val[1]);
+                    gcp.setYgeo(val[0]);
+                    gcps.add(gcp);
+                } else if (a.equals("Bottom Right Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
+                    Gcp gcp = new Gcp();
+                    gcp.setXpix(xSize);
+                    gcp.setOriginalXpix(new Double(xSize));
+                    gcp.setYpix(ySize);
+                    gcp.setXgeo(val[1]);
+                    gcp.setYgeo(val[0]);
+                    gcps.add(gcp);
+                } else if (a.equals("Top Left Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
+                    Gcp gcp = new Gcp();
+                    gcp.setXpix(0);
+                    gcp.setOriginalXpix(new Double(0));//new Double(xSize));
+                    gcp.setYpix(0);
+                    gcp.setXgeo(val[1]);
+                    gcp.setYgeo(val[0]);
+                    gcps.add(gcp);
+                } else if (a.equals("Top Right Geodetic Coordinates")) {
+                    double[] val = (double[]) metadata.get(a);
+                    Gcp gcp = new Gcp();
+                    gcp.setXpix(xSize);
+                    gcp.setOriginalXpix(new Double(xSize));
+                    gcp.setYpix(0);
+                    gcp.setXgeo(val[1]);
+                    gcp.setYgeo(val[0]);
+                    gcps.add(gcp);
+                } else if (a.equals("Scene Sensing Start UTC")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setTimeStampStart(val[0]);
+                } else if (a.equals("Scene Sensing Stop UTC")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setTimeStampStop(val[0]);
+                } else if (a.equals("Equivalent Number of Looks")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setENL(String.valueOf(val[0]));
+                } else if (a.equals("Column Spacing")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setRangeSpacing(new Float(val[0]));
+                    pixelsize[0]=getRangeSpacing();
+                } else if (a.equals("Far Incidence Angle")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setIncidenceFar(new Float(val[0]));
+                } else if (a.equals("Near Incidence Angle")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setIncidenceNear(new Float(val[0]));
+                } else if (a.equals("Line Spacing")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setAzimuthSpacing(new Float(val[0]));
+                    pixelsize[1]=getAzimuthSpacing();
+                } else if (a.equals("Look Side")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setLookDirection(val[0]);
+                } else if (a.equals("Orbit Direction")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setOrbitDirection(val[0]);
+                } else if (a.equals("Processing Centre")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setProcessor(val[0]);
+                } else if (a.equals("Radar Wavelength")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setRadarWaveLenght(val[0]);
+                } else if (a.equals("Product Type")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setType(val[0]);
+                } else if (a.equals("Satellite ID")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setSatellite(val[0]);
+                } else if (a.equals("Satellite Height")) {
+                    double[] val = (double[]) metadata.get(a);
+                    setSatelliteAltitude(val[0]);
+                } else if (a.equals("Polarisation")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setPolarization(val[0]);
+                } else if (a.equals("Multi-Beam ID")) {
+                    String[] val = (String[]) metadata.get(a);
+                    setBeam(val[0]);
+                }else if (a.equals("PRF")) {
+                	double[] val = (double[]) metadata.get(a);
+                    setPRF(val[0]);
+                }else if (a.equals("")) {
+                	double[] val = (double[]) metadata.get(a);
+                    setPRF(val[0]);
+                }
+                
+                setSatelliteOrbitInclination(97.86);
+                setRevolutionsPerday(14.8125);
+                
+            }
+            setSensor("CS");
+            if (getType().startsWith("SCS")) {
+                complex = true;
+            }
+            geotransform = GeoTransformFactory.createFromGcps(gcps, "EPSG:4326");
+
+        } catch (Exception ex) {
+        	logger.error(null, ex);
+            return false;
+        }
+        return true;
+    }
 
 
     public void setFile(File imageFile) {
@@ -312,6 +496,9 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         }
         return output;
     }
+	
+	
+	
 	public double[] getPixelsize(){
 		return pixelsize;
 	}
