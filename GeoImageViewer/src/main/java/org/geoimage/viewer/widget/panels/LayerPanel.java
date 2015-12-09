@@ -156,7 +156,6 @@ public class LayerPanel extends JPanel {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        layer.dispose();
         LayerManager.getIstanceManager().removeLayer(layer);
         ((JDialog)this.getParent().getParent().getParent().getParent().getParent()).dispose();
         SumoPlatform.refresh();

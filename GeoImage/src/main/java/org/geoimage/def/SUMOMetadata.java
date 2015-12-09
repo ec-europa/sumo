@@ -172,7 +172,12 @@ public abstract class SUMOMetadata implements GeoMetadata,SarMetadata{
     
     
     public double getSatelliteAltitude(){
-    	return (Double)getMetadata(GeoMetadata.SATELLITE_ALTITUDE);
+    	try{
+    		return (Double)getMetadata(GeoMetadata.SATELLITE_ALTITUDE);
+    	}catch(Exception e){
+    		return 0;
+    	}
+    	
     }
     public void setSatelliteAltitude(Double data){
     	setMetadata(GeoMetadata.SATELLITE_ALTITUDE,data);

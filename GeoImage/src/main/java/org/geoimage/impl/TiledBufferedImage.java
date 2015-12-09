@@ -358,9 +358,6 @@ public class TiledBufferedImage implements GeoImageReader {
         return gir.getGcps();
     }
 
-    public String getAccessRights() {
-        return gir.getAccessRights();
-    }
 
     public String[] getFilesList() {
         return gir.getFilesList();

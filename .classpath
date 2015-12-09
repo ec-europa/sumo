@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="libs/gdal_lib_win64/bin/gdal/java/gdal.jar"/>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
 	<classpathentry kind="src" path="GeoImage/src/test"/>
 	<classpathentry kind="src" path="resources"/>
@@ -30,7 +31,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils-bean-collections.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-beanutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-digester-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-lang3-3.4.jar"/>
@@ -68,8 +68,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/smtp.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/svgSalamander.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/toplink-grid.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/gdal_lib_win64/gdal/java/gdal.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/gdal_lib_win64/gdal.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/batik-transcoder-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/bridj-0.6-c-only.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/bufr-4.3.16.jar"/>
@@ -77,7 +75,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-beanutils-1.7.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-cli-2.0-gt2-pre1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-codec-1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-dbcp-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-digester-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/geotools-12.0/commons-httpclient-3.1.jar"/>
@@ -297,5 +294,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/ConcaveHull-0.2.jar"/>
+	<classpathentry kind="lib" path="libs/commons-collections4-4.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

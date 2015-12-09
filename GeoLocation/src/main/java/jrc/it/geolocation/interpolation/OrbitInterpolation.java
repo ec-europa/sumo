@@ -7,8 +7,8 @@ import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
 import jrc.it.geolocation.exception.MathException;
+import jrc.it.geolocation.metadata.AbstractMetadata;
 import jrc.it.geolocation.metadata.IMetadata;
-import jrc.it.geolocation.metadata.S1Metadata;
  
 
 
@@ -26,7 +26,7 @@ public class OrbitInterpolation {
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
 
-	public void orbitInterpolation(List<S1Metadata.OrbitStatePosVelox> vpList,
+	public void orbitInterpolation(List<AbstractMetadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
 			double zeroDopplerTimeLastLineSeconds,
 			double samplingf,double iSafetyBufferAz) throws MathException{
@@ -53,17 +53,12 @@ public class OrbitInterpolation {
 		
 		//differences in seconds between the ref time and the positions time
 		secondsDiffFromRefTime=new double[vpList.size()]; // in matlab code is timeStampInitSecondsRef
-		for(S1Metadata.OrbitStatePosVelox vp:vpList){
+		for(AbstractMetadata.OrbitStatePosVelox vp:vpList){
 			secondsDiffFromRefTime[idx]= (vp.time-reftime);
 			idx++;
 		}
 		
-		
-		
-		 // Modifiche di Carlos del 20150703 //
-		//zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime)-iSafetyBufferAz*deltaT;
-		//zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime)+iSafetyBufferAz*deltaT;
-		//
+		//move all times on reftime
 		zeroDopplerTimeFirstRef=(zeroDopplerTimeFirstLineSeconds-reftime);
 		zeroDopplerTimeLastRef=(zeroDopplerTimeLastLineSeconds-reftime);
 
@@ -73,14 +68,14 @@ public class OrbitInterpolation {
 		double zeroDopplerTimeFirstLineWSafetyBufSecondsRef=0;
 		double zeroDopplerTimeLastLineWSafetyBufSecondsRef=0;
 		if(zeroDopplerTimeFirstRef<zeroDopplerTimeLastRef){
-			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef - iSafetyBufferAz * deltaT; //20150703
-	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef + iSafetyBufferAz * deltaT;   //20150703
+			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef - iSafetyBufferAz * deltaT; 
+	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef + iSafetyBufferAz * deltaT;   
 	        
-	        minT = FastMath.min(0, zeroDopplerTimeFirstLineWSafetyBufSecondsRef); //20150703
-	        maxT = FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastLineWSafetyBufSecondsRef); //20150703
+	        minT = FastMath.min(0, zeroDopplerTimeFirstLineWSafetyBufSecondsRef); 
+	        maxT = FastMath.max(secondsDiffFromRefTime[secondsDiffFromRefTime.length-1], zeroDopplerTimeLastLineWSafetyBufSecondsRef); 
 		}else{
-			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef + iSafetyBufferAz * deltaT; //20150703
-	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef - iSafetyBufferAz * deltaT; //20150703
+			zeroDopplerTimeFirstLineWSafetyBufSecondsRef = zeroDopplerTimeFirstRef + iSafetyBufferAz * deltaT; 
+	        zeroDopplerTimeLastLineWSafetyBufSecondsRef = zeroDopplerTimeLastRef - iSafetyBufferAz * deltaT; 
 	        
 			if(firstTime<(lastTime)){
 				minT=FastMath.min(secondsDiffFromRefTime[0], zeroDopplerTimeLastLineWSafetyBufSecondsRef);
@@ -90,8 +85,6 @@ public class OrbitInterpolation {
 				maxT=FastMath.max(secondsDiffFromRefTime[0],zeroDopplerTimeFirstLineWSafetyBufSecondsRef);
 			}	
 		}
-		// Fine Modifiche di Carlos del 20150703 //
-		
 		
 		int limit=((Double)((maxT-minT)/deltaT)).intValue();
 		
@@ -206,7 +199,7 @@ public class OrbitInterpolation {
 	            	}
 	            }				
 	            
-	            List<S1Metadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(idxStart,idxEnd+1);
+	            List<AbstractMetadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(idxStart,idxEnd+1);
 	             
 
 	            //Do the interpolation only in the portion of the section that is between zeroDopplerTimeInitSecondsRef and zeroDopplerTimeEndSecondsRef
@@ -275,7 +268,7 @@ public class OrbitInterpolation {
             	}
             }				
             
-            List<S1Metadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(vOrbPointsInit,vOrbPointsEnd+1);
+            List<AbstractMetadata.OrbitStatePosVelox> stateVecPoints=vpList.subList(vOrbPointsInit,vOrbPointsEnd+1);
 	        
 
 	       ///////Do the interpolation only in the portion of the section that is between timeStampInitSecondsRef(vOrbPoints(end)) and zeroDopplerTimeEndSecondsRef   /////
@@ -390,7 +383,7 @@ public class OrbitInterpolation {
 
 	public static void main(String args[]){
 		try {
-			S1Metadata meta =new S1Metadata("F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml");
+		/*	S1Metadata meta =new S1Metadata("F:\\SumoImgs\\test_geo_loc\\S1A_IW_GRDH_1SDV_20150428T171323_20150428T171348_005687_0074BD_5A2C.SAFE/annotation/s1a-iw-grd-vv-20150428t171323-20150428t171348-005687-0074bd-001.xml");
 			//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\S1_PRF_SWATH_DEVEL\\\\S1A_IW_GRDH_1SDV_20150219T053530_20150219T053555_004688_005CB5_3904.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20150219t053530-20150219t053555-004688-005cb5-001.xml");
 			//meta.initMetaData("C:\\\\tmp\\\\sumo_images\\\\test_interpolation\\\\S1A_IW_GRDH_1SDV_20141016T173306_20141016T173335_002858_0033AF_FA6D.SAFE\\\\annotation\\\\s1a-iw-grd-vv-20141016t173306-20141016t173335-002858-0033af-001.xml");
 			//meta.initMetaData("G:\\\\sat\\\\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE\\\\annotation\\\\s1a-iw-grd-hh-20140607t205125-20140607t205150-000949-000ec8-001.xml");
@@ -409,7 +402,7 @@ public class OrbitInterpolation {
 					zTimeLastInSeconds,
 					meta.getSamplingf(),500);
 			//System.out.println(""+orbitInterpolation.getStatepVecInterp().get(113315)[0]);
-			System.out.println(""+orbitInterpolation.getStatepVecInterp().size());
+			System.out.println(""+orbitInterpolation.getStatepVecInterp().size());*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

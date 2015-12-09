@@ -19,7 +19,8 @@ import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -335,11 +336,6 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     @Override
-    public String getAccessRights() {
-        return "r";
-    }
-
-    @Override
     public String[] getFilesList() {
         return files;
     }
@@ -479,7 +475,7 @@ public class TerrasarXImage extends SarImageReader {
         TIFFImageReadParam tirp=new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
-        int[] rawData = tiff.getReader().read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        int[] rawData = tiff.read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
         
         int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
@@ -524,7 +520,7 @@ public class TerrasarXImage extends SarImageReader {
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
         try {
-            return  tiff.getReader().read(0, t).getRGB(x, y);
+            return  tiff.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -560,7 +556,7 @@ public class TerrasarXImage extends SarImageReader {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedData =  tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
+            preloadedData =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -570,7 +566,7 @@ public class TerrasarXImage extends SarImageReader {
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(TIFF t:tiffImages.values()){
+        for(IReader t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;
@@ -773,4 +769,47 @@ public class TerrasarXImage extends SarImageReader {
 	public String getSensor() {
 		return "TX";
 	}
+
+	/*@Override
+	public int[] getAmbiguityCorrection(int xPos, int yPos) {
+		return new int[]{0};
+	}*/
+
+
+	 @Override
+	    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+	    	if(satelliteSpeed==0){
+		    	satelliteSpeed = calcSatelliteSpeed();
+		        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
+	    	}    
+
+	        double temp, deltaAzimuth, deltaRange;
+	        int[] output = new int[2];
+
+	        try {
+	        	// already in radian
+	            double incidenceAngle = getIncidence(xPos);
+	            double slantRange = getSlantRange(xPos,incidenceAngle);
+	            double prf = getPRF(xPos,yPos);
+
+	            double sampleDistAzim = getPixelsize()[0];
+	            double sampleDistRange =getPixelsize()[1];
+
+	            temp = (getRadarWaveLenght() * slantRange * prf) /
+	                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
+
+	            //azimuth and delta in number of pixels
+	            deltaAzimuth = temp / sampleDistAzim;
+	            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+	            output[0] = (int) FastMath.floor(deltaAzimuth);
+	            output[1] = (int) FastMath.floor(deltaRange);
+
+	        } catch (Exception ex) {
+	        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+	        }
+	        return output;
+	    }
 }
+
+

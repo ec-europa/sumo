@@ -141,6 +141,7 @@ public class ZoomDialog extends javax.swing.JDialog {
 
     	//TODO:check how to repleace this deprecated method
         gLCanvas1 = new GLCanvas(null, null, org.geoimage.viewer.core.SumoPlatform.getApplication().getGeoContext().getGLContext(), null);
+        gLCanvas1 = new GLCanvas();//null, null, org.geoimage.viewer.core.SumoPlatform.getApplication().getMainCanvas().getContext(), null);
         jCheckBox1 = new javax.swing.JCheckBox();
 
         setTitle("Zoom");

@@ -43,8 +43,17 @@ public class DetectedPixels {
 	        this.threshold = threshold;
 	        this.band = band;
 	    }
+	    
+	    @Override
+	    public boolean equals(Object o){
+			BoatPixel bp=(BoatPixel)o;
+			if(bp.x==this.x && bp.y==this.y)
+				return true;
+			return false;
+		}
 	}
-    private Map<String, BoatPixel> allDetectedPixels = new HashMap<String, BoatPixel>();
+    //private Map<String, BoatPixel> allDetectedPixels = new HashMap<String, BoatPixel>();
+	private List<BoatPixel> allDetectedPixels = new ArrayList<BoatPixel>();
     private Map<String, BoatPixel> aggregatedPixels = new HashMap<String, BoatPixel>();
     private Map<Integer, List<int[]>> aggregatedBoats = new HashMap<Integer, List<int[]>>();
    // private Boat[] boatArray = null;
@@ -59,7 +68,6 @@ public class DetectedPixels {
     ArrayList<BoatConnectedPixelMap> listboatneighbours = new ArrayList<BoatConnectedPixelMap>();
 
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
-
     
     public double getPixsam() {
 		return pixsam;
@@ -102,9 +110,9 @@ public class DetectedPixels {
      */
     public void add(int x, int y, int value, double tileAvg, double tileStd, double threshold, int band) {
         BoatPixel boatPixel = new BoatPixel(x, y, value, tileAvg, tileStd, threshold, band);
-        StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
-        allDetectedPixels.put(point.toString(), boatPixel);
-
+        //StringBuilder point=new StringBuilder("").append(x).append(" ").append(y);
+      	//allDetectedPixels.put(point.toString(), boatPixel);
+      	allDetectedPixels.add(boatPixel);
     }
 
     /**
@@ -112,13 +120,14 @@ public class DetectedPixels {
      * @param pixels
      */
     public void addAll(DetectedPixels pixels) {
-    	Map<String, BoatPixel> BoatPixel = pixels.getDetectedPixels();
-    	Collection<BoatPixel> boats = BoatPixel.values();
-    	StringBuilder point=new StringBuilder();
+    	List <BoatPixel> boats = pixels.getDetectedPixels();
+    	//Collection<BoatPixel> boats = BoatPixel.values();
+    	//StringBuilder point=new StringBuilder();
         for (BoatPixel boat:boats) {
-        	point.setLength(0);
-        	point=point.append(boat.x).append(" ").append(boat.y);
-            allDetectedPixels.put(point.toString(), boat);
+        	//point.setLength(0);
+        	//point=point.append(boat.x).append(" ").append(boat.y);
+            //allDetectedPixels.put(point.toString(), boat);
+            allDetectedPixels.add(boat);
         }
     }
     /**
@@ -127,8 +136,8 @@ public class DetectedPixels {
      */
     // marge the detectedpixels
     public void merge(DetectedPixels pixels) {
-    	Map<String, BoatPixel> BoatPixel = pixels.getDetectedPixels();
-    	Collection<BoatPixel> boats = BoatPixel.values();
+    	List <BoatPixel> boats = pixels.getDetectedPixels();
+    	//Collection<BoatPixel> boats = BoatPixel.values();
     	StringBuilder position = new StringBuilder();
         for (BoatPixel boat:boats) {
         	position.setLength(0);
@@ -136,8 +145,11 @@ public class DetectedPixels {
             position = position.append(boat.x).append(" ").append(boat.y); 
             //if (allDetectedPixels.get(position.toString()) == null) {
             	//if the value is already in the map it will be replaced 
-                allDetectedPixels.put(position.toString(), boat);
+                //allDetectedPixels.put(position.toString(), boat);
             //}
+            if(!allDetectedPixels.contains(boat))
+                allDetectedPixels.add( boat);
+
         }
     }
 
@@ -145,8 +157,17 @@ public class DetectedPixels {
         return boatArray;
     }
 */
-    private Map<String, BoatPixel> getDetectedPixels() {
+    private List<BoatPixel> getDetectedPixels() {
         return allDetectedPixels;
+    }
+    
+    
+    private BoatPixel findboat(int x,int y){
+    	for(BoatPixel bp:allDetectedPixels){
+    		if(bp.x==x&&bp.y==y)
+    			return bp;
+    	}
+    	return null;
     }
     
     /**
@@ -167,7 +188,7 @@ public class DetectedPixels {
             for (int i = xx - this.searchwindowWidth; i < xx + this.searchwindowWidth + 1; i++) {
                 for (int j = yy - this.searchwindowHeight; j < yy + this.searchwindowHeight + 1; j++) {
                 	String key = new StringBuilder().append(i).append(" ").append(j).toString();
-                    BoatPixel pixel = allDetectedPixels.get(key);
+                    BoatPixel pixel = findboat(i,j);
                     if (pixel != null && !(i == xx && j == yy)) {
                         if (aggregatedPixels.get(key) == null) {
                             pixel.id=idd;
@@ -187,7 +208,7 @@ public class DetectedPixels {
     }
     
     public void agglomerate() {
-    	BoatPixel[] boats = allDetectedPixels.values().toArray(new BoatPixel[0]);
+    	BoatPixel[] boats = allDetectedPixels.toArray(new BoatPixel[0]);
         int id = -1;
         for (BoatPixel boat:boats) {
             List<int[]> agBoat = new ArrayList<int[]>();
@@ -361,7 +382,7 @@ public class DetectedPixels {
    
 
     public Collection<BoatPixel> getAllDetectedPixelsValues() {
-    	return allDetectedPixels.values();
+    	return allDetectedPixels;
     }
     
     /**
@@ -372,7 +393,7 @@ public class DetectedPixels {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
         
-        BoatPixel[] enumeration = allDetectedPixels.values().toArray(new BoatPixel[0]);
+        BoatPixel[] enumeration = allDetectedPixels.toArray(new BoatPixel[0]);
         for (BoatPixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
         }
