@@ -5,7 +5,6 @@
 package org.geoimage.viewer.core;
 
 
-import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
