@@ -93,6 +93,8 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 			ImageLayer layer=LayerManager.getIstanceManager().getCurrentImageLayer();
 			
 			if(layer!=null && args.length>=2){
+				
+				//run for the black border analysis
 				if(args[0].equalsIgnoreCase("bb")){
 					if(args.length==2 && args[1].equalsIgnoreCase("test")){
 						runBBAnalysis();
@@ -104,7 +106,8 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 							direction=args[2];
 						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
-					}	
+					}
+			//run vds analysis on a single tile		
 				}else if(args[0].equalsIgnoreCase("vds")){
 					
 					int row=Integer.parseInt(args[1]);

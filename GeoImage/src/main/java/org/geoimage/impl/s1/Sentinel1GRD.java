@@ -7,7 +7,7 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geoimage.utils.IProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,13 +42,13 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
-        rect = rect.intersection(getImage(band).bounds);
+        rect = rect.intersection(getImage(band).getBounds());
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
         }
 
-        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.y*rect.height-1)) {
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
         	//logger.debug("using preloaded data");
@@ -140,24 +140,19 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         Rectangle rect = new Rectangle(x, y, 1, 1);
         int val=0;
 
-        	if (y < 0) {
+        	if (y < 0||y>this.getHeight()||x<0||x>this.getWidth()) {
  	            val= 0;
         	}else{
 	 	        TIFF tiff=getImage(band);
-	 	        TIFFImageReader reader=tiff.reader;
 	 	        try {
-	 	            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
-	 	            tirp.setSourceRegion(rect);
 	 	        	BufferedImage bi=null;
- 	        		bi=reader.read(0, tirp);
+ 	        		bi=tiff.read(0, rect);
  	        		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
  	        		short[] b=raster.getData();
 	 	        	//short[] data=(short[])raster.getDataElements(0, 0, width,height, null);
 	 	        	val=b[0];
 	 	        } catch (Exception ex) {
 	 	            logger.error(ex.getMessage(),ex);
-	 	        }finally{
-	 	        	reader.dispose();
 	 	        }
         	}  
         
@@ -175,17 +170,12 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
         
         TIFF tiff=getImage(band);
-        rect=tiff.bounds.intersection(rect);
+        rect=tiff.getBounds().intersection(rect);
         
         try {
-            TIFFImageReadParam tirp =(TIFFImageReadParam) tiff.reader.getDefaultReadParam();
-            tirp.setSourceRegion(rect);
         	BufferedImage bi=null;
-        	TIFFImageReader reader=tiff.reader;
         	try{
-
-        			bi=reader.read(0, tirp);
-
+        			bi=tiff.read(0, rect);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -193,7 +183,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=reader.read(0, tirp);
+        		bi=tiff.read(0, rect);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
@@ -343,4 +333,6 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 		public String getSensor() {
 			return "S1";
 		}
+
+	
 }

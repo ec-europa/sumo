@@ -253,9 +253,19 @@ public class GeometricLayer implements Cloneable{
 				                        	if(f.getProperty(schema[i]).getValue()!=null)
 				                        		at.set(schema[i], f.getProperty(schema[i]).getValue());
 				                        }
-		                                
-				                        //todo:check this part -> forse non serve
+				                      //todo:check this part -> forse non serve
 				                        g=PolygonOp.removeInteriorRing(g);
+				                        
+				                        
+				                        /*g=g.buffer(0);
+				                        Object[]o=new Object[2];
+			                        	o[0]=g;
+		                                o[1]=at;
+		                                
+		                                result.add(o);
+				                        */
+				                        
+				                        
 				                        Geometry gbuff=g.buffer(0);
 				                        
 					                        if(imageP.contains(gbuff)){
@@ -264,7 +274,8 @@ public class GeometricLayer implements Cloneable{
 				                                o[1]=at;
 				                                result.add(o);
 					                        }else if(imageP.intersects(gbuff)){
-					                        	Geometry p2 =EnhancedPrecisionOp.intersection(imageP,gbuff);
+					                        	
+					                        	Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(1),gbuff);
 					                        	p2=p2.buffer(0);
 					                        	if (!p2.isEmpty()) {
 					                        		for (int ii = 0; ii < p2.getNumGeometries(); ii++) {
@@ -293,9 +304,11 @@ public class GeometricLayer implements Cloneable{
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			Geometry g=gf.createGeometry((Geometry)o[i][0]);
-	                			if(applayTransformation&&transform!=null)
+	                			Geometry g=(Geometry)o[i][0];//gf.createGeometry((Geometry)o[i][0]);
+	                			if(applayTransformation&&transform!=null){
 	                				g=transform.transformGeometryPixelFromGeo(g);
+	                				//g=PolygonOp.removeInteriorRing(g);
+	                			}	
 	                			if(!g.isValid()){
 	                				Geometry b0=g.buffer(0);
 	                				if(!g.isSimple()&&(b0.getArea()/g.getArea())<0.75){
@@ -318,7 +331,6 @@ public class GeometricLayer implements Cloneable{
 	                				}
 	                			}
 	                			out.put(g,(AttributesGeometry)o[i][1]);
-	                				
 	                		}	
 	                	}	
 	                }
