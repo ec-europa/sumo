@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.GeoMetadata;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.TIFF;
+import org.geoimage.impl.imgreader.IReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -62,11 +62,6 @@ public class Radarsat2Image extends SarImageReader {
             parseProductXML(productxml);
         }
         return gcps;
-    }
-
-    @Override
-    public String getAccessRights() {
-        return "r";
     }
 
     @Override
@@ -177,7 +172,7 @@ public class Radarsat2Image extends SarImageReader {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedData = tiff.getReader().read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
+            preloadedData = tiff.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
             System.gc();
@@ -214,7 +209,7 @@ public class Radarsat2Image extends SarImageReader {
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
         try {
-            return tiff.getReader().read(0, t).getRGB(x, y);
+            return tiff.read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -233,7 +228,7 @@ public class Radarsat2Image extends SarImageReader {
     public void dispose() {
     	super.dispose();
         if(tiffImages==null) return;
-        for(TIFF t:tiffImages.values()){
+        for(IReader t:tiffImages.values()){
             t.dispose();
         }
         tiffImages=null;

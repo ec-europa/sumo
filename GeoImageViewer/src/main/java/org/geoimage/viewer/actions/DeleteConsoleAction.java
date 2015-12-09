@@ -38,7 +38,6 @@ public class DeleteConsoleAction extends AbstractAction {
             if (args==null||args.length == 0)
             {
                 if (l instanceof ImageLayer & l.isActive()) {
-                        l.dispose();
                         lm.removeLayer(l);
                         return true;
                     }
@@ -48,7 +47,6 @@ public class DeleteConsoleAction extends AbstractAction {
             {
                 if (l instanceof ImageLayer & (l.getName().compareTo(args[0]) == 0))
                 {
-                        l.dispose();
                         lm.removeLayer(l);
                         return true;
                     }
@@ -63,7 +61,6 @@ public class DeleteConsoleAction extends AbstractAction {
                     {
                         if(lvector.getName().compareTo(args[1]) == 0)
                         {
-                            lvector.dispose();
                             ((ILayerManager)l).removeLayer(lvector);
                             return true;
                         }

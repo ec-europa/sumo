@@ -168,7 +168,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			float[] thresholds,int buffer,float enl,
 			String landmask,String runVersion,Integer runVersionNumber) {
 		
-		SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		
 		String start=gir.getTimeStampStart();
 		Timestamp tStart=Timestamp.valueOf(start);

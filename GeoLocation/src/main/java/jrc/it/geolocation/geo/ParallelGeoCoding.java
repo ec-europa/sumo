@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
+import jrc.it.geolocation.metadata.impl.S1Metadata;
+
 
 public class ParallelGeoCoding {
 
@@ -168,7 +170,9 @@ public class ParallelGeoCoding {
 
 		GeoCoding gc;
 		try {
-			gc = new S1GeoCodingImpl(metaF);
+			S1Metadata meta =new S1Metadata(metaF);
+			meta.initMetaData();
+			gc = new S1GeoCodingImpl(meta);
 			double lat = 41.31735;//43.13935;//42.81202;
 			double lon = 2.17263;//3.35876;//10.32972;
 			Coordinate c = new Coordinate(lat, lon);

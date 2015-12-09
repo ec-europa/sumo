@@ -6,6 +6,9 @@ package org.geoimage.analysis;
 
 import java.awt.image.Raster;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -271,7 +274,7 @@ public class VDSAnalysis{
                     tileStat[rowIndex][0] = kdist.getTileStat();
                     
                     double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
-
+                    
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
                             // check pixel is in the sea
@@ -291,15 +294,11 @@ public class VDSAnalysis{
                                     }
                                 }
                                 int pix = data[k * (sizeX+dx) + h];
-                                // if (pix > thresh[i][0][subwindow] * (significance - (significance - 1.)	/ thresh[i][0][5])) {
-
-                                // Modified condition from S = ((pix/mean) - 1)/(t_p - 1) where T_window = t_p * mean
                                 if (pix > threshWindowsVals[subwindow-1]) {
-                                	
                                 	double tileAvg=thresh[subwindow] / thresh[5];
                                 	
                                 	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
-
+                                		
                                 	dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue 
@@ -310,6 +309,7 @@ public class VDSAnalysis{
                             }
                         }
                     }
+                    
 	            }
 	        }
             System.out.println(rowIndex + "/" + verTilesImage);
@@ -473,8 +473,13 @@ public class VDSAnalysis{
                 		int x=i%200;
                 		if(x==0)
                 			y++;
-                		if(rastermask==null||rastermask.getSample(x, y, 0)==0){
-                			tileAvg=tileAvg+data[iBand][i];
+                		
+                		try{
+                			if(rastermask==null||rastermask.getSample(x, y, 0)==0){
+                				tileAvg=tileAvg+data[iBand][i];
+                			}
+                		}catch(Exception e ){
+                			System.out.println("X:"+x+"Y:"+y);
                 		}	
                 	}
                 	tileAvg=tileAvg/i;

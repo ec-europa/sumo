@@ -77,6 +77,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 		this.manifestFile = manifestFile;
 	}
 	
+	public double[] getPixelsize() {
+		return pixelsize;
+	}
+	
 	public String getImId(){
 		String imId="";
 		try{
@@ -102,8 +106,6 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public abstract String getDisplayName(int band); 
 	@Override
     public abstract int getWidth();
-	@Override
-	public abstract double[] getPixelsize();
 	
 	
 	/**
@@ -115,41 +117,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     @Override
     public abstract int getHeight();
     
-   // public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
+    public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
+    //public abstract double getSlanteRange(double lat ,double lon);
     
-    @Override
-    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-	    orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-
-        double temp, deltaAzimuth, deltaRange;
-        int[] output = new int[2];
-
-        try {
-        	// already in radian
-            double incidenceAngle = getIncidence(xPos);
-            double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
-            double slantRange = ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lonlat[0], lonlat[1]);
-          //  double sold=getSlantRange(xPos,incidenceAngle);
-            double prf = getPRF(xPos,yPos);
-
-            double sampleDistAzim = getPixelsize()[1];
-            double sampleDistRange= getPixelsize()[0];
-
-            temp = (getRadarWaveLenght() * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - FastMath.cos(orbitInclination) / getRevolutionsPerday()));
-
-            //azimuth and delta in number of pixels
-            deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
-
-            output[0] = (int) FastMath.floor(deltaAzimuth);
-            output[1] = (int) FastMath.floor(deltaRange);
-            
-        } catch (Exception ex) {
-        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage(),ex);
-        }
-        return output;
-    }
+   
     
     public void dispose(){
     	overViewImage=null;

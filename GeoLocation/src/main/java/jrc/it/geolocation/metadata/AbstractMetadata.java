@@ -1,5 +1,9 @@
 package jrc.it.geolocation.metadata;
 
+import java.util.List;
+
+import jrc.it.geolocation.metadata.IMetadata.CoordinateConversion;
+import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 
 public abstract class AbstractMetadata implements IMetadata{
 	//for S1 always Increasing
@@ -17,13 +21,28 @@ public abstract class AbstractMetadata implements IMetadata{
     protected String antennaPointing;
     protected String mode="";
     
-    public abstract String getAntennaPointing();
+    protected int nLines=0;
+    
+    protected List<OrbitStatePosVelox> orbitStatePosVelox=null;
+    protected CoordinateConversion[] coordinateConversion=null;
+	protected String productType;
+	
+	
+	
+	
+	public abstract String getAntennaPointing();
 
 	public abstract void initMetaData();
 	
 	public abstract double getNumberOfSamplesPerLine();
 	
-	
+	public String getProductType() {
+		return productType;
+	}
+
+	public void setProductType(String productType) {
+		this.productType = productType;
+	}
 	
 	public String getType() {
 		return type;
@@ -83,4 +102,23 @@ public abstract class AbstractMetadata implements IMetadata{
 		this.azimuthPixelSpacing = azimuthPixelSpacing;
 	}
 	
+	public int getNlines() {
+		return nLines;
+	}
+
+	public void setnLines(int nLines) {
+		this.nLines = nLines;
+	}
+	
+	public CoordinateConversion[] getCoordinateConversion(){
+		return this.coordinateConversion;
+	}
+	
+	public List<OrbitStatePosVelox> getOrbitStatePosVelox() {
+		return orbitStatePosVelox;
+	}
+
+	public void setOrbitStatePosVelox(List<OrbitStatePosVelox> orbitStatePosVelox) {
+		this.orbitStatePosVelox = orbitStatePosVelox;
+	}
 }
