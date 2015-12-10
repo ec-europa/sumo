@@ -9,7 +9,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
@@ -34,7 +35,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class SumoXmlIOOld extends AbstractVectorIO {
     public static String CONFIG_FILE = "file";
-    final Logger logger = Logger.getLogger(SumoXmlIOOld.class);
+    final Logger logger = LogManager.getLogger(SumoXmlIOOld.class);
     private File input=null;
     private GeometricLayer glayer=null;
     

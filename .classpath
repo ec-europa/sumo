@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="GeoImageAnalysis/src/main/resources"/>
+	<classpathentry kind="src" path="SumoCore/src/main/java"/>
 	<classpathentry kind="src" path="GeoImage/src/test"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="GeoLocation/src/main/resources"/>

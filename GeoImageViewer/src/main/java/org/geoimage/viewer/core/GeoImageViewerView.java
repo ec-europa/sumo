@@ -56,9 +56,6 @@ import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerListener;
-import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
 import org.geoimage.viewer.core.gui.manager.WidgetManager;
@@ -80,6 +77,9 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.TaskMonitor;
+import org.jrc.sumo.core.api.ILayerListener;
+import org.jrc.sumo.core.api.iactions.IAction;
+import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.newt.opengl.GLWindow;
@@ -327,7 +327,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    try {
 	                        p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
 	                        p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
-	                        lm.mouseMoved(p, geoContext);
+	                        lm.mouseMoved(p);
 	                        
 	                       // public void setImagePosition(Point imagePosition) {
 	                       ImageLayer imgL=LayerManager.getIstanceManager().getCurrentImageLayer();
@@ -371,7 +371,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    dragging = true;
 	                    init = p;
 	                } else {
-	                    lm.mouseDragged(init, p, e.getButton(), geoContext);
+	                    lm.mouseDragged(init, p, e.getButton());
 	                }
 	                init = p;
             	}
@@ -465,7 +465,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             		p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
             		p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
             		LayerPickedData.clear();
-            		lm.mouseClicked(p, e.getButton(), geoContext);
+            		lm.mouseClicked(p, e.getButton());
             	}
             }
 

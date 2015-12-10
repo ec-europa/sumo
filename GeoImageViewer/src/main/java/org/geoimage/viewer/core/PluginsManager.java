@@ -14,8 +14,8 @@ import javax.persistence.Query;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
-import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.util.ClassPathHacker;
+import org.jrc.sumo.core.api.iactions.IAction;
+import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
 public class PluginsManager {

@@ -25,11 +25,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
@@ -43,6 +39,10 @@ import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.VDSAnalysisVersionDialog;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.core.api.ISave;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -277,16 +277,16 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	}
 	
     @Override
-    public OptionMenu[] getFileFormatTypes() {
-    	OptionMenu[] opts=new OptionMenu[8];
-    	opts[0]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO,ISave.STR_EXPORT_XML_SUMO,"xml");
-    	opts[1]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD,"xml");
-    	opts[2]=new OptionMenu(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV,"csv"); 
-    	opts[3]=new OptionMenu(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP,"shp");
-    	opts[4]=new OptionMenu(ISave.OPT_EXPORT_GML,ISave.STR_EXPORT_GML);
-    	opts[5]=new OptionMenu(ISave.OPT_EXPORT_KMZ,ISave.STR_EXPORT_KMZ);
-    	opts[6]=new OptionMenu(ISave.OPT_EXPORT_POSTGIS,ISave.STR_EXPORT_POSTGIS);
-    	opts[7]=new OptionMenu(ISave.OPT_EXPORT_THUMBS,ISave.STR_EXPORT_THUMBS);
+    public FileTypes[] getFileFormatTypes() {
+    	FileTypes[] opts=new FileTypes[8];
+    	opts[0]=new FileTypes(ISave.OPT_EXPORT_XML_SUMO,ISave.STR_EXPORT_XML_SUMO,"xml");
+    	opts[1]=new FileTypes(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD,"xml");
+    	opts[2]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV,"csv"); 
+    	opts[3]=new FileTypes(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP,"shp");
+    	opts[4]=new FileTypes(ISave.OPT_EXPORT_GML,ISave.STR_EXPORT_GML);
+    	opts[5]=new FileTypes(ISave.OPT_EXPORT_KMZ,ISave.STR_EXPORT_KMZ);
+    	opts[6]=new FileTypes(ISave.OPT_EXPORT_POSTGIS,ISave.STR_EXPORT_POSTGIS);
+    	opts[7]=new FileTypes(ISave.OPT_EXPORT_THUMBS,ISave.STR_EXPORT_THUMBS);
     	
         return opts; 
     }

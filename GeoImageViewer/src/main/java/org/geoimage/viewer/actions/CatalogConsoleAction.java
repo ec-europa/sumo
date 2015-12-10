@@ -7,8 +7,8 @@ package org.geoimage.viewer.actions;
 
 import java.util.List;
 
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.IAction;
 
 /**
  *

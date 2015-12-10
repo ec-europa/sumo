@@ -8,7 +8,7 @@ package org.geoimage.viewer.core;
 import java.util.Date;
 import java.util.Vector;
 
-import org.geoimage.viewer.core.api.ITime;
+import org.jrc.sumo.core.api.ITime;
 
 /**
  *

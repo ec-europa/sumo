@@ -22,8 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.IAction;
 import org.slf4j.LoggerFactory;
 
 /**

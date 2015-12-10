@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -16,7 +17,6 @@ import java.util.Scanner;
 
 import org.slf4j.LoggerFactory;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class AlosProperties extends Properties {

@@ -14,10 +14,10 @@ import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.jrc.sumo.core.api.ITime;
+import org.jrc.sumo.core.api.layer.ILayer;
 
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;

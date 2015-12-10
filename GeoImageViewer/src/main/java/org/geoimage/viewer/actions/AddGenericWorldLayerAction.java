@@ -8,12 +8,12 @@ import java.io.File;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;

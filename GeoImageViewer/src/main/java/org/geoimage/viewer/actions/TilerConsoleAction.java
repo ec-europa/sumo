@@ -9,12 +9,12 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.ImageTiler;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.AbstractAction;
+import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *
@@ -36,7 +36,7 @@ public class TilerConsoleAction extends AbstractAction {
             if (l instanceof ImageLayer & l.isActive()) {
                 new Thread(new Runnable() {
                     public void run() {
-                        GeoImageReader gir =GeoImageReaderFactory.createReaderForName(((ImageLayer)l).getImageReader().getFilesList()[0]).get(0);
+                        GeoImageReader gir =GeoImageReaderFactory.createReaderForName(((ImageLayer)l).getImageReader().getFilesList()[0],null).get(0);
                         ImageTiler it = new ImageTiler(gir);
                         it.generateTiles(((ImageLayer)l).getActiveBand());
                         gir.dispose();
