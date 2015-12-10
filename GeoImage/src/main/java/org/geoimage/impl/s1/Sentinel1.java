@@ -18,8 +18,7 @@ import org.geoimage.impl.Gcp;
 import org.geoimage.impl.geoop.GeoTransformOrbitState;
 import org.geoimage.impl.imgreader.IReader;
 import org.geoimage.impl.imgreader.TIFF;
-import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.util.Constant;
+//import org.geoimage.viewer.core.SumoPlatform;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -29,9 +28,6 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
@@ -90,18 +86,21 @@ public abstract class Sentinel1 extends SarImageReader {
     @Override
 	public abstract File getOverviewFile() ;
     
+    private String geolocationAlgorithm=null;
     
     private List<Swath> swaths=null;
     
     
-    public Sentinel1(String swath,String manifestXMLPath) {
+    public Sentinel1(String swath,String manifestXMLPath,String geolocationMethod) {
     	super(new File(manifestXMLPath)); 
     	this.swath=swath;
+    	this.geolocationAlgorithm=geolocationMethod;
     }
     
-    public Sentinel1(String swath,File manifestXML) {
+    public Sentinel1(String swath,File manifestXML,String geolocationMethod) {
     	super(manifestXML); 
     	this.swath=swath;
+    	this.geolocationAlgorithm=geolocationMethod;
     }
 
     
@@ -166,6 +165,13 @@ public abstract class Sentinel1 extends SarImageReader {
         return files;
     }
 
+    public String getGeolocationAlgorithm() {
+		return geolocationAlgorithm;
+	}
+	public void setGeolocationAlgorithm(String geolocationAlgorithm) {
+		this.geolocationAlgorithm = geolocationAlgorithm;
+	}
+    
     
     @Override
     public boolean initialise() {
@@ -223,10 +229,9 @@ public abstract class Sentinel1 extends SarImageReader {
                 return false;
             }
             
-            //TODO: we need to remove this dependencies with the Geoimageviewver project
-            String geoloc=SumoPlatform.getApplication().getConfiguration().getS1GeolocationAlgorithm();
             
-            if(geoloc.equalsIgnoreCase(Constant.GEOLOCATION_ORBIT)&& this instanceof Sentinel1GRD){
+          //TODO: remove or change this control!!! 
+            if(geolocationAlgorithm.equalsIgnoreCase("ORB")&& this instanceof Sentinel1GRD){
                    geotransform = GeoTransformFactory.createFromOrbitVector(annotationReader);
             }else{       
             	String epsg = "EPSG:4326";

@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.utils.IMask;
-import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
-import org.geoimage.viewer.util.PolygonOp;
+import org.jrc.sumo.core.api.IClickable;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.core.api.layer.IMask;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;

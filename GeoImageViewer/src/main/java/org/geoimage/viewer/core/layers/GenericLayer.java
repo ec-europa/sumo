@@ -5,21 +5,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.jrc.sumo.core.api.ISave;
+import org.jrc.sumo.core.api.IThreshable;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.util.files.FileTypes;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -63,7 +60,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	
 
     @Override
-	public void render(OpenGLContext context){
+	public void render(){
+    	  OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
 		  if (!context.isDirty()||SumoPlatform.isBatchMode()) {
 	            return;
 	        }
@@ -338,10 +336,10 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 
 
 	@Override
-	 public OptionMenu[] getFileFormatTypes() {
-    	OptionMenu[] opts=new OptionMenu[2];
-    	opts[0]=new OptionMenu(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
-    	opts[1]=new OptionMenu(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
+	 public FileTypes[] getFileFormatTypes() {
+		FileTypes[] opts=new FileTypes[2];
+    	opts[0]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
+    	opts[1]=new FileTypes(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
         return opts; 
     }
 	

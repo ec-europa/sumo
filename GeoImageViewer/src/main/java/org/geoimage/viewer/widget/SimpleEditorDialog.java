@@ -5,8 +5,8 @@
  */
 package org.geoimage.viewer.widget;
 
-import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.ILayer;
+import org.jrc.sumo.core.api.IEditable;
+import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *

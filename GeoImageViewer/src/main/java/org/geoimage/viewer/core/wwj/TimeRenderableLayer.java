@@ -11,7 +11,7 @@ import java.util.Vector;
 
 import javax.media.opengl.GL2;
 
-import org.geoimage.viewer.core.api.ITime;
+import org.jrc.sumo.core.api.ITime;
 
 import gov.nasa.worldwind.Disposable;
 import gov.nasa.worldwind.Locatable;

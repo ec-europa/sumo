@@ -74,7 +74,24 @@
 			<version>${geotools.version}</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>it.geosolutions.imageio-ext</groupId>
+			<artifactId>imageio-ext-gdal-bindings</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		
+		<!--  dependency>
+			<groupId>it.geosolutions.imageio-ext</groupId>
+			<artifactId>imageio-ext-gdalplugin</artifactId>
+			<version>1.1.13</version>
+		</dependency -->
+		
+		<dependency>
+			<groupId>it.geosolutions.imageio-ext</groupId>
+			<artifactId>imageio-ext-gdalframework</artifactId>
+			<version>1.1.13</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util</artifactId>
@@ -316,6 +333,7 @@
 	<modules>
 		<!-- module>SumoCore</module> <module>SentinelXMLReader</module> <module>GeoLocation</module> 
 			<module>GeoImage</module> <module>GeoImageAnalysis</module> <module>GeoImageViewer</module -->
+		<module>SumoCore</module>
 		<module>GeoImage</module>
 		<module>GeoImageAnalysis</module>
 		<module>GeoImageViewer</module>

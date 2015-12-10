@@ -6,7 +6,7 @@
 
 package org.geoimage.viewer.widget.panels;
 
-import org.geoimage.viewer.core.api.ISelect;
+import org.jrc.sumo.core.api.ISelect;
 
 /**
  *

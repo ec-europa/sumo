@@ -7,8 +7,8 @@
 package org.geoimage.viewer.widget;
 
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.jdesktop.application.Action;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 
 /**
  *

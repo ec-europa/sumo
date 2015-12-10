@@ -16,10 +16,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.def.GeoTransform;
+import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;

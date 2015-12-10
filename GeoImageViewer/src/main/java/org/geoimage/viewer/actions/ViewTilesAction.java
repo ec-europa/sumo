@@ -9,11 +9,11 @@ import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

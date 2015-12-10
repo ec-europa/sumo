@@ -13,14 +13,14 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.Positioning;
 import org.geoimage.viewer.widget.PositionDialog;
 import org.geotools.referencing.GeodeticCalculator;
+import org.jrc.sumo.core.api.IClickable;
+import org.jrc.sumo.core.api.IMouseMove;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -90,7 +90,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         pd.dispose();
     }
 
-    public void mouseMoved(Point imagePosition, OpenGLContext context) {
+    public void mouseMoved(Point imagePosition) {
         this.imagePosition = imagePosition;
         if (active) {
         	try{
@@ -107,7 +107,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         }
     }
 
-    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
+    public void mouseClicked(Point imagePosition, int button) {
         if (pd.getCheckDistance()) {
             if (initPosition == null) {
                 initPosition = imagePosition;

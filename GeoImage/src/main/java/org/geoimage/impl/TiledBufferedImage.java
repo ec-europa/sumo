@@ -422,11 +422,11 @@ public class TiledBufferedImage implements GeoImageReader {
     
     //test main
     public static void main(String[] args) {
-        GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
+        /*GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
         TiledBufferedImage tbi = new TiledBufferedImage(new File("/home/thoorfr/cache/test/" + gir.getFilesList()[0]), gir);
         for (int i = 0; i < 8000; i += Constant.TILE_SIZE) {
             tbi.preloadLineTile(i, Constant.TILE_SIZE,0);
-        }
+        }*/
     }
 
 	@Override

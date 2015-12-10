@@ -37,7 +37,10 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -128,19 +131,17 @@ public class GDALtest extends JFrame implements ActionListener{
 			System.out.println("Projection is `" + poDataset.GetProjectionRef()
 					+ "'");
 		
-		Hashtable dict = poDataset.GetMetadata_Dict("");
-		Enumeration keys = dict.keys();
+		HashMap dict = poDataset.GetMetadata_Dict("");
 		System.out.println(dict.size() + " items of metadata found (via Hashtable dict):");
-		while(keys.hasMoreElements()) {
-			String key = (String)keys.nextElement();
+		for(Object keys:dict.keySet()) {
+			String key = (String)keys;
 			System.out.println(" :" + key + ":==:" + dict.get(key) + ":");
 		}
 
-		Vector list = poDataset.GetMetadata_List("");
-		Enumeration enumerate = list.elements();
+		List list = poDataset.GetMetadata_List("");
 		System.out.println(list.size() + " items of metadata found (via Vector list):");
-		while(enumerate.hasMoreElements()) {
-			String s = (String)enumerate.nextElement();
+		for(Object enumerate:list) {
+			String s = (String)enumerate;
 			System.out.println(" " + s);
 		}
 		
@@ -368,7 +369,7 @@ public class GDALtest extends JFrame implements ActionListener{
 		Dataset d=gdal.Open(file);
 		Band b=d.GetRasterBand(0);
 	//	b.readraster_
-		Vector data = d.GetMetadata_List("NGSGEOID");//"GEOLOCATION" );
+		List data = d.GetMetadata_List("NGSGEOID");//"GEOLOCATION" );
 		System.out.println("---");
 
 		

@@ -20,7 +20,7 @@ import org.apache.commons.math3.util.Precision;
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;
 import org.geoimage.analysis.BoatConnectedPixelMap.ConPixel;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.utils.IMask;
+import org.jrc.sumo.core.api.layer.IMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

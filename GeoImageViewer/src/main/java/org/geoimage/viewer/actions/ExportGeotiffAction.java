@@ -10,9 +10,9 @@ import java.util.Vector;
 
 import org.geoimage.impl.GeotiffWriter;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.slf4j.LoggerFactory;
 
 /**

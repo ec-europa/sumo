@@ -10,13 +10,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.jrc.sumo.core.api.ISelect;
+import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -37,9 +36,9 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
     }
 
     @Override
-    public void render(OpenGLContext context) {
+    public void render() {
         doSelect();
-        super.render(context);
+        super.render();
 
     }
 
