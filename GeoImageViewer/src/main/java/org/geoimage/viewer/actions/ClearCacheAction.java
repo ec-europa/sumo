@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.jrc.sumo.core.api.Argument;
+import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

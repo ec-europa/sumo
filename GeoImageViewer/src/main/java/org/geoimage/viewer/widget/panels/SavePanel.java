@@ -22,15 +22,15 @@ import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.NumberFormatter;
 
-import org.geoimage.viewer.common.OptionMenu;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geotools.referencing.CRS;
+import org.jrc.sumo.core.api.ISave;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 
 
@@ -51,14 +51,14 @@ public class SavePanel extends javax.swing.JPanel {
     	            boolean isSelected, boolean cellHasFocus){
     	            
     				super.getListCellRendererComponent(list, value, index,isSelected, cellHasFocus);
-    				if(value instanceof OptionMenu){
+    				if(value instanceof FileTypes){
 	    	            if (value != null) {
-	    	            	OptionMenu item = (OptionMenu)value;
+	    	            	FileTypes item = (FileTypes)value;
 	    	                setText( item.getOptionDesc());
 	    	            }
 	    	 
 	    	            if (index == -1){
-	    	            	OptionMenu item = (OptionMenu)value;
+	    	            	FileTypes item = (FileTypes)value;
 	    	            	setText( item.getOptionDesc());
 	    	            }
     				}    
@@ -77,7 +77,7 @@ public class SavePanel extends javax.swing.JPanel {
         this.saveLayer = layer;
         
         
-        DefaultComboBoxModel<OptionMenu> modelComboFormat=new DefaultComboBoxModel<OptionMenu>(layer.getFileFormatTypes()){
+        DefaultComboBoxModel<FileTypes> modelComboFormat=new DefaultComboBoxModel<FileTypes>(layer.getFileFormatTypes()){
         	@Override
         	public Object getSelectedItem(){
         		return super.getSelectedItem();
@@ -104,7 +104,7 @@ public class SavePanel extends javax.swing.JPanel {
         
         if(layer instanceof MaskVectorLayer)
             if(((MaskVectorLayer)layer).getParent() instanceof ImageLayer){
-            	OptionMenu opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
+            	FileTypes opt=comboSaveFormat.getItemAt(comboSaveFormat.getSelectedIndex());
             	if (opt==null)
             		opt=comboSaveFormat.getItemAt(0);
                 jTextField1.setText(((ImageLayer)((MaskVectorLayer)layer).getParent()).getImageReader().getFilesList()[0] + "." + opt.getOptionDesc());
@@ -252,7 +252,7 @@ public class SavePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    	OptionMenu opt=(OptionMenu)comboSaveFormat.getSelectedItem();
+    	FileTypes opt=(FileTypes)comboSaveFormat.getSelectedItem();
     	if(saveLayer instanceof ComplexEditVDSVectorLayer && opt.getOptionId()==ISave.OPT_EXPORT_XML_SUMO ){
     		String runversion=this.txtRunVersion.getText();
     		Integer runId=(Integer)this.txtRunVersionNumber.getValue();
@@ -297,7 +297,7 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     int ii=filename.lastIndexOf(".");
     filename = filename.substring(0,ii!=-1?ii:filename.length());
     
-    String ext=((OptionMenu)comboSaveFormat.getSelectedItem()).getValue();
+    String ext=((FileTypes)comboSaveFormat.getSelectedItem()).getValue();
     if(!filename.endsWith("."+ext)){
     	filename=filename+"."+ext;
     }    
@@ -307,7 +307,7 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<OptionMenu> comboSaveFormat;
+    private javax.swing.JComboBox<FileTypes> comboSaveFormat;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -13,7 +13,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fenggui.ObservableLabelWidget;
 import org.fenggui.event.mouse.MousePressedEvent;
 import org.fenggui.render.Binding;
@@ -23,15 +24,15 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.ScaleTransformation;
-import org.geoimage.viewer.util.Constant;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.util.files.Constant;
 
 
  class Overview extends ObservableLabelWidget {
-	final Logger logger = Logger.getLogger(GeoOverviewToolbar.class);
+	final Logger logger = LogManager.getLogger(GeoOverviewToolbar.class);
 	
     private ITexture texture = null;
     protected Color backgroundColor = null;

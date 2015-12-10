@@ -20,8 +20,8 @@ public class Sentinel1SLC extends Sentinel1 {
 	protected RandomAccessFile fss;
     protected byte[] preloadedData;
 
-	public Sentinel1SLC(String swath,File manifest) {
-    	super(swath,manifest);
+	public Sentinel1SLC(String swath,File manifest,String geolocationMethod) {
+    	super(swath,manifest,geolocationMethod);
     }
 
     @Override

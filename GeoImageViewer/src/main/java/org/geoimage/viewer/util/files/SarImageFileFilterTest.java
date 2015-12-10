@@ -1,15 +1,15 @@
 package org.geoimage.viewer.util.files;
 
 import java.io.File;
-
+/*
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.Test;*/
 
 public class SarImageFileFilterTest {
-
+/*
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -52,7 +52,7 @@ public class SarImageFileFilterTest {
 		
 		
 	}
-
+*/
 	
 
 }

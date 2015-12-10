@@ -18,14 +18,6 @@ import javax.swing.SwingUtilities;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
-import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.IKeyPressed;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ILayerListener;
-import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.IMouseDrag;
-import org.geoimage.viewer.core.api.IMouseMove;
-import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
@@ -33,6 +25,14 @@ import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.jrc.sumo.core.api.IClickable;
+import org.jrc.sumo.core.api.IKeyPressed;
+import org.jrc.sumo.core.api.ILayerListener;
+import org.jrc.sumo.core.api.ILayerManager;
+import org.jrc.sumo.core.api.IMouseDrag;
+import org.jrc.sumo.core.api.IMouseMove;
+import org.jrc.sumo.core.api.ITime;
+import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -121,7 +121,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         for (ILayer lkey : getAllLayers()){//layers.keySet()) {
             if (lkey.isActive()) {
                 try {
-                    lkey.render(context);
+                    lkey.render();
                     /*for (ILayer child : layers.get(lkey)) {
                     	child.render(context);
                     }*/
@@ -146,21 +146,21 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 
 
-    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
+    public void mouseClicked(Point imagePosition, int button) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IClickable) {
-                    ((IClickable) l).mouseClicked(imagePosition, button, context);
+                    ((IClickable) l).mouseClicked(imagePosition, button);
                 }
             }
         }
     }
 
-    public void mouseMoved(Point imagePosition, OpenGLContext context) {
+    public void mouseMoved(Point imagePosition) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseMove) {
-                    ((IMouseMove) l).mouseMoved(imagePosition, context);
+                    ((IMouseMove) l).mouseMoved(imagePosition);
                 }
             }
         }
@@ -206,11 +206,11 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         return layers;
     }
 
-    public void mouseDragged(Point initPosition, Point imagePosition, int button, OpenGLContext context) {
+    public void mouseDragged(Point initPosition, Point imagePosition, int button) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseDrag) {
-                    ((IMouseDrag) l).mouseDragged(initPosition, imagePosition, button, context);
+                    ((IMouseDrag) l).mouseDragged(initPosition, imagePosition, button);
                 }
             }
         }

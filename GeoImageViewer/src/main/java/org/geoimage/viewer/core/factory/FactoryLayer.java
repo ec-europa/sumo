@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -16,6 +15,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer;
+import org.jrc.sumo.core.api.layer.IMask;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;

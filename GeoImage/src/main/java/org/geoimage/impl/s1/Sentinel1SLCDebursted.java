@@ -20,8 +20,8 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
     protected SentinelDeburstUtil util;
     int lines=0;
 
-	public Sentinel1SLCDebursted(String swath,File manifest) {
-    	super(swath,manifest);
+	public Sentinel1SLCDebursted(String swath,File manifest,String geolocationMethod) {
+    	super(swath,manifest,geolocationMethod);
     }
 	
 	@Override

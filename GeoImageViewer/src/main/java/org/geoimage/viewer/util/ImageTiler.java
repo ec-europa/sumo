@@ -9,10 +9,10 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.eclipse.swt.internal.C;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.layers.image.Cache;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.jrc.sumo.util.files.Constant;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -18,14 +18,14 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.GeometryExtractor;
-import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.core.api.layer.IMask;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;

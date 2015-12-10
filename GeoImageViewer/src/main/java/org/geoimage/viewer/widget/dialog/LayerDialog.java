@@ -5,11 +5,6 @@
  */
 
 package org.geoimage.viewer.widget.dialog;
-import org.geoimage.viewer.core.api.IComplexVectorLayer;
-import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.ISave;
-import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -20,6 +15,11 @@ import org.geoimage.viewer.widget.panels.LayerPanel;
 import org.geoimage.viewer.widget.panels.SavePanel;
 import org.geoimage.viewer.widget.panels.SelectPanel;
 import org.geoimage.viewer.widget.panels.VectorPanel;
+import org.jrc.sumo.core.api.IComplexVectorLayer;
+import org.jrc.sumo.core.api.IEditable;
+import org.jrc.sumo.core.api.ISave;
+import org.jrc.sumo.core.api.ISelect;
+import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *

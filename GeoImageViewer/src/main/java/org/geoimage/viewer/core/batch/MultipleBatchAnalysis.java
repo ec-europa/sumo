@@ -7,11 +7,12 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.util.files.SarFileUtil;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.core.api.layer.IMask;
+import org.jrc.sumo.util.files.Constant;
 import org.slf4j.LoggerFactory;
 
 public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
@@ -62,7 +63,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						}
 						
 						//crate the reader
-						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath());
+						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 						for(GeoImageReader r:readers){
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;

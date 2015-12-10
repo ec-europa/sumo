@@ -8,6 +8,7 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -75,7 +76,7 @@ public class BatchModeTest {
 
 	@Test
 	public void testStartAnalysis() {
-		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(testImage);
+		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(testImage,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 		SarImageReader reader=(SarImageReader) readers.get(0);
 		
 	/*			

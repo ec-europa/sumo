@@ -38,12 +38,12 @@ import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.Plugins;
 import org.geoimage.viewer.core.PluginsManager;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.util.ClassPathHacker;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
+import org.jrc.sumo.core.api.iactions.IAction;
+import org.jrc.sumo.core.api.iactions.IConsoleAction;
+import org.jrc.sumo.core.api.layer.ILayer;
+import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
 /**

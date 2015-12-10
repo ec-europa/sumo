@@ -10,13 +10,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
 
 /**

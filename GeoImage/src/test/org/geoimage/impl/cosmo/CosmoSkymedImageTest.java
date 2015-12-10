@@ -46,7 +46,7 @@ public class CosmoSkymedImageTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		reader=(AbstractCosmoSkymedImage) GeoImageReaderFactory.createReaderForName(
-				"F:\\SumoImgs\\CSK\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903.h5").get(0);
+				"F:\\SumoImgs\\CSK\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903\\CSKS1_DGM_B_HI_07_HH_RA_FF_20111123022856_20111123022903.h5",null).get(0);
 		reader.initialise();
 	}
 

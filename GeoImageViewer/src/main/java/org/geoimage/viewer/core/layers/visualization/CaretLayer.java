@@ -8,9 +8,9 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *
