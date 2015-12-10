@@ -24,5 +24,7 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="libs/eclipselink.jar"/>
+	<classpathentry kind="lib" path="libs/h2-1.2.121.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
