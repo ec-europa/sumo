@@ -63,8 +63,8 @@ public class ThumbnailsLayer extends GenericLayer {
     }
 
     @Override
-    public void render() {
-    	OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;//SumoPlatform.getApplication().getGeoContext();
         GL gl = context.getGL();
         gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
         BufferedImage temp=new BufferedImage(overview.getWidth(), overview.getHeight(), overview.getType());

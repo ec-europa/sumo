@@ -121,7 +121,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         for (ILayer lkey : getAllLayers()){//layers.keySet()) {
             if (lkey.isActive()) {
                 try {
-                    lkey.render();
+                    lkey.render(context);
                     /*for (ILayer child : layers.get(lkey)) {
                     	child.render(context);
                     }*/
@@ -146,21 +146,21 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 
 
 
-    public void mouseClicked(Point imagePosition, int button) {
+    public void mouseClicked(Point imagePosition, int button,Object graphicContext) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IClickable) {
-                    ((IClickable) l).mouseClicked(imagePosition, button);
+                    ((IClickable) l).mouseClicked(imagePosition, button, graphicContext);
                 }
             }
         }
     }
 
-    public void mouseMoved(Point imagePosition) {
+    public void mouseMoved(Point imagePosition,Object graphicContext) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseMove) {
-                    ((IMouseMove) l).mouseMoved(imagePosition);
+                    ((IMouseMove) l).mouseMoved(imagePosition, graphicContext);
                 }
             }
         }
@@ -206,11 +206,11 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         return layers;
     }
 
-    public void mouseDragged(Point initPosition, Point imagePosition, int button) {
+    public void mouseDragged(Point initPosition, Point imagePosition, int button,Object graphicContext) {
         for (ILayer l : getAllLayers()) {
             if (l.isActive()) {
                 if (l instanceof IMouseDrag) {
-                    ((IMouseDrag) l).mouseDragged(initPosition, imagePosition, button);
+                    ((IMouseDrag) l).mouseDragged(initPosition, imagePosition, button, graphicContext);
                 }
             }
         }

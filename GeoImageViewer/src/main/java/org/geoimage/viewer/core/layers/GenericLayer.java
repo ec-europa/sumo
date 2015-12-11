@@ -60,8 +60,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	
 
     @Override
-	public void render(){
-    	  OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+	public void render(Object gcC){
+    	   OpenGLContext context=(OpenGLContext)gcC;
 		  if (!context.isDirty()||SumoPlatform.isBatchMode()) {
 	            return;
 	        }

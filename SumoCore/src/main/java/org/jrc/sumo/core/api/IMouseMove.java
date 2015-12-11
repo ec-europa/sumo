@@ -12,5 +12,5 @@ import java.awt.Point;
  * @author thoorfr
  */
 public interface IMouseMove {
-    public void mouseMoved(Point imagePosition);
+    public void mouseMoved(Point imagePosition,Object graphicContext);
 }

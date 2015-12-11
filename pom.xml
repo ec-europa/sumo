@@ -92,11 +92,6 @@
 			<version>1.1.13</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>org.lwjgl.lwjgl</groupId>
-			<artifactId>lwjgl_util</artifactId>
-			<version>2.9.0</version>
-		</dependency>
 
 		<dependency>
 			<groupId>gov.nasa</groupId>
@@ -140,6 +135,12 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.12</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.kitfox.svg</groupId>
@@ -151,38 +152,30 @@
 
 
 		<!-- JOGL -->
-
-		<dependency>
-			<groupId>org.jogamp.jogl</groupId>
-			<artifactId>jogl</artifactId>
-			<version>2.2.4</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
-			<artifactId>jogl-all-noawt</artifactId>
-			<version>2.2.4</version>
+			<artifactId>jogl</artifactId>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>nativewindow</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 
 		<!-- JTS -->

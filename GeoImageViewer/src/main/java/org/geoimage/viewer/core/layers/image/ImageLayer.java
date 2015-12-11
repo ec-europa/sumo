@@ -135,7 +135,6 @@ public class ImageLayer implements ILayer  {
     
     Iterator<ImageReader> iReader=null;
 	ImageReader pngReader=null;
-
     
     
     /**
@@ -242,8 +241,8 @@ public class ImageLayer implements ILayer  {
     /**
      * displays the tiles on screen
      */
-    public void render() {
-    	OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+    public void render(Object glContext) {
+    	OpenGLContext context=(OpenGLContext)glContext;
     	if(activeGir!=null){	
 	        if (torescale) {
 	            torescale = false;

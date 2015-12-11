@@ -13,7 +13,7 @@ package org.jrc.sumo.core.api.layer;
 public interface ILayer {
 	public String getName();
     public void setName(String name);
-    public void render();
+    public void render(Object glContext);
     public boolean isActive();
     public void setActive(boolean active);
     public void setParent(ILayer parent);

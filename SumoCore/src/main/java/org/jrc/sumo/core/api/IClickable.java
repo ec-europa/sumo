@@ -22,5 +22,5 @@ public interface IClickable {
      * @param button the button clicked: BUTTON1 (left click), BUTTON2 or BUTTON3 (right click)
      * @param context the geographic GeoContext of the current display
      */
-    public void mouseClicked(Point imagePosition, int button);
+    public void mouseClicked(Point imagePosition, int button,Object graphicContext);
 }

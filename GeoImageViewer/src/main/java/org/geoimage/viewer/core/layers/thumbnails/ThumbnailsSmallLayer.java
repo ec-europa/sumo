@@ -73,7 +73,7 @@ public class ThumbnailsSmallLayer extends GenericLayer implements  IClickable {
         pd.dispose();
     }
 
-    public void mouseClicked(Point imagePosition, int button) {
+    public void mouseClicked(Point imagePosition, int button,Object geoContext) {
         this.imagePosition = imagePosition;
         if (active) {
             pd.setBufferedImage(((ThumbnailsLayer)super.getParent()).get(imagePosition));
