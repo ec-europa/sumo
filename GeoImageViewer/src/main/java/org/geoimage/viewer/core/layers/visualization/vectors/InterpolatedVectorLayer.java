@@ -184,8 +184,8 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
         return false;
     }
 
-    public void mouseClicked(java.awt.Point imagePosition, int button) {
-    	OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+    public void mouseClicked(java.awt.Point imagePosition, int button,Object graphicContext) {
+    	OpenGLContext context=(OpenGLContext)graphicContext;
         this.selectedGeometry = null;
         GeometryFactory gf = new GeometryFactory();
         Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));

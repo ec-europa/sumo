@@ -13,6 +13,6 @@ import java.awt.Point;
  */
 public interface IMouseDrag {
     
-    public void mouseDragged(Point initPosition, Point imagePosition, int button);
+    public void mouseDragged(Point initPosition, Point imagePosition, int button,Object glContext);
 
 }

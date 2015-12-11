@@ -102,9 +102,10 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
     }
 
     @Override
-    public void render() {
-        super.render();
-        OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;
+        super.render(context);
+        //OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
         
         if (!context.isDirty() || glayer == null||SumoPlatform.isBatchMode()) {
             return;
