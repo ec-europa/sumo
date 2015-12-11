@@ -90,7 +90,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         pd.dispose();
     }
 
-    public void mouseMoved(Point imagePosition) {
+    public void mouseMoved(Point imagePosition,Object glContext) {
         this.imagePosition = imagePosition;
         if (active) {
         	try{
@@ -107,7 +107,7 @@ public class PositionLayer extends GenericLayer implements  IMouseMove, IClickab
         }
     }
 
-    public void mouseClicked(Point imagePosition, int button) {
+    public void mouseClicked(Point imagePosition, int button,Object graphicContext) {
         if (pd.getCheckDistance()) {
             if (initPosition == null) {
                 initPosition = imagePosition;

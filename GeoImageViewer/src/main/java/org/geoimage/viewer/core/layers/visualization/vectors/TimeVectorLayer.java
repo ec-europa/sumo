@@ -52,11 +52,12 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
     }
 
     @Override
-    public void render() {
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;
         if (minimumDate == null || maximumDate == null) {
-            super.render();
+            super.render(context);
         } else {
-        	OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
+        	//OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
             if (!context.isDirty() || onWork) {
                 return;
             }

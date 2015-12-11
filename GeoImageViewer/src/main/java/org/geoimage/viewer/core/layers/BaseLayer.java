@@ -1,7 +1,6 @@
 
 package org.geoimage.viewer.core.layers;
 
-import org.geoimage.opengl.OpenGLContext;
 import org.jrc.sumo.core.api.layer.ILayer;
 
 public class BaseLayer extends GenericLayer {
@@ -14,7 +13,7 @@ public class BaseLayer extends GenericLayer {
 	}
 
 	@Override
-	public void render() {
+	public void render(Object c) {
 
 	}
 

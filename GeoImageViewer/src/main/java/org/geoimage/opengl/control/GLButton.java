@@ -47,7 +47,7 @@ public class GLButton extends GLWidget{
 	    
 	    
 	    GLDrawable draw=gl.getGL().getContext().getGLDrawable();
-		textRenderer.beginRendering(draw.getSurfaceWidth(),draw.getSurfaceHeight());
+		textRenderer.beginRendering(draw.getWidth(),draw.getHeight());
 		textRenderer.setColor(Color.WHITE);
 		textRenderer.setSmoothing(true);
 		textRenderer.draw(this.text,(int)posx,(int)posy+5); //text and position

@@ -184,7 +184,7 @@ public class ZoomWindowLayer extends GenericLayer implements  IMouseMove {
         this.gir.dispose();
     }
 
-    public void mouseMoved(Point imagePosition) {
+    public void mouseMoved(Point imagePosition,Object graphicContext) {
         this.position = imagePosition;
         this.newP = true;
 

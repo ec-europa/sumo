@@ -56,6 +56,8 @@ import org.jrc.sumo.util.files.Constant;
     @Override
     public void paint(org.fenggui.render.Graphics g) {
         super.paint(g);
+        
+        
         if ((il == null) || (!il.isActive())) {
             il = null;
             onbuilding = false;
