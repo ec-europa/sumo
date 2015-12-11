@@ -22,11 +22,11 @@ import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.geoimage.viewer.core.Catalogue;
 import org.geoimage.viewer.core.ImagePlanning;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.jrc.sumo.configuration.Catalogue;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
