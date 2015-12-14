@@ -12,7 +12,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.files.SarFileUtil;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.core.api.layer.IMask;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 public class MultipleBatchAnalysis extends AbstractBatchAnalysis{

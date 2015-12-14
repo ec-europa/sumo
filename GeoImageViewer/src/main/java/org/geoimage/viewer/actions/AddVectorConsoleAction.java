@@ -34,7 +34,7 @@ import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.core.api.Argument;
 import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.jrc.sumo.core.api.layer.ILayer;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;

@@ -4,30 +4,30 @@
  */
 package org.jrc.sumo.configuration;
 
-import static org.jrc.sumo.util.files.Constant.PREF_AGGLOMERATION_METHODOLOGY;
-import static org.jrc.sumo.util.files.Constant.PREF_BUFFERING_DISTANCE;
-import static org.jrc.sumo.util.files.Constant.PREF_DISPLAY_BANDS;
-import static org.jrc.sumo.util.files.Constant.PREF_DISPLAY_PIXELS;
-import static org.jrc.sumo.util.files.Constant.PREF_LAND_MASK_MARGIN;
-import static org.jrc.sumo.util.files.Constant.PREF_NEIGHBOUR_DISTANCE;
-import static org.jrc.sumo.util.files.Constant.PREF_NEIGHBOUR_TILESIZE;
-import static org.jrc.sumo.util.files.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
-import static org.jrc.sumo.util.files.Constant.PREF_S1_GEOLOCATION;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_COLOR_BAND_0;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_COLOR_BAND_1;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_COLOR_BAND_2;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_COLOR_BAND_3;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SIZE_BAND_0;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SIZE_BAND_1;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SIZE_BAND_2;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SIZE_BAND_3;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SYMBOL_BAND_0;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SYMBOL_BAND_1;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SYMBOL_BAND_2;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SYMBOL_BAND_3;
-import static org.jrc.sumo.util.files.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
+import static org.jrc.sumo.util.Constant.PREF_AGGLOMERATION_METHODOLOGY;
+import static org.jrc.sumo.util.Constant.PREF_BUFFERING_DISTANCE;
+import static org.jrc.sumo.util.Constant.PREF_DISPLAY_BANDS;
+import static org.jrc.sumo.util.Constant.PREF_DISPLAY_PIXELS;
+import static org.jrc.sumo.util.Constant.PREF_LAND_MASK_MARGIN;
+import static org.jrc.sumo.util.Constant.PREF_NEIGHBOUR_DISTANCE;
+import static org.jrc.sumo.util.Constant.PREF_NEIGHBOUR_TILESIZE;
+import static org.jrc.sumo.util.Constant.PREF_REMOVE_LANDCONNECTEDPIXELS;
+import static org.jrc.sumo.util.Constant.PREF_S1_GEOLOCATION;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_COLOR_BAND_0;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_COLOR_BAND_1;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_COLOR_BAND_2;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_COLOR_BAND_3;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_COLOR_BAND_MERGED;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SIZE_BAND_0;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SIZE_BAND_1;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SIZE_BAND_2;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SIZE_BAND_3;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SIZE_BAND_MERGED;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SYMBOL_BAND_0;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SYMBOL_BAND_1;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SYMBOL_BAND_2;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SYMBOL_BAND_3;
+import static org.jrc.sumo.util.Constant.PREF_TARGETS_SYMBOL_BAND_MERGED;
 
 import java.awt.Color;
 import java.util.List;
@@ -37,7 +37,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 
 /**
  * A class that deals with environment variables, they are stored on a local h2 database

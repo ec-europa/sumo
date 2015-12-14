@@ -13,7 +13,7 @@ import org.fenggui.event.mouse.MousePressedEvent;
 import org.fenggui.render.Binding;
 import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 /**

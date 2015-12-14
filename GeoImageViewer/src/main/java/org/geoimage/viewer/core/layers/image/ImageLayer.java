@@ -31,7 +31,7 @@ import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.jrc.sumo.core.api.layer.ILayer;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.texture.Texture;
