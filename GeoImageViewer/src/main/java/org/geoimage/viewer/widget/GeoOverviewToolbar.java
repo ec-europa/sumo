@@ -28,7 +28,7 @@ import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.ScaleTransformation;
 import org.jrc.sumo.core.api.layer.ILayer;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 
 
  class Overview extends ObservableLabelWidget {

@@ -7,7 +7,6 @@ package org.geoimage.viewer.widget.panels;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -26,7 +25,7 @@ import org.geoimage.viewer.widget.AttributesEditor;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.core.api.IComplexVectorLayer;
 import org.jrc.sumo.core.api.layer.ILayer;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;

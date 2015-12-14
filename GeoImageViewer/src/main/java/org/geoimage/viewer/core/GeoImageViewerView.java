@@ -206,7 +206,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }

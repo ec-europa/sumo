@@ -16,18 +16,16 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
-import org.geoimage.viewer.util.ImageTiler;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.core.api.Argument;
 import org.jrc.sumo.core.api.iactions.AbstractAction;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 /**
