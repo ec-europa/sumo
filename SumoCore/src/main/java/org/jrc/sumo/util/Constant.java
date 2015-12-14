@@ -1,4 +1,4 @@
-package org.jrc.sumo.util.files;
+package org.jrc.sumo.util;
 
 public class Constant {
   public static final int OVERVIEW_SIZE=256;

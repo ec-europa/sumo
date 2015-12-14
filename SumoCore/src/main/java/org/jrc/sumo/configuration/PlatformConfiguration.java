@@ -1,7 +1,7 @@
 package org.jrc.sumo.configuration;
 
 
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 
 public class PlatformConfiguration {
 	private static PlatformConfiguration instance=null;
