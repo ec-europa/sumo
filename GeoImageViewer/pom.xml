@@ -108,6 +108,9 @@
 					<includePluginDependencies>true</includePluginDependencies>
 					<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
 					<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
+					<arguments>
+						<argument>-Dsun.java2d.noddraw=true</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 

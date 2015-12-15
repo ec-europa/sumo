@@ -28,6 +28,16 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+	        <resource>
+	            <directory>src/main/java</directory>
+	            <includes>
+	                <include>**/*.properties</include>
+	                <include>**/*.xml</include>
+	                <include>**/*.png</include>
+	            </includes>
+	        </resource>
+    	</resources>
 	</build>
 	<repositories>
 		<repository>
