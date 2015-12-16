@@ -90,11 +90,11 @@
 		</dependency>
 
 
-		<dependency>
+		<!-- dependency>
 			<groupId>gov.nasa</groupId>
 			<artifactId>worldwind</artifactId>
 			<version>2.0.0-986</version>
-		</dependency>
+		</dependency  -->
 
 		<dependency>
 			<groupId>rome</groupId>
@@ -152,37 +152,37 @@
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>nativewindow</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-noawt</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-noawt-main</artifactId>
-			<version>2.2.4</version>
+			<version>2.1.4</version>
 		</dependency>
 
 		<!-- JTS -->
@@ -267,6 +267,28 @@
 			<version>1.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>worldwind</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>vpf-symbols</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>worldwindx</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>plugin</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>

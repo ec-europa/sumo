@@ -33,11 +33,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jrc.sumo</groupId>
-			<artifactId>GeoImage</artifactId>
-			<version>1.3.0</version>
-		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>org.jrc.sumo</groupId>
