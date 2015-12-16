@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import jrc.it.geolocation.exception.MathException;
 import jrc.it.geolocation.metadata.AbstractMetadata;
@@ -24,7 +25,7 @@ public class OrbitInterpolation {
 	double[] secondsDiffFromRefTime;
 	double iSafetyBufferAz=0;
 	
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(OrbitInterpolation.class);
+	private static Logger logger=LogManager.getLogger(OrbitInterpolation.class);
 
 	public void orbitInterpolation(List<AbstractMetadata.OrbitStatePosVelox> vpList,
 			double zeroDopplerTimeFirstLineSeconds,
