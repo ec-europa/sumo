@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.geoimage.viewer.java2d.util.ScaleTransformation;
-import org.jrc.sumo.util.files.Constant;
+import org.jrc.sumo.util.Constant;
 
 
 public class OverviewTest {

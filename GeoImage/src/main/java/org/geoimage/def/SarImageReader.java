@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
@@ -24,8 +26,6 @@ import org.geoimage.utils.PolygonOp;
 //import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -62,7 +62,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected Polygon bbox=null;
     
     protected double[] pixelsize={0.0,0.0};
-    private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
+    private Logger logger= LogManager.getLogger(SarImageReader.class);
     
 
 	public SarImageReader(File manifest){

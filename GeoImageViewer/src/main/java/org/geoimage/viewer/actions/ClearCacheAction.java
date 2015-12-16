@@ -10,15 +10,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
 import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.jrc.sumo.core.api.Argument;
 import org.jrc.sumo.core.api.iactions.AbstractAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ClearCacheAction extends AbstractAction implements IProgress{
-	private Logger logger = LoggerFactory.getLogger(ClearCacheAction.class);
+	private org.apache.logging.log4j.Logger logger = LogManager.getLogger(ClearCacheAction.class);
 	boolean done=false;
 	
 	

@@ -67,7 +67,7 @@ public class MathUtil {
     }
     
     /**
-     * cross product    (a2b3-a3b2)ˆi+(a3b1-a1b3)ˆj+(a1b2-a2b1)ˆk
+     * cross product    (a2b3-a3b2)^i+(a3b1-a1b3)^j+(a1b2-a2b1)^k
      * @param v1,v2 should have the same length
      * @return
      */

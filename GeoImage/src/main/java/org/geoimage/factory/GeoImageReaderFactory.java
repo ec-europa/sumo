@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.AlosGeoTiff;
 import org.geoimage.impl.alos.AlosProperties;
@@ -21,7 +23,6 @@ import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
-import org.slf4j.LoggerFactory;
 
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 import ncsa.hdf.object.HObject;
@@ -32,7 +33,7 @@ import ncsa.hdf.object.h5.H5Group;
 public class GeoImageReaderFactory {
 
     public final static List<String> FORMATS = new Vector<String>();
-    private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageReaderFactory.class);
+    private static Logger logger=LogManager.getLogger(GeoImageReaderFactory.class);
     
     static {
     	try{
