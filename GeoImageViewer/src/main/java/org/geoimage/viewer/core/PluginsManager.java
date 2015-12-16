@@ -175,7 +175,7 @@ public class PluginsManager {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
             return (IAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
-            logger.error(ex.getMessage(),ex);
+            logger.error(ex.getMessage());
         }
         return null;
     }
