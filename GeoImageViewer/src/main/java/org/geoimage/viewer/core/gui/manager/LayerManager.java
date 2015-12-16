@@ -68,7 +68,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     	return manager;
     }
 
-    public void render(final OpenGLContext context) {
+    public void render(OpenGLContext context) {
         if (this.added.size() > 0) {
         	for(ILayer l:added){
         		if(l.getParent()==null){

@@ -549,7 +549,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         GL gl = drawable.getGL();
         gl.getGL2().glMatrixMode(GL2.GL_PROJECTION);
         gl.getGL2().glLoadIdentity();
-        glu.gluPerspective(0.1, aspect, 0.1f, 1);
+        glu.gluPerspective(0, aspect, 0.1f, 1);
 
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);

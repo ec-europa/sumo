@@ -28,7 +28,7 @@ public class GeoUtils {
 	public final static double semiMinorAxis2=semiMinorAxis*semiMinorAxis;
 	public final static double cc = 299792458; //Speed of light
 	public final static double R_HEART=6372.795477598;
-	public final static double GRS80_EARTH_MU=3.986005e14;//	Earth gravitational constant from GRS80 model: 3.986005e14 m³/s².
+	public final static double GRS80_EARTH_MU=3.986005e14;//	Earth gravitational constant from GRS80 model: 3.986005e14 
 	
 	/**
 	 * 
