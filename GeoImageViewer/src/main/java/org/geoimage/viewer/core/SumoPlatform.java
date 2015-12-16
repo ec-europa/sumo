@@ -19,6 +19,7 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
+import org.geoimage.viewer.core.GeoImageViewerView;
 
 /**
  *

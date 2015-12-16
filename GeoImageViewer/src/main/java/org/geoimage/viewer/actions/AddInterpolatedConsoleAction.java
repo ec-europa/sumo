@@ -20,7 +20,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
@@ -36,6 +35,8 @@ import org.jrc.sumo.core.api.Argument;
 import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
+import org.geoimage.utils.IProgress;
+
 
 import com.vividsolutions.jts.geom.Polygon;
 
