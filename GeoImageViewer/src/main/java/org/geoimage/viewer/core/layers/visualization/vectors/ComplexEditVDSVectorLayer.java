@@ -26,6 +26,8 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
@@ -40,8 +42,6 @@ import org.geoimage.viewer.widget.AttributesEditor;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.VDSAnalysisVersionDialog;
 import org.jrc.sumo.configuration.PlatformConfiguration;
-import org.jrc.sumo.core.api.ISave;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 

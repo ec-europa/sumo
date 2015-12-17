@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jrc.sumo.core.api;
+package org.geoimage.viewer.core.api;
 
 /**
  * the class deals with possible arguments types that can be passed to execute a

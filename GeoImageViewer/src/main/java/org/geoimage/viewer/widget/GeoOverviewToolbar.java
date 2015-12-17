@@ -24,10 +24,10 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.ScaleTransformation;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.jrc.sumo.util.Constant;
 
 
@@ -176,7 +176,7 @@ import org.jrc.sumo.util.Constant;
                 BufferedImage temp = new BufferedImage((int) (gir.getWidth() * (1.0 / ratio)), (int) (gir.getHeight() * (1.0 / ratio)), BufferedImage.TYPE_USHORT_GRAY);
                 // get a handle on the raster data
                 WritableRaster raster = temp.getRaster();
-                int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, null,0);
+                int[] data = gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(), 1.0 / ratio, true, 0);
                 raster.setSamples(0, 0, temp.getWidth(), temp.getHeight(), 0, data);
                 RescaleOp rescale = new RescaleOp(contrast,brightness, null);
                 rescale.filter(temp, temp);

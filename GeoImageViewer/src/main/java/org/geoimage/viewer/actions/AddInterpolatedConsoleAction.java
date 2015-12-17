@@ -19,8 +19,9 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
@@ -28,15 +29,11 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
+import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.jrc.sumo.configuration.PlatformConfiguration;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
-import org.geoimage.utils.IProgress;
-
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -212,7 +209,7 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
                                 addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
                             }
                     }
-                } catch (GeoTransformException ex) {
+                } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
             } 

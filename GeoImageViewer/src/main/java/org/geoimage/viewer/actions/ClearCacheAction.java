@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
-import org.geoimage.utils.IProgress;
+import org.apache.logging.log4j.Logger;
+import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.layers.image.CacheManager;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.util.IProgress;
 
 public class ClearCacheAction extends AbstractAction implements IProgress{
-	private org.apache.logging.log4j.Logger logger = LogManager.getLogger(ClearCacheAction.class);
+	private Logger logger = LogManager.getLogger(this);
 	boolean done=false;
 	
 	

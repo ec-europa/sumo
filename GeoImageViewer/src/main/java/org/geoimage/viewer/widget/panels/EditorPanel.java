@@ -8,8 +8,8 @@ package org.geoimage.viewer.widget.panels;
 
 import java.awt.Frame;
 
+import org.geoimage.viewer.core.api.IEditable;
 import org.geoimage.viewer.widget.SimpleEditorDialog;
-import org.jrc.sumo.core.api.IEditable;
 
 /**
  *

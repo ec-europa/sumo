@@ -17,11 +17,11 @@ import org.fenggui.layout.FormAttachment;
 import org.fenggui.layout.FormData;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.IThreshable;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
 import org.geoimage.viewer.widget.dialog.LayerDialog;
-import org.jrc.sumo.core.api.IThreshable;
-import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *

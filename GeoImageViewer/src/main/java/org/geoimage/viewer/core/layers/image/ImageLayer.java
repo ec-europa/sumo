@@ -30,7 +30,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.jrc.sumo.core.api.layer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 

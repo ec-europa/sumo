@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api;
+package org.geoimage.viewer.core.api;
 
-import org.jrc.sumo.core.api.layer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 /**
  *

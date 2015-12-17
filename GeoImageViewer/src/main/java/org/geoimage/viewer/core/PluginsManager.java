@@ -13,11 +13,12 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.apache.commons.io.FilenameUtils;
+import org.geoimage.viewer.actions.AbstractConsoleAction;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
-import org.jrc.sumo.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
-import org.geoimage.utils.IProgress;
 
 public class PluginsManager {
 	private final EntityManagerFactory emf;
@@ -75,6 +76,8 @@ public class PluginsManager {
 	        for (int i = 0; i < classes.length; i++) {
 	            try {
 	            	if(!dbPlugins.contains(classes[i])){
+	            		//ClassLoader cls = ClassLoader.getSystemClassLoader();
+	            		//Object temp = cls.loadClass(classes[i]).newInstance();
 		                Object temp = Class.forName(classes[i]).newInstance();
 		                if (temp instanceof IAction) {
 		                    Plugins p = new Plugins(classes[i]);

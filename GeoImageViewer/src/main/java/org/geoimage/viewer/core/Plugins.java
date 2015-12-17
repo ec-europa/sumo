@@ -6,7 +6,6 @@
 package org.geoimage.viewer.core;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

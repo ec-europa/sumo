@@ -12,14 +12,13 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.slf4j.LoggerFactory;
 
 /**
