@@ -230,12 +230,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.hdfgroup</groupId>
-			<artifactId>hdf-java</artifactId>
-			<version>2.6.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
 			<version>2.9.3</version>
@@ -301,6 +295,28 @@
 			</exclusions>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdf5</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdfobj</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdf5obj</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdf5dll</artifactId>
+			<version>2.11.0</version>
+			<type>dll</type>
+		</dependency>
 	</dependencies>
 
 
