@@ -17,6 +17,7 @@ import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.jrc.sumo.core.api.iactions.IAction;
 import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
+import org.geoimage.utils.IProgress;
 
 public class PluginsManager {
 	private final EntityManagerFactory emf;
