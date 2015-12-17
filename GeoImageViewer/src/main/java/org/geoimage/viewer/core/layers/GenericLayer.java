@@ -10,12 +10,12 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.api.IThreshable;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
-import org.jrc.sumo.core.api.ISave;
-import org.jrc.sumo.core.api.IThreshable;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.jrc.sumo.util.files.FileTypes;
 
 import com.vividsolutions.jts.geom.Coordinate;

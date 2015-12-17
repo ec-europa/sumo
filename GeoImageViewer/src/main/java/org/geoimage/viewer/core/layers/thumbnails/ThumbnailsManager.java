@@ -17,9 +17,9 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.util.ImageTiler;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -117,7 +117,7 @@ public class ThumbnailsManager {
                 }
                 BufferedImage overview = new BufferedImage((int)(gir.getWidth()*(1.0/scale)), (int)(gir.getHeight()*(1.0/scale)), gir.getType(true));
                 overview.getRaster().setSamples(0, 0, overview.getWidth(), overview.getHeight(), 0, 
-                		gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(),1/scale, false, null,band));
+                		gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(),1/scale, false, band));
                 ImageIO.write(overview, "png", new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png"));
             }
         } catch (IOException ex) {

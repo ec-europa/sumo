@@ -3,15 +3,12 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api.iactions;
-
-
+package org.geoimage.viewer.core.api;
 
 /**
  *
  * @author thoorfr
  */
-public interface IConsoleAction extends IAction{
-
-    public String getCommand();
+public interface ISelect {
+    public void select(String whereClause);
 }

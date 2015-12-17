@@ -15,10 +15,10 @@ import javax.media.opengl.GLBase;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.dialog.ZoomDialog;
-import org.jrc.sumo.core.api.IMouseMove;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;

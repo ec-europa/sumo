@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api.layer;
+package org.geoimage.viewer.core.api.ilayer;
 
 import java.awt.Rectangle;
 import java.awt.geom.Area;
@@ -26,14 +26,14 @@ public interface IMask extends ILayer{
 	 * @param height
 	 * @return
 	 */
-    public boolean intersects(int x, int y, int width, int height);
+   // public boolean intersects(int x, int y, int width, int height);
     /**
      * 
      * @param x
      * @param y
      * @return
      */
-    public boolean contains(int x, int y);
+  //  public boolean contains(int x, int y);
     /**
      * 
      * @param x
@@ -42,7 +42,7 @@ public interface IMask extends ILayer{
      * @param height
      * @return
      */
-    public boolean includes(int x, int y, int width, int height);
+  //  public boolean includes(int x, int y, int width, int height);
     /**
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
      * 
@@ -52,7 +52,7 @@ public interface IMask extends ILayer{
      * @param scalingFactor
      * @return
      */
-    public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor);
+   // public BufferedImage rasterize(Rectangle rect, int offsetX, int offsetY, double scalingFactor);
     /**
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
      * 
@@ -65,7 +65,7 @@ public interface IMask extends ILayer{
      * @param scalingFactor
      * @return
      */
-    public BufferedImage rasterize(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) ;
+    //public BufferedImage rasterize(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) ;
     /**
      * 
      * @param width

@@ -1,8 +1,8 @@
-package org.jrc.sumo.core.api.iactions;
+package org.geoimage.viewer.core.api.iactions;
 
 import java.util.List;
 
-import org.jrc.sumo.core.api.Argument;
+import org.geoimage.viewer.core.api.Argument;
 
 public interface IAction {
 	 	

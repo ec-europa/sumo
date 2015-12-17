@@ -16,6 +16,8 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.IComplexVectorLayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -23,8 +25,6 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
 import org.geoimage.viewer.widget.AttributesEditor;
 import org.jrc.sumo.configuration.PlatformConfiguration;
-import org.jrc.sumo.core.api.IComplexVectorLayer;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 

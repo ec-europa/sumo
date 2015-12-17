@@ -3,12 +3,12 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api;
+package org.geoimage.viewer.core.api;
 
 import java.util.HashMap;
 import java.util.List;
 
-import org.jrc.sumo.core.api.layer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 /**
  * Interface that codes the behavior of a Layer Manager which consists of a set of layers.

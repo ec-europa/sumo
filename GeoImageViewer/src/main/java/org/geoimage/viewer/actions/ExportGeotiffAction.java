@@ -10,9 +10,8 @@ import java.util.Vector;
 
 import org.geoimage.impl.GeotiffWriter;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -42,7 +41,7 @@ public class ExportGeotiffAction extends AbstractAction{
                 try {
                     SumoPlatform.setInfo("Exporting file...", -1);
                     f.createNewFile();
-                    GeotiffWriter.create(LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader(), 0,f.getAbsolutePath(),null);
+                    GeotiffWriter.create(LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader(), 0,f.getAbsolutePath());
                 } catch (Exception ex) {
                 	logger.error(ex.getLocalizedMessage(),ex);
                 }

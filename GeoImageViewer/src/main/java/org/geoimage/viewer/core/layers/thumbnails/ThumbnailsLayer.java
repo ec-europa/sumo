@@ -15,10 +15,10 @@ import javax.media.opengl.GLBase;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
-import org.jrc.sumo.core.api.layer.ILayer;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;

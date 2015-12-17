@@ -20,7 +20,6 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.Constant;
-import org.geoimage.utils.IProgress;
 import org.jaitools.tiledimage.DiskMemImage;
 
 import com.sun.media.imageio.plugins.tiff.GeoTIFFTagSet;
@@ -75,19 +74,13 @@ public class GeotiffWriter {
       //  mygir.dispose();
     }
 
-    public static void create(final GeoImageReader gir, int band,String filepath, IProgress progress) throws FileNotFoundException, IOException, GeoTransformException {
-        progress.setIndeterminate(true);
-        progress.setMessage("Starting export...");
+    public static void create(final GeoImageReader gir, int band,String filepath) throws FileNotFoundException, IOException, GeoTransformException {
        // GeoImageReader mygir = gir.clone();
         ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_GRAY), false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT);
         SampleModel sm = cm.createCompatibleSampleModel(Constant.TILE_SIZE, Constant.TILE_SIZE);
         DiskMemImage ti = new DiskMemImage(gir.getWidth(), gir.getHeight(), sm);
         ti.setUseCommonCache(true);
         System.out.println(ti.getNumXTiles() + "-" + ti.getNumYTiles());
-        progress.setIndeterminate(false);
-        progress.setMaximum(ti.getNumXTiles() * ti.getNumYTiles());
-        progress.setCurrent(0);
-        progress.setMessage("Writing data to the cache...");
         int cur = 0;
         for (int j = 0; j < ti.getNumYTiles(); j++) {
             for (int i = 0; i < ti.getNumXTiles(); i++) {
@@ -95,10 +88,8 @@ public class GeotiffWriter {
                 Rectangle bounds = r.getBounds();
                 r.setPixels(bounds.x, bounds.y, bounds.width, bounds.height, gir.readTile(bounds.x, bounds.y, bounds.width, bounds.height,band));
                 ti.releaseWritableTile(i, j);
-                progress.setCurrent(cur++);
             }
         }
-        progress.setMessage("Writing metadata...");
         TIFFEncodeParam encodep = new TIFFEncodeParam();
         TIFFField[] geotiffmeta = new TIFFField[1];
         List<Gcp> gcps = gir.getGcps();
@@ -116,15 +107,10 @@ public class GeotiffWriter {
         geotiffmeta[0] = new TIFFField(GeoTIFFTagSet.TAG_MODEL_TIE_POINT, TIFFField.TIFF_DOUBLE, data.length, data);
         encodep.setExtraFields(geotiffmeta);
         FileOutputStream fos = new FileOutputStream(filepath);
-        progress.setIndeterminate(true);
-        progress.setMessage("Wrtiting to the file system, please wait...");
         TIFFImageEncoder w = new TIFFImageEncoder(fos, encodep);
         w.encode(ti);
         fos.close();
         ti.dispose();
-     //   mygir.dispose();
-        progress.setMessage("");
-        progress.setDone(true);
     }
 
     public static void main(String[] args) throws IOException {

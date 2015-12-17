@@ -18,8 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.api.Argument;
 import org.slf4j.LoggerFactory;
 
 /**

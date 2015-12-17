@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api.layer;
+package org.geoimage.viewer.core.api.ilayer;
 
 
 /**

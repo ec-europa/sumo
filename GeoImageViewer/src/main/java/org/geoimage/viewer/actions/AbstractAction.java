@@ -3,10 +3,12 @@
  * and open the template in the editor.
  */
 
-package org.jrc.sumo.core.api.iactions;
+package org.geoimage.viewer.actions;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import org.geoimage.viewer.core.api.iactions.IAction;
 
 /**
  *

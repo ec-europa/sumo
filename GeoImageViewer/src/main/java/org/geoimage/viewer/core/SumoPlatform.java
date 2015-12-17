@@ -12,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.AbstractConsoleAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
