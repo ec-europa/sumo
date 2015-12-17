@@ -1,7 +1,7 @@
 
 package org.geoimage.viewer.core.layers;
 
-import org.jrc.sumo.core.api.layer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 public class BaseLayer extends GenericLayer {
 	

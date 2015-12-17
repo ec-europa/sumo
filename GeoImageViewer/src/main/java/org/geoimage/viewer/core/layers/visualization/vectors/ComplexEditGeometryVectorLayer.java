@@ -14,9 +14,9 @@ import java.util.Map;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.IComplexVectorLayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.jrc.sumo.core.api.IComplexVectorLayer;
-import org.jrc.sumo.core.api.layer.ILayer;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;

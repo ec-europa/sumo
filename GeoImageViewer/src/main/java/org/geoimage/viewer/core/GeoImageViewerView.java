@@ -56,6 +56,9 @@ import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
+import org.geoimage.viewer.core.api.ILayerListener;
+import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
 import org.geoimage.viewer.core.gui.manager.WidgetManager;
@@ -77,15 +80,11 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.TaskMonitor;
-import org.jrc.sumo.core.api.ILayerListener;
-import org.jrc.sumo.core.api.iactions.IAction;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLReadBufferUtil;
-
 
 
 
@@ -950,11 +949,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         mainPanel.setName("MainPanel"); // NOI18N
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-        jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
+      /*  jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                GeoImageViewerView.this.focusGained(evt);
+               // GeoImageViewerView.this.focusGained(evt);
             }
-        });
+        });*/
 
         sumopanel.setName("sumopanel"); // NOI18N
         sumopanel.setLayout(new java.awt.GridLayout(1, 0));
@@ -963,14 +962,15 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         sumopanel.add(mainCanvas);
 
         jTabbedPane1.addTab(resourceMap.getString("sumopanel.TabConstraints.tabTitle"), sumopanel); // NOI18N
-        jTabbedPane1.addChangeListener(new ChangeListener() {
+        
+        /*jTabbedPane1.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if(jTabbedPane1.getSelectedIndex()==1){
 					wwjPanel.resizeWW();
 				}
 			}
-		});
+		});*/
 
         org.jdesktop.layout.GroupLayout MainPanelLayout = new org.jdesktop.layout.GroupLayout(mainPanel);
         mainPanel.setLayout(MainPanelLayout);

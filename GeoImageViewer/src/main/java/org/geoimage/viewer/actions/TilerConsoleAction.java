@@ -9,12 +9,11 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.ImageTiler;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
-import org.jrc.sumo.core.api.layer.ILayer;
 
 /**
  *

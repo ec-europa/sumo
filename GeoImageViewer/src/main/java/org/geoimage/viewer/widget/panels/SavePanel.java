@@ -23,13 +23,13 @@ import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.NumberFormatter;
 
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.ISave;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geotools.referencing.CRS;
-import org.jrc.sumo.core.api.ISave;
-import org.jrc.sumo.core.api.layer.ILayer;
 import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 

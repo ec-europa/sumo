@@ -22,7 +22,7 @@ import org.fenggui.render.Graphics;
 import org.fenggui.render.ITexture;
 import org.fenggui.util.Color;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.jrc.sumo.core.api.IThreshable;
+import org.geoimage.viewer.core.api.IThreshable;
 import org.slf4j.LoggerFactory;
 
 /**

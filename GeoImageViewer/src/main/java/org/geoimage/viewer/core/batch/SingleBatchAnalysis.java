@@ -5,10 +5,10 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
-import org.jrc.sumo.core.api.layer.IMask;
 
 
 public class SingleBatchAnalysis extends AbstractBatchAnalysis {

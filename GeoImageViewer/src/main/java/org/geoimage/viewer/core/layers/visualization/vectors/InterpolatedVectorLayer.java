@@ -22,6 +22,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.IClickable;
+import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -29,8 +31,6 @@ import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
-import org.jrc.sumo.core.api.IClickable;
-import org.jrc.sumo.core.api.ISave;
 import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 

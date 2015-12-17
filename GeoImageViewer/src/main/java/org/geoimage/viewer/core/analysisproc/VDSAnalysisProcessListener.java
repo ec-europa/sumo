@@ -1,6 +1,6 @@
 package org.geoimage.viewer.core.analysisproc;
 
-import org.jrc.sumo.core.api.layer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 public interface VDSAnalysisProcessListener {
 	

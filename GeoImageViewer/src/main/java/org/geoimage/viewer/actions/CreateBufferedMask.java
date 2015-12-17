@@ -5,28 +5,24 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import org.apache.commons.math3.distribution.GeometricDistribution;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geotools.geometry.jts.JTS;
-import org.jrc.sumo.core.api.Argument;
-import org.jrc.sumo.core.api.iactions.AbstractAction;
-import org.jrc.sumo.core.api.layer.IMask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 public class CreateBufferedMask extends AbstractAction{
-	private Logger logger = LoggerFactory.getLogger(CreateBufferedMask.class);
+	//private Logger logger = LogManager.getLogger(CreateBufferedMask.class);
 
 	@Override
 	public String getName() {

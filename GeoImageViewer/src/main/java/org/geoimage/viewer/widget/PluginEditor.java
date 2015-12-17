@@ -25,7 +25,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.viewer.core.Plugins;
-import org.jrc.sumo.core.api.iactions.IConsoleAction;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
