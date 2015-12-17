@@ -7,8 +7,9 @@ package org.geoimage.viewer.core.gui.manager;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.viewer.widget.TransparentWidget;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class WidgetManager {
     private static WidgetManager instance;
     static HashMap<String, Class<? extends TransparentWidget>> widgets=null;
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(WidgetManager.class);
+	private static Logger logger=LogManager.getLogger();
 
     
     private WidgetManager(){
