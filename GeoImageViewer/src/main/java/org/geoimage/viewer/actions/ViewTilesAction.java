@@ -5,8 +5,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.GeometryExtractor;
@@ -15,11 +13,13 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ViewTilesAction extends AbstractAction{
-	private Logger logger = LogManager.getLogger();
+	private Logger logger = LoggerFactory.getLogger(ViewTilesAction.class);
 	boolean done=false;
 	int tileSize=0;
 	
