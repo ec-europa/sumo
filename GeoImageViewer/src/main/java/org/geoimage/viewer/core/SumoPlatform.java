@@ -8,12 +8,8 @@ package org.geoimage.viewer.core;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.actions.AbstractConsoleAction;
-import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
@@ -22,13 +18,14 @@ import org.geoimage.viewer.widget.TransparentWidget;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author thoorfr
  */
 public class SumoPlatform extends SingleFrameApplication {
-	private static Logger logger=LogManager.getLogger(SumoPlatform.class);
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoPlatform.class);
 
     private static boolean batchMode=false;
     private PluginsManager plManager=null;
