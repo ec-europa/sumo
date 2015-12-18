@@ -8,6 +8,9 @@
 	<build>
 		<resources>
 			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
 				<directory>src/main/java</directory>
 				<includes>
 					<include>**/*.properties</include>
@@ -31,7 +34,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-					<finalName>sumo.jar</finalName>
+					<finalName>sumo</finalName>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
@@ -88,10 +91,9 @@
 					<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
 					<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
 					<arguments>
+						<!-- <argument>-Dexec.classpathScope=compile</argument> -->
 						<argument>-Dsun.java2d.noddraw=true</argument>
-						<workingDirectory>target</workingDirectory>
-						<argument>-Djava.library.path=${basedir}/lib</argument>
-						<!-- <argument>-Djava.library.path=lib/hdf-java-2.6.1.jar</argument> -->
+						<argument>-Dlog4j.configuration=file:${project.build.resources[0].directory}/log4j2.xml</argument>
 					</arguments>
 				</configuration>
 			</plugin>
@@ -116,6 +118,28 @@
 		<version>1.3.0</version>
 	</parent>
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		 	<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<type>jar</type>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
 			<artifactId>SumoCore</artifactId>
