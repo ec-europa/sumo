@@ -177,6 +177,10 @@ public class PluginsManager {
     private IAction instanciate(Plugins p) {
         try {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
+            //Thread thread = Thread.currentThread();
+            //ClassLoader loader = thread.getContextClassLoader();
+            //return (IAction)loader.loadClass(p.getClassName()).newInstance();
+            //return (IAction)ClassLoader.getSystemClassLoader().loadClass(p.getClassName()).newInstance();
             return (IAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
             logger.error(ex.getMessage());

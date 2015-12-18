@@ -42,7 +42,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author thoorfr
  */
 public class AddInterpolatedConsoleAction extends AbstractAction implements IProgress {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
+	private  org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
 
     private JFileChooser fd;
     private static String lastDirectory;
