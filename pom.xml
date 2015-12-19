@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>it.geosolutions.imageio-ext</groupId>
 			<artifactId>imageio-ext-gdal-bindings</artifactId>
-			<version>1.7.2</version>
+			<version>1.9.2</version>
 		</dependency>
 
 		<!-- dependency> <groupId>it.geosolutions.imageio-ext</groupId> <artifactId>imageio-ext-gdalplugin</artifactId> 
