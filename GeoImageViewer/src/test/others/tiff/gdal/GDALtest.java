@@ -131,7 +131,7 @@ public class GDALtest extends JFrame implements ActionListener{
 			System.out.println("Projection is `" + poDataset.GetProjectionRef()
 					+ "'");
 		
-		HashMap dict = poDataset.GetMetadata_Dict("");
+		Hashtable dict = poDataset.GetMetadata_Dict("");
 		System.out.println(dict.size() + " items of metadata found (via Hashtable dict):");
 		for(Object keys:dict.keySet()) {
 			String key = (String)keys;

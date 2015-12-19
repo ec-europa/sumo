@@ -244,7 +244,7 @@ public class gdalinfo
 
                 int count = 0;
                 List GCPs = new ArrayList<>();
-                hDataset.GetGCPs(GCPs);
+             //   hDataset.GetGCPs(GCPs);
 
                 for (Object e:GCPs)
                 {
