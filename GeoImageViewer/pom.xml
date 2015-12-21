@@ -11,6 +11,12 @@
 				<directory>src/main/resources</directory>
 			</resource>
 			<resource>
+				<directory>../repo</directory>
+				<includes>
+					<include>gdal_lib_win64</include>
+				</includes>	
+			</resource>
+			<resource>
 				<directory>src/main/java</directory>
 				<includes>
 					<include>**/*.properties</include>
