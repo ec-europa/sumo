@@ -8,7 +8,8 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.util.FastMath;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import jrc.it.geolocation.common.GeoUtils;
 import jrc.it.geolocation.common.MathUtil;
@@ -27,7 +28,7 @@ public abstract class AbstractGeoCoding implements GeoCoding {
 	protected IMetadata.CoordinateConversion[] coordConv=null;
 	
 	
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractGeoCoding.class);
+	private static Logger logger=LogManager.getLogger(AbstractGeoCoding.class);
 
 	/**
 	 * 
@@ -177,7 +178,7 @@ public abstract class AbstractGeoCoding implements GeoCoding {
            
            double deltaD=0;
            do{
-        	 //calcolo dExp e denommExp come prodotti vettoriali => il risultato è uno scalare
+        	 //calcolo dExp e denommExp come prodotti vettoriali => il risultato e'  uno scalare
         	   double numCoeffsXGround=0;//[]=new double[nCoeffs];
         	   double denomCoeffsXGround=0;//[]=new double[nCoeffs];
         	   double scalNum=0;

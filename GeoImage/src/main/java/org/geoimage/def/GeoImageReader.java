@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
-import org.geoimage.utils.IProgress;
 
 /**
  * Interface to be implemented by all the readers for "geographic" images
@@ -141,7 +140,7 @@ public interface GeoImageReader  {
      * @param progressbar
      * @return
      */
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band);
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter,int band);
 
     /**
      * Reads single pixel value of the curent band.

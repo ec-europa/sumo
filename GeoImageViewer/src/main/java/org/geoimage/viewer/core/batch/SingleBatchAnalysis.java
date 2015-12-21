@@ -5,9 +5,10 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.utils.IMask;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 
 
 public class SingleBatchAnalysis extends AbstractBatchAnalysis {
@@ -22,7 +23,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 	 */
 	protected void startAnalysis(){
 		//crate the reader
-		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0]);
+		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 		
 		for(GeoImageReader r:readers){
 			currentReader=r;

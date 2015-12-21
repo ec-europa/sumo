@@ -16,7 +16,6 @@ import org.geoimage.def.OpticalMetadata;
 import org.geoimage.def.SUMOMetadata;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.Constant;
-import org.geoimage.utils.IProgress;
 import org.geotools.referencing.GeodeticCalculator;
 
 /**
@@ -130,7 +129,7 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         }
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, int band) {
         System.out.println("readAndDecimateTile(" + x + ", " + y + ", " + width + ", " + height + ")");
         int outWidth = (int) (width * scalingFactor);
         int outHeight = (int) (height * scalingFactor);
@@ -156,18 +155,10 @@ public abstract class OpticalImageReader extends SUMOMetadata implements Optical
         // load first tile
         int currentY = 0;
         int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
-        if (progressbar != null) {
-            progressbar.setMaximum(outHeight / 100);
-        // start going through the image one Tile at a time
-        }
         double posY = 0.0;
         for (int j = 0; j < outHeight; j++, posY += deltaPixelsY) {
             // update progress bar
             if (j / 100 - Math.floor(j / 100) == 0) {
-                if (progressbar != null) {
-                    progressbar.setCurrent(j / 100);
-                // check if Tile needs loading
-                }
             }
             if (posY > (int) Math.ceil(tileHeight)) {
                 tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);

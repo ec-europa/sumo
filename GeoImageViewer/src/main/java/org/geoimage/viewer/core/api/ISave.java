@@ -5,7 +5,7 @@
 
 package org.geoimage.viewer.core.api;
 
-import org.geoimage.viewer.common.OptionMenu;
+import org.jrc.sumo.util.files.FileTypes;
 
 /**
  *
@@ -33,6 +33,6 @@ public interface ISave {
    public static final String STR_EXPORT_THUMBS="thumbnails";
 	  
     public void save(String file, int type, String projection);
-    public OptionMenu[] getFileFormatTypes();
+    public FileTypes[] getFileFormatTypes();
 
 }

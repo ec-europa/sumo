@@ -9,7 +9,7 @@ package org.geoimage.viewer.widget;
 import java.util.HashMap;
 
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 
 /**
  *

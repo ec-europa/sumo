@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.s1.Sentinel1SLC;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -60,7 +61,7 @@ public class OverviewTest  {
 		try{
 			ImageIO.scanForPlugins();
 			Object o=ImageIO.getImageReadersByFormatName("tiff");
-			List<GeoImageReader> readers= GeoImageReaderFactory.createReaderForName(safe);
+			List<GeoImageReader> readers= GeoImageReaderFactory.createReaderForName(safe,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 			Sentinel1SLC slc=(Sentinel1SLC)(readers.get(0));
 			
 			Overview overview=new Overview(null);

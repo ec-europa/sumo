@@ -14,19 +14,17 @@ import javax.swing.JFileChooser;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.TiledBufferedImage;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
-import org.geoimage.viewer.util.Constant;
-import org.geoimage.viewer.util.ImageTiler;
+import org.geoimage.viewer.util.IProgress;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -133,14 +131,14 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
         List<GeoImageReader> tempList = null;
         
         if (tileBuff) {
-            GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(imagefile).get(0);
+            GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(imagefile,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm()).get(0);
             temp = new TiledBufferedImage(new File(CacheManager.getRootCacheInstance().getPath(), gir1.getFilesList()[0] + "/data"), gir1);
             if(temp!=null){
             	tempList=new ArrayList<GeoImageReader>();
             	tempList.add(temp);
             }
         } else {
-        	tempList = GeoImageReaderFactory.createReaderForName(imagefile);
+        	tempList = GeoImageReaderFactory.createReaderForName(imagefile,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
         	temp=tempList.get(0);
         }
         // save the file name in the preferences

@@ -15,11 +15,10 @@ import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -103,9 +102,10 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
     }
 
     @Override
-    public void render(OpenGLContext context) {
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;
         super.render(context);
-        
+        //OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
         
         if (!context.isDirty() || glayer == null||SumoPlatform.isBatchMode()) {
             return;

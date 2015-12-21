@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.TimeComponent;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;

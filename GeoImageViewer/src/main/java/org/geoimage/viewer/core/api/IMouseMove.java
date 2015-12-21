@@ -7,12 +7,10 @@ package org.geoimage.viewer.core.api;
 
 import java.awt.Point;
 
-import org.geoimage.opengl.OpenGLContext;
-
 /**
  *
  * @author thoorfr
  */
 public interface IMouseMove {
-    public void mouseMoved(Point imagePosition, OpenGLContext context);
+    public void mouseMoved(Point imagePosition,Object graphicContext);
 }

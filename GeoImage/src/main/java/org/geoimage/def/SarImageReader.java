@@ -14,18 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.geoop.GeoTransformOrbitState;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
-import org.geoimage.utils.IProgress;
-import org.geoimage.viewer.util.PolygonOp;
+import org.geoimage.utils.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -62,7 +60,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected Polygon bbox=null;
     
     protected double[] pixelsize={0.0,0.0};
-    private Logger logger= LoggerFactory.getLogger(SarImageReader.class);
+    private Logger logger= LogManager.getLogger(SarImageReader.class);
     
 
 	public SarImageReader(File manifest){
@@ -231,7 +229,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, int band) {
         int outWidth = (int) (width * scalingFactor);
         int outHeight = (int) (height * scalingFactor);
         double deltaPixelsX = (double) width / outWidth;
@@ -254,18 +252,10 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         // load first tile
         int currentY = 0;
         int[] tile = readTile(0, currentY, width, (int) FastMath.ceil(tileHeight),band);
-        if (progressbar != null) {
-            progressbar.setMaximum(outHeight / 100);
-        // start going through the image one Tile at a time
-        }
         double posY = 0.0;
         for (int j = 0; j < outHeight; j++, posY += deltaPixelsY) {
             // update progress bar
             if (j / 100 - FastMath.floor(j / 100) == 0) {
-                if (progressbar != null) {
-                    progressbar.setCurrent(j / 100);
-                // check if Tile needs loading
-                }
             }
             if (posY > (int) FastMath.ceil(tileHeight)) {
                 tile = readTile(0, currentY + (int) FastMath.ceil(tileHeight), width, (int) FastMath.ceil(tileHeight),band);

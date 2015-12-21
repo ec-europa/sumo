@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,8 +16,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.Precision;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
@@ -37,7 +39,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-import com.ibm.icu.math.BigDecimal;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -45,7 +46,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
-	public static Logger logger = Logger.getLogger(SumoXMLWriter.class);
+	public static Logger logger = LogManager.getLogger(SumoXMLWriter.class);
 	private File input=null;
 	private GeometricLayer layer = null;
 	
@@ -362,13 +363,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
             //marshaller.marshal(an, System.out);
             marshaller.marshal( an, os );
             os.close();
-        } catch (javax.xml.bind.JAXBException ex) {
-        	logger.log(Level.ERROR, null, ex);
-        } catch (FileNotFoundException e) {
-        	logger.log(Level.ERROR, null, e);
-		} catch (IOException e) {
-			logger.log(Level.ERROR, null, e);
-
+        } catch (javax.xml.bind.JAXBException|IOException ex) {
+        	logger.error(ex.getMessage(), ex);
 		}
 	}
 	
@@ -557,14 +553,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	            //marshaller.marshal(an, System.out);
 	            marshaller.marshal( an, os );
 	            os.close();
-	        } catch (javax.xml.bind.JAXBException ex) {
-	        	logger.log(Level.ERROR, null, ex);
-	        } catch (FileNotFoundException e) {
-	        	logger.log(Level.ERROR, null, e);
-			} catch (IOException e) {
-				logger.log(Level.ERROR, null, e);
-
-			}
+	        } catch (javax.xml.bind.JAXBException|IOException ex) {
+	        	logger.error(ex.getMessage(), ex);
+	        } 
 			
 			
 		} catch (ParseException e) {

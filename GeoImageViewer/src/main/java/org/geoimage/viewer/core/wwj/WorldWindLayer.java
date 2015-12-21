@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ITime;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 

@@ -9,24 +9,24 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
-import org.geoimage.utils.IMask;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.IProgress;
 
 /**
  *
@@ -119,8 +119,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 	IMask maskList = mask.get(i);
                		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
                 }
-                
-                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, bufferedMask, ENL, thresholds);
+                MaskGeometries mg=new MaskGeometries(bufferedMask[0].getGeometries());
+                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg, ENL, thresholds);
 
                 proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferedMask,bufferingDistance,0);
                 proc.addProcessListener(this);
