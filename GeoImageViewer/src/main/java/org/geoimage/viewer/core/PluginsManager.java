@@ -13,9 +13,11 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.apache.commons.io.FilenameUtils;
+import org.geoimage.viewer.actions.AbstractConsoleAction;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.util.ClassPathHacker;
+import org.geoimage.viewer.core.api.iactions.IConsoleAction;
+import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
 public class PluginsManager {
@@ -74,6 +76,8 @@ public class PluginsManager {
 	        for (int i = 0; i < classes.length; i++) {
 	            try {
 	            	if(!dbPlugins.contains(classes[i])){
+	            		//ClassLoader cls = ClassLoader.getSystemClassLoader();
+	            		//Object temp = cls.loadClass(classes[i]).newInstance();
 		                Object temp = Class.forName(classes[i]).newInstance();
 		                if (temp instanceof IAction) {
 		                    Plugins p = new Plugins(classes[i]);
@@ -173,9 +177,13 @@ public class PluginsManager {
     private IAction instanciate(Plugins p) {
         try {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
+            //Thread thread = Thread.currentThread();
+            //ClassLoader loader = thread.getContextClassLoader();
+            //return (IAction)loader.loadClass(p.getClassName()).newInstance();
+            //return (IAction)ClassLoader.getSystemClassLoader().loadClass(p.getClassName()).newInstance();
             return (IAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
-            logger.error(ex.getMessage(),ex);
+            logger.error(ex.getMessage());
         }
         return null;
     }

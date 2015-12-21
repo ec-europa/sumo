@@ -20,9 +20,7 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.utils.Constant;
-import org.geoimage.utils.IProgress;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -382,8 +380,8 @@ public class TiledBufferedImage implements GeoImageReader {
         root.delete();
     }
 
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
-        return gir.readAndDecimateTile(x, y, width, height, scalingFactor, filter, progressbar,band);
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter,int band) {
+        return gir.readAndDecimateTile(x, y, width, height, scalingFactor, filter, band);
     }
 
     @Override
@@ -422,11 +420,11 @@ public class TiledBufferedImage implements GeoImageReader {
     
     //test main
     public static void main(String[] args) {
-        GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
+        /*GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
         TiledBufferedImage tbi = new TiledBufferedImage(new File("/home/thoorfr/cache/test/" + gir.getFilesList()[0]), gir);
         for (int i = 0; i < 8000; i += Constant.TILE_SIZE) {
             tbi.preloadLineTile(i, Constant.TILE_SIZE,0);
-        }
+        }*/
     }
 
 	@Override

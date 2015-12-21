@@ -9,18 +9,19 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
-import org.geoimage.utils.IMask;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -122,8 +123,12 @@ public abstract class AbstractBatchAnalysis {
         thresholdsMap.put("VH", params.thresholdArrayValues[2]);
         thresholdsMap.put("VV", params.thresholdArrayValues[3]);
 		
+        MaskGeometries mg=null;
+        if(masks!=null)
+        	mg=new MaskGeometries(masks[0].getGeometries());
+        
         analysis = new VDSAnalysis(reader,
-        		masks, 
+        		mg, 
         		params.enl, 
         		thresholdsMap
         		);

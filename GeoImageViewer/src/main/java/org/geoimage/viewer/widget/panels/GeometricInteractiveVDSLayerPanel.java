@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.apache.commons.lang3.StringUtils;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;

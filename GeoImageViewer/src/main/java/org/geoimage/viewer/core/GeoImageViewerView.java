@@ -26,6 +26,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
@@ -46,7 +47,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.math3.util.FastMath;
-import org.fenggui.Canvas;
 import org.fenggui.Display;
 import org.fenggui.FengGUI;
 import org.fenggui.layout.FormAttachment;
@@ -56,9 +56,9 @@ import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
 import org.geoimage.viewer.core.gui.manager.WidgetManager;
@@ -83,10 +83,8 @@ import org.jdesktop.application.TaskMonitor;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.newt.opengl.GLWindow;
-import javax.media.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLReadBufferUtil;
-
 
 
 
@@ -207,7 +205,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }
@@ -327,7 +324,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    try {
 	                        p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
 	                        p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
-	                        lm.mouseMoved(p, geoContext);
+	                        lm.mouseMoved(p,geoContext);
 	                        
 	                       // public void setImagePosition(Point imagePosition) {
 	                       ImageLayer imgL=LayerManager.getIstanceManager().getCurrentImageLayer();
@@ -371,7 +368,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    dragging = true;
 	                    init = p;
 	                } else {
-	                    lm.mouseDragged(init, p, e.getButton(), geoContext);
+	                    lm.mouseDragged(init, p, e.getButton(),geoContext);
 	                }
 	                init = p;
             	}
@@ -465,7 +462,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             		p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
             		p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
             		LayerPickedData.clear();
-            		lm.mouseClicked(p, e.getButton(), geoContext);
+            		lm.mouseClicked(p, e.getButton(),geoContext);
             	}
             }
 
@@ -547,11 +544,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             height = 1;
         }
 
-        final float h = (float) width / (float) height;
+        final float aspect = (float) width / (float) height;
         GL gl = drawable.getGL();
         gl.getGL2().glMatrixMode(GL2.GL_PROJECTION);
         gl.getGL2().glLoadIdentity();
-        glu.gluPerspective(0, h, 0.1f, 1);
+        glu.gluPerspective(0, aspect, 0.1f, 1);
 
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
@@ -952,11 +949,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         mainPanel.setName("MainPanel"); // NOI18N
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-        jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
+      /*  jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                GeoImageViewerView.this.focusGained(evt);
+               // GeoImageViewerView.this.focusGained(evt);
             }
-        });
+        });*/
 
         sumopanel.setName("sumopanel"); // NOI18N
         sumopanel.setLayout(new java.awt.GridLayout(1, 0));
@@ -965,14 +962,15 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         sumopanel.add(mainCanvas);
 
         jTabbedPane1.addTab(resourceMap.getString("sumopanel.TabConstraints.tabTitle"), sumopanel); // NOI18N
-        jTabbedPane1.addChangeListener(new ChangeListener() {
+        
+        /*jTabbedPane1.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if(jTabbedPane1.getSelectedIndex()==1){
 					wwjPanel.resizeWW();
 				}
 			}
-		});
+		});*/
 
         org.jdesktop.layout.GroupLayout MainPanelLayout = new org.jdesktop.layout.GroupLayout(mainPanel);
         mainPanel.setLayout(MainPanelLayout);

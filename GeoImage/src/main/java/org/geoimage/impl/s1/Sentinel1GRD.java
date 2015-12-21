@@ -8,7 +8,6 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 
 import org.geoimage.impl.imgreader.TIFF;
-import org.geoimage.utils.IProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +30,8 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
 	
 	protected short[] preloadedData;
     
-    public Sentinel1GRD(String swath,File manifest) {
-    	super(swath,manifest);
+    public Sentinel1GRD(String swath,File manifest,String geolocationMethod) {
+    	super(swath,manifest,geolocationMethod);
     	//gdal.AllRegister();
     }
 
@@ -74,7 +73,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     
         
     @Override    
-    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, IProgress progressbar,int band) {
+    public int[] readAndDecimateTile(int x, int y, int width, int height, double scalingFactor, boolean filter, int band) {
         int outWidth = (int) (width * scalingFactor);
         int outHeight = (int) (height * scalingFactor);
         double deltaPixelsX = (double) width / outWidth;
@@ -97,19 +96,8 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         // load first tile
         int currentY = 0;
         int[] tile = readTile(0, currentY, width, (int) Math.ceil(tileHeight),band);
-        if (progressbar != null) {
-            progressbar.setMaximum(outHeight / 100);
-        // start going through the image one Tile at a time
-        }
         double posY = 0.0;
         for (int j = 0; j < outHeight; j++, posY += deltaPixelsY) {
-            // update progress bar
-            if (j / 100 - Math.floor(j / 100) == 0) {
-                if (progressbar != null) {
-                    progressbar.setCurrent(j / 100);
-                // check if Tile needs loading
-                }
-            }
             if (posY > (int) Math.ceil(tileHeight)) {
                 tile = readTile(0, currentY + (int) Math.ceil(tileHeight), width, (int) Math.ceil(tileHeight),band);
                 posY -= (int) Math.ceil(tileHeight);

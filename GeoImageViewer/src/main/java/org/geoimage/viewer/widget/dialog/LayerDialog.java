@@ -7,9 +7,9 @@
 package org.geoimage.viewer.widget.dialog;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.ISelect;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;

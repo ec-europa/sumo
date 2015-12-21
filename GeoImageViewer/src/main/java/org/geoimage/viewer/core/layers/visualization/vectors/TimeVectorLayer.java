@@ -12,8 +12,9 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ITime;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -51,10 +52,12 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
     }
 
     @Override
-    public void render(OpenGLContext context) {
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;
         if (minimumDate == null || maximumDate == null) {
             super.render(context);
         } else {
+        	//OpenGLContext context=SumoPlatform.getApplication().getGeoContext();
             if (!context.isDirty() || onWork) {
                 return;
             }

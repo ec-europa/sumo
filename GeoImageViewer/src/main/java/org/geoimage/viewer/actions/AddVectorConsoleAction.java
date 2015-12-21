@@ -17,13 +17,9 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
@@ -32,9 +28,11 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.util.Constant;
+import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -142,7 +140,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
                             done=LayerManager.addLayerInThread("complexvds", positions, (ImageLayer) l);
                         }
                     }
-                } catch (GeoTransformException ex) {
+                } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
             }
@@ -324,7 +322,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	                return;
 	            }
 	        }
-    	} catch (GeoTransformException ex) {
+    	} catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             return;
         }  

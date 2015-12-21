@@ -26,7 +26,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.viewer.core.Plugins;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
-import org.geoimage.viewer.util.ClassPathHacker;
+import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
 /**

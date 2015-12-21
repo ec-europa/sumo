@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.widget.dialog.LayerDialog;
 

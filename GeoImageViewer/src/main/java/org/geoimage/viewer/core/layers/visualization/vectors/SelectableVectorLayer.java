@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
 import org.geoimage.viewer.core.api.ISelect;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GenericLayer;
@@ -37,7 +37,9 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
     }
 
     @Override
-    public void render(OpenGLContext context) {
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;
+
         doSelect();
         super.render(context);
 

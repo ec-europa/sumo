@@ -220,7 +220,7 @@ public class WWJPanel extends javax.swing.JPanel {
         splitPane = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane1.setMaximumSize(new Dimension(200,getHeight()));
-
+        
         wwjCanvas = new gov.nasa.worldwind.awt.WorldWindowGLCanvas();
         wwjCanvas.setPreferredSize(new java.awt.Dimension(1000, 800));
         wwjCanvas.setModel(new BasicModel());

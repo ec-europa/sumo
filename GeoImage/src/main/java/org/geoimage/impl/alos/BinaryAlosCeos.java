@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.gdal.gdal.GCP;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.imgreader.CeosBinaryReader;
@@ -24,8 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
-
-import sun.invoke.util.BytecodeName;
 
 
 public class BinaryAlosCeos extends Alos {

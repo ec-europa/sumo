@@ -15,7 +15,7 @@ import javax.media.opengl.GLBase;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
@@ -63,7 +63,8 @@ public class ThumbnailsLayer extends GenericLayer {
     }
 
     @Override
-    public void render(OpenGLContext context) {
+    public void render(Object glC) {
+    	OpenGLContext context=(OpenGLContext)glC;//SumoPlatform.getApplication().getGeoContext();
         GL gl = context.getGL();
         gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
         BufferedImage temp=new BufferedImage(overview.getWidth(), overview.getHeight(), overview.getType());

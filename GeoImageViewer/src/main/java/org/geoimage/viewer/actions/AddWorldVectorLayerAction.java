@@ -1,24 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.geoimage.viewer.actions;
 
 import java.io.File;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.utils.IProgress;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.slf4j.LoggerFactory;
+import org.geoimage.viewer.util.IProgress;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -29,7 +25,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  */
 public class AddWorldVectorLayerAction extends AbstractAction implements IProgress {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
+	private static Logger logger=LogManager.getLogger(AddWorldVectorLayerAction.class);
 
     protected boolean done = false;
 

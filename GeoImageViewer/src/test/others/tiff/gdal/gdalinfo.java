@@ -1,5 +1,7 @@
 package others.tiff.gdal;
 
+import java.util.ArrayList;
+
 /******************************************************************************
 
  * $Id$
@@ -34,7 +36,7 @@ package others.tiff.gdal;
  ****************************************************************************/
 
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.ColorTable;
@@ -78,7 +80,7 @@ public class gdalinfo
             int i, iBand;
             double[] adfGeoTransform = new double[6];
             Driver hDriver;
-            Vector papszMetadata;
+            List papszMetadata;
             boolean bComputeMinMax = false, bSample = false;
             boolean bShowGCPs = true, bShowMetadata = true;
             boolean bStats = false, bApproxStats = true;
@@ -86,8 +88,8 @@ public class gdalinfo
             boolean bReportHistograms = false;
             boolean bShowRAT = true;
             String pszFilename = null;
-            Vector papszFileList;
-            Vector papszExtraMDDomains = new Vector();
+            List papszFileList;
+            List papszExtraMDDomains = new ArrayList<>();
 
             gdal.AllRegister();
 
@@ -128,7 +130,7 @@ public class gdalinfo
                 else if (args[i].equals("-checksum"))
                     bComputeChecksum = true;
                 else if (args[i].equals("-mdd") && i + 1 < args.length)
-                    papszExtraMDDomains.addElement(args[++i]);
+                    papszExtraMDDomains.add(args[++i]);
                 else if (args[i].startsWith("-"))
                     Usage();
                 else if (pszFilename == null)
@@ -173,11 +175,9 @@ public class gdalinfo
             }
             else
             {
-                Enumeration e = papszFileList.elements();
-                System.out.println("Files: " + (String) e.nextElement());
-                while (e.hasMoreElements())
+                for (Object o:papszFileList)
                 {
-                    System.out.println("       " + (String) e.nextElement());
+                    System.out.println(" Files:      " + (String) o);
                 }
             }
 
@@ -243,13 +243,12 @@ public class gdalinfo
                     + hDataset.GetGCPProjection());
 
                 int count = 0;
-                Vector GCPs = new Vector();
-                hDataset.GetGCPs(GCPs);
+                List GCPs = new ArrayList<>();
+             //   hDataset.GetGCPs(GCPs);
 
-                Enumeration e = GCPs.elements();
-                while (e.hasMoreElements())
+                for (Object e:GCPs)
                 {
-                    GCP gcp = (GCP) e.nextElement();
+                    GCP gcp = (GCP) e;
                     System.out.println("GCP[" + (count++) + "]: Id="
                         + gcp.getId() + ", Info=" + gcp.getInfo());
                     System.out.println("    (" + gcp.getGCPPixel() + ","
@@ -264,26 +263,23 @@ public class gdalinfo
             papszMetadata = hDataset.GetMetadata_List("");
             if (bShowMetadata && papszMetadata.size() > 0)
             {
-                Enumeration keys = papszMetadata.elements();
                 System.out.println("Metadata:");
-                while (keys.hasMoreElements())
+                for (Object keys:papszMetadata)
                 {
-                    System.out.println("  " + (String) keys.nextElement());
+                    System.out.println("  " + (String) keys);
                 }
             }
 
-            Enumeration eExtraMDDDomains = papszExtraMDDomains.elements();
-            while (eExtraMDDDomains.hasMoreElements())
+            for (Object eExtraMDDDomains:papszExtraMDDomains)
             {
-                String pszDomain = (String) eExtraMDDDomains.nextElement();
+                String pszDomain = (String) eExtraMDDDomains;
                 papszMetadata = hDataset.GetMetadata_List(pszDomain);
                 if (bShowMetadata && papszMetadata.size() > 0)
                 {
-                    Enumeration keys = papszMetadata.elements();
                     System.out.println("Metadata (" + pszDomain + "):");
-                    while (keys.hasMoreElements())
+                    for (Object keys:papszMetadata)
                     {
-                        System.out.println("  " + (String) keys.nextElement());
+                        System.out.println("  " + (String) keys);
                     }
                 }
             }
@@ -293,11 +289,10 @@ public class gdalinfo
             papszMetadata = hDataset.GetMetadata_List("IMAGE_STRUCTURE");
             if (bShowMetadata && papszMetadata.size() > 0)
             {
-                Enumeration keys = papszMetadata.elements();
                 System.out.println("Image Structure Metadata:");
-                while (keys.hasMoreElements())
+                for (Object keys:papszMetadata)
                 {
-                    System.out.println("  " + (String) keys.nextElement());
+                    System.out.println("  " + (String) keys);
                 }
             }
             /* -------------------------------------------------------------------- */
@@ -307,10 +302,9 @@ public class gdalinfo
             if (papszMetadata.size() > 0)
             {
                 System.out.println("Subdatasets:");
-                Enumeration keys = papszMetadata.elements();
-                while (keys.hasMoreElements())
+                for (Object keys:papszMetadata)
                 {
-                    System.out.println("  " + (String) keys.nextElement());
+                    System.out.println("  " + (String) keys);
                 }
             }
 
@@ -321,10 +315,9 @@ public class gdalinfo
             if (papszMetadata.size() > 0)
             {
                 System.out.println("Geolocation:");
-                Enumeration keys = papszMetadata.elements();
-                while (keys.hasMoreElements())
+                for (Object keys:papszMetadata)            
                 {
-                    System.out.println("  " + (String) keys.nextElement());
+                    System.out.println("  " + (String) keys);
                 }
             }
 
@@ -335,10 +328,9 @@ public class gdalinfo
             if (papszMetadata.size() > 0)
             {
                 System.out.println("RPC Metadata:");
-                Enumeration keys = papszMetadata.elements();
-                while (keys.hasMoreElements())
+                for (Object keys:papszMetadata)            
                 {
-                    System.out.println("  " + (String) keys.nextElement());
+                    System.out.println("  " + (String) keys);
                 }
             }
 
@@ -541,16 +533,14 @@ public class gdalinfo
                     System.out.println("  Unit Type: " + hBand.GetUnitType());
                 }
 
-                Vector papszCategories = hBand.GetRasterCategoryNames();
+                List papszCategories = hBand.GetRasterCategoryNames();
                 if (papszCategories.size() > 0)
                 {
                     System.out.println("  Categories:");
-                    Enumeration eCategories = papszCategories.elements();
                     i = 0;
-                    while (eCategories.hasMoreElements())
+                    for (Object keys:papszCategories)            
                     {
-                        System.out.println("    " + i + ": " + (String) eCategories.nextElement());
-                        i++;
+                        System.out.println("  " + (String) keys);
                     }
                 }
 
@@ -568,11 +558,10 @@ public class gdalinfo
                 papszMetadata = hBand.GetMetadata_List("");
                 if (bShowMetadata && papszMetadata.size() > 0)
                 {
-                    Enumeration keys = papszMetadata.elements();
                     System.out.println("  Metadata:");
-                    while (keys.hasMoreElements())
+                    for (Object keys:papszMetadata)            
                     {
-                        System.out.println("    " + (String) keys.nextElement());
+                        System.out.println("  " + (String) keys);
                     }
                 }
                 if (hBand.GetRasterColorInterpretation() == gdalconstConstants.GCI_PaletteIndex

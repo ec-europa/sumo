@@ -13,7 +13,6 @@ import javax.swing.filechooser.FileFilter;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;

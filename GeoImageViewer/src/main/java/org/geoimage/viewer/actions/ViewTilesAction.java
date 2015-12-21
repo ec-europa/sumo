@@ -10,7 +10,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.iactions.AbstractAction;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
@@ -111,7 +110,6 @@ public class ViewTilesAction extends AbstractAction{
 
 	@Override
 	public List<Argument> getArgumentTypes() {
-		//List <Argument> args=new  ArrayList<Argument>();
 		return null;
 	}
 
