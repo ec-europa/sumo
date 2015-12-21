@@ -6,7 +6,7 @@
 package org.geoimage.viewer.widget;
 
 import org.geoimage.viewer.core.api.IEditable;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 /**
  *

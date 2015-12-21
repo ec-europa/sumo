@@ -9,8 +9,7 @@ import java.util.Vector;
 
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.api.iactions.AbstractConsoleAction;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 

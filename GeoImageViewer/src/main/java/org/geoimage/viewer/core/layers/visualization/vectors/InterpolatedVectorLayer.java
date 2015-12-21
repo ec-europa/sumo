@@ -21,7 +21,7 @@ import javax.media.opengl.GL2;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.common.OptionMenu;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.io.AbstractVectorIO;
@@ -31,6 +31,7 @@ import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
+import org.jrc.sumo.util.files.FileTypes;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -170,11 +171,11 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
     	}
     }
 
-    public OptionMenu[] getFileFormatTypes() {
-    	OptionMenu[] opts=new OptionMenu[3];
-    	opts[0]=new OptionMenu(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
-    	opts[1]=new OptionMenu(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
-    	opts[2]=new OptionMenu(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD);
+    public FileTypes[] getFileFormatTypes() {
+    	FileTypes[] opts=new FileTypes[3];
+    	opts[0]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
+    	opts[1]=new FileTypes(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
+    	opts[2]=new FileTypes(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD);
         return opts; 
         
     }
@@ -183,7 +184,8 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
         return false;
     }
 
-    public void mouseClicked(java.awt.Point imagePosition, int button, OpenGLContext context) {
+    public void mouseClicked(java.awt.Point imagePosition, int button,Object graphicContext) {
+    	OpenGLContext context=(OpenGLContext)graphicContext;
         this.selectedGeometry = null;
         GeometryFactory gf = new GeometryFactory();
         Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));

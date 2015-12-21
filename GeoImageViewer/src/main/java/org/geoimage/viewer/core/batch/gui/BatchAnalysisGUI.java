@@ -27,9 +27,10 @@ import javax.swing.UIManager;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.utils.GeometryExtractor;
-import org.geoimage.utils.IProgress;
+import org.geoimage.viewer.util.IProgress;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
 
 import com.keithpower.gekmlib.Document;
@@ -661,7 +662,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
 
         for (File f : files) {
-            GeoImageReader gir = GeoImageReaderFactory.createReaderForName(f.getAbsolutePath()).get(0);
+            GeoImageReader gir = GeoImageReaderFactory.createReaderForName(f.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm()).get(0);
             if (gir != null) {
                 String sql = "SELECT * FROM CATALOGUE WHERE IMAGENAME = '" + f.getAbsolutePath() + "'";
                 try {

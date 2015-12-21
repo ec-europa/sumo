@@ -1,8 +1,7 @@
 
 package org.geoimage.viewer.core.layers;
 
-import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 public class BaseLayer extends GenericLayer {
 	
@@ -14,7 +13,7 @@ public class BaseLayer extends GenericLayer {
 	}
 
 	@Override
-	public void render(OpenGLContext context) {
+	public void render(Object c) {
 
 	}
 

@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import jrc.it.geolocation.common.GeoUtils;
 import jrc.it.geolocation.exception.GeoLocationException;
@@ -17,7 +17,7 @@ import jrc.it.geolocation.metadata.IMetadata.OrbitStatePosVelox;
 import jrc.it.geolocation.metadata.impl.S1Metadata;
 
 public class S1GeoCodingImpl extends AbstractGeoCoding {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(S1GeoCodingImpl.class);
+	private static Logger logger=LogManager.getLogger(S1GeoCodingImpl.class);
 	
 	private final int  iSafetyBufferAz=500;
 	private S1Metadata s1Meta;

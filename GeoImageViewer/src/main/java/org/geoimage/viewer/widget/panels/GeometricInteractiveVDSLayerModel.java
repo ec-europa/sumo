@@ -7,7 +7,6 @@ package org.geoimage.viewer.widget.panels;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -18,15 +17,15 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
-import org.geoimage.viewer.core.api.ILayer;
-import org.geoimage.viewer.core.configuration.PlatformConfiguration;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.EditGeometryVectorLayer;
-import org.geoimage.viewer.util.Constant;
 import org.geoimage.viewer.widget.AttributesEditor;
+import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;

@@ -9,7 +9,7 @@ import java.awt.Point;
 
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.IClickable;
-import org.geoimage.viewer.core.api.ILayer;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.widget.dialog.ThumbnailsDialog;
 
@@ -73,7 +73,7 @@ public class ThumbnailsSmallLayer extends GenericLayer implements  IClickable {
         pd.dispose();
     }
 
-    public void mouseClicked(Point imagePosition, int button, OpenGLContext context) {
+    public void mouseClicked(Point imagePosition, int button,Object geoContext) {
         this.imagePosition = imagePosition;
         if (active) {
             pd.setBufferedImage(((ThumbnailsLayer)super.getParent()).get(imagePosition));

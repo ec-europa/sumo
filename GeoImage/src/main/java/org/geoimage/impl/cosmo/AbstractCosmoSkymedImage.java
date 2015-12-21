@@ -360,7 +360,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         try {
             Object o2 = imagedata.read();
             return Array.getInt(o2, 0) & 0xFFFF;
-        } catch (HDF5Exception ex) {
+        } catch (Exception ex) {
         	logger.error(null, ex);
             return 0;
         }

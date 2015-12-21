@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.AlosGeoTiff;
 import org.geoimage.impl.alos.AlosProperties;
@@ -21,7 +23,6 @@ import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
-import org.slf4j.LoggerFactory;
 
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 import ncsa.hdf.object.HObject;
@@ -32,7 +33,7 @@ import ncsa.hdf.object.h5.H5Group;
 public class GeoImageReaderFactory {
 
     public final static List<String> FORMATS = new Vector<String>();
-    private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageReaderFactory.class);
+    private static Logger logger=LogManager.getLogger(GeoImageReaderFactory.class);
     
     static {
     	try{
@@ -55,12 +56,12 @@ public class GeoImageReaderFactory {
     	GeoImageReader clone=null;
     	if(gir instanceof Sentinel1){
     		if(gir instanceof Sentinel1GRD)
-    			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile());
+    			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile(),((Sentinel1GRD)gir).getGeolocationAlgorithm());
     		else
-    			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath(),((Sentinel1SLC)gir).getManifestFile());
+    			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath(),((Sentinel1SLC)gir).getManifestFile(),((Sentinel1GRD)gir).getGeolocationAlgorithm());
 			clone.initialise();
     	}else {
-    		clone=createReaderForName(gir.getFilesList()[0]).get(0);
+    		clone=createReaderForName(gir.getFilesList()[0],null).get(0);
     	}
     	return clone;
     }
@@ -71,7 +72,7 @@ public class GeoImageReaderFactory {
      * @param file
      * @return
      */
-    public static List<GeoImageReader> createReaderForName(String file){
+    public static List<GeoImageReader> createReaderForName(String file,String geoAlgorithm){
     	List<GeoImageReader> girList=new ArrayList<GeoImageReader>();
 
         try {
@@ -116,9 +117,9 @@ public class GeoImageReaderFactory {
         		Sentinel1 sentinel=null;
         		for(String sw:swath){
         			if(parent.contains("SLC_")){
-        				sentinel=new Sentinel1SLC(sw,f);
+        				sentinel=new Sentinel1SLC(sw,f,geoAlgorithm);
         			}else{
-        				sentinel=new Sentinel1GRD(sw,f);
+        				sentinel=new Sentinel1GRD(sw,f,geoAlgorithm);
         			}
         			sentinel.setContainsMultipleImage(multipleImages);
         			if (sentinel.initialise()) {

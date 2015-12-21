@@ -1,10 +1,10 @@
 package org.geoimage.impl.s1;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,7 +16,8 @@ public class Sentinel1GRDTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		reader=(Sentinel1)GeoImageReaderFactory.createReaderForName(
-				"\"H:\\sat\\geocoding img with problems\\S1A_EW_GRDM_1SDH_20150105T060017_20150105T060121_004032_004DC8_BE6F.SAFE\"");
+				"\"H:\\sat\\geocoding img with problems\\S1A_EW_GRDM_1SDH_20150105T060017_20150105T060121_004032_004DC8_BE6F.SAFE\""
+				,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 		reader.initialise();
 	}
 

@@ -14,8 +14,8 @@ import javax.persistence.Query;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import org.geoimage.viewer.core.configuration.Preferences;
 import org.jdesktop.application.Action;
+import org.jrc.sumo.configuration.Preferences;
 
 /**
  *
