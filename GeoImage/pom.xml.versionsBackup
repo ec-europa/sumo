@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>GeoImageAnalysis</artifactId>
- <properties>
+  <artifactId>GeoImage</artifactId>
+  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
@@ -29,31 +29,21 @@
 			</plugin>
     </plugins>
   </build>
-  <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>Sumo</groupId>
-  			<artifactId>Sumo</artifactId>
-  			<version>1.3.0</version>
-  			<type>pom</type>
-  		</dependency>
-  	</dependencies>
-  </dependencyManagement>
   <dependencies>
-  	<dependency>
-  		<groupId>org.jrc.sumo</groupId>
-  		<artifactId>GeoImage</artifactId>
-  		<version>1.3.2</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.jrc.sumo</groupId>
-  		<artifactId>SumoCore</artifactId>
-  		<version>1.3.2</version>
-  	</dependency>
+	<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>SumoCore</artifactId>
+			<version>1.3.0</version>
+		</dependency>
+  <dependency>
+  	<groupId>org.jrc.sumo</groupId>
+  	<artifactId>GeoLocation</artifactId>
+  	<version>1.3.0</version>
+  </dependency>
   </dependencies>
   <parent>
   	<groupId>org.jrc.sumo</groupId>
   	<artifactId>Sumo</artifactId>
-  	<version>1.3.2</version>
+  	<version>1.3.0</version>
   </parent>
 </project>
