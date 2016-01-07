@@ -1,0 +1,71 @@
+      SUMMARY OF THE HDF5 CONFIGURATION
+      =================================
+
+General Information:
+-------------------
+                   HDF5 Version: 1.8.16
+                  Configured on: 2016-01-05
+                  Configured by: Unix Makefiles
+                 Configure mode: CMAKE 3.4.1
+                    Host system: Linux-3.2.0-4-amd64
+              Uname information: Linux
+                       Byte sex: little-endian
+                      Libraries: 
+             Installation point: /usr/local/myhdf5
+
+Compiling Options:
+------------------
+               Compilation Mode: Release
+                     C Compiler: /usr/bin/cc
+                         CFLAGS:   -std=c99 -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-qual -Wcast-align -Wwrite-strings -Wconversion -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wnested-externs -Winline -fmessage-length=0
+                      H5_CFLAGS: 
+                      AM_CFLAGS: 
+                       CPPFLAGS: 
+                    H5_CPPFLAGS: 
+                    AM_CPPFLAGS: 
+               Shared C Library: NO
+               Static C Library: YES
+  Statically Linked Executables: OFF
+                        LDFLAGS: 
+                     AM_LDFLAGS: 
+                Extra libraries: m;dl;rt;zlib-static;szip-static
+                       Archiver: /usr/bin/ar
+                         Ranlib: /usr/bin/ranlib
+              Debugged Packages: 
+                    API Tracing: OFF
+
+Languages:
+----------
+                        Fortran: OFF
+               Fortran Compiler: 
+          Fortran 2003 Compiler: OFF
+                  Fortran Flags: 
+               H5 Fortran Flags: 
+               AM Fortran Flags: 
+         Shared Fortran Library: NO
+         Static Fortran Library: YES
+
+                            C++: ON
+                   C++ Compiler: /usr/bin/c++
+                      C++ Flags:   -std=c99 -fmessage-length=0
+                   H5 C++ Flags: 
+                   AM C++ Flags: 
+             Shared C++ Library: NO
+             Static C++ Library: YES
+
+Features:
+---------
+                  Parallel HDF5: OFF
+             High Level library: ON
+                   Threadsafety: OFF
+            Default API Mapping: v18
+ With Deprecated Public Symbols: ON
+         I/O filters (external):  DEFLATE DECODE ENCODE
+                            MPE: 
+                     Direct VFD: 
+                        dmalloc: 
+Clear file buffers before write: ON
+           Using memory checker: OFF
+         Function Stack Tracing: OFF
+      Strict File Format Checks: OFF
+   Optimization Instrumentation: 
