@@ -6,136 +6,157 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<build.outputfolder>some-other-place</build.outputfolder>
 	</properties>
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>../repo</directory>
-				<includes>
-					<include>gdal_lib_win64</include>
-				</includes>	
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-					<include>**/*.png</include>
-				</includes>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<finalName>sumo</finalName>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
-						</manifest>
-					</archive>
-					<!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.9</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
+	
+	
+	<profiles>
+        <profile>
+        	<id>win-build</id>
+		     <activation>
+		       <os>
+		         <name>Windows</name>
+		         <family>Windows</family>
+		         <arch>x86</arch>       
+		       </os>
+		     </activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+					<resource>
+						<directory>../repo</directory>
+						<includes>
+							<include>gdal_lib_win64</include>
+						</includes>	
+					</resource>
+					<resource>
+						<directory>src/main/java</directory>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/*.xml</include>
+							<include>**/*.png</include>
+						</includes>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>3.1</version>
 						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<excludeArtifactIds>junit</excludeArtifactIds>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
+							<source>1.8</source>
+							<target>1.8</target>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-	          <groupId>org.apache.maven.plugins</groupId>
-	          <artifactId>maven-dependency-plugin</artifactId>
-	          <version>2.8</version>
-	          <executions>
-	            <execution>
-	              <id>copy-installed</id>
-	              <phase>install</phase>
-	              <goals>
-	                <goal>copy</goal>
-	              </goals>
-	              <configuration>
-	                <artifactItems>
-	                  <artifactItem>
-	                    <groupId>${project.groupId}</groupId>
-	                    <artifactId>${project.artifactId}</artifactId>
-	                    <version>${project.version}</version>
-	                    <type>${project.packaging}</type>
-	                  </artifactItem>
-	                </artifactItems>
-	                <outputDirectory>some-other-place</outputDirectory>
-	              </configuration>
-	            </execution>
-	          </executions>
-	        </plugin>
-	        
-	        
-			<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
-				<version>2.6</version> <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
-				</descriptorRefs> <finalName>${parent.artifactId}</finalName> <descriptors> 
-				<descriptor>src/assembly/bin.xml</descriptor> </descriptors> <archive> <manifest> 
-				<addClasspath>true</addClasspath> <mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass> 
-				</manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> 
-				this is used for inheritance merges <phase>package</phase> bind to the packaging 
-				phase <goals> <goal>single</goal> </goals> </execution> </executions> </plugin -->
-				
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.4.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includePluginDependencies>true</includePluginDependencies>
-					<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
-					<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
-					<arguments>
-						<!-- <argument>-Dexec.classpathScope=compile</argument> -->
-						<argument>-Dsun.java2d.noddraw=true</argument>
-						<argument>-Dlog4j.configuration=file:${project.build.resources[0].directory}/log4j2.xml</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-
-
-		</plugins>
-	</build>
-
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<finalName>sumo</finalName>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<classpathPrefix>lib/</classpathPrefix>
+									<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
+								</manifest>
+							</archive>
+							<!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.9</version>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+									<excludeArtifactIds>junit</excludeArtifactIds>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>false</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+			          <groupId>org.apache.maven.plugins</groupId>
+			          <artifactId>maven-dependency-plugin</artifactId>
+			          <version>2.8</version>
+			          <executions>
+			            <execution>
+			              <id>copy-installed</id>
+			              <phase>install</phase>
+			              <goals>
+			                <goal>copy</goal>
+			              </goals>
+			              <configuration>
+			                <artifactItems>
+			                  <artifactItem>
+			                    <groupId>${project.groupId}</groupId>
+			                    <artifactId>${project.artifactId}</artifactId>
+			                    <version>${project.version}</version>
+			                    <type>${project.packaging}</type>
+			                  </artifactItem>
+			                </artifactItems>
+			                <outputDirectory>some-other-place</outputDirectory>
+			              </configuration>
+			            </execution>
+			          </executions>
+			        </plugin>
+			        
+			        
+					<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
+						<version>2.6</version> <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+						</descriptorRefs> <finalName>${parent.artifactId}</finalName> <descriptors> 
+						<descriptor>src/assembly/bin.xml</descriptor> </descriptors> <archive> <manifest> 
+						<addClasspath>true</addClasspath> <mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass> 
+						</manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> 
+						this is used for inheritance merges <phase>package</phase> bind to the packaging 
+						phase <goals> <goal>single</goal> </goals> </execution> </executions> </plugin -->
+						
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.4.0</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>java</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<includePluginDependencies>true</includePluginDependencies>
+							<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
+							<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
+							<arguments>
+								<!-- <argument>-Dexec.classpathScope=compile</argument> -->
+								<argument>-Dsun.java2d.noddraw=true</argument>
+								<argument>-Dlog4j.configuration=file:${project.build.resources[0].directory}/log4j2.xml</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+		    <activation>
+		      <os>
+		        <family>Linux</family>
+		        <arch>x64</arch>
+		      </os>
+		    </activation>
+		</profile>
+	</profiles>
+        
 
 	<parent>
 		<groupId>org.jrc.sumo</groupId>
@@ -184,7 +205,7 @@
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
 			<artifactId>Geolocation</artifactId>
-			<version>1.3.0</version>
+			<version>1.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
