@@ -89,7 +89,7 @@ public class Constant {
 
   public static final String PREF_NOISE_FLOOR = "Noise Floor"; //used in the KDsitrubutionEstimation class in calcStatValues method  
 
-  
+  public static final String PREF_THRESH_MIN_PIX_VAL = "Min threshold Pixel value";
   
   //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
   //constants to define the margin x,y in which we need to check the value of the pixel 

@@ -262,4 +262,12 @@ public class PlatformConfiguration {
     		return defaultValue; 
     	}
     }
+    
+    public int getThreshMinPixelValue(int defaultValue){
+    	try{
+    		return prefDB.getMinThreshPixelValue();
+    	}catch(Exception e){
+    		return defaultValue; 
+    	}
+    }
 }

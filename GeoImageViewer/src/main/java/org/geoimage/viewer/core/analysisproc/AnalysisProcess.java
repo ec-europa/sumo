@@ -166,7 +166,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
              // create K distribution
              int noiseFloor=SumoPlatform.getApplication().getConfiguration().getNoiseFloor(0);
-             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,noiseFloor);
+             int thresPixelMin=SumoPlatform.getApplication().getConfiguration().getThreshMinPixelValue(500);
+             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,noiseFloor,thresPixelMin);
              
              
              DetectedPixels mergePixels = new DetectedPixels(reader.getRangeSpacing(),reader.getAzimuthSpacing());
