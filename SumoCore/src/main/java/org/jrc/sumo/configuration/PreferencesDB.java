@@ -181,6 +181,7 @@ public class PreferencesDB {
         
         insertIfNotExistRow(Constant.PREF_NOISE_FLOOR, "0");
 
+        insertIfNotExistRow(Constant.PREF_THRESH_MIN_PIX_VAL, "500");
     }
     
     
@@ -327,7 +328,14 @@ public class PreferencesDB {
     	return noise;
     }
     
-    
+    /**
+     * 
+     * @return
+     */
+    public int getMinThreshPixelValue(){
+        int min= Integer.parseInt(readRow(Constant.PREF_THRESH_MIN_PIX_VAL));
+    	return min;
+    }
 }
     
     

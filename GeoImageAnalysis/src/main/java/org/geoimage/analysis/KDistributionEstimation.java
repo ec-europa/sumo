@@ -75,6 +75,7 @@ public class KDistributionEstimation {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
 	
 	private int noiseFloor=0;
+	private int thresholdPixelsMinValue=500;
 	
 	class SupportStats{
 		public double std;
@@ -88,7 +89,7 @@ public class KDistributionEstimation {
 	 * @param enlf  			 eq number of looks
 	 * @param noiseFloorParam  	 value setted in the preferences. Used as lower limit for the pixels value	
 	 */
-	public KDistributionEstimation(float enlf,int noiseFloorParam) {
+	public KDistributionEstimation(float enlf,int noiseFloorParam,int thresholdPixelsMin) {
 		String enl = "" + (int) (enlf * 10);
 		if (enl.length() == 2) {
 			enl = "0" + enl;
@@ -99,7 +100,7 @@ public class KDistributionEstimation {
 		loadLookUpTable(lut);
 		
 		this.noiseFloor=noiseFloorParam;
-
+		this.thresholdPixelsMinValue=thresholdPixelsMin;
 	}
 
 	// load the lookup table for thresholds estimation from a file
@@ -376,7 +377,8 @@ public class KDistributionEstimation {
 		double clip4 = statData[4] * clip;
 		
 		// used to fill in the zero values for the means
-		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
+		//int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
+		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, this.thresholdPixelsMinValue);
 		double standardDeviation = 0.0;
 
 		
