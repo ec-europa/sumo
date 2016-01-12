@@ -255,5 +255,11 @@ public class PlatformConfiguration {
     	return (String)prefDB.getConfiguration(Constant.PREF_LASTVECTOR);
     }
     
-    
+    public int getNoiseFloor(int defaultValue){
+    	try{
+    		return prefDB.getPrefNoiseFloor();
+    	}catch(Exception e){
+    		return defaultValue; 
+    	}
+    }
 }
