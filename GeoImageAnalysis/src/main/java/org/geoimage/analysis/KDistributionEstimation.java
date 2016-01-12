@@ -74,6 +74,8 @@ public class KDistributionEstimation {
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
 	
+	private int noiseFloor=0;
+	
 	class SupportStats{
 		public double std;
 		public double tempN;
@@ -81,9 +83,12 @@ public class KDistributionEstimation {
 	}
 	
 
-	// CONSTRUCTOR
-	/** the cinstructor */
-	public KDistributionEstimation(float enlf) {
+	/**
+	 * 
+	 * @param enlf  			 eq number of looks
+	 * @param noiseFloorParam  	 value setted in the preferences. Used as lower limit for the pixels value	
+	 */
+	public KDistributionEstimation(float enlf,int noiseFloorParam) {
 		String enl = "" + (int) (enlf * 10);
 		if (enl.length() == 2) {
 			enl = "0" + enl;
@@ -92,6 +97,8 @@ public class KDistributionEstimation {
 		URL lut = VDSAnalysis.class.getClassLoader().getResource("ktables/TabK" + enl + "17.r8");
 		System.out.println(lut.getPath());
 		loadLookUpTable(lut);
+		
+		this.noiseFloor=noiseFloorParam;
 
 	}
 
@@ -246,6 +253,7 @@ public class KDistributionEstimation {
 		
 		boolean exit=false;
 		
+		//Vertical Black border filter
 		if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
 			if(starty==0){ //we are in the first or second part of the tile
 				int firstCutOffY=blackAn.verTopCutOffArray[0];
@@ -279,9 +287,10 @@ public class KDistributionEstimation {
 					}
 				}
 			}
-		}
+		}//End Vertical Black border filter
 		if(!exit){
 			for (int y = starty; y <endy; y += 2) {
+				//horiz Black border filter
 				if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
 						if(y==blackAn.verTopCutOffArray.length||y<=meanThresh(blackAn.verTopCutOffArray))continue;//use the mean
 				}	
@@ -309,7 +318,8 @@ public class KDistributionEstimation {
 							newEnd=blackAn.horizRightCutOffArray[y];
 						}
 					}	
-				}	
+				}	//end horiz Black border filter //
+				
 				for (int x = newStart; x < newEnd ; x += 2) {
 					
 					if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
@@ -320,7 +330,7 @@ public class KDistributionEstimation {
 							break;
 						}	
 	
-						if (val > 0 && val < clipx) {
+						if (val >  this.noiseFloor  && val < clipx) {
 							mux += val;
 							std += val * val;
 							tempN++;

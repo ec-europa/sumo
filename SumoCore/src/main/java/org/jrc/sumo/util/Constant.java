@@ -87,7 +87,8 @@ public class Constant {
   public static final String PREF_PASSWORD = "PostGIS - Password";
   public static final String PREF_PORT = "PostGIS - Port";
 
-		  
+  public static final String PREF_NOISE_FLOOR = "Noise Floor"; //used in the KDsitrubutionEstimation class in calcStatValues method  
+
   
   
   //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
