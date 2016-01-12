@@ -178,7 +178,10 @@ public class PreferencesDB {
         
         insertIfNotExistRow(Constant.PREF_CACHE, System.getProperty("user.dir") + "/sumocache/");
         insertIfNotExistRow(Constant.PREF_LASTIMAGE, "");
+        
+        insertIfNotExistRow(Constant.PREF_NOISE_FLOOR, "0");
 
+        insertIfNotExistRow(Constant.PREF_THRESH_MIN_PIX_VAL, "500");
     }
     
     
@@ -316,9 +319,23 @@ public class PreferencesDB {
     	return readRow(Constant.PREF_VERSION);
     }
     
+    /**
+     * 
+     * @return
+     */
+    public int getPrefNoiseFloor(){
+        int noise= Integer.parseInt(readRow(Constant.PREF_NOISE_FLOOR));
+    	return noise;
+    }
     
-    
-    
+    /**
+     * 
+     * @return
+     */
+    public int getMinThreshPixelValue(){
+        int min= Integer.parseInt(readRow(Constant.PREF_THRESH_MIN_PIX_VAL));
+    	return min;
+    }
 }
     
     
