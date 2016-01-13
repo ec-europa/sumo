@@ -13,7 +13,7 @@
 	<classpathentry kind="src" path="GeoImage/src/main/resources"/>
 	<classpathentry kind="src" path="SentinelXMLReader/src/main/java"/>
 	<classpathentry excluding="jrc/it/geolocation/aspect/Geolocation.aj|jrc/it/geolocation/aspect/HermiteAspect.aj|jrc/it/geolocation/aspect/SimpleShapefile.aj" kind="src" path="GeoLocation/src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
