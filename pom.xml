@@ -33,7 +33,7 @@
 	</build>
 	<packaging>pom</packaging>
 
-	<profiles>
+	<!-- <profiles>
         <profile>
         	<id>linux</id>
 	        <activation>
@@ -41,7 +41,7 @@
 	                <family>linux</family>
 	                <arch>amd64</arch>
 	            </os>
-	        </activation>
+	        </activation> -->
 			<dependencies>
 				<dependency>
 					<groupId>junit</groupId>
@@ -321,8 +321,8 @@
 				</dependency>
 			</dependencies>
 		
-		</profile>
-    </profiles>
+	<!-- 	</profile>
+    </profiles> -->
 
 	<repositories>
 		<repository>
