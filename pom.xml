@@ -33,15 +33,15 @@
 	</build>
 	<packaging>pom</packaging>
 
-	<!-- <profiles>
+	<profiles>
         <profile>
-        	<id>linux</id>
+        	<id>win</id>
 	        <activation>
 	            <os>
-	                <family>linux</family>
-	                <arch>amd64</arch>
+	                <family>Windows</family>
+	                <arch>x86_64</arch>
 	            </os>
-	        </activation> -->
+	        </activation> 
 			<dependencies>
 				<dependency>
 					<groupId>junit</groupId>
@@ -135,19 +135,11 @@
 					<version>1.0.3</version>
 				</dependency>
 		
-		
-				
-		
-				
-		
 				<dependency>
 					<groupId>com.kitfox.svg</groupId>
 					<artifactId>svg-salamander</artifactId>
 					<version>1.0</version>
 				</dependency>
-		
-		
-		
 		
 				<!-- JOGL -->
 				<dependency>
@@ -321,8 +313,8 @@
 				</dependency>
 			</dependencies>
 		
-	<!-- 	</profile>
-    </profiles> -->
+		</profile>
+    </profiles> 
 
 	<repositories>
 		<repository>
