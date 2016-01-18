@@ -96,7 +96,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			
 			//landmask name
             
-            if(bufferedMask!=null){
+            if(bufferedMask!=null&&bufferedMask.length>0){
            	 	bufferedMaskName=bufferedMask[0].getName();
            	 	this.maskGeoms=new MaskGeometries(bufferedMask[0].getGeometries());
             }
