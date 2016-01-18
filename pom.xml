@@ -16,7 +16,7 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
-				<configuration> 
+				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
@@ -33,288 +33,324 @@
 	</build>
 	<packaging>pom</packaging>
 
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+
+
+		<!-- Geotools -->
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-swing</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-wfs-ng</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-wkt</artifactId>
+			<version>${geotools.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-process-feature</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>it.geosolutions.imageio-ext</groupId>
+			<artifactId>imageio-ext-gdal-bindings</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
+		<!-- dependency> <groupId>it.geosolutions.imageio-ext</groupId> <artifactId>imageio-ext-gdalplugin</artifactId> 
+			<version>1.1.13</version> </dependency -->
+
+		<dependency>
+			<groupId>it.geosolutions.imageio-ext</groupId>
+			<artifactId>imageio-ext-gdalframework</artifactId>
+			<version>1.1.13</version>
+		</dependency>
+
+
+		<!-- dependency> <groupId>gov.nasa</groupId> <artifactId>worldwind</artifactId> 
+			<version>2.0.0-986</version> </dependency -->
+
+		<dependency>
+			<groupId>rome</groupId>
+			<artifactId>modules</artifactId>
+			<version>0.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jdesktop</groupId>
+			<artifactId>appframework</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swing-layout</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
+
+
+
+
+
+		<dependency>
+			<groupId>com.kitfox.svg</groupId>
+			<artifactId>svg-salamander</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
+
+
+		<!-- JOGL -->
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-main</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>nativewindow</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-main</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-noawt</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-noawt-main</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+
+		<!-- JTS -->
+
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.13</version>
+		</dependency>
+
+		<!-- Apache commons -->
+
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.190</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<version>2.9.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+			<version>2.0.6</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.gdal</groupId>
+			<artifactId>gdal</artifactId>
+			<version>1.11.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>gekmllib</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>worldwind</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>vpf-symbols</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>worldwindx</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>plugin</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>eclipselink</artifactId>
+			<version>2.5.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>commonj.sdo</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+
+		<!-- Hdf5 library -->
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdf5</artifactId>
+			<version>2.11.0</version>
+
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdfobj</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jrc.sumo</groupId>
+			<artifactId>jhdf5obj</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+
+
+	</dependencies>
+
+
 	<profiles>
-        <profile>
-        	<id>win</id>
-	        <activation>
-	            <os>
-	                <family>Windows</family>
-	                <arch>x86_64</arch>
-	            </os>
-	        </activation> 
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>linux</family>
+					<!-- <arch>amd64</arch> -->
+				</os>
+			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-					<version>4.11</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-api</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-core</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-slf4j-impl</artifactId>
-				</dependency>
-				
-				
-				<!-- Geotools -->
-				<dependency>
-					<groupId>org.geotools</groupId>
-					<artifactId>gt-shapefile</artifactId>
-					<version>${geotools.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.geotools</groupId>
-					<artifactId>gt-swing</artifactId>
-					<version>${geotools.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.geotools</groupId>
-					<artifactId>gt-wfs-ng</artifactId>
-					<version>${geotools.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.geotools</groupId>
-					<artifactId>gt-epsg-wkt</artifactId>
-					<version>${geotools.version}</version>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.geotools</groupId>
-					<artifactId>gt-process-feature</artifactId>
-					<version>${geotools.version}</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>it.geosolutions.imageio-ext</groupId>
-					<artifactId>imageio-ext-gdal-bindings</artifactId>
-					<version>1.9.2</version>
-				</dependency>
-		
-				<!-- dependency> <groupId>it.geosolutions.imageio-ext</groupId> <artifactId>imageio-ext-gdalplugin</artifactId> 
-					<version>1.1.13</version> </dependency -->
-		
-				<dependency>
-					<groupId>it.geosolutions.imageio-ext</groupId>
-					<artifactId>imageio-ext-gdalframework</artifactId>
-					<version>1.1.13</version>
-				</dependency>
-		
-		
-				<!-- dependency>
-					<groupId>gov.nasa</groupId>
-					<artifactId>worldwind</artifactId>
-					<version>2.0.0-986</version>
-				</dependency  -->
-		
-				<dependency>
-					<groupId>rome</groupId>
-					<artifactId>modules</artifactId>
-					<version>0.3.2</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>org.jdesktop</groupId>
-					<artifactId>appframework</artifactId>
-					<version>1.0.3</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>org.swinglabs</groupId>
-					<artifactId>swing-layout</artifactId>
-					<version>1.0.3</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>com.kitfox.svg</groupId>
-					<artifactId>svg-salamander</artifactId>
-					<version>1.0</version>
-				</dependency>
-		
-				<!-- JOGL -->
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>jogl-all</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>jogl-all-main</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>jogl</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>nativewindow</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.gluegen</groupId>
-					<artifactId>gluegen-rt-main</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>jogl-all-noawt</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jogamp.jogl</groupId>
-					<artifactId>jogl-all-noawt-main</artifactId>
-					<version>2.1.4</version>
-				</dependency>
-		
-				<!-- JTS -->
-		
-				<dependency>
-					<groupId>com.vividsolutions</groupId>
-					<artifactId>jts</artifactId>
-					<version>1.13</version>
-				</dependency>
-		
-				<!-- Apache commons -->
-		
-		
-				<dependency>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-math3</artifactId>
-					<version>3.5</version>
-				</dependency>
-				<dependency>
-					<groupId>commons-io</groupId>
-					<artifactId>commons-io</artifactId>
-					<version>2.4</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-lang3</artifactId>
-					<version>3.4</version>
-				</dependency>
-				<dependency>
-					<groupId>commons-lang</groupId>
-					<artifactId>commons-lang</artifactId>
-					<version>2.6</version>
-				</dependency>
-				<dependency>
-					<groupId>commons-net</groupId>
-					<artifactId>commons-net</artifactId>
-					<version>3.3</version>
-				</dependency>
-		
-		
-				<dependency>
-					<groupId>com.h2database</groupId>
-					<artifactId>h2</artifactId>
-					<version>1.4.190</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>org.lwjgl.lwjgl</groupId>
-					<artifactId>lwjgl</artifactId>
-					<version>2.9.3</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>javax.mail</groupId>
-					<artifactId>javax.mail-api</artifactId>
-					<version>1.5.5</version>
-				</dependency>
-		
-		
-		
-				<dependency>
-					<groupId>org.jdom</groupId>
-					<artifactId>jdom2</artifactId>
-					<version>2.0.6</version>
-				</dependency>
-		
-		
-				<dependency>
-					<groupId>org.gdal</groupId>
-					<artifactId>gdal</artifactId>
-					<version>1.11.1</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>gekmllib</artifactId>
-					<version>1.0</version>
-				</dependency>
-		
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>worldwind</artifactId>
-					<version>1.0</version>
-				</dependency>
-				
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>vpf-symbols</artifactId>
-					<version>1.0</version>
-				</dependency>
-				
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>worldwindx</artifactId>
-					<version>1.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>plugin</artifactId>
-					<version>1.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.eclipse.persistence</groupId>
-					<artifactId>eclipselink</artifactId>
-					<version>2.5.2</version>
-					<exclusions>
-						<exclusion>
-							<groupId>org.eclipse.persistence</groupId>
-							<artifactId>commonj.sdo</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-		
-		
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>jhdf5</artifactId>
-					<version>2.11.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>jhdfobj</artifactId>
-					<version>2.11.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jrc.sumo</groupId>
-					<artifactId>jhdf5obj</artifactId>
-					<version>2.11.0</version>
-				</dependency>
-				<dependency>
+					<!-- Hdf5 library so linux -->
 					<groupId>org.jrc.sumo</groupId>
 					<artifactId>jhdf5dll</artifactId>
 					<version>2.11.0</version>
 					<type>dll</type>
 				</dependency>
-			</dependencies>
-		
+			</dependencies>	
 		</profile>
-    </profiles> 
+		
+		<profile>
+			<id>Windows</id>
+			<activation>
+				<os>
+					<!-- Hdf5 library dll Windows -->
+					<family>Windows</family>
+					<!-- <arch>amd64</arch> -->
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<!-- Hdf5 library dll Windows -->
+					<groupId>org.jrc.sumo</groupId>
+					<artifactId>jhdf5dll</artifactId>
+					<version>2.11.0</version>
+					<type>dll</type>
+				</dependency>
+			</dependencies>	
+			
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>
