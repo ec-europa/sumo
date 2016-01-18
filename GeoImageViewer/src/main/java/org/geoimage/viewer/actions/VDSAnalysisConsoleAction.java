@@ -119,7 +119,11 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 	IMask maskList = mask.get(i);
                		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
                 }
-                MaskGeometries mg=new MaskGeometries(bufferedMask[0].getGeometries());
+                MaskGeometries mg=null;
+                if(bufferedMask!=null&&bufferedMask.length>0)
+                	mg=new MaskGeometries(bufferedMask[0].getGeometries());
+                	
+                
                 VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg, ENL, thresholds);
 
                 proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferedMask,bufferingDistance,0);
@@ -127,7 +131,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 
                 Thread t=new Thread(proc);
                 t.setName("VDS_analysis_"+gir.getDisplayName(0));
-                t.start();
+                t.start();  
             }
             return true;
         }
