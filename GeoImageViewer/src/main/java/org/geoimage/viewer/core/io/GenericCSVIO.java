@@ -133,7 +133,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            boolean usegeom=true;
 	            if(titles[0].equals("geom")){
 	            	//if file contains the geom , atts start from the second colums
-                	types=ArrayUtils.subarray(types, 1,types.length);
+                	types=ArrayUtils.subarray(types, 0,types.length);
                 	attributes=ArrayUtils.subarray(titles, 1,titles.length);
                 }else{
                 	usegeom=false;
