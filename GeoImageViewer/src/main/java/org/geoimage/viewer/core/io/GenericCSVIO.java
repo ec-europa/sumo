@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -105,7 +106,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 
 		return out;
 	}*/
-	
+	//TODO: check the import from csv
 	 public GeometricLayer readLayer() {
 	        RandomAccessFile fss = null;
 	        GeometricLayer out=null;
@@ -163,7 +164,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                	String att=attributes[i - startCol];
 	                	
 	                	val[i]=val[i].replace("\"", "");
-	                    if (typ.equals("Date")) {
+	                    if (typ.equals("Date")||typ.equals("Timestamp")) {
 	                        try {
 	                        	//val[i]=val[i].trim().replace(" ","T");
 	                            Timestamp t=Timestamp.valueOf(val[i]);
@@ -229,9 +230,13 @@ public class GenericCSVIO extends AbstractVectorIO{
 			} else {
 				fis.write("geom,lat,lon," + glayer.getSchema(',') + "\n");
 			}
-			
 			//TODO: text the export and import csv after the schema modification
-			fis.write(glayer.getGeometryType()+ '\n');//+",Double,Double,"+glayer.getSchemaTypes(',') + '\n');
+			//AttributesGeometry attGeom=glayer.getAttributes(glayer.getGeometries().get(0));
+			//fis.write(attGeom.getTypes()+ '\n');
+			//fis.write(glayer.getGeometryType()+ '\n');//+",Double,Double,"+glayer.getSchemaTypes(',') + '\n');
+			String types=Arrays.toString(glayer.getSchemaTypes());
+			types="Point,Double,Double,"+types.substring(1,types.length()-1);
+			fis.write(types+ '\n');
 			String[] schema = glayer.getSchema();
 			for (Geometry geom : glayer.getGeometries()) {
 				Geometry geomGeo=transform.transformGeometryGeoFromPixel(geom);
@@ -265,7 +270,12 @@ public class GenericCSVIO extends AbstractVectorIO{
 				for (int ii = 0; ii < schema.length; ii++) {
 					String s = "";
 					if (atts.get(schema[ii]) != null) {
-						s = "\""+atts.get(schema[ii]).toString()+"\"";
+						if(atts.get(schema[ii]) instanceof double[]){
+							s = "\""+Arrays.toString((double[])atts.get(schema[ii]))+"\"";
+						}else if(atts.get(schema[ii]) instanceof int[]){
+							s = "\""+Arrays.toString((int[])atts.get(schema[ii]))+"\"";
+						}else
+							s = "\""+atts.get(schema[ii]).toString()+"\"";
 					}
 					fis.write(s + (ii == schema.length - 1 ? "" : ","));
 				}
