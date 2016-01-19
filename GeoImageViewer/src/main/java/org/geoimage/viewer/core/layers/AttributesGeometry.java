@@ -1,7 +1,9 @@
 package org.geoimage.viewer.core.layers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.geoimage.analysis.VDSSchema;
 
@@ -92,6 +94,18 @@ public class AttributesGeometry implements Cloneable{
     public Class getType(String attr){
     	return types.get(attr);
     }
+    
+    public String getTypes(){
+    	String strTypes="";
+    	Collection<Class> vals=this.types.values();
+    	
+    	for(Class c:vals){
+    		strTypes=strTypes.concat(c.getSimpleName()).concat(",");
+    	}
+    	strTypes=strTypes.substring(0,strTypes.length()-1);
+    	return strTypes;
+    }
+    
     
 
     /**
