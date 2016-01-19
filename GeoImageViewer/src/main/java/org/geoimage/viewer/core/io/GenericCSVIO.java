@@ -158,10 +158,10 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                	geom=factory.createPoint(new Coordinate(lon,lat));
 	                	startCol=0;
 	                }
-	                for (int i = startCol; i < val.length-startCol; i++) {
+	                for (int i = startCol; i < val.length; i++) {
 	                	
 	                	String typ=types[i];
-	                	String att=attributes[i];
+	                	String att=attributes[i-startCol];
 	                	
 	                	val[i]=val[i].replace("\"", "");
 	                    if (typ.equals("Date")||typ.equals("Timestamp")) {
