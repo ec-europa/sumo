@@ -732,7 +732,9 @@ public class GeometricLayer implements Cloneable{
         		types=new String[attr.getSchema().length];
         		String[] schema=attr.getSchema();
         		for(int ii=0;ii<schema.length;ii++){
-        			types[ii]=attr.getType(schema[ii]).getSimpleName();
+        			Class o=attr.getType(schema[ii]);
+        			if(o!=null)
+        				types[ii]=o.getSimpleName();
         			
         		}
         		return types;

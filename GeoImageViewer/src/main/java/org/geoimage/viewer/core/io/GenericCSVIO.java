@@ -145,23 +145,23 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            
 	            while ((line = fss.readLine()) != null) {
 	                AttributesGeometry atts = new AttributesGeometry(attributes);
-	                String[] val = line.split(",");
+	                String[] val = line.split("," + "(?=(?:(?:[^\"]*+\"){2})*+[^\"]*+$)");//split(",");
 
 	                Geometry geom=null;
 	                int startCol=1;
 	                if(usegeom){
-	                	geom = parser.read(val[0]);
+	                	geom = parser.read(val[0].replace("\"",""));
 	                }else{
 	                	//create  geom from lat and lon
-	                	double lat=Double.parseDouble(val[0]);
-	                	double lon=Double.parseDouble(val[1]);
+	                	double lat=Double.parseDouble(val[0].replace("\"",""));
+	                	double lon=Double.parseDouble(val[1].replace("\"",""));
 	                	geom=factory.createPoint(new Coordinate(lon,lat));
 	                	startCol=0;
 	                }
-	                for (int i = startCol; i < val.length; i++) {
+	                for (int i = startCol; i < val.length-startCol; i++) {
 	                	
-	                	String typ=types[i - startCol];
-	                	String att=attributes[i - startCol];
+	                	String typ=types[i];
+	                	String att=attributes[i];
 	                	
 	                	val[i]=val[i].replace("\"", "");
 	                    if (typ.equals("Date")||typ.equals("Timestamp")) {
@@ -247,12 +247,12 @@ public class GenericCSVIO extends AbstractVectorIO{
 				
 				for (int i = 0; i < pos.length; i++) {
 					if (projection == null) {
-						cc.append(pos[i].x + "," + pos[i].y);
+						cc.append(pos[i].x + "\",\"" + pos[i].y);
 					} else {
 						double[] temp;
 						try {
 							temp = transform.getGeoFromPixel(pos[i].x, pos[i].y);
-							cc.append(temp[1] + "," + temp[0]);
+							cc.append(temp[1] + "\",\"" + temp[0]+'"');
 						} catch (GeoTransformException e) {
 							logger.warn("Can't write coordinates:"+ e.getMessage());
 						}
@@ -263,7 +263,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 				if (schema.length != 0) {
 					cc.append(",");
 				}
-				cc.append("\"");
+				//cc.append("\"");
 				fis.write(cc.toString());
 				
 				AttributesGeometry atts = glayer.getAttributes(geom);
