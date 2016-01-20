@@ -34,6 +34,7 @@ import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
+import org.geotools.data.store.ContentFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -158,13 +159,13 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            	
 	            ClipProcess clip=new ClipProcess();
 	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-	           // exportFeaturesToShapeFile(new File("C:\\tmp\\test.shp"),fc,fc.getSchema());
+	            //exportFeaturesToShapeFile(new File("F:/tmp/export.shp"),fc);
 	            
 	            
 	            if (fc.isEmpty()) {
 	                return null;
 	            }
-	            String[] schema = createSchema(fc.getSchema().getDescriptors());
+	            String[] schemaStr = createSchema(fc.getSchema().getDescriptors());
 	            String[] types = createTypes(fc.getSchema().getDescriptors());
 	
 	            String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
@@ -172,8 +173,14 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            boolean applayT=false; 
 	            if(transform!=null)
 	            	applayT=true;
-	            glout=GeometricLayer.createFromSimpleGeometry(imageP, geoName, fc, schema, types,applayT,transform);
+	            glout=GeometricLayer.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
+	            
+	            SimpleShapefile.exportGeometriesToShapeFile(glout.getGeometries(), 
+	            		new File("F:/tmp/geoms.shp"), 
+	            		"Polygon", 
+	            		transform, 
+	            		null);
         	}
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
@@ -236,7 +243,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	        mergeFeat.addFeatures(collectionsLayer);
 	        mergeFeat.addFeatures(fc);
 	        //save the new shape file
-	        exportToShapefile(newds, mergeFeat.getFeatures(),newds.getSchema());
+	        exportToShapefile(newds, mergeFeat.getFeatures());//,newds.getSchema());
 	
 	        //from here create the new GeometricLayer
 	        Collection<PropertyDescriptor>descriptorsMerge=new ArrayList<>();
@@ -303,8 +310,8 @@ public class SimpleShapefile extends AbstractVectorIO{
     		 SimpleFeatureType featureType) throws IOException, SchemaException{
 
     	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-    	 Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
-    	 DataStore data = factory.createNewDataStore( map );
+    	 //Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
+    	 DataStore data = factory.createDataStore( fileOutput.toURI().toURL() );
     	 boolean addAttr=true;
     	 if(featureType==null){
     		 featureType=DataUtilities.createType( "the_geom", "geom:"+geomType+",name:String,age:Integer,description:String" );
@@ -364,14 +371,19 @@ public class SimpleShapefile extends AbstractVectorIO{
          }
     	 
      }
-     public static void exportFeaturesToShapeFile(File fileOutput,FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection,SimpleFeatureType ft){
+     public static void exportFeaturesToShapeFile(File fileOutput,FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection){//,SimpleFeatureType ft){
     	 DataStore data =null;
     	 try {
+    		 
+    		 if (!fileOutput.exists()){
+    			 fileOutput.createNewFile();
+    			 fileOutput.setWritable(true);
+    		 }
 	    	 FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-	    	 Map map = Collections.singletonMap( "url", fileOutput.toURI().toURL() );
-	    	 data = factory.createNewDataStore( map );
+	    	 data = factory.createDataStore( fileOutput.toURI().toURL() );
 	    	 
-			exportToShapefile(data,featureCollection,ft);
+	    	 data.createSchema(featureCollection.getSchema());
+			 exportToShapefile(data,featureCollection);
 		} catch (Exception e) {
 			logger.error("Export to shapefile failed",e );
 		}finally{
@@ -395,8 +407,8 @@ public class SimpleShapefile extends AbstractVectorIO{
       * Export features to a new shapefile using the map projection in which
       * they are currently displayed
       */
-      public static void exportToShapefile(DataStore newDataStore, FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection,SimpleFeatureType ftype) throws Exception {
-         // carefully open an iterator and writer to process the results
+      public static void exportToShapefile(DataStore newDataStore, FeatureCollection<SimpleFeatureType,SimpleFeature> featureCollection)/*,SimpleFeatureType ftype)*/ throws Exception {
+    	 // carefully open an iterator and writer to process the results
          Transaction transaction = new DefaultTransaction();
          FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriter(newDataStore.getTypeNames()[0],  transaction);
          
