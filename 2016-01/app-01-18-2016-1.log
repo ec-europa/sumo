@@ -1,4 +1,4 @@
-2016-01-20 10:19:42,561 ERROR o.g.f.GeoImageReaderFactory [AWT-EventQueue-0] Error reading:
+2016-01-18 15:32:07,797 ERROR o.g.f.GeoImageReaderFactory [AWT-EventQueue-0] Error reading:
 java.lang.NullPointerException
 	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:107) [classes/:?]
 	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:141) [classes/:?]
