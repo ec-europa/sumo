@@ -176,11 +176,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            glout=GeometricLayer.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
 	            
-	            SimpleShapefile.exportGeometriesToShapeFile(glout.getGeometries(), 
-	            		new File("F:/tmp/geoms.shp"), 
-	            		"Polygon", 
-	            		transform, 
-	            		null);
+	            
         	}
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
