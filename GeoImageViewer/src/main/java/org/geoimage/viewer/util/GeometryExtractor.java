@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.utils;
+package org.geoimage.viewer.util;
 
 import java.util.ArrayList;
 import java.util.List;
