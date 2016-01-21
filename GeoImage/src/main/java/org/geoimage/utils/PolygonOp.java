@@ -1,4 +1,4 @@
-package org.geoimage.viewer.util;
+package org.geoimage.utils;
 
 import java.util.ArrayList;
 import java.util.List;
