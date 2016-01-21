@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -22,6 +23,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.util.JTSUtil;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -35,7 +37,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 
@@ -296,12 +300,15 @@ public class GeometricLayer implements Cloneable{
 	                	Object o[][]=f.get();
 	                	if(o!=null){
 	                		for(int i=0;i<o.length;i++){
-	                			Geometry g=(Geometry)o[i][0];//gf.createGeometry((Geometry)o[i][0]);
+	                			Geometry g=(Geometry)o[i][0];
 	                			if(applayTransformation&&transform!=null){
 	                				g=transform.transformGeometryPixelFromGeo(g);
-	                				//g=PolygonOp.removeInteriorRing(g);
 	                			}	
 	                			if(!g.isValid()){
+	                				g=JTSUtil.repair(g);
+	                				
+	                				
+	                				/*
 	                				Geometry b0=g.buffer(0);
 	                				if(!g.isSimple()&&(b0.getArea()/g.getArea())<0.75){
 	                					Coordinate[] cc=g.getCoordinates();
@@ -317,10 +324,11 @@ public class GeometricLayer implements Cloneable{
 	                					Geometry newGeom=gf.createPolygon(cl.toCoordinateArray());
 	                					if(!newGeom.isValid())
 	                						newGeom=TopologyPreservingSimplifier.simplify(newGeom, 0.0001);
-	                					g=newGeom.buffer(0);
+	                						//newGeom=DouglasPeuckerSimplifier.simplify(newGeom, 0.0001);
+	                					g=newGeom.buffer(0.0);
 	                				}else{
 	                					g=b0;
-	                				}
+	                				}*/
 	                			}
 	                			out.put(g,(AttributesGeometry)o[i][1]);
 	                		}	
