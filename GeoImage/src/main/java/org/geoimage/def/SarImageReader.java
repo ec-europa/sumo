@@ -21,7 +21,7 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.utils.Constant;
 import org.geoimage.utils.Corners;
-import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.util.PolygonOp;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.referencing.GeodeticCalculator;
 

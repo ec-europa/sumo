@@ -26,7 +26,7 @@ import javax.swing.UIManager;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.utils.GeometryExtractor;
+import org.geoimage.viewer.util.GeometryExtractor;
 import org.geoimage.viewer.util.IProgress;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
