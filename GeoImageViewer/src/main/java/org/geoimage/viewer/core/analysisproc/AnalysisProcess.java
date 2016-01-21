@@ -18,7 +18,6 @@ import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
-import org.geoimage.utils.GeometryExtractor;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
@@ -26,6 +25,7 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.GeometryExtractor;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
 
