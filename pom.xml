@@ -323,9 +323,9 @@
 				<dependency>
 					<!-- Hdf5 library so linux -->
 					<groupId>org.jrc.sumo</groupId>
-					<artifactId>jhdf5dll</artifactId>
+					<artifactId>jhdf5so</artifactId>
 					<version>2.11.0</version>
-					<type>dll</type>
+					<type>so</type>
 				</dependency>
 			</dependencies>	
 		</profile>
