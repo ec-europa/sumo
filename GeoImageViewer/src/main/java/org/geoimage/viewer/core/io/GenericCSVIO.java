@@ -118,7 +118,14 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            //second line = fields name
 	            final String[] titles = fss.readLine().split(",");
 	            //third line = types
-	            String[] types=fss.readLine().split(",");
+	            String typStr=fss.readLine();
+	            String[] types=null;
+	            if(typStr!=null&&!typStr.isEmpty()){
+	            	typStr.split(",");
+	            }else{
+	            	types=new String[titles.length];
+	            	Arrays.fill(types,"String");
+	            }
 	            
 	            String geomtype = layerinfo[0].split("=")[1];
 	            out = new GeometricLayer(geomtype);
@@ -185,6 +192,8 @@ public class GenericCSVIO extends AbstractVectorIO{
 	                                    atts.set(att, 0);
 	                                }
                         } else {
+                        	val[i]=val[i].replace("]","");
+                        	val[i]=val[i].replace("[","");
                             atts.set(att, val[i]);
                         }
 	                }
