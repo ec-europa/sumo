@@ -17,3 +17,7 @@ mvn install:install-file -Dfile=./plugin.jar -DgroupId=org.jrc.sumo -DartifactId
 #linux so
 mvn install:install-file -Dfile=./hdf5_linux/libjhdf5.so -DgroupId=org.jrc.sumo -DartifactId=jhdf5so -Dversion=2.11.0 -Dpackaging=so
 mvn install:install-file -Dfile=./hdf5_linux/libjhdf.so -DgroupId=org.jrc.sumo -DartifactId=jhdf4so -Dversion=2.11.0 -Dpackaging=so
+
+#windows
+#mvn install:install-file -Dfile=./jhdf5.dll -DgroupId=org.jrc.sumo -DartifactId=jhdf5dll -Dversion=2.11.0 -Dpackaging=dll
+#mvn install:install-file -Dfile=./jhdf.dll -DgroupId=org.jrc.sumo -DartifactId=jhdf4dll -Dversion=2.11.0 -Dpackaging=dll
