@@ -4,19 +4,11 @@
 	<artifactId>GeoImageViewer</artifactId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<build.outputfolder>some-other-place</build.outputfolder>
-	</properties>
+<!-- 		<build.outputfolder>some-other-place</build.outputfolder>
+ -->	</properties>
 	
 	
-<!-- 	<profiles> -->
-<!--         <profile> -->
-<!--         	<id>win-build</id> -->
-<!-- 		     <activation> -->
-<!-- 		       <os> -->
-<!-- 		         <family>linux</family> -->
-<!-- 		         <arch>amd64</arch>        -->
-<!-- 		       </os> -->
-<!-- 		     </activation> -->
+
 			<build>
 				<resources>
 					<resource>
@@ -203,7 +195,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
-			<artifactId>Geolocation</artifactId>
+			<artifactId>GeoLocation</artifactId>
 			<version>1.3.2</version>
 		</dependency>
 		<dependency>
