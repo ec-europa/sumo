@@ -21,3 +21,6 @@ mvn install:install-file -Dfile=./hdf5_linux/libjhdf.so -DgroupId=org.jrc.sumo -
 #windows
 #mvn install:install-file -Dfile=./jhdf5.dll -DgroupId=org.jrc.sumo -DartifactId=jhdf5dll -Dversion=2.11.0 -Dpackaging=dll
 #mvn install:install-file -Dfile=./jhdf.dll -DgroupId=org.jrc.sumo -DartifactId=jhdf4dll -Dversion=2.11.0 -Dpackaging=dll
+
+
+#mvn install:install-file -Dfile=./gdal_lib_lin64/gdal.jar -DgroupId=org.jrc.sumo -DartifactId=gdallinux -Dversion=1.11 -Dpackaging=jar

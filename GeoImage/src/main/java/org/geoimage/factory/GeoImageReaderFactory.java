@@ -148,7 +148,7 @@ public class GeoImageReaderFactory {
 	        	}else if(new File(file).getName().equalsIgnoreCase("summary.txt")){
 	        		AlosProperties props=new AlosProperties(file);
 	        		if(props.getProductFormat().equalsIgnoreCase("CEOS")){
-	        			gir=new GDALAlosCeos(f);//new GDALAlosCeos(f);
+	        			gir=new GDALAlosCeos(f);
 	        		}else{
 	        			gir=new AlosGeoTiff(f);
 	        		}

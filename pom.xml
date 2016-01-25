@@ -240,11 +240,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>org.gdal</groupId>
-			<artifactId>gdal</artifactId>
-			<version>1.11.1</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
@@ -327,6 +322,11 @@
 					<version>2.11.0</version>
 					<type>so</type>
 				</dependency>
+				<dependency>
+					<groupId>org.jrc.sumo</groupId>
+					<artifactId>gdallinux</artifactId>
+					<version>1.11</version>
+				</dependency>
 			</dependencies>	
 		</profile>
 		
@@ -340,6 +340,12 @@
 				</os>
 			</activation>
 			<dependencies>
+				<dependency>
+					<groupId>org.gdal</groupId>
+					<artifactId>gdal</artifactId>
+					<version>1.11.1</version>
+				</dependency>
+			
 				<dependency>
 					<!-- Hdf5 library dll Windows -->
 					<groupId>org.jrc.sumo</groupId>
