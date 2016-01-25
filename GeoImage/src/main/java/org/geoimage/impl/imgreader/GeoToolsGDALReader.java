@@ -7,16 +7,21 @@ package org.geoimage.impl.imgreader;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.GCP;
+import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
+import it.geosolutions.imageio.gdalframework.GDALImageReaderSpi;
 import it.geosolutions.imageio.gdalframework.GDALUtilities;
 
 /**
@@ -48,8 +53,8 @@ public class GeoToolsGDALReader implements IReader {
         try {
         	boolean bb=GDALUtilities.isGDALAvailable();
         	GDALUtilities.loadGDAL();
-
-/*        	GDALImageReaderSpi spi=null;
+int drvcount=gdal.GetDriverCount();
+        	GDALImageReaderSpi spi=null;
         	IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
             final Class<ImageReaderSpi> spiClass = ImageReaderSpi.class;
             final Iterator<ImageReaderSpi> iter = iioRegistry.getServiceProviders(spiClass,true);
@@ -59,7 +64,7 @@ public class GeoToolsGDALReader implements IReader {
                 	spi=(GDALImageReaderSpi)provider;
                 	break;
                 }
-            }*/
+            }
         	this.band=band;
         	data=GDALUtilities.acquireDataSet(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
     		try{
