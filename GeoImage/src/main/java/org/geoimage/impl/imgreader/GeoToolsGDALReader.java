@@ -16,6 +16,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
+import org.gdal.gdal.Driver;
 import org.gdal.gdal.GCP;
 import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
@@ -51,9 +52,20 @@ public class GeoToolsGDALReader implements IReader {
 	public GeoToolsGDALReader(File imageFile,int band) {
     	this.imageFile=imageFile;
         try {
-        	boolean bb=GDALUtilities.isGDALAvailable();
         	GDALUtilities.loadGDAL();
-int drvcount=gdal.GetDriverCount();
+        	
+        	/*int count = gdal.GetDriverCount();
+			System.out.println(count + " available Drivers");
+			for (int i = 0; i < count; i++) {
+				try {
+					Driver driver = gdal.GetDriver(i);
+					System.out.println(" " + driver.getShortName() + " : "
+							+ driver.getLongName());
+				} catch (Exception e) {
+					System.err.println("Error loading driver " + i);
+				}
+			}
+*/        	
         	GDALImageReaderSpi spi=null;
         	IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
             final Class<ImageReaderSpi> spiClass = ImageReaderSpi.class;
@@ -67,6 +79,7 @@ int drvcount=gdal.GetDriverCount();
             }
         	this.band=band;
         	data=GDALUtilities.acquireDataSet(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
+        	
     		try{
     			xSize=data.getRasterXSize();
     			ySize=data.getRasterYSize();
