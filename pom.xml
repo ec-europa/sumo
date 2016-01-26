@@ -33,7 +33,7 @@
 	</build>
 	<packaging>pom</packaging>
 
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -124,19 +124,11 @@
 			<version>1.0.3</version>
 		</dependency>
 
-
-
-
-
-
 		<dependency>
 			<groupId>com.kitfox.svg</groupId>
 			<artifactId>svg-salamander</artifactId>
 			<version>1.0</version>
 		</dependency>
-
-
-
 
 		<!-- JOGL -->
 		<dependency>
@@ -300,12 +292,9 @@
 			<artifactId>jhdf5obj</artifactId>
 			<version>2.11.0</version>
 		</dependency>
-
-
 	</dependencies>
 
-
-	<profiles>
+<profiles>
 		<profile>
 			<id>linux</id>
 			<activation>
@@ -322,11 +311,11 @@
 					<version>2.11.0</version>
 					<type>so</type>
 				</dependency>
-				<dependency>
+				<!-- <dependency>
 					<groupId>org.jrc.sumo</groupId>
-					<artifactId>gdallinux</artifactId>
-					<version>1.11</version>
-				</dependency>
+					<artifactId>gdal</artifactId>
+					<version>1.11.0</version>
+				</dependency> -->
 			</dependencies>	
 		</profile>
 		
@@ -340,11 +329,11 @@
 				</os>
 			</activation>
 			<dependencies>
-				<dependency>
+<!-- 				<dependency>
 					<groupId>org.gdal</groupId>
 					<artifactId>gdal</artifactId>
 					<version>1.11.1</version>
-				</dependency>
+				</dependency> -->
 			
 				<dependency>
 					<!-- Hdf5 library dll Windows -->
@@ -357,6 +346,7 @@
 			
 		</profile>
 	</profiles>
+	
 
 	<repositories>
 		<repository>

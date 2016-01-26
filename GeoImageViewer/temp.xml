@@ -50,11 +50,6 @@
 									<classpathPrefix>lib/</classpathPrefix>
 									<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
 								</manifest>
-								 <manifestEntries>
-								 	<Class-Path>lib/gdal-1.11.0.jar</Class-Path> 
-								 </manifestEntries>
-								 
-								 
 							</archive>
 							<!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
 						</configuration>
@@ -100,7 +95,7 @@
 			                    <type>${project.packaging}</type>
 			                  </artifactItem>
 			                </artifactItems>
-			                <outputDirectory>some-other-place</outputDirectory>
+			                <outputDirectory>${project.build.directory}/lib</outputDirectory>
 			              </configuration>
 			            </execution>
 			          </executions>
@@ -148,10 +143,6 @@
 		<artifactId>Sumo</artifactId>
 		<version>1.3.2</version>
 	</parent>
-	
-	
-	
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -208,5 +199,4 @@
 			<version>1.3.2</version>
 		</dependency>
 	</dependencies>
-	
 </project>
