@@ -4,154 +4,216 @@
 	<artifactId>GeoImageViewer</artifactId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<build.outputfolder>some-other-place</build.outputfolder>
 	</properties>
-	
-	
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-					</resource>
-					<resource>
-						<directory>../repo</directory>
-						<includes>
-							<include>gdal_lib_win64</include>
-						</includes>	
-					</resource>
-					<resource>
-						<directory>src/main/java</directory>
-						<includes>
-							<include>**/*.properties</include>
-							<include>**/*.xml</include>
-							<include>**/*.png</include>
-						</includes>
-					</resource>
-				</resources>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.1</version>
-						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>2.6</version>
-						<configuration>
-							<finalName>sumo</finalName>
-							<archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
-									<classpathPrefix>lib/</classpathPrefix>
-									<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
-								</manifest>
-								 <manifestEntries>
-								 	<Class-Path>lib/gdal-1.11.0.jar</Class-Path> 
-								 </manifestEntries>
-								 
-								 
-							</archive>
-							<!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.9</version>
-						<executions>
-							<execution>
-								<id>copy-dependencies</id>
-								<phase>package</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/lib</outputDirectory>
-									<excludeArtifactIds>junit</excludeArtifactIds>
-									<overWriteReleases>false</overWriteReleases>
-									<overWriteSnapshots>false</overWriteSnapshots>
-									<overWriteIfNewer>true</overWriteIfNewer>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-			          <groupId>org.apache.maven.plugins</groupId>
-			          <artifactId>maven-dependency-plugin</artifactId>
-			          <version>2.8</version>
-			          <executions>
-			            <execution>
-			              <id>copy-installed</id>
-			              <phase>install</phase>
-			              <goals>
-			                <goal>copy</goal>
-			              </goals>
-			              <configuration>
-			                <artifactItems>
-			                  <artifactItem>
-			                    <groupId>${project.groupId}</groupId>
-			                    <artifactId>${project.artifactId}</artifactId>
-			                    <version>${project.version}</version>
-			                    <type>${project.packaging}</type>
-			                  </artifactItem>
-			                </artifactItems>
-			                <outputDirectory>some-other-place</outputDirectory>
-			              </configuration>
-			            </execution>
-			          </executions>
-			        </plugin>
-						
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.4.0</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>java</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<includePluginDependencies>true</includePluginDependencies>
-							<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
-							<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
-							<arguments>
-								<!-- <argument>-Dexec.classpathScope=compile</argument> -->
-								<argument>-Dsun.java2d.noddraw=true</argument>
-								<argument>-Dlog4j.configuration=file:${project.build.resources[0].directory}/log4j2.xml</argument>
-							</arguments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-<!-- 		</profile> -->
+
+
+	<profiles>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>linux</family>
+					<!-- <arch>amd64</arch> -->
+				</os>
+			</activation>
+			<properties>
+				<dist.outputfolder>/mnt/sdb1/SumoImgs/dist</dist.outputfolder>
+			</properties>
+		</profile>
 		
-<!-- 		<profile> -->
-<!-- 		    <activation> -->
-<!-- 		      <os> -->
-<!-- 		        <family>Windows</family> -->
-<!-- 		        <arch>x64</arch> -->
-<!-- 		      </os> -->
-<!-- 		    </activation> -->
-<!-- 		</profile> -->
-<!-- 	</profiles> -->
-        
+		<profile>
+			<id>Windows</id>
+			<activation>
+				<os>
+					<!-- Hdf5 library dll Windows -->
+					<family>Windows</family>
+					<!-- <arch>amd64</arch> -->
+				</os>
+			</activation>
+			<properties>
+					<dist.outputfolder>E:/Sumo/dist</dist.outputfolder>
+			</properties>
+		</profile>	
+	</profiles>
+
+
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>../repo</directory>
+				<includes>
+					<include>gdal_lib_win64</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.png</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<finalName>sumo</finalName>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>lib/gdal.jar</Class-Path>
+						</manifestEntries>
+
+
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.9</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<excludeArtifactIds>junit</excludeArtifactIds>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>../repo/gdal_lib_lin64/</directory>
+									 <includes>
+          								<include>*.*</include>
+          							</includes>	
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${dist.outputfolder}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}</directory>
+									 <includes>
+          								<include>sumo.jar</include>
+          							</includes>	
+								</resource>
+								<resource>
+									<directory>${project.build.directory}/lib</directory>
+									<targetPath>lib</targetPath>
+								</resource>
+								<resource>
+									<directory>../script</directory>
+									<include>*.*</include>
+								</resource>
+								<resource>
+									<directory>src/main/resources</directory>
+									<include>log4j2.xml</include>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
+				<version>2.9</version> <executions> <execution> <id>copy-installed</id> <phase>install</phase> 
+				<goals> <goal>copy</goal> </goals> <configuration> <artifactItems> <artifactItem> 
+				<groupId>${project.groupId}</groupId> <artifactId>${project.artifactId}</artifactId> 
+				<version>${project.version}</version> <type>${project.packaging}</type> </artifactItem> 
+				</artifactItems> <outputDirectory>${dist.outputfolder}</outputDirectory> 
+				</configuration> </execution> </executions> </plugin> -->
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includePluginDependencies>true</includePluginDependencies>
+					<mainClass>org.geoimage.viewer.core.GeoImageViewer</mainClass>
+					<!-- <workingDirectory>${project.build.directory}</workingDirectory> -->
+					<arguments>
+						<!-- <argument>-Dexec.classpathScope=compile</argument> -->
+						<argument>-Dsun.java2d.noddraw=true</argument>
+						<argument>-Dlog4j.configuration=file:${project.build.resources[0].directory}/log4j2.xml</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 
 	<parent>
 		<groupId>org.jrc.sumo</groupId>
 		<artifactId>Sumo</artifactId>
 		<version>1.3.2</version>
 	</parent>
-	
-	
-	
-	
+
+
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -166,7 +228,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
-		 	<type>jar</type>
+			<type>jar</type>
 		</dependency>
 
 		<dependency>
@@ -174,7 +236,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<type>jar</type>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.jrc.sumo</groupId>
 			<artifactId>SumoCore</artifactId>
@@ -208,5 +270,5 @@
 			<version>1.3.2</version>
 		</dependency>
 	</dependencies>
-	
+
 </project>
