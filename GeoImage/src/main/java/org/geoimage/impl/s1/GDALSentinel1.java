@@ -1,9 +1,6 @@
 package org.geoimage.impl.s1;
 
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,13 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.factory.GeoTransformFactory;
-import org.geoimage.impl.Gcp;
 import org.geoimage.impl.imgreader.GeoToolsGDALReader;
-import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.jdom.Document;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
@@ -27,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import jrc.it.annotation.reader.jaxb.AdsHeaderType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
-import jrc.it.annotation.reader.jaxb.GeolocationGridPointType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.annotation.reader.jaxb.SwathBoundsType;
@@ -147,19 +140,11 @@ public class GDALSentinel1 extends Sentinel1 {
        }
    }
 	
-	
-	  
-
 	@Override
 	public File getOverviewFile() {
 		return null;
 	}
 		
-	  
-    
-    
-    private List<Swath> swaths=null;
-    
     public GDALSentinel1(String swath,File manifest,String geolocationMethod) {
     	super(swath,manifest,geolocationMethod);
     }
