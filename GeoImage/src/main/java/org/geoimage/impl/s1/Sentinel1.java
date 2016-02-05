@@ -56,10 +56,10 @@ public abstract class Sentinel1 extends SarImageReader {
     protected double MGtTime = 0;
     protected double MGtauTime = 0;
     
-    protected Map<String, TIFF> tiffImages;
+    protected Map<String, IReader> tiffImages;
 
     //protected List<String> bands = new ArrayList<String>();
-    private List<String> polarizations=null;
+    protected List<String> polarizations=null;
     
     
 	protected double xposition = 0;
@@ -67,17 +67,17 @@ public abstract class Sentinel1 extends SarImageReader {
     protected double zposition = 0;
     
     protected File mainFolder;
-    private String swath=null;
+    protected String swath=null;
     protected int ipfVersion=0;
     
 	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
 	
-	private String files[]=new String[1];
-    private List<GeolocationGridPointType> points=null;
-    private List<String> tiffs=null;
+	protected String files[]=new String[1];
+	protected List<GeolocationGridPointType> points=null;
+    protected List<String> tiffs=null;
     
-    private String safeFilePath=null;
-    private String instumentationMode="";
+    protected String safeFilePath=null;
+    protected String instumentationMode="";
     
     @Override
     public abstract int[] readTile(int x, int y, int width, int height,int band);
@@ -86,9 +86,9 @@ public abstract class Sentinel1 extends SarImageReader {
     @Override
 	public abstract File getOverviewFile() ;
     
-    private String geolocationAlgorithm=null;
+    protected String geolocationAlgorithm=null;
     
-    private List<Swath> swaths=null;
+    protected List<Swath> swaths=null;
     
     
     public Sentinel1(String swath,String manifestXMLPath,String geolocationMethod) {
@@ -335,8 +335,8 @@ public abstract class Sentinel1 extends SarImageReader {
     * 
     * @return
     */
-    private Map<String, TIFF> getImages() {
-        Map<String, TIFF> tiffsMap = new HashMap<String, TIFF>();
+    private Map<String, IReader> getImages() {
+        Map<String, IReader> tiffsMap = new HashMap<String, IReader>();
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
@@ -380,7 +380,7 @@ public abstract class Sentinel1 extends SarImageReader {
        rect = rect.intersection(getImage(band).getBounds());
        int data[]=null;
 
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         try {
             
         	BufferedImage bi=null;
@@ -583,19 +583,19 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
 	public int getWidth() {
-		return getImage(0).xSize;
+		return getImage(0).getxSize();
 	}
 
 
 	@Override
 	public int getHeight() {
-		return getImage(0).ySize;
+		return getImage(0).getySize();
 	}
 	
 	
 
-	public TIFF getImage(int band){
-		TIFF img=null;
+	public IReader getImage(int band){
+		IReader img=null;
 		try{
 			img = tiffImages.get(getBandName(band));
 		}catch(Exception e){ 

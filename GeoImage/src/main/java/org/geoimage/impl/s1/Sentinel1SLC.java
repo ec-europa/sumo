@@ -30,9 +30,9 @@ public class Sentinel1SLC extends Sentinel1 {
         long temp = 0;
         byte[] pixelByte = new byte[4];
 
-        if (x >= 0 & y >= 0 & x < getImage(band).xSize & y < getImage(band).ySize) {
+        if (x >= 0 & y >= 0 & x < getImage(band).getxSize() & y < getImage(band).getySize()) {
             try {
-                temp = (y * (getImage(band).xSize * 4) +  + x * 4);
+                temp = (y * (getImage(band).getxSize() * 4) +  + x * 4);
                 fss.seek(temp);
                 fss.read(pixelByte, 0, 4);
                 byte interm0 = pixelByte[0];
@@ -56,8 +56,8 @@ public class Sentinel1SLC extends Sentinel1 {
         }
         preloadedInterval = new int[]{y, y + length};
         //positioning in file images y=rows image.xSize=cols 4=numero bytes 
-        int tileOffset =  (y * (getImage(band).xSize * 4 ));
-        preloadedData = new byte[(getImage(band).xSize * 4) * length];
+        int tileOffset =  (y * (getImage(band).getxSize() * 4 ));
+        preloadedData = new byte[(getImage(band).getxSize() * 4) * length];
         try {
         	File fimg = getImage(band).getImageFile();
 			fss = new RandomAccessFile(fimg.getAbsolutePath(), "r");
@@ -88,7 +88,7 @@ public class Sentinel1SLC extends Sentinel1 {
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]) {
         	preloadLineTile(rect.y, rect.height,band);
         }
-        int yOffset =  4 * getImage(band).xSize;
+        int yOffset =  4 * getImage(band).getxSize();
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -110,7 +110,7 @@ public class Sentinel1SLC extends Sentinel1 {
 
     
 	public int[] readData(int x, int y, int w, int h, int band) throws IOException {
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         
         int length=w*h;
         int[] data  = new int[]{y, y + length};

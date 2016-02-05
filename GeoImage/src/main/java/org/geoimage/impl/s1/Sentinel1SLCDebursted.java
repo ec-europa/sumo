@@ -68,8 +68,8 @@ public class Sentinel1SLCDebursted extends Sentinel1SLC {
         }
         preloadedInterval = new int[]{y, y + length};
         //positioning in file images y=rows image.xSize=cols 4=numero bytes 
-        int tileOffset =  (y * (getImage(band).xSize * 4 ));
-        preloadedData = new byte[(getImage(band).xSize * 4) * length];
+        int tileOffset =  (y * (getImage(band).getxSize() * 4 ));
+        preloadedData = new byte[(getImage(band).getxSize() * 4) * length];
         try {
         	File fimg = getImage(band).getImageFile();
 			fss = new RandomAccessFile(fimg.getAbsolutePath(), "r");

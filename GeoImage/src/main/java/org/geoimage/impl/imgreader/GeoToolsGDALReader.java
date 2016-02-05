@@ -16,9 +16,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
-import org.gdal.gdal.Driver;
 import org.gdal.gdal.GCP;
-import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
@@ -102,12 +100,12 @@ public class GeoToolsGDALReader implements IReader {
 	 */
 	public short[] readShortValues(int x,int y,int offsetx,int offsety){
 		int pixels = offsetx * offsety;
-		Band b=data.GetRasterBand(band);
+		Band b=data.GetRasterBand(band+1);
 		//int type=gdal.GetDataTypeSize(b.getDataType());
 		int buf_size = pixels;
 
 		short[] dd = new short[buf_size];
-		int ok = b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
+		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
 		return dd;
 	}
 	

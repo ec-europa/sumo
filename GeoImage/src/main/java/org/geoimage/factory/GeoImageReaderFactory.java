@@ -18,6 +18,7 @@ import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
 import org.geoimage.impl.radarsat.Radarsat2Image_SLC;
+import org.geoimage.impl.s1.GDALSentinel1;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
@@ -57,6 +58,8 @@ public class GeoImageReaderFactory {
     	if(gir instanceof Sentinel1){
     		if(gir instanceof Sentinel1GRD)
     			clone=new Sentinel1GRD(((Sentinel1GRD) gir).getSwath(),((Sentinel1GRD)gir).getManifestFile(),((Sentinel1GRD)gir).getGeolocationAlgorithm());
+    		else if(gir instanceof GDALSentinel1)
+    			clone=new GDALSentinel1(((GDALSentinel1) gir).getSwath(),((GDALSentinel1)gir).getManifestFile(),((GDALSentinel1)gir).getGeolocationAlgorithm());
     		else
     			clone=new Sentinel1SLC(((Sentinel1SLC) gir).getSwath(),((Sentinel1SLC)gir).getManifestFile(),((Sentinel1GRD)gir).getGeolocationAlgorithm());
 			clone.initialise();
@@ -119,7 +122,7 @@ public class GeoImageReaderFactory {
         			if(parent.contains("SLC_")){
         				sentinel=new Sentinel1SLC(sw,f,geoAlgorithm);
         			}else{
-        				sentinel=new Sentinel1GRD(sw,f,geoAlgorithm);
+        				sentinel=new GDALSentinel1(sw,f,geoAlgorithm);
         			}
         			sentinel.setContainsMultipleImage(multipleImages);
         			if (sentinel.initialise()) {

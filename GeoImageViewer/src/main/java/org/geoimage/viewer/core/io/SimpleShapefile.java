@@ -159,7 +159,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            	
 	            ClipProcess clip=new ClipProcess();
 	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-	            //exportFeaturesToShapeFile(new File("F:/tmp/export.shp"),fc);
+
 	            
 	            
 	            if (fc.isEmpty()) {
