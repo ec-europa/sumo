@@ -6,8 +6,6 @@ package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.List;
 
 import org.gdal.gdal.Band;
