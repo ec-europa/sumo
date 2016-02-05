@@ -1,7 +1,9 @@
 package org.geoimage.impl.s1;
 
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
-import org.geoimage.impl.imgreader.PureGDALReader;
+import org.geoimage.impl.imgreader.GeoToolsGDALReader;
+import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -30,6 +32,7 @@ import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
 import jrc.it.annotation.reader.jaxb.SwathBoundsType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
+import jrc.it.annotation.reader.jaxb.VelocityType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
 import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -39,91 +42,130 @@ import jrc.it.xml.wrapper.SumoJaxbSafeReader;
  * 
  * @author 
  */
-public abstract class GDALSentinel1 extends SarImageReader {
-	protected int[] preloadedInterval = new int[]{0, 0};
+public class GDALSentinel1 extends Sentinel1 {
+    protected Map<String, GeoToolsGDALReader> tiffImages;
 
-    protected AffineTransform matrix;
-   
-    protected Document doc;
-    
-    protected double MGtTime = 0;
-    protected double MGtauTime = 0;
-    
-    protected Map<String, PureGDALReader> tiffImages;
-
-    protected List<String> bands = new ArrayList<String>();
-
-	protected double xposition = 0;
-    protected double yposition = 0;
-    protected double zposition = 0;
-    
-    protected File mainFolder;
-    private String swath=null;
-    
 	private Logger logger= LoggerFactory.getLogger(GDALSentinel1.class);
+    protected short[] preloadedData;
+    
+    
+    
+    
+    @Override
+    public int[] readTile(int x, int y, int width, int height,int band) {
+        Rectangle rect = new Rectangle(x, y, width, height);
+        rect = rect.intersection(getImage(band).getBounds());
+        int[] tile = new int[height * width];
+        if (rect.isEmpty()) {
+            return tile;
+        }
+
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
+            preloadLineTile(rect.y, rect.height,band);
+        }else{
+        	//logger.debug("using preloaded data");
+        }
+
+        int yOffset = getImage(band).getxSize();
+        int xinit = rect.x - x;
+        int yinit = rect.y - y;
+        for (int i = 0; i < rect.height; i++) {
+            for (int j = 0; j < rect.width; j++) {
+                int temp = i * yOffset + j + rect.x;
+                try{
+                	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                }catch(ArrayIndexOutOfBoundsException e ){
+                	logger.warn("readTile function:"+e.getMessage());
+                }	
+            }
+            }
+        return tile;
+    }
+    
+    
+	 /**
+	  * 
+	  * @param x
+	  * @param y
+	  * @param width
+	  * @param height
+	  * @param band
+	  * @return
+	  */
+   public int readTileXY(int x, int y, int band) {
+       int val=0;
+
+       	if (y < 0||y>this.getHeight()||x<0||x>this.getWidth()) {
+	            val= 0;
+       	}else{
+	 	        GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
+	 	        try {
+	 	        	short[] bi=null;
+	        		bi=tiff.readShortValues(x, y, 1, 1);
+	 	        	val=bi[0];
+	 	        } catch (Exception ex) {
+	 	            logger.error(ex.getMessage(),ex);
+	 	        }
+       	}  
+       
+       return val;
+   }
+   
+
+
 	
-	private String files[]=new String[1];
-    private List<GeolocationGridPointType> points=null;
-    private List<String> tiffs=null;
-    private List<String> polarizations=null;
-    private String safeFilePath=null;
-    
-    
-    @Override
-    public abstract int[] readTile(int x, int y, int width, int height,int band);
-    @Override
-    public abstract void preloadLineTile(int y, int length,int band);
-    @Override
-	public abstract File getOverviewFile() ;
+	public  void preloadLineTile(int y, int length,int band) {
+       if (y < 0) {
+           return;
+       }
+       preloadedInterval = new int[]{y, y + length};
+       Rectangle rect = new Rectangle(0, y, getImage(band).getxSize(), length);
+       
+       GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
+       rect=tiff.getBounds().intersection(rect);
+       
+       try {
+       	short[] bi=null;
+       	try{
+       		bi = tiff.readShortValues(0, y, rect.width, rect.height);
+       	}catch(Exception e){
+       		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
+       		try {
+   			    Thread.sleep(100);                 
+   			} catch(InterruptedException exx) {
+   			    Thread.currentThread().interrupt();
+   			}
+       		bi=tiff.readShortValues(0, y, rect.width, rect.height);
+       	}	
+       	preloadedData=bi;
+       } catch (Exception ex) {
+           logger.error(ex.getMessage(),ex);
+       }finally{
+       	//tiff.reader.addIIOReadProgressListener(this);
+       	//readComplete=false;
+       	
+       }
+   }
+	
+	
+	  
+
+	@Override
+	public File getOverviewFile() {
+		return null;
+	}
+		
+	  
     
     
     private List<Swath> swaths=null;
     
-    public GDALSentinel1(File f,String swath) {
-    	super(f);
-    	this.swath=swath;
+    public GDALSentinel1(String swath,File manifest,String geolocationMethod) {
+    	super(swath,manifest,geolocationMethod);
     }
 
     
-    @Override
-    public int getNBand() {
-        return bands.size();
-    }
 
-    /**
-     * read ground control points from xml annotation file. 
-     *   
-     * There is one annotation file for each tiff image 
-     * The annotation files are files in annotation folder with name "tiff image name".xml
-     * 
-     * @return list of ground control points
-     */
-    @Override
-    public List<Gcp> getGcps() {
-        if (gcps == null||gcps.size()==0) {
-	        	
-        	//read the ground control points
-            gcps = new ArrayList<Gcp>(points.size());
-			
-            for(int index=0;index<points.size()-1;index++){
-            	GeolocationGridPointType point=points.get(index);
-            	Gcp gcp=new Gcp();
-            	try{
-            		gcp.setAngle(new Float(point.getIncidenceAngle().getValue()));
-            	}catch(Exception e){
-            		logger.info("Incident Angle not valid for grid point n:"+index);
-            	}
-            	gcp.setXgeo(point.getLongitude().getValue());
-            	gcp.setYgeo(point.getLatitude().getValue());
-            	gcp.setYpix(point.getLine().getValue().intValue());
-            	gcp.setXpix(point.getPixel().getValue().intValue());
-            	gcp.setOriginalXpix(point.getPixel().getValue().doubleValue());
-            	gcp.setZgeo(point.getHeight().getValue());
-            	gcps.add(gcp);
-            }
-        }    
-        return gcps;
-    }
 
     @Override
     public String[] getFilesList() {
@@ -140,15 +182,15 @@ public abstract class GDALSentinel1 extends SarImageReader {
         	tiffs=safeReader.getTiffsBySwath(this.swath);
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
+        	instumentationMode=safeReader.getInstrumentationMode();
         	
+        	this.ipfVersion=safeReader.getIPFVersion();
         	
 			//set image properties
             tiffImages=getImages();
             String bandName=getBandName(0);
             
-			//activeImage = tiffImages.values().iterator().next();
-
-            String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();//new File(safeReader.getHrefsTiff()[0]).getName();
+            String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();
             nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
 			//load the correct annotation file for the current images (per swath) 
 			mainFolder=manifestFile.getParentFile();
@@ -157,20 +199,25 @@ public abstract class GDALSentinel1 extends SarImageReader {
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
 			//read the ground control points
         	points= annotationReader.getGridPoints();
-			
 
+        	super.pixelsize[0]=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
+        	super.pixelsize[1]=annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
+
+			
             List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
             List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
             swaths=new ArrayList<Swath>();
-            for(int i=0;i<swathMerges.size();i++){
+            for(int i=0;i<downInfos.size();i++){
             	Swath s=new Swath();
-            	s.setBounds(swathMerges.get(i).getSwathBoundsList().getSwathBounds());
+            	if(!swathMerges.isEmpty())
+            		s.setBounds(swathMerges.get(i).getSwathBoundsList().getSwathBounds());
             	DownlinkInformationType info=downInfos.get(i);
             	s.setAzimuthTime(info.getAzimuthTime().toGregorianCalendar().getTimeInMillis());
             	s.setFirstLineSensingTime(info.getFirstLineSensingTime().toGregorianCalendar().getTimeInMillis());
             	s.setName(info.getSwath().name());
             	s.setLastLineSensingTime(info.getLastLineSensingTime().toGregorianCalendar().getTimeInMillis());
             	s.setPrf(info.getPrf().getValue());
+            	swaths.add(s);
             }
             
         	//read and set the metadata from the manifest and the annotation
@@ -181,10 +228,14 @@ public abstract class GDALSentinel1 extends SarImageReader {
                 dispose();
                 return false;
             }
-            String epsg = "EPSG:4326";
-            //geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
-            geotransform = GeoTransformFactory.createFromOrbitVector(annotationFilePath);
             
+          //TODO: remove or change this control!!! 
+            if(geolocationAlgorithm.equalsIgnoreCase("ORB")){
+                   geotransform = GeoTransformFactory.createFromOrbitVector(annotationReader);
+            }else{       
+            	String epsg = "EPSG:4326";
+            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
+            }
             
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
@@ -195,12 +246,20 @@ public abstract class GDALSentinel1 extends SarImageReader {
             	zposition=o.getPosition().getZ().getValue();
             }
             
+            //use the middle orbit position to calculate the satellite speed
+            VelocityType middlePos=orbitList.get(orbitList.size()/2).getVelocity();
+            satelliteSpeed=Math.sqrt((middlePos.getX().getValue()*middlePos.getX().getValue()+
+            		middlePos.getY().getValue()*middlePos.getY().getValue()+
+            		middlePos.getZ().getValue()*middlePos.getZ().getValue()));
+            
+            
             //set the satellite altitude
             double radialdist = Math.pow(xposition * xposition + yposition * yposition + zposition * zposition, 0.5);
-            double[] latlon = getGeoTransform().getGeoFromPixel(0, 0);
+            double[] latlon = geotransform.getGeoFromPixel(0, 0);
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
+            
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
             setSatelliteAltitude(radialdist - earthradial);
 
@@ -208,8 +267,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
             float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
             setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-            setIncidenceNear(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-
+            setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
             return true;
         } catch (TransformException ex) {
@@ -226,7 +284,34 @@ public abstract class GDALSentinel1 extends SarImageReader {
         return false;
     }
 
-    
+    /**
+	  * 
+	  * @param x
+	  * @param y
+	  * @param width
+	  * @param height
+	  * @param band
+	  * @return
+	  */
+  public int[] read(int x, int y,int w,int h, int band) {
+      Rectangle rect = new Rectangle(x, y, w, h);
+      rect = rect.intersection(getImage(band).getBounds());
+      int data[]=null;
+
+      GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
+       try {
+   		short[] b=tiff.readShortValues(x, y, w,h);
+   		data=new int[b.length];
+       	for(int i=0;i<b.length;i++)
+       		data[i]=b[i];
+   		
+       } catch (Exception ex) {
+           logger.warn(ex.getMessage());
+       }finally{
+       }
+      
+      return data;
+  }
     /**
      * 
      */
@@ -260,16 +345,15 @@ public abstract class GDALSentinel1 extends SarImageReader {
     * 
     * @return
     */
-    private Map<String, PureGDALReader> getImages() {
-        Map<String, PureGDALReader> tiffsMap = new HashMap<String, PureGDALReader>();
+    private Map<String, GeoToolsGDALReader> getImages() {
+        Map<String, GeoToolsGDALReader> tiffsMap = new HashMap<String, GeoToolsGDALReader>();
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
-    				tiffsMap.put(pol,new PureGDALReader(new File(tiff),0));
+    				tiffsMap.put(pol,new GeoToolsGDALReader(new File(tiff),0));
     			}
     		}
     	}
-    	bands=polarizations;
         return tiffsMap;
     }
 
@@ -278,7 +362,7 @@ public abstract class GDALSentinel1 extends SarImageReader {
     
     @Override
     public int readPixel(int x, int y,int band) {
-        PureGDALReader tiff=null;
+    	GeoToolsGDALReader tiff=null;
         try {
         	String b=getBandName(band);
         	tiff=tiffImages.get(b);
@@ -291,28 +375,15 @@ public abstract class GDALSentinel1 extends SarImageReader {
         return -1;
     }
 
-    @Override
-    public String getBandName(int band) {
-        return bands.get(band);
-    }
-
-    /**
-     * set the current band and the associate image 
-     *
-    @Override
-    public void setBand(int band) {
-        this.band = band;
-        if(tiffImages==null)
-        	tiffImages=getImages();
-    }*/
+    
 
    
     @Override
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(PureGDALReader t:tiffImages.values()){
-            t.dispose();
+        for(GeoToolsGDALReader t:tiffImages.values()){
+          //  t.dispose();
         }
         tiffImages=null;
     }
@@ -371,77 +442,13 @@ public abstract class GDALSentinel1 extends SarImageReader {
             
     }
 
-    @Override
-    public int getNumberOfBytes() {
-        return super.getNumberOfBytes();
-    }
-
-    @Override
-    public int getType(boolean oneBand) {
-        if(oneBand || bands.size()<2) return BufferedImage.TYPE_USHORT_GRAY;
-        else return BufferedImage.TYPE_INT_RGB;
-    }
-
-    @Override
-    public String getFormat() {
-        return getClass().getCanonicalName();
-    }
-
-    @Override
-    public String getDisplayName(int band) {
-    	try{
-        	return tiffImages.get(getBandName(band)).getImageFile().getName();
-    	}catch(Exception e){
-    		return "S1"+System.currentTimeMillis();
-    	}		
-    }
-    
-    @Override
-    public String getImgName() {
-    	try{
-    		String name=tiffImages.get(getBandName(0)).getImageFile().getParentFile().getParentFile().getName();
-    		return name;
-    	}catch(Exception e ){			
-    		return tiffImages.get(getBandName(0)).getImageFile().getName();
-    	}	
-    }
-
-        
-    
-    public String getInternalImage() {
-  		return null;
-  	}
-    
-    public String getSwath() {
-		return swath;
-	}
-
-
-	public void setSwath(String swath) {
-		this.swath = swath;
-	}
-	
-	
-	public String getSafeFilePath(){
-		return safeFilePath;
+    public double[] getPixelsize() {
+		return super.pixelsize;
 	}
 	
 
-    @Override
-	public int getWidth() {
-		return getImage(0).xSize;
-	}
-
-
-	@Override
-	public int getHeight() {
-		return getImage(0).ySize;
-	}
-	
-	
-
-	public PureGDALReader getImage(int band){
-		PureGDALReader img=null;
+	public GeoToolsGDALReader getImage(int band){
+		GeoToolsGDALReader img=null;
 		try{
 			img = tiffImages.get(getBandName(band));
 		}catch(Exception e){ 
@@ -450,7 +457,14 @@ public abstract class GDALSentinel1 extends SarImageReader {
 		return img;
 	}
 
-	
+	@Override
+    public String getDisplayName(int band) {
+    	try{
+        	return tiffImages.get(getBandName(band)).getImageFile().getName();
+    	}catch(Exception e){
+    		return "S1"+System.currentTimeMillis();
+    	}		
+    }
 
 }
 

@@ -11,12 +11,6 @@ import org.geoimage.impl.imgreader.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
-
-
-
-
 
 /**
  * 
@@ -25,14 +19,12 @@ import com.sun.media.imageioimpl.plugins.tiff.TIFFImageReader;
  */
 public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListener {
 	private Logger logger= LoggerFactory.getLogger(Sentinel1GRD.class);
-	//private boolean readComplete=false;
-	//private boolean readAborted=false;
+
 	
 	protected short[] preloadedData;
     
     public Sentinel1GRD(String swath,File manifest,String geolocationMethod) {
     	super(swath,manifest,geolocationMethod);
-    	//gdal.AllRegister();
     }
 
     /**
@@ -53,7 +45,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         	//logger.debug("using preloaded data");
         }
 
-        int yOffset = getImage(band).xSize;
+        int yOffset = getImage(band).getxSize();
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
@@ -131,7 +123,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         	if (y < 0||y>this.getHeight()||x<0||x>this.getWidth()) {
  	            val= 0;
         	}else{
-	 	        TIFF tiff=getImage(band);
+	 	        TIFF tiff=(TIFF)getImage(band);
 	 	        try {
 	 	        	BufferedImage bi=null;
  	        		bi=tiff.read(0, rect);
@@ -155,9 +147,9 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
+        Rectangle rect = new Rectangle(0, y, getImage(band).getxSize(), length);
         
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         rect=tiff.getBounds().intersection(rect);
         
         try {
