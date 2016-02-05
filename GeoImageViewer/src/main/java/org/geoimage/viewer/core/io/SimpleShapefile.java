@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.util.JTSUtil;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
@@ -32,11 +32,12 @@ import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
-import org.geotools.data.store.ContentFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -155,12 +156,12 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            //retrieve a FeatureSource to work with the feature data
 	            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
 	            
+	            SimpleFeatureCollection corrected=correctFeatures(featureSource.getFeatures());
+	            
 	            Polygon imageP=bbox;
 	            	
 	            ClipProcess clip=new ClipProcess();
-	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-
-	            
+	            SimpleFeatureCollection fc=clip.execute(corrected, imageP,true);
 	            
 	            if (fc.isEmpty()) {
 	                return null;
@@ -189,6 +190,25 @@ public class SimpleShapefile extends AbstractVectorIO{
     }
    
     
+    public static SimpleFeatureCollection correctFeatures(SimpleFeatureCollection fc){
+    	SimpleFeatureIterator iterator=fc.features();
+    	DefaultFeatureCollection outVector = new DefaultFeatureCollection();
+
+    	while(iterator.hasNext()){
+    		SimpleFeature sf=iterator.next();
+    		Geometry gm=(Geometry)sf.getDefaultGeometry();
+    		if(!gm.isValid()){
+    			gm=JTSUtil.repair(gm);
+    			System.out.println(gm.isValid());
+    		}
+			sf.setDefaultGeometry(gm);
+		    outVector.add(sf);
+
+    	}    
+    	
+    	return fc;
+    }
+    
    
     /**
      * 
@@ -212,7 +232,6 @@ public class SimpleShapefile extends AbstractVectorIO{
         ClipProcess clip=new ClipProcess();
         SimpleFeatureCollection fc=clip.execute(collectionsShape2, bbox,true);
         
-        //SimpleFeatureSource shapeLayer = layer.getFeatureSource();
     	SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) layer.getFeatureCollection();
         SimpleFeatureType schemaLayer=collectionsLayer.getSchema();
         
