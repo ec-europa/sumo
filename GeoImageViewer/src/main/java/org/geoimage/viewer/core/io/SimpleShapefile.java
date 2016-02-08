@@ -156,12 +156,12 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            //retrieve a FeatureSource to work with the feature data
 	            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
 	            
-	            SimpleFeatureCollection corrected=correctFeatures(featureSource.getFeatures());
+	           
 	            
 	            Polygon imageP=bbox;
 	            	
 	            ClipProcess clip=new ClipProcess();
-	            SimpleFeatureCollection fc=clip.execute(corrected, imageP,true);
+	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
 	            
 	            if (fc.isEmpty()) {
 	                return null;
@@ -189,6 +189,31 @@ public class SimpleShapefile extends AbstractVectorIO{
 
     }
    
+    public static void correctShapeFile(File shpInput,File shpOutput){
+    	DataStore dataStore =null;
+        try {
+        	if(shpInput!=null){
+	        	Map<String, Serializable> params = new HashMap<String, Serializable>();
+	            params.put("url", shpInput.toURI().toURL());
+	        	
+	            //create a DataStore object to connect to the physical source 
+	            dataStore = DataStoreFinder.getDataStore(params);
+	            //retrieve a FeatureSource to work with the feature data
+	            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
+	            
+	            SimpleFeatureCollection corrected=correctFeatures(featureSource.getFeatures());
+	            
+	            exportFeaturesToShapeFile(shpOutput, corrected);
+	            
+	            
+        	}
+        }catch(Exception e){
+        	
+        }	
+    }
+    
+    
+    
     
     public static SimpleFeatureCollection correctFeatures(SimpleFeatureCollection fc){
     	SimpleFeatureIterator iterator=fc.features();
@@ -555,13 +580,16 @@ public class SimpleShapefile extends AbstractVectorIO{
     	double cc[][]=new double[][]{{200.0,200.0},{500.0,200.0},{500.0,500.0},{200.0,500.0},{200.0,200.0}};
     	
     	try {
-    		Polygon p=PolygonOp.createPolygon(cc);
+    		/*Polygon p=PolygonOp.createPolygon(cc);
         	List<Geometry>geoms=new ArrayList<>();
         	geoms.add(p);
-			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null,null);
-		} catch (IOException | SchemaException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
+			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null,null);*/
+    		
+    		SimpleShapefile.correctShapeFile(new File("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp")
+    				, new File("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp"));
+    		
+    		
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
     	
