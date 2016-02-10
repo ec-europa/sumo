@@ -44,12 +44,11 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.process.vector.ClipProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.referencing.operation.projection.Stereographic;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
+import org.osgeo.proj4j.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,7 +202,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            SimpleFeatureCollection corrected=correctFeatures(featureSource.getFeatures());
 	            
 	            
-	            exportFeaturesToShapeFile(shpOutput, corrected);
+	            exportFeaturesToShapeFile(shpOutput, featureSource.getFeatures());
 	            
 	            
         	}
@@ -477,7 +476,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      	 // carefully open an iterator and writer to process the results
           Transaction transaction = new DefaultTransaction();
           
-          CoordinateReferenceSystem crsOrig=featureCollection.getSchema().getCoordinateReferenceSystem();
+          //CoordinateReferenceSystem crsOrig=featureCollection.getSchema().getCoordinateReferenceSystem();
           
           //set wgs84 coordinates ref sys 
           SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype(featureCollection.getSchema(), DefaultGeographicCRS.WGS84);
@@ -485,7 +484,29 @@ public class SimpleShapefile extends AbstractVectorIO{
           
           FeatureWriter<SimpleFeatureType, SimpleFeature> writer = newDataStore.getFeatureWriter(newDataStore.getTypeNames()[0],  transaction);
           //create the transformation
-          MathTransform trans=CRS.findMathTransform(CRS.parseWKT(WKTString.WKT3995),DefaultGeographicCRS.WGS84,true);
+          MathTransform trans=CRS.findMathTransform(CRS.parseWKT(WKTString.WKT3995_ESRI),DefaultGeographicCRS.WGS84);
+          
+          /*DefaultMathTransformFactory mfac=new DefaultMathTransformFactory();
+          ParameterValueGroup parameters=mfac.getDefaultParameters("Stereographic_North_Pole");
+          parameters.parameter("semi_major").setValue(DefaultEllipsoid.WGS84.getSemiMajorAxis());
+          parameters.parameter("semi_minor").setValue(DefaultEllipsoid.WGS84.getSemiMinorAxis());
+          parameters.parameter("latitude_of_origin").setValue(90.0);
+          MathTransform trans=mfac.createParameterizedTransform(parameters);*/
+          
+          
+          /*Envelope env = new Envelope(-180,60,180,90);//minx, maxx, miny, maxy
+          GeometryFactory fac = new GeometryFactory();
+          Geometry referenceGeom = fac.toGeometry(env);*/
+          
+          
+          //PJ sourcePJ = new PJ("+init=epsg:3995");           // (x,y) axis order
+          //PJ targetPJ = new PJ("+proj=latlong +datum=WGS84"); // (λ,φ) axis order
+          
+          CoordinateReferenceSystem EPSG_3995 = Proj.crs("EPSG:3995");
+          CoordinateReferenceSystem EPSG_4326 = Proj.crs("EPSG:4326");
+          
+          
+          
           
           FeatureIterator<SimpleFeature> iterator = featureCollection.features();                
           try {
@@ -494,8 +515,11 @@ public class SimpleShapefile extends AbstractVectorIO{
                   SimpleFeature feature = iterator.next();
                   SimpleFeature copy = writer.next();
                   
+                  
+                  
                   Geometry geometry = (Geometry) feature.getDefaultGeometry();
                   geometry=JTS.transform(geometry,trans);
+
                   
                   if(geometry!=null){
                   	copy.setDefaultGeometry( geometry.buffer(0));      
@@ -621,14 +645,18 @@ public class SimpleShapefile extends AbstractVectorIO{
 			SimpleShapefile.exportGeometriesToShapeFile(geoms,new File("F:\\SumoImgs\\export\\test.shp") , "Polygon",null,null);*/
     		
     		
-    		CoordinateReferenceSystem crs = CRS.decode("EPSG:3995");
+    		/*CoordinateReferenceSystem crs = CRS.decode("EPSG:3995");
     	    String wkt = crs.toWKT();
     	    System.out.println("wkt for EPSG:3995");
-    	    System.out.println( wkt );
+    	    System.out.println( wkt );*/
     		
     		
-    		//SimpleShapefile.cleanAndSaveShapeFile(new File("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp")
-    			//	, new File("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp"));
+    		String nameOut="/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected"
+    				+ System.currentTimeMillis()+"_"
+    				+".shp";
+    		
+    		SimpleShapefile.cleanAndSaveShapeFile(new File("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp")
+    				, new File(nameOut));
     		
     		
 		} catch (Exception e) {
