@@ -93,12 +93,11 @@ public class GDALProjection {
 	}
 
 	public static void main(String[] args) {
-		// GDALProjection.test("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp"
-		// ,
-		// "/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp");
+		 GDALProjection.test("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp",
+		 "/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp");
 
-		GDALProjection.test("H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km.shp",
-				"H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km_copy.shp");
+		//GDALProjection.test("H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km.shp",
+		//		"H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km_copy.shp");
 	}
 
 }
