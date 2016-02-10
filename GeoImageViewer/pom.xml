@@ -17,7 +17,7 @@
 				</os>
 			</activation>
 			<properties>
-				<dist.outputfolder>/mnt/sdb1/SumoImgs/dist</dist.outputfolder>
+				<dist.outputfolder>H:/dist</dist.outputfolder>
 			</properties>
 		</profile>
 		
@@ -31,7 +31,7 @@
 				</os>
 			</activation>
 			<properties>
-					<dist.outputfolder>E:/Sumo/dist</dist.outputfolder>
+					<dist.outputfolder>H:/dist</dist.outputfolder>
 			</properties>
 		</profile>	
 	</profiles>
