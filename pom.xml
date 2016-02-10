@@ -171,10 +171,25 @@
 
 		<dependency>
 			<groupId>com.vividsolutions</groupId>
-			<artifactId>jts</artifactId>
-			<version>1.13</version>
+			<artifactId>jts-core</artifactId>
+			<version>1.14.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts-io</artifactId>
+			<version>1.14.0</version>
+		</dependency>
+
+
+		<!--Proj4 -->
+		<dependency>
+			<groupId>org.osgeo</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		
+		
 		<!-- Apache commons -->
 
 
@@ -373,6 +388,7 @@
 			<id>local-repo</id>
 			<url>file://${project.basedir}/../repo</url>
 		</repository>
+		
 	</repositories>
 	<!-- =========================================================== -->
 	<!-- Plugin repositories. -->
