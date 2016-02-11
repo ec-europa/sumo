@@ -1,7 +1,11 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
+import org.gdal.gdal.Dataset;
+import org.gdal.gdal.gdal;
+import org.gdal.gdalconst.gdalconstConstants;
 import org.gdal.ogr.DataSource;
 import org.gdal.ogr.Driver;
 import org.gdal.ogr.Feature;
@@ -13,10 +17,13 @@ import org.gdal.ogr.ogr;
 import org.gdal.ogr.ogrConstants;
 import org.gdal.osr.CoordinateTransformation;
 import org.gdal.osr.SpatialReference;
+import org.gdal.osr.osr;
 
-public class GDALProjection {
+import it.geosolutions.imageio.gdalframework.GDALUtilities;
 
-	public static void test(String pathFile, String outPathFile) {
+public class GDALWarpReprojection {
+
+	public static void reprojectShapeFile(String pathFile, String outPathFile) {
 		ogr.RegisterAll();
 
 		DataSource vector = ogr.Open(pathFile);
@@ -92,12 +99,69 @@ public class GDALProjection {
 
 	}
 
-	public static void main(String[] args) {
-		 GDALProjection.test("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp",
-		 "/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp");
+	
+	
+	public static void reprojectTiffWithWarp(String pathFile, String outPathFile) throws FileNotFoundException {
+		gdal.AllRegister();
+		System.out.println(gdal.VersionInfo());
+		
+		File f=new File(pathFile);
+		if(!f.exists())
+			throw new FileNotFoundException();
+		
+		GDALUtilities.loadGDAL();
+		
+		// Source
+		Dataset source=GDALUtilities.acquireDataSet(pathFile, gdalconstConstants.GA_ReadOnly);//gdal.Open(pathFile);
+		
+		// Output / destination
+        Dataset out_ds = source.GetDriver().Create(outPathFile,source.getRasterXSize(), source.getRasterYSize(), source.getRasterCount());
 
-		//GDALProjection.test("H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km.shp",
-		//		"H:/sat/masie/masie_ice_r00_v01_2016039_1km/masie_ice_r00_v01_2016039_1km_copy.shp");
+        
+
+		try{
+		
+			String srcProj = source.GetProjection();
+			double[] trans = source.GetGeoTransform();
+	
+			// We want a section of source that matches this:
+			SpatialReference dstRef = new SpatialReference();
+	        dstRef.ImportFromEPSG(4326);
+	
+	
+			
+	
+	        out_ds.SetProjection(dstRef.ExportToWkt());
+	        out_ds.SetGeoTransform(source.GetGeoTransform());
+	
+	
+	        Dataset warp = gdal.AutoCreateWarpedVRT(source, source.GetProjection(), dstRef.ExportToWkt());
+	        
+			// Do the work
+			gdal.ReprojectImage(source, warp);
+
+		}finally {
+            source.delete();
+            out_ds.delete();
+		}
+		
+	}
+	public static void main(String[] args) {
+		 //GDALWarpReprojection.reprojectShapeFile("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp",
+		 //"/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp");
+
+		try {
+			 //GDALWarpReprojection.reprojectShapeFile("/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km.shp",
+			 //"/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016037_1km_corrected.shp");
+
+			GDALWarpReprojection.reprojectTiffWithWarp(""
+					+ "/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016039_1km.tif",
+			 "/home/argenpo/Desktop/script_ice/masie_ice_r00_v01_2016037_1km/masie_ice_r00_v01_2016039_1km_out_java.tif");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
 	}
 
 }
