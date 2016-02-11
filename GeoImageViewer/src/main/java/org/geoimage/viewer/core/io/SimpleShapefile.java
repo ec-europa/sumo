@@ -48,7 +48,6 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.referencing.operation.MathTransform;
-import org.osgeo.proj4j.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -423,7 +422,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	    	 data = factory.createDataStore( fileOutput.toURI().toURL() );
 	    	 
 	    	 data.createSchema(featureCollection.getSchema());
-			 exportToShapefileForceWGS84(data,featureCollection);
+	    	 exportToShapefile(data,featureCollection);
 		} catch (Exception e) {
 			logger.error("Export to shapefile failed",e );
 		}finally{
@@ -486,27 +485,6 @@ public class SimpleShapefile extends AbstractVectorIO{
           //create the transformation
           MathTransform trans=CRS.findMathTransform(CRS.parseWKT(WKTString.WKT3995_ESRI),DefaultGeographicCRS.WGS84);
           
-          /*DefaultMathTransformFactory mfac=new DefaultMathTransformFactory();
-          ParameterValueGroup parameters=mfac.getDefaultParameters("Stereographic_North_Pole");
-          parameters.parameter("semi_major").setValue(DefaultEllipsoid.WGS84.getSemiMajorAxis());
-          parameters.parameter("semi_minor").setValue(DefaultEllipsoid.WGS84.getSemiMinorAxis());
-          parameters.parameter("latitude_of_origin").setValue(90.0);
-          MathTransform trans=mfac.createParameterizedTransform(parameters);*/
-          
-          
-          /*Envelope env = new Envelope(-180,60,180,90);//minx, maxx, miny, maxy
-          GeometryFactory fac = new GeometryFactory();
-          Geometry referenceGeom = fac.toGeometry(env);*/
-          
-          
-          //PJ sourcePJ = new PJ("+init=epsg:3995");           // (x,y) axis order
-          //PJ targetPJ = new PJ("+proj=latlong +datum=WGS84"); // (λ,φ) axis order
-          
-          CoordinateReferenceSystem EPSG_3995 = Proj.crs("EPSG:3995");
-          CoordinateReferenceSystem EPSG_4326 = Proj.crs("EPSG:4326");
-          
-          
-          
           
           FeatureIterator<SimpleFeature> iterator = featureCollection.features();                
           try {
@@ -514,7 +492,6 @@ public class SimpleShapefile extends AbstractVectorIO{
               while( iterator.hasNext() ){
                   SimpleFeature feature = iterator.next();
                   SimpleFeature copy = writer.next();
-                  
                   
                   
                   Geometry geometry = (Geometry) feature.getDefaultGeometry();
