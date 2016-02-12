@@ -790,7 +790,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     
     public void removeStopListener(ActionListener lis){
     	this.stopThreadButton.removeActionListener(lis);
-    	this.stopThreadButton.setVisible(false);
+    	this.stopThreadButton.setEnabled(false);//Visible(false);
     }
     
 
