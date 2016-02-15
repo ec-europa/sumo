@@ -16,6 +16,7 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.util.JTSUtil;
@@ -23,17 +24,21 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
+import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.FileDataStoreFinder;
+import org.geotools.data.Query;
 import org.geotools.data.Transaction;
+import org.geotools.data.collection.CollectionFeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
+import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -47,6 +52,8 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
 import org.opengis.referencing.operation.MathTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -241,21 +248,21 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @return
      * @throws Exception
      */
-    public static GeometricLayer addShape(GeometricLayer layer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
+    public static GeometricLayer mergeShapeFile1(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
     	Map<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("url", shpInput.toURI().toURL());
     	
         //create a DataStore object to connect to the physical source 
         DataStore dataStore = DataStoreFinder.getDataStore(params);
-        //retrieve a FeatureSource to work with the feature data
+       
         SimpleFeatureSource shape2 = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
-    	SimpleFeatureCollection collectionsShape2=shape2.getFeatures();
+        
+        SimpleFeatureCollection collectionsShape2=shape2.getFeatures();
         SimpleFeatureType schemaShape2=shape2.getSchema();
         
         ClipProcess clip=new ClipProcess();
         SimpleFeatureCollection fc=clip.execute(collectionsShape2, bbox,true);
         
-    	SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) layer.getFeatureCollection();
         SimpleFeatureType schemaLayer=collectionsLayer.getSchema();
         
         //merge the schema and the types
@@ -291,16 +298,109 @@ public class SimpleShapefile extends AbstractVectorIO{
 	        String[] schema = createSchema(descriptorsMerge);
 	        String[] types = createTypes(descriptorsMerge);
 	
-	        String geoName = layer.getFeatureCollection().getSchema().getGeometryDescriptor().getType().getName().toString();        
+	        	        
+	        String geoName = schemaLayer.getGeometryDescriptor().getType().getName().toString();        
 	        out=GeometricLayer.createLayerFromFeatures(geoName, newds, mergeFeat.getFeatures(), schema, types,true,transform);
 	        //out = GeometricLayer.createImageProjectedLayer(out, transform,null);
-	        out.setName("merge_"+shpInput.getName()+"_"+layer.getName());
+	        out.setName("merge_"+shpInput.getName()+"_"+LayerManager.getIstanceManager().getCurrentImageLayer().getName());
         }finally{
         	if(newds!=null)
         		newds.dispose();
         }    
         return out;
     }
+    
+    
+    public static GeometricLayer mergeShapeFile2(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
+    	Map<String, Serializable> params = new HashMap<String, Serializable>();
+        params.put("url", shpInput.toURI().toURL());
+    	
+        //create a DataStore object to connect to the physical source 
+        DataStore dataStore = DataStoreFinder.getDataStore(params);
+        //retrieve a FeatureSource to work with the feature data
+        SimpleFeatureSource shape2 = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
+       
+        ClipProcess clip=new ClipProcess();
+        SimpleFeatureCollection collectionsShape2=shape2.getFeatures();
+        SimpleFeatureCollection fc=clip.execute(collectionsShape2, bbox,true);
+        SimpleFeatureSource source = new CollectionFeatureSource(fc);
+        
+        SimpleFeatureCollection result=joinFeaures(source, shape2);
+        
+        //create new datastore to save the new shapefile
+        FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
+        File tmp=new File(SumoPlatform.getApplication().getCachePath()+"\\tmpshape_"+System.currentTimeMillis()+".shp");
+        Map<String, Serializable> params2 = new HashMap<String, Serializable>();
+        params2.put("url", tmp.toURI().toURL());
+        ShapefileDataStore newds=(ShapefileDataStore)factory.createNewDataStore(params2);
+        
+        String geoName = collectionsLayer.getSchema().getGeometryDescriptor().getType().getName().toString();
+        String nameOutput="merge_"+shpInput.getName()+"_"+LayerManager.getIstanceManager().getCurrentImageLayer().getName();
+        
+      //from here create the new GeometricLayer
+        Collection<PropertyDescriptor>descriptorsMerge=new ArrayList<>();
+        descriptorsMerge.addAll(shape2.getSchema().getDescriptors());
+        descriptorsMerge.addAll(collectionsLayer.getSchema().getDescriptors());
+        
+        String[] schema = createSchema(descriptorsMerge);
+        String[] types = createTypes(descriptorsMerge);
+        
+        GeometricLayer out=GeometricLayer.createLayerFromFeatures(geoName, newds, result, schema, types,true,transform);
+        
+        return out;
+    }
+    
+    
+    /**
+     * 
+     * @param shapes
+     * @param shapes2
+     * @throws Exception
+     */
+    private static SimpleFeatureCollection joinFeaures(SimpleFeatureSource shapes, SimpleFeatureSource shapes2) throws Exception {
+    	SimpleFeatureCollection join =null;
+    	
+        SimpleFeatureType schema = shapes.getSchema();
+        String typeName = schema.getTypeName();
+        String geomName = schema.getGeometryDescriptor().getLocalName();
+        
+        SimpleFeatureType schema2 = shapes2.getSchema();
+        String typeName2 = schema2.getTypeName();
+        String geomName2 = schema2.getGeometryDescriptor().getLocalName();
+        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+        
+        Query outerGeometry = new Query(typeName, Filter.INCLUDE, new String[] { geomName });
+        SimpleFeatureCollection outerFeatures = shapes.getFeatures(outerGeometry);
+        SimpleFeatureIterator iterator = outerFeatures.features();
+        int max = 0;
+        try {
+            while (iterator.hasNext()) {
+                SimpleFeature feature = iterator.next();
+                try {
+                    Geometry geometry = (Geometry) feature.getDefaultGeometry();
+                    if (!geometry.isValid()) {
+                        // skip bad data
+                        continue;
+                    }
+                    Filter innerFilter = ff.intersects(ff.property(geomName2), ff.literal(geometry));
+                    Query innerQuery = new Query(typeName2, innerFilter, Query.NO_NAMES);
+                    join = shapes2.getFeatures(innerQuery);
+                    int size = join.size();
+                    max = Math.max(max, size);
+                } catch (Exception skipBadData) {
+                }
+            }
+        } finally {
+            iterator.close();
+        }
+        return join;
+    }
+    
+    
+    
+    
+    
+    
     
     /**
      * 
@@ -611,6 +711,14 @@ public class SimpleShapefile extends AbstractVectorIO{
         return ft;
     }
 
+    
+    
+    
+    
+ 
+    
+    
+    
 	
     public static void main(String[] args){
     	double cc[][]=new double[][]{{200.0,200.0},{500.0,200.0},{500.0,500.0},{200.0,500.0},{200.0,200.0}};

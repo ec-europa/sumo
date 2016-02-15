@@ -19,6 +19,7 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -49,7 +50,10 @@ public class MergeShapeFileAction extends AbstractAction  {
 	                        try {
 	                        	MaskVectorLayer ml=LayerManager.getIstanceManager().getChildMaskLayer(l);
 	                        	if(ml!=null){
-	                        		GeometricLayer gl = SimpleShapefile.addShape(ml.getGeometriclayer(), shpFile,l.getImageReader().getGeoTransform(),
+	                        			
+	                        		SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) ml.getGeometriclayer().getFeatureCollection();
+	                        		
+	                        		GeometricLayer gl = SimpleShapefile.mergeShapeFile2(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 	                        		LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, (ImageLayer) l);
 	                        	}	
