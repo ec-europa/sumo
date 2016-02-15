@@ -6,7 +6,7 @@
 	<version>1.3.2</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<geotools.version>13.2</geotools.version>
+		<geotools.version>14.2</geotools.version>
 	</properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -85,6 +85,12 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-process-feature</artifactId>
 			<version>${geotools.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.geotools</groupId>
+		  <artifactId>gt-imageio-ext-gdal</artifactId>
+		  <version>${geotools.version}</version>
 		</dependency>
 
 		<dependency>
