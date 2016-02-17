@@ -398,38 +398,35 @@ public class GeometricLayer implements Cloneable{
 	        	
 	            while (fi.hasNext()) {
 	            		final Feature f = fi.next();
-	                	Callable<Object[][]> run=new Callable<Object[][]>() {
-	                		Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
-							@Override
-							public Object[][] call() {
-								List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
-								try {
-									AttributesGeometry at = new AttributesGeometry(schema);
-			                        for (int i = 0; i < f.getProperties().size(); i++) {
-			                        	if(f.getProperty(schema[i])!=null)
-			                        		at.set(schema[i], f.getProperty(schema[i]).getValue());
-			                        }
-	                        		for (int ii = 0; ii < g.getNumGeometries(); ii++) {
-		                                Object[]o=new Object[2];
-			                        	o[0]=g.getGeometryN(ii);
-		                                o[1]=at;
-		                                result.add(o);
-			                        }
-			                    } catch (Exception ex) {
-			                    	logger.error(ex.getMessage(),ex);
-			                    }
-								return result.toArray(new Object[0][]);
-							}
-						};
+	            		Geometry g=(Geometry) f.getDefaultGeometryProperty().getValue();
+	            		
+	            		Callable<Object[][]> run=() -> {
+	    					List<Object[]> result=java.util.Collections.synchronizedList(new ArrayList<Object[]>());
+	    					try {
+	    						AttributesGeometry at = new AttributesGeometry(schema);
+	    				        for (int i = 0; i < f.getProperties().size(); i++) {
+	    				        	if(f.getProperty(schema[i])!=null)
+	    				        		at.set(schema[i], f.getProperty(schema[i]).getValue());
+	    				        }
+	    						for (int ii = 0; ii < g.getNumGeometries(); ii++) {
+	    				            Object[]o=new Object[2];
+	    				        	o[0]=g.getGeometryN(ii);
+	    				            o[1]=at;
+	    				            result.add(o);
+	    				        }
+	    				    } catch (Exception ex) {
+	    				    	logger.error(ex.getMessage(),ex);
+	    				    }
+	    					return result.toArray(new Object[0][]);
+	    				};
 						tasks.add(run);
 	            }
 	        	
 	        	List<Future<Object[][]>> results=executor.invokeAll(tasks);
 	            executor.shutdown();
 	            
-	            
-	            for(Future<Object[][]> f:results){
-	            	Object o[][]=f.get();
+	            for(Future<Object[][]> future:results){
+	            	Object o[][]=future.get();
 	            	if(o!=null){
 	            		for(int i=0;i<o.length;i++){
 	            			if(applayTransformation&&transform!=null){

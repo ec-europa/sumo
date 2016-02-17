@@ -4,6 +4,7 @@
 package org.geoimage.viewer.core;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,8 +43,6 @@ import javax.swing.JMenuItem;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.math3.util.FastMath;
@@ -677,17 +676,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     public void openLastImage() {
         final String lastImage = SumoPlatform.getApplication().getConfiguration().getLastImage();
         if (lastImage != null) {
-            new Thread(new Runnable() {
-
-                public void run() {
-                    try {
-                        getConsole().execute(new String[]{"image", "image", "file=" + lastImage, "buffer=false"});
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ex) {
-                    	logger.error(ex.getMessage(),ex);
-                    }
-                }
-            }).start();
+            new Thread(() -> {
+			    try {
+			        getConsole().execute(new String[]{"image", "image", "file=" + lastImage, "buffer=false"});
+			        Thread.sleep(5000);
+			    } catch (InterruptedException ex) {
+			    	logger.error(ex.getMessage(),ex);
+			    }
+			}).start();
         }
     }
 
@@ -789,8 +785,10 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     }
     
     public void removeStopListener(ActionListener lis){
-    	this.stopThreadButton.removeActionListener(lis);
-    	this.stopThreadButton.setEnabled(false);//Visible(false);
+        EventQueue.invokeLater(() -> {
+			stopThreadButton.removeActionListener(lis);
+			stopThreadButton.setEnabled(false);//Visible(false);
+		});
     }
     
 
