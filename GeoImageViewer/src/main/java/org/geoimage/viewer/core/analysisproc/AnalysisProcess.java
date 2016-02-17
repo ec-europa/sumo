@@ -321,7 +321,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 notifyLayerReady(vdsanalysisLayer);
 	                 resultLayers.add(vdsanalysisLayer);
 	             }
-	             stop();
+            	 stop();
              }catch(Exception ee){
             	 ee.printStackTrace();
              }    

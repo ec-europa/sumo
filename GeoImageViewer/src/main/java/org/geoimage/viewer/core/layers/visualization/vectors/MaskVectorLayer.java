@@ -31,6 +31,7 @@ import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
+import org.geoimage.viewer.util.JTSUtil;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -42,6 +43,8 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.operation.buffer.BufferOp;
+import com.vividsolutions.jts.operation.buffer.BufferParameters;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
@@ -246,15 +249,17 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
      * @author argenpo
      *
      */
-    class ParallelBuffer implements Callable<Geometry> {
+    private class ParallelBuffer implements Callable<Geometry> {
     	private Geometry bufferedGeom;
     	private double bufferingDistance=0;
-		/**
+		
+    	/**
 		 * 
 		 * @param 
 		 * @param 
 		 */
-		ParallelBuffer(Geometry bufferedGeom,double bufferingDistance) {
+
+    	private ParallelBuffer(Geometry bufferedGeom,double bufferingDistance) {
 			this.bufferedGeom=bufferedGeom;
 			this.bufferingDistance=bufferingDistance;
 		}
@@ -263,17 +268,20 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		public Geometry call() {
 				bufferedGeom =PolygonOp.removeInteriorRing(bufferedGeom);
 			    if(!bufferedGeom.isValid()){
+			    	bufferedGeom=JTSUtil.repair(bufferedGeom);
 			    	//System.out.println(Arrays.toString(bufferedGeom.getCoordinates()));
-			    	PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
+			    	/*PrecisionModel pm=new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
 				    GeometryFactory gf = new GeometryFactory(pm);
 				    Coordinate[]cc=new Coordinate[bufferedGeom.getCoordinates().length+1];
 				    for(int i=0;i<bufferedGeom.getCoordinates().length;i++){
 				    	cc[i]=bufferedGeom.getCoordinates()[i];
 				    }
 				    cc[cc.length-1]=cc[0];
-			    	bufferedGeom=gf.createPolygon(cc);
+			    	bufferedGeom=gf.createPolygon(cc);*/
 			    }
-	            bufferedGeom =EnhancedPrecisionOp.buffer(bufferedGeom, bufferingDistance);
+	            bufferedGeom =BufferOp.bufferOp(bufferedGeom,bufferingDistance,BufferParameters.CAP_SQUARE,BufferParameters.DEFAULT_QUADRANT_SEGMENTS);
+
+	            	
 			return bufferedGeom;
 		}
 	}
