@@ -1042,14 +1042,23 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
                 } else {
 
                     if (i == path.length - 1) {
-                        temp = new JMenuItem(new AbstractAction(path[i]) {
+                    	temp = new JMenuItem(new AbstractAction(path[i]) {
 
-                            public void actionPerformed(ActionEvent e) {
+                    		public void actionPerformed(ActionEvent e) {
+                    			String[] args=null;
                                 if (action.getArgumentTypes() != null) {
-                                    new ActionDialog(JFrame.getFrames()[0], true, action).setVisible(true);
-                                } else {
-                                    action.execute(null);
+                                    ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, action);
+                                    dialog.setVisible(true);
+                                    boolean ok=dialog.isOk();
+                                    if(ok){
+                                    	args=dialog.getActionArgs();
+                                    	dialog.dispose();
+                                    }else{
+                                    	return;
+                                    }
                                 }
+                                //SumoPlatform.getApplication().getConsoleLayer().execute(args);
+                                action.execute(args);
                             }
                         });
                     } else {
@@ -1096,7 +1105,7 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private javax.swing.JTabbedPane jTabbedPane1;
     private GLCanvas mainCanvas;
     private javax.swing.JMenuBar menuBar;
-    public javax.swing.JProgressBar progressBar;
+    private javax.swing.JProgressBar progressBar;
     private JButton stopThreadButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;

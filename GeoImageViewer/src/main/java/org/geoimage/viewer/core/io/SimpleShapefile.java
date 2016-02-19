@@ -248,7 +248,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @return
      * @throws Exception
      */
-    public static GeometricLayer mergeShapeFile1(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
+    public static GeometricLayer mergeShapeFile(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
     	Map<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("url", shpInput.toURI().toURL());
     	
@@ -310,7 +310,15 @@ public class SimpleShapefile extends AbstractVectorIO{
         return out;
     }
     
-    
+    /**
+     * 
+     * @param collectionsLayer
+     * @param shpInput
+     * @param transform
+     * @param bbox
+     * @return
+     * @throws Exception
+     */
     public static GeometricLayer mergeShapeFile2(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
     	Map<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("url", shpInput.toURI().toURL());

@@ -53,7 +53,7 @@ public class MergeShapeFileAction extends AbstractAction  {
 	                        			
 	                        		SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) ml.getGeometriclayer().getFeatureCollection();
 	                        		
-	                        		GeometricLayer gl = SimpleShapefile.mergeShapeFile2(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
+	                        		GeometricLayer gl = SimpleShapefile.mergeShapeFile(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 	                        		LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, (ImageLayer) l);
 	                        	}	
