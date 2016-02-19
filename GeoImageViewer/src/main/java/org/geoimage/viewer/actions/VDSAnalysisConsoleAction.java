@@ -30,7 +30,7 @@ import org.geoimage.viewer.util.IProgress;
 
 /**
  *
- * @author thoorfr
+ * @author 
  */
 public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
     private String message = "";
@@ -57,7 +57,10 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     }
 
     /**
-     * run the analysis called from ActionDialog
+     * run the analysis called from ActionDialog.
+     *
+     * @param 
+     * @return true, if successful
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
@@ -157,6 +160,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         Argument a23 = new Argument("thresholdVV", Argument.FLOAT, false, 1.2);
 
         Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
+        
         ArrayList<String> vectors = new ArrayList<String>();
         ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 

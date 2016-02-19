@@ -6,22 +6,16 @@ package org.geoimage.viewer.core.layers;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -30,25 +24,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
+import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.Plugins;
-import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
-import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author thoorfr
+ * @author 
  */
 public class ConsoleLayer extends GenericLayer {
 
