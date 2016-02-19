@@ -10,8 +10,8 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,27 +21,47 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author  thoorfr
+ * @author  Pietro
  */
 public class ActionDialog extends javax.swing.JDialog {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ActionDialog.class);
 
     private IAction action;
-    private List<JComponent> components = new Vector<JComponent>();
+    private List<JComponent> components = new ArrayList<JComponent>();
+    private boolean ok=false;
+    private String[] actionArgs=null;
+    private String   actionName=null;
+    
+    public String getActionName() {
+		return actionName;
+	}
 
-    /** Creates new form ActionDialog */
+	public void setActionName(String actionName) {
+		this.actionName = actionName;
+	}
+
+	public boolean isOk() {
+		return ok;
+	}
+
+	public void setOk(boolean ok) {
+		this.ok = ok;
+	}
+
+	/** Creates new form ActionDialog */
     public ActionDialog(java.awt.Frame parent, boolean modal, IAction action) {
         super(parent, modal);
         this.action = action;
         List<Argument> args = action.getArgumentTypes();
+        
         initComponents();
+        
         if (args != null) {
             argPanel.setLayout(new GridLayout(args.size(), 2));
             for (Argument arg : args) {
@@ -54,7 +74,7 @@ public class ActionDialog extends javax.swing.JDialog {
                         argPanel.add(tf);
                     } else {
                         JLabel label = new JLabel(arg.getName());
-                        JComboBox cb = new JComboBox(arg.getPossibleValues());
+                        JComboBox<Object> cb = new JComboBox<Object>(arg.getPossibleValues());
                         components.add(cb);
                         argPanel.add(label);
                         argPanel.add(cb);
@@ -144,26 +164,18 @@ public class ActionDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
         argPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Action Parameters");
 
-        jButton1.setText("OK");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        okButton.setText("OK");
+        okButton.addActionListener(evt -> okButtonActionPerformed(evt));
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(evt -> cancelButtonActionPerformed(evt));
 
         argPanel.setLayout(new java.awt.GridLayout(2, 2));
 
@@ -176,9 +188,9 @@ public class ActionDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(argPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -188,19 +200,19 @@ public class ActionDialog extends javax.swing.JDialog {
                 .addComponent(argPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.setVisible(false);
         try {
-            String[] args = new String[components.size() + 1];
-            args[0] = action.getName();
-            int i = 1;
+            String[] args = new String[components.size() ];
+            actionName = action.getName();
+            int i = 0;
             for (JComponent c : components) {
                 if (c instanceof JTextField) {
                     args[i++] = ((JTextField) c).getText();
@@ -214,18 +226,29 @@ public class ActionDialog extends javax.swing.JDialog {
                     args[i++] = new Timestamp(((DateControl) c).getDate().getTime()).toString();
                 }*/
             }
-            SumoPlatform.getApplication().getConsoleLayer().execute(args);
+            this.actionArgs=args;
+            ok=true;
         } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);      
+        	logger.error(ex.getMessage(),ex);
+        	ok=false;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    public String[] getActionArgs() {
+		return actionArgs;
+	}
+
+	public void setActionArgs(String[] actionArgs) {
+		this.actionArgs = actionArgs;
+	}
+
+	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.setVisible(false);
+        ok=false;
     }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel argPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton okButton;
+    private javax.swing.JButton cancelButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,16 +4,11 @@
  */
 package org.geoimage.viewer.core.layers.visualization.vectors;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -21,7 +16,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.PolygonOp;
@@ -37,16 +31,11 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.operation.buffer.BufferOp;
 import com.vividsolutions.jts.operation.buffer.BufferParameters;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
-import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
 
 /**
