@@ -20,6 +20,7 @@ import org.geoimage.impl.radarsat.Radarsat2Image;
 import org.geoimage.impl.radarsat.Radarsat2Image_SLC;
 import org.geoimage.impl.s1.GDALSentinel1;
 import org.geoimage.impl.s1.Sentinel1;
+import org.geoimage.impl.s1.Sentinel1Factory;
 import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
@@ -108,30 +109,7 @@ public class GeoImageReaderFactory {
 	        		}
 	        	}
 	        }else if(parent.contains("S1A")||parent.contains("S1B")){//sentinel 1
-	        	final SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());
-	        	boolean multipleImages=false;
-	        	
-	        	//for multiple images. For SLC product we can have 1 images for each sub-swat and for each polarization
-	        	//we create 1 reader for each sub-swath
-        		String[] swath=safeReader.getSwaths();
-        		if(swath.length>1)
-        			multipleImages=true;
-        		
-        		Sentinel1 sentinel=null;
-        		for(String sw:swath){
-        			if(parent.contains("SLC_")){
-        				sentinel=new Sentinel1SLC(sw,f,geoAlgorithm);
-        			}else{
-        				sentinel=new GDALSentinel1(sw,f,geoAlgorithm);
-        			}
-        			sentinel.setContainsMultipleImage(multipleImages);
-        			if (sentinel.initialise()) {
-	                    logger.info("Successfully reading {0} as {1}...", new Object[]{file,sentinel.getClass()});
-	                }else{
-	                	logger.warn("Problem reading {0} as {1}...", new Object[]{file,sentinel.getClass()});
-	                }
-        			girList.add(sentinel);
-        		}	
+	        	girList=Sentinel1Factory.instanceS1Reader(f, geoAlgorithm);
         	}else{
         		GeoImageReader gir=null;
         		if(parent.contains("TDX1_SAR__MGD")){
