@@ -71,7 +71,9 @@ public class FactoryLayer {
             if (!timestamplayer) {
             	//TODO: implement another way to understand the type of the layer
                 //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
-                return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
+                return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
+                		layer.getName(), layer.getGeometryType(), 
+                		MaskVectorLayer.COASTLINE_MASK,layer);
             } else {
                 TimeComponent.setDirty(true);
                 return new TimeVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer, timecolumnname);
@@ -82,20 +84,23 @@ public class FactoryLayer {
 	/**
 	 * 
 	 * @param name
-	 * @param type
+	 * @param geomType
+	 * @param maskType : Type of mask: Coastline, Ice or Windfarm.  See MaskVectorLayer constant
 	 * @param bufferingDistance
 	 * @return
 	 */
-	 public static IMask createMaskLayer(String name,String type,double bufferingDistance,GeometricLayer layer) {
+	 public static IMask createMaskLayer(String name,String geomType,double bufferingDistance,int maskType,GeometricLayer layer) {
 		 MaskVectorLayer mask = null;
         try {
-            mask = (new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),name, type, layer.clone()));
+            mask = (new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),name, geomType,MaskVectorLayer.COASTLINE_MASK, layer.clone()));
            	mask.buffer(bufferingDistance);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
         return mask;
     }
+	 
+	 
 	/**
 	 * 
 	 * @param layer

@@ -113,7 +113,10 @@ public class CreateBufferedMask extends AbstractAction{
 				MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(LayerManager.getIstanceManager().getCurrentImageLayer());
 				// create new buffered mask with bufferingDistance using the mask in parameters
 	            final IMask[] bufferedMask = new IMask[1];
-	      		bufferedMask[0]=FactoryLayer.createMaskLayer("mask buffer_"+bufferSize, mask.getType(), bufferSize, ((MaskVectorLayer)mask).getGeometriclayer());
+	      		bufferedMask[0]=FactoryLayer.createMaskLayer("mask buffer_"+bufferSize, 
+	      				mask.getType(), bufferSize,
+	      				mask.getMaskType(),
+	      				((MaskVectorLayer)mask).getGeometriclayer());
 				LayerManager.getIstanceManager().addLayer(bufferedMask[0]);
 			}	
 		}
