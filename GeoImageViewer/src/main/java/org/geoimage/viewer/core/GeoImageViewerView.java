@@ -1057,7 +1057,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
                                     	return;
                                     }
                                 }
-                                //SumoPlatform.getApplication().getConsoleLayer().execute(args);
                                 action.execute(args);
                             }
                         });

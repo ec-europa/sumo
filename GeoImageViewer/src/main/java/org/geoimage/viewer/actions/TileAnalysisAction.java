@@ -133,7 +133,10 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
 	                final IMask[] bufferedMask = new IMask[mask.size()];
 	                for (int i=0;i<mask.size();i++) {
 	                	IMask maskList = mask.get(i);
-	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), buffer, ((MaskVectorLayer)maskList).getGeometriclayer());
+	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
+	               				buffer,
+	               				MaskVectorLayer.COASTLINE_MASK,
+	               				((MaskVectorLayer)maskList).getGeometriclayer());
 	                }
 					
 	                VDSAnalysis analysis = new VDSAnalysis(sar, null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});

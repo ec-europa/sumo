@@ -10,6 +10,7 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.files.SarFileUtil;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -82,7 +83,9 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							IMask[] masks = null;
 							if(gl!=null){
 								masks=new IMask[1];
-								masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, activeParams.buffer,  gl);
+								masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, 
+										MaskVectorLayer.COASTLINE_MASK,
+										activeParams.buffer,  gl);
 							}	
 							analizeImage(reader,masks,activeParams);
 							String name=image.getParentFile().getName();

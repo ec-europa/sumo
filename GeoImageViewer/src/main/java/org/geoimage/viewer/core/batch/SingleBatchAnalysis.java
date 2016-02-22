@@ -8,6 +8,7 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 
 
@@ -38,7 +39,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 			IMask[] masks = null;
 			if(gl!=null){
 				masks=new IMask[1];
-				masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX, params.buffer, gl);
+				masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX,MaskVectorLayer.COASTLINE_MASK, params.buffer, gl);
 			}	
 			
 			analizeImage(reader,masks,params);
