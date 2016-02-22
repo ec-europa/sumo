@@ -26,7 +26,6 @@ import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
 
-import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 import ncsa.hdf.object.HObject;
 import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5Group;

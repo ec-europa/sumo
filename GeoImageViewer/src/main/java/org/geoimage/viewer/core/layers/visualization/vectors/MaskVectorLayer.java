@@ -42,19 +42,33 @@ import com.vividsolutions.jts.operation.distance.DistanceOp;
  *
  * @author thoorfr
  */
-public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,IClickable{//,,IEditable,IMouseMove, IMouseDrag, IKeyPressed{
+public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,IClickable{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskVectorLayer.class);
+	public static final int COASTLINE_MASK=0;
+	public static final int ICE_MASK=1;
+	public static final int WINDFARM_MASK=2;
+	private int  maskType=COASTLINE_MASK;
     
     
-    /**
+    public int getMaskType() {
+		return maskType;
+	}
+
+	public void setMaskType(int maskType) {
+		this.maskType = maskType;
+	}
+
+	/**
      * 
      * @param parent
      * @param layername
-     * @param type
+     * @param geomType
+     * @param masktype coastline, ice or windfarm
      * @param layer
      */
-    public MaskVectorLayer(ILayer parent,String layername,String type, GeometricLayer layer) {
-    	super(parent,layername,type,layer);
+    public MaskVectorLayer(ILayer parent,String layername,String geomType,int maskType, GeometricLayer layer) {
+    	super(parent,layername,geomType,layer);
+    	this.maskType=maskType;
     	
         if (layer == null) {
             return;

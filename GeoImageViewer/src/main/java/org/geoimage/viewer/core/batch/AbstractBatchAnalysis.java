@@ -1,8 +1,6 @@
 package org.geoimage.viewer.core.batch;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

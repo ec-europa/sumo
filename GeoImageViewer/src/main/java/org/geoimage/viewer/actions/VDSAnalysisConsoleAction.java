@@ -41,7 +41,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     private boolean done = false;
     private boolean indeterminate;
     private GeoImageReader gir = null;
-    private List<IMask> mask = null;
+    private List<MaskVectorLayer> coastlineMask = null;
+    private List<MaskVectorLayer> iceMask = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
     
@@ -105,10 +106,17 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                     }
                 }
                 //read the land mask
-                mask = new ArrayList<IMask>();
+                coastlineMask = new ArrayList<MaskVectorLayer>();
+                iceMask = new ArrayList<MaskVectorLayer>();
                 for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
-                        mask.add((IMask) l);
+                    	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
+                    		coastlineMask.add((MaskVectorLayer) l);
+                    	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){	
+                    		iceMask.add((MaskVectorLayer) l);
+                    	}else{
+                    		
+                    	}
                     }
                 }
                 //read the buffer distance
@@ -116,11 +124,13 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
                 final float ENL = Float.parseFloat(args[numberofbands + 3]);
 
                 // create new buffered mask with bufferingDistance using the mask in parameters
-                final IMask[] bufferedMask = new IMask[mask.size()];
+                final IMask[] bufferedMask = new IMask[coastlineMask.size()];
                 
-                for (int i=0;i<mask.size();i++) {
-                	IMask maskList = mask.get(i);
-               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), bufferingDistance, ((MaskVectorLayer)maskList).getGeometriclayer());
+                for (int i=0;i<coastlineMask.size();i++) {
+                	MaskVectorLayer maskList = coastlineMask.get(i);
+               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), 
+               				bufferingDistance, maskList.getMaskType(),
+               				((MaskVectorLayer)maskList).getGeometriclayer());
                 }
                 MaskGeometries mg=null;
                 if(bufferedMask!=null&&bufferedMask.length>0)
@@ -152,6 +162,8 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
      * 
      */
     public List<Argument> getArgumentTypes() {
+        List<Argument> out = new ArrayList<Argument>();
+        
         Argument a1 = new Argument("algorithm", Argument.STRING, false, "k-dist");
         a1.setPossibleValues(new Object[]{"k-dist"});
         Argument a2 = new Argument("thresholdHH", Argument.FLOAT, false, 1.5);
@@ -159,22 +171,32 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         Argument a22 = new Argument("thresholdVH", Argument.FLOAT, false, 1.5);
         Argument a23 = new Argument("thresholdVV", Argument.FLOAT, false, 1.2);
 
-        Argument a3 = new Argument("mask", Argument.STRING, true, "no mask choosen");
+        Argument a3 = new Argument("coastline", Argument.STRING, true, "no mask choosen");
+        Argument a31= new Argument("ice", Argument.STRING, true, "no mask choosen");
         
-        ArrayList<String> vectors = new ArrayList<String>();
+        
+        ArrayList<String> coasts = new ArrayList<String>();
+        ArrayList<String> ice = new ArrayList<String>();
         ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
-            for (ILayer l : LayerManager.getIstanceManager().getAllLayers()) {
+            for (ILayer l : LayerManager.getIstanceManager().getChilds(il)) {
                 if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometricLayer.POINT)) {
-                    vectors.add(l.getName());
+                	if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
+                		coasts.add(l.getName());
+                	}else if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.ICE_MASK){
+                		ice.add(l.getName());
+                	}
                 }
             }
         }
-        a3.setPossibleValues(vectors.toArray());
-        List<Argument> out = new ArrayList<Argument>();
-
+        a3.setPossibleValues(coasts.toArray());
+        a31.setPossibleValues(ice.toArray());
+        out.add(a3);
+        out.add(a31);
+  
+        
         Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 
         //management of the different threshold in the VDS parameters panel
@@ -192,7 +214,7 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
             }
         }
 
-        out.add(a3);
+        
         out.add(a4);
         if (il.getImageReader() instanceof SarImageReader) {
             Argument aEnl = new Argument("ENL", Argument.FLOAT, false, ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()));
