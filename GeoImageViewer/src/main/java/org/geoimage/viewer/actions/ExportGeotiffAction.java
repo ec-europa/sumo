@@ -18,21 +18,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr
  */
-public class ExportGeotiffAction extends AbstractAction{
+public class ExportGeotiffAction extends SumoAbstractAction{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ExportGeotiffAction.class);
 
-	
-    public String getName() {
-        return "exportGeotiff";
-    }
+	public ExportGeotiffAction(){
+		super("exportGeotiff","Tools/Export Geotiff");
+	}
 
     public String getDescription() {
         return "simple export of raster data in geotiff";
     }
 
-    public String getPath() {
-        return "Tools/Export Geotiff";
-    }
 
     public boolean execute(String[] args) {
         final File f = new File(args[0]);

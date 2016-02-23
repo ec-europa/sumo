@@ -5,7 +5,10 @@
 
 package org.geoimage.viewer.actions;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
+
+import javax.swing.AbstractAction;
 
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
@@ -14,7 +17,7 @@ import org.geoimage.viewer.core.api.iactions.IAction;
  *
  * @author thoorfr
  */
-public class CatalogConsoleAction implements IAction{
+public class CatalogConsoleAction extends AbstractAction implements IAction{
 
     public String getName() {
         return "catalog";
@@ -35,5 +38,11 @@ public class CatalogConsoleAction implements IAction{
     public List<Argument> getArgumentTypes() {
         return null;
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -41,7 +41,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class AddInterpolatedConsoleAction extends AbstractAction implements IProgress {
+public class AddInterpolatedConsoleAction extends SumoAbstractAction implements IProgress {
 	private  org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
 
     private JFileChooser fd;
@@ -50,14 +50,12 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
     private String message = "Adding data. Please wait...";
 
     public AddInterpolatedConsoleAction() {
+    	super("interpolatedvector","Import/Interpolated Vector");
     	if(lastDirectory==null)
     		lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         fd = new JFileChooser(lastDirectory);
     }
 
-    public String getName() {
-        return "interpolatedvector";
-    }
 
     public String getDescription() {
         return " Add a vector layer, using geotools connection.\n" +
@@ -233,9 +231,6 @@ public class AddInterpolatedConsoleAction extends AbstractAction implements IPro
         }).start();
     }
 
-    public String getPath() {
-        return "Import/Interpolated Vector";
-    }
 
     public boolean isIndeterminate() {
         return true;

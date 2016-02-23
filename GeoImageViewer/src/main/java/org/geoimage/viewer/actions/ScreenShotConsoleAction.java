@@ -18,19 +18,17 @@ import org.geoimage.viewer.core.api.Argument;
  * It works with the GeoImageViewerView class changing the value of the onScreenshot Boolean variable, used by the method display().
  *
  */
-public class ScreenShotConsoleAction extends AbstractAction{
+public class ScreenShotConsoleAction extends SumoAbstractAction{
 
-    public String getName() {
-        return "Screenshot";
-    }
+	public ScreenShotConsoleAction(){
+		super("Screenshot","Tools/Screenshot");
+	}
+	
 
     public String getDescription() {
         return "Save a screenshot of your current view";
     }
 
-    public String getPath() {
-        return "Tools/Screenshot";
-    }
 
     public boolean execute(String[] args) {
        GeoImageViewerView.screenshot();

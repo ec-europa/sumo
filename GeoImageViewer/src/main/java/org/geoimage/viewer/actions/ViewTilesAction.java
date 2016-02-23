@@ -18,25 +18,23 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class ViewTilesAction extends AbstractAction{
+public class ViewTilesAction extends SumoAbstractAction{
 	private Logger logger = LoggerFactory.getLogger(ViewTilesAction.class);
 	boolean done=false;
 	int tileSize=0;
 	
-	@Override
-	public String getName() {
-		return "viewtile";
-	}
+	
+	public ViewTilesAction(){
+    	super("viewtile","Tools/ViewTile");
+    }
+	
 
 	@Override
 	public String getDescription() {
 		return "ViewTile";
 	}
 
-	@Override
-	public String getPath() {
-		return "Tools/ViewTile";
-	}
+	
 
 	@Override
 	public boolean execute(String[] args) {
@@ -44,7 +42,6 @@ public class ViewTilesAction extends AbstractAction{
 			done = false;
 			if(args!=null){
 				tileSize=Integer.parseInt(args[0]);
-				
 			}
 			
 	        new Thread(new Runnable() {

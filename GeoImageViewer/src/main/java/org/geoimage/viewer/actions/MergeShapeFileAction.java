@@ -28,12 +28,13 @@ import org.slf4j.LoggerFactory;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  * 
  */
-public class MergeShapeFileAction extends AbstractAction  {
+public class MergeShapeFileAction extends SumoAbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MergeShapeFileAction.class);
 	
     private JFileChooser fd;
     
     public MergeShapeFileAction() {
+    	super("merge","Import/Merge shape file");
     	fd = new JFileChooser();
     }
 
@@ -95,16 +96,6 @@ public class MergeShapeFileAction extends AbstractAction  {
         return file;
     }
     
-    public String getPath() {
-        return "Import/Merge shape file";
-    }
-
-
-	@Override
-	public String getName() {
-		return "merge";
-	}
-
 
 	@Override
 	public String getDescription() {

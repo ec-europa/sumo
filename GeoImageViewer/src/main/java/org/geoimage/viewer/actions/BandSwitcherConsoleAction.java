@@ -21,9 +21,10 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
  */
 public class BandSwitcherConsoleAction extends AbstractConsoleAction {
 
-    public String getName() {
-        return "bs";
-    }
+	public BandSwitcherConsoleAction(){
+		super("bs");
+	}
+	
 
     public String getDescription() {
         return "";
