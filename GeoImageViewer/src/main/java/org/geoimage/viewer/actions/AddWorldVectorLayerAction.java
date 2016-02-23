@@ -24,18 +24,15 @@ import com.vividsolutions.jts.geom.Polygon;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  * 
  */
-public class AddWorldVectorLayerAction extends AbstractAction implements IProgress {
+public class AddWorldVectorLayerAction extends SumoAbstractAction implements IProgress {
 	private static Logger logger=LogManager.getLogger(AddWorldVectorLayerAction.class);
 
     protected boolean done = false;
 
     public AddWorldVectorLayerAction() {
+    	super("world","Import/Land mask");
     }
-
-    public String getName() {
-        return "world";
-    }
-
+    
     public String getDescription() {
         return " Add a land mask layer";
     }
@@ -87,9 +84,6 @@ public class AddWorldVectorLayerAction extends AbstractAction implements IProgre
         }
     }*/
 
-    public String getPath() {
-        return "Import/Land mask";
-    }
 
     public boolean isIndeterminate() {
         return true;

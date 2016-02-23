@@ -1,21 +1,28 @@
-2016-02-05 15:38:41,219 ERROR o.g.a.S1ArtefactsAmbiguity [VDS_analysis_s1a-ew-grd-hh-20160130t050441-20160130t050546-009719-00e30c-001.tiff] Error processing Azimuth Ambiguity
+2016-02-23 14:59:40,871 ERROR o.g.f.GeoImageReaderFactory [Thread-21] Error reading:
 java.lang.NullPointerException
-	at org.geoimage.impl.s1.Sentinel1.findSwath(Sentinel1.java:310) ~[classes/:?]
-	at org.geoimage.impl.s1.Sentinel1.getSwathName(Sentinel1.java:299) ~[classes/:?]
-	at org.geoimage.analysis.S1ArtefactsAmbiguity.process(S1ArtefactsAmbiguity.java:66) [classes/:?]
-	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:250) [classes/:?]
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:110) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:142) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:76) ~[classes/:?]
+	at org.geoimage.viewer.core.GeoImageViewerView.lambda$0(GeoImageViewerView.java:682) ~[classes/:?]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_65]
-2016-02-05 15:38:42,977 ERROR o.g.a.S1ArtefactsAmbiguity [VDS_analysis_s1a-ew-grd-hh-20160130t050441-20160130t050546-009719-00e30c-001.tiff] Error processing Azimuth Ambiguity
+2016-02-23 14:59:47,531 ERROR o.g.f.GeoImageReaderFactory [Thread-22] Error reading:
 java.lang.NullPointerException
-	at org.geoimage.impl.s1.Sentinel1.findSwath(Sentinel1.java:310) ~[classes/:?]
-	at org.geoimage.impl.s1.Sentinel1.getSwathName(Sentinel1.java:299) ~[classes/:?]
-	at org.geoimage.analysis.S1ArtefactsAmbiguity.process(S1ArtefactsAmbiguity.java:66) [classes/:?]
-	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:250) [classes/:?]
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:110) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:142) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:76) ~[classes/:?]
+	at org.geoimage.viewer.core.GeoImageViewerView.lambda$0(GeoImageViewerView.java:682) ~[classes/:?]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_65]
-2016-02-05 15:38:43,159 ERROR o.g.a.S1ArtefactsAmbiguity [VDS_analysis_s1a-ew-grd-hh-20160130t050441-20160130t050546-009719-00e30c-001.tiff] Error processing Azimuth Ambiguity
+2016-02-23 15:02:16,652 ERROR o.g.f.GeoImageReaderFactory [Thread-21] Error reading:
 java.lang.NullPointerException
-	at org.geoimage.impl.s1.Sentinel1.findSwath(Sentinel1.java:310) ~[classes/:?]
-	at org.geoimage.impl.s1.Sentinel1.getSwathName(Sentinel1.java:299) ~[classes/:?]
-	at org.geoimage.analysis.S1ArtefactsAmbiguity.process(S1ArtefactsAmbiguity.java:66) [classes/:?]
-	at org.geoimage.viewer.core.analysisproc.AnalysisProcess.run(AnalysisProcess.java:316) [classes/:?]
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:110) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:142) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:76) ~[classes/:?]
+	at org.geoimage.viewer.core.GeoImageViewerView.lambda$0(GeoImageViewerView.java:682) ~[classes/:?]
+	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_65]
+2016-02-23 15:02:31,968 ERROR o.g.f.GeoImageReaderFactory [Thread-22] Error reading:
+java.lang.NullPointerException
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:110) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.addImage(AddImageConsoleAction.java:142) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageConsoleAction.execute(AddImageConsoleAction.java:76) ~[classes/:?]
+	at org.geoimage.viewer.core.GeoImageViewerView.lambda$0(GeoImageViewerView.java:682) ~[classes/:?]
 	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_65]

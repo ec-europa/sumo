@@ -11,9 +11,13 @@ import org.geoimage.viewer.core.api.iactions.IConsoleAction;
  *
  * @author leforth
  */
-public abstract class AbstractConsoleAction extends AbstractAction implements IConsoleAction {
+public abstract class AbstractConsoleAction extends SumoAbstractAction implements IConsoleAction {
 
-   @Override
+   public AbstractConsoleAction(String name) {
+		super(name,"");
+	}
+
+@Override
    public abstract String getCommand();
    //TODO: auto-update pluginspublic abstract long getLastUpdateTimeStamp(); 
 }

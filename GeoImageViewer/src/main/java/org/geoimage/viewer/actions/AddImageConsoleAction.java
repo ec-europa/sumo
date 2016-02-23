@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * this class is called whenever we want to open an image. A new image consists in a new layer (SimpleVectorLayer).
  * thumbnails part need to be revised
  */
-public class AddImageConsoleAction extends AbstractAction implements IProgress {
+public class AddImageConsoleAction extends SumoAbstractAction implements IProgress {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageConsoleAction.class);
 
     private JFileChooser fileChooser;
@@ -42,8 +42,10 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
     private String message = "Adding Image. Please wait...";
  
 
+    
+    
     public AddImageConsoleAction() {
-        
+    	super("image","Import/Image");
         if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
             lastDirectory = SumoPlatform.getApplication().getConfiguration().getImageFolder();
@@ -53,10 +55,6 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
         fileChooser = new JFileChooser(lastDirectory);
     }
 
-    @Override
-    public String getName() {
-        return "image";
-    }
 
     @Override
     public String getDescription() {
@@ -210,10 +208,6 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
 
     }
 
-    public String getPath() {
-        return "Import/Image";
-    }
-
     public boolean isIndeterminate() {
         return true;
     }
@@ -311,4 +305,6 @@ public class AddImageConsoleAction extends AbstractAction implements IProgress {
         }
         return null;
     }
+
+	
 }

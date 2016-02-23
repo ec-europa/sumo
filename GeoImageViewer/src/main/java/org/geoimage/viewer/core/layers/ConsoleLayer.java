@@ -5,22 +5,12 @@
 package org.geoimage.viewer.core.layers;
 
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
 import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
-import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -33,7 +23,6 @@ import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.IProgress;
-import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -260,101 +249,6 @@ public class ConsoleLayer extends GenericLayer {
 
     public void execute(String message) {
         execute(parseCommandLineAction(message));
-    }
-
-    public JMenuBar getMenuBar() {
-        JMenuBar bar = new JMenuBar();
-        Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
-        JMenuItem temp = null;
-        for (final IAction act : pl.getActions().values()) {
-           // final IConsoleAction action = instanciate(p);
-            String[] path = act.getPath().split("/");
-            JMenuItem mitem = null;
-            String mediumpath = "";
-            for (int i = 0; i < path.length; i++) {
-                mediumpath =new StringBuilder(mediumpath).append(path[i]).append("/").toString();
-                if (menus.containsKey(mediumpath)) {
-                    temp = menus.get(mediumpath);
-                } else {
-
-                    if (i == path.length - 1) {
-                        temp = new JMenuItem(new AbstractAction(path[i]) {
-
-                            public void actionPerformed(ActionEvent e) {
-                                if (act.getArgumentTypes() != null) {
-                                    new ActionDialog(JFrame.getFrames()[0], true, act).setVisible(true);
-                                } else {
-                                	act.execute(null);
-                                }
-                            }
-                        });
-
-                    } else {
-                        temp = new JMenu(path[i]);
-                    }
-
-                    if (i < path.length - 1) {
-                        menus.put(mediumpath, temp);
-                    }
-                }
-
-                if (mitem == null) {
-                    mitem = temp;
-                    bar.add((JMenu) temp);
-                } else {
-                    mitem.add(temp);
-                    mitem = temp;
-                }
-
-            }
-        }
-
-        return bar;
-    }
-
-    public List<JMenu> getMenus() {
-        List<JMenu> out = new Vector<JMenu>();
-        Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
-        JMenuItem temp = null;
-        for (final IAction action : pl.getActions().values()) {
-           // final IConsoleAction action = instanciate(p);
-            String[] path = action.getPath().split("/");
-            JMenuItem mitem = null;
-            String mediumpath = "";
-            for (int i = 0; i < path.length; i++) {
-                mediumpath =new StringBuilder(mediumpath).append(path[i]).append("/").toString();
-                if (menus.containsKey(mediumpath)) {
-                    temp = menus.get(mediumpath);
-                } else {
-                    if (i == path.length - 1) {
-                        temp = new JMenuItem(new AbstractAction(path[i]) {
-
-                            public void actionPerformed(ActionEvent e) {
-                                if (action.getArgumentTypes() != null) {
-                                    new ActionDialog(JFrame.getFrames()[0], true, action).setVisible(true);
-                                } else {
-                                    action.execute(null);
-                                }
-                            }
-                        });
-                        temp.setToolTipText(action.getDescription());
-                    } else {
-                        temp = new JMenu(path[i]);
-                    }
-                    menus.put(mediumpath, temp);
-                }
-
-                if (mitem == null) {
-                    mitem = temp;
-                    out.add((JMenu) temp);
-                } else {
-                    mitem.add(temp);
-                    mitem = temp;
-                }
-            }
-        }
-
-        return out;
     }
 
     

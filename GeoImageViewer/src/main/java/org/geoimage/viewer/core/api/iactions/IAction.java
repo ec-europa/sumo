@@ -2,9 +2,11 @@ package org.geoimage.viewer.core.api.iactions;
 
 import java.util.List;
 
+import javax.swing.Action;
+
 import org.geoimage.viewer.core.api.Argument;
 
-public interface IAction {
+public interface IAction extends Action{
 	 	
 		public String getName();
 	    public String getDescription();

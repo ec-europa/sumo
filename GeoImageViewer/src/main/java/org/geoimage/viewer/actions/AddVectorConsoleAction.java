@@ -42,7 +42,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author thoorfr+ga
  * this class is called whenever you want to open one of the supported vector formats (shp, csv, xml, gml, query). It is opened as a new layer, linked to the active image.
  */
-public class AddVectorConsoleAction extends AbstractAction implements IProgress {
+public class AddVectorConsoleAction extends SumoAbstractAction implements IProgress {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddVectorConsoleAction.class);
 	
     private JFileChooser fd;
@@ -51,6 +51,7 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
     private String message = "Adding data. Please wait...";
 
     public AddVectorConsoleAction() {
+    	super("vector","Import/Vector");
         if(SumoPlatform.getApplication().getConfiguration().getLastVector().equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
@@ -58,11 +59,6 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
         }
     	fd = new JFileChooser(lastDirectory);
 
-    }
-
-    @Override
-    public String getName() {
-        return "vector";
     }
 
     @Override
@@ -409,14 +405,6 @@ public class AddVectorConsoleAction extends AbstractAction implements IProgress 
 	        logger.error(ex.getMessage(), ex);
 	        return;
 	    }   
-    }
-
-    
-   
-
-    @Override
-    public String getPath() {
-        return "Import/Vector";
     }
 
     public boolean isIndeterminate() {
