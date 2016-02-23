@@ -54,6 +54,8 @@ import org.fenggui.render.jogl.EventBinding;
 import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.AddImageConsoleAction;
+import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.api.iactions.IAction;
@@ -1006,7 +1008,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     }// </editor-fold>//GEN-END:initComponents
 
     public void setMenus(JMenuBar menubar) {
-        Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
+        
+    	Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         // fill with existing menu items
         for (int i = 0; i < menubar.getMenuCount(); i++) {
             JMenu menu = menubar.getMenu(i);
@@ -1019,61 +1022,45 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
                 }
             }
         }
+        
         JMenuItem temp = null;
         PluginsManager pl=SumoPlatform.getApplication().getPluginsManager();
         for (final IAction action : pl.getActions().values()) {
-            if (!pl.getPlugins().get(action.getName()).isActive()) {
-                continue;
-            }
-            //final IConsoleAction action = instanciate(p);
-            if (action == null) {
-                continue;
-            }
-            if (action.getPath().startsWith("$")) {
-                continue;
-            }
-            String[] path = action.getPath().split("/");
-            JMenuItem mitem = null;
-            String mediumpath = "";
-            for (int i = 0; i < path.length; i++) {
-                mediumpath = new StringBuilder(mediumpath).append(path[i]).append("/").toString();
-                if (menus.containsKey(mediumpath)) {
-                    temp = menus.get(mediumpath);
-                } else {
-
-                    if (i == path.length - 1) {
-                    	temp = new JMenuItem(new AbstractAction(path[i]) {
-
-                    		public void actionPerformed(ActionEvent e) {
-                    			String[] args=null;
-                                if (action.getArgumentTypes() != null) {
-                                    ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, action);
-                                    dialog.setVisible(true);
-                                    boolean ok=dialog.isOk();
-                                    if(ok){
-                                    	args=dialog.getActionArgs();
-                                    	dialog.dispose();
-                                    }else{
-                                    	return;
-                                    }
-                                }
-                                action.execute(args);
-                            }
-                        });
-                    } else {
-                        temp = new JMenu(path[i]);
-                    }
-                    menus.put(mediumpath, temp);
-                }
-
-                if (mitem == null) {
-                    mitem = temp;
-                    menubar.add((JMenu) temp);
-                } else {
-                    mitem.add(temp);
-                    mitem = temp;
-                }
-            }
+            if (!action.getPath().startsWith("$")) {
+	            if (!pl.getPlugins().get(action.getName()).isActive()) {
+	                continue;
+	            }
+	
+	            String[] path = action.getPath().split("/");
+	            if(action instanceof SumoAbstractAction){
+		            JMenuItem mitem = null;
+		            String mediumpath = "";
+		            for (int i = 0; i < path.length; i++) {
+		                mediumpath = new StringBuilder(mediumpath).append(path[i]).append("/").toString();
+		                if (menus.containsKey(mediumpath)) {
+		                    temp = menus.get(mediumpath);
+		                } else {
+		                	
+		                    if (i == path.length - 1) {
+		                    	((SumoAbstractAction)action).setMenuName(path[i]);
+		                    	temp = new JMenuItem(action);
+	
+		                    } else {
+		                        temp = new JMenu(path[i]);
+		                    }
+		                    menus.put(mediumpath, temp);
+		                }
+		
+		                if (mitem == null) {
+		                    mitem = temp;
+		                    menubar.add((JMenu) temp);
+		                } else {
+		                    mitem.add(temp);
+		                    mitem = temp;
+		                }
+		            }
+	            }   
+            }    
         }
 
     }

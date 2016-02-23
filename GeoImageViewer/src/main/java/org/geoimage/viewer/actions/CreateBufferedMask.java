@@ -21,22 +21,17 @@ import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
-public class CreateBufferedMask extends AbstractAction{
+public class CreateBufferedMask extends SumoAbstractAction{
 	//private Logger logger = LogManager.getLogger(CreateBufferedMask.class);
 
-	@Override
-	public String getName() {
-		return "buffer";
+	public CreateBufferedMask() {
+		super("buffer","Tools/buffer");
 	}
+
 
 	@Override
 	public String getDescription() {
 		return "---";
-	}
-
-	@Override
-	public String getPath() {
-		return "Tools/buffer";
 	}
 
 	@Override

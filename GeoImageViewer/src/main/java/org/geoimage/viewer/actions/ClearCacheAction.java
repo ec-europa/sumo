@@ -16,25 +16,21 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.util.IProgress;
 
-public class ClearCacheAction extends AbstractAction implements IProgress{
+public class ClearCacheAction extends SumoAbstractAction implements IProgress{
 	private Logger logger = LogManager.getLogger(this);
 	boolean done=false;
 	
 	
-	@Override
-	public String getName() {
-		return "Clear cache";
+	public ClearCacheAction(){
+		super("Clear cache","Tools/ClearCache");
 	}
+	
 
 	@Override
 	public String getDescription() {
 		return "Clear image cache";
 	}
 
-	@Override
-	public String getPath() {
-		return "Tools/ClearCache";
-	}
 
 	@Override
 	public boolean execute(String[] args) {

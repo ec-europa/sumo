@@ -25,12 +25,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author leforth
  */
-public class SendMailAction extends AbstractAction  {
+public class SendMailAction extends SumoAbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SendMailAction.class);
 
     boolean done = false;
     private final String message = "Sending email. Please wait...";
     private static Properties fMailServerConfig = new Properties();
+    
+    
+    public SendMailAction(){
+    	super("sendmail","Tools/SendMail");
+    }
+    
     
     /**
     * Send a single email.
@@ -74,18 +80,12 @@ public class SendMailAction extends AbstractAction  {
         }
     }
 
-    public String getName() {
-        return "sendmail";
-    }
 
     public String getDescription() {
         return " Send an email with an attachment option\n" +
                 " Use sendmail emailaccount emailaddress subject emailtext attachmentfilename";
     }
 
-    public String getPath() {
-        return "Tools/SendMail";
-    }
 
     public boolean execute(String[] args) {
         if (args.length == 0) {

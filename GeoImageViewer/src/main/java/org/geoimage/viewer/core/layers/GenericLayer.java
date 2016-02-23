@@ -28,8 +28,8 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class GenericLayer implements ILayer, ISave, IThreshable{
 	protected String name = "";
-	protected boolean active = true;
-	protected boolean isRadio = false;
+	private boolean active = true;
+	private boolean isRadio = false;
 	protected GeometricLayer glayer;
 	protected Color color = new Color(1f, 1f, 1f);
 	protected ILayer parent=null;
@@ -38,7 +38,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	protected String type;
 	protected Geometry selectedGeometry;
 	public static enum symbol {point, circle, square, triangle, cross};
-	protected symbol displaysymbol = symbol.point;
+	private symbol displaysymbol = symbol.point;
 	protected double currentThresh = 0;
 	protected double minThresh = 0;
 	protected double maxThresh = 0;

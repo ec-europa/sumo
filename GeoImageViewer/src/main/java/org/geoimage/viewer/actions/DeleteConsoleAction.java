@@ -18,11 +18,11 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
  *
  * @author thoorfr
  */
-public class DeleteConsoleAction extends AbstractAction {
+public class DeleteConsoleAction extends SumoAbstractAction {
 
-    public String getName() {
-        return "delete";
-    }
+    public DeleteConsoleAction(String name) {
+		super("delete","Tools/Delete Active Image");
+	}
 
     public String getDescription() {
         return "Remove layer in ImageLayer.\n" +
@@ -71,9 +71,6 @@ public class DeleteConsoleAction extends AbstractAction {
         return true;
     }
 
-    public String getPath() {
-        return "Tools/Delete Active Image";
-    }
     
     public List<Argument> getArgumentTypes() {
         return null;

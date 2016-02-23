@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -19,11 +18,13 @@ import org.geoimage.viewer.util.ImageTiler;
  *
  * @author thoorfr
  */
-public class TilerConsoleAction extends AbstractAction {
+public class TilerConsoleAction extends SumoAbstractAction {
 
-    public String getName() {
-        return "tiler";
+	
+	public TilerConsoleAction(){
+    	super("tiler","Tools/Image/Create Tiles");
     }
+	
 
     public String getDescription() {
         return " Build the tiles overview of the current image.\n" +
@@ -47,9 +48,6 @@ public class TilerConsoleAction extends AbstractAction {
         return true;
     }
 
-    public String getPath() {
-        return "Tools/Image/Create Tiles";
-    }
     public List<Argument> getArgumentTypes() {
         return null;
     }

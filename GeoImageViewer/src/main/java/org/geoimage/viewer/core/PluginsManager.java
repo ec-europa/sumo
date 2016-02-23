@@ -13,10 +13,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.apache.commons.io.FilenameUtils;
-import org.geoimage.viewer.actions.AbstractConsoleAction;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
 import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 

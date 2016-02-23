@@ -21,9 +21,10 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
  */
 public class HomeConsoleAction extends AbstractConsoleAction {
 
-    public String getName() {
-        return "home";
-    }
+	public HomeConsoleAction(){
+		super("home");
+	}
+	
 
     public String getDescription() {
         return "Reset active image layer to overview\n" +

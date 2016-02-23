@@ -32,7 +32,7 @@ import org.geoimage.viewer.util.IProgress;
  *
  * @author 
  */
-public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
+public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
     private String message = "";
     
     
@@ -46,11 +46,10 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
     private AnalysisProcess proc=null;
     private boolean stopping=false;
     
-    public VDSAnalysisConsoleAction() {  }
-
-    public String getName() {
-        return "vds";
+    public VDSAnalysisConsoleAction() {  
+    	super("vds","Analysis/VDS");
     }
+
 
     public String getDescription() {
         return "Compute a VDS (Vessel Detection System) analysis.\n"
@@ -150,13 +149,6 @@ public class VDSAnalysisConsoleAction extends AbstractAction implements  IProgre
         }
     }
     
-	/**
-	 *
-	 * @return
-	 */
-    public String getPath() {
-        return "Analysis/VDS";
-    }
 
     /**
      * 

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 
 
-public class TileAnalysisAction extends AbstractAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
+public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
 	private int current = 0;
@@ -39,20 +39,16 @@ public class TileAnalysisAction extends AbstractAction implements VDSAnalysisPro
     private AnalysisProcess proc=null;
     
     
-	@Override
-	public String getName() {
-		return "chktile";
-	}
-
+    public TileAnalysisAction(){
+    	super("chktile","Tools/CheckTile");
+    }
+    
+    
 	@Override
 	public String getDescription() {
 		return "Analyze Tile Values";
 	}
 
-	@Override
-	public String getPath() {
-		return "Tools/CheckTile";
-	}
 
 	private void runBBAnalysis(){
 		//run the blackborder analysis for the s1 images

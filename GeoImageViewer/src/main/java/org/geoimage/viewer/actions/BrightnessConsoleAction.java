@@ -4,8 +4,11 @@
  */
 package org.geoimage.viewer.actions;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Vector;
+
+import javax.swing.AbstractAction;
 
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.Argument;
@@ -18,7 +21,7 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
  *
  * @author thoorfr
  */
-public class BrightnessConsoleAction implements IAction	 {
+public class BrightnessConsoleAction extends AbstractAction implements IAction	 {
 
     public String getName() {
         return "brightness";
@@ -61,4 +64,10 @@ public class BrightnessConsoleAction implements IAction	 {
         out.add(a1);
         return out;
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
