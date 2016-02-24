@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>360</x>
+      <y>230</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>read 
+configuration</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>160</x>
+      <y>360</y>
+      <w>60</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Sumo</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>350</x>
+      <y>360</y>
+      <w>150</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Run Vds analysis
+with coastline 
+and ice
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>290</x>
+      <y>500</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>load shape file
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>180</x>
+      <y>390</y>
+      <w>130</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;110.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>180</x>
+      <y>380</y>
+      <w>190</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;20.0;168.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>180</x>
+      <y>240</y>
+      <w>200</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;160.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>400</x>
+      <y>280</y>
+      <w>100</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;20.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>430</y>
+      <w>130</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;depends&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;70.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>650</x>
+      <y>390</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>import shp ice 
+from remote</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>410</y>
+      <w>250</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>230.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>310</x>
+      <y>630</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Load shp from ice and 
+coast as specified in the 
+configuration file
+
+
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>340</x>
+      <y>530</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;30.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>730</x>
+      <y>670</y>
+      <w>180</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>download from remote
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>710</x>
+      <y>440</y>
+      <w>40</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;20.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>160</y>
+      <w>180</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>160.0;230.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>440</x>
+      <y>70</y>
+      <w>210</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>search and download 
+shp file from remote url</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>180</x>
+      <y>110</y>
+      <w>280</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>260.0;10.0;10.0;290.0</additional_attributes>
+  </element>
+</diagram>

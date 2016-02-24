@@ -37,31 +37,31 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author thoorfr  
+ * @author thoorfr
  */
 public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMouseDrag, IKeyPressed,ILayerListener{
 
     //Each Listener list all layers
-	protected List<ILayerListener> listeners = new ArrayList<ILayerListener>();	    
-	
+	private List<ILayerListener> listeners = new ArrayList<ILayerListener>();
+
 	/**
 	 * each Main Layer-> List of childs layers
 	 */
-	protected HashMap<ILayer,List<ILayer>> layers = new HashMap<ILayer,List<ILayer>>();
+	private HashMap<ILayer,List<ILayer>> layers = new HashMap<ILayer,List<ILayer>>();
 	private  ConsoleLayer consoleLayer=null;
 	private  BaseLayer baseLayer=null;
-    protected List<ILayer> remove = new ArrayList<ILayer>();
-    protected List<ILayer> added = new ArrayList<ILayer>();
+	private List<ILayer> remove = new ArrayList<ILayer>();
+	private List<ILayer> added = new ArrayList<ILayer>();
     private static LayerManager manager=null;
-    
+
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(LayerManager.class);
-    
+
 
     private LayerManager() {
     	addListener(this);
     }
-    
-    
+
+
     public static LayerManager getIstanceManager(){
     	if(manager==null)
     		manager=new LayerManager();
@@ -97,10 +97,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
         if (this.remove.size() > 0) {
         	for(ILayer l:remove){
-        		//check if I removed a parent layer 
+        		//check if I removed a parent layer
         		if(l.getParent()==null){
         			List<ILayer> removed=layers.remove(l);
-        			
+
         			if(removed!=null)
         				for (ILayer r : removed) {
         					notifyLayerRemoved(r);
@@ -110,7 +110,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         			layers.get(l.getParent()).remove(l);
         			notifyLayerRemoved(l);
         		}
-        	}	
+        	}
             remove.clear();
             try {
                 SumoPlatform.getApplication().refresh();
@@ -167,7 +167,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     }
 
     /**
-     * 
+     *
      * @param layer
      * @param needActive
      */
@@ -190,8 +190,8 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
             TimeComponent.setDirty(true);
         }
     }
-    
-    
+
+
     public void removeLayer(ILayer layer) {
         layer.setActive(false);
         this.remove.add(layer);
@@ -247,19 +247,19 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     		l.layerRemoved(layer);
     }
 
-    
+
     public List<ILayer> getAllLayers(){
-    	
+
     	List<ILayer> all=new ArrayList<ILayer>();
     	Collection<ILayer> ks=layers.keySet();
     	for(ILayer k:ks){
     		all.add(k);
     		all.addAll(layers.get(k));
     	}
-    	
-    	return all;		
+
+    	return all;
     }
-    
+
   public ILayer getLayerByName(String name){
     	Collection<ILayer> ks=layers.keySet();
     	for(ILayer k:ks){
@@ -273,8 +273,8 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
     			}
     		}
     	}
-    	
-    	return null;		
+
+    	return null;
     }
   public MaskVectorLayer getChildMaskLayer(ILayer layer){
 	  ILayer mask=getChildLayerByType(layer, MaskVectorLayer.class);
@@ -282,7 +282,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 		  return (MaskVectorLayer)mask;
 	  return  null;
   }
-  
+
   public ILayer getChildLayerByType(ILayer layer,Class type){
   	Collection<ILayer> ks=getChilds(layer);
 
@@ -290,10 +290,10 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
   		if(k.getClass().isAssignableFrom(type))
   			return k;
   	}
-  	
-  	return null;		
-  }  
-  
+
+  	return null;
+  }
+
 
   public ImageLayer getCurrentImageLayer() {
   	if(!SumoPlatform.isBatchMode()){
@@ -306,23 +306,23 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 	                }
 	            }
 	        }
-  	}    
+  	}
       return null;
   }
-    
+
     /**
      * return the list of childs layers for a layer
      * @param l
      * @return
      */
     public List<ILayer> getChilds(ILayer l){
-    	return layers.get(l);		
+    	return layers.get(l);
     }
 
 
 	@Override
 	public void layerAdded(ILayer l) {
-		
+
 	}
 
 
@@ -333,7 +333,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 			if(il!=null && il.getImageReader()!=null){
 				il.getImageReader().dispose();
 				il=null;
-			}	
+			}
 		}else{
 			l.dispose();
 		}
@@ -350,14 +350,14 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 				for(ILayer p:layers.keySet()){
 					if(!p.equals(l)){
 						p.setActive(false);
-						
-					}	
+
+					}
 				}
 				if(childs!=null){
 					for(ILayer c:childs){
 						c.setActive(false);
 					}
-				}	
+				}
 			}else{
 				l.setActive(true);
 				if(childs!=null){
@@ -365,14 +365,14 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 						c.setActive(true);
 					}
 				}
-			}	
+			}
 		}else{
 			l.setActive(!l.isActive());
 		}
 	}
 
 	 /**
-     * 
+     *
      * @param type
      * @param layer
      * @param il
@@ -399,7 +399,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
         }
         return done;
     }
-	
+
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;
 	}
@@ -423,6 +423,6 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
 	@Override
 	public void addLayer(ILayer layer) {
 		addLayer(layer, true);
-		
+
 	}
 }

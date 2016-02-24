@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.GeoImageViewerView" x="525" y="386">
+        <Communication destinationClassName="org.geoimage.viewer.actions.SumoAbstractAction"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.widget.dialog.ActionDialog" x="519" y="113"/>
+    <CommunicationClass
+        name="org.geoimage.viewer.actions.VDSAnalysisConsoleAction"
+        x="793" y="208">
+        <Extension destinationClassName="org.geoimage.viewer.actions.SumoAbstractAction"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.GeoImageViewerView"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.viewer.core.GeoImageViewerView.LayerListener"
+        x="299" y="391"/>
+    <CommunicationClass
+        name="org.geoimage.viewer.actions.SumoAbstractAction" x="347" y="240">
+        <Communication destinationClassName="org.geoimage.viewer.widget.dialog.ActionDialog"/>
+    </CommunicationClass>
+</ClassDiagram>

@@ -22,13 +22,13 @@ import org.geoimage.viewer.widget.dialog.ActionDialog;
 public abstract class SumoAbstractAction extends AbstractAction implements IAction {
 	private String name=null;
 	private String absolutePath=null;
-	
+
 	public SumoAbstractAction(String name,String path){
 		absolutePath=path;
 		this.name=name;
 	}
-	
-	
+
+
     public void errorWindow(String message)
     {
         final String errorMessage = message;
@@ -40,14 +40,13 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
     }
 
     /**
-     * 	
+     *
      */
 	public void actionPerformed(ActionEvent e) {
 		String[] args=null;
-		
-	//	IAction sumoAction=(IAction)e.getSource();
+
         if (getArgumentTypes() != null) {
-            ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, this);
+            ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, this.getArgumentTypes());
             dialog.setVisible(true);
             boolean ok=dialog.isOk();
             if(ok){
@@ -59,7 +58,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
         }
         execute(args);
     }
-	
+
     public String getName() {
         return name;
     }
@@ -67,12 +66,12 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
     public void setMenuName(String menuName){
 		 super.putValue(NAME, menuName);
 	}
-    
+
 	/**
-	 * 
+	 *
 	 */
 	public String getPath(){
 		return absolutePath;
 	}
-	
+
 }

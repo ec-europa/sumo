@@ -48,8 +48,8 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	public static final int ICE_MASK=1;
 	public static final int WINDFARM_MASK=2;
 	private int  maskType=COASTLINE_MASK;
-    
-    
+
+
     public int getMaskType() {
 		return maskType;
 	}
@@ -59,7 +59,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	}
 
 	/**
-     * 
+     *
      * @param parent
      * @param layername
      * @param geomType
@@ -69,7 +69,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     public MaskVectorLayer(ILayer parent,String layername,String geomType,int maskType, GeometricLayer layer) {
     	super(parent,layername,geomType,layer);
     	this.maskType=maskType;
-    	
+
         if (layer == null) {
             return;
         }
@@ -81,9 +81,9 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         }
         this.edit=false;
     }
-    
+
     /**
-     * 
+     *
      * @param imagePosition
      * @param context
      */
@@ -102,12 +102,12 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 		                LayerPickedData.put(temp, glayer.getAttributes(temp));
 		                break;
 		            }
-	        	}   
+	        	}
 	        }
-    	}   
+    	}
     }
-    
-    
+
+
 
     private void calculateMaxMinTresh() {
         minThresh = Double.MAX_VALUE;
@@ -125,9 +125,9 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         currentThresh = minThresh - 0.01;
     }
 
-    
 
- 
+
+
     public boolean isRadio() {
         return false;
     }
@@ -141,7 +141,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     	if(glayer!=null){
     		glayer.clear();
     		glayer = null;
-    	}	
+    	}
     }
 
     /**
@@ -171,13 +171,13 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         }
         return false;
     }
-    
-   
 
-   
+
+
+
     public Area getShape(int width, int height) {
         Area maskArea = new Area();
-        
+
         Rectangle rect = new Rectangle(0, 0, width,height);//reader.getWidth(), reader.getHeight());
 
         GeometryFactory gf = new GeometryFactory();
@@ -203,20 +203,20 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
         return maskArea;
     }
 
-   
-    
+
+
     /**
      * create the new buffered layer
      */
     public void buffer(double bufferingDistance) {
         List<Geometry> bufferedGeom=glayer.getGeometries();
-        
+
         try {
 			bufferedGeom=parallelBuffer(bufferedGeom, bufferingDistance);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-        
+
         // then merge them
         List<Geometry> newgeoms = new ArrayList<Geometry>();
         List<Geometry> remove = new ArrayList<Geometry>();
@@ -245,21 +245,21 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	        }
       //  }
     }
-    
-    
+
+
     /**
-     * 
+     *
      * @author argenpo
      *
      */
     private class ParallelBuffer implements Callable<Geometry> {
     	private Geometry bufferedGeom;
     	private double bufferingDistance=0;
-		
+
     	/**
-		 * 
-		 * @param 
-		 * @param 
+		 *
+		 * @param
+		 * @param
 		 */
 
     	private ParallelBuffer(Geometry bufferedGeom,double bufferingDistance) {
@@ -284,14 +284,14 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 			    }
 	            bufferedGeom =BufferOp.bufferOp(bufferedGeom,bufferingDistance,BufferParameters.CAP_SQUARE,BufferParameters.DEFAULT_QUADRANT_SEGMENTS);
 
-	            	
+
 			return bufferedGeom;
 		}
 	}
-    
-    
+
+
     /**
-     * 
+     *
      * @param bufferedGeom
      * @param bufferDistance
      * @return
@@ -317,10 +317,10 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 
 		return geoms;
 	}
-    
-    
-  
-    
+
+
+
+
     public List<Geometry> getGeometries() {
         return glayer.getGeometries();
     }

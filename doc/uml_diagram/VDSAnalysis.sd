@@ -1,0 +1,26 @@
+user:Actor
+main:GeoImageViewerview
+/dialog:ActionDialog
+/action:VDSAnalysisConsoleAction
+
+
+user:main.vdsanalysis()
+main:action.new()
+action:dialog.new(action_arguments)
+
+*2 dialog
+build and show a dialog 
+based on the action arguments
+*2
+
+action:dialog.show 
+
+action:values=dialog.getValues()
+*1 action
+ return the parameters (with type)
+ needed for the analysis
+*1
+
+
+main:>action.execute()
+

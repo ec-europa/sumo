@@ -1,0 +1,9 @@
+@startuml
+ actor user
+
+ user -> geoimageviewer: vdsanalysis
+ geoimageviewer -> vdsanalysisaction
+ vdsanalysisaction -> actiondialog :new(action_arguments)
+
+ actiondialog -> actiondialog :show()
+@enduml
