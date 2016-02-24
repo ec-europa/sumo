@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"   elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<!-- analysis = xml root -->
 	<xs:element name="analysis">
 		<xs:complexType>
@@ -44,13 +44,13 @@
 				<xs:element name="inc_ang" type="xs:double"/>
 				<xs:element name="reliability" type="xs:int"/>
 				<xs:element name="false_alarm_cause" type="xs:string"/>
-				<xs:element name="nr_pixels"  type="xs:int"/>
+				<xs:element name="nr_pixels" type="xs:int"/>
 				<xs:element name="length" type="xs:double"/>
 				<xs:element name="width" type="xs:double"/>
 				<xs:element name="size_class" type="xs:NCName"/>
-				<xs:element name="heading_range"  type="xs:double"/>
+				<xs:element name="heading_range" type="xs:double"/>
 				<xs:element name="heading_north" type="xs:double"/>
-				<xs:element name="lwh_reliability"  type="xs:boolean"/>
+				<xs:element name="lwh_reliability" type="xs:boolean"/>
 				<xs:element name="manual_add" type="xs:boolean"/>
 
 				<xs:element name="rcs" type="xs:string"/>
@@ -71,10 +71,10 @@
 				<xs:element name="min_detectable_rcs" type="xs:string"/>
 				
 				<!--  only for compatibility with the old code -->
-				<xs:element name="speed" minOccurs="0" type="xs:double"/>
-				<xs:element name="target_type" minOccurs="0" type="xs:string"/>
-				<xs:element name="comment" minOccurs="0" type="xs:string"/>
-				<xs:element name="related_target_number" minOccurs="0" type="xs:int"/>
+				<xs:element minOccurs="0" name="speed" type="xs:double"/>
+				<xs:element minOccurs="0" name="target_type" type="xs:string"/>
+				<xs:element minOccurs="0" name="comment" type="xs:string"/>
+				<xs:element minOccurs="0" name="related_target_number" type="xs:int"/>
 				
 			</xs:sequence>
 		</xs:complexType>

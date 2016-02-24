@@ -1,53 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
     <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer"
-        x="689" y="-199">
+        name="org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer"
+        x="366" y="155">
         <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
+            private-accepted="false" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
         <MethodDisplayFilter public-accepted="true"
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-        <Association
-            destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
-            endpointName="displaysymbol" kind="Simple"/>
-    </Class>
-    <Class name="org.geoimage.viewer.core.layers.GenericLayer.symbol"
-        x="325" y="-436">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer"
-        x="444" y="-461">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer"
-        x="23" y="-123">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
     </Class>
     <Class name="org.geoimage.viewer.core.layers.GenericLayer" x="430" y="-228">
         <AttributesDisplayFilter public-accepted="true"
@@ -62,8 +26,8 @@
             endpointName="displaysymbol" kind="Simple"/>
     </Class>
     <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer"
-        x="60" y="556">
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SelectableVectorLayer"
+        x="182" y="-315">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -71,19 +35,7 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
-        x="414" y="401">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
     </Class>
     <Class
         name="org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer"
@@ -95,33 +47,7 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
         <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer"
-        x="385" y="94">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
-    </Class>
-    <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SelectableVectorLayer"
-        x="182" y="-315">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
     </Class>
     <Class
         name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer"
@@ -136,13 +62,76 @@
         <Extension destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer"/>
         <Association
             destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
-            endpointName="additionalGeometries" kind="Simple"/>
+            endpointName="additionalGeometries" kind="Simple">
+            <Point x="88" y="218"/>
+        </Association>
         <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
         <Communication destinationClassName="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"/>
     </Class>
     <Class
-        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer.symbol"
-        x="970" y="-224">
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleEditVectorLayer"
+        x="177" y="140">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </Class>
+    <Class
+        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVectorLayer.additionalgeometries"
+        x="130" y="2">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer"
+        x="735" y="-160">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+        <Association
+            destinationClassName="org.geoimage.viewer.core.layers.GenericLayer.symbol"
+            endpointName="displaysymbol" kind="Simple"/>
+    </Class>
+    <Class
+        name="org.geoimage.viewer.core.layers.visualization.vectors.TimeVectorLayer"
+        x="365" y="-449">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </Class>
+    <Class
+        name="org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer"
+        x="60" y="556">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.geoimage.viewer.core.layers.GenericLayer"/>
+    </Class>
+    <Class name="org.geoimage.viewer.core.layers.GenericLayer.symbol"
+        x="810" y="-426">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
