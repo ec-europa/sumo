@@ -25,6 +25,8 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
 import org.slf4j.LoggerFactory;
 
+import net.opengis.fes20.ArgumentsType;
+
 /**
  *
  * @author  Pietro
@@ -32,16 +34,20 @@ import org.slf4j.LoggerFactory;
 public class ActionDialog extends javax.swing.JDialog {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ActionDialog.class);
 
-    private IAction action;
+    //private IAction action;
     private List<JComponent> components = new ArrayList<JComponent>();
     private boolean ok=false;
     private String[] actionArgs=null;
     private String   actionName=null;
-    
+    private List<Argument> args = null;
+
     public String getActionName() {
 		return actionName;
 	}
-
+    /**
+     *
+     * @param actionName
+     */
 	public void setActionName(String actionName) {
 		this.actionName = actionName;
 	}
@@ -55,13 +61,12 @@ public class ActionDialog extends javax.swing.JDialog {
 	}
 
 	/** Creates new form ActionDialog */
-    public ActionDialog(java.awt.Frame parent, boolean modal, IAction action) {
+    public ActionDialog(java.awt.Frame parent, boolean modal,List<Argument> arguments) {
         super(parent, modal);
-        this.action = action;
-        List<Argument> args = action.getArgumentTypes();
-        
+        this.args=arguments;
+
         initComponents();
-        
+
         if (args != null) {
             argPanel.setLayout(new GridLayout(args.size(), 2));
             for (Argument arg : args) {
@@ -211,7 +216,7 @@ public class ActionDialog extends javax.swing.JDialog {
         this.setVisible(false);
         try {
             String[] args = new String[components.size() ];
-            actionName = action.getName();
+            //actionName = action.getName();
             int i = 0;
             for (JComponent c : components) {
                 if (c instanceof JTextField) {

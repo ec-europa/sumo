@@ -24,16 +24,16 @@ import com.vividsolutions.jts.geom.Point;
 public class FactoryLayer {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FactoryLayer.class);
 
-	
+
 	public final static String TYPE_COMPLEX="complexvds";
 	public final static String TYPE_NON_COMPLEX="noncomplexlayer";
 	//TODO utilizzare queste costanti : in questo momento viene utilizzata solo TYPE_COMPLEX
 	public final static String TYPE_SIMPLE="simple";
 	public final static String TYPE_TIMESTAMP="timestamp";
 	public final static String TYPE_DATE="Date";
-	
+
 	/**
-	 * 
+	 *
 	 * @param type
 	 * @param layer
 	 * @param parent
@@ -70,9 +70,8 @@ public class FactoryLayer {
             }*/
             if (!timestamplayer) {
             	//TODO: implement another way to understand the type of the layer
-                //return new SimpleEditVectorLayer(Platform.getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer);
                 return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
-                		layer.getName(), layer.getGeometryType(), 
+                		layer.getName(), layer.getGeometryType(),
                 		MaskVectorLayer.COASTLINE_MASK,layer);
             } else {
                 TimeComponent.setDirty(true);
@@ -80,9 +79,9 @@ public class FactoryLayer {
             }
         }
     }
-	
+
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param geomType
 	 * @param maskType : Type of mask: Coastline, Ice or Windfarm.  See MaskVectorLayer constant
@@ -99,10 +98,10 @@ public class FactoryLayer {
         }
         return mask;
     }
-	 
-	 
+
+
 	/**
-	 * 
+	 *
 	 * @param layer
 	 * @return
 	 */
@@ -118,7 +117,7 @@ public class FactoryLayer {
 		        for (Geometry geom : remove) {
 		            out.remove(geom);
 		        }
-	        }    
+	        }
 	        return out;
 
 	    }
