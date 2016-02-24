@@ -8,6 +8,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,12 +252,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      */
     private void addShapeFile(String[] args) {
         File file = null;
-        if (args.length >= 2) {
+        /*if (args.length >= 2) {
             file = new File(args[2].split("=")[1].replace("%20", " "));
         } else {
         	file=selectFile();
-        }
-        
+        }*/
+        file=selectFile();
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
@@ -432,8 +433,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         Argument a1 = new Argument("data type", Argument.STRING, false, "image");
         a1.setPossibleValues(new String[]{"csv", "shp", "gml", "sumo XML", "postgis", "query"});
 
-        Vector<Argument> out = new Vector<Argument>();
+        Argument a2 = new Argument("type", Argument.STRING, false, "coastline");
+        a2.setPossibleValues(new String[]{"coastline", "ice"});
+        
+        List<Argument> out = new ArrayList<Argument>();
         out.add(a1);
+        out.add(a2);
         return out;
     }
 

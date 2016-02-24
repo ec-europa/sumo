@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
@@ -323,11 +326,15 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(proc!=null&&e.getActionCommand().equals("STOP")){
-			this.proc.setStop(true);
-			this.message="stopping";
-			SumoPlatform.getApplication().getMain().removeStopListener(this);
-			this.proc=null;
+		if(e.getSource() instanceof JMenuItem){
+			super.actionPerformed(e);
+		}else{
+			if(proc!=null&&e.getActionCommand().equals("STOP")){
+				this.proc.setStop(true);
+				this.message="stopping";
+				SumoPlatform.getApplication().getMain().removeStopListener(this);
+				this.proc=null;
+			}	
 		}	
 	}
 
