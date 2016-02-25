@@ -1,5 +1,6 @@
 package org.geoimage.viewer.actions;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -37,13 +39,13 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
     private String message = "";
     private boolean stopping=false;
     private AnalysisProcess proc=null;
-    
-    
+
+
     public TileAnalysisAction(){
     	super("chktile","Tools/CheckTile");
     }
-    
-    
+
+
 	@Override
 	public String getDescription() {
 		return "Analyze Tile Values";
@@ -60,35 +62,32 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
            	 		mv=(MaskVectorLayer)bufferedMask[0];
            	 	if(mv!=null)
            	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
-           	 	else*/ 
+           	 	else*/
            	blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
-         } 	
+         }
          if(blackBorderAnalysis!=null){
         	 int nTile=SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis();
         	 blackBorderAnalysis.analyse(nTile,BlackBorderAnalysis.ANALYSE_ALL);
         	 List<Coordinate>cc=blackBorderAnalysis.getCoordinatesThresholds();
-        	 GeometricLayer bbanal=new GeometricLayer("BBAnalysis",
-        			 GeometricLayer.POINT,
-        			 cc
-        			 );
-        	 LayerManager.addLayerInThread(
-        			 GeometricLayer.POINT, 
-        			 bbanal, 
-        			 LayerManager.getIstanceManager().getCurrentImageLayer());
-        	 
+        	 GeometricLayer bbanal=new GeometricLayer("BBAnalysis",GeometricLayer.POINT,cc);
+        	 GenericLayer ivl = FactoryLayer.createComplexLayer(bbanal);
+        	 ivl.setColor(Color.GREEN);
+        	 ivl.setWidth(5);
+        	 LayerManager.addLayerInThread(ivl);
+
          }
          //end blackborder analysis
 	}
-	
-	
+
+
 	@Override
 	public boolean execute(String[] args) {
 		try {
 			SarImageReader sar=(SarImageReader) SumoPlatform.getApplication().getCurrentImageReader();
 			ImageLayer layer=LayerManager.getIstanceManager().getCurrentImageLayer();
-			
+
 			if(layer!=null && args.length>=2){
-				
+
 				//run for the black border analysis
 				if(args[0].equalsIgnoreCase("bb")){
 					if(args.length==2 && args[1].equalsIgnoreCase("test")){
@@ -102,9 +101,9 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 					}
-			//run vds analysis on a single tile		
+			//run vds analysis on a single tile
 				}else if(args[0].equalsIgnoreCase("vds")){
-					
+
 					int row=Integer.parseInt(args[1]);
 					int col=Integer.parseInt(args[2]);
 					Float buffer=Float.parseFloat(args[3]);
@@ -131,10 +130,10 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 	                	IMask maskList = mask.get(i);
 	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
 	               				buffer,
-	               				MaskVectorLayer.COASTLINE_MASK,
-	               				((MaskVectorLayer)maskList).getGeometriclayer());
+	               				((MaskVectorLayer)maskList).getGeometriclayer(),
+	               				MaskVectorLayer.COASTLINE_MASK);
 	                }
-					
+
 	                VDSAnalysis analysis = new VDSAnalysis(sar, null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
 					analysis.setAnalyseSingleTile(true);
 					analysis.setxTileToAnalyze(col);
@@ -150,7 +149,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			logger.error(e.getMessage());
 			proc.removeProcessListener(this);
 			proc.dispose();
-			
+
 			return false;
 		}finally{
 		}
@@ -182,8 +181,8 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 	    public void setDone(boolean value) {
 	        done = value;
 	    }
-	
-	
+
+
 	@Override
 	public void startAnalysis() {
 		setCurrent(1);
@@ -195,7 +194,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			setMaximum(numSteps);
 			setCurrent(1);
 			this.message=message;
-		}	
+		}
 	}
 
 	@Override
@@ -203,7 +202,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 		if(!stopping){
 			setCurrent(2);
 			this.message=message;
-		}	
+		}
 	}
 
 	@Override
@@ -211,7 +210,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 		if(!stopping){
 			setCurrent(3);
 			this.message=message;
-		}	
+		}
 	}
 
 	@Override
@@ -219,7 +218,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 		if(!stopping){
 			setCurrent(4);
 			this.message=message;
-		}	
+		}
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
@@ -232,7 +231,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 	public void endAnalysis() {
 		setDone(true);
 		SumoPlatform.getApplication().getMain().removeStopListener(this);
-		
+
 		if(proc!=null)
 			proc.dispose();
 	}
@@ -244,7 +243,7 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			this.message="stopping";
 			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc=null;
-		}	
+		}
 	}
 
 	@Override
@@ -279,8 +278,8 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 		if(!stopping){
 			setCurrent(1);
 			this.message=message;
-		}	
-		
+		}
+
 	}
 
 

@@ -33,12 +33,12 @@ import org.geoimage.viewer.util.IProgress;
 
 /**
  *
- * @author 
+ * @author
  */
 public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
     private String message = "";
-    
-    
+
+
     private int current = 0;
     private int maximum = 3;
     private boolean done = false;
@@ -48,8 +48,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     private List<MaskVectorLayer> iceMask = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
-    
-    public VDSAnalysisConsoleAction() {  
+
+    public VDSAnalysisConsoleAction() {
     	super("vds","Analysis/VDS");
     }
 
@@ -62,21 +62,21 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     /**
      * run the analysis called from ActionDialog.
      *
-     * @param 
+     * @param
      * @return true, if successful
      */
     public boolean execute(String[] args) {
         // initialise the buffering distance value
         int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
         SumoPlatform.getApplication().getMain().addStopListener(this);
-        
+
         if (args.length < 2) {
             return true;
         } else {
 
             if (args[0].equals("k-dist")) {
                 done = false;
-                
+
                 ImageLayer cl=LayerManager.getIstanceManager().getCurrentImageLayer();
                 GeoImageReader reader = ((ImageLayer) cl).getImageReader();
                 if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
@@ -90,7 +90,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 //this part mange the different thresholds for different bands
                 //in particular is also looking for which band is available and leave the threshold to 0 for the not available bands
                 java.util.HashMap<String,Float> thresholds = new java.util.HashMap<>();
-                
+
                 int numberofbands = gir.getNBand();
                 thresholds.put("HH",0.0f);
                 thresholds.put("HV",0.0f);
@@ -114,10 +114,10 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                     if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
                     		coastlineMask.add((MaskVectorLayer) l);
-                    	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){	
+                    	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
                     		iceMask.add((MaskVectorLayer) l);
                     	}else{
-                    		
+
                     	}
                     }
                 }
@@ -127,38 +127,39 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
                 // create new buffered mask with bufferingDistance using the mask in parameters
                 final IMask[] bufferedMask = new IMask[coastlineMask.size()];
-                
+
                 for (int i=0;i<coastlineMask.size();i++) {
                 	MaskVectorLayer maskList = coastlineMask.get(i);
-               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(), 
-               				bufferingDistance, maskList.getMaskType(),
-               				((MaskVectorLayer)maskList).getGeometriclayer());
+               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
+               				bufferingDistance,
+               				((MaskVectorLayer)maskList).getGeometriclayer(),
+               				maskList.getMaskType());
                 }
                 MaskGeometries mg=null;
                 if(bufferedMask!=null&&bufferedMask.length>0)
                 	mg=new MaskGeometries(bufferedMask[0].getGeometries());
-                	
-                
+
+
                 VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg, ENL, thresholds);
 
                 proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferedMask,bufferingDistance,0);
                 proc.addProcessListener(this);
-                
+
                 Thread t=new Thread(proc);
                 t.setName("VDS_analysis_"+gir.getDisplayName(0));
-                t.start();  
+                t.start();
             }
             return true;
         }
     }
-    
+
 
     /**
-     * 
+     *
      */
     public List<Argument> getArgumentTypes() {
         List<Argument> out = new ArrayList<Argument>();
-        
+
         Argument a1 = new Argument("algorithm", Argument.STRING, false, "k-dist");
         a1.setPossibleValues(new Object[]{"k-dist"});
         Argument a2 = new Argument("thresholdHH", Argument.FLOAT, false, 1.5);
@@ -168,8 +169,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
         Argument a3 = new Argument("coastline", Argument.STRING, true, "no mask choosen");
         Argument a31= new Argument("ice", Argument.STRING, true, "no mask choosen");
-        
-        
+
+
         ArrayList<String> coasts = new ArrayList<String>();
         ArrayList<String> ice = new ArrayList<String>();
         ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
@@ -190,8 +191,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
         a31.setPossibleValues(ice.toArray());
         out.add(a3);
         out.add(a31);
-  
-        
+
+
         Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 
         //management of the different threshold in the VDS parameters panel
@@ -209,7 +210,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
             }
         }
 
-        
+
         out.add(a4);
         if (il.getImageReader() instanceof SarImageReader) {
             Argument aEnl = new Argument("ENL", Argument.FLOAT, false, ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()));
@@ -219,9 +220,9 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
         return out;
     }
 
-    
-   
-    
+
+
+
     public boolean isIndeterminate() {
         return this.indeterminate;
     }
@@ -261,8 +262,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     public void setDone(boolean value) {
         done = value;
     }
-    
-    
+
+
 
 	@Override
 	public void startAnalysis() {
@@ -275,22 +276,22 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 			setMaximum(numSteps);
 			setCurrent(1);
 			this.message=message;
-		}	
+		}
 	}
 	@Override
 	public void startBlackBorederAnalysis(String message) {
 		if(!stopping){
 			setCurrent(1);
 			this.message=message;
-		}	
-		
+		}
+
 	}
 	@Override
 	public void startAnalysisBand(String message) {
 		if(!stopping){
 			setCurrent(2);
 			this.message=message;
-		}	
+		}
 	}
 
 	@Override
@@ -298,7 +299,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 		if(!stopping){
 			setCurrent(3);
 			this.message=message;
-		}	
+		}
 	}
 
 	@Override
@@ -306,7 +307,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 		if(!stopping){
 			setCurrent(4);
 			this.message=message;
-		}	
+		}
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
@@ -314,12 +315,12 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 		setCurrent(numSteps);
 	}
 
-	
+
 	@Override
 	public void endAnalysis() {
 		setDone(true);
 		SumoPlatform.getApplication().getMain().removeStopListener(this);
-		
+
 		if(proc!=null)
 			proc.dispose();
 	}
@@ -334,8 +335,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 				this.message="stopping";
 				SumoPlatform.getApplication().getMain().removeStopListener(this);
 				this.proc=null;
-			}	
-		}	
+			}
+		}
 	}
 
 	@Override
@@ -343,8 +344,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 		if(!SumoPlatform.isBatchMode()){
 			LayerManager.getIstanceManager().addLayer(layer);
 		}
-		
+
 	}
 
-	
+
 }

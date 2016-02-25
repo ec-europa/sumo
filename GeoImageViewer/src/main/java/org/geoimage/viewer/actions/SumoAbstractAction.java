@@ -23,6 +23,11 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	private String name=null;
 	private String absolutePath=null;
 
+
+	@Override
+	public abstract boolean execute(String[] args);
+
+
 	public SumoAbstractAction(String name,String path){
 		absolutePath=path;
 		this.name=name;

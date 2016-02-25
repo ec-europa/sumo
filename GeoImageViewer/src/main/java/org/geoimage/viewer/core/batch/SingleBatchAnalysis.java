@@ -14,36 +14,36 @@ import org.jrc.sumo.configuration.PlatformConfiguration;
 
 public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 
-	
+
 	public SingleBatchAnalysis(AnalysisParams analysisParams) {
 		super(analysisParams);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void startAnalysis(){
 		//crate the reader
 		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
-		
+
 		for(GeoImageReader r:readers){
 			currentReader=r;
 			SarImageReader reader=(SarImageReader) r;
 			String enl=reader.getENL();
 			params.enl=Float.parseFloat(enl);
-			
+
 			GeometricLayer gl=null;
 			if(params.shapeFile!=null)
 				gl=readShapeFile(reader);
-			
+
 			IMask[] masks = null;
 			if(gl!=null){
 				masks=new IMask[1];
-				masks[0]=FactoryLayer.createMaskLayer("buffered", FactoryLayer.TYPE_COMPLEX,MaskVectorLayer.COASTLINE_MASK, params.buffer, gl);
-			}	
-			
+				masks[0]=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
+			}
+
 			analizeImage(reader,masks,params);
 			saveResults(reader.getImgName(),masks,reader);
-		}	
-	}	
+		}
+	}
 }
