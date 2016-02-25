@@ -206,7 +206,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 	    	 f = new FileFilter() {
 
 	            public boolean accept(File f) {
-	            	if(!f.isDirectory()){
+	            	if(f.isDirectory()){
 	            		return true;
 	            	}
 	            	for(int i=0;i<extsFilter.length;i++){
