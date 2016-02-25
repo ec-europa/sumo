@@ -51,7 +51,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
-                            //addLayerInThread("noncomplexlayer", gl, (ImageLayer) l);
+
                             LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, l);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);

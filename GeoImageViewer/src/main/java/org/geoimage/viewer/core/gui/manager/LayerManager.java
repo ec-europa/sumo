@@ -377,7 +377,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
      * @param layer
      * @param il
      */
-    public static boolean addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
+   /* public static boolean addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
     	boolean done=false;
         if (layer != null) {
             new Thread(new Runnable() {
@@ -398,7 +398,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
             done = true;
         }
         return done;
-    }
+    }*/
 
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;
