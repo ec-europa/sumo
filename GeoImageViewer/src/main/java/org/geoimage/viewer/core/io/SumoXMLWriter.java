@@ -49,16 +49,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	public static Logger logger = LogManager.getLogger(SumoXMLWriter.class);
 	private File input=null;
 	private GeometricLayer layer = null;
-	
+
 	public SumoXMLWriter(File input){
 		this.input=input;
 	}
-	
+
 	public SumoXMLWriter(){
 
 	}
-	
-	
+
+
 	@Override
 	public void read() {
 		try {
@@ -130,10 +130,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			logger.error(ex.getMessage(), ex);
 		}
 	}
-	
+
 	/**
 	 * trunc and round off the milliseconds in a date using 3 digits
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
@@ -145,17 +145,17 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			String strFinalVal=""+finalValue;
 			String milli=strFinalVal.length()>5?(""+finalValue).substring(2,5):strFinalVal.substring(2);
 			date=date.substring(0, date.indexOf(".")+1)+milli;
-		}	
-		
-		
-		
+		}
+
+
+
 		return date;
-	} 
-	
-	
-	
+	}
+
+
+
 	/**
-	 * 
+	 *
 	 * @param gLayer
 	 * @param projection
 	 * @param gir
@@ -164,29 +164,29 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	 * @param enl
 	 * @param landmask
 	 */
-	public static void saveNewXML(File output,ComplexEditVDSVectorLayer layer, 
+	public static void saveNewXML(File output,ComplexEditVDSVectorLayer layer,
 			String projection,SarImageReader gir,
 			float[] thresholds,int buffer,float enl,
 			String landmask,String runVersion,Integer runVersionNumber) {
-		
+
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		
+
 		String start=gir.getTimeStampStart();
 		Timestamp tStart=Timestamp.valueOf(start);
-		
+
 		start=start.replace("Z","");
 		start=roundedMillis(start);
-		
+
 		String stop=gir.getTimeStampStop();
 		stop=stop.replace("Z","");
 		stop=roundedMillis(stop);
-		
-		
-		
+
+
+
 		/**** VDS ANALYSIS ***********/
 		VdsAnalysis vdsA = new VdsAnalysis();
 		vdsA.setAlgorithm("k-dist");
-		
+
 		vdsA.setBuffer(buffer);
 		vdsA.setDetectorVersion("SUMO_1.3.0");
 
@@ -199,16 +199,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		//vdsA.setMatrixratio(new Double(0));
 		//vdsA.setEnl(enlround);
 		//		vdsA.setSumoRunid(0);
-		
-		double enlround=Precision.round(enl,2); 
-		
-		
+
+		double enlround=Precision.round(enl,2);
+
+
 		StringBuilder params=new StringBuilder("").append(enlround).append(",");
 		if(thresholds!=null && thresholds.length>0){
 			String th=Arrays.toString(thresholds);
 			th=th.substring(1, th.length()-1);
 			params=params.append(th).append(",0.00");
-			
+
 		}
 		vdsA.setParameters(params.toString());
 		vdsA.setRunTime(format.format(new Date()));
@@ -216,23 +216,23 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		//TODO: modify the gui to add this fields
 		vdsA.setRunVersion(runVersion);
 		vdsA.setRunVersionNum(runVersionNumber);
-		
+
 		vdsA.setLandMaskRead(landmask);
 
 		List<Geometry> ambiguity=new ArrayList<>();
 		Additionalgeometries amb=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.AZIMUTH_AMBIGUITY_TAG);
 		if(amb!=null)
 			ambiguity=amb.getGeometries();
-		
+
 		Additionalgeometries art=layer.getGeometriesByTag(ComplexEditVDSVectorLayer.ARTEFACTS_AMBIGUITY_TAG);
 		List<Geometry> ambiguityArt=new ArrayList<>();
 		if(art!=null)
 			ambiguityArt=art.getGeometries();
-		
+
 		/**** VDS TARGETS ***********/
 		int targetNumber = 0;
 		VdsTarget target = new VdsTarget();
-		
+
 		List<Geometry> gg=layer.getGeometriclayer().getGeometries();
 		vdsA.setNrDetections(gg.size());
 		for (Geometry geom : gg) {
@@ -252,18 +252,18 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				b.setLon(Precision.round(pos[0],6));
 			}catch(GeoTransformException e){
 				logger.warn(e);
-			}		
+			}
 			double incAngle=gir.getIncidence((int)geom.getCoordinate().x);
 			incAngle=Math.toDegrees(incAngle);
 			b.setIncAng(Precision.round(incAngle,3));
-			
+
 			//x,y without decimal
 			b.setXpixel(Precision.round(geom.getCoordinate().x,0));
 			b.setYpixel(Precision.round(geom.getCoordinate().y,0));
-			
-			//for the moment we leave 
+
+			//for the moment we leave
 			b.setDetecttime(format.format(tStart));
-			
+
 			if(ambiguity.contains(geom)||ambiguityArt.contains(geom)){
 				//is an ambiguity
 				b.setReliability(3);
@@ -284,7 +284,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				double lenght=Precision.round((Double) att.get(VDSSchema.ESTIMATED_LENGTH),1);
 				b.setLength(lenght);
 				b.setWidth(Precision.round((Double) att.get(VDSSchema.ESTIMATED_WIDTH),1));
-				
+
 				b.setSizeClass("S");//lenght<70
 				if(lenght>70 && lenght<=120)
 					b.setSizeClass("M");
@@ -296,7 +296,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 			if(att.get(VDSSchema.ESTIMATED_HEADING)!=null)
 				b.setHeadingNorth(Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR));
-			
+
 			if(att.get(VDSSchema.SIGNIFICANCE)!=null){
 				double[] significance=(double[])att.get(VDSSchema.SIGNIFICANCE);
 				if(significance!=null)
@@ -309,29 +309,29 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			}
 			target.getBoat().add(b);
 		}
-		
-		
+
+
 		/**** IMAGE METADATA ***********/
 		SatImageMetadata imageMeta = new SatImageMetadata();
-		
-		
+
+
 		try {
 			imageMeta.setGcps(getCorners(gir));
 			imageMeta.setTimestampStart(tStart.toString());
 			imageMeta.setTimeStart(format.format(tStart));
-			
+
 			Timestamp tStop=Timestamp.valueOf(stop);
 			imageMeta.setTimeStop(format.format(tStop));
-			
+
 			String sensor=gir.getSensor();
 			format=new SimpleDateFormat("yyyyMMdd_HHmmss");
 			String imId=sensor+"_"+format.format(tStart);
-			
+
 			imageMeta.setImId(imId);
 			imageMeta.setImageName(((SarImageReader)gir).getImgName());
-			
+
 			imageMeta.setSensor(sensor);
-			
+
 			String pol=gir.getPolarization();
 			imageMeta.setPol(pol.trim());
 			String polNumeric=pol.replace("HH","1");
@@ -345,20 +345,20 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		
-		
+
+
 		Analysis an = new Analysis();
 		an.setSatImageMetadata(imageMeta);
 		an.setVdsAnalysis(vdsA);
 		an.setVdsTarget(target);
-		
+
 		/**** SAVING ***********/
-		try {            
+		try {
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            
+
             OutputStream os = new FileOutputStream(output );
             //marshaller.marshal(an, System.out);
             marshaller.marshal( an, os );
@@ -367,11 +367,11 @@ public class SumoXMLWriter extends AbstractVectorIO {
         	logger.error(ex.getMessage(), ex);
 		}
 	}
-	
+
 	/**
 	 * Get Gpcs for corners
 	 * @return
-	 * @throws GeoTransformException 
+	 * @throws GeoTransformException
 	 */
 	public static Gcps getCorners(GeoImageReader gir) throws GeoTransformException {
 		//Corners corners=((SarImageReader)gir).getOriginalCorners();
@@ -379,8 +379,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
         double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
         double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
-		
-		
+
+
 		/*double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0,"EPSG:4326");
 		double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
 		double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0,gir.getHeight());
@@ -415,23 +415,23 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		gcps.getGcp().add(gcpTopR);
 		gcps.getGcp().add(gcpBottomL);
 		gcps.getGcp().add(gcpBottomR);
-		
+
 		return gcps;
 	}
-	
-	
-	
-	
+
+
+
+
 	@Override
 	public void save(File output, String projection, GeoTransform transform) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
-	
-	
-	//to test xml 
+
+
+	//to test xml
 	public static void main(String[] args){
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd_HHmmSSS");
@@ -440,24 +440,24 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			Date d=format.parse(dd);
 			String dd2=format2.format(d);
 			System.out.println(dd2);
-			
+
 			/**** VDS ANALYSIS ***********/
 			VdsAnalysis vdsA = new VdsAnalysis();
 			vdsA.setAlgorithm("k-dist");
-			
+
 			vdsA.setBuffer(0);
 			vdsA.setDetectorVersion("SUMO_1.2.0");
-			
-			
+
+
 			vdsA.setParameters("");
 			vdsA.setRunTime(format.format(new Date()));
 
 			vdsA.setRunVersion("");
 			vdsA.setRunVersionNum(1);
-			
-			
+
+
 			vdsA.setLandMaskRead("");
-			
+
 			/**** VDS TARGETS ***********/
 			int targetNumber = 0;
 			VdsTarget target = new VdsTarget();
@@ -471,57 +471,57 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 				b.setLat(0);
 				b.setLon(0);
-						
+
 				b.setIncAng(0);
-				
+
 				//x,y without decimal
 				b.setXpixel(0);
 				b.setYpixel(0);
-				
-				//for the moment we leave 
+
+				//for the moment we leave
 				b.setDetecttime(dd);
-				
+
 				b.setReliability(3);
 				b.setFalseAlarmCause("AA");//AA is for azimuth ambiguity
 				//TODO:change in array
 				//b.setMaxValue(0);
-				
+
 				double lenght=0;
 				b.setLength(lenght);
 				b.setWidth(0);
-				
+
 				b.setSizeClass("S");//lenght<70
-				
+
 				double hn=0;
 				b.setHeadingNorth(hn);
-				
+
 				//TODO: add significance and thresholdtile
 				b.setSignificance("");
 				b.setThresholdTile("");
-				
+
 				target.getBoat().add(b);
 			}
-			
-			
+
+
 			/**** IMAGE METADATA ***********/
 			SatImageMetadata imageMeta = new SatImageMetadata();
-			
-			
+
+
 			try {
 				imageMeta.setGcps(new Gcps());
 				imageMeta.setTimestampStart(dd);
 				imageMeta.setTimeStart(format.format(dd));
-				
+
 				Timestamp tStop=Timestamp.valueOf(dd);
 				imageMeta.setTimeStop(format.format(tStop));
-				
+
 				format=new SimpleDateFormat("yyyyMMdd_HHmmss");
-				
+
 				imageMeta.setImId("XX_"+format.format(dd));
 				imageMeta.setImageName("TEST");
-				
+
 				imageMeta.setSensor("XX");
-				
+
 				String pol="HH";
 				imageMeta.setPol(pol.trim());
 				String polNumeric=pol.replace("HH","1");
@@ -535,15 +535,15 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			} catch (Exception e) {
 				logger.error(e);
 			}
-			
-			
+
+
 			Analysis an = new Analysis();
 			an.setSatImageMetadata(imageMeta);
 			an.setVdsAnalysis(vdsA);
 			an.setVdsTarget(target);
-			
+
 			/**** SAVING ***********/
-			try {            
+			try {
 	            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
 	            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
 	            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
@@ -555,15 +555,15 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	            os.close();
 	        } catch (javax.xml.bind.JAXBException|IOException ex) {
 	        	logger.error(ex.getMessage(), ex);
-	        } 
-			
-			
+	        }
+
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		System.exit(0);
 	}
 
-	
-	
+
+
 }

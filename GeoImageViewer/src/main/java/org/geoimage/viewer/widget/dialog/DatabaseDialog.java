@@ -54,7 +54,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
         new Thread(new Runnable() {
 
             public void run() {
-                LayerManager.getIstanceManager().addLayer((ILayer)(FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"")));
+                LayerManager.getIstanceManager().addLayer((ILayer)(FactoryLayer.createComplexLayer(layer)));
             }
         }).start();
     }

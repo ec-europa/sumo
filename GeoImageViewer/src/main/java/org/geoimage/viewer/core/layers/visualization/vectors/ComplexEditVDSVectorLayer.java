@@ -29,6 +29,7 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.KmlIO;
 import org.geoimage.viewer.core.io.PostgisIO;
@@ -48,74 +49,76 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
+import gov.nasa.worldwind.layers.Layer;
+
 /**
  *
  * @author Pietro Argentieri
  *  The main class to visualize the result of the analysis
- * 
- * 
+ *
+ *
  */
 public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ComplexEditVDSVectorLayer.class);
 	private String[] thresholds={};
 	private double enl=0;
 	private int buffer=0;
-	private String landMask;
+	//private String landMask;
 	private String band="";
-	
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,String landMask) {
+
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
         super(parent,layername, type, layer);
-        this.landMask=landMask;
-        
+        //this.landMask=landMask;
+
     }
-	
+
 	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer,
 			String[] thresholds,double enl,int buffer,String landMask,String band) {
         super(parent,layername, type, layer);
         this.thresholds=thresholds;
         this.enl=enl;
         this.buffer=buffer;
-        this.landMask=landMask;
+        //this.landMask=landMask;
         this.band=band;
-        
+
         // set the color and symbol values for the VDS layer
    	 	int widthstring=SumoPlatform.getApplication().getConfiguration().getTargetsSizeBand(""+band);
    	 	String colorString=SumoPlatform.getApplication().getConfiguration().getTargetsColorStringBand(""+band);
    	 	String symbolString=SumoPlatform.getApplication().getConfiguration().getTargetsSymbolBand(""+band);
-        
+
         setWidth(widthstring);
         Color colordisplay = new Color(Integer.decode(colorString));
         setColor(colordisplay);
         setDisplaysymbol(MaskVectorLayer.symbol.valueOf(symbolString));
     }
-    
+
     public boolean anyDections(){
     	return (glayer!=null && !glayer.getGeometries().isEmpty());
     }
 
-    
+
     public void addAzimuthAmbiguities(List<Geometry> azimuthGeoms,boolean display){
     	super.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED,5, GeometricLayer.POINT, azimuthGeoms, display);
-    	
+
     }
-    
+
     public void addArtefactsAmbiguities(List<Geometry> artGeoms,boolean display){
     	super.addGeometries(ARTEFACTS_AMBIGUITY_TAG, Color.CYAN,5, GeometricLayer.POINT, artGeoms, display);
-    	
+
     }
-    
+
     public void addDetectedPixels(List<Geometry> pixgeoms,boolean display){
     	super.addGeometries(DETECTED_PIXELS_TAG,  new Color(0x00FF00),1, GeometricLayer.POINT, pixgeoms, display);
     }
-    
+
     public void addThreshAggPixels(List<Geometry> threshAgg,boolean display){
     	super.addGeometries(TRESHOLD_PIXELS_AGG_TAG,  new Color(0x0000FF),1, GeometricLayer.POINT, threshAgg, display);
     }
-    
+
     public void addThresholdPixels(List<Geometry> pixgeoms,boolean display){
     	super.addGeometries(TRESHOLD_PIXELS_TAG,  new Color(0x00FFFF),1, GeometricLayer.POINT, pixgeoms, display);
     }
-    
+
     public void saveNewXML(String file, int formattype, String projection,String runVersion,Integer runVersionNumber) {
     	try{
         	SarImageReader sar=((SarImageReader)SumoPlatform.getApplication().getCurrentImageReader());
@@ -126,28 +129,31 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	        for(int i=0;i<thresholds.length;i++){
 	        	ts[i]=Float.parseFloat(thresholds[i]);
 	        }
+
+	        MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(this);
+
 	        SumoXMLWriter.saveNewXML(new File(file),this,
 	        		//FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
 	        		projection,
-	        		sar,ts,buffer,new Float(enl),landMask,runVersion,runVersionNumber);
-	        
+	        		sar,ts,buffer,new Float(enl),mask.getName(),runVersion,runVersionNumber);
+
 		    if(!SumoPlatform.isBatchMode())
 		    	JOptionPane.showMessageDialog(null,"The VDS has been correctly saved into Sumo XML format","XML Saved", JOptionPane.INFORMATION_MESSAGE);
-		    else 
+		    else
 		    	logger.info("The VDS has been correctly saved into Sumo XML format");
     	}catch(Exception e){
     			JOptionPane.showMessageDialog(null,"Error saving XML:"+e.getMessage(),"Error", JOptionPane.INFORMATION_MESSAGE);
     			logger.error(e.getMessage());
     	}
     }
-    
+
     @Override
     public void save(String file, int formattype, String projection) {
     	GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
     	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
-        
-        
+
+
         String[] msgResult={"","Succefull"};
         switch (formattype) {
 	        case ISave.OPT_EXPORT_POSTGIS: {
@@ -162,9 +168,9 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	                VDSAnalysisVersionDialog versiondialog = new VDSAnalysisVersionDialog(null, true);
 	                versiondialog.setVisible(true);
 	                String version = versiondialog.getVersion();
-	
+
 	                // generate SQL commands
-	                ArrayList<String> postgiscommands = postgisCommands(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), table, version, 
+	                ArrayList<String> postgiscommands = postgisCommands(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), table, version,
 	                		sar.getGeoTransform(), projection,sar.getTimeStampStart(),sar.getDisplayName(0));
 	                // save the new layer in database
 	                PostgisIO vio=new PostgisIO(reader, config);
@@ -188,7 +194,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            break;
 	        }
 	        case ISave.OPT_EXPORT_XML_SUMO_OLD: {
-	
+
 	            if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
@@ -210,7 +216,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            		projection,
 	            		sar,ts,buffer,new Float(enl),landMask);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";*/
-	            
+
 	            break;
 	        }
 	        case ISave.OPT_EXPORT_KMZ: {
@@ -238,12 +244,12 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         		msgResult[0]=file+" created";
         if(!SumoPlatform.isBatchMode())
         	JOptionPane.showMessageDialog(null,msgResult[0], msgResult[1],JOptionPane.INFORMATION_MESSAGE);
-        else 
+        else
         	logger.info(msgResult[0]);
     }
 
-    
-    
+
+
     public String getBand() {
 		return band;
 	}
@@ -259,7 +265,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	public void setThresholds(String[] thresholds) {
 		this.thresholds = thresholds;
 	}
-    
+
 	public double getEnl() {
 		return enl;
 	}
@@ -267,7 +273,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	public void setEnl(double enl) {
 		this.enl = enl;
 	}
-	
+
 	public int getBuffer() {
 		return buffer;
 	}
@@ -275,20 +281,20 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	public void setBuffer(int buffer) {
 		this.buffer = buffer;
 	}
-	
+
     @Override
     public FileTypes[] getFileFormatTypes() {
     	FileTypes[] opts=new FileTypes[8];
     	opts[0]=new FileTypes(ISave.OPT_EXPORT_XML_SUMO,ISave.STR_EXPORT_XML_SUMO,"xml");
     	opts[1]=new FileTypes(ISave.OPT_EXPORT_XML_SUMO_OLD,ISave.STR_EXPORT_XML_SUMO_OLD,"xml");
-    	opts[2]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV,"csv"); 
+    	opts[2]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV,"csv");
     	opts[3]=new FileTypes(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP,"shp");
     	opts[4]=new FileTypes(ISave.OPT_EXPORT_GML,ISave.STR_EXPORT_GML);
     	opts[5]=new FileTypes(ISave.OPT_EXPORT_KMZ,ISave.STR_EXPORT_KMZ);
     	opts[6]=new FileTypes(ISave.OPT_EXPORT_POSTGIS,ISave.STR_EXPORT_POSTGIS);
     	opts[7]=new FileTypes(ISave.OPT_EXPORT_THUMBS,ISave.STR_EXPORT_THUMBS);
-    	
-        return opts; 
+
+        return opts;
     }
 
     private GeometricLayer postgisLayer(GeometricLayer glayer,String timeStampStart) {
@@ -347,7 +353,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
                         */
             //tableattributes.set("id", new Integer(270100 + id));
             tableattributes.set("detectime", date);
-            
+
             String image_id = timeStampStart + "0";
             image_id.replaceAll(":", "");
             image_id.replaceAll("-", "");
@@ -371,8 +377,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         return layer;
     }
 
-    
-    
+
+
     private ArrayList<String> postgisCommands(GeometricLayer glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) throws GeoTransformException {
         // id counter for the postgis database
         int id = 0;
@@ -423,7 +429,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             //final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
             int size=glayer.getGeometries().size();
-            
+
             Integer maxVal=0;
             for(int i=0;i<size;i++){
             	Integer val=(Integer) ((AttributesGeometry)glayer.getGeometries().get(i).getUserData()).get(VDSSchema.ID);
@@ -456,25 +462,25 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
                         glayer.put(selectedGeometry,atts);*/
                     } catch (Throwable t) {
                         t.printStackTrace();
-                    }                
+                    }
                 }
 			});
-            
-            
-           
+
+
+
         }
     }
-    
-    
-    
+
+
+
    protected AttributesGeometry setNewAttributeValues(AttributesGeometry attr,HashMap<String,Object> map){
-    Collection<String>keys=map.keySet();	
+    Collection<String>keys=map.keySet();
     SimpleDateFormat df=new SimpleDateFormat("dd-MM-YYYY");
     for (int i = 0; i <keys.size() ; i++) {
           String att = attr.getSchema()[i];
           Class<?> type = attr.getType(attr.getSchema()[i]);
           String val=((String)map.get(att));
-          
+
           if(val!=null&&!"".equals(val)){
         	  try{
 		          if (type == Double.class){
@@ -491,14 +497,14 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 		          } else if (type == Boolean.class){
 		        	  attr.set(att, Boolean.parseBoolean(val));
 		          }else if (type.isArray()){
-		        	//TODO: cambiare questa m...a   
+		        	//TODO: cambiare questa m...a
 		        	int bb=Integer.parseInt(band);
 		          	if(type==int[].class||type==Integer[].class){
 		          		int[] a=new int[4];
 		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
 		          		a[id]=Integer.parseInt(val);
 		          		attr.set(att,a);
-		          	}	
+		          	}
 		          	if(type==double[].class||type==Double[].class){
 		          		double[] a=new double[4];
 		          		int id=PlatformConfiguration.getConfigurationInstance().getIdPolarization(SumoPlatform.getApplication().getCurrentImageReader().getBandName(bb));
@@ -510,8 +516,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 		          }
         	  }catch(Exception e){
         		  logger.error("Error setting attribute:"+att,e.getMessage());
-        	  }     
-          }   
+        	  }
+          }
       }
       return attr;
    }
