@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -252,11 +251,6 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      */
     private void addShapeFile(String[] args) {
         File file = null;
-        /*if (args.length >= 2) {
-            file = new File(args[2].split("=")[1].replace("%20", " "));
-        } else {
-        	file=selectFile();
-        }*/
         file=selectFile();
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
@@ -289,7 +283,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 	            String file=args[1].split("=")[1];
 	            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	            if(l!=null){
-	            		GenericCSVIO csv=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
+	            		GenericCSVIO csv=new GenericCSVIO(file);
 	                    GeometricLayer positions = csv.readLayer();
 	                    if (positions.getProjection() == null) {
 	                    	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);

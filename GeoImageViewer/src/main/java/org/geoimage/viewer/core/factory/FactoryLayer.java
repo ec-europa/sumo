@@ -39,7 +39,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */            	//TODO: implement another way to understand the type of the layer
-	public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
+	/*public static GenericLayer createGenericLayer(String type, GeometricLayer layer, GeoImageReader reader,String landMask) {
         String[] schema = layer.getSchema();
         boolean timestamplayer = false;
         String timecolumnname = "";
@@ -68,7 +68,7 @@ public class FactoryLayer {
                     break;
                 }
             }*/
-            if (!timestamplayer) {
+           /* if (!timestamplayer) {
             	//TODO: implement another way to understand the type of the layer
                 return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
                 		layer.getName(), layer.getGeometryType(),
@@ -78,7 +78,7 @@ public class FactoryLayer {
                 return new TimeVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layer.getName(), layer.getGeometryType(), layer, timecolumnname);
             }
         }
-    }
+    }*/
 
 	/**
 	 *
