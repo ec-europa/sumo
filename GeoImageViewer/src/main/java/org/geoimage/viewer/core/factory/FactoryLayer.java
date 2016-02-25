@@ -115,7 +115,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */
-	public static GenericLayer createMaskLayer(GeometricLayer layer) {
+	public static GenericLayer createMaskLayer(GeometricLayer layer,int maskType) {
 
 		boolean timestamplayer = false;
 		String timecolumnname = "";
@@ -129,7 +129,7 @@ public class FactoryLayer {
 		if (!timestamplayer) {
 			// TODO: implement another way to understand the type of the layer
 			return new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(), layer.getName(),
-					layer.getGeometryType(), MaskVectorLayer.COASTLINE_MASK, layer);
+					layer.getGeometryType(),maskType , layer);
 		} else {
 			TimeComponent.setDirty(true);
 			return new TimeVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(), layer.getName(),

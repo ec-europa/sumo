@@ -14,6 +14,7 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 
@@ -52,7 +53,11 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
 
-                    		GenericLayer lay=FactoryLayer.createMaskLayer(gl);
+                            int t=MaskVectorLayer.COASTLINE_MASK;
+                            if(args[1].equalsIgnoreCase("ice"))
+                            	t=MaskVectorLayer.ICE_MASK;
+                    		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
+
 
                             LayerManager.addLayerInThread(lay);
                         } catch (Exception ex) {
