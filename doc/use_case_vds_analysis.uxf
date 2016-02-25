@@ -4,8 +4,8 @@
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>150</x>
-      <y>230</y>
+      <x>170</x>
+      <y>200</y>
       <w>60</w>
       <h>110</h>
     </coordinates>
@@ -15,8 +15,8 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>340</x>
-      <y>230</y>
+      <x>360</x>
+      <y>200</y>
       <w>150</w>
       <h>80</h>
     </coordinates>
@@ -29,8 +29,8 @@ and ice
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>280</x>
-      <y>370</y>
+      <x>300</x>
+      <y>340</y>
       <w>140</w>
       <h>40</h>
     </coordinates>
@@ -41,8 +41,8 @@ and ice
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>170</x>
-      <y>260</y>
+      <x>190</x>
+      <y>230</y>
       <w>130</w>
       <h>150</h>
     </coordinates>
@@ -52,8 +52,8 @@ and ice
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>170</x>
-      <y>250</y>
+      <x>190</x>
+      <y>220</y>
       <w>190</w>
       <h>40</h>
     </coordinates>
@@ -63,8 +63,8 @@ and ice
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>350</x>
-      <y>100</y>
+      <x>370</x>
+      <y>70</y>
       <w>120</w>
       <h>40</h>
     </coordinates>
@@ -74,8 +74,8 @@ and ice
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>170</x>
-      <y>110</y>
+      <x>190</x>
+      <y>80</y>
       <w>200</w>
       <h>180</h>
     </coordinates>
@@ -85,8 +85,8 @@ and ice
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>390</x>
-      <y>130</y>
+      <x>410</x>
+      <y>100</y>
       <w>100</w>
       <h>120</h>
     </coordinates>
@@ -97,8 +97,8 @@ and ice
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>340</x>
-      <y>300</y>
+      <x>360</x>
+      <y>270</y>
       <w>130</w>
       <h>90</h>
     </coordinates>
@@ -109,8 +109,8 @@ and ice
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>560</x>
-      <y>350</y>
+      <x>580</x>
+      <y>320</y>
       <w>120</w>
       <h>60</h>
     </coordinates>
@@ -121,8 +121,8 @@ from remote</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>410</x>
-      <y>360</y>
+      <x>430</x>
+      <y>330</y>
       <w>170</w>
       <h>50</h>
     </coordinates>
@@ -133,8 +133,8 @@ from remote</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>300</x>
-      <y>500</y>
+      <x>320</x>
+      <y>470</y>
       <w>180</w>
       <h>70</h>
     </coordinates>
@@ -148,8 +148,8 @@ bg=orange</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>330</x>
-      <y>400</y>
+      <x>350</x>
+      <y>370</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -159,8 +159,8 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>720</x>
-      <y>540</y>
+      <x>740</x>
+      <y>510</y>
       <w>180</w>
       <h>40</h>
     </coordinates>
@@ -171,8 +171,8 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>820</x>
-      <y>150</y>
+      <x>840</x>
+      <y>120</y>
       <w>60</w>
       <h>110</h>
     </coordinates>
@@ -182,8 +182,8 @@ bg=orange</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>620</x>
-      <y>400</y>
+      <x>640</x>
+      <y>370</y>
       <w>120</w>
       <h>170</h>
     </coordinates>
@@ -193,8 +193,8 @@ bg=orange</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>740</x>
-      <y>180</y>
+      <x>760</x>
+      <y>150</y>
       <w>130</w>
       <h>80</h>
     </coordinates>
@@ -204,8 +204,8 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>690</x>
-      <y>240</y>
+      <x>710</x>
+      <y>210</y>
       <w>160</w>
       <h>80</h>
     </coordinates>
@@ -216,8 +216,8 @@ from remote url</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>650</x>
-      <y>310</y>
+      <x>670</x>
+      <y>280</y>
       <w>130</w>
       <h>70</h>
     </coordinates>

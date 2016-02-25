@@ -45,7 +45,7 @@ public class CreateBufferedMask extends SumoAbstractAction{
 					File f=new File(reader.getFilesList()[0]);
 					fw = new FileWriter(f.getParent()+"\\invalidgeom.txt");
 					bw = new BufferedWriter(fw);
-					
+
 					MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(LayerManager.getIstanceManager().getCurrentImageLayer());
 					List<Geometry> geoms=mask.getGeometries();
 					for(int i=0;i<geoms.size();i++){
@@ -57,7 +57,7 @@ public class CreateBufferedMask extends SumoAbstractAction{
 						//	fw.write(geo.toText()+'\n');
 							fw.write('\n');
 							//System.out.println("Corrected?:"+g.isValid());
-						}	
+						}
 					}
 				}catch(Exception e){
 					e.printStackTrace();
@@ -66,9 +66,9 @@ public class CreateBufferedMask extends SumoAbstractAction{
 						bw.close();
 						fw.close();
 					}catch(Exception e){
-					}	
-				}	
-				
+					}
+				}
+
 			}else if(args[0].equalsIgnoreCase("testreload")){
 				String fname="F:\\SumoImgs\\coastline\\OSMLandPoly_20141001_250\\OSMLandPoly_20141001_250m.shp";
 					GeometricLayer shpLayer=null;
@@ -93,27 +93,25 @@ public class CreateBufferedMask extends SumoAbstractAction{
 											//Geometry geo=reader.getGeoTransform().transformGeometryGeoFromPixel(g);
 											//fw.write(g.toText()+'\n');
 											//fw.write('\n');
-										}	
+										}
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-							}	
+							}
 						};
 						check.start();
 					}catch(Exception e){e.printStackTrace();}
-				
+
 			}else{
 				Integer bufferSize=Integer.parseInt(args[0]);
 				MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(LayerManager.getIstanceManager().getCurrentImageLayer());
 				// create new buffered mask with bufferingDistance using the mask in parameters
 	            final IMask[] bufferedMask = new IMask[1];
-	      		bufferedMask[0]=FactoryLayer.createMaskLayer("mask buffer_"+bufferSize, 
-	      				mask.getType(), bufferSize,
-	      				mask.getMaskType(),
-	      				((MaskVectorLayer)mask).getGeometriclayer());
+	      		bufferedMask[0]=FactoryLayer.createMaskLayer("mask buffer_"+bufferSize,mask.getType(),
+	      				bufferSize,((MaskVectorLayer)mask).getGeometriclayer(),MaskVectorLayer.COASTLINE_MASK);
 				LayerManager.getIstanceManager().addLayer(bufferedMask[0]);
-			}	
+			}
 		}
 		return true;
 	}

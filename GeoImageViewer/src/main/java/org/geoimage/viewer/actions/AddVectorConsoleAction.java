@@ -26,6 +26,7 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.util.IProgress;
@@ -44,7 +45,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class AddVectorConsoleAction extends SumoAbstractAction implements IProgress {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddVectorConsoleAction.class);
-	
+
     private JFileChooser fd;
     private static String lastDirectory;
     boolean done = false;
@@ -98,50 +99,33 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         return true;
     }
 
+    /**
+     *
+     * @param args
+     */
     private void addGenericCSV(String[] args) {
     	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-//AG changed "noncomplexlayer" to "complexvds"
-        if (args.length == 2) {
-            if(l!=null){
-            	GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
-                GeometricLayer positions = csv.readLayer();
-                if (positions.getProjection() == null) {
-                	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-                } else {
-                	try{
-                    	positions = GeometricLayer.createImageProjectedLayer(positions, 
-                    		((ImageLayer) l).getImageReader().getGeoTransform(),
-                    		positions.getProjection());
-                    		done=LayerManager.addLayerInThread("complexvds", positions, (ImageLayer) l);
-                	}catch(Exception e){
-                		logger.error(e.getMessage(),e);
-                	}		
-                }
-            }
-        } else {
-            int returnVal = fd.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    lastDirectory = fd.getSelectedFile().getParent();
-                    SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTVECTOR, lastDirectory);
-                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
-                    
-                    
-                    if(l!=null){
-                        GeometricLayer positions = csv.readLayer();
-                        if (positions.getProjection() == null) {
-                        	done=LayerManager.addLayerInThread("complexvds", positions, (ImageLayer) l);
-                        } else {
-                            positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                            done=LayerManager.addLayerInThread("complexvds", positions, (ImageLayer) l);
-                        }
-                    }
-                } catch (Exception ex) {
-                	logger.error(ex.getMessage(), ex);
-                }
-            }
-            return;
-        }
+    	if(l!=null){
+    		try {
+		    	GeometricLayer positions =null;
+		    	GenericCSVIO csv=null;
+
+	            File f=selectFile(new String[]{"csv","CSV"});
+	            csv=new GenericCSVIO(f);
+
+	            if(csv!=null){
+	                positions = csv.readLayer();
+	                if (positions.getProjection() != null) {
+	                    positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+	                }
+	                GenericLayer lay=FactoryLayer.createComplexLayer(positions);
+	                done=LayerManager.addLayerInThread(lay);
+
+	            }
+	        } catch (Exception ex) {
+	        	logger.error(ex.getMessage(), ex);
+	        }
+    	}
     }
 
     private void addPostgis(String[] args) {
@@ -212,25 +196,37 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     }
 
     /**
-     * 
+     *
      * @return
      */
-    private File selectFile(){
+    private File selectFile(String[] extsFilter){
     	File file=null;
-    	FileFilter f = new FileFilter() {
+    	FileFilter f =null;
+    	if(extsFilter!=null & extsFilter.length>0){
+	    	 f = new FileFilter() {
 
-            public boolean accept(File f) {
-                return f.isDirectory() || f.getPath().endsWith("shp") || f.getPath().endsWith("SHP");
-            }
+	            public boolean accept(File f) {
+	            	if(!f.isDirectory()){
+	            		return true;
+	            	}
+	            	for(int i=0;i<extsFilter.length;i++){
+	            		if(f.getName().endsWith(extsFilter[i]))
+	            			return true;
+	            	}
+	            	return false;
+	            }
 
-            public String getDescription() {
-                return "Shapefiles";
-            }
-        };
-        fd.setFileFilter(f);
+	            public String getDescription() {
+	                return "Vector File";
+	            }
+	        };
+	        fd.setFileFilter(f);
+    	}
+
 
         int returnVal = fd.showOpenDialog(null);
-        fd.removeChoosableFileFilter(f);
+        if(f!=null)
+        	fd.removeChoosableFileFilter(f);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 lastDirectory = fd.getSelectedFile().getParent();
@@ -239,19 +235,19 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             } catch (Exception ex) {
             	logger.error(ex.getMessage(), ex);
             }
-        } 
+        }
         return file;
     }
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * @param args
      */
     private void addShapeFile(String[] args) {
         File file = null;
-        file=selectFile();
+        file=selectFile(new String[]{"shp","SHP"});
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
@@ -266,140 +262,106 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                         gl.setName(args[3]);
                     }
                 }
-                done=LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, imgLayer);
+        		GenericLayer lay=FactoryLayer.createMaskLayer(gl);
+
+                done=LayerManager.addLayerInThread(lay);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param args
      */
     private void addSimpleCSV(String[] args) {
     	try {
+    		GeometricLayer positions=null;
+    		GenericCSVIO csv=null;
 	        if (args.length == 2) {
 	            String file=args[1].split("=")[1];
-	            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-	            if(l!=null){
-	            		GenericCSVIO csv=new GenericCSVIO(file);
-	                    GeometricLayer positions = csv.readLayer();
-	                    if (positions.getProjection() == null) {
-	                    	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-	                    } else {
-	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                        done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, l);
-	                    }
-	            }
+
+           		csv=new GenericCSVIO(file);
 	        } else {
 	            int returnVal = fd.showOpenDialog(null);
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            		ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                    lastDirectory = fd.getSelectedFile().getParent();
-	                    GenericCSVIO csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
-	                    
-	                    if(l!=null){
-	                            GeometricLayer positions = csv.readLayer();
-	                            if (positions.getProjection() == null) {
-	                            	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions,  l);
-	                            } else {
-	                                positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                                done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions,  l);
-	                            }
-	                    }
-	                
-	            } else {
-	                return;
+	                    csv=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
 	            }
 	        }
+            if(csv!=null){
+                positions = csv.readLayer();
+                if (positions.getProjection() != null) {
+                	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
+                	positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
+
+                }
+            }
+	        GenericLayer gl=FactoryLayer.createComplexLayer(positions);
+            done=LayerManager.addLayerInThread(gl);
     	} catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             return;
-        }  
+        }
     }
 
     /**
-     * 
+     *
      * @param args
      */
     private void addSumo(String[] args) {
+    	GeometricLayer positions =null;
+    	File sumoXml=null;
     	try{
 	        if (args.length == 2) {
-	        	File f=new File(args[2].split("=")[3]);
-	        	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-	            if(l!=null){
-	            		SumoXmlIOOld old=new SumoXmlIOOld(f);
-	            		GeometricLayer positions = old.readLayer();
-	                    if (positions.getProjection() == null) {
-	                    	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, positions, l);
-	                    } else {
-	                        positions = GeometricLayer.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
-	                        done=LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, positions, l);
-	                    }
-	            }
+	        	sumoXml=new File(args[2].split("=")[3]);
 	        } else {
 	            int returnVal = fd.showOpenDialog(null);
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
-	                try {
 	                    lastDirectory = fd.getSelectedFile().getParent();
-	                    SumoXmlIOOld old=new SumoXmlIOOld(fd.getSelectedFile());
-	                    ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-	                    if(l!=null){
-		                    GeometricLayer positions = old.readLayer();
-		                    if (positions.getProjection() == null) {
-		                    	done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-		                    } else {
-		                        positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-		                        done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-		                    }
-	                    }    
-	                } catch (Exception ex) {
-	                	logger.error(ex.getMessage(), ex);
-	                    return;
-	                }
-	            } else {
-	                return;
+	                    sumoXml=fd.getSelectedFile();
 	            }
 	        }
+            ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
+	        SumoXmlIOOld old=new SumoXmlIOOld(sumoXml);
+            positions = old.readLayer();
+            if (positions.getProjection() != null) {
+            	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+            }
+
+            GenericLayer gl=FactoryLayer.createMaskLayer(positions);
+            done=LayerManager.addLayerInThread(gl);
+
     	} catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             return;
-        }   
+        }
     }
 
     /**
-     * 
+     *
      * @param args
      */
     private void addGml(String[] args) {
     	try{
 	        int returnVal = fd.showOpenDialog(null);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            try {
 	                lastDirectory = fd.getSelectedFile().getParent();
 	                ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-	                if(l!=null){
-	                		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
-	                        GeometricLayer positions = gmlIO.readLayer();
-	                        if (positions.getProjection() == null) {
-	                            done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-	                        } else {
-	                            positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-	                            done=LayerManager.addLayerInThread(FactoryLayer.TYPE_COMPLEX, positions, (ImageLayer) l);
-	                        }
-	                }
-	            } catch (Exception ex) {
-	            	logger.error(ex.getMessage(), ex);
-	                return;
-	            }
-	        } else {
-	            return;
+
+            		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
+                    GeometricLayer positions = gmlIO.readLayer();
+                    if (positions.getProjection() != null) {
+                    	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                    }
+                    GenericLayer gl=FactoryLayer.createComplexLayer(positions);
+                    done=LayerManager.addLayerInThread(gl);
 	        }
 	    } catch (Exception ex) {
 	        logger.error(ex.getMessage(), ex);
 	        return;
-	    }   
+	    }
     }
 
     public boolean isIndeterminate() {
@@ -429,7 +391,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 
         Argument a2 = new Argument("type", Argument.STRING, false, "coastline");
         a2.setPossibleValues(new String[]{"coastline", "ice"});
-        
+
         List<Argument> out = new ArrayList<Argument>();
         out.add(a1);
         out.add(a2);

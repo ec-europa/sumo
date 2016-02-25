@@ -11,6 +11,7 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
@@ -22,11 +23,11 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr.
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
- * 
+ *
  */
 public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddGenericWorldLayerAction.class);
-	
+
 	private String name="";
     private File worldFile;
 
@@ -51,12 +52,12 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
-
-                            LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, l);
+                            GenericLayer mask=FactoryLayer.createMaskLayer(gl);
+                            LayerManager.addLayerInThread(mask);
                         } catch (Exception ex) {
                            logger.error(ex.getMessage(), ex);
                         }
-                	}   
+                	}
                 } catch (Exception e) {
                 }
                 SumoPlatform.getApplication().setInfo(null);
@@ -66,7 +67,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
     }
 
     /*
-     * 
+     *
      * @param type
      * @param layer
      * @param il
@@ -93,7 +94,7 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
             done = true;
         }
     }*/
-    
+
     public String getPath() {
         return "Import/Coastline/"+name;
     }

@@ -377,15 +377,12 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
      * @param layer
      * @param il
      */
-   /* public static boolean addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
+    public static boolean addLayerInThread(final ILayer layer) {
     	boolean done=false;
         if (layer != null) {
             new Thread(new Runnable() {
                 public void run() {
-                	GenericLayer ivl = FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"");
-                    ivl.setColor(Color.GREEN);
-                    ivl.setWidth(5);
-                    SumoPlatform.getApplication().getLayerManager().addLayer((ILayer) ivl);
+                    SumoPlatform.getApplication().getLayerManager().addLayer((ILayer) layer);
                 }
             }).start();
             done=true;
@@ -398,7 +395,7 @@ public class LayerManager implements ILayerManager, IClickable, IMouseMove, IMou
             done = true;
         }
         return done;
-    }*/
+    }
 
 	public ConsoleLayer getConsoleLayer() {
 		return consoleLayer;

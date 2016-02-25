@@ -16,6 +16,7 @@ import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -26,13 +27,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr.
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
- * 
+ *
  */
 public class MergeShapeFileAction extends SumoAbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MergeShapeFileAction.class);
-	
+
     private JFileChooser fd;
-    
+
     public MergeShapeFileAction() {
     	super("merge","Import/Merge shape file");
     	fd = new JFileChooser();
@@ -51,17 +52,20 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 	                        try {
 	                        	MaskVectorLayer ml=LayerManager.getIstanceManager().getChildMaskLayer(l);
 	                        	if(ml!=null){
-	                        			
+
 	                        		SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) ml.getGeometriclayer().getFeatureCollection();
-	                        		
+
 	                        		GeometricLayer gl = SimpleShapefile.mergeShapeFile(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
-	                        		LayerManager.addLayerInThread(FactoryLayer.TYPE_NON_COMPLEX, gl, (ImageLayer) l);
-	                        	}	
+
+	                        		GenericLayer lay=FactoryLayer.createMaskLayer(gl);
+
+	                        		LayerManager.addLayerInThread(lay);
+	                        	}
 	                        } catch (Exception ex) {
 	                           logger.error(ex.getMessage(), ex);
 	                        }
-	                	}   
+	                	}
 	                } catch (Exception e) {
 	                }
 	                SumoPlatform.getApplication().setInfo(null);
@@ -71,7 +75,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private File selectFile(){
@@ -92,10 +96,10 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
         fd.removeChoosableFileFilter(f);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
                 file = fd.getSelectedFile();
-        } 
+        }
         return file;
     }
-    
+
 
 	@Override
 	public String getDescription() {
