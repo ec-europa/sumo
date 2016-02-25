@@ -29,6 +29,7 @@ import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
@@ -262,7 +263,10 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                         gl.setName(args[3]);
                     }
                 }
-        		GenericLayer lay=FactoryLayer.createMaskLayer(gl);
+                int t=MaskVectorLayer.COASTLINE_MASK;
+                if(args[1].equalsIgnoreCase("ice"))
+                	t=MaskVectorLayer.ICE_MASK;
+        		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
 
                 done=LayerManager.addLayerInThread(lay);
             } catch (Exception ex) {
@@ -330,8 +334,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
             }
 
-            GenericLayer gl=FactoryLayer.createMaskLayer(positions);
-            done=LayerManager.addLayerInThread(gl);
+            int t=MaskVectorLayer.COASTLINE_MASK;
+            if(args[1].equalsIgnoreCase("ice"))
+            	t=MaskVectorLayer.ICE_MASK;
+    		GenericLayer lay=FactoryLayer.createMaskLayer(positions,t);
+
+            done=LayerManager.addLayerInThread(lay);
 
     	} catch (Exception ex) {
             logger.error(ex.getMessage(), ex);

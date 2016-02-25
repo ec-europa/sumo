@@ -58,7 +58,10 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 	                        		GeometricLayer gl = SimpleShapefile.mergeShapeFile(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 
-	                        		GenericLayer lay=FactoryLayer.createMaskLayer(gl);
+	                        		int t=MaskVectorLayer.COASTLINE_MASK;
+	                                if(args[1].equalsIgnoreCase("ice"))
+	                                	t=MaskVectorLayer.ICE_MASK;
+	                        		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
 
 	                        		LayerManager.addLayerInThread(lay);
 	                        	}
