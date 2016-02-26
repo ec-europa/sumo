@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 public interface IAction extends Action{
-	 	
+
 		public String getName();
 	    public String getDescription();
 	    /**
@@ -17,5 +17,5 @@ public interface IAction extends Action{
 	     */
 	    public String getPath();
 	    public boolean execute(String[] args);
-	    public List<Argument> getArgumentTypes();
+	    public List<ActionDialog.Argument> getArgumentTypes();
 }

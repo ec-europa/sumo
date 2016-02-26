@@ -18,7 +18,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -32,6 +31,8 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -79,19 +80,41 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         }
         done = false;
         try {
+        	GenericLayer lay=null;
             if (args[0].equals("shp")) {
-                addShapeFile(args);
+                int t=MaskVectorLayer.COASTLINE_MASK;
+                if(args[1].equalsIgnoreCase("ice"))
+                	t=MaskVectorLayer.ICE_MASK;
+
+            	GeometricLayer gl=loadShapeFile(args);
+                lay=FactoryLayer.createMaskLayer(gl,t);
+
             } else if (args[0].equals("postgis")) {
                 addPostgis(args);
+
             } else if (args[0].equals("csv")) {
-                addGenericCSV(args);
+            	GeometricLayer positions=loadGenericCSV(args);
+                lay=FactoryLayer.createComplexLayer(positions);
+                done=LayerManager.addLayerInThread(lay);
+
             } else if (args[0].equals("sumo XML")) {
-                addSumo(args);
+                int t=MaskVectorLayer.COASTLINE_MASK;
+                if(args[1].equalsIgnoreCase("ice"))
+                	t=MaskVectorLayer.ICE_MASK;
+
+            	GeometricLayer positions=loadSumoXML(args);
+        		lay=FactoryLayer.createMaskLayer(positions,t);
+
             } else if (args[0].equals("gml")) {
-                addGml(args);
+            	GeometricLayer positions=loadGml(args);
+                GenericLayer gl=FactoryLayer.createComplexLayer(positions);
+                done=LayerManager.addLayerInThread(gl);
+
             } else if (args[0].equals("query")) {
                 addQuery(args);
             }
+            if(lay!=null)
+            	done=LayerManager.addLayerInThread(lay);
         } catch (Exception e) {
             errorWindow("Problem with import of vector data\n");
             done = true;
@@ -104,11 +127,11 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private void addGenericCSV(String[] args) {
+    private GeometricLayer loadGenericCSV(String[] args) {
     	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
+    	GeometricLayer positions=null;
     	if(l!=null){
     		try {
-		    	GeometricLayer positions =null;
 		    	GenericCSVIO csv=null;
 
 	            File f=selectFile(new String[]{"csv","CSV"});
@@ -119,14 +142,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 	                if (positions.getProjection() != null) {
 	                    positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
 	                }
-	                GenericLayer lay=FactoryLayer.createComplexLayer(positions);
-	                done=LayerManager.addLayerInThread(lay);
-
 	            }
 	        } catch (Exception ex) {
 	        	logger.error(ex.getMessage(), ex);
 	        }
     	}
+    	return positions;
     }
 
     private void addPostgis(String[] args) {
@@ -246,15 +267,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private void addShapeFile(String[] args) {
+    private GeometricLayer loadShapeFile(String[] args) {
         File file = null;
+        GeometricLayer gl=null;
         file=selectFile(new String[]{"shp","SHP"});
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
         		Polygon imageP=((SarImageReader)imgLayer.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
         		long start=System.currentTimeMillis();
-                GeometricLayer gl = SimpleShapefile.createIntersectedLayer(file,imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
+                 gl = SimpleShapefile.createIntersectedLayer(file,imageP,((SarImageReader)imgLayer.getImageReader()).getGeoTransform());
                 long end=System.currentTimeMillis();
                 System.out.println("Shapefile loaded in:"+(end-start));
                 // if 5 args, set a specific name
@@ -263,16 +285,11 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                         gl.setName(args[3]);
                     }
                 }
-                int t=MaskVectorLayer.COASTLINE_MASK;
-                if(args[1].equalsIgnoreCase("ice"))
-                	t=MaskVectorLayer.ICE_MASK;
-        		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
-
-                done=LayerManager.addLayerInThread(lay);
-            } catch (Exception ex) {
+                            } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
         }
+        return gl;
     }
 
     /**
@@ -314,7 +331,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private void addSumo(String[] args) {
+    private GeometricLayer loadSumoXML(String[] args) {
     	GeometricLayer positions =null;
     	File sumoXml=null;
     	try{
@@ -334,24 +351,19 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
             }
 
-            int t=MaskVectorLayer.COASTLINE_MASK;
-            if(args[1].equalsIgnoreCase("ice"))
-            	t=MaskVectorLayer.ICE_MASK;
-    		GenericLayer lay=FactoryLayer.createMaskLayer(positions,t);
-
-            done=LayerManager.addLayerInThread(lay);
-
     	} catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            return;
+            return null;
         }
+    	return positions;
     }
 
     /**
      *
      * @param args
      */
-    private void addGml(String[] args) {
+    private GeometricLayer loadGml(String[] args) {
+    	GeometricLayer positions =null;
     	try{
 	        int returnVal = fd.showOpenDialog(null);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -359,17 +371,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 	                ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
 
             		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
-                    GeometricLayer positions = gmlIO.readLayer();
+                    positions = gmlIO.readLayer();
                     if (positions.getProjection() != null) {
                     	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
                     }
-                    GenericLayer gl=FactoryLayer.createComplexLayer(positions);
-                    done=LayerManager.addLayerInThread(gl);
 	        }
 	    } catch (Exception ex) {
 	        logger.error(ex.getMessage(), ex);
-	        return;
+	        return null;
 	    }
+    	return positions;
     }
 
     public boolean isIndeterminate() {
@@ -394,15 +405,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 
     @Override
     public List<Argument> getArgumentTypes() {
+    	List<Argument> out = new ArrayList<Argument>();
         Argument a1 = new Argument("data type", Argument.STRING, false, "image");
         a1.setPossibleValues(new String[]{"csv", "shp", "gml", "sumo XML", "postgis", "query"});
 
         Argument a2 = new Argument("type", Argument.STRING, false, "coastline");
-        a2.setPossibleValues(new String[]{"coastline", "ice"});
+        a2.setPossibleValues(new String[]{"coastline", "ice","other"});
 
-        List<Argument> out = new ArrayList<Argument>();
         out.add(a1);
         out.add(a2);
+
         return out;
     }
 

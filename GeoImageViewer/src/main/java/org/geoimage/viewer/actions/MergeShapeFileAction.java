@@ -12,7 +12,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -20,6 +19,7 @@ import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 
 
 	@Override
-	public List<Argument> getArgumentTypes() {
+	public List<ActionDialog.Argument> getArgumentTypes() {
 		return null;
 	}
 
