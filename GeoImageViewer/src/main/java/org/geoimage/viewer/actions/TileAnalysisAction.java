@@ -14,7 +14,6 @@ import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -24,6 +23,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -20,7 +20,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
@@ -31,6 +30,7 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;

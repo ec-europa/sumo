@@ -7,14 +7,10 @@ package org.geoimage.viewer.actions;
 import java.util.List;
 import java.util.Vector;
 
-import org.fenggui.layout.FormAttachment;
-import org.fenggui.layout.FormData;
-import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.widget.Slider;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 
 /**
  *

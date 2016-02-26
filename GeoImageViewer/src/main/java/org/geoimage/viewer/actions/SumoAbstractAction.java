@@ -6,6 +6,7 @@
 package org.geoimage.viewer.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -77,6 +78,11 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	 */
 	public String getPath(){
 		return absolutePath;
+	}
+
+	@Override
+	public List<ActionDialog.Argument> getArgumentTypes() {
+		return null;
 	}
 
 }
