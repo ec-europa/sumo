@@ -47,6 +47,9 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
 	public static final int COASTLINE_MASK=0;
 	public static final int ICE_MASK=1;
 	public static final int WINDFARM_MASK=2;
+	public static final int GENERIC=99;
+
+	//set default
 	private int  maskType=COASTLINE_MASK;
 
 

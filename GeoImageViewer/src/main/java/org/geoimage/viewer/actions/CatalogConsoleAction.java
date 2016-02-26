@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 
 /**
  *

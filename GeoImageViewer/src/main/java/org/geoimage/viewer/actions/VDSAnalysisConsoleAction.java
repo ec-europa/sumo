@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.geoimage.analysis.MaskGeometries;
@@ -21,7 +20,6 @@ import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -30,6 +28,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
+import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 /**
  *
@@ -157,22 +156,24 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     /**
      *
      */
-    public List<Argument> getArgumentTypes() {
-        List<Argument> out = new ArrayList<Argument>();
+    public List<ActionDialog.Argument> getArgumentTypes() {
+        List<ActionDialog.Argument> out = new ArrayList<ActionDialog.Argument>();
 
-        Argument a1 = new Argument("algorithm", Argument.STRING, false, "k-dist");
+        ActionDialog.Argument a1 = new ActionDialog.Argument("algorithm", ActionDialog.Argument.STRING, false, "k-dist");
         a1.setPossibleValues(new Object[]{"k-dist"});
-        Argument a2 = new Argument("thresholdHH", Argument.FLOAT, false, 1.5);
-        Argument a21 = new Argument("thresholdHV", Argument.FLOAT, false, 1.2);
-        Argument a22 = new Argument("thresholdVH", Argument.FLOAT, false, 1.5);
-        Argument a23 = new Argument("thresholdVV", Argument.FLOAT, false, 1.2);
+        ActionDialog.Argument a2 = new ActionDialog.Argument("thresholdHH", ActionDialog.Argument.FLOAT, false, 1.5);
+        ActionDialog.Argument a21 = new ActionDialog.Argument("thresholdHV", ActionDialog.Argument.FLOAT, false, 1.2);
+        ActionDialog.Argument a22 = new ActionDialog.Argument("thresholdVH", ActionDialog.Argument.FLOAT, false, 1.5);
+        ActionDialog.Argument a23 = new ActionDialog.Argument("thresholdVV", ActionDialog.Argument.FLOAT, false, 1.2);
 
-        Argument a3 = new Argument("coastline", Argument.STRING, true, "no mask choosen");
-        Argument a31= new Argument("ice", Argument.STRING, true, "no mask choosen");
+        ActionDialog.Argument a3 = new ActionDialog.Argument("coastline", ActionDialog.Argument.STRING, true, "no mask choosen");
+        ActionDialog.Argument a31= new ActionDialog.Argument("ice", ActionDialog.Argument.STRING, true, "no mask choosen");
 
 
         ArrayList<String> coasts = new ArrayList<String>();
+        coasts.add("");
         ArrayList<String> ice = new ArrayList<String>();
+        ice.add("");
         ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (il != null) {
@@ -193,7 +194,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
         out.add(a31);
 
 
-        Argument a4 = new Argument("Buffer (pixels)", Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
+        ActionDialog.Argument a4 = new ActionDialog.Argument("Buffer (pixels)", ActionDialog.Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 
         //management of the different threshold in the VDS parameters panel
         out.add(a1);
@@ -213,7 +214,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
         out.add(a4);
         if (il.getImageReader() instanceof SarImageReader) {
-            Argument aEnl = new Argument("ENL", Argument.FLOAT, false, ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()));
+        	ActionDialog.Argument aEnl = new ActionDialog.Argument("ENL", ActionDialog.Argument.FLOAT, false, ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()));
             out.add(aEnl);
         }
 

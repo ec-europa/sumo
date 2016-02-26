@@ -18,7 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.geoimage.viewer.core.api.Argument;
+import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.LoggerFactory;
 
 /**

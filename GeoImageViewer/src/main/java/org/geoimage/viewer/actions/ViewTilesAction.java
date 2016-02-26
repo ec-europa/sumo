@@ -8,7 +8,6 @@ import javax.swing.SwingUtilities;
 import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.Argument;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
@@ -22,19 +21,19 @@ public class ViewTilesAction extends SumoAbstractAction{
 	private Logger logger = LoggerFactory.getLogger(ViewTilesAction.class);
 	boolean done=false;
 	int tileSize=0;
-	
-	
+
+
 	public ViewTilesAction(){
     	super("viewtile","Tools/ViewTile");
     }
-	
+
 
 	@Override
 	public String getDescription() {
 		return "ViewTile";
 	}
 
-	
+
 
 	@Override
 	public boolean execute(String[] args) {
@@ -43,7 +42,7 @@ public class ViewTilesAction extends SumoAbstractAction{
 			if(args!=null){
 				tileSize=Integer.parseInt(args[0]);
 			}
-			
+
 	        new Thread(new Runnable() {
 
 	            public void run() {
@@ -55,15 +54,15 @@ public class ViewTilesAction extends SumoAbstractAction{
 	                        	if(tileSize==0){
 	                        		tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
 	                        		if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
-	                        	}	
-	                    		
+	                        	}
+
 	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader().getWidth(),l.getImageReader().getHeight(),tileSize);
 	                        	SimpleGeometryLayer sgl=new SimpleGeometryLayer(l, "tiles",tiles,SimpleGeometryLayer.LINESTRING);
 	                            addLayerInThread(sgl);
 	                        } catch (Exception ex) {
 	                            logger.error(ex.getMessage(),ex);
 	                        }
-	                	}   
+	                	}
 	                } catch (Exception e) {
 	                }finally{
 	                	done=true;
@@ -72,15 +71,15 @@ public class ViewTilesAction extends SumoAbstractAction{
 	            }
 	        }).start();
 	        return true;
-		
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;
 		}
 	}
-	
+
 	 /**
-     * 
+     *
      * @param type
      * @param layer
      * @param il
@@ -105,11 +104,8 @@ public class ViewTilesAction extends SumoAbstractAction{
         }
     }
 
-	@Override
-	public List<Argument> getArgumentTypes() {
-		return null;
-	}
 
-	
+
+
 
 }
