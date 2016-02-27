@@ -26,8 +26,8 @@ public class NoaaClient {
 
 
 
-	public static void download(Date date) {
-
+	public static File download(Date date) {
+		File f=null;
 		try {
 			GregorianCalendar gc=new GregorianCalendar();
 			gc.setTimeInMillis(date.getTime());
@@ -52,12 +52,13 @@ public class NoaaClient {
 			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-			String tmpPath=SumoPlatform.getApplication().getCachePath()+File.separator+System.currentTimeMillis()+File.separator+fileName;
-			File f=new File(tmpPath);
-
-
-
-
+			String cachePath=SumoPlatform.getApplication().getCachePath();
+			File cache=new File(cachePath+File.separator+System.currentTimeMillis());
+			if(!cache.exists())
+				cache.mkdirs();
+			String tmpPath=cache.getAbsolutePath()+File.separator+fileName;
+			f=new File(tmpPath);
+				
 			FileWriter writer=new FileWriter(f);
 			BufferedWriter out = new BufferedWriter(writer);
 			String output;
@@ -65,7 +66,7 @@ public class NoaaClient {
 			while ((output = br.readLine()) != null) {
 				out.write(output);
 			}
-
+			out.flush();
 			conn.disconnect();
 			out.close();
 		} catch (MalformedURLException e) {
@@ -74,7 +75,7 @@ public class NoaaClient {
 			e.printStackTrace();
 
 		}
-
+		return f;
 	}
 
 }

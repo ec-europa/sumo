@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
@@ -526,7 +527,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 		this.overViewImage = overViewImage;
 	}
 	 
-
+	@Override
+    public Date getImageDate(){
+	 //TODO check this
+    	Timestamp t=Timestamp.valueOf(getTimeStampStart());
+    	return new Date(t.getTime());
+    }
 
 	 public String getDescription() {
 	        StringBuilder description = new StringBuilder("Image Acquisition and Generation Parameters:\n")

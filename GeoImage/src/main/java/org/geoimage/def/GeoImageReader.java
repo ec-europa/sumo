@@ -1,6 +1,7 @@
 package org.geoimage.def;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.geoimage.exception.GeoTransformException;
@@ -177,6 +178,7 @@ public interface GeoImageReader  {
 
     public String getInternalImage();
 
+    public Date getImageDate();
     
     public GeoImageReader clone();
 
