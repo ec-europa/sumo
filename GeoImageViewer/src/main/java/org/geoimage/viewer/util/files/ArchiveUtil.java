@@ -40,9 +40,9 @@ public class ArchiveUtil {
 	                continue;
 	            }
 
-	            if (newFile.exists()) {
+	            /*if (newFile.exists()) {
 	                newFile.delete();
-	            }
+	            }*/
 
 	            FileOutputStream fos = new FileOutputStream(newFile);
 				
