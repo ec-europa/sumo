@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -30,9 +31,10 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
+import org.geoimage.viewer.util.files.ArchiveUtil;
+import org.geoimage.viewer.util.files.NoaaClient;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
-import org.geoimage.viewer.widget.dialog.ActionDialog;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -83,9 +85,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         	GenericLayer lay=null;
             if (args[0].equals("shp")) {
                 int t=MaskVectorLayer.COASTLINE_MASK;
-                if(args[1].equalsIgnoreCase("ice"))
+                if(args[1].equalsIgnoreCase("ice")){
                 	t=MaskVectorLayer.ICE_MASK;
-
+                	//if(args[1].equals("remote")){
+                		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
+                		File f=NoaaClient.download(reader.getImageDate());
+                		if(f.getName().endsWith("zip")||f.getName().endsWith("gz")){
+                			ArchiveUtil.unZip(f.getAbsolutePath());
+                		}
+                	//}
+                }	
             	GeometricLayer gl=loadShapeFile(args);
                 lay=FactoryLayer.createMaskLayer(gl,t);
 
@@ -98,12 +107,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                 done=LayerManager.addLayerInThread(lay);
 
             } else if (args[0].equals("sumo XML")) {
-                int t=MaskVectorLayer.COASTLINE_MASK;
+            /*    int t=MaskVectorLayer.COASTLINE_MASK;
                 if(args[1].equalsIgnoreCase("ice"))
                 	t=MaskVectorLayer.ICE_MASK;
 
             	GeometricLayer positions=loadSumoXML(args);
-        		lay=FactoryLayer.createMaskLayer(positions,t);
+        		lay=FactoryLayer.createMaskLayer(positions,t);*/
 
             } else if (args[0].equals("gml")) {
             	GeometricLayer positions=loadGml(args);
@@ -285,7 +294,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                         gl.setName(args[3]);
                     }
                 }
-                            } catch (Exception ex) {
+            } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
             }
         }

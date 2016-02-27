@@ -6,7 +6,9 @@ import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileFilter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -251,9 +253,7 @@ public class AlosCeos extends Alos {
         }finally{
         	//tiff.reader.addIIOReadProgressListener(this);
         	//readComplete=false;
-        	
         }
-
 	}
 
 	@Override
@@ -262,5 +262,10 @@ public class AlosCeos extends Alos {
 		return null;
 	}
 
-	
+	@Override
+    public Date getImageDate(){
+	 //TODO check this
+    	Timestamp t=Timestamp.valueOf(getTimeStampStart());
+    	return new Date(t.getTime());
+    }
 }
