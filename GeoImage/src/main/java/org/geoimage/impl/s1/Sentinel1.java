@@ -6,7 +6,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -521,7 +523,13 @@ public abstract class Sentinel1 extends SarImageReader {
 
             
     }
-
+    @Override
+    public Date getImageDate(){
+    	Timestamp t=Timestamp.valueOf(getTimeStampStart());
+    	return new Date(t.getTime());
+    }
+    
+    
     @Override
     public int getNumberOfBytes() {
         return super.getNumberOfBytes();

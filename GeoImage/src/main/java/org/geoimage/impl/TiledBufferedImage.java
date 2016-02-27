@@ -14,6 +14,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -240,9 +242,13 @@ public class TiledBufferedImage implements GeoImageReader {
         } catch (IOException e) {
         	logger.error("cannot preload the line tile: ",e);
         }
-
     }
 
+    @Override
+    public Date getImageDate(){
+    	return new Date();
+    }
+    
     private void mapExistingTiles() {
         for (int yy = 0; yy < nYTiles; yy++) {
             for (int xx = 0; xx < nXTiles; xx++) {
