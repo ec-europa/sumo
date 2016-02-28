@@ -89,7 +89,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                 	t=MaskVectorLayer.ICE_MASK;
                 	//if(args[1].equals("remote")){
                 		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
-                		File f=NoaaClient.download(reader.getImageDate());
+                		File f=NoaaClient.download(reader.getImageDate(),"");
                 		if(f.getName().endsWith("zip")||f.getName().endsWith("gz")){
                 			ArchiveUtil.unZip(f.getAbsolutePath());
                 		}
