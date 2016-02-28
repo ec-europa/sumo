@@ -1,5 +1,6 @@
 package org.geoimage.viewer.util.files;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,7 +54,8 @@ public class NoaaClient {
 			//conn.setRequestProperty("Accept", "application/json");
 			
 			int responseCode = conn.getResponseCode();
-
+			Long lenght=conn.getContentLengthLong();
+			System.out.println("Content lenght:"+lenght);
 			// always check HTTP response code first
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 
@@ -61,16 +63,24 @@ public class NoaaClient {
 					throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
 				}
 	
-				BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+				BufferedInputStream br = new BufferedInputStream(url.openStream());
 
 				f=new File(outputFile);
-					
-				BufferedWriter  out = new BufferedWriter(new FileWriter(f)) ;
-				String output;
 				System.out.println("Downloading from Server .... \n");
-				while ((output = br.readLine()) != null) {
+				
+				FileOutputStream  out = new FileOutputStream(f) ;
+				//String output;
+				/*while ((output = br.readLine()) != null) {
 					out.write(output);
-				}
+				}*/
+				int count;
+				byte buffer[] = new byte[1024];
+
+				while ((count = br.read(buffer, 0, buffer.length)) != -1)
+				  out.write(buffer, 0, count);
+				
+				System.out.println("Download complete \n");
+				
 				out.flush();
 				conn.disconnect();
 				out.close();
