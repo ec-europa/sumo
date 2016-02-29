@@ -206,12 +206,14 @@ public class ActionDialog extends javax.swing.JDialog {
 	                if (arg.getType() == Argument.STRING) {
 	                    if (arg.getPossibleValues() == null) {
 	                        JLabel label = new JLabel(arg.getName());
+	                        label.setName(arg.getName());
 	                        JTextField tf = new JTextField("" + arg.getDefaultValue());
 	                        components.put(arg,tf);
 	                        argPanel.add(label);
 	                        argPanel.add(tf);
 	                    } else {
 	                        JLabel label = new JLabel(arg.getName());
+	                        label.setName(arg.getName());
 	                        JComboBox<Object> cb = new JComboBox<Object>(arg.getPossibleValues());
 	                        components.put(arg,cb);
 	                        argPanel.add(label);
@@ -226,12 +228,15 @@ public class ActionDialog extends javax.swing.JDialog {
 	                    argPanel.add(tf);
 	                } */else if (arg.getType() == Argument.BOOLEAN) {
 	                    JCheckBox cb = new JCheckBox(arg.getName());
+	                    cb.setName(arg.getName());
 	                    argPanel.add(new JLabel());
 	                    components.put(arg,cb);
 	                    argPanel.add(cb);
 	                } else if (arg.getType() == Argument.DIRECTORY) {
 	                    JLabel label = new JLabel(arg.getName());
+	                    label.setName(arg.getName());
 	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    tf.setName(arg.getName());
 	                    JButton b = new JButton("Choose...");
 	                    b.addActionListener(new ActionListener() {
 
@@ -258,6 +263,7 @@ public class ActionDialog extends javax.swing.JDialog {
 	                } else if (arg.getType() == Argument.FILE) {
 	                    JLabel label = new JLabel(arg.getName());
 	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    tf.setName(arg.getName());
 	                    JButton b = new JButton("Choose...");
 	                    b.addActionListener(new ActionListener() {
 
