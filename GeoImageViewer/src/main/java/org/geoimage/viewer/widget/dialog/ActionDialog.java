@@ -11,8 +11,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -34,11 +37,11 @@ public class ActionDialog extends javax.swing.JDialog {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ActionDialog.class);
 
     //private IAction action;
-    private List<JComponent> components = new ArrayList<JComponent>();
+    private Map<ActionDialog.Argument,JComponent> components = new HashMap<ActionDialog.Argument,JComponent>();
     private boolean ok=false;
     private String[] actionArgs=null;
     private String   actionName=null;
-    private List<Argument> args = null;
+    private Map<String,Argument> args = null;
 
 
 /**
@@ -61,12 +64,24 @@ public class ActionDialog extends javax.swing.JDialog {
     private Object defaultValue;
     private Object[] values;
 
+    private boolean conditional=false;
+    private Argument condtionObject=null;
+    private Object conditionValue=null;
+
+
     public Argument(String name, Class type, boolean optional, Object defaultValue) {
         this.name = name;
         this.type = type;
         this.optional=optional;
         this.defaultValue=defaultValue;
     }
+
+    public void setCondition(Argument condtionObj,Object value){
+    	conditional=true;
+    	condtionObject=condtionObj;
+    	this.conditionValue=value;
+    }
+
 
     /**
      * Using this method will force the UI to setup a combobox for choosing the values of the argument
@@ -150,6 +165,11 @@ public class ActionDialog extends javax.swing.JDialog {
     }
 }
 
+
+
+
+
+
     public String getActionName() {
 		return actionName;
 	}
@@ -170,99 +190,133 @@ public class ActionDialog extends javax.swing.JDialog {
 	}
 
 	/** Creates new form ActionDialog */
-    public ActionDialog(java.awt.Frame parent, boolean modal,List<Argument> arguments) {
+    @SuppressWarnings("rawtypes")
+	public ActionDialog(java.awt.Frame parent, boolean modal,Map<String,Argument> arguments) {
         super(parent, modal);
         this.args=arguments;
+
+
 
         initComponents();
 
         if (args != null) {
             argPanel.setLayout(new GridLayout(args.size(), 2));
-            for (Argument arg : args) {
-                if (arg.getType() == Argument.STRING) {
-                    if (arg.getPossibleValues() == null) {
-                        JLabel label = new JLabel(arg.getName());
-                        JTextField tf = new JTextField("" + arg.getDefaultValue());
-                        components.add(tf);
-                        argPanel.add(label);
-                        argPanel.add(tf);
-                    } else {
-                        JLabel label = new JLabel(arg.getName());
-                        JComboBox<Object> cb = new JComboBox<Object>(arg.getPossibleValues());
-                        components.add(cb);
-                        argPanel.add(label);
-                        argPanel.add(cb);
-                    }
-                }/* else if (arg.getType() == Argument.DATE) {
-                    JLabel label = new JLabel(arg.getName());
-                    DateControl tf = new DateControl();
-                    tf.setDateType(Consts.TYPE_DATE_TIME);
-                    components.add(tf);
-                    argPanel.add(label);
-                    argPanel.add(tf);
-                } */else if (arg.getType() == Argument.BOOLEAN) {
-                    JCheckBox cb = new JCheckBox(arg.getName());
-                    argPanel.add(new JLabel());
-                    components.add(cb);
-                    argPanel.add(cb);
-                } else if (arg.getType() == Argument.DIRECTORY) {
-                    JLabel label = new JLabel(arg.getName());
-                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
-                    JButton b = new JButton("Choose...");
-                    b.addActionListener(new ActionListener() {
+            for (Argument arg : args.values()) {
 
-                        public void actionPerformed(ActionEvent e) {
-                            JFileChooser fc = new JFileChooser();
-                            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                                try {
-                                    tf.setText(fc.getSelectedFile().getCanonicalPath());
-                                } catch (IOException ex) {
-                                	logger.error(ex.getMessage(),ex);
-                                }
-                            }
-                        }
-                    });
+	                if (arg.getType() == Argument.STRING) {
+	                    if (arg.getPossibleValues() == null) {
+	                        JLabel label = new JLabel(arg.getName());
+	                        JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                        components.put(arg,tf);
+	                        argPanel.add(label);
+	                        argPanel.add(tf);
+	                    } else {
+	                        JLabel label = new JLabel(arg.getName());
+	                        JComboBox<Object> cb = new JComboBox<Object>(arg.getPossibleValues());
+	                        components.put(arg,cb);
+	                        argPanel.add(label);
+	                        argPanel.add(cb);
+	                    }
+	                }/* else if (arg.getType() == Argument.DATE) {
+	                    JLabel label = new JLabel(arg.getName());
+	                    DateControl tf = new DateControl();
+	                    tf.setDateType(Consts.TYPE_DATE_TIME);
+	                    components.add(tf);
+	                    argPanel.add(label);
+	                    argPanel.add(tf);
+	                } */else if (arg.getType() == Argument.BOOLEAN) {
+	                    JCheckBox cb = new JCheckBox(arg.getName());
+	                    argPanel.add(new JLabel());
+	                    components.put(arg,cb);
+	                    argPanel.add(cb);
+	                } else if (arg.getType() == Argument.DIRECTORY) {
+	                    JLabel label = new JLabel(arg.getName());
+	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    JButton b = new JButton("Choose...");
+	                    b.addActionListener(new ActionListener() {
 
-                    components.add(tf);
-                    argPanel.add(label);
-                    argPanel.add(tf);
-                    argPanel.add(new Label());
-                    argPanel.add(b);
-                    GridLayout gl = (GridLayout) argPanel.getLayout();
-                    gl.setRows(gl.getRows() + 1);
-                } else if (arg.getType() == Argument.FILE) {
-                    JLabel label = new JLabel(arg.getName());
-                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
-                    JButton b = new JButton("Choose...");
-                    b.addActionListener(new ActionListener() {
+	                        public void actionPerformed(ActionEvent e) {
+	                            JFileChooser fc = new JFileChooser();
+	                            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	                            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+	                                try {
+	                                    tf.setText(fc.getSelectedFile().getCanonicalPath());
+	                                } catch (IOException ex) {
+	                                	logger.error(ex.getMessage(),ex);
+	                                }
+	                            }
+	                        }
+	                    });
 
-                        public void actionPerformed(ActionEvent e) {
-                            JFileChooser fc = new JFileChooser();
-                            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                                try {
-                                    tf.setText(fc.getSelectedFile().getCanonicalPath());
-                                } catch (IOException ex) {
-                                	logger.error(ex.getMessage(),ex);                                }
-                            }
-                        }
-                    });
+	                    components.put(arg,tf);
+	                    argPanel.add(label);
+	                    argPanel.add(tf);
+	                    argPanel.add(new Label());
+	                    argPanel.add(b);
+	                    GridLayout gl = (GridLayout) argPanel.getLayout();
+	                    gl.setRows(gl.getRows() + 1);
+	                } else if (arg.getType() == Argument.FILE) {
+	                    JLabel label = new JLabel(arg.getName());
+	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    JButton b = new JButton("Choose...");
+	                    b.addActionListener(new ActionListener() {
 
-                    components.add(tf);
-                    argPanel.add(label);
-                    argPanel.add(tf);
-                    argPanel.add(new Label());
-                    argPanel.add(b);
-                    GridLayout gl = (GridLayout) argPanel.getLayout();
-                    gl.setRows(gl.getRows() + 1);
-                } else {
-                    JLabel label = new JLabel(arg.getName());
-                    JTextField tf = new JTextField("" + arg.getDefaultValue());
-                    components.add(tf);
-                    argPanel.add(label);
-                    argPanel.add(tf);
-                }
+	                        public void actionPerformed(ActionEvent e) {
+	                            JFileChooser fc = new JFileChooser();
+	                            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	                            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+	                                try {
+	                                    tf.setText(fc.getSelectedFile().getCanonicalPath());
+	                                } catch (IOException ex) {
+	                                	logger.error(ex.getMessage(),ex);                                }
+	                            }
+	                        }
+	                    });
+
+	                    components.put(arg,tf);
+	                    argPanel.add(label);
+	                    argPanel.add(tf);
+	                    argPanel.add(new Label());
+	                    argPanel.add(b);
+	                    GridLayout gl = (GridLayout) argPanel.getLayout();
+	                    gl.setRows(gl.getRows() + 1);
+	                } else {
+	                    JLabel label = new JLabel(arg.getName());
+	                    JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    components.put(arg,tf);
+	                    argPanel.add(label);
+	                    argPanel.add(tf);
+	                }
+	        }
+            for (Argument arg : args.values()) {
+            	if(arg.conditional){
+            		JComponent jcControl=components.get(arg);
+            		jcControl.setVisible(false);
+            		JComponent jc=components.get(arg.condtionObject);
+            		if(jc!=null){
+            			if(jc instanceof AbstractButton){
+            				((AbstractButton)jc).addActionListener(evt -> {
+            					if(((AbstractButton)jc).isSelected()){
+            						//if(Boolean.parseBoolean((String)arg.conditionValue))
+            						jcControl.setVisible(true);
+            					}else{
+    								jcControl.setVisible(false);
+            					}
+    						});
+            			}
+            			if(jc instanceof JComboBox){
+            				((JComboBox)jc).addActionListener(evt -> {
+            					if(((JComboBox)jc).getSelectedItem().equals(arg.conditionValue)){
+            						jcControl.setVisible(true);
+            					}else{
+    								jcControl.setVisible(false);
+            					}
+    						});
+            			}
+
+
+            		}
+            	}
             }
             pack();
             setBounds(getX(), getY(), getWidth(), getHeight() + 65 * args.size() - argPanel.getHeight());
@@ -327,9 +381,10 @@ public class ActionDialog extends javax.swing.JDialog {
             String[] args = new String[components.size() ];
             //actionName = action.getName();
             int i = 0;
-            for (JComponent c : components) {
+            for (JComponent c : components.values()) {
                 if (c instanceof JTextField) {
-                    args[i++] = ((JTextField) c).getText();
+                    args[i++]= ((JTextField) c).getText();
+
                 } else if (c instanceof JComboBox) {
                     args[i++] = ((JComboBox) c).getSelectedItem() + "";
                 }
