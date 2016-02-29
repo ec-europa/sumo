@@ -15,7 +15,9 @@ import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
@@ -83,20 +85,38 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         done = false;
         try {
         	GenericLayer lay=null;
+        	File shp=null;
             if (args[0].equals("shp")) {
                 int t=MaskVectorLayer.COASTLINE_MASK;
                 if(args[1].equalsIgnoreCase("ice")){
-                	t=MaskVectorLayer.ICE_MASK;
-                	//if(args[1].equals("remote")){
-                		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
-                		File f=NoaaClient.download(reader.getImageDate(),"");
-                		if(f.getName().endsWith("zip")||f.getName().endsWith("gz")){
-                			ArchiveUtil.unZip(f.getAbsolutePath());
-                		}
-                	//}
-                }	
-            	GeometricLayer gl=loadShapeFile(args);
-                lay=FactoryLayer.createMaskLayer(gl,t);
+                	try{
+	                	t=MaskVectorLayer.ICE_MASK;
+	                	if(args[1].equals("remote")){
+	                		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
+	                		String cachePath=SumoPlatform.getApplication().getCachePath();
+	                		File cache=new File(cachePath+File.separator+System.currentTimeMillis());
+	                		if(!cache.exists())
+	                			cache.mkdirs();
+	                		File f=NoaaClient.download(reader.getImageDate(),cache.getAbsolutePath());
+
+	                		if(f.getName().endsWith("zip")||f.getName().endsWith("gz")){
+	                			ArchiveUtil.unZip(f.getAbsolutePath());
+	                			File[] shpfiles=f.getParentFile().listFiles((java.io.FileFilter) pathname -> FilenameUtils.getExtension(pathname.getName()).equalsIgnoreCase("shp"));
+	                			shp=shpfiles[0];
+	                		}
+	                	}else{
+	                		shp=selectFile(new String[]{"shp","SHP"});
+	                	}
+                	}catch(Exception e){
+                		shp=null;
+                	}
+                }else{
+             		shp=selectFile(new String[]{"shp","SHP"});
+            	}
+                if(shp!=null){
+                	GeometricLayer gl=loadShapeFile(shp,"");
+                	lay=FactoryLayer.createMaskLayer(gl,t);
+                }
 
             } else if (args[0].equals("postgis")) {
                 addPostgis(args);
@@ -234,23 +254,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     	File file=null;
     	FileFilter f =null;
     	if(extsFilter!=null & extsFilter.length>0){
-	    	 f = new FileFilter() {
-
-	            public boolean accept(File f) {
-	            	if(f.isDirectory()){
-	            		return true;
-	            	}
-	            	for(int i=0;i<extsFilter.length;i++){
-	            		if(f.getName().endsWith(extsFilter[i]))
-	            			return true;
-	            	}
-	            	return false;
-	            }
-
-	            public String getDescription() {
-	                return "Vector File";
-	            }
-	        };
+	    	f = new FileNameExtensionFilter("Vector files",extsFilter);
 	        fd.setFileFilter(f);
     	}
 
@@ -276,10 +280,9 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private GeometricLayer loadShapeFile(String[] args) {
-        File file = null;
+    private GeometricLayer loadShapeFile(File file,String name){//String[] args) {
         GeometricLayer gl=null;
-        file=selectFile(new String[]{"shp","SHP"});
+
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
         	try {
@@ -289,9 +292,9 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                 long end=System.currentTimeMillis();
                 System.out.println("Shapefile loaded in:"+(end-start));
                 // if 5 args, set a specific name
-                if (args.length == 3) {
+                if (name!=null&&!name.equals("")) {
                     if (gl != null) {
-                        gl.setName(args[3]);
+                        gl.setName(name);
                     }
                 }
             } catch (Exception ex) {
@@ -421,8 +424,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         Argument a2 = new Argument("type", Argument.STRING, false, "coastline");
         a2.setPossibleValues(new String[]{"coastline", "ice","other"});
 
+        Argument a3= new Argument("Load from Noaa",Argument.BOOLEAN,true,false);
+        a3.setCondition(a2,"ice");
+
         out.add(a1);
         out.add(a2);
+        out.add(a3);
 
         return out;
     }
