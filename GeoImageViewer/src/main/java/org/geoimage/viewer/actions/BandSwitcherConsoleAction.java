@@ -24,24 +24,27 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
 	public BandSwitcherConsoleAction(){
 		super("bs");
 	}
-	
+
 
     public String getDescription() {
         return "";
+    }
+    public boolean executeFromConsole() {
+    	return execute();
     }
 
     public boolean execute() {
         for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
             	ImageLayer imL=((ImageLayer) l);
-            	
+
             	//int[] bands=((IImageLayer) l).getBands()[0]+1);
             	int bb=imL.getActiveBand()+1;
             	if(bb==(imL.getNumberOfBands())){
             		bb=0;
             	}
             	imL.setActiveBand(bb);
-            	
+
            		((ImageLayer)imL).setName(imL.getImageReader());
                 SumoPlatform.setInfo(imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()), 2000);
             }

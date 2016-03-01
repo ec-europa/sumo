@@ -12,6 +12,7 @@ import org.geoimage.viewer.core.api.iactions.IConsoleAction;
  * @author leforth
  */
 public abstract class AbstractConsoleAction extends SumoAbstractAction implements IConsoleAction {
+   protected  String[] commandLine=null;
 
    public AbstractConsoleAction(String name) {
 		super(name,"");
@@ -19,5 +20,10 @@ public abstract class AbstractConsoleAction extends SumoAbstractAction implement
 
 @Override
    public abstract String getCommand();
-   //TODO: auto-update pluginspublic abstract long getLastUpdateTimeStamp(); 
+   public abstract boolean executeFromConsole();
+
+
+   public void setCommandLine(String[] commandLine){
+	   this.commandLine=commandLine;
+   }
 }

@@ -34,35 +34,22 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
                 "Use \"contrast +0.1\" to add 0.1 to the current scale factor\n" +
                 "Use \"contrast -0.2\" to substract 0.2 to the current scale factor";
     }
+    public boolean executeFromConsole() {
+    	contrast(super.commandLine[1]);
+    	return true;
+    }
 
     public boolean execute() {
         if (paramsAction.size() != 1) {
             return false;
         }
         String val=paramsAction.get("value");
-        //manage a slider for changing the contrast
-      /*    for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
-            if (l instanceof ImageLayer && l.isActive()) {
-                Slider slider = new Slider(true, Slider.CONTRAST);
-                slider.setSize(200, 40);
-                slider.setExpandable(false);
-                slider.setShrinkable(false);
-                slider.addListener(Slider.createContrastListener((ImageLayer) l));
-                {
-                    FormData fd = new FormData();
-                    fd.right = new FormAttachment(100, -50);
-                    fd.top = new FormAttachment(100, -300);
-                    slider.setLayoutData(fd);
-                }
-                slider.setValue(((ImageLayer) l).getContrast());
-                SumoPlatform.getApplication().getGeoContext().getFenguiDisplay().addWidget(slider);
-                slider.hook(SumoPlatform.getApplication().getGeoContext().getFenguiDisplay());
+        contrast(val);
+        return true;
+    }
 
-                SumoPlatform.getApplication().getGeoContext().getFenguiDisplay().updateMinSize();
-                SumoPlatform.getApplication().getGeoContext().getFenguiDisplay().layout();
-                return true;
-            }
-        }*/
+    private void contrast(String val){
+
         // c +(number) to increase the actual contrast
         if (val.startsWith("+")) {
             float contrast = Float.parseFloat(val.substring(1));
@@ -87,14 +74,12 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
                 }
             }
         }
-
-        return true;
     }
-    
+
     public String getPath() {
         return "Tools/Contrast";
     }
-    
+
     public List<Argument> getArgumentTypes() {
         Argument a1=new Argument("value", Argument.FLOAT, true, 1,"value");
         Vector<Argument> out=new Vector<Argument>();

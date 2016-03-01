@@ -101,29 +101,29 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     private int dyy = 0;
     private boolean onRefresh = false;
     private CacheManager cm;
-    
+
     private ConsoleLayer cl;
     private BaseLayer base;
-    
+
     private TimeBarDialog timeSlider;
     private WWJPanel wwjPanel = null;
-    
+
     gov.nasa.worldwind.awt.WorldWindowGLCanvas wwjCanvas = null;
-    
+
     private static boolean onScreenshot = false;
     private boolean worldwindpanelenabled = true;
     private InfoDialog infod;
     private GLU glu;
-    
+
     private static GLWindow window;
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
 
-    
+
 	class LayerListener implements ILayerListener {
-		
+
 		public LayerListener() {}
-		
+
 	    public void layerAdded(ILayer l) {
 	        if (l instanceof ImageLayer) {
 	            wwjPanel.add((ImageLayer) l);
@@ -142,38 +142,38 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	        }
 	    }
 	}
-	
-	
-	
-	
+
+
+
+
     public GeoImageViewerView(SingleFrameApplication app) {
     	super(app);
-       
+
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
-        
+
         mainCanvas = new GLCanvas(glcapabilities);
         mainCanvas.addGLEventListener(this);
-        
-       /* 
+
+       /*
         window = GLWindow.create(glcapabilities);
         window.setAutoSwapBufferMode(true);
         //window.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
         window.addGLEventListener(this);
         window.setTitle("SUMO_1.3.0");*/
-        
-        
+
+
         final FPSAnimator animator = new FPSAnimator(window, 45, true);
 	    animator.start();
 
         initComponents();
-        
+
         //WidgetManager.addWidget("Navigation", GeoNavigationToolbar.class);
         WidgetManager.getWManagerInstance().addWidget("Overview", GeoOverviewToolbar.class);
         //WidgetManager.addWidget("Time", CurrentTimeWidget.class);
         //WidgetManager.addWidget("Info", InfoWidget.class);
         // AG init the preferences
-        
+
 
         mainPanel.addComponentListener(new ComponentListener() {
             // This method is called after the component's size changes
@@ -261,18 +261,18 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
          * Real Stuff
          */
         lm = LayerManager.getIstanceManager();
-        
+
         base=new BaseLayer(null);
         base.setName("Layers");
         base.setIsRadio(true);
         lm.setBaseLayer(base);
-        
+
         cl = new ConsoleLayer(null);
         cl.setName("Console Layer");
         cl.setIsRadio(true);
         lm.setConsoleLayer(cl);
-        
-        
+
+
         infod = new InfoDialog(null, false);
 
         setMenus(getMenuBar());
@@ -323,7 +323,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                        p.x = (int) (geoContext.getX() + e.getX() * geoContext.getWidth() / e.getComponent().getWidth() * geoContext.getZoom());
 	                        p.y = (int) (geoContext.getY() + e.getY() * geoContext.getHeight() / e.getComponent().getHeight() * geoContext.getZoom());
 	                        lm.mouseMoved(p,geoContext);
-	                        
+
 	                       // public void setImagePosition(Point imagePosition) {
 	                       ImageLayer imgL=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                       if(imgL!=null){
@@ -331,7 +331,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   double[] geo= gir.getGeoTransform().getGeoFromPixel(p.x,p.y);
 	                    	   double lon=FastMath.floor(geo[0]*100000)/100000;
 	                    	   double lat=FastMath.floor(geo[1]*100000)/100000;
-	                    	   
+
 	                    	   int val=0;
 	                    	   try{
 	                    		  if(p.x>=0&&p.y>=0&&p.x<gir.getWidth()-1&&p.y<gir.getHeight()-1)
@@ -339,13 +339,13 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   }catch(Exception ex){
 	                    		   val=0;
 	                    	   }
-	                    	   
+
 	                    	   StringBuilder infopos=new StringBuilder("  Lon:")
 	                    	   		.append(lon).append("  Lat:")
 	                    	   		.append(lat).append("           x:")
 	                    	   		.append(p.x).append("  y:").append(p.y)
 	                    	   		.append("  value:").append(val);
-	                    	   
+
 	                    	   positionLabel.setText(infopos.toString());
 	                       }
 	                    } catch (Exception ex) {
@@ -354,8 +354,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                }
                 }
             }
-            
-            
+
+
             @Override
             public void mouseDragged(MouseEvent e) {
             	if(geoContext!=null){
@@ -393,7 +393,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             }
         });
 
-        
+
 
         /**
          * dealing with the keyboard entry: if ctrl and alt and shift are not used, redirecting to the console layer
@@ -494,9 +494,9 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         geoContext.initialize(drawable.getContext());
         geoContext.setHeight(sumopanel.getHeight());
     	geoContext.setWidth(sumopanel.getWidth());
-    	
+
         glu = new GLU();    // get GL Utilities
-        
+
         display.setLayoutManager(new org.fenggui.layout.FormLayout());
         display.setDepthTestEnabled(true);
         display.setSize(mainCanvas.getWidth(), mainCanvas.getHeight());
@@ -505,8 +505,8 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         LayerManagerWidget lmw = LayerManagerWidget.getManagerInstance(display);
         lmw.buildWidget();
         display.addWidget(lmw.getWidget());
-        
-        
+
+
         // add overview window
         {
             FormData fd = new FormData();
@@ -514,7 +514,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             fd.top = new FormAttachment(100, -10);
             addWidget("Overview", fd, "");
         }
-        
+
         geoContext.initialize(drawable.getContext());
     }
 
@@ -648,70 +648,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         return cl;
     }
 
-    @Action
-    public void showAboutBox() {
-        if (aboutBox == null) {
-            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
-            aboutBox = new GeoImageViewerAboutBox(mainFrame);
-            aboutBox.setLocationRelativeTo(mainFrame);
-        }
-        SumoPlatform.getApplication().show(aboutBox);
-    }
 
-    @Action
-    public void showTimeSlider() {
-        if (timeSlider == null || !timeSlider.isVisible()) {
-            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
-            timeSlider = new TimeBarDialog(mainFrame, false);
-            timeSlider.setLocationRelativeTo(mainFrame);
-            timeSlider.setVisible(true);
-        }
-    }
-
-    /**
-     * open the lastly successfully image (like using CTRL+L)
-     */
-    @Action
-    public void openLastImage() {
-        final String lastImage = SumoPlatform.getApplication().getConfiguration().getLastImage();
-        if (lastImage != null) {
-            new Thread(() -> {
-			    try {
-			        getConsole().execute(new String[]{"image=image", "file=" + lastImage, "buffer=false"});
-			        Thread.sleep(5000);
-			    } catch (InterruptedException ex) {
-			    	logger.error(ex.getMessage(),ex);
-			    }
-			}).start();
-        }
-    }
-
-
-    /**
-     * open the preferences dialog to set some parameters
-     */
-    @Action
-    public void callPreferences() {
-        PreferencesDialog pf = new PreferencesDialog();
-        pf.setVisible(true);
-    }
-
-    /**
-     * open the plugin dialog to set some parameters
-     */
-    @Action
-    public void callPluginManager() {
-        PluginManagerDialog dialog = new PluginManagerDialog(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-    }
-    
-    /**
-     * reload plugins
-     */
-    @Action
-    public void reloadPlugins() {
-    	SumoPlatform.getApplication().getPluginsManager().reloadPlugins();
-    }
 
     /**
      * Method to create and put a widget "name" in the openGL display using the "fd" parameter
@@ -777,19 +714,19 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     public void setProgressValue(int value) {
         progressBar.setValue(value);
     }
-    
+
     public void addStopListener(ActionListener lis){
     	this.stopThreadButton.addActionListener(lis);
     	this.stopThreadButton.setVisible(true);
     }
-    
+
     public void removeStopListener(ActionListener lis){
         EventQueue.invokeLater(() -> {
 			stopThreadButton.removeActionListener(lis);
 			stopThreadButton.setEnabled(false);//Visible(false);
 		});
     }
-    
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -845,12 +782,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         jMenuSystem.add(jMenuItem3);
 
-        
+
         jMenuItemReloadPlugin.setAction(actionMap.get("reloadPlugins")); // NOI18N
         jMenuItemReloadPlugin.setText(resourceMap.getString("jMenuItemReloadPlugin.text")); // NOI18N
         jMenuItemReloadPlugin.setName("jMenuItemReloadPlugin"); // NOI18N
         jMenuSystem.add(jMenuItemReloadPlugin);
-        
+
         exitMenuItem.setAction(actionMap.get("quit"));
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         jMenuSystem.add(exitMenuItem);
@@ -896,7 +833,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         statusAnimationLabel.setName("statusAnimationLabel"); // NOI18N
 
         progressBar.setName("progressBar"); // NOI18N
-        
+
         stopThreadButton.setName("Stop Button");
         stopThreadButton.setVisible(false);
         stopThreadButton.setActionCommand("STOP");
@@ -904,15 +841,15 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//Platform.stopCurrentThread();
-				
-				
+
+
 			}
 		});*/
-        
+
         positionLabel= new JLabel();
  	    positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
  	    positionLabel.setName("PositionLabel"); // NOI18N
- 	    
+
         //org.jdesktop.layout.GroupLayout statusPanelLayout = new org.jdesktop.layout.GroupLayout(statusPanel);
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
@@ -923,7 +860,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
             	.addComponent(positionLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                 .addComponent(statusMessageLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-               	.addComponent(stopThreadButton,15, 15, 15)	
+               	.addComponent(stopThreadButton,15, 15, 15)
                 .addComponent(progressBar, GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(statusAnimationLabel)
@@ -959,7 +896,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         sumopanel.add(mainCanvas);
 
         jTabbedPane1.addTab(resourceMap.getString("sumopanel.TabConstraints.tabTitle"), sumopanel); // NOI18N
-        
+
         /*jTabbedPane1.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -1005,7 +942,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     }// </editor-fold>//GEN-END:initComponents
 
     public void setMenus(JMenuBar menubar) {
-        
+
     	Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         // fill with existing menu items
         for (int i = 0; i < menubar.getMenuCount(); i++) {
@@ -1019,7 +956,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
                 }
             }
         }
-        
+
         JMenuItem temp = null;
         PluginsManager pl=SumoPlatform.getApplication().getPluginsManager();
         for (final IAction action : pl.getActions().values()) {
@@ -1027,7 +964,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	            if (!pl.getPlugins().get(action.getName()).isActive()) {
 	                continue;
 	            }
-	
+
 	            String[] path = action.getPath().split("/");
 	            if(action instanceof SumoAbstractAction){
 		            JMenuItem mitem = null;
@@ -1037,17 +974,17 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		                if (menus.containsKey(mediumpath)) {
 		                    temp = menus.get(mediumpath);
 		                } else {
-		                	
+
 		                    if (i == path.length - 1) {
 		                    	((SumoAbstractAction)action).setMenuName(path[i]);
 		                    	temp = new JMenuItem(action);
-	
+
 		                    } else {
 		                        temp = new JMenu(path[i]);
 		                    }
 		                    menus.put(mediumpath, temp);
 		                }
-		
+
 		                if (mitem == null) {
 		                    mitem = temp;
 		                    menubar.add((JMenu) temp);
@@ -1056,12 +993,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		                    mitem = temp;
 		                }
 		            }
-	            }   
-            }    
+	            }
+            }
         }
 
     }
-    
+
 private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focusGained
     refresh();
 }//GEN-LAST:event_focusGained
@@ -1102,10 +1039,10 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private JLabel positionLabel;
-    
-    
-    
-    
+
+
+
+
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		arg0.destroy();
@@ -1119,7 +1056,7 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 	public void endAnalysis() {
 		stopThreadButton.setVisible(false);
 	}
-	
+
 	@Override
 	public void startAnalysisBand(String message) {
 	}
@@ -1143,4 +1080,72 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 	@Override
 	public void nextVDSAnalysisStep(int numSteps) {
 	}
+
+
+	@Action
+    public void showAboutBox() {
+        if (aboutBox == null) {
+            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
+            aboutBox = new GeoImageViewerAboutBox(mainFrame);
+            aboutBox.setLocationRelativeTo(mainFrame);
+        }
+        SumoPlatform.getApplication().show(aboutBox);
+    }
+
+    @Action
+    public void showTimeSlider() {
+        if (timeSlider == null || !timeSlider.isVisible()) {
+            JFrame mainFrame = SumoPlatform.getApplication().getMainFrame();
+            timeSlider = new TimeBarDialog(mainFrame, false);
+            timeSlider.setLocationRelativeTo(mainFrame);
+            timeSlider.setVisible(true);
+        }
+    }
+
+    /**
+     * open the lastly successfully image (like using CTRL+L)
+     */
+    @Action
+    public void openLastImage() {
+        final String lastImage = SumoPlatform.getApplication().getConfiguration().getLastImage();
+        if (lastImage != null) {
+            new Thread(() -> {
+			    try {
+			        getConsole().execute(new String[]{"image_type=image", "file=" + lastImage, "buffer=false"});
+			        Thread.sleep(5000);
+			    } catch (InterruptedException ex) {
+			    	logger.error(ex.getMessage(),ex);
+			    }
+			}).start();
+        }
+    }
+
+
+    /**
+     * open the preferences dialog to set some parameters
+     */
+    @Action
+    public void callPreferences() {
+        PreferencesDialog pf = new PreferencesDialog();
+        pf.setVisible(true);
+    }
+
+    /**
+     * open the plugin dialog to set some parameters
+     */
+    @Action
+    public void callPluginManager() {
+        PluginManagerDialog dialog = new PluginManagerDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+    }
+
+    /**
+     * reload plugins
+     */
+    @Action
+    public void reloadPlugins() {
+    	SumoPlatform.getApplication().getPluginsManager().reloadPlugins();
+    }
+
+
 }

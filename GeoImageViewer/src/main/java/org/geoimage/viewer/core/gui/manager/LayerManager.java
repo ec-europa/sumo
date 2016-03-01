@@ -4,7 +4,6 @@
  */
 package org.geoimage.viewer.core.gui.manager;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -26,11 +25,8 @@ import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.BaseLayer;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.slf4j.LoggerFactory;

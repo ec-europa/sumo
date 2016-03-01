@@ -4,6 +4,7 @@
  */
 package org.geoimage.viewer.actions;
 
+import java.awt.Color;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -56,7 +57,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     private static String lastDirectory;
     boolean done = false;
     private String message = "Adding data. Please wait...";
-    
+
     private static final String paramFileType="File type";
     private static final String paramType="Type";
     private static final String paramSite="Remote";
@@ -91,12 +92,14 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         try {
         	GenericLayer lay=null;
         	File shp=null;
+        	Color shpColor=Color.GREEN;
             if (getParamValue(paramFileType).equals("shp")) {
                 int t=MaskVectorLayer.COASTLINE_MASK;
                 if(getParamValue(paramType).equalsIgnoreCase("ice")){
                 	try{
 	                	t=MaskVectorLayer.ICE_MASK;
-	                	if(getParamValue(paramSite).equals("remote")){
+	                	shpColor=Color.WHITE;
+	                	if(getParamValue(paramSite).equals("true")){
 	                		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
 	                		String cachePath=SumoPlatform.getApplication().getCachePath();
 	                		File cache=new File(cachePath+File.separator+System.currentTimeMillis());
@@ -121,6 +124,9 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                 if(shp!=null){
                 	GeometricLayer gl=loadShapeFile(shp,"");
                 	lay=FactoryLayer.createMaskLayer(gl,t);
+
+                	lay.setColor(shpColor);
+                    lay.setWidth(5);
                 }
 
             } else if (getParamValue(paramFileType).equals("postgis")) {
@@ -201,7 +207,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             config.put("dbtype", "postgis");
             config.put("schema", "public");
             config.put("port", "5432");
-            
+
             config.put("host", getParamValue("host").replace("host=", ""));
             config.put("dbname", getParamValue("dbname").replace("dbname=", ""));
             config.put("user", getParamValue("user").replace("user=", ""));
@@ -234,7 +240,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
                     dialog.setConnection(conn);
-                   
+
                     //TODO:replace the args[1] with the correct param name
                     //dialog.setImageLayer((ImageLayer) l, args[1]);
                     dialog.setVisible(true);
@@ -427,7 +433,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         Argument a3= new Argument(paramSite,Argument.BOOLEAN,true,false,"Load from remote site");
         a3.setCondition(a2,"ice");
 
-        
+
         out.add(a1);
         out.add(a2);
         out.add(a3);
