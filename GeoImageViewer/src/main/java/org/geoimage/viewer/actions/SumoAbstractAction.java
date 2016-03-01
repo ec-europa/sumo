@@ -66,14 +66,13 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
      *
      */
 	public void actionPerformed(ActionEvent e) {
-		Map<String,String> args=null;
 
         if (getArgumentTypes() != null) {
             ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, this.getArgumentTypes());
             dialog.setVisible(true);
             boolean ok=dialog.isOk();
             if(ok){
-            	args=dialog.getActionArgs();
+            	paramsAction=dialog.getActionArgs();
             	dialog.dispose();
             }else{
             	return;
