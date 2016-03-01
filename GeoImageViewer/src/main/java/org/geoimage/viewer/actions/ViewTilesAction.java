@@ -36,11 +36,11 @@ public class ViewTilesAction extends SumoAbstractAction{
 
 
 	@Override
-	public boolean execute(String[] args) {
+	public boolean execute() {
 		try {
 			done = false;
-			if(args!=null){
-				tileSize=Integer.parseInt(args[0]);
+			if(paramsAction!=null){
+				tileSize=Integer.parseInt(paramsAction.values().iterator().next());
 			}
 
 	        new Thread(new Runnable() {

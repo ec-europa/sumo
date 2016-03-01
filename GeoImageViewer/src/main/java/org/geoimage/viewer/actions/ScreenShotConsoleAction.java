@@ -30,7 +30,7 @@ public class ScreenShotConsoleAction extends SumoAbstractAction{
     }
 
 
-    public boolean execute(String[] args) {
+    public boolean execute() {
        GeoImageViewerView.screenshot();
        return true;
     }

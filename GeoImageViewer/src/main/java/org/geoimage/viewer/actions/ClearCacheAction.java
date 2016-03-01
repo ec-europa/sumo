@@ -33,7 +33,7 @@ public class ClearCacheAction extends SumoAbstractAction implements IProgress{
 
 
 	@Override
-	public boolean execute(String[] args) {
+	public boolean execute() {
 		File folder=CacheManager.getRootCacheInstance().getPath();
 		//System.gc();
 		try {

@@ -63,22 +63,21 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
                 "Use \"add postgis SimpleEditVector [host=myhost.org dbname=database user=user password=pwd table=mytable]\" to add a postgis table to the image\n";
     }
 
-    public boolean execute(final String[] args) {
-        if (args.length == 0) {
+    public boolean execute() {
+        if (paramsAction.size() == 0) {
             return true;
         }
         done = false;
         try {
-            if (args[0].equals("shp")) {
-                addShapeFile(args);
-
-            } else if (args[0].equals("postgis")) {
-                addPostgis(args);
-
-            } else if (args[0].equals("csv")) {
-                addSimpleCSV(args);
-            } else if (args[0].equals("query")) {
-                addQuery(args);
+        	String type=paramsAction.get("data type");
+            if (type.equals("shp")) {
+                addShapeFile();
+            } else if (type.equals("postgis")) {
+               // addPostgis();
+            } else if (type.equals("csv")) {
+                addSimpleCSV();
+            } else if (type.equals("query")) {
+               // addQuery();
             }
         } catch (Exception e) {
             done = true;
@@ -131,10 +130,10 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
         }
     }
 
-    private void addShapeFile(String[] args) {
+    private void addShapeFile() {
         String file = "";
-        if (args.length == 4) {
-            file = args[3].split("=")[1].replace("%20", " ");
+        if (paramsAction.size() == 4) {
+            file = getParamValue("Date Column").split("=")[1].replace("%20", " ");
         } else {
             FileFilter f = new FileFilter() {
 
@@ -166,26 +165,29 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
                 try {
                 	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
                     GeometricLayer gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
-                    addLayerInThread(args[1], args[2], gl, (ImageLayer) l);
+                    addLayerInThread(getParamValue("data type"),
+                    		getParamValue("Id Column"), gl, (ImageLayer) l);
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
         }
     }
     
-    private void addSimpleCSV(String[] args) {
-        if (args.length == 4&&args[1].contains("=")) {
-            String file=args[1].split("=")[3];
+    private void addSimpleCSV() {
+        if (paramsAction.size() == 4&&paramsAction.get("Id Column").contains("=")) {
+            String file=paramsAction.get("Id Column").split("=")[3];
             ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
             if(l!=null){
             		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
                     GeometricLayer positions = csvio.readLayer();
                     if (positions.getProjection() == null) {
-                        addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
+                        addLayerInThread(paramsAction.get("Id Column"), 
+                        		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                     } else {
                     	try{
                         	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                    			addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
+                    			addLayerInThread(paramsAction.get("Id Column"), 
+                                		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                     	}catch(Exception e){
                     		logger.error(e.getMessage(),e);
                     	}		
@@ -201,10 +203,12 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
                     		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     		GeometricLayer positions = csvio.readLayer();
                             if (positions.getProjection() == null) {
-                                addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
+                                addLayerInThread(paramsAction.get("Id Column"), 
+                                		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                             } else {
                                 positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                                addLayerInThread(args[1], args[2], positions, (ImageLayer) l);
+                                addLayerInThread(paramsAction.get("Id Column"), 
+                                		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                             }
                     }
                 } catch (Exception ex) {
@@ -253,11 +257,11 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
     }
 
     public List<Argument> getArgumentTypes() {
-        Argument a1 = new Argument("data type", Argument.STRING, false, "image");
+        Argument a1 = new Argument("data type", Argument.STRING, false, "image","data type");
         a1.setPossibleValues(new String[]{"csv", "postgis", "shp", "query"});
-        Argument a2 = new Argument("Id Column", Argument.STRING, false, "id");
-        Argument a3 = new Argument("Date Column", Argument.STRING, false, "date");
-        Argument a4 = new Argument("Interpolation Date", Argument.DATE, false, new Date());
+        Argument a2 = new Argument("Id Column", Argument.STRING, false, "id","Id Column");
+        Argument a3 = new Argument("Date Column", Argument.STRING, false, "date","Date Column");
+        Argument a4 = new Argument("Interpolation Date", Argument.DATE, false, new Date(),"Interpolation Date");
         Vector<Argument> out = new Vector<Argument>();
         out.add(a1);
         out.add(a2);
@@ -281,4 +285,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
     public void setDone(boolean value) {
         done = value;
     }
+
+
 }

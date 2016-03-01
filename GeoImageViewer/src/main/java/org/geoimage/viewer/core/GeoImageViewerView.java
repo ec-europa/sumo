@@ -677,7 +677,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         if (lastImage != null) {
             new Thread(() -> {
 			    try {
-			        getConsole().execute(new String[]{"image", "image", "file=" + lastImage, "buffer=false"});
+			        getConsole().execute(new String[]{"image=image", "file=" + lastImage, "buffer=false"});
 			        Thread.sleep(5000);
 			    } catch (InterruptedException ex) {
 			    	logger.error(ex.getMessage(),ex);

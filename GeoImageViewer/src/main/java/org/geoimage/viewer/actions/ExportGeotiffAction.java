@@ -30,8 +30,9 @@ public class ExportGeotiffAction extends SumoAbstractAction{
     }
 
 
-    public boolean execute(String[] args) {
-        final File f = new File(args[0]);
+    public boolean execute() {
+    	String val=paramsAction.values().iterator().next();
+        final File f = new File(val);
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -48,7 +49,7 @@ public class ExportGeotiffAction extends SumoAbstractAction{
     }
 
     public List<Argument> getArgumentTypes() {
-        Argument arg1 = new Argument("File path", Argument.FILE, false, null);
+        Argument arg1 = new Argument("File path", Argument.FILE, false, null,"File path");
         Vector<Argument> out = new Vector<Argument>();
         out.add(arg1);
         return out;

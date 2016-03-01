@@ -64,16 +64,16 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
      * @param
      * @return true, if successful
      */
-    public boolean execute(String[] args) {
+    public boolean execute() {
         // initialise the buffering distance value
         int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
         SumoPlatform.getApplication().getMain().addStopListener(this);
 
-        if (args.length < 2) {
+        if (paramsAction.size() < 2) {
             return true;
         } else {
 
-            if (args[0].equals("k-dist")) {
+            if (paramsAction.get("algorithm").equals("k-dist")) {
                 done = false;
 
                 ImageLayer cl=LayerManager.getIstanceManager().getCurrentImageLayer();
@@ -97,32 +97,34 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 thresholds.put("VV",0.0f);
                 for (int bb = 0; bb < numberofbands; bb++) {
                     if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-                    	thresholds.put("HH", Float.parseFloat(args[bb+1]));
+                    	thresholds.put("HH", Float.parseFloat(paramsAction.get("thresholdHH")));
                     } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-                    	thresholds.put("HV", Float.parseFloat(args[bb+1]));
+                    	thresholds.put("HV", Float.parseFloat(paramsAction.get("thresholdHV")));
                     } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-                    	thresholds.put("VH", Float.parseFloat(args[bb+1]));
+                    	thresholds.put("VH", Float.parseFloat(paramsAction.get("thresholdVH")));
                     } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-                    	thresholds.put("VV", Float.parseFloat(args[bb+1]));
+                    	thresholds.put("VV", Float.parseFloat(paramsAction.get("thresholdVV")));
                     }
                 }
                 //read the land mask
                 coastlineMask = new ArrayList<MaskVectorLayer>();
                 iceMask = new ArrayList<MaskVectorLayer>();
                 for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
-                    if (l instanceof IMask & l.getName().startsWith(args[numberofbands + 1])) {
+                    if (l instanceof IMask ) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
-                    		coastlineMask.add((MaskVectorLayer) l);
+                    		if( l.getName().startsWith(paramsAction.get("coastline")))
+                    			coastlineMask.add((MaskVectorLayer) l);
                     	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
-                    		iceMask.add((MaskVectorLayer) l);
+                    		if( l.getName().startsWith(paramsAction.get("ice")))
+                    			iceMask.add((MaskVectorLayer) l);
                     	}else{
 
                     	}
                     }
                 }
                 //read the buffer distance
-                bufferingDistance = Integer.parseInt(args[numberofbands + 2]);
-                final float ENL = Float.parseFloat(args[numberofbands + 3]);
+                bufferingDistance = Integer.parseInt(paramsAction.get("Buffer"));
+                final float ENL = Float.parseFloat(paramsAction.get("ENL"));
 
                 // create new buffered mask with bufferingDistance using the mask in parameters
                 final IMask[] bufferedMask = new IMask[coastlineMask.size()];
@@ -159,15 +161,15 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     public List<ActionDialog.Argument> getArgumentTypes() {
         List<ActionDialog.Argument> out = new ArrayList<ActionDialog.Argument>();
 
-        ActionDialog.Argument a1 = new ActionDialog.Argument("algorithm", ActionDialog.Argument.STRING, false, "k-dist");
+        ActionDialog.Argument a1 = new ActionDialog.Argument("algorithm", ActionDialog.Argument.STRING, false, "k-dist","algorithm");
         a1.setPossibleValues(new Object[]{"k-dist"});
-        ActionDialog.Argument a2 = new ActionDialog.Argument("thresholdHH", ActionDialog.Argument.FLOAT, false, 1.5);
-        ActionDialog.Argument a21 = new ActionDialog.Argument("thresholdHV", ActionDialog.Argument.FLOAT, false, 1.2);
-        ActionDialog.Argument a22 = new ActionDialog.Argument("thresholdVH", ActionDialog.Argument.FLOAT, false, 1.5);
-        ActionDialog.Argument a23 = new ActionDialog.Argument("thresholdVV", ActionDialog.Argument.FLOAT, false, 1.2);
+        ActionDialog.Argument a2 = new ActionDialog.Argument("thresholdHH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdHH");
+        ActionDialog.Argument a21 = new ActionDialog.Argument("thresholdHV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdHV");
+        ActionDialog.Argument a22 = new ActionDialog.Argument("thresholdVH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdVH");
+        ActionDialog.Argument a23 = new ActionDialog.Argument("thresholdVV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdVV");
 
-        ActionDialog.Argument a3 = new ActionDialog.Argument("coastline", ActionDialog.Argument.STRING, true, "no mask choosen");
-        ActionDialog.Argument a31= new ActionDialog.Argument("ice", ActionDialog.Argument.STRING, true, "no mask choosen");
+        ActionDialog.Argument a3 = new ActionDialog.Argument("coastline", ActionDialog.Argument.STRING, true, "no mask choosen","coastline");
+        ActionDialog.Argument a31= new ActionDialog.Argument("ice", ActionDialog.Argument.STRING, true, "no mask choosen","ice");
 
 
         ArrayList<String> coasts = new ArrayList<String>();
@@ -194,7 +196,9 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
         out.add(a31);
 
 
-        ActionDialog.Argument a4 = new ActionDialog.Argument("Buffer (pixels)", ActionDialog.Argument.FLOAT, false, SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
+        ActionDialog.Argument a4 = new ActionDialog.Argument("Buffer", 
+        		ActionDialog.Argument.FLOAT, false, 
+        		SumoPlatform.getApplication().getConfiguration().getBufferingDistance(),"Buffer (pixels)");
 
         //management of the different threshold in the VDS parameters panel
         out.add(a1);
@@ -214,7 +218,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
         out.add(a4);
         if (il.getImageReader() instanceof SarImageReader) {
-        	ActionDialog.Argument aEnl = new ActionDialog.Argument("ENL", ActionDialog.Argument.FLOAT, false, ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()));
+        	ActionDialog.Argument aEnl = new ActionDialog.Argument("ENL", ActionDialog.Argument.FLOAT, false, 
+        			ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()),"ENL");
             out.add(aEnl);
         }
 

@@ -32,7 +32,7 @@ public class HomeConsoleAction extends AbstractConsoleAction {
 
     }
 
-    public boolean execute(String[] args) {
+    public boolean execute() {
         ILayerManager lm = LayerManager.getIstanceManager();
         OpenGLContext geoc=SumoPlatform.getApplication().getGeoContext();
         for (ILayer l : lm.getLayers().keySet()) {

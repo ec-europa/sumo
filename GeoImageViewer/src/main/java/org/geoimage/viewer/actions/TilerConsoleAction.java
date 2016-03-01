@@ -28,7 +28,7 @@ public class TilerConsoleAction extends SumoAbstractAction {
                 "Use \"tiler\" ";
     }
 
-    public boolean execute(String[] args) {
+    public boolean execute() {
         for (final ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
                 new Thread(new Runnable() {

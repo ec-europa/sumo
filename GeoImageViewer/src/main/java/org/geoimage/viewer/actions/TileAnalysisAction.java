@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
@@ -81,41 +83,44 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 
 
 	@Override
-	public boolean execute(String[] args) {
+	public boolean execute() {
 		try {
 			SarImageReader sar=(SarImageReader) SumoPlatform.getApplication().getCurrentImageReader();
 			ImageLayer layer=LayerManager.getIstanceManager().getCurrentImageLayer();
 
-			if(layer!=null && args.length>=2){
-
+			if(layer!=null && paramsAction.size()>=2){
+				Iterator<String>it=paramsAction.values().iterator();
+				String arg0=it.next();
+				String arg1=it.next();
+				String arg2=it.next();
 				//run for the black border analysis
-				if(args[0].equalsIgnoreCase("bb")){
-					if(args.length==2 && args[1].equalsIgnoreCase("test")){
+				if(arg0.equalsIgnoreCase("bb")){
+					if(paramsAction.size()==2 && arg1.equalsIgnoreCase("test")){
 						runBBAnalysis();
 					}else{
-						int row=Integer.parseInt(args[1]);
-						int col=Integer.parseInt(args[2]);
+						int row=Integer.parseInt(arg1);
+						int col=Integer.parseInt(arg2);
 						String direction="H"; //h= horizontal v=vertical
-						if(args.length==4)
-							direction=args[2];
+						if(paramsAction.size()==4)
+							direction=arg2;
 						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 					}
 			//run vds analysis on a single tile
-				}else if(args[0].equalsIgnoreCase("vds")){
+				}else if(arg0.equalsIgnoreCase("vds")){
 
-					int row=Integer.parseInt(args[1]);
-					int col=Integer.parseInt(args[2]);
-					Float buffer=Float.parseFloat(args[3]);
+					int row=Integer.parseInt(paramsAction.get("row"));//args[1]);
+					int col=Integer.parseInt(paramsAction.get("col2"));//args[2]);
+					Float buffer=Float.parseFloat(paramsAction.get("buffer"));
 					Float hh=1.5f;
 					Float hv=1.5f;
 					Float vh=1.5f;
 					Float vv=1.5f;
-					if(args.length>=5){
-						hh=Float.parseFloat(args[4]);
-						hv=Float.parseFloat(args[5]);
-						vh=Float.parseFloat(args[6]);
-						vv=Float.parseFloat(args[7]);
+					if(paramsAction.size()>=5){
+						hh=Float.parseFloat(paramsAction.get("hh"));
+						hv=Float.parseFloat(paramsAction.get("hv"));
+						vh=Float.parseFloat(paramsAction.get("vh"));
+						vv=Float.parseFloat(paramsAction.get("vv"));
 					}
 					//read the land mask
 					ArrayList<IMask> mask = new ArrayList<IMask>();
