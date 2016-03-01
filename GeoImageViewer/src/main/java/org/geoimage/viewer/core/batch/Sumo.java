@@ -24,74 +24,74 @@ public class Sumo {
 	protected final int PARAM_ERROR=-1;
 	protected final int SINGLE_IMG_ANALYSIS=1;
 	protected final int MULTI_IMG_ANALYSIS=2;
-	
+
 	private int status=SINGLE_IMG_ANALYSIS;
 	private String msg="";
-	
+
 	private final  String TOO_MUCH_PARAMS="-d and -f are exsclusive params";
 	private final  String FOLDER_ERROR="Folder not exist, check path";
 	private final  String FILE_ERROR="File not exist, check path";
-	
+
 	//starting params for the command line
-	public static final String TRESH_HH_PARAM="-thh";
-	public static  final String TRESH_HV_PARAM="-thv";
-	public static  final String TRESH_VH_PARAM="-tvh";
-	public static  final String TRESH_VV_PARAM="-tvv";
-	public static  final String[] TRESH_PARAMS={TRESH_HH_PARAM, TRESH_VH_PARAM , TRESH_HV_PARAM ,TRESH_VV_PARAM };
-	
+	private static final String TRESH_HH_PARAM="-thh";
+	private static  final String TRESH_HV_PARAM="-thv";
+	private static  final String TRESH_VH_PARAM="-tvh";
+	private static  final String TRESH_VV_PARAM="-tvv";
+	private static  final String[] TRESH_PARAMS={TRESH_HH_PARAM, TRESH_VH_PARAM , TRESH_HV_PARAM ,TRESH_VV_PARAM };
+
 	//for a single image
-	public static  final String IMG_PARAM="-i";
+	private static  final String IMG_PARAM="-i";
 	//for multiple images
-	public static  final String IMG_FOLD_PARAM="-d";
-	
-	public static  final String BUFFER_PARAM="-b";
-	public static  final String OUTPUT_FOLD_PARAM="-o";
-	public static  final String SHP_FILE="-sh";
-	public static  final String GLOBAL_CONF_FILE_PARAM="-gconf";
-	public static  final String LOCAL_CONF_FILE_PARAM="-uselocalconf"; // Y/N
-	
+	private static  final String IMG_FOLD_PARAM="-d";
+
+	private static  final String BUFFER_PARAM="-b";
+	private static  final String OUTPUT_FOLD_PARAM="-o";
+	private static  final String SHP_FILE="-sh";
+	private static  final String GLOBAL_CONF_FILE_PARAM="-gconf";
+	private static  final String LOCAL_CONF_FILE_PARAM="-uselocalconf"; // Y/N
+
 	//
-	
-	
+
+
 	private AnalysisParams params;
 	private ConfigurationFile conf;
 	private static AbstractBatchAnalysis batch=null;
 	private Date startDate;
-	
-	
+
+
 	public Sumo(){
 		params=new AnalysisParams();
 		SumoPlatform.setInBatchMode();
 		startDate=new Date();
 		params.startDate=startDate;
 	}
-	
+
 	public static GeoImageReader getCurrentReader(){
 		return batch.getCurrentReader();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void execAnalysis(){
-		
+
 		if(status==SINGLE_IMG_ANALYSIS){
 			batch=new SingleBatchAnalysis(params);
-			
+
 		}else{
 			batch=new MultipleBatchAnalysis(params,conf);
 		}
 		batch.runProcess();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
 	protected int parseParams(List<String> inputParams){
 		this.status=0; //OK
-		
+
 		//for  the moment, the configuration file is ONLY FOR THE MULTIPLE ANALYSIS
 		int idx=inputParams.indexOf(GLOBAL_CONF_FILE_PARAM);
 		if(idx!=-1){
@@ -112,8 +112,8 @@ public class Sumo {
 				status=PARAM_ERROR;
 			}
 		}else{
-		
-			//XOR se i parametri non contengono o contengono entrambi 
+
+			//XOR se i parametri non contengono o contengono entrambi
 	        if (!(inputParams.contains(IMG_FOLD_PARAM)  ^ inputParams.contains(IMG_PARAM) )){
 	        	status=PARAM_ERROR;
 	        	msg=TOO_MUCH_PARAMS;
@@ -141,7 +141,7 @@ public class Sumo {
 	        		msg=FILE_ERROR;
 	        	}
 	        }
-		    
+
 	        //parameters are OK
 	        if(status!=PARAM_ERROR){
 	        	int index=inputParams.indexOf(BUFFER_PARAM);
@@ -150,10 +150,10 @@ public class Sumo {
 	        	}else{
 	        		params.buffer=Integer.parseInt(SumoPlatform.getApplication().getConfiguration().getBufferingDistance());
 	        	}
-	
+
 	        	//set the treshold params
 	        	for(int i=0;i<TRESH_PARAMS.length;i++){
-	        		//leggo i valori di threshold se li trovo 
+	        		//leggo i valori di threshold se li trovo
 	        		index=inputParams.indexOf(TRESH_PARAMS[i]);
 	        		if(index!=-1){
 	        			//li setto nell'array dei threshold con questo ordine HH HV VH VV
@@ -161,19 +161,19 @@ public class Sumo {
 	        			params.thresholdArrayValues[i]=val;
 	        		}
 	        	}
-	        	
-	        	//check for the output folder 
+
+	        	//check for the output folder
 	        	index=inputParams.indexOf(OUTPUT_FOLD_PARAM);
 	        	if(index!=-1){
 	        		params.outputFolder=inputParams.get(index+1);
 	        	}else{
 	        		//if the output folder is not setted we create an output folder under the current folder
-	        		File f=new File("./outupt_"+System.currentTimeMillis()+"/");
+	        		File f=new File("."+File.separator+"outupt_"+System.currentTimeMillis()+File.separator);
 	        		logger.debug("Setting output folder:"+f.getAbsolutePath());
 	        		f.mkdir();
 	        		params.outputFolder=f.getAbsolutePath();
 	        	}
-	        	
+
 	        	//check for shp file
 	        	index=inputParams.indexOf(SHP_FILE);
 	        	if(index!=-1){
@@ -182,33 +182,33 @@ public class Sumo {
 	        		//search default shp file
 	        		params.shapeFile=SumoPlatform.getApplication().getConfiguration().getDefaultLandMask();
 	        	}
-	        } 	
+	        }
         }
-        
+
 		return status;
 	}
-	
-	
+
+
 	public static void main(String[] args) {
 		/**@todo
          * arguments
          * -i : path to single image folder
          * -d : path to the directory that contains the image folders
-         * 
-         * 
+         *
+         *
          * -sh: specify shape file (if is not passed , use land mask for the analysis)
-         * 
+         *
          * -gf: specify global file configuration
-         * 
-         * 
+         *
+         *
          * -enl : equinvalent number of looks
-         * -thh threshold HH 
-         * -thv threshold HV 
-         * -tvh threshold VH 
-         * -tvv threshold HV 
-         * 
+         * -thh threshold HH
+         * -thv threshold HV
+         * -tvh threshold VH
+         * -tvv threshold HV
+         *
          * -o output dir to store files if no ddbb storage
-         * 
+         *
          *
          */
 		long start=System.currentTimeMillis();

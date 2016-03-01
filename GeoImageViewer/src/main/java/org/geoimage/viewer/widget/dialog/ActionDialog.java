@@ -204,8 +204,6 @@ public class ActionDialog extends javax.swing.JDialog {
         super(parent, modal);
         this.args=arguments;
 
-
-
         initComponents();
 
         if (args != null) {

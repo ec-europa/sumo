@@ -39,10 +39,10 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
     private String lastDirectory;
     boolean done = false;
     private String message = "Adding Image. Please wait...";
- 
 
-    
-    
+
+
+
     public AddImageConsoleAction() {
     	super("image","Import/Image");
         if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
@@ -68,7 +68,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         }
         done = false;
         try {
-        	String img=getParamValue("image");
+        	String img=getParamValue("image_type");
             if (img.equals("image")) {
                 addImage();
             } else if (img.startsWith("thumb")) {
@@ -87,7 +87,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         // set the done flag to false
         this.done = false;
         boolean tileBuff=false;
-        
+
         String imagefile = "";
         if(paramsAction.size()!=3){//menu open image
         	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
@@ -101,11 +101,11 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
                 imagefile=fileChooser.getSelectedFile().getAbsolutePath();
-            }   
-            tileBuff=paramsAction.get("Local_Buffer").equals("true"); 
+            }
+            tileBuff=paramsAction.get("Local_Buffer").equals("true");
         }else{
         	//**** menu open last image ********//
-            
+
         	String imagename = paramsAction.get("file");//.split("=")[1];
             final String imagenamefile = imagename.substring(imagename.lastIndexOf(File.separator) + 1);
             // check if a wildcard character is used
@@ -124,10 +124,10 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
                 imagefile = imagename;
             }
             tileBuff=paramsAction.get("buffer").equals("true");//.split("=")[1].equals("true");
-        }    
+        }
         GeoImageReader temp = null;
         List<GeoImageReader> tempList = null;
-        
+
         if (tileBuff) {
             GeoImageReader gir1 = GeoImageReaderFactory.createReaderForName(imagefile,PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm()).get(0);
             temp = new TiledBufferedImage(new File(CacheManager.getRootCacheInstance().getPath(), gir1.getFilesList()[0] + "/data"), gir1);
@@ -143,7 +143,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         SumoPlatform.getApplication().getConfiguration().updateConfiguration(Constant.PREF_LASTIMAGE, temp.getFilesList()[0]);
         SumoPlatform.getApplication().getGeoContext().setX(0);
         SumoPlatform.getApplication().getGeoContext().setY(0);
-        
+
         if (tempList==null||tempList.isEmpty()) {
             this.done = true;
             this.setMessage("Could not open image file");
@@ -152,10 +152,10 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         } else {
         	for(int i=0;i<tempList.size();i++){
         		temp=tempList.get(i);
-             
+
         		//ImageTiler it = new ImageTiler(temp);
                 //it.generateAllTiles();
-        		
+
         		ImageLayer newImage = new ImageLayer(temp);
                 SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
                 try {
@@ -173,8 +173,8 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         }
         done = true;
     }
-    
-    
+
+
     private void addThumbnails() {
     	 SumoXmlIOOld old=null;
         if (paramsAction.size() == 2) {
@@ -197,14 +197,14 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
 	        	}catch(Exception e){
 	        		logger.error(e.getMessage());
 	        	}
-	        	
-	        }    
+
+	        }
 	        try {
 	            SumoPlatform.getApplication().refresh();
 	        } catch (Exception ex) {
 	        	logger.error(ex.getMessage(),ex);
 	        }
-        }   
+        }
 
     }
 
@@ -229,7 +229,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
     }
 
     public List<Argument> getArgumentTypes() {
-        Argument a1 = new Argument("data_type", Argument.STRING, false, "image","data type");
+        Argument a1 = new Argument("image_type", Argument.STRING, false, "image","data type");
         //AG import thumbnails removed
         //a1.setPossibleValues(new String[]{"image", "thumbnails"});
         a1.setPossibleValues(new String[]{"image"});
@@ -306,5 +306,5 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         return null;
     }
 
-	
+
 }
