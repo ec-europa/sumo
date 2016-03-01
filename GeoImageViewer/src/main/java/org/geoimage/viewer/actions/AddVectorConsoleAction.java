@@ -56,6 +56,11 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     private static String lastDirectory;
     boolean done = false;
     private String message = "Adding data. Please wait...";
+    
+    private static final String paramFileType="File type";
+    private static final String paramType="Type";
+    private static final String paramSite="Remote";
+
 
     public AddVectorConsoleAction() {
     	super("vector","Import/Vector");
@@ -76,8 +81,8 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     }
 
     @Override
-    public boolean execute(final String[] args) {
-        if (args.length < 1) {
+    public boolean execute() {
+        if (super.paramsAction.size() < 1) {
             errorWindow("Wrong arguments for add vector action\n" + getDescription());
             done = true;
             return true;
@@ -86,12 +91,12 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         try {
         	GenericLayer lay=null;
         	File shp=null;
-            if (args[0].equals("shp")) {
+            if (getParamValue(paramFileType).equals("shp")) {
                 int t=MaskVectorLayer.COASTLINE_MASK;
-                if(args[1].equalsIgnoreCase("ice")){
+                if(getParamValue(paramType).equalsIgnoreCase("ice")){
                 	try{
 	                	t=MaskVectorLayer.ICE_MASK;
-	                	if(args[1].equals("remote")){
+	                	if(getParamValue(paramSite).equals("remote")){
 	                		GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
 	                		String cachePath=SumoPlatform.getApplication().getCachePath();
 	                		File cache=new File(cachePath+File.separator+System.currentTimeMillis());
@@ -118,15 +123,15 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                 	lay=FactoryLayer.createMaskLayer(gl,t);
                 }
 
-            } else if (args[0].equals("postgis")) {
-                addPostgis(args);
+            } else if (getParamValue(paramFileType).equals("postgis")) {
+                addPostgis();
 
-            } else if (args[0].equals("csv")) {
-            	GeometricLayer positions=loadGenericCSV(args);
+            } else if (getParamValue(paramFileType).equals("csv")) {
+            	GeometricLayer positions=loadGenericCSV();
                 lay=FactoryLayer.createComplexLayer(positions);
                 done=LayerManager.addLayerInThread(lay);
 
-            } else if (args[0].equals("sumo XML")) {
+            } else if (getParamValue(paramFileType).equals("sumo XML")) {
             /*    int t=MaskVectorLayer.COASTLINE_MASK;
                 if(args[1].equalsIgnoreCase("ice"))
                 	t=MaskVectorLayer.ICE_MASK;
@@ -134,13 +139,13 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             	GeometricLayer positions=loadSumoXML(args);
         		lay=FactoryLayer.createMaskLayer(positions,t);*/
 
-            } else if (args[0].equals("gml")) {
-            	GeometricLayer positions=loadGml(args);
+            } else if (getParamValue(paramFileType).equals("gml")) {
+            	GeometricLayer positions=loadGml();
                 GenericLayer gl=FactoryLayer.createComplexLayer(positions);
                 done=LayerManager.addLayerInThread(gl);
 
-            } else if (args[0].equals("query")) {
-                addQuery(args);
+            } else if (getParamValue(paramFileType).equals("query")) {
+                addQuery();
             }
             if(lay!=null)
             	done=LayerManager.addLayerInThread(lay);
@@ -156,7 +161,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private GeometricLayer loadGenericCSV(String[] args) {
+    private GeometricLayer loadGenericCSV() {
     	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
     	GeometricLayer positions=null;
     	if(l!=null){
@@ -179,10 +184,10 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     	return positions;
     }
 
-    private void addPostgis(String[] args) {
+    private void addPostgis() {
         Map <String,String> config = null;
         String layer = "";
-        if (args.length == 1) {
+        if (paramsAction.size() == 1) {
             PostgisSettingsDialog ps = new PostgisSettingsDialog(null, true);
             ps.setVisible(true);
             if (!ps.isOk()) {
@@ -191,24 +196,17 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
             layer = ps.getTable();
             config = ps.getConfig();
 
-        } else if (args.length == 6) {
+        } else if (paramsAction.size() == 6) {
             config = new HashMap<String,String>();
             config.put("dbtype", "postgis");
             config.put("schema", "public");
             config.put("port", "5432");
-            for (int i = 1; i < args.length; i++) {
-                if (args[i].startsWith("host=")) {
-                    config.put("host", args[i].replace("host=", ""));
-                } else if (args[i].startsWith("dbname=")) {
-                    config.put("dbname", args[i].replace("dbname=", ""));
-                } else if (args[i].startsWith("user=")) {
-                    config.put("user", args[i].replace("user=", ""));
-                } else if (args[i].startsWith("password=")) {
-                    config.put("password", args[i].replace("password=", ""));
-                } else if (args[i].startsWith("table=")) {
-                    layer = args[i].replace("table=", "");
-                }
-            }
+            
+            config.put("host", getParamValue("host").replace("host=", ""));
+            config.put("dbname", getParamValue("dbname").replace("dbname=", ""));
+            config.put("user", getParamValue("user").replace("user=", ""));
+            config.put("password", getParamValue("password").replace("password=", ""));
+            layer = getParamValue("table").replace("table=", "");
         }
         for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
             if (l instanceof ImageLayer && l.isActive()) {
@@ -217,7 +215,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
                     Connection conn = DriverManager.getConnection("jdbc:postgresql://" + config.get("host").toString()
                             + ":" + config.get("port") + "/" + config.get("dbname"), config.get("user"), config.get("password"));
                     dialog.setConnection(conn);
-                    dialog.setImageLayer((ImageLayer) l, args[1]);
+                    dialog.setImageLayer((ImageLayer) l, getParamValue("dbname"));
                     dialog.setVisible(true);
                     done = true;
                     return;
@@ -229,14 +227,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         }
     }
 
-    private void addQuery(String[] args) {
+    private void addQuery() {
         try {
             for (ILayer l : SumoPlatform.getApplication().getLayerManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer && l.isActive()) {
                     DatabaseDialog dialog = new DatabaseDialog(null, true);
                     Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
                     dialog.setConnection(conn);
-                    dialog.setImageLayer((ImageLayer) l, args[1]);
+                   
+                    //TODO:replace the args[1] with the correct param name
+                    //dialog.setImageLayer((ImageLayer) l, args[1]);
                     dialog.setVisible(true);
                     done = true;
                 }
@@ -374,7 +374,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
      *
      * @param args
      */
-    private GeometricLayer loadGml(String[] args) {
+    private GeometricLayer loadGml() {
     	GeometricLayer positions =null;
     	try{
 	        int returnVal = fd.showOpenDialog(null);
@@ -418,15 +418,16 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     @Override
     public List<Argument> getArgumentTypes() {
     	List<Argument> out = new ArrayList<Argument>();
-        Argument a1 = new Argument("data type", Argument.STRING, false, "image");
+        Argument a1 = new Argument(paramFileType, Argument.STRING, false, "image","Type");
         a1.setPossibleValues(new String[]{"csv", "shp", "gml", "sumo XML", "postgis", "query"});
 
-        Argument a2 = new Argument("type", Argument.STRING, false, "coastline");
+        Argument a2 = new Argument(paramType, Argument.STRING, false, "coastline","Mask type");
         a2.setPossibleValues(new String[]{"coastline", "ice","other"});
 
-        Argument a3= new Argument("Load from Noaa",Argument.BOOLEAN,true,false);
+        Argument a3= new Argument(paramSite,Argument.BOOLEAN,true,false,"Load from remote site");
         a3.setCondition(a2,"ice");
 
+        
         out.add(a1);
         out.add(a2);
         out.add(a3);

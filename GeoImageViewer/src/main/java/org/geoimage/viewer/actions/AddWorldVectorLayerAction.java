@@ -39,7 +39,7 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
         return " Add a land mask layer";
     }
 
-    public boolean execute(final String[] args) {
+    public boolean execute() {
         done = false;
         new Thread(new Runnable() {
 
@@ -54,7 +54,7 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
 
                             int t=MaskVectorLayer.COASTLINE_MASK;
-                            if(args[1].equalsIgnoreCase("ice"))
+                            if(paramsAction.get("data_type").equalsIgnoreCase("ice"))
                             	t=MaskVectorLayer.ICE_MASK;
                     		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
 

@@ -3,6 +3,7 @@ package org.geoimage.viewer.actions;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Iterator;
 import java.util.List;
 
 //import org.apache.logging.log4j.LogManager;
@@ -35,10 +36,12 @@ public class CreateBufferedMask extends SumoAbstractAction{
 	}
 
 	@Override
-	public boolean execute(String[] args) {
-		if(args.length>=1){
+	public boolean execute() {
+		Iterator it=paramsAction.values().iterator();
+		String arg=(String)it.next();
+		if(paramsAction.size()>=1){
 			final GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
-			if(args[0].equalsIgnoreCase("test")){
+			if(arg.equalsIgnoreCase("test")){
 				FileWriter fw=null;
 				BufferedWriter bw=null;
 				try{
@@ -69,7 +72,7 @@ public class CreateBufferedMask extends SumoAbstractAction{
 					}
 				}
 
-			}else if(args[0].equalsIgnoreCase("testreload")){
+			}else if(arg.equalsIgnoreCase("testreload")){
 				String fname="F:\\SumoImgs\\coastline\\OSMLandPoly_20141001_250\\OSMLandPoly_20141001_250m.shp";
 					GeometricLayer shpLayer=null;
 					try{
@@ -104,7 +107,7 @@ public class CreateBufferedMask extends SumoAbstractAction{
 					}catch(Exception e){e.printStackTrace();}
 
 			}else{
-				Integer bufferSize=Integer.parseInt(args[0]);
+				Integer bufferSize=Integer.parseInt(arg);
 				MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(LayerManager.getIstanceManager().getCurrentImageLayer());
 				// create new buffered mask with bufferingDistance using the mask in parameters
 	            final IMask[] bufferedMask = new IMask[1];

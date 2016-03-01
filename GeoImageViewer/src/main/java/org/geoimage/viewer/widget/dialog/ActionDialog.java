@@ -10,7 +10,6 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +38,9 @@ public class ActionDialog extends javax.swing.JDialog {
     //private IAction action;
     private Map<ActionDialog.Argument,JComponent> components = new HashMap<ActionDialog.Argument,JComponent>();
     private boolean ok=false;
-    private String[] actionArgs=null;
+    private Map<String,String> actionArgs=null;
     private String   actionName=null;
-    private Map<String,Argument> args = null;
+    private List<Argument> args = null;
 
 
 /**
@@ -63,20 +62,30 @@ public class ActionDialog extends javax.swing.JDialog {
     private boolean optional;
     private Object defaultValue;
     private Object[] values;
+    private String description;
 
     private boolean conditional=false;
     private Argument condtionObject=null;
     private Object conditionValue=null;
 
 
-    public Argument(String name, Class type, boolean optional, Object defaultValue) {
+    public Argument(String name, Class type, boolean optional, Object defaultValue,String description) {
         this.name = name;
         this.type = type;
         this.optional=optional;
         this.defaultValue=defaultValue;
+        this.description=description;
     }
 
-    public void setCondition(Argument condtionObj,Object value){
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setCondition(Argument condtionObj,Object value){
     	conditional=true;
     	condtionObject=condtionObj;
     	this.conditionValue=value;
@@ -191,7 +200,7 @@ public class ActionDialog extends javax.swing.JDialog {
 
 	/** Creates new form ActionDialog */
     @SuppressWarnings("rawtypes")
-	public ActionDialog(java.awt.Frame parent, boolean modal,Map<String,Argument> arguments) {
+	public ActionDialog(java.awt.Frame parent, boolean modal,List<Argument> arguments) {
         super(parent, modal);
         this.args=arguments;
 
@@ -201,20 +210,20 @@ public class ActionDialog extends javax.swing.JDialog {
 
         if (args != null) {
             argPanel.setLayout(new GridLayout(args.size(), 2));
-            for (Argument arg : args.values()) {
+            for (Argument arg : args) {
 
 	                if (arg.getType() == Argument.STRING) {
 	                    if (arg.getPossibleValues() == null) {
-	                        JLabel label = new JLabel(arg.getName());
-	                        label.setName(arg.getName());
+	                        JLabel label = new JLabel(arg.getDescription());
 	                        JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                        tf.setName(arg.getName());
 	                        components.put(arg,tf);
 	                        argPanel.add(label);
 	                        argPanel.add(tf);
 	                    } else {
-	                        JLabel label = new JLabel(arg.getName());
-	                        label.setName(arg.getName());
+	                        JLabel label = new JLabel(arg.getDescription());
 	                        JComboBox<Object> cb = new JComboBox<Object>(arg.getPossibleValues());
+	                        cb.setName(arg.getName());
 	                        components.put(arg,cb);
 	                        argPanel.add(label);
 	                        argPanel.add(cb);
@@ -227,14 +236,13 @@ public class ActionDialog extends javax.swing.JDialog {
 	                    argPanel.add(label);
 	                    argPanel.add(tf);
 	                } */else if (arg.getType() == Argument.BOOLEAN) {
-	                    JCheckBox cb = new JCheckBox(arg.getName());
+	                    JCheckBox cb = new JCheckBox(arg.getDescription());
 	                    cb.setName(arg.getName());
 	                    argPanel.add(new JLabel());
 	                    components.put(arg,cb);
 	                    argPanel.add(cb);
 	                } else if (arg.getType() == Argument.DIRECTORY) {
-	                    JLabel label = new JLabel(arg.getName());
-	                    label.setName(arg.getName());
+	                    JLabel label = new JLabel(arg.getDescription());
 	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
 	                    tf.setName(arg.getName());
 	                    JButton b = new JButton("Choose...");
@@ -261,7 +269,7 @@ public class ActionDialog extends javax.swing.JDialog {
 	                    GridLayout gl = (GridLayout) argPanel.getLayout();
 	                    gl.setRows(gl.getRows() + 1);
 	                } else if (arg.getType() == Argument.FILE) {
-	                    JLabel label = new JLabel(arg.getName());
+	                    JLabel label = new JLabel(arg.getDescription());
 	                    final JTextField tf = new JTextField("" + arg.getDefaultValue());
 	                    tf.setName(arg.getName());
 	                    JButton b = new JButton("Choose...");
@@ -287,14 +295,15 @@ public class ActionDialog extends javax.swing.JDialog {
 	                    GridLayout gl = (GridLayout) argPanel.getLayout();
 	                    gl.setRows(gl.getRows() + 1);
 	                } else {
-	                    JLabel label = new JLabel(arg.getName());
+	                    JLabel label = new JLabel(arg.getDescription());
 	                    JTextField tf = new JTextField("" + arg.getDefaultValue());
+	                    tf.setName(arg.getName());
 	                    components.put(arg,tf);
 	                    argPanel.add(label);
 	                    argPanel.add(tf);
 	                }
 	        }
-            for (Argument arg : args.values()) {
+            for (Argument arg : args) {
             	if(arg.conditional){
             		JComponent jcControl=components.get(arg);
             		jcControl.setVisible(false);
@@ -384,24 +393,25 @@ public class ActionDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.setVisible(false);
         try {
-            String[] args = new String[components.size() ];
-            //actionName = action.getName();
+            //String[] args = new String[components.size() ];
+            this.actionArgs=new HashMap<>();
             int i = 0;
             for (JComponent c : components.values()) {
                 if (c instanceof JTextField) {
-                    args[i++]= ((JTextField) c).getText();
-
+                    //args[i++]= ((JTextField) c).getText();
+                    actionArgs.put(((JTextField) c).getName(), ((JTextField) c).getText());
                 } else if (c instanceof JComboBox) {
-                    args[i++] = ((JComboBox) c).getSelectedItem() + "";
+                    //args[i++] = ((JComboBox) c).getSelectedItem() + "";
+                    actionArgs.put(((JComboBox) c).getName(),  ((JComboBox) c).getSelectedItem() + "");
                 }
                 else if (c instanceof JCheckBox) {
-                    args[i++] = ((JCheckBox) c).isSelected() + "";
+                   // args[i++] = ((JCheckBox) c).isSelected() + "";
+                    actionArgs.put(((JCheckBox) c).getName(), ((JCheckBox) c).isSelected() + "");
                 }
                 /* else if (c instanceof DateControl) {
                     args[i++] = new Timestamp(((DateControl) c).getDate().getTime()).toString();
                 }*/
             }
-            this.actionArgs=args;
             ok=true;
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
@@ -409,13 +419,10 @@ public class ActionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public String[] getActionArgs() {
+    public Map<String,String> getActionArgs() {
 		return actionArgs;
 	}
 
-	public void setActionArgs(String[] actionArgs) {
-		this.actionArgs = actionArgs;
-	}
 
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.setVisible(false);

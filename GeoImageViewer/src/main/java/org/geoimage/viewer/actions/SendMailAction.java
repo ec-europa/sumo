@@ -5,6 +5,7 @@
 
 package org.geoimage.viewer.actions;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -87,8 +88,8 @@ public class SendMailAction extends SumoAbstractAction  {
     }
 
 
-    public boolean execute(String[] args) {
-        if (args.length == 0) {
+    public boolean execute() {
+      /*  if (args.length == 0) {
             return true;
         }
         done = false;
@@ -107,15 +108,14 @@ public class SendMailAction extends SumoAbstractAction  {
         } catch (Exception e) {
             errorWindow("Problem opening file");
         }
-        done = true;
+        done = true;*/
         return true;
     }
 
     public List<Argument> getArgumentTypes() {
-
-        Vector<Argument> out = new Vector<Argument>();
+        List<Argument> out = new ArrayList<Argument>();
         
-        Argument a1 = new Argument("email account", Argument.STRING, false, "ipsc-mail.jrc.it");
+      /*  Argument a1 = new Argument("email account", Argument.STRING, false, "ipsc-mail.jrc.it");
         out.add(a1);
 
         Argument a2 = new Argument("email account user name", Argument.STRING, false, "leforth");
@@ -135,7 +135,7 @@ public class SendMailAction extends SumoAbstractAction  {
         
         Argument a7 = new Argument("attachment file", Argument.FILE, false, "");
         out.add(a7);
-        
+        */
         return out;
     }
 

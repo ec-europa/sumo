@@ -10,12 +10,15 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.iactions.IAction;
@@ -50,10 +53,17 @@ public class ConsoleLayer extends GenericLayer {
 
     public void execute(String[] arguments) {
         for (String c : pl.getCommands()) {
-            if (c.startsWith(arguments[0])) {
-                String[] args = new String[arguments.length - 1];
-                for (int i = 1; i < arguments.length; i++) {
-                    args[i - 1] = arguments[i];
+            if (arguments[0].startsWith(c)) {
+                //String[] args = new String[arguments.length - 1];
+            	Map<String,String> paramsAction=new HashMap<>();
+            	for (int i = 0; i < arguments.length;i++ ) {
+                    //args[i - 1] = arguments[i];
+            		String[] s=arguments[i].split("=");
+            		if(s!=null&&s.length==2){
+            			paramsAction.put(s[0],s[1]);
+            		}else{
+            			System.out.print("");
+            		}	
                 }
                 try {
                     if (!pl.getPlugins().get(c).isActive()) {
@@ -63,11 +73,12 @@ public class ConsoleLayer extends GenericLayer {
                     if (!(a instanceof IAction)) {
                         return;
                     }
-                    IAction ica = (IAction) a;
+                    SumoAbstractAction ica = (SumoAbstractAction) a;
+                    ica.setParamsAction(paramsAction);
                     if (ica instanceof IProgress) {
                         currentAction = (IProgress) ica;
                     }
-                    ica.execute(args);
+                    ica.execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -123,14 +134,14 @@ public class ConsoleLayer extends GenericLayer {
 	                        IConsoleAction ica = (IConsoleAction) a;
 	                        if (ica instanceof IProgress) {
 	                            currentAction = (IProgress) ica;
-	                            if (ica.execute(args)) {
+	                            if (ica.execute()) {
 	                                return;
 	                            }
 	                            while (currentAction != null && !currentAction.isDone()) {
 	                                Thread.sleep(1000);
 	                            }
 	                        } else {
-	                            if (!ica.execute(args)) {
+	                            if (!ica.execute()) {
 	                                return;
 	                            }
 	                        }
@@ -167,14 +178,14 @@ public class ConsoleLayer extends GenericLayer {
                             IConsoleAction ica = (IConsoleAction) a;
                             if (ica instanceof IProgress) {
                                 currentAction = (IProgress) ica;
-                                if (!ica.execute(args)) {
+                                if (!ica.execute()) {
                                     return;
                                 }
                                 while (currentAction != null && !currentAction.isDone()) {
                                     Thread.sleep(1000);
                                 }
                             } else {
-                                if (!ica.execute(args)) {
+                                if (!ica.execute()) {
                                     return;
                                 }
                             }

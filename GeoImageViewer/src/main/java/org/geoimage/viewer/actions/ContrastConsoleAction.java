@@ -35,11 +35,11 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
                 "Use \"contrast -0.2\" to substract 0.2 to the current scale factor";
     }
 
-    public boolean execute(String[] args) {
-        if (args.length != 1) {
+    public boolean execute() {
+        if (paramsAction.size() != 1) {
             return false;
         }
-        
+        String val=paramsAction.get("value");
         //manage a slider for changing the contrast
       /*    for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer && l.isActive()) {
@@ -64,23 +64,23 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
             }
         }*/
         // c +(number) to increase the actual contrast
-        if (args[0].startsWith("+")) {
-            float contrast = Float.parseFloat(args[0].substring(1));
+        if (val.startsWith("+")) {
+            float contrast = Float.parseFloat(val.substring(1));
             for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer & l.isActive()) {
                     ((ImageLayer) l).setContrast(((ImageLayer) l).getContrast() + contrast);
                 }
             }
         // c -(number) to decrease the actual contrast
-        } else if (args[0].startsWith("-")) {
-            float contrast = Float.parseFloat(args[0].substring(1));
+        } else if (val.startsWith("-")) {
+            float contrast = Float.parseFloat(val.substring(1));
             for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer & l.isActive()) {
                     ((ImageLayer) l).setContrast(((ImageLayer) l).getContrast() - contrast);
                 }
             }
         } else {
-            float contrast = Float.parseFloat(args[0]);
+            float contrast = Float.parseFloat(val);
             for (ILayer l :LayerManager.getIstanceManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer & l.isActive()) {
                     ((ImageLayer) l).setContrast(contrast);
@@ -96,7 +96,7 @@ public class ContrastConsoleAction extends AbstractConsoleAction {
     }
     
     public List<Argument> getArgumentTypes() {
-        Argument a1=new Argument("value", Argument.FLOAT, true, 1);
+        Argument a1=new Argument("value", Argument.FLOAT, true, 1,"value");
         Vector<Argument> out=new Vector<Argument>();
         out.add(a1);
         return out;

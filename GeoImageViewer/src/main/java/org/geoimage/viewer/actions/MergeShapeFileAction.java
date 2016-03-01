@@ -40,7 +40,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
     }
 
 
-    public boolean execute(final String[] args) {
+    public boolean execute() {
     	final File shpFile=selectFile();
         if(shpFile!=null)
 	        new Thread(new Runnable() {
@@ -59,7 +59,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 
 	                        		int t=MaskVectorLayer.COASTLINE_MASK;
-	                                if(args[1].equalsIgnoreCase("ice"))
+	                                if(paramsAction.get("data_type").equalsIgnoreCase("ice"))
 	                                	t=MaskVectorLayer.ICE_MASK;
 	                        		GenericLayer lay=FactoryLayer.createMaskLayer(gl,t);
 

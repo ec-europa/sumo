@@ -16,6 +16,6 @@ public interface IAction extends Action{
 	     * @return
 	     */
 	    public String getPath();
-	    public boolean execute(String[] args);
+	    public boolean execute();//String[] args);
 	    public List<ActionDialog.Argument> getArgumentTypes();
 }
