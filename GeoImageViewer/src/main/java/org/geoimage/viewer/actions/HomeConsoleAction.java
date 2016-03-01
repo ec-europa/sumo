@@ -10,6 +10,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayerManager;
+import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -19,17 +20,21 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
  *
  * @author thoorfr
  */
-public class HomeConsoleAction extends AbstractConsoleAction {
+public class HomeConsoleAction extends AbstractConsoleAction implements IAction{
 
 	public HomeConsoleAction(){
-		super("home");
+		super("h");
 	}
-	
+
 
     public String getDescription() {
         return "Reset active image layer to overview\n" +
                 "Use \"home\"";
 
+    }
+
+    public boolean executeFromConsole() {
+    	return execute();
     }
 
     public boolean execute() {
@@ -38,19 +43,19 @@ public class HomeConsoleAction extends AbstractConsoleAction {
         for (ILayer l : lm.getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
                GeoImageReader gir=((ImageLayer)l).getImageReader();
-               
+
                int x=(gir.getWidth()/geoc.getWidth());
                int y=gir.getHeight()/geoc.getHeight();
                int zoom=y;
                if(x>y)
             	   zoom=x;
-               
+
                zoom++;
-               
+
                //Platform.getGeoContext().setX(-(Platform.getGeoContext().getWidth()*10-(gir.getWidth()/zoom))/2);
                geoc.setX(-(geoc.getWidth())/2);
                geoc.setY(0);
-               
+
                geoc.setZoom(zoom);
             }
         }
@@ -67,6 +72,6 @@ public class HomeConsoleAction extends AbstractConsoleAction {
 
 	@Override
 	public String getCommand() {
-		return "home";
+		return "h";
 	}
 }

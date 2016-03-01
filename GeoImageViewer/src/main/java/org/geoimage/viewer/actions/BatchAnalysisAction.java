@@ -18,11 +18,11 @@ import org.slf4j.LoggerFactory;
 public class BatchAnalysisAction extends AbstractConsoleAction{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(BatchAnalysisAction.class);
 
-	
+
 	public BatchAnalysisAction() {
 	        super("batch");
 	}
-    
+
     public String getCommand() {
         return "batch";
     }
@@ -47,5 +47,10 @@ public class BatchAnalysisAction extends AbstractConsoleAction{
     public List<Argument> getArgumentTypes() {
         return null;
     }
+
+	@Override
+	public boolean executeFromConsole() {
+		return execute();
+	}
 
 }

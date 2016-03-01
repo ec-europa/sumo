@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.AbstractConsoleAction;
 import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.SumoPlatform;
@@ -30,20 +31,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author 
+ * @author
  */
 public class ConsoleLayer extends GenericLayer {
 
     private String message = "";
     private String oldMessage = "";
-    
-   
+
+
     //private String[] commands;
     private IProgress currentAction = null;
     private PluginsManager pl;
-    
+
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ConsoleLayer.class);
-    
+
     public ConsoleLayer(ILayer parent) {
     	super(parent,"Console",null,null);
         super.init(parent);
@@ -54,34 +55,41 @@ public class ConsoleLayer extends GenericLayer {
     public void execute(String[] arguments) {
         for (String c : pl.getCommands()) {
             if (arguments[0].startsWith(c)) {
-                //String[] args = new String[arguments.length - 1];
-            	Map<String,String> paramsAction=new HashMap<>();
-            	for (int i = 0; i < arguments.length;i++ ) {
-                    //args[i - 1] = arguments[i];
-            		String[] s=arguments[i].split("=");
-            		if(s!=null&&s.length==2){
-            			paramsAction.put(s[0],s[1]);
-            		}else{
-            			System.out.print("");
-            		}	
-                }
-                try {
+            	try {
                     if (!pl.getPlugins().get(c).isActive()) {
                         return;
                     }
-                    Object a = pl.getActions().get(c);//Class.forName(actions.get(c).getClassName()).newInstance();
+                    Object a = pl.getActions().get(c);
                     if (!(a instanceof IAction)) {
                         return;
                     }
-                    SumoAbstractAction ica = (SumoAbstractAction) a;
-                    ica.setParamsAction(paramsAction);
-                    if (ica instanceof IProgress) {
-                        currentAction = (IProgress) ica;
+                    if(a instanceof AbstractConsoleAction){
+                    	AbstractConsoleAction ica = (AbstractConsoleAction) a;
+                        ica.setCommandLine(arguments);
+                        ica.executeFromConsole();
+                    }else{
+	                    SumoAbstractAction ica = (SumoAbstractAction) a;
+
+	                    Map<String,String> paramsAction=new HashMap<>();
+	                	for (int i = 0; i < arguments.length;i++ ) {
+
+	                		String[] s=arguments[i].split("=");
+	                		if(s!=null&&s.length==2){
+	                			paramsAction.put(s[0],s[1]);
+	                		}
+	                    }
+
+	                	ica.setParamsAction(paramsAction);
+	                    if (ica instanceof IProgress) {
+	                        currentAction = (IProgress) ica;
+	                    }
+	                    ica.execute();
+
                     }
-                    ica.execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 return;
             }
         }
@@ -153,9 +161,9 @@ public class ConsoleLayer extends GenericLayer {
 	            }
 	            Thread.sleep(1000);
 	        }
-        }finally{    
+        }finally{
         	raf.close();
-        }	
+        }
     }
 
     public void runScriptString(String script) throws Exception {
@@ -200,7 +208,7 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-    
+
 
     public String getName() {
         return message;
@@ -226,7 +234,7 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
- 
+
     public boolean isRadio() {
         return false;
     }
@@ -262,7 +270,7 @@ public class ConsoleLayer extends GenericLayer {
         execute(parseCommandLineAction(message));
     }
 
-    
+
 
     public void dispose() {
     }
@@ -311,8 +319,8 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-    
 
-   
-    
+
+
+
 }
