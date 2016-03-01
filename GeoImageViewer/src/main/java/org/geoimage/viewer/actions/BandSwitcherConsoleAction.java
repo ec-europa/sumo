@@ -30,7 +30,7 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
         return "";
     }
 
-    public boolean execute(String[] args) {
+    public boolean execute() {
         for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
             if (l instanceof ImageLayer & l.isActive()) {
             	ImageLayer imL=((ImageLayer) l);
@@ -54,7 +54,7 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
     }
 
     public List<Argument> getArgumentTypes() {
-        Argument a1 = new Argument("offset", Argument.FLOAT, true, 0);
+        Argument a1 = new Argument("offset", Argument.FLOAT, true, 0,"offset");
         Vector<Argument> out = new Vector<Argument>();
         out.add(a1);
         return out;

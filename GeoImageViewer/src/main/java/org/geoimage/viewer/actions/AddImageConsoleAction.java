@@ -7,7 +7,6 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JFileChooser;
 
@@ -63,18 +62,17 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
     }
 
     @Override
-    public boolean execute(final String[] args) {
-        if (args.length == 0) {
+    public boolean execute() {
+        if (paramsAction.size() == 0) {
             return true;
         }
         done = false;
         try {
-            if (args[0].equals("image")) {
-                addImage(args);
-
-
-            } else if (args[0].startsWith("thumb")) {
-                addThumbnails(args);
+        	String img=getParamValue("image");
+            if (img.equals("image")) {
+                addImage();
+            } else if (img.startsWith("thumb")) {
+                addThumbnails();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,13 +83,13 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         return true;
     }
 
-    private void addImage(String[] args) {
+    private void addImage() {
         // set the done flag to false
         this.done = false;
         boolean tileBuff=false;
         
         String imagefile = "";
-        if(args.length!=3){//menu open image
+        if(paramsAction.size()!=3){//menu open image
         	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
                 if (fileChooser == null) {
                     fileChooser = new JFileChooser(lastDirectory);
@@ -104,9 +102,11 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
                 lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
                 imagefile=fileChooser.getSelectedFile().getAbsolutePath();
             }   
-            tileBuff=args[1].equals("true"); 
-        }else{ //menu open last image
-            String imagename = args[1].split("=")[1];
+            tileBuff=paramsAction.get("Local_Buffer").equals("true"); 
+        }else{
+        	//**** menu open last image ********//
+            
+        	String imagename = paramsAction.get("file");//.split("=")[1];
             final String imagenamefile = imagename.substring(imagename.lastIndexOf(File.separator) + 1);
             // check if a wildcard character is used
             if (imagename.contains("*")) {
@@ -123,7 +123,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
             } else {
                 imagefile = imagename;
             }
-            tileBuff=args[2].split("=")[1].equals("true");
+            tileBuff=paramsAction.get("buffer").equals("true");//.split("=")[1].equals("true");
         }    
         GeoImageReader temp = null;
         List<GeoImageReader> tempList = null;
@@ -147,7 +147,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         if (tempList==null||tempList.isEmpty()) {
             this.done = true;
             this.setMessage("Could not open image file");
-            final String filename = args[1].split("=")[1];
+            final String filename = paramsAction.get("image_name").split("=")[1];
             errorWindow("Could not open image file\n" + filename);
         } else {
         	for(int i=0;i<tempList.size();i++){
@@ -169,15 +169,15 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
             } catch (Exception ex) {
             	logger.error(ex.getMessage(),ex);
             }
-        	SumoPlatform.getApplication().getConsoleLayer().execute("home");
+        	SumoPlatform.getApplication().getConsoleLayer().execute("home=home");
         }
         done = true;
     }
     
     
-    private void addThumbnails(String[] args) {
+    private void addThumbnails() {
     	 SumoXmlIOOld old=null;
-        if (args.length == 2) {
+        if (paramsAction.size() == 2) {
             //csv = new SimpleCSVIO(args[1].split("=")[1]);
         } else {
             int returnVal = fileChooser.showOpenDialog(null);
@@ -229,14 +229,14 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
     }
 
     public List<Argument> getArgumentTypes() {
-        Argument a1 = new Argument("data type", Argument.STRING, false, "image");
+        Argument a1 = new Argument("data_type", Argument.STRING, false, "image","data type");
         //AG import thumbnails removed
         //a1.setPossibleValues(new String[]{"image", "thumbnails"});
         a1.setPossibleValues(new String[]{"image"});
-        Vector<Argument> out = new Vector<Argument>();
+        List<Argument> out = new ArrayList<Argument>();
         out.add(a1);
 
-        Argument a2 = new Argument("Local Buffer the raster data", Argument.BOOLEAN, false, "buffer");
+        Argument a2 = new Argument("Local_Buffer", Argument.BOOLEAN, false, "buffer","Local Buffer the raster data");
         out.add(a2);
 
         return out;

@@ -31,9 +31,6 @@ public class CatalogConsoleAction extends AbstractAction implements IAction{
         return "Files/Catalog";
     }
 
-    public boolean execute(String[] args) {
-        return true;
-    }
 
     public List<Argument> getArgumentTypes() {
         return null;
@@ -43,6 +40,11 @@ public class CatalogConsoleAction extends AbstractAction implements IAction{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean execute() {
+		return true;
 	}
 
 }

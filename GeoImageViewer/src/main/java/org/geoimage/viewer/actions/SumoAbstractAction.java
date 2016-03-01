@@ -7,6 +7,7 @@ package org.geoimage.viewer.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -23,11 +24,23 @@ import org.geoimage.viewer.widget.dialog.ActionDialog;
 public abstract class SumoAbstractAction extends AbstractAction implements IAction {
 	private String name=null;
 	private String absolutePath=null;
+	protected Map<String,String> paramsAction;
+
+
 
 
 	@Override
-	public abstract boolean execute(String[] args);
+	public abstract boolean execute();//String[] args);
 
+	public Map<String, String> getParamsAction() {
+		return paramsAction;
+	}
+
+
+
+	public void setParamsAction(Map<String, String> paramsAction) {
+		this.paramsAction = paramsAction;
+	}
 
 
 	public SumoAbstractAction(String name,String path){
@@ -35,6 +48,9 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 		this.name=name;
 	}
 
+	public String getParamValue(String paramName){
+		return paramsAction.get(paramName);
+	}
 
     public void errorWindow(String message)
     {
@@ -50,7 +66,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
      *
      */
 	public void actionPerformed(ActionEvent e) {
-		String[] args=null;
+		Map<String,String> args=null;
 
         if (getArgumentTypes() != null) {
             ActionDialog dialog=new ActionDialog(JFrame.getFrames()[0], true, this.getArgumentTypes());
@@ -63,7 +79,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
             	return;
             }
         }
-        execute(args);
+        execute();
     }
 
     public String getName() {

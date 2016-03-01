@@ -35,7 +35,7 @@ public class BatchAnalysisAction extends AbstractConsoleAction{
         return "Tools/Image/Batch Analysis";
     }
 
-    public boolean execute(String[] args) {
+    public boolean execute() {
         try {
             BatchAnalysisGUI.main(null);
         } catch (Exception ex) {

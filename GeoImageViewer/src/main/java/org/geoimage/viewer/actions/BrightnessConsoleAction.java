@@ -20,8 +20,12 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
  *
  * @author thoorfr
  */
-public class BrightnessConsoleAction extends AbstractAction implements IAction	 {
+public class BrightnessConsoleAction extends SumoAbstractAction implements IAction	 {
 
+	public BrightnessConsoleAction(){
+		super("","");
+	}
+	
     public String getName() {
         return "brightness";
     }
@@ -33,15 +37,16 @@ public class BrightnessConsoleAction extends AbstractAction implements IAction	 
                 "Use \"brightness -0.2 +\" to substract 0.2 to the current scale factor";
     }
 
-    public boolean execute(String[] args) {
-        if (args.length == 1) {
+    public boolean execute() {
+    	Object fl=paramsAction.values().iterator().next();
+        if (paramsAction.size() == 1) {
             for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer & l.isActive()) {
-                    ((ImageLayer) l).setBrightness(Float.parseFloat(args[0]));
+                    ((ImageLayer) l).setBrightness(Float.parseFloat((String)fl));
                 }
             }
-        } else if (args.length == 2) {
-            float br = Float.parseFloat(args[0]);
+        } else if (paramsAction.size() == 2) {
+            float br = Float.parseFloat((String)fl);
             for (ILayer l : LayerManager.getIstanceManager().getLayers().keySet()) {
                 if (l instanceof ImageLayer & l.isActive()) {
                     ((ImageLayer) l).setBrightness(((ImageLayer) l).getBrightness() + br);
@@ -58,7 +63,7 @@ public class BrightnessConsoleAction extends AbstractAction implements IAction	 
     }
     
     public List<Argument> getArgumentTypes() {
-        Argument a1=new Argument("offset", Argument.FLOAT, true, 0);
+        Argument a1=new Argument("offset", Argument.FLOAT, true, 0,"offset");
         Vector<Argument> out=new Vector<Argument>();
         out.add(a1);
         return out;
