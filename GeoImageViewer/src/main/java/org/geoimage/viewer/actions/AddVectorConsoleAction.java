@@ -35,7 +35,7 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.util.files.ArchiveUtil;
-import org.geoimage.viewer.util.files.NoaaClient;
+import org.geoimage.viewer.util.files.IceHttpClient;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
@@ -105,7 +105,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 	                		File cache=new File(cachePath+File.separator+System.currentTimeMillis());
 	                		if(!cache.exists())
 	                			cache.mkdirs();
-	                		File f=NoaaClient.download(reader.getImageDate(),cache.getAbsolutePath());
+	                		File f=new IceHttpClient().downloadFromNoaa(reader.getImageDate(),cache.getAbsolutePath());
 
 	                		if(f.getName().endsWith("zip")||f.getName().endsWith("gz")){
 	                			ArchiveUtil.unZip(f.getAbsolutePath());
