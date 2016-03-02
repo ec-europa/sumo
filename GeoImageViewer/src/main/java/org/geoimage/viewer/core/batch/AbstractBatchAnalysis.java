@@ -31,6 +31,12 @@ class AnalysisParams {
 	public float[] thresholdArrayValues={0,0,0,0};
 	public String pathImg[]=null;
 	public String shapeFile="";
+
+	public String iceShapeFile="";
+	/*public String iceRepoPath="";
+	public String icePatternName="";
+	public boolean icePatternRemote=false;*/
+
 	public String outputFolder="";
 	public String xmlOutputFolder="";
 	public float enl=0;
