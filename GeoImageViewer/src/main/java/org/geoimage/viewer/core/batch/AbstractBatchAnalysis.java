@@ -38,12 +38,11 @@ class AnalysisParams {
 	public String epsg="EPSG:4326";
 	public Date startDate;
 	public int maxDetections=0;
-
 }
 
 public abstract class AbstractBatchAnalysis {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractBatchAnalysis.class);
-	public AnalysisParams params;
+	protected AnalysisParams params=null;
 	private  List<ComplexEditVDSVectorLayer>layerResults=null;
 	private SimpleDateFormat dFormat=new SimpleDateFormat("ddMMyy_hhmmss");//"dd-MM-yy hh-mm-ss");
 	private VDSAnalysis analysis;
@@ -112,7 +111,7 @@ public abstract class AbstractBatchAnalysis {
 	/**
 	 * run analysis for 1 image
 	 */
-	public void analizeImage(SarImageReader reader,IMask[] masks,AnalysisParams params){
+	protected void analizeImage(SarImageReader reader,IMask[] masks,AnalysisParams params){
 
         java.util.HashMap<String,Float> thresholdsMap = new java.util.HashMap<>();
 
@@ -151,7 +150,7 @@ public abstract class AbstractBatchAnalysis {
      * @return
      */
     public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, buffer,1250000);
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, buffer,0);
         ap.run();
         return ap.getResultLayers();
     }
