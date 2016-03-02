@@ -2,6 +2,7 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.geoimage.def.GeoImageReader;
@@ -32,6 +33,13 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 */
 	public void startAnalysis(){
 			List<File>filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
+
+			//params.iceShapeFile=conf.getIceShapeFile();
+			String icePatternName=confFile.getIceShapeFileName();
+			boolean isRemote=confFile.getIsRemoteRepoIceFile();
+			String url=confFile.getIceRepositoryPath();
+
+
 
 			for (File image:filesImg){
 				try{
@@ -68,6 +76,20 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						for(GeoImageReader r:readers){
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
+
+							if(isRemote){
+
+								String tokenName=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
+								String tokenUrl=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
+
+
+								SimpleDateFormat fd=new SimpleDateFormat(tokenName);
+								fd.format(r.getImageDate());
+								fd.applyPattern(tokenUrl);
+
+
+							}
+
 
 							if(confFile.getENL()==0){
 								String enl=reader.getENL();

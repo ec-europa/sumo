@@ -2,6 +2,7 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -98,6 +99,7 @@ public class Sumo {
 			String confFile=inputParams.get(idx+1);
 			try {
 				conf=new ConfigurationFile(confFile);
+
 				params.shapeFile=conf.getShapeFile();
 				params.buffer=conf.getBuffer();
 				params.enl=conf.getENL();
