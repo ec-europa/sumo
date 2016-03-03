@@ -44,7 +44,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     private boolean indeterminate;
     private GeoImageReader gir = null;
     private List<MaskVectorLayer> coastlineMask = null;
-    private List<MaskVectorLayer> iceMask = null;
+    private List<MaskVectorLayer> iceMasks = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
 
@@ -108,7 +108,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 }
                 //read the land mask
                 coastlineMask = new ArrayList<MaskVectorLayer>();
-                iceMask = new ArrayList<MaskVectorLayer>();
+                iceMasks = new ArrayList<MaskVectorLayer>();
                 for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
                     if (l instanceof IMask ) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
@@ -116,7 +116,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                     			coastlineMask.add((MaskVectorLayer) l);
                     	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
                     		if( l.getName().startsWith(paramsAction.get("ice")))
-                    			iceMask.add((MaskVectorLayer) l);
+                    			iceMasks.add((MaskVectorLayer) l);
                     	}else{
 
                     	}
@@ -127,7 +127,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 final float ENL = Float.parseFloat(paramsAction.get("ENL"));
 
                 // create new buffered mask with bufferingDistance using the mask in parameters
-                final IMask[] bufferedMask = new IMask[coastlineMask.size()];
+               /* final IMask[] bufferedMask = new IMask[coastlineMask.size()];
 
                 for (int i=0;i<coastlineMask.size();i++) {
                 	MaskVectorLayer maskList = coastlineMask.get(i);
@@ -135,15 +135,34 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                				bufferingDistance,
                				((MaskVectorLayer)maskList).getGeometriclayer(),
                				maskList.getMaskType());
-                }
+                }*/
+                IMask bufferedMask=null;
+                if(coastlineMask!=null)
+                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.get(0).getName(),
+                		coastlineMask.get(0).getType(),
+           				bufferingDistance,
+           				((MaskVectorLayer)coastlineMask.get(0)).getGeometriclayer(),
+           				coastlineMask.get(0).getMaskType());
+                
+                IMask iceMask=null;
+                if(coastlineMask!=null)
+                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.get(0).getName(),
+                		iceMasks.get(0).getType(),
+           				bufferingDistance,
+           				((MaskVectorLayer)iceMasks.get(0)).getGeometriclayer(),
+           				iceMasks.get(0).getMaskType());
+                
                 MaskGeometries mg=null;
-                if(bufferedMask!=null&&bufferedMask.length>0)
-                	mg=new MaskGeometries(bufferedMask[0].getGeometries());
+                if(bufferedMask!=null)
+                	mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
 
+                MaskGeometries icemg=null;
+                if(coastlineMask!=null)
+                	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
+                
+                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds);
 
-                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg, ENL, thresholds);
-
-                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferedMask,bufferingDistance,0);
+                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0);
                 proc.addProcessListener(this);
 
                 Thread t=new Thread(proc);

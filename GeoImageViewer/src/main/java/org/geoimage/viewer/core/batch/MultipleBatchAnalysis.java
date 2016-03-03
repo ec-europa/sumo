@@ -3,19 +3,26 @@ package org.geoimage.viewer.core.batch;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.files.ArchiveUtil;
+import org.geoimage.viewer.util.files.IceHttpClient;
 import org.geoimage.viewer.util.files.SarFileUtil;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Polygon;
 
 public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MultipleBatchAnalysis.class);
@@ -33,13 +40,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 */
 	public void startAnalysis(){
 			List<File>filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
-
-			//params.iceShapeFile=conf.getIceShapeFile();
-			String icePatternName=confFile.getIceShapeFileName();
-			boolean isRemote=confFile.getIsRemoteRepoIceFile();
-			String url=confFile.getIceRepositoryPath();
-
-
 
 			for (File image:filesImg){
 				try{
@@ -76,21 +76,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						for(GeoImageReader r:readers){
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
-
-							if(isRemote){
-
-								String tokenName=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
-								String tokenUrl=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
-
-
-								SimpleDateFormat fd=new SimpleDateFormat(tokenName);
-								fd.format(r.getImageDate());
-								fd.applyPattern(tokenUrl);
-
-
-							}
-
-
+							
 							if(confFile.getENL()==0){
 								String enl=reader.getENL();
 								activeParams.enl=Float.parseFloat(enl);
@@ -99,17 +85,29 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							}
 
 							GeometricLayer gl=null;
-							if(activeParams.shapeFile!=null)
-								gl=readShapeFile(reader);
+					    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
-							IMask[] masks = null;
+							if(activeParams.shapeFile!=null)
+								gl=readShapeFile(imageP,reader.getGeoTransform());
+
+							IMask mask = null;
 							if(gl!=null){
-								masks=new IMask[1];
-								masks[0]=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
+								mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
 							}
-							analizeImage(reader,masks,activeParams);
+							
+							IMask iceMask = null;
+							if(confFile.useIceShapeFile()){
+								File ice=getIceShapeFile(r.getImageDate());
+								if(ice!=null){
+									activeParams.iceShapeFile=ice.getAbsolutePath();
+									GeometricLayer glIce=readShapeFile(imageP,reader.getGeoTransform());
+									iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
+								}	
+							}
+							
+							analizeImage(reader,mask,iceMask,activeParams);
 							String name=image.getParentFile().getName();
-							saveResults(name,masks,reader);
+							saveResults(name,reader);
 						}
 					}
 					logger.info("Image processed:"+image.getAbsolutePath());
@@ -119,6 +117,43 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			}
 	}
 
+	private File getIceShapeFile(Date imgDate) {
+		File ice=null;
+		try{
+			String icePatternName=confFile.getIceShapeFileName();
+			boolean isRemote=confFile.getIsRemoteRepoIceFile();
+			String iceRepoUrl=confFile.getIceRepositoryUrl();
+			if(isRemote){
+				String tokenName=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
+				String tokenUrl=iceRepoUrl.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
+	
+				SimpleDateFormat fd=new SimpleDateFormat(tokenName);
+				icePatternName=icePatternName.replace(tokenName,fd.format(imgDate));
+				
+				fd.applyPattern(tokenUrl);
+				iceRepoUrl=iceRepoUrl.replace(tokenName,fd.format(imgDate));
+	
+				String completeUrl=iceRepoUrl.concat(File.separator).concat(icePatternName);
+				String output=SumoPlatform.getApplication().getCachePath().concat(File.separator).concat(icePatternName);
+				ice=new IceHttpClient().download(completeUrl, output);
+				if(ArchiveUtil.isArchive(ice)){
+					ArchiveUtil.unZip(ice.getAbsolutePath());
+					File[] shpfiles=ice.getParentFile().listFiles((java.io.FileFilter) pathname -> FilenameUtils.getExtension(pathname.getName()).equalsIgnoreCase("shp"));
+	    			ice=shpfiles[0];
+				}	
+				
+			}else{
+				
+			}
+		}catch(Exception e){
+			logger.error("Ice shape file not loaded:"+e.getMessage());
+			ice=null;
+		}	
+		return ice;
+	}
+	
+	
+	
 	/**
 	 *
 	 * @param global
