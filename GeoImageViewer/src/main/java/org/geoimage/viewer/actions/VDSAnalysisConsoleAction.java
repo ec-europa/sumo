@@ -155,7 +155,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 	mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
 
                 MaskGeometries icemg=null;
-                if(coastlineMask!=null)
+                if(iceMask!=null)
                 	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
                 
                 VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds);
