@@ -43,8 +43,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     private boolean done = false;
     private boolean indeterminate;
     private GeoImageReader gir = null;
-    private List<MaskVectorLayer> coastlineMask = null;
-    private List<MaskVectorLayer> iceMasks = null;
+    private MaskVectorLayer coastlineMask = null;
+    private MaskVectorLayer iceMasks = null;
     private AnalysisProcess proc=null;
     private boolean stopping=false;
 
@@ -107,16 +107,14 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                     }
                 }
                 //read the land mask
-                coastlineMask = new ArrayList<MaskVectorLayer>();
-                iceMasks = new ArrayList<MaskVectorLayer>();
                 for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
                     if (l instanceof IMask ) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
                     		if( l.getName().startsWith(paramsAction.get("coastline")))
-                    			coastlineMask.add((MaskVectorLayer) l);
+                    			coastlineMask=(MaskVectorLayer) l;
                     	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
                     		if( l.getName().startsWith(paramsAction.get("ice")))
-                    			iceMasks.add((MaskVectorLayer) l);
+                    			iceMasks=(MaskVectorLayer) l;
                     	}else{
 
                     	}
@@ -138,19 +136,19 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 }*/
                 IMask bufferedMask=null;
                 if(coastlineMask!=null)
-                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.get(0).getName(),
-                		coastlineMask.get(0).getType(),
+                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
+                		coastlineMask.getType(),
            				bufferingDistance,
-           				((MaskVectorLayer)coastlineMask.get(0)).getGeometriclayer(),
-           				coastlineMask.get(0).getMaskType());
+           				((MaskVectorLayer)coastlineMask).getGeometriclayer(),
+           				coastlineMask.getMaskType());
                 
                 IMask iceMask=null;
-                if(coastlineMask!=null)
-                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.get(0).getName(),
-                		iceMasks.get(0).getType(),
+                if(iceMasks!=null)
+                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
+                		iceMasks.getType(),
            				bufferingDistance,
-           				((MaskVectorLayer)iceMasks.get(0)).getGeometriclayer(),
-           				iceMasks.get(0).getMaskType());
+           				((MaskVectorLayer)iceMasks).getGeometriclayer(),
+           				iceMasks.getMaskType());
                 
                 MaskGeometries mg=null;
                 if(bufferedMask!=null)
