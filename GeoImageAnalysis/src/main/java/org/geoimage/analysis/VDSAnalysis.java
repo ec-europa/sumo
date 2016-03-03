@@ -274,25 +274,23 @@ public class VDSAnalysis{
                     if(iceMask!=null){
                     	rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
                     	//Read pixels for ice
-                    	iceMaskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                    	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
                     }
 
                     //count invalid pixel (land)
                     int inValidPixelCount = 0;
-                    int extraIcePixel=0;
                     for(int count = 0; count < maskdata.length; count++){
                         inValidPixelCount += maskdata[count];
                         //if the pixel is valid check if this pixel is ice
                         if(maskdata[count]==0){
-                        	if(iceMaskdata[count]==1){
+                        	if(iceMaskdata!=null&&iceMaskdata[count]==1){
                         		inValidPixelCount++;
                         		maskdata[count]=1;
-                        		extraIcePixel++;
                         	}
                         }
                     }
 
-                    double oldInValidPixelCount=inValidPixelCount;
+                    //double oldInValidPixelCount=inValidPixelCount;
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
 
                     if(!containsMinPixelValid){
@@ -301,7 +299,26 @@ public class VDSAnalysis{
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
 
-                        containsMinPixelValid=((double)(oldInValidPixelCount-extraIcePixel) / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                        iceMaskdata = null;
+                        if(iceMask!=null){
+                        	rasterIceMask    = iceMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0).getData();
+                        	//Read pixels for ice
+                        	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
+                        }
+                        inValidPixelCount=0;
+                        for(int count = 0; count < maskdata.length; count++){
+                            inValidPixelCount += maskdata[count];
+                            //if the pixel is valid check if this pixel is ice
+                            if(maskdata[count]==0){
+                            	if(iceMaskdata!=null&&iceMaskdata[count]==1){
+                            		inValidPixelCount++;
+                            		maskdata[count]=1;
+                            	}
+                            }
+                        }
+                        containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+
+                        //containsMinPixelValid=(double)(oldInValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }
 
