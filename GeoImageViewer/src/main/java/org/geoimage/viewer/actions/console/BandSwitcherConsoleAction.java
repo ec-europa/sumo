@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.actions;
+package org.geoimage.viewer.actions.console;
 
 import java.util.List;
 import java.util.Vector;

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="org.geoimage.analysis.BlackBorderAnalysis" x="339" y="825">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis"
+            endpointName="mapAnalysis" kind="Simple"/>
+    </Class>
+    <Class name="org.geoimage.analysis.KDistributionEstimation" x="46" y="304">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis"
+            endpointName="blackTileAnalysis" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.LookUpTable"
+            endpointName="lookUpTable" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.analysis.LookUpTable"/>
+    </Class>
+    <Class name="org.geoimage.analysis.BoatConnectedPixelMap" x="1057" y="197">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap.ConPixel"
+            endpointName="connectedpixels" kind="Simple"/>
+    </Class>
+    <Class name="org.geoimage.analysis.BoatConnectedPixelMap.ConPixel"
+        x="1074" y="20">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.VDSAnalysis" x="942" y="659">
+        <AttributesDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.VDSAnalysis.ProgressListener"
+            endpointName="progressListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.DetectedPixels"
+            endpointName="pixels" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.MaskGeometries"
+            endpointName="iceMask" kind="Simple">
+            <Point x="741" y="772"/>
+        </Association>
+        <Association
+            destinationClassName="org.geoimage.analysis.MaskGeometries"
+            endpointName="coastMask" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BlackBorderAnalysis"
+            endpointName="blackBorderAnalysis" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.analysis.BlackBorderAnalysis"/>
+        <Communication destinationClassName="org.geoimage.analysis.VDSAnalysis.ProgressListener"/>
+        <Communication destinationClassName="org.geoimage.analysis.MaskGeometries"/>
+        <Communication destinationClassName="org.geoimage.analysis.KDistributionEstimation"/>
+        <Communication destinationClassName="org.geoimage.analysis.DetectedPixels"/>
+        <Communication destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap"/>
+        <Communication destinationClassName="org.geoimage.analysis.Boat"/>
+    </Class>
+    <Class name="org.geoimage.analysis.LookUpTable" x="43" y="41">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="org.geoimage.analysis.KDistributionEstimation.SupportStats"
+        x="351" y="173">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis"
+        x="70" y="818">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.DetectedPixels.BoatPixel" x="578" y="33">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.VDSAnalysis.ProgressListener"
+        x="1430" y="449">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.MaskGeometries" x="338" y="594">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.geoimage.analysis.DetectedPixels" x="391" y="347">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.DetectedPixels.BoatPixel"
+            endpointName="aggregatedPixels" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap"
+            endpointName="listboatneighbours" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.DetectedPixels.BoatPixel"
+            endpointName="allDetectedPixels" kind="Simple">
+            <Point x="854" y="256"/>
+            <Point x="777" y="135"/>
+        </Association>
+        <Communication destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap"/>
+        <Communication destinationClassName="org.geoimage.analysis.Boat"/>
+    </Class>
+    <Class name="org.geoimage.analysis.Boat" x="1432" y="144">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+</ClassDiagram>

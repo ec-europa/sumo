@@ -11,16 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gdal.gdal.gdal;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.impl.alos.AlosGeoTiff;
-import org.geoimage.impl.alos.AlosProperties;
-import org.geoimage.impl.alos.GDALAlosCeos;
-import org.geoimage.impl.envi.EnvisatImage_SLC;
-import org.geoimage.impl.radarsat.Radarsat1Image;
-import org.geoimage.impl.radarsat.Radarsat2Image;
-import org.geoimage.impl.radarsat.Radarsat2Image_SLC;
-import org.geoimage.impl.tsar.TerrasarXImage;
-import org.geoimage.impl.tsar.TerrasarXImage_SLC;
 import org.jdom2.JDOMException;
 
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
@@ -29,19 +19,19 @@ import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 public class Sentinel1Factory {
     private static Logger logger=LogManager.getLogger(Sentinel1Factory.class);
 
-	
-	
+
+
 	public static List<GeoImageReader> instanceS1Reader(File f,String geoAlgorithm) throws JDOMException, IOException, JAXBException{
 		List<GeoImageReader> girList=new ArrayList<GeoImageReader>();
 		final SumoJaxbSafeReader safeReader=new SumoJaxbSafeReader(f.getAbsolutePath());
     	boolean multipleImages=false;
-    	
+
     	//for multiple images. For SLC product we can have 1 images for each sub-swat and for each polarization
     	//we create 1 reader for each sub-swath
 		String[] swath=safeReader.getSwaths();
 		if(swath.length>1)
 			multipleImages=true;
-		
+
 		Sentinel1 sentinel=null;
 		String parent=f.getParent();
 		for(String sw:swath){
@@ -50,7 +40,7 @@ public class Sentinel1Factory {
 			}else{
 			   try{
 				    gdal.AllRegister();
-					sentinel=new GDALSentinel1(sw,f,geoAlgorithm);   
+					sentinel=new GDALSentinel1(sw,f,geoAlgorithm);
 			   }catch(UnsatisfiedLinkError e){
 				    sentinel=new Sentinel1GRD(sw,f,geoAlgorithm);
 			   }
@@ -62,9 +52,9 @@ public class Sentinel1Factory {
             	logger.warn("Problem reading {0} as {1}...", new Object[]{f.getName(),sentinel.getClass()});
             }
 			girList.add(sentinel);
-		}	
-	
-		
+		}
+
+
 		return girList;
 	}
 }

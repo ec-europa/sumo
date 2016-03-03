@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * 
+ *
  * @author argenpo
  *this class manage the connection between the Boat and the pixels
  *
@@ -24,7 +24,7 @@ public class BoatConnectedPixelMap {
         private int maxValue = 0;
 		private boolean touchlandmask = false;
         private int[] corners;
-        
+
         public class ConPixel {
 
             public int x;
@@ -41,10 +41,10 @@ public class BoatConnectedPixelMap {
             }
         }
 
-		private double stdvalue = 0.0;
-        
+	//	private double stdvalue = 0.0;
+
 		private BoatStatisticMapPolarization statMap;
-		
+
 		public BoatConnectedPixelMap(int cornerx,int cornery,int x, int y, int id, int value) {
             // add initial pixel, clipped value is always set to 1
             connectedpixels.put(new StringBuilder().append(x).append(" ").append(y).toString(), new ConPixel(x, y, value, true));
@@ -62,14 +62,14 @@ public class BoatConnectedPixelMap {
         public boolean containsPixel(int x, int y) {
             return connectedpixels.get(new StringBuilder().append(x).append(" ").append(y).toString()) != null;
         }
-        
+
         public Collection<ConPixel> getConnectedpixels() {
 			return connectedpixels.values();
 		}
 
 
         /**
-         * 
+         *
          * @param pixsam
          * @param pixrec
          */
@@ -135,7 +135,7 @@ public class BoatConnectedPixelMap {
             return boatwidth;
         }
 
-       
+
 
 
         protected List<int[]> getThresholdclipPixels() {
@@ -170,7 +170,7 @@ public class BoatConnectedPixelMap {
         protected boolean touchesLand() {
             return touchlandmask;
         }
-        
+
         public BoatStatisticMapPolarization getStatMap() {
 			return statMap;
 		}

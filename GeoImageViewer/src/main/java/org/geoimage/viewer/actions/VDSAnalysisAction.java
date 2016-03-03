@@ -34,8 +34,14 @@ import org.geoimage.viewer.widget.dialog.ActionDialog;
  *
  * @author
  */
-public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
-    private String message = "";
+public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
+    /**
+	 *
+	 */
+	private static final long serialVersionUID = 3649669297745164880L;
+
+
+	private String message = "";
 
 
     private int current = 0;
@@ -48,7 +54,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     private AnalysisProcess proc=null;
     private boolean stopping=false;
 
-    public VDSAnalysisConsoleAction() {
+    public VDSAnalysisAction() {
     	super("vds","Analysis/VDS");
     }
 
@@ -141,7 +147,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
            				bufferingDistance,
            				((MaskVectorLayer)coastlineMask).getGeometriclayer(),
            				coastlineMask.getMaskType());
-                
+
                 IMask iceMask=null;
                 if(iceMasks!=null)
                 	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
@@ -149,7 +155,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
            				bufferingDistance,
            				((MaskVectorLayer)iceMasks).getGeometriclayer(),
            				iceMasks.getMaskType());
-                
+
                 MaskGeometries mg=null;
                 if(bufferedMask!=null)
                 	mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
@@ -157,7 +163,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
                 MaskGeometries icemg=null;
                 if(iceMask!=null)
                 	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
-                
+
                 VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds);
 
                 proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0);
@@ -178,22 +184,22 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
     public List<ActionDialog.Argument> getArgumentTypes() {
         List<ActionDialog.Argument> out = new ArrayList<ActionDialog.Argument>();
 
-        ActionDialog.Argument a1 = new ActionDialog.Argument("algorithm", ActionDialog.Argument.STRING, false, "k-dist","algorithm");
+        final ActionDialog.Argument a1 = new ActionDialog.Argument("algorithm", ActionDialog.Argument.STRING, false, "k-dist","algorithm");
         a1.setPossibleValues(new Object[]{"k-dist"});
-        ActionDialog.Argument a2 = new ActionDialog.Argument("thresholdHH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdHH");
-        ActionDialog.Argument a21 = new ActionDialog.Argument("thresholdHV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdHV");
-        ActionDialog.Argument a22 = new ActionDialog.Argument("thresholdVH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdVH");
-        ActionDialog.Argument a23 = new ActionDialog.Argument("thresholdVV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdVV");
+        final ActionDialog.Argument a2 = new ActionDialog.Argument("thresholdHH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdHH");
+        final ActionDialog.Argument a21 = new ActionDialog.Argument("thresholdHV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdHV");
+        final ActionDialog.Argument a22 = new ActionDialog.Argument("thresholdVH", ActionDialog.Argument.FLOAT, false, 1.5,"thresholdVH");
+        final ActionDialog.Argument a23 = new ActionDialog.Argument("thresholdVV", ActionDialog.Argument.FLOAT, false, 1.2,"thresholdVV");
 
-        ActionDialog.Argument a3 = new ActionDialog.Argument("coastline", ActionDialog.Argument.STRING, true, "no mask choosen","coastline");
-        ActionDialog.Argument a31= new ActionDialog.Argument("ice", ActionDialog.Argument.STRING, true, "no mask choosen","ice");
+        final ActionDialog.Argument a3 = new ActionDialog.Argument("coastline", ActionDialog.Argument.STRING, true, "no mask choosen","coastline");
+        final ActionDialog.Argument a31= new ActionDialog.Argument("ice", ActionDialog.Argument.STRING, true, "no mask choosen","ice");
 
 
-        ArrayList<String> coasts = new ArrayList<String>();
+        final ArrayList<String> coasts = new ArrayList<String>();
         coasts.add("");
-        ArrayList<String> ice = new ArrayList<String>();
+        final ArrayList<String> ice = new ArrayList<String>();
         ice.add("");
-        ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
+        final ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
@@ -213,8 +219,8 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
         out.add(a31);
 
 
-        ActionDialog.Argument a4 = new ActionDialog.Argument("Buffer", 
-        		ActionDialog.Argument.FLOAT, false, 
+        ActionDialog.Argument a4 = new ActionDialog.Argument("Buffer",
+        		ActionDialog.Argument.FLOAT, false,
         		SumoPlatform.getApplication().getConfiguration().getBufferingDistance(),"Buffer (pixels)");
 
         //management of the different threshold in the VDS parameters panel
@@ -235,7 +241,7 @@ public class VDSAnalysisConsoleAction extends SumoAbstractAction implements  IPr
 
         out.add(a4);
         if (il.getImageReader() instanceof SarImageReader) {
-        	ActionDialog.Argument aEnl = new ActionDialog.Argument("ENL", ActionDialog.Argument.FLOAT, false, 
+        	ActionDialog.Argument aEnl = new ActionDialog.Argument("ENL", ActionDialog.Argument.FLOAT, false,
         			ENL.getFromGeoImageReader((SarImageReader) il.getImageReader()),"ENL");
             out.add(aEnl);
         }

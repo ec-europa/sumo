@@ -76,7 +76,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						for(GeoImageReader r:readers){
 							super.currentReader=r;
 							SarImageReader reader=(SarImageReader) r;
-							
+
 							if(confFile.getENL()==0){
 								String enl=reader.getENL();
 								activeParams.enl=Float.parseFloat(enl);
@@ -94,17 +94,17 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 							if(gl!=null){
 								mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
 							}
-							
+
 							IMask iceMask = null;
-							if(confFile.useIceShapeFile()){
+							if(confFile.useIceRepositoryShapeFile()){
 								File ice=getIceShapeFile(r.getImageDate());
 								if(ice!=null){
 									activeParams.iceShapeFile=ice.getAbsolutePath();
 									GeometricLayer glIce=readShapeFile(imageP,reader.getGeoTransform());
 									iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
-								}	
+								}
 							}
-							
+
 							analizeImage(reader,mask,iceMask,activeParams);
 							String name=image.getParentFile().getName();
 							saveResults(name,reader);
@@ -117,6 +117,12 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			}
 	}
 
+
+	/**
+	 *
+	 * @param imgDate the date of the image. It is used to download the correct shape file  fron the repository
+	 * @return the ice shp file
+	 */
 	private File getIceShapeFile(Date imgDate) {
 		File ice=null;
 		try{
@@ -124,15 +130,15 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			boolean isRemote=confFile.getIsRemoteRepoIceFile();
 			String iceRepoUrl=confFile.getIceRepositoryUrl();
 			if(isRemote){
-				String tokenName=icePatternName.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
-				String tokenUrl=iceRepoUrl.substring(icePatternName.indexOf("%"),icePatternName.lastIndexOf("%"));
-	
+				String tokenName=icePatternName.substring(icePatternName.indexOf("%")+1,icePatternName.lastIndexOf("%"));
+				String tokenUrl=iceRepoUrl.substring(iceRepoUrl.indexOf("%")+1,iceRepoUrl.lastIndexOf("%"));
+
 				SimpleDateFormat fd=new SimpleDateFormat(tokenName);
-				icePatternName=icePatternName.replace(tokenName,fd.format(imgDate));
-				
+				icePatternName=icePatternName.replace("%"+tokenName+"%",fd.format(imgDate));
+
 				fd.applyPattern(tokenUrl);
-				iceRepoUrl=iceRepoUrl.replace(tokenName,fd.format(imgDate));
-	
+				iceRepoUrl=iceRepoUrl.replace("%"+tokenUrl+"%",fd.format(imgDate));
+
 				String completeUrl=iceRepoUrl.concat(File.separator).concat(icePatternName);
 				String output=SumoPlatform.getApplication().getCachePath().concat(File.separator).concat(icePatternName);
 				ice=new IceHttpClient().download(completeUrl, output);
@@ -140,20 +146,20 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 					ArchiveUtil.unZip(ice.getAbsolutePath());
 					File[] shpfiles=ice.getParentFile().listFiles((java.io.FileFilter) pathname -> FilenameUtils.getExtension(pathname.getName()).equalsIgnoreCase("shp"));
 	    			ice=shpfiles[0];
-				}	
-				
+				}
+
 			}else{
-				
+
 			}
 		}catch(Exception e){
 			logger.error("Ice shape file not loaded:"+e.getMessage());
 			ice=null;
-		}	
+		}
 		return ice;
 	}
-	
-	
-	
+
+
+
 	/**
 	 *
 	 * @param global

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass name="org.geoimage.analysis.BlackBorderAnalysis"
+        x="508" y="199"/>
+    <CommunicationClass
+        name="org.geoimage.analysis.VDSAnalysis.ProgressListener" x="-7" y="300"/>
+    <CommunicationClass
+        name="org.geoimage.analysis.KDistributionEstimation" x="294" y="460"/>
+    <CommunicationClass name="org.geoimage.analysis.MaskGeometries"
+        x="558" y="436"/>
+    <CommunicationClass name="org.geoimage.analysis.DetectedPixels"
+        x="545" y="92">
+        <Association
+            destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap"
+            endpointName="listboatneighbours" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap">
+            <Point x="748" y="163"/>
+            <Point x="821" y="183"/>
+        </Communication>
+        <Communication destinationClassName="org.geoimage.analysis.Boat">
+            <Point x="504" y="5"/>
+        </Communication>
+    </CommunicationClass>
+    <CommunicationClass name="org.geoimage.analysis.AnalysisUtil" x="91" y="424">
+        <Communication destinationClassName="org.geoimage.analysis.KDistributionEstimation"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.analysis.BoatConnectedPixelMap" x="796" y="215">
+        <Association
+            destinationClassName="org.geoimage.analysis.BoatStatisticMapPolarization"
+            endpointName="statMap" kind="Simple"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.geoimage.analysis.VDSAnalysis" x="297" y="266">
+        <Association
+            destinationClassName="org.geoimage.analysis.VDSAnalysis.ProgressListener"
+            endpointName="progressListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.DetectedPixels"
+            endpointName="pixels" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.MaskGeometries"
+            endpointName="iceMask" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.MaskGeometries"
+            endpointName="coastMask" kind="Simple"/>
+        <Association
+            destinationClassName="org.geoimage.analysis.BlackBorderAnalysis"
+            endpointName="blackBorderAnalysis" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.analysis.BlackBorderAnalysis"/>
+        <Communication destinationClassName="org.geoimage.analysis.VDSAnalysis.ProgressListener"/>
+        <Communication destinationClassName="org.geoimage.analysis.KDistributionEstimation"/>
+        <Communication destinationClassName="org.geoimage.analysis.MaskGeometries"/>
+        <Communication destinationClassName="org.geoimage.analysis.DetectedPixels"/>
+        <Communication destinationClassName="org.geoimage.analysis.AnalysisUtil"/>
+        <Communication destinationClassName="org.geoimage.analysis.BoatConnectedPixelMap"/>
+        <Communication destinationClassName="org.geoimage.analysis.Boat">
+            <Point x="243" y="106"/>
+        </Communication>
+        <Communication destinationClassName="org.geoimage.analysis.BoatStatisticMapPolarization"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.geoimage.analysis.Boat" x="322" y="-1">
+        <Association
+            destinationClassName="org.geoimage.analysis.BoatStatisticMapPolarization"
+            endpointName="statMap" kind="Simple"/>
+        <Communication destinationClassName="org.geoimage.analysis.BoatStatisticMapPolarization"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.geoimage.analysis.BoatStatisticMapPolarization"
+        x="-23" y="94"/>
+</ClassDiagram>
