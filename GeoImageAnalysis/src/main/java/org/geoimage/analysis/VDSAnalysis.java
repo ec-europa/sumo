@@ -35,7 +35,8 @@ public class VDSAnalysis{
     private String enl = "010";
     private Map<String, Float> thresholdsBandParams=new HashMap<String, Float>();
     private DetectedPixels pixels;
-    private MaskGeometries mask;
+    private MaskGeometries coastMask;
+    private MaskGeometries iceMask;
     private int tileSize;
     private int verTilesImage=0;
     private int horTilesImage=0;
@@ -49,6 +50,52 @@ public class VDSAnalysis{
     private boolean analyseSingleTile=false;
     private int xTileToAnalyze=0;
     private int yTileToAnalyze=0;
+
+	public VDSAnalysis(SarImageReader gir, MaskGeometries coastMask,
+			MaskGeometries iceMask, float enlf, Float[] trhreshold ) {
+		
+		HashMap<String,Float>thresholdsBandParams=new HashMap<>();
+		thresholdsBandParams.put("HH",trhreshold[0]);
+		thresholdsBandParams.put("HV",trhreshold[1]);
+		thresholdsBandParams.put("VH",trhreshold[2]);
+		thresholdsBandParams.put("VV",trhreshold[3]);
+		this.thresholdsBandParams=thresholdsBandParams;
+        this.gir = gir;
+        this.coastMask = coastMask;
+        this.iceMask=iceMask;
+        init(enlf);
+	}
+	/**
+	 * 
+	 * @param gir
+	 * @param mask
+	 * @param enlf
+	 * @param trhresholdMap
+	 */
+    public VDSAnalysis(SarImageReader gir, MaskGeometries mask,
+    		MaskGeometries iceMask, float enlf, Map<String, Float> trhresholdMap ) {
+    	this.thresholdsBandParams=trhresholdMap;
+        this.gir = gir;
+        this.coastMask = mask;
+        this.iceMask=iceMask;
+        init(enlf);
+    }
+	
+    private void init(float enlf ){
+    	this.enl = "" + (int) (enlf * 10);
+        if (this.enl.length() == 2) {
+            this.enl = "0" + this.enl;
+        }
+        this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
+        if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
+        
+        this.horTilesImage = gir.getWidth() / this.tileSize;
+        this.verTilesImage = gir.getHeight() / this.tileSize;
+        
+        
+        progressListener=new ArrayList<ProgressListener>();
+    }
+    
 	
 	
 	public boolean isAnalyseSingleTile() {
@@ -69,18 +116,20 @@ public class VDSAnalysis{
 	public void setyTileToAnalyze(int yTileToAnalyze) {
 		this.yTileToAnalyze = yTileToAnalyze;
 	}
-	public VDSAnalysis(SarImageReader gir, MaskGeometries mask, float enlf, Float[] trhreshold ) {
-		HashMap<String,Float>thresholdsBandParams=new HashMap<>();
-		thresholdsBandParams.put("HH",trhreshold[0]);
-		thresholdsBandParams.put("HV",trhreshold[1]);
-		thresholdsBandParams.put("VH",trhreshold[2]);
-		thresholdsBandParams.put("VV",trhreshold[3]);
-		this.thresholdsBandParams=thresholdsBandParams;
-        this.gir = gir;
-        this.mask = mask;
-        init(enlf);
+	
+	 public MaskGeometries getCoastMask() {
+		return coastMask;
 	}
-	 public BlackBorderAnalysis getBlackBorderAnalysis() {
+	public void setCoastMask(MaskGeometries coastMask) {
+		this.coastMask = coastMask;
+	}
+	public MaskGeometries getIceMask() {
+		return iceMask;
+	}
+	public void setIceMask(MaskGeometries iceMask) {
+		this.iceMask = iceMask;
+	}
+	public BlackBorderAnalysis getBlackBorderAnalysis() {
 			return blackBorderAnalysis;
 	}
 
@@ -102,34 +151,6 @@ public class VDSAnalysis{
 		public void setVerTiles(int verTiles) {
 			this.verTilesImage = verTiles;
 		}
-	/**
-	 * 
-	 * @param gir
-	 * @param mask
-	 * @param enlf
-	 * @param trhresholdMap
-	 */
-    public VDSAnalysis(SarImageReader gir, MaskGeometries mask, float enlf, Map<String, Float> trhresholdMap ) {
-    	this.thresholdsBandParams=trhresholdMap;
-        this.gir = gir;
-        this.mask = mask;
-        init(enlf);
-    }
-    private void init(float enlf ){
-    	this.enl = "" + (int) (enlf * 10);
-        if (this.enl.length() == 2) {
-            this.enl = "0" + this.enl;
-        }
-        this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
-        if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
-        
-        this.horTilesImage = gir.getWidth() / this.tileSize;
-        this.verTilesImage = gir.getHeight() / this.tileSize;
-        
-        
-        progressListener=new ArrayList<ProgressListener>();
-    }
-    
 
     public DetectedPixels getPixels() {
         return pixels;
@@ -225,7 +246,7 @@ public class VDSAnalysis{
                 Raster rastermask =null;
                 boolean containsMinPixelValid=false;
                 
-                if (mask == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
+                if (coastMask == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	rastermask =null;
                 }else{
                 	// compute different statistics if the tile intersects the land mask
@@ -234,7 +255,7 @@ public class VDSAnalysis{
                         continue;
                     
                     // create raster mask //dx and dy are for tile on the border that have different dimensions
-                    rastermask = (mask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
+                    rastermask = (coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0)).getData();
 
                     //Read pixels for the area and check there are enough sea pixels
                     int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
@@ -248,7 +269,7 @@ public class VDSAnalysis{
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     if(!containsMinPixelValid){
                     	//try to read more pixels (out of the current tile) to have more pixels for the statistics
-                    	rastermask = (mask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0)).getData();
+                    	rastermask = (coastMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0)).getData();
                         //Read pixels for the area and check there are enough sea pixels
                         maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
                         
@@ -649,10 +670,10 @@ public class VDSAnalysis{
      * @return
      */
     public boolean intersects(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
-        if (mask == null) {
+        if (coastMask == null) {
             return false;
         }
-        if (mask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if (coastMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
             return true;
         }
         return false;
@@ -667,11 +688,11 @@ public class VDSAnalysis{
      * @return
      */
     private boolean includes(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
-         if (mask == null) {
+         if (coastMask == null) {
             return false;
         }
 
-        if (mask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if (coastMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
             return true;
         }
 

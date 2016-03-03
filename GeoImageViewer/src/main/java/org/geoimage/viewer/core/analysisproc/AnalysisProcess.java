@@ -40,8 +40,10 @@ import com.vividsolutions.jts.geom.Geometry;
 public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
-		private MaskGeometries coastlineGeoms=null;
-		private MaskGeometries iceGeoms=null;
+	
+		//private MaskGeometries coastlineGeoms=null;
+		//private MaskGeometries iceGeoms=null;
+		
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
@@ -91,11 +93,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		 * @param blackBorderAnalysis
 		 * @param numLimitPoint   num max of point that we can analize (0=all)
 		 */
-		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,IMask[] bufferedMask,int buffer,int numLimitPoint) {
+		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,
+				int buffer,int numLimitPoint) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 
-
+/*
             if(bufferedMask!=null&&bufferedMask.length>0){
             	for(int i=0;i<bufferedMask.length;i++){
             		if(bufferedMask[i].getType().equals(MaskVectorLayer.COASTLINE_MASK)){
@@ -105,8 +108,9 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             			this.iceGeoms=new MaskGeometries(bufferedMask[0].getGeometries());
             		}
             	}
-            }
-
+            }*/
+            bufferedMaskName=analysis.getCoastMask().getMaskName();
+            
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=Collections.synchronizedList(new ArrayList<VDSAnalysisProcessListener>());
@@ -126,8 +130,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			//run the blackborder analysis for the s1 images
 			BlackBorderAnalysis blackBorderAnalysis=null;
             if(gir instanceof Sentinel1){
-	           	 	if(coastlineGeoms!=null)
-	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,coastlineGeoms.getMaskGeometries());
+	           	 	if(analysis.getCoastMask()!=null)
+	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,analysis.getCoastMask().getMaskGeometries());
 	           	 	else
 	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
              }
@@ -225,7 +229,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                        	 break;
 
 	                         boats=analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, tilesize,removelandconnectedpixels,
-	                         		 (coastlineGeoms != null) ? coastlineGeoms : null, kdist,polarization,band);
+	                         		 (analysis.getCoastMask() != null) ? analysis.getCoastMask() : null, kdist,polarization,band);
 	                     }
 
 	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
@@ -259,8 +263,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                    	 }
 	                     }
 
-                         if ((coastlineGeoms != null) ) {
-	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometricLayer.POLYGON, coastlineGeoms.getMaskGeometries(), true);
+                         if ((analysis.getCoastMask() != null) ) {
+	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometricLayer.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
 	                     }
 	                     //leave display params forced to false
 	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
@@ -284,7 +288,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     mergePixels.computeBoatsAttributes("merge");
 	                 } else {
 	                     // method neighbours used
-	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, tilesize, removelandconnectedpixels, (coastlineGeoms != null)  ? coastlineGeoms : null, kdist,"merge",bands);
+	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, tilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
 	                 }
 	                 if(stop){
 	                     stop();
@@ -301,8 +305,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 }
 	                 vdsanalysisLayer.addDetectedPixels(mergePixels.getAllDetectedPixels(), display);
 
-	                 if ((coastlineGeoms != null)) {
-	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, coastlineGeoms.getMaskGeometries(), true);
+	                 if ((analysis.getCoastMask() != null)) {
+	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
 	                 }
 	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
 

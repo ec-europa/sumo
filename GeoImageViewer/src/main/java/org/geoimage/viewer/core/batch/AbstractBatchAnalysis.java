@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
@@ -101,11 +102,10 @@ public abstract class AbstractBatchAnalysis {
 	 * @param reader
 	 * @return
 	 */
-	protected GeometricLayer readShapeFile(SarImageReader reader){
+	protected GeometricLayer readShapeFile(Polygon imgBox,GeoTransform gt){
 		GeometricLayer gl=null;
 	    try {
-	    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imageP,reader.getGeoTransform());
+            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imgBox,gt);
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
         }
@@ -117,7 +117,7 @@ public abstract class AbstractBatchAnalysis {
 	/**
 	 * run analysis for 1 image
 	 */
-	protected void analizeImage(SarImageReader reader,IMask[] masks,AnalysisParams params){
+	protected void analizeImage(SarImageReader reader,IMask mask,IMask iceMask,AnalysisParams params){
 
         java.util.HashMap<String,Float> thresholdsMap = new java.util.HashMap<>();
 
@@ -127,11 +127,17 @@ public abstract class AbstractBatchAnalysis {
         thresholdsMap.put("VV", params.thresholdArrayValues[3]);
 
         MaskGeometries mg=null;
-        if(masks!=null)
-        	mg=new MaskGeometries(masks[0].getGeometries());
+        if(mask!=null)
+        	mg=new MaskGeometries(mask.getName(),mask.getGeometries());
+        
+        MaskGeometries icemg=null;
+        if(iceMask!=null)
+        	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
+        
 
         analysis = new VDSAnalysis(reader,
         		mg,
+        		icemg,
         		params.enl,
         		thresholdsMap
         		);
@@ -143,7 +149,8 @@ public abstract class AbstractBatchAnalysis {
         		""+params.thresholdArrayValues[3]};
         		//Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
 
-            layerResults=runBatchAnalysis(reader,params.enl,analysis,masks,thresholds,params.buffer);
+            layerResults=runBatchAnalysis(reader,params.enl,analysis,
+            		mask,iceMask,thresholds,params.buffer);
 
 	}
 
@@ -155,8 +162,9 @@ public abstract class AbstractBatchAnalysis {
      * @param thresholds
      * @return
      */
-    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,IMask[] bufferedMask, String[] thresholds,int buffer){
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, bufferedMask, buffer,0);
+    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,
+    		IMask bufferedMask,IMask bufferedIceMask, String[] thresholds,int buffer){
+    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, buffer,0);
         ap.run();
         return ap.getResultLayers();
     }
@@ -167,7 +175,7 @@ public abstract class AbstractBatchAnalysis {
 	/**
 	 *
 	 */
-	protected void saveResults(String imageName,IMask[] masks,SarImageReader reader){
+	protected void saveResults(String imageName,SarImageReader reader){
 		if(layerResults!=null){
 			String outfolder=new StringBuilder(params.outputFolder)
    					.append(File.separator)

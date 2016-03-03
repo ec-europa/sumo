@@ -10,9 +10,13 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Polygon;
 
 
 public class SingleBatchAnalysis extends AbstractBatchAnalysis {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SingleBatchAnalysis.class);
 
 
 	public SingleBatchAnalysis(AnalysisParams analysisParams) {
@@ -23,27 +27,31 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 	 *
 	 */
 	protected void startAnalysis(){
-		//crate the reader
-		List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
-
-		for(GeoImageReader r:readers){
-			currentReader=r;
-			SarImageReader reader=(SarImageReader) r;
-			String enl=reader.getENL();
-			params.enl=Float.parseFloat(enl);
-
-			GeometricLayer gl=null;
-			if(params.shapeFile!=null)
-				gl=readShapeFile(reader);
-
-			IMask[] masks = null;
-			if(gl!=null){
-				masks=new IMask[1];
-				masks[0]=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
+		try{
+			//crate the reader
+			List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
+	
+			for(GeoImageReader r:readers){
+				currentReader=r;
+				SarImageReader reader=(SarImageReader) r;
+				String enl=reader.getENL();
+				params.enl=Float.parseFloat(enl);
+	
+				GeometricLayer gl=null;
+				if(params.shapeFile!=null){
+			    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
+					gl=readShapeFile(imageP,reader.getGeoTransform());
+				}	
+				IMask masks = null;
+				if(gl!=null){
+					masks=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
+				}
+	
+				analizeImage(reader,masks,null,params);
+				saveResults(reader.getImgName(),reader);
 			}
-
-			analizeImage(reader,masks,params);
-			saveResults(reader.getImgName(),masks,reader);
-		}
+		}catch(Exception e){
+			logger.error(e.getMessage(),e);
+		}	
 	}
 }
