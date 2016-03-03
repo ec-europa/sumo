@@ -18,8 +18,8 @@ import javax.swing.JTabbedPane;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.actions.AbstractConsoleAction;
 import org.geoimage.viewer.actions.SumoAbstractAction;
+import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.iactions.IAction;

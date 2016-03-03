@@ -7,6 +7,7 @@ package org.geoimage.viewer.actions;
 
 import java.util.List;
 
+import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.batch.gui.BatchAnalysisGUI;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.LoggerFactory;

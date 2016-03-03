@@ -2,7 +2,6 @@ package org.geoimage.viewer.core.analysisproc;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.Boat;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
-import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.S1ArtefactsAmbiguity;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
@@ -20,11 +18,9 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.GeometryExtractor;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
@@ -40,10 +36,10 @@ import com.vividsolutions.jts.geom.Geometry;
 public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
-	
+
 		//private MaskGeometries coastlineGeoms=null;
 		//private MaskGeometries iceGeoms=null;
-		
+
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
@@ -110,7 +106,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             	}
             }*/
             bufferedMaskName=analysis.getCoastMask().getMaskName();
-            
+
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=Collections.synchronizedList(new ArrayList<VDSAnalysisProcessListener>());
