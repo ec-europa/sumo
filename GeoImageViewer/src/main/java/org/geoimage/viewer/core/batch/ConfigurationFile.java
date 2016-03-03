@@ -29,7 +29,7 @@ public class ConfigurationFile {
 
 	public static  final String USE_ICE_SHP_FILE="use_ice";
 	//public static  final String ICE_SHP_FILE="ice_shape_file";
-	public static  final String ICE_REPOSITORY_SITE="ice_repository";
+	public static  final String ICE_REPOSITORY_SITE="ice_repository_site";
 	public static  final String ICE_REPOSITORY_PATH="ice_repository_path";
 	public static  final String ICE_PATTERN_NAME="ice_pattern_name";
 
@@ -129,10 +129,28 @@ public class ConfigurationFile {
 		public String getShapeFile(){
 			return prop.getProperty(SHP_FILE,"");
 		}
-		
-		public boolean useIceShapeFile(){
-			return Boolean.parseBoolean((String)prop.get(USE_ICE_SHP_FILE));
+
+		public String useIce(){
+			String useIce=((String)prop.get(USE_ICE_SHP_FILE));
+			return useIce!=null?useIce:"none";
 		}
+		/**
+		 *
+		 * @return true if we use a repository for the ice shp files
+		 */
+		public boolean useIceRepositoryShapeFile(){
+			String useIce=useIce();
+			return useIce!=null&&useIce.equalsIgnoreCase("repository");
+		}
+		/**
+		 *
+		 * @return true if we use a single shp file
+		 */
+		public boolean useSingleShapeFile(){
+			String useIce=useIce();
+			return useIce!=null&&useIce.equalsIgnoreCase("single");
+		}
+
 
 		public boolean getIsRemoteRepoIceFile(){
 			String remote=prop.getProperty(ICE_REPOSITORY_SITE,"");

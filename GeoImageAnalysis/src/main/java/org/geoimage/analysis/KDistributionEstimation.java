@@ -45,13 +45,13 @@ public class KDistributionEstimation {
 	// clipping thresh to compute the mean and the standard deviation
 	double clippingThresh;
 
-	
+
 	private static String dbname = "Positions";
 	private static String dbuser = "vms-vds-user";
 	private static String dbpass = "";
 	private static String dbhost = "localhost";
 	private static String dbport = "5432";
-	
+
 	// detect Thresh
 	// with field = 0 -> mormalized detect Thresh
 	// with field = 1 -> detect Thresh for subTile 1
@@ -71,23 +71,29 @@ public class KDistributionEstimation {
 	//private int rowTile;
 	//private int colTile;
 	//private int band=0;
-	
+
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KDistributionEstimation.class);
-	
+
 	private int noiseFloor=0;
 	private int thresholdPixelsMinValue=500;
-	
+
 	class SupportStats{
 		public double std;
 		public double tempN;
 		public double mu;
+
+		public SupportStats(final double std,final double tempN,final double mu){
+			this.std=std;
+			this.tempN=tempN;
+			this.mu=mu;
+		}
 	}
-	
+
 
 	/**
-	 * 
+	 *
 	 * @param enlf  			 eq number of looks
-	 * @param noiseFloorParam  	 value setted in the preferences. Used as lower limit for the pixels value	
+	 * @param noiseFloorParam  	 value setted in the preferences. Used as lower limit for the pixels value
 	 */
 	public KDistributionEstimation(float enlf,int noiseFloorParam,int thresholdPixelsMin) {
 		String enl = "" + (int) (enlf * 10);
@@ -95,10 +101,10 @@ public class KDistributionEstimation {
 			enl = "0" + enl;
 		}
 		System.out.println("ktables/TabK" + enl + "17.r8");
-		URL lut = VDSAnalysis.class.getClassLoader().getResource("ktables/TabK" + enl + "17.r8");
+		URL lut = KDistributionEstimation.class.getClassLoader().getResource("ktables/TabK" + enl + "17.r8");
 		System.out.println(lut.getPath());
 		loadLookUpTable(lut);
-		
+
 		this.noiseFloor=noiseFloorParam;
 		this.thresholdPixelsMinValue=thresholdPixelsMin;
 	}
@@ -163,8 +169,8 @@ public class KDistributionEstimation {
 	 * 			  horiz index for the tile
 	 * @param useBlackBorderAnalysis
 	 * 			  true = use the black border analysis to analize the tiles
-	 * 
-	 *  
+	 *
+	 *
 	 */
 	public void setImageData(int sizeX, int sizeY,
 							 int sizeTileX, int sizeTileY,int band,TileAnalysis blackTyleAnalysis){
@@ -199,7 +205,7 @@ public class KDistributionEstimation {
 		return imageData;
 	}
 
-	
+
 
 
 	/**
@@ -234,14 +240,14 @@ public class KDistributionEstimation {
 	}
 	/**
 	 * the tile is divided in 4 parts, this function analize each part
-	 * 
+	 *
 	 * @param startx  origin x in tile
 	 * @param starty  origin y in tile
 	 * @param endx    end x pos of the part of the tile that we want analize
 	 * @param endy    end y of the part of the tile that we want analize
 	 * @param mask
 	 * @param data    pixels values
-	 * @param thresholdpixels      threshold 
+	 * @param thresholdpixels      threshold
 	 * @param clipx
 	 * @param blackAn              result of the black border analysis (null if the bb analysis is not used)
 	 * @return
@@ -251,14 +257,14 @@ public class KDistributionEstimation {
 		double std = 0.0;
 		double tempN=0.0;
 		double mux=0.0;
-		
+
 		boolean exit=false;
-		
+
 		//Vertical Black border filter
 		if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
 			if(starty==0){ //we are in the first or second part of the tile
 				int firstCutOffY=blackAn.verTopCutOffArray[0];
-			
+
 				if(firstCutOffY>endy){//verify if the first cutoff is > of the endy
 					int count=0;
 					for(int v:blackAn.verTopCutOffArray){
@@ -271,11 +277,11 @@ public class KDistributionEstimation {
 					}
 				}
 			}
-		}	
+		}
 		if(blackAn!=null&&blackAn.verBottomOffArray!=null){
 			if(starty>0){
 				int firstCutOffY=blackAn.verBottomOffArray[0];
-				
+
 				if(firstCutOffY<=starty){//verify if the first cutoff is <= of the starty
 					int count=0;
 					for(int v:blackAn.verBottomOffArray){
@@ -294,14 +300,14 @@ public class KDistributionEstimation {
 				//horiz Black border filter
 				if(blackAn!=null&&blackAn.verTopCutOffArray!=null){
 						if(y==blackAn.verTopCutOffArray.length||y<=meanThresh(blackAn.verTopCutOffArray))continue;//use the mean
-				}	
+				}
 				if(blackAn!=null&&blackAn.verBottomOffArray!=null){
 						if(y==blackAn.verBottomOffArray.length||y>=meanThresh(blackAn.verBottomOffArray))continue;//use the mean
 				}
-				
+
 				int newStart=startx;
 				int newEnd=endx;
-				
+
 				if(blackAn!=null){
 					boolean jump=false;
 					if(blackAn.horizLeftCutOffArray!=null&&y>=blackAn.horizLeftCutOffArray.length){
@@ -314,23 +320,24 @@ public class KDistributionEstimation {
 					if(!jump){
 						if(blackAn.horizLeftCutOffArray!=null&&startx<blackAn.horizLeftCutOffArray[y]){
 							newStart=startx+blackAn.horizLeftCutOffArray[y];
-						}	
+						}
 						if(blackAn.horizRightCutOffArray!=null&&endx>blackAn.horizRightCutOffArray[y]){
 							newEnd=blackAn.horizRightCutOffArray[y];
 						}
-					}	
+					}
 				}	//end horiz Black border filter //
-				
+
 				for (int x = newStart; x < newEnd ; x += 2) {
-					
+
+					//mask is the raster mask . Is used to understand if the point is on land
 					if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
 						try{
 							val = data[y * sizeTileX + x];
 						}catch(Exception e ){
 							logger.warn(e.toString(),e);
 							break;
-						}	
-	
+						}
+
 						if (val >  this.noiseFloor  && val < clipx) {
 							mux += val;
 							std += val * val;
@@ -339,15 +346,12 @@ public class KDistributionEstimation {
 					}
 				}
 			}
-		}	
-		SupportStats result=new SupportStats();
-		result.mu=mux;
-		result.tempN=tempN;
-		result.std=std;
+		}
+		SupportStats result=new SupportStats(std,tempN,mux);
 		return result;
 	}
 	/**
-	 * 
+	 *
 	 * @param thres
 	 * @return
 	 */
@@ -357,7 +361,7 @@ public class KDistributionEstimation {
 			tot=tot+t;
 		return tot/thres.length;
 	}
-	
+
 	/**
 	 * compute the stats of thesubtiles
 	 *
@@ -375,29 +379,29 @@ public class KDistributionEstimation {
 		double clip2 = statData[2] * clip;
 		double clip3 = statData[3]* clip;
 		double clip4 = statData[4] * clip;
-		
+
 		// used to fill in the zero values for the means
 		//int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, 500);
 		int thresholdpixels = Math.min(sizeTileX * sizeTileY / 4 / 4, this.thresholdPixelsMinValue);
 		double standardDeviation = 0.0;
 
-		
+
 		boolean estimate=true;
 		//check the black border analysis for the first 5 tile on rows
 		TileAnalysis black=blackTileAnalysis;
-		
+
 		if(black!=null){
 			if(black.bIsBorder)
 				estimate=false;//the tile is completely on the black border
 		}
-	  
+
 		try{
 			if(estimate){
 				double mean = 0.0;
 				int meancounter = 0;
 				double tempTileN = 0.;
 				SupportStats[] result=new SupportStats[4];
-				
+
 				result[0]=calcStatValues(0,0,sizeTileX/2,sizeTileY/2,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip1,black);
 				// make sure we have enough points
 				if (result[0].tempN > thresholdpixels) {
@@ -407,7 +411,7 @@ public class KDistributionEstimation {
 					mean += result[0].mu;
 					meancounter++;
 				}
-				
+
 				result[1]=calcStatValues(sizeTileX/2,0,sizeTileX,sizeTileY/2,mask,sizeTileX,sizeTileY,data,thresholdpixels,clip2,black);
 				// make sure we have enough points
 				if (result[1].tempN > thresholdpixels) {
@@ -435,7 +439,7 @@ public class KDistributionEstimation {
 					mean += result[3].mu;
 					meancounter++;
 				}
-				
+
 				// at least one mean was set to zero
 				if ((meancounter != 4) && (meancounter > 0)) {
 					mean = mean / meancounter;
@@ -448,7 +452,7 @@ public class KDistributionEstimation {
 					if (result[3].tempN < thresholdpixels)
 						result[3].mu = mean;
 				}
-		
+
 				if (meancounter != 0) {
 					standardDeviation = Math.sqrt((standardDeviation - tempTileN)
 							/ (tempTileN - 1.));
@@ -470,7 +474,7 @@ public class KDistributionEstimation {
 					statData[2] = 100000;
 					statData[3] = 100000;
 					statData[4] = 100000;
-			}	
+			}
 		}catch(Exception e){
 			logger.error("Error computing statistics for iniX:"+iniX+"   iniY:"+iniY,e);
 			statData[0] = 0.001;
@@ -478,10 +482,10 @@ public class KDistributionEstimation {
 			statData[2] = 100000;
 			statData[3] = 100000;
 			statData[4] = 100000;
-		}	
+		}
 	}
-	
-	
+
+
 	// return [normalized standardDeviation, mean1, mean2, mean3, mean4] of each
 	// sub-window
 	/**

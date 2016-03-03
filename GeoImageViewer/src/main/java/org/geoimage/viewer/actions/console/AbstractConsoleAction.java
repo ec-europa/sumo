@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.actions;
+package org.geoimage.viewer.actions.console;
 
+import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 
 /**
