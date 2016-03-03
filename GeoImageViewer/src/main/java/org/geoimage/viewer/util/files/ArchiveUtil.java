@@ -5,16 +5,25 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.LoggerFactory;
 
 public class ArchiveUtil {
 	private static final int BUFFER = 2048;
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ArchiveUtil.class);
+	private static String[] exts=new String[]{"zip","gz","rar"};
+	
+	public static boolean isArchive(File f){
+		String ext=FilenameUtils.getExtension(f.getName());
+		return (Arrays.asList(exts).contains(ext.toLowerCase()));
+	}
+	
 	
 	/**
 	 * 

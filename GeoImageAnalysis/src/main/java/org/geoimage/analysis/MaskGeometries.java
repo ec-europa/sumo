@@ -24,23 +24,28 @@ import com.vividsolutions.jts.io.WKTReader;
 
 public class MaskGeometries {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MaskGeometries.class);
-
 	private List<Geometry> maskGeometries;
+	private String maskName=null;
+	private Map<String,Boolean> intersectedMapCache=null;
+    private Map<String,Boolean> includesMapCache=null;
+	
 	public List<Geometry> getMaskGeometries() {
 		return maskGeometries;
 	}
-
-
-
-
 	public void setMaskGeometries(List<Geometry> maskGeometries) {
 		this.maskGeometries = maskGeometries;
 	}
-	private Map<String,Boolean> intersectedMapCache=null;
-    private Map<String,Boolean> includesMapCache=null;
+	
     
     
-    public MaskGeometries(List<Geometry> maskGeometries) {
+    public String getMaskName() {
+		return maskName;
+	}
+	public void setMaskName(String maskName) {
+		this.maskName = maskName;
+	}
+	public MaskGeometries(String maskName,List<Geometry> maskGeometries) {
+    	this.maskName=maskName;
     	this.maskGeometries=maskGeometries;
     	intersectedMapCache=new HashMap<String,Boolean>();
     	includesMapCache=new HashMap<String,Boolean>();

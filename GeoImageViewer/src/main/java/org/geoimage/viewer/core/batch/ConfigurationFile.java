@@ -18,35 +18,35 @@ import java.util.Set;
 
 public class ConfigurationFile {
 	//starting params
-	private static  final String TRESH_HH_PARAM="thh";
-	private static  final String TRESH_HV_PARAM="thv";
-	private static  final String TRESH_VH_PARAM="tvh";
-	private static  final String TRESH_VV_PARAM="tvv";
+	public static  final String TRESH_HH_PARAM="thh";
+	public static  final String TRESH_HV_PARAM="thv";
+	public static  final String TRESH_VH_PARAM="tvh";
+	public static  final String TRESH_VV_PARAM="tvv";
 
-	private static  final String ENL_PARAM="enl";
+	public static  final String ENL_PARAM="enl";
 
-	private static  final String SHP_FILE="shape_file";
+	public static  final String SHP_FILE="shape_file";
 
-	private static  final String USE_SHP_FILE="use_ice";
-	private static  final String ICE_SHP_FILE="ice_shape_file";
-	private static  final String ICE_REPOSITORY_SITE="ice_repository";
-	private static  final String ICE_REPOSITORY_PATH="ice_repository_path";
-	private static  final String ICE_PATTERN_NAME="ice_pattern_name";
+	public static  final String USE_ICE_SHP_FILE="use_ice";
+	//public static  final String ICE_SHP_FILE="ice_shape_file";
+	public static  final String ICE_REPOSITORY_SITE="ice_repository";
+	public static  final String ICE_REPOSITORY_PATH="ice_repository_path";
+	public static  final String ICE_PATTERN_NAME="ice_pattern_name";
 
 
-	private static  final String BUFFER_PARAM="buffer";
-	private static  final String INPUT_FOLD_PARAM="input_folder";
-	private static  final String OUTPUT_FOLD_PARAM="output_folder";
-	private static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
+	public static  final String BUFFER_PARAM="buffer";
+	public static  final String INPUT_FOLD_PARAM="input_folder";
+	public static  final String OUTPUT_FOLD_PARAM="output_folder";
+	public static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
 
-	private static  final String USE_LOCAL_CONF="use_local_conf";
+	public static  final String USE_LOCAL_CONF="use_local_conf";
 	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
-	private static  final String FORCE_NEW_ANALYSIS="force_new_analysis";
-	private static  final String FILTER_FOLDER="filter";
-	private static final String MAX_DETECTIONS_ALLOWED="max_detections_allowed";
+	public static  final String FORCE_NEW_ANALYSIS="force_new_analysis";
+	public static  final String FILTER_FOLDER="filter";
+	public static final String MAX_DETECTIONS_ALLOWED="max_detections_allowed";
 
-	private static  final String RUN_VERSION="run_version";
-	private static  final String RUN_VERSION_NUMBER="run_version_number";
+	public static  final String RUN_VERSION="run_version";
+	public static  final String RUN_VERSION_NUMBER="run_version_number";
 
 	private String confFile;
 	private Properties prop = new Properties();
@@ -127,7 +127,11 @@ public class ConfigurationFile {
 		 * @return
 		 */
 		public String getShapeFile(){
-			return prop.getProperty(ICE_SHP_FILE,"");
+			return prop.getProperty(SHP_FILE,"");
+		}
+		
+		public boolean useIceShapeFile(){
+			return Boolean.parseBoolean((String)prop.get(USE_ICE_SHP_FILE));
 		}
 
 		public boolean getIsRemoteRepoIceFile(){
@@ -135,7 +139,7 @@ public class ConfigurationFile {
 			return (remote!=null&&remote.equals("remote"));
 		}
 
-		public String getIceRepositoryPath(){
+		public String getIceRepositoryUrl(){
 			return prop.getProperty(ICE_REPOSITORY_PATH,"");
 		}
 		public String getIceShapeFileName(){

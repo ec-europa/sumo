@@ -123,27 +123,31 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 						vv=Float.parseFloat(paramsAction.get("vv"));
 					}
 					//read the land mask
-					ArrayList<IMask> mask = new ArrayList<IMask>();
+					IMask mask = null;
 	                for (ILayer l : LayerManager.getIstanceManager().getChilds(layer)) {
 	                    if (l instanceof IMask ) {
-	                        mask.add((IMask) l);
+	                        //mask.add((IMask) l);
+	                    	mask=(IMask) l;
 	                    }
 	                }
 					// create new buffered mask with bufferingDistance using the mask in parameters
-	                final IMask[] bufferedMask = new IMask[mask.size()];
+	               /* final IMask[] bufferedMask = new IMask[mask.size()];
 	                for (int i=0;i<mask.size();i++) {
 	                	IMask maskList = mask.get(i);
 	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
 	               				buffer,
 	               				((MaskVectorLayer)maskList).getGeometriclayer(),
 	               				MaskVectorLayer.COASTLINE_MASK);
-	                }
+	                }*/
+	                IMask bufferedMask=FactoryLayer.createMaskLayer(mask.getName(), mask.getType(),buffer,
+               				((MaskVectorLayer)mask).getGeometriclayer(),
+               				MaskVectorLayer.COASTLINE_MASK);
 
-	                VDSAnalysis analysis = new VDSAnalysis(sar, null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
+	                VDSAnalysis analysis = new VDSAnalysis(sar, null,null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
 					analysis.setAnalyseSingleTile(true);
 					analysis.setxTileToAnalyze(col);
 					analysis.setyTileToAnalyze(row);
-					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis, bufferedMask,0,0);
+					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis,0,0);
 					proc.addProcessListener(this);
 					Thread t=new Thread(proc);
 	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
