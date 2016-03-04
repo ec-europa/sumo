@@ -250,15 +250,13 @@ public class VDSAnalysis{
                 xLeftTile = colIndex * sizeX;   //x start tile
                 xRightTile = xLeftTile + sizeX+dx; //dx is always 0 except on the last tile
 
-                Raster rastermask =null;
-                Raster rasterIceMask =null;
                 boolean containsMinPixelValid=false;
 
 
 
-
+                int[] maskdata =null;
                 if (coastMask == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
-                	rastermask =null;
+                	maskdata =null;
                 }else{
                 	// compute different statistics if the tile intersects the land mask
                     // check if there is sea pixels in the tile area
@@ -266,13 +264,13 @@ public class VDSAnalysis{
                         continue;
 
                     // create raster mask //dx and dy are for tile on the border that have different dimensions
-                    rastermask = coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+                    Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
                     //Read pixels for the area and check there are enough sea pixels
-                    int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+                    maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
 
                     int[] iceMaskdata = null;
                     if(iceMask!=null){
-                    	rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+                    	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
                     	//Read pixels for ice
                     	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
                     }
@@ -286,6 +284,7 @@ public class VDSAnalysis{
                         	if(iceMaskdata!=null&&iceMaskdata[count]==1){
                         		inValidPixelCount++;
                         		maskdata[count]=1;
+
                         	}
                         }
                     }
@@ -301,7 +300,7 @@ public class VDSAnalysis{
 
                         iceMaskdata = null;
                         if(iceMask!=null){
-                        	rasterIceMask    = iceMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0).getData();
+                        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0).getData();
                         	//Read pixels for ice
                         	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
                         }
@@ -317,16 +316,11 @@ public class VDSAnalysis{
                             }
                         }
                         containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
-
-                        //containsMinPixelValid=(double)(oldInValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }
 
-
-
-
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
-                if(containsMinPixelValid||rastermask==null){
+                if(containsMinPixelValid||maskdata==null){
                     // if there are pixels to estimate, calculate statistics using the mask
                 	TileAnalysis bbAnalysis=null;
 
@@ -336,7 +330,7 @@ public class VDSAnalysis{
 
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,band,bbAnalysis);
-                    kdist.estimate(rastermask,data);
+                    kdist.estimate(maskdata,data);
 
                     double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
@@ -346,7 +340,7 @@ public class VDSAnalysis{
                     for (int k = 0; k < (sizeY+dy); k++) {
                         for (int h = 0; h < (sizeX+dx); h++) {
                             // check pixel is in the sea
-                            if(rastermask==null||(rastermask.getSample(h, k, 0) == 0)){
+                            if(maskdata==null||(maskdata[h*k]==0)){//rastermask.getSample(h, k, 0) == 0)){
                                 int subwindow = 1;
                                 if (h < (sizeX+dx) / 2) {
                                     if (k < (sizeY+dy) / 2) {
@@ -527,7 +521,7 @@ public class VDSAnalysis{
 
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, iBand,bbAnalysis);
                 	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,bands[iBand]);
-                	kdist.estimate(rastermask, newdata);
+                	kdist.estimate(newdata, newdata);
 
                 	double[] treshTile=kdist.getDetectThresh();
                 	double threshTotal=treshTile[0]+treshTile[1]+treshTile[2]+treshTile[3];

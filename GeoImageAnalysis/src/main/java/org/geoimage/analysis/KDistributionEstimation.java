@@ -211,7 +211,7 @@ public class KDistributionEstimation {
 	/**
 	 * @param mask
 	 */
-	public void estimate(Raster mask,int data[]) {
+	public void estimate(int[] mask,int data[]) {
 		detectThresh = new double[6];
 
 		double[] statData = new double[] { 1, 1, 1, 1, 1 };
@@ -252,7 +252,7 @@ public class KDistributionEstimation {
 	 * @param blackAn              result of the black border analysis (null if the bb analysis is not used)
 	 * @return
 	 */
-	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,Raster mask,int sizeTileX, int sizeTileY,int[] data,int thresholdpixels,double clipx,TileAnalysis blackAn){
+	private SupportStats calcStatValues(int startx,int starty,int endx,int endy,int[] mask,int sizeTileX, int sizeTileY,int[] data,int thresholdpixels,double clipx,TileAnalysis blackAn){
 		double val = 0.;
 		double std = 0.0;
 		double tempN=0.0;
@@ -330,7 +330,7 @@ public class KDistributionEstimation {
 				for (int x = newStart; x < newEnd ; x += 2) {
 
 					//mask is the raster mask . Is used to understand if the point is on land
-					if ((mask == null) || (mask.getSample(x, y, 0) == 0)) {
+					if ((mask == null) || (mask[x*y]==0)){//(mask.getSample(x, y, 0) == 0)) {
 						try{
 							val = data[y * sizeTileX + x];
 						}catch(Exception e ){
@@ -373,7 +373,7 @@ public class KDistributionEstimation {
 	 *            the column of the tile
 	 * @return the stats of each subtiles
 	 */
-	protected void computeStat(double clip, int iniX, int iniY,	Raster mask, int[] data,double[] statData) {
+	protected void computeStat(double clip, int iniX, int iniY,	int[] mask, int[] data,double[] statData) {
 		//multiply the clip with the previous statData[]
 		double clip1 = statData[1] * clip;
 		double clip2 = statData[2] * clip;
