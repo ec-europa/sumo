@@ -169,6 +169,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,
                 proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0);
                 proc.addProcessListener(this);
 
+                SumoPlatform.getApplication().getConsoleLayer().setCurrentAction(this);
+                
                 Thread t=new Thread(proc);
                 t.setName("VDS_analysis_"+gir.getDisplayName(0));
                 t.start();
