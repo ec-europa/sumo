@@ -32,23 +32,23 @@ public class SimpleGeometryLayer extends GenericLayer {
     public final static String LINESTRING = GeometricLayer.LINESTRING;
     public final static String MIXED = GeometricLayer.MIXED;
     protected boolean active = true;
-    
-   	
+
+
     protected float renderWidth = 1;
     protected Color color = new Color(1f, 1f, 1f);
     protected List<Geometry> geometries;
     private symbol displaysymbol = symbol.point;
     protected double currentThresh = 0;
-    
+
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(SimpleGeometryLayer.class);
-    
-    
-    
+
+
+
     public SimpleGeometryLayer(ILayer parent,String layername, List<Geometry> geometries,String type) {
     	super(parent,layername,type,null);
         this.geometries=geometries;
     }
- 
+
 
     public String getName() {
         return name;
@@ -57,9 +57,9 @@ public class SimpleGeometryLayer extends GenericLayer {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
-     * 
+     *
      * @param gl
      * @param cs
      * @param width
@@ -75,7 +75,7 @@ public class SimpleGeometryLayer extends GenericLayer {
         	double vy=1 - (cs[p].y - y) / height;
             gl.glVertex2d(vx,vy);
         }
-       
+
         //close polygon
         Coordinate point = cs[0];
         gl.glVertex2d((point.x - x) / width, 1 - (point.y - y) / height);
@@ -83,7 +83,8 @@ public class SimpleGeometryLayer extends GenericLayer {
         gl.glFlush();
     }
 
-    public void render(OpenGLContext context) {
+    public void render(Object gcC) {
+    	OpenGLContext context=(OpenGLContext)gcC;
         if (!context.isDirty()) {
             return;
         }
@@ -92,7 +93,7 @@ public class SimpleGeometryLayer extends GenericLayer {
         float zoom = context.getZoom();
         float width = context.getWidth() * zoom;
         float height = context.getHeight() * zoom;
-        
+
         GL2 gl = context.getGL().getGL2();
         float[] c = color.getColorComponents(null);
         gl.glColor3f(c[0], c[1], c[2]);
@@ -122,10 +123,10 @@ public class SimpleGeometryLayer extends GenericLayer {
                         		   double angle = 2 * Math.PI * i / 300;
                         		   double xx = Math.cos(angle);
                         		   double yy = Math.sin(angle);
-                        		   
+
                         		   gl.glVertex2d(xx+dx,yy+dy);
                         	   }
-	                        } 
+	                        }
                     	    gl.glEnd();
                             gl.glFlush();
                         }
@@ -196,7 +197,7 @@ public class SimpleGeometryLayer extends GenericLayer {
                             continue;
                         }
                         float rWidth=this.renderWidth ;
-                        
+
                         int interior=polygon.getNumInteriorRing();
 
                         if(interior>0){
@@ -211,14 +212,14 @@ public class SimpleGeometryLayer extends GenericLayer {
                         }else{
                         	drawPoly(gl,polygon.getCoordinates(),width,height,x,y,rWidth);
                         }
-                        
+
                     }
                 } else if (getType().equalsIgnoreCase(LINESTRING)) {
                     for (Geometry temp : geometries) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
                         }
-                        
+
                         gl.glLineWidth(this.renderWidth);
                         gl.glBegin(GL.GL_LINE_STRIP);
                         Coordinate[] cs = temp.getCoordinates();
@@ -228,8 +229,8 @@ public class SimpleGeometryLayer extends GenericLayer {
                         gl.glEnd();
                         gl.glFlush();
                     }
-                } 
-            } 
+                }
+            }
     }
 
 	public boolean isActive() {
@@ -268,7 +269,7 @@ public class SimpleGeometryLayer extends GenericLayer {
         this.renderWidth = width;
     }
 
-  
+
 
     public String getType() {
         return type;
@@ -278,9 +279,9 @@ public class SimpleGeometryLayer extends GenericLayer {
         this.type = type;
     }
 
-   
-  
-  
+
+
+
 
 
 }

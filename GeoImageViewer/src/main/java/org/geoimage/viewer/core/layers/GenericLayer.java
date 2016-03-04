@@ -42,9 +42,9 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	protected double currentThresh = 0;
 	protected double minThresh = 0;
 	protected double maxThresh = 0;
-	
+
 	/**
-	 * 
+	 *
 	 * @param parent
 	 * @param layername
 	 * @param type
@@ -57,11 +57,11 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
         this.type = type;
         this.glayer=layer;
     }
-	
+
 
     @Override
 	public void render(Object gcC){
-    	   OpenGLContext context=(OpenGLContext)gcC;
+    	  OpenGLContext context=(OpenGLContext)gcC;
 		  if (!context.isDirty()||SumoPlatform.isBatchMode()) {
 	            return;
 	        }
@@ -70,7 +70,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	        float zoom = context.getZoom();
 	        float width = context.getWidth() * zoom;
 	        float height = context.getHeight() * zoom;
-	        
+
 	        if (glayer != null) {
 	        	List<Geometry> geomList=glayer.getGeometries();
 
@@ -112,9 +112,9 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 		                            continue;
 		                        }
 		                        float rWidth=polygon == selectedGeometry ? this.renderWidth * 2 : this.renderWidth;
-		                        
+
 		                        int interior=polygon.getNumInteriorRing();
-		                        
+
 		                        if(interior>0){
 		                        	//draw external polygon
 		                        	LineString line=polygon.getExteriorRing();
@@ -141,7 +141,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                            	}
 	                            	GL2ShapesRender.drawPoly(context,g.getCoordinates(),width,height,x,y,rWidth,color);
 	                            }*/
-	                            
+
 	                            GL2ShapesRender.drawPoly(context,mpolygon.getCoordinates(),width,height,x,y,rWidth,color);
 
 	                    	}
@@ -237,10 +237,10 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	            }
 	        }
 	}
-	
-	
 
-	
+
+
+
 
 	public boolean isActive() {
         return active;
@@ -249,7 +249,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	public void setActive(boolean active) {
         this.active=active;
     }
-	
+
 	public String getName() {
         return name;
     }
@@ -257,8 +257,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     public void setName(String name) {
         this.name = name;
     }
-	
-	
+
+
     public boolean isRadio() {
         return isRadio;
     }
@@ -266,12 +266,12 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     public void setIsRadio(boolean radio) {
         isRadio = radio;
     }
-    
+
     public void init(ILayer parent) {
 		this.parent = parent;
 	}
 
-	
+
 	public ILayer getParent() {
 		return parent;
 	}
@@ -279,7 +279,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	public void setParent(ILayer parent) {
 		this.parent = parent;
 	}
-	
+
     public String getType() {
         return type;
     }
@@ -287,7 +287,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public Geometry getSelectedGeometry() {
 		return selectedGeometry;
 	}
@@ -295,7 +295,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	public void setSelectedGeometry(Geometry selectedGeometry) {
 		this.selectedGeometry = selectedGeometry;
 	}
-	
+
     public void setThresh(double thresh) {
         currentThresh = thresh;
     }
@@ -303,7 +303,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
         return currentThresh;
     }
 
-    
+
     public GeometricLayer getGeometriclayer() {
         return glayer;
     }
@@ -311,7 +311,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     public void setGeometriclayer(GeometricLayer glayer) {
         this.glayer = glayer;
     }
-    
+
 	@Override
 	public String getDescription() {
 		return name;
@@ -338,11 +338,11 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	@Override
 	 public FileTypes[] getFileFormatTypes() {
 		FileTypes[] opts=new FileTypes[2];
-    	opts[0]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV); 
+    	opts[0]=new FileTypes(ISave.OPT_EXPORT_CSV,ISave.STR_EXPORT_CSV);
     	opts[1]=new FileTypes(ISave.OPT_EXPORT_SHP,ISave.STR_EXPORT_SHP);
-        return opts; 
+        return opts;
     }
-	
+
 	public int[] getHistogram(int numClasses) {
         if (threshable) {
             int[] out = new int[numClasses];
@@ -356,7 +356,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
         }
         return null;
     }
-	
+
 	public Color getColor() {
 	        return this.color;
 	    }
@@ -372,7 +372,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     public void setWidth(float width) {
         this.renderWidth = width;
     }
-    
+
     public symbol getDisplaysymbol() {
         return displaysymbol;
     }

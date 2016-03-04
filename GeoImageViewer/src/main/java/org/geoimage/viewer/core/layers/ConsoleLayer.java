@@ -54,7 +54,7 @@ public class ConsoleLayer extends GenericLayer {
 
     public void execute(String[] arguments) {
         for (String c : pl.getCommands()) {
-            if (arguments[0].startsWith(c)) {
+            if (arguments[0].equals(c)) {
             	try {
                     if (!pl.getPlugins().get(c).isActive()) {
                         return;

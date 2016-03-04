@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.def.GeoImageReader;
+import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class ViewTilesAction extends SumoAbstractAction{
+public class ViewTilesAction extends AbstractConsoleAction{
 	private Logger logger = LoggerFactory.getLogger(ViewTilesAction.class);
 	boolean done=false;
 	int tileSize=0;
@@ -36,11 +37,12 @@ public class ViewTilesAction extends SumoAbstractAction{
 
 
 	@Override
-	public boolean execute() {
+	public boolean executeFromConsole() {
 		try {
 			done = false;
-			if(paramsAction!=null){
-				tileSize=Integer.parseInt(paramsAction.values().iterator().next());
+
+			if(super.commandLine!=null){
+				tileSize=Integer.parseInt(commandLine[1]);
 			}
 
 	        new Thread(new Runnable() {
@@ -103,6 +105,21 @@ public class ViewTilesAction extends SumoAbstractAction{
             done = true;
         }
     }
+
+
+	@Override
+	public String getCommand() {
+		return "viewtile";
+	}
+
+
+	@Override
+	public boolean execute() {
+		if(paramsAction!=null&&!paramsAction.isEmpty()){
+			tileSize=Integer.parseInt(paramsAction.values().iterator().next());
+		}
+		return executeFromConsole();
+	}
 
 
 

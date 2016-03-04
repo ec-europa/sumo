@@ -19,6 +19,10 @@ public abstract class AbstractConsoleAction extends SumoAbstractAction implement
 		super(name,"");
 	}
 
+   public AbstractConsoleAction(String name,String actionPath) {
+		super(name,actionPath);
+	}
+
 @Override
    public abstract String getCommand();
    public abstract boolean executeFromConsole();
