@@ -4,15 +4,16 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
+import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
+import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 
 
-public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
+public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
 	private int current = 0;
@@ -83,19 +84,19 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 
 
 	@Override
-	public boolean execute() {
+	public boolean executeFromConsole() {
 		try {
 			SarImageReader sar=(SarImageReader) SumoPlatform.getApplication().getCurrentImageReader();
 			ImageLayer layer=LayerManager.getIstanceManager().getCurrentImageLayer();
 
-			if(layer!=null && paramsAction.size()>=2){
-				Iterator<String>it=paramsAction.values().iterator();
-				String arg0=it.next();
-				String arg1=it.next();
-				String arg2=it.next();
+			if(layer!=null && commandLine.length>=3){
+				String arg0=commandLine[1];
+				String arg1=commandLine[2];
+				String arg2=commandLine[3];
+
 				//run for the black border analysis
 				if(arg0.equalsIgnoreCase("bb")){
-					if(paramsAction.size()==2 && arg1.equalsIgnoreCase("test")){
+					if(commandLine.length==2 && arg1.equalsIgnoreCase("test")){
 						runBBAnalysis();
 					}else{
 						int row=Integer.parseInt(arg1);
@@ -109,41 +110,53 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			//run vds analysis on a single tile
 				}else if(arg0.equalsIgnoreCase("vds")){
 
-					int row=Integer.parseInt(paramsAction.get("row"));//args[1]);
-					int col=Integer.parseInt(paramsAction.get("col2"));//args[2]);
-					Float buffer=Float.parseFloat(paramsAction.get("buffer"));
+					int row=Integer.parseInt(arg1);//args[1]);
+					int col=Integer.parseInt(arg2);
+
 					Float hh=1.5f;
 					Float hv=1.5f;
 					Float vh=1.5f;
 					Float vv=1.5f;
-					if(paramsAction.size()>=5){
-						hh=Float.parseFloat(paramsAction.get("hh"));
-						hv=Float.parseFloat(paramsAction.get("hv"));
-						vh=Float.parseFloat(paramsAction.get("vh"));
-						vv=Float.parseFloat(paramsAction.get("vv"));
+					Float buffer=0.0f;
+					if(commandLine.length>=5){
+						buffer=Float.parseFloat(commandLine[4]);
+						hh=Float.parseFloat(commandLine[5]);
+						hv=Float.parseFloat(commandLine[6]);
+						vh=Float.parseFloat(commandLine[7]);
+						vv=Float.parseFloat(commandLine[8]);
 					}
+
+
+					MaskVectorLayer coastlineMask = null;
+				    MaskVectorLayer iceMasks = null;
 					//read the land mask
-					IMask mask = null;
 	                for (ILayer l : LayerManager.getIstanceManager().getChilds(layer)) {
 	                    if (l instanceof IMask ) {
-	                        //mask.add((IMask) l);
-	                    	mask=(IMask) l;
+	                    	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
+	                    			coastlineMask=(MaskVectorLayer) l;
+	                    	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
+	                    			iceMasks=(MaskVectorLayer) l;
+	                    	}
 	                    }
 	                }
-					// create new buffered mask with bufferingDistance using the mask in parameters
-	               /* final IMask[] bufferedMask = new IMask[mask.size()];
-	                for (int i=0;i<mask.size();i++) {
-	                	IMask maskList = mask.get(i);
-	               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
-	               				buffer,
-	               				((MaskVectorLayer)maskList).getGeometriclayer(),
-	               				MaskVectorLayer.COASTLINE_MASK);
-	                }*/
-	                IMask bufferedMask=FactoryLayer.createMaskLayer(mask.getName(), mask.getType(),buffer,
-               				((MaskVectorLayer)mask).getGeometriclayer(),
-               				MaskVectorLayer.COASTLINE_MASK);
 
-	                VDSAnalysis analysis = new VDSAnalysis(sar, null,null, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
+					IMask bufferedMask=null;
+	                if(coastlineMask!=null)
+	                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
+	                		coastlineMask.getType(),0,((MaskVectorLayer)coastlineMask).getGeometriclayer(),
+	           				coastlineMask.getMaskType());
+
+	                IMask iceMask=null;
+	                if(iceMasks!=null)
+	                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
+	                		iceMasks.getType(),0,((MaskVectorLayer)iceMasks).getGeometriclayer(),
+	           				iceMasks.getMaskType());
+
+
+	                MaskGeometries mg=new MaskGeometries("coast", bufferedMask.getGeometries());
+	                MaskGeometries ice=new MaskGeometries("ice",   iceMask.getGeometries());
+
+	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
 					analysis.setAnalyseSingleTile(true);
 					analysis.setxTileToAnalyze(col);
 					analysis.setyTileToAnalyze(row);
@@ -156,8 +169,8 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			proc.removeProcessListener(this);
-			proc.dispose();
+			//proc.removeProcessListener(this);
+			//proc.dispose();
 
 			return false;
 		}finally{
@@ -289,6 +302,18 @@ public class TileAnalysisAction extends SumoAbstractAction implements VDSAnalysi
 			this.message=message;
 		}
 
+	}
+
+
+	@Override
+	public String getCommand() {
+		return "chktile";
+	}
+
+
+	@Override
+	public boolean execute() {
+		return executeFromConsole();
 	}
 
 
