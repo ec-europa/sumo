@@ -319,6 +319,14 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
+	public IProgress getCurrentAction() {
+		return currentAction;
+	}
+
+	public void setCurrentAction(IProgress currentAction) {
+		this.currentAction = currentAction;
+	}
+
 
 
 
