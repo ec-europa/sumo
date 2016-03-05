@@ -139,22 +139,24 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                    	}
 	                    }
 	                }
-
+	                
+	                MaskGeometries mg=null;
 					IMask bufferedMask=null;
-	                if(coastlineMask!=null)
+	                if(coastlineMask!=null){
 	                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
 	                		coastlineMask.getType(),0,((MaskVectorLayer)coastlineMask).getGeometriclayer(),
 	           				coastlineMask.getMaskType());
-
+	                	mg=new MaskGeometries("coast", bufferedMask.getGeometries());
+	                }	
+	                MaskGeometries ice=null;
 	                IMask iceMask=null;
-	                if(iceMasks!=null)
+	                if(iceMasks!=null){
 	                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
 	                		iceMasks.getType(),0,((MaskVectorLayer)iceMasks).getGeometriclayer(),
 	           				iceMasks.getMaskType());
-
-
-	                MaskGeometries mg=new MaskGeometries("coast", bufferedMask.getGeometries());
-	                MaskGeometries ice=new MaskGeometries("ice",   iceMask.getGeometries());
+	                	 
+		                 ice=new MaskGeometries("ice",   iceMask.getGeometries());
+	                }	 
 
 	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
 					analysis.setAnalyseSingleTile(true);

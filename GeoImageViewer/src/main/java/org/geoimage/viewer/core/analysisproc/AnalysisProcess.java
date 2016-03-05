@@ -105,7 +105,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             		}
             	}
             }*/
-            bufferedMaskName=analysis.getCoastMask().getMaskName();
+			if(analysis.getCoastMask()!=null)
+				bufferedMaskName=analysis.getCoastMask().getMaskName();
 
 			this.buffer=buffer;
 			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
