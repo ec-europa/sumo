@@ -252,8 +252,6 @@ public class VDSAnalysis{
 
                 boolean containsMinPixelValid=false;
 
-
-
                 int[] maskdata =null;
                 if (coastMask == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	maskdata =null;
@@ -263,62 +261,25 @@ public class VDSAnalysis{
                     if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
                         continue;
 
-                    // create raster mask //dx and dy are for tile on the border that have different dimensions
-                    Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
-                    //Read pixels for the area and check there are enough sea pixels
-                    maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
-
-                    int[] iceMaskdata = null;
-                    if(iceMask!=null){
-                    	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
-                    	//Read pixels for ice
-                    	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
-                    }
-
+                   
+                    maskdata=createDataMask(xLeftTile, yTopTile, sizeX, sizeY, dx, dy);
                     //count invalid pixel (land)
                     int inValidPixelCount = 0;
-                    for(int count = 0; count < maskdata.length; count++){
+                    for(int count = 0; count < maskdata.length; count++)
                         inValidPixelCount += maskdata[count];
-                        //if the pixel is valid check if this pixel is ice
-                        if(maskdata[count]==0){
-                        	if(iceMaskdata!=null&&iceMaskdata[count]==1){
-                        		inValidPixelCount++;
-                        		maskdata[count]=1;
-
-                        	}
-                        }
-                    }
-
                     //double oldInValidPixelCount=inValidPixelCount;
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
 
                     if(!containsMinPixelValid){
-                    	//try to read more pixels (out of the current tile) to have more pixels for the statistics
-                    	rastermask = (coastMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0)).getData();
-                        //Read pixels for the area and check there are enough sea pixels
-                        maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
-
-                        iceMaskdata = null;
-                        if(iceMask!=null){
-                        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile-30, yTopTile-30, sizeX+dx+30, sizeY+dy+30, -xLeftTile, -yTopTile, 1.0).getData();
-                        	//Read pixels for ice
-                        	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
-                        }
-                        inValidPixelCount=0;
-                        for(int count = 0; count < maskdata.length; count++){
+                    	maskdata=createDataMask(xLeftTile-30, yTopTile-30, sizeX+30, sizeY+30, dx, dy);
+                        //count invalid pixel (land)
+                        inValidPixelCount = 0;
+                        for(int count = 0; count < maskdata.length; count++)
                             inValidPixelCount += maskdata[count];
-                            //if the pixel is valid check if this pixel is ice
-                            if(maskdata[count]==0){
-                            	if(iceMaskdata!=null&&iceMaskdata[count]==1){
-                            		inValidPixelCount++;
-                            		maskdata[count]=1;
-                            	}
-                            }
-                        }
+                    	
                         containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }
-
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
                 if(containsMinPixelValid||maskdata==null){
                     // if there are pixels to estimate, calculate statistics using the mask
@@ -326,7 +287,6 @@ public class VDSAnalysis{
 
                 	//check if it is avalaible the bb analysis for this tile
             		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(rowIndex,colIndex);
-
 
                     int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
                     kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,band,bbAnalysis);
@@ -371,7 +331,6 @@ public class VDSAnalysis{
                             }
                         }
                     }
-
 	            }
 	        }
             System.out.println(rowIndex + "/" + verTilesImage);
@@ -380,6 +339,42 @@ public class VDSAnalysis{
         return dpixels;
     }
 
+    
+    /**
+     * 
+     * @param xLeftTile
+     * @param yTopTile
+     * @param sizeX
+     * @param sizeY
+     * @param dx
+     * @param dy
+     * @return
+     */
+    public int[] createDataMask(int xLeftTile, int yTopTile, int sizeX, int sizeY,int dx,int dy){
+    	// create raster mask //dx and dy are for tile on the border that have different dimensions
+        Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+        //Read pixels for the area and check there are enough sea pixels
+        int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+
+        int[] iceMaskdata = null;
+        if(iceMask!=null){
+        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+        	//Read pixels for ice
+        	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
+        }
+        
+        for(int count = 0; count < maskdata.length; count++){
+            //if the pixel is valid check if this pixel is ice
+            if(maskdata[count]==0){
+            	if(iceMaskdata!=null&&iceMaskdata[count]==1){
+            		maskdata[count]=1;
+            	}
+            }
+        }
+        return maskdata;
+    }
+    
+    
     /**
      *
      * @param distance
