@@ -15,6 +15,7 @@ import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.IProgress;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
 
@@ -26,22 +27,19 @@ import com.vividsolutions.jts.geom.Polygon;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  *
  */
-public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
+public class AddGenericWorldLayerAction extends SumoAbstractAction implements IProgress  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddGenericWorldLayerAction.class);
 
-	private String name="";
     private File worldFile;
-
+    protected boolean done = false;
+    
     public AddGenericWorldLayerAction(String actionName,File worldFile) {
-    	name=actionName;
+    	super(actionName,"Import/Coastline/"+actionName);
     	this.worldFile=worldFile;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public boolean execute(final String[] args) {
+    public boolean execute() {
         done = false;
         new Thread(new Runnable() {
 
@@ -72,37 +70,11 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
         return true;
     }
 
-    /*
-     *
-     * @param type
-     * @param layer
-     * @param il
-     *
-    public void addLayerInThread(final String type, final GeometricLayer layer, final ImageLayer il) {
-        if (layer != null) {
-            new Thread(new Runnable() {
-
-                public void run() {
-                    GenericLayer ivl = FactoryLayer.createGenericLayer(type, layer, il.getImageReader(),"");
-                    ivl.setColor(Color.GREEN);
-                    ivl.setWidth(5);
-                    Platform.getLayerManager().addLayer((ILayer) ivl);
-                    done = true;
-                }
-            }).start();
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    JOptionPane.showMessageDialog(null, "Empty layer, not added to layers", "Warning", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-            done = true;
-        }
-    }*/
-
     public String getPath() {
         return "Import/Coastline/"+name;
     }
+
+
+	
 
 }
