@@ -34,6 +34,9 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
     public AddWorldVectorLayerAction() {
     	super("world","Import/Land mask");
     }
+    public AddWorldVectorLayerAction(String name,String path) {
+    	super(name,path);
+    }
 
     public String getDescription() {
         return " Add a land mask layer";
