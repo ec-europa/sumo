@@ -52,14 +52,8 @@ public class LayerWidget extends Container {
             public void mousePressed(MousePressedEvent e) {
                 if (e.getButton() == MouseButton.LEFT) {
                 	if(!(layer instanceof ConsoleLayer || layer instanceof BaseLayer)){
-                		/*if(layer.getParent()==null)
-                			layer.setActive(!layer.isActive());
-                		else{
-                			if(layer.getParent().isActive())
-                				layer.setActive(!layer.isActive());
-                		}*/
                     	SumoPlatform.getApplication().getLayerManager().notifyLayerClicked(layer);
-                    	SumoPlatform.refresh();
+                        SumoPlatform.getApplication().refresh();
                 	}
                 } else if (e.getButton() == MouseButton.RIGHT) {
                     LayerDialog dialog = dialogs.get(layer);

@@ -66,8 +66,6 @@ public class LayerManagerWidget {
     	
     	LayerWidget console=new LayerWidget(SumoPlatform.getApplication().getLayerManager().getConsoleLayer());
     	//console.setMinSize(20,20);
-    	
-    	
     	wContainer.addWidget(console);
     	
     	Container parent=new LayerWidget(SumoPlatform.getApplication().getLayerManager().getBaseLayer());

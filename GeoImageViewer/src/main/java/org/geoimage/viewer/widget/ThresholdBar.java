@@ -75,7 +75,7 @@ public class ThresholdBar extends TransparentWidget {
 
             public void sliderMoved(SliderMovedEvent sliderMovedEvent) {
                 layer.setThresh(min + (max - min) * sliderMovedEvent.getPosition());
-                SumoPlatform.refresh();
+                SumoPlatform.getApplication().refresh();
             }
         });
         return bar;

@@ -38,8 +38,6 @@ public class ConsoleLayer extends GenericLayer {
     private String message = "";
     private String oldMessage = "";
 
-
-    //private String[] commands;
     private IProgress currentAction = null;
     private PluginsManager pl;
 
@@ -51,8 +49,12 @@ public class ConsoleLayer extends GenericLayer {
         pl=SumoPlatform.getApplication().getPluginsManager();
         //commands=pl.getCommands();
     }
-
-    public void execute(String[] arguments) {
+    
+    public void executeCommand(String argumentsString) {
+    	executeCommand(parseCommandLineAction(argumentsString));
+    }
+    
+    public void executeCommand(String[] arguments) {
         for (String c : pl.getCommands()) {
             if (arguments[0].equals(c)) {
             	try {
@@ -234,11 +236,9 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-
     public boolean isRadio() {
         return false;
     }
-
 
     public String getDescription() {
         return "Inline Console";
@@ -247,9 +247,9 @@ public class ConsoleLayer extends GenericLayer {
     public void addChar(char c) {
         if (c == '\n') {
             if (message.equals("")) {
-                execute(oldMessage);
+                executeCommand(parseCommandLineAction(oldMessage));
             } else {
-                execute(this.message);
+                executeCommand(parseCommandLineAction(this.message));
                 oldMessage = message;
                 this.message = "";
             }
@@ -260,17 +260,11 @@ public class ConsoleLayer extends GenericLayer {
             this.message += c;
         }
         try {
-            SumoPlatform.refresh();
+            SumoPlatform.getApplication().refresh();
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }
     }
-
-    public void execute(String message) {
-        execute(parseCommandLineAction(message));
-    }
-
-
 
     public void dispose() {
     }

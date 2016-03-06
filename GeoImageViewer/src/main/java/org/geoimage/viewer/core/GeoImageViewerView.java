@@ -53,6 +53,7 @@ import org.fenggui.render.jogl.EventBinding;
 import org.fenggui.render.jogl.JOGLBinding;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.AddLastImageAction;
 import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ILayerListener;
@@ -114,7 +115,9 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     private boolean worldwindpanelenabled = true;
     private InfoDialog infod;
     private GLU glu;
-
+    private org.jdesktop.application.ResourceMap resourceMap;
+    private javax.swing.ActionMap actionMap;
+    
     private static GLWindow window;
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
@@ -149,19 +152,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     public GeoImageViewerView(SingleFrameApplication app) {
     	super(app);
 
+    	resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(GeoImageViewerView.class);
+        actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(GeoImageViewerView.class, this);
+    	
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
 
         mainCanvas = new GLCanvas(glcapabilities);
         mainCanvas.addGLEventListener(this);
-
-       /*
-        window = GLWindow.create(glcapabilities);
-        window.setAutoSwapBufferMode(true);
-        //window.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
-        window.addGLEventListener(this);
-        window.setTitle("SUMO_1.3.0");*/
-
 
         final FPSAnimator animator = new FPSAnimator(window, 45, true);
 	    animator.start();
@@ -275,7 +273,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
         infod = new InfoDialog(null, false);
 
-        setMenus(getMenuBar());
         cl.updateTab(jTabbedPane1);
         if (worldwindpanelenabled) {
             wwjPanel = new WWJPanel();
@@ -737,16 +734,10 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     private void initComponents() {
 
         menuBar = new javax.swing.JMenuBar();
-        javax.swing.JMenu jMenuSystem = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItemReloadPlugin= new javax.swing.JMenuItem();
-        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
-        jMenuImport = new javax.swing.JMenu();
-        jMenuItemLastImage = new javax.swing.JMenuItem();
-        javax.swing.JMenu jMenuHelp = new javax.swing.JMenu();
-        javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
-        jMenuTools = new javax.swing.JMenu();
+   
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -758,72 +749,16 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         jTabbedPane1 = new javax.swing.JTabbedPane();
         sumopanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
-       // jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        vectormenu = new javax.swing.JMenu();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
-        //jMenu4 = new javax.swing.JMenu();
-
+        
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         menuBar.setName("menuBar"); // NOI18N
-
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(GeoImageViewerView.class);
-        jMenuSystem.setText(resourceMap.getString("jMenuSystem.text")); // NOI18N
-        jMenuSystem.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jMenuSystem.setName("jMenuSystem"); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(GeoImageViewerView.class, this);
-        jMenuItem2.setAction(actionMap.get("callPreferences")); // NOI18N
-        jMenuItem2.setName("jMenuItem2"); // NOI18N
-        jMenuSystem.add(jMenuItem2);
-
-        jMenuItem3.setAction(actionMap.get("callPluginManager")); // NOI18N
-        jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
-        jMenuItem3.setName("jMenuItem3"); // NOI18N
-        jMenuSystem.add(jMenuItem3);
-
-
-        jMenuItemReloadPlugin.setAction(actionMap.get("reloadPlugins")); // NOI18N
-        jMenuItemReloadPlugin.setText(resourceMap.getString("jMenuItemReloadPlugin.text")); // NOI18N
-        jMenuItemReloadPlugin.setName("jMenuItemReloadPlugin"); // NOI18N
-        jMenuSystem.add(jMenuItemReloadPlugin);
-
-        exitMenuItem.setAction(actionMap.get("quit"));
-        exitMenuItem.setName("exitMenuItem"); // NOI18N
-        jMenuSystem.add(exitMenuItem);
-
-        menuBar.add(jMenuSystem);
-
-        jMenuImport.setText(resourceMap.getString("jMenuImport.text")); // NOI18N
-        jMenuImport.setName("jMenuImport"); // NOI18N
-
-        jMenuItemLastImage.setAction(actionMap.get("openLastImage")); // NOI18N
-        jMenuItemLastImage.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
-        jMenuItemLastImage.setName("jMenuItem1"); // NOI18N
-        jMenuImport.add(jMenuItemLastImage);
-
-        menuBar.add(jMenuImport);
-
-        jMenuHelp.setText(resourceMap.getString("jMenuHelp.text")); // NOI18N
-        jMenuHelp.setName("jMenuHelp"); // NOI18N
-
-        aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
-        aboutMenuItem.setName("aboutMenuItem"); // NOI18N
-        jMenuHelp.add(aboutMenuItem);
-
-        menuBar.add(jMenuHelp);
-
-        jMenuTools.setText(resourceMap.getString("jMenuTools.text")); // NOI18N
-        jMenuTools.setName("jMenuTools"); // NOI18N
-
-        jCheckBoxMenuItem1.setAction(actionMap.get("InfoDial")); // NOI18N
-        jCheckBoxMenuItem1.setName("jCheckBoxMenuItem1"); // NOI18N
-        jMenuTools.add(jCheckBoxMenuItem1);
-
-        menuBar.add(jMenuTools);
-
+        setMenuBar(menuBar);
+        setMenus(menuBar);
+        
         statusPanel.setName("statusPanel"); // NOI18N
-
         statusPanelSeparator.setName("statusPanelSeparator"); // NOI18N
 
         statusMessageLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -837,14 +772,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         stopThreadButton.setName("Stop Button");
         stopThreadButton.setVisible(false);
         stopThreadButton.setActionCommand("STOP");
-      /*  stopThreadButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//Platform.stopCurrentThread();
-
-
-			}
-		});*/
 
         positionLabel= new JLabel();
  	    positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -883,11 +810,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         mainPanel.setName("MainPanel"); // NOI18N
 
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-      /*  jTabbedPane1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-               // GeoImageViewerView.this.focusGained(evt);
-            }
-        });*/
 
         sumopanel.setName("sumopanel"); // NOI18N
         sumopanel.setLayout(new java.awt.GridLayout(1, 0));
@@ -896,15 +818,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         sumopanel.add(mainCanvas);
 
         jTabbedPane1.addTab(resourceMap.getString("sumopanel.TabConstraints.tabTitle"), sumopanel); // NOI18N
-
-        /*jTabbedPane1.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				if(jTabbedPane1.getSelectedIndex()==1){
-					wwjPanel.resizeWW();
-				}
-			}
-		});*/
 
         org.jdesktop.layout.GroupLayout MainPanelLayout = new org.jdesktop.layout.GroupLayout(mainPanel);
         mainPanel.setLayout(MainPanelLayout);
@@ -919,30 +832,64 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
         jMenuBar1.setName("jMenuBar1"); // NOI18N
 
-     //   jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
-     //   jMenu1.setName("jMenu1"); // NOI18N
-     //   jMenuBar1.add(jMenu1);
-
-        jMenu2.setText(resourceMap.getString("jMenu2.text")); // NOI18N
-        jMenu2.setName("jMenu2"); // NOI18N
-        jMenuBar1.add(jMenu2);
 
         jMenuBar2.setName("jMenuBar2"); // NOI18N
 
         jMenu3.setName("jMenu3"); // NOI18N
         jMenuBar2.add(jMenu3);
 
-   /*     jMenu4.setText(resourceMap.getString("jMenu4.text")); // NOI18N
-        jMenu4.setName("jMenu4"); // NOI18N
-        jMenuBar2.add(jMenu4);*/
-
         setComponent(mainPanel);
-        setMenuBar(menuBar);
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
     public void setMenus(JMenuBar menubar) {
+    	javax.swing.JMenu jMenuSystem = new javax.swing.JMenu();
+        javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
+    	
+        
+        jMenuSystem.setText(resourceMap.getString("jMenuSystem.text")); // NOI18N
+        jMenuSystem.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jMenuSystem.setName("jMenuSystem"); // NOI18N
 
+        jMenuItem2.setAction(actionMap.get("callPreferences")); // NOI18N
+        jMenuItem2.setName("jMenuItem2"); // NOI18N
+        jMenuSystem.add(jMenuItem2);
+
+        jMenuItem3.setAction(actionMap.get("callPluginManager")); // NOI18N
+        jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
+        jMenuItem3.setName("jMenuItem3"); // NOI18N
+        jMenuSystem.add(jMenuItem3);
+
+        jMenuItemReloadPlugin.setAction(actionMap.get("reloadPlugins")); // NOI18N
+        jMenuItemReloadPlugin.setText(resourceMap.getString("jMenuItemReloadPlugin.text")); // NOI18N
+        jMenuItemReloadPlugin.setName("jMenuItemReloadPlugin"); // NOI18N
+        jMenuSystem.add(jMenuItemReloadPlugin);
+
+        exitMenuItem.setAction(actionMap.get("quit"));
+        exitMenuItem.setName("exitMenuItem"); // NOI18N
+        jMenuSystem.add(exitMenuItem);
+        menuBar.add(jMenuSystem);
+
+        
+        javax.swing.JMenu jMenuImport = new javax.swing.JMenu();
+        jMenuImport.setText(resourceMap.getString("jMenuImport.text"));
+        jMenuImport.setName(resourceMap.getString("jMenuImport.text"));
+        
+        javax.swing.JMenuItem lastItem = new javax.swing.JMenuItem();
+        lastItem.setText(resourceMap.getString("jMenuLast.text"));
+        lastItem.setAction(actionMap.get("jMenuLast")); // NOI18N
+        lastItem.setName("jMenuLast"); // NOI18N
+        jMenuImport.add(lastItem);
+        menuBar.add(jMenuImport);
+        
+        javax.swing.JMenu jMenuTools = new javax.swing.JMenu();
+        jMenuTools.setText(resourceMap.getString("jMenuTools.text"));
+        jMenuTools.setName(resourceMap.getString("jMenuTools.text"));
+        menuBar.add(jMenuTools);
+        
     	Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         // fill with existing menu items
         for (int i = 0; i < menubar.getMenuCount(); i++) {
@@ -974,17 +921,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		                if (menus.containsKey(mediumpath)) {
 		                    temp = menus.get(mediumpath);
 		                } else {
-
 		                    if (i == path.length - 1) {
 		                    	((SumoAbstractAction)action).setMenuName(path[i]);
 		                    	temp = new JMenuItem(action);
-
 		                    } else {
 		                        temp = new JMenu(path[i]);
 		                    }
 		                    menus.put(mediumpath, temp);
 		                }
-
 		                if (mitem == null) {
 		                    mitem = temp;
 		                    menubar.add((JMenu) temp);
@@ -996,12 +940,25 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	            }
             }
         }
+        javax.swing.JMenu jMenuHelp = new javax.swing.JMenu();
+        jMenuHelp.setText(resourceMap.getString("jMenuHelp.text")); // NOI18N
+        jMenuHelp.setName("jMenuHelp"); // NOI18N
+        javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
+        aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
+        aboutMenuItem.setName("aboutMenuItem"); // NOI18N
+        jMenuHelp.add(aboutMenuItem);
 
+        menuBar.add(jMenuHelp);
     }
 
 private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focusGained
     refresh();
 }//GEN-LAST:event_focusGained
+	
+	@Action
+	public void jMenuLast() {
+		new AddLastImageAction().execute();
+	}	
 
     @Action
     public void infoDial() {
@@ -1011,17 +968,16 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private javax.swing.JPanel mainPanel;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
   //  private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu vectormenu;
     private javax.swing.JMenu jMenu3;
  //   private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenu jMenuImport;
-    private javax.swing.JMenuItem jMenuItemLastImage;
+   
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItemReloadPlugin;
-    private javax.swing.JMenu jMenuTools;
+    
     private javax.swing.JTabbedPane jTabbedPane1;
     private GLCanvas mainCanvas;
     private javax.swing.JMenuBar menuBar;
@@ -1101,25 +1057,6 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
             timeSlider.setVisible(true);
         }
     }
-
-    /**
-     * open the lastly successfully image (like using CTRL+L)
-     */
-    @Action
-    public void openLastImage() {
-        final String lastImage = SumoPlatform.getApplication().getConfiguration().getLastImage();
-        if (lastImage != null) {
-            new Thread(() -> {
-			    try {
-			        getConsole().execute(new String[]{"image_type=image", "file=" + lastImage, "buffer=false"});
-			        Thread.sleep(5000);
-			    } catch (InterruptedException ex) {
-			    	logger.error(ex.getMessage(),ex);
-			    }
-			}).start();
-        }
-    }
-
 
     /**
      * open the preferences dialog to set some parameters

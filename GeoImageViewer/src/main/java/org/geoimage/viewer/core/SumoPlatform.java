@@ -139,7 +139,7 @@ public class SumoPlatform extends SingleFrameApplication {
     }
     
     
-    public static void refresh() {
+    public  void refresh() {
         ((GeoImageViewerView) getApplication().getMainView()).refresh();
     }
     
