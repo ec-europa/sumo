@@ -212,15 +212,15 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             case 'B':
             case 'b':
             {
-                SumoPlatform.getApplication().getConsoleLayer().execute("bs");
+                SumoPlatform.getApplication().getConsoleLayer().executeCommand("bs");
             } break;
             // increase the contrast
             case KeyEvent.VK_C:
             {
                 if(e.isShiftDown())
-                    SumoPlatform.getApplication().getConsoleLayer().execute("contrast +10");
+                    SumoPlatform.getApplication().getConsoleLayer().executeCommand("contrast +10");
                 else
-                    SumoPlatform.getApplication().getConsoleLayer().execute("contrast -10");
+                    SumoPlatform.getApplication().getConsoleLayer().executeCommand("contrast -10");
             } break;
             // move image up
             case KeyEvent.VK_UP:

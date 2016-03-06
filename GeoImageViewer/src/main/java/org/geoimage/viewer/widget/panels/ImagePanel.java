@@ -256,12 +256,12 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void jSlider2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider2StateChanged
         layer.setBrightness(jSlider2.getValue());
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jSlider2StateChanged
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         layer.setContrast(jSlider1.getValue() / 10.0F);//TODO check the contrast
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -271,17 +271,17 @@ public class ImagePanel extends javax.swing.JPanel {
     /*    else if(layer instanceof ThumbnailsLayer){
         	Platform.getLayerManager().addLayer(new ThumbnailsSmallLayer((ThumbnailsLayer)layer));
         }*/
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     	LayerManager.getIstanceManager().addLayer(new CaretLayer(layer));
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
     	LayerManager.getIstanceManager().addLayer(new PositionLayer(layer));
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -289,12 +289,12 @@ public class ImagePanel extends javax.swing.JPanel {
     			new EditGeometryVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
     					jTextField2.getText(),(String)jComboBox1.getSelectedItem(), 
     			new GeometricLayer((String)jComboBox1.getSelectedItem())));
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jSlider3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider3StateChanged
         layer.setMaximumCut(jSlider3.getValue());
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jSlider3StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

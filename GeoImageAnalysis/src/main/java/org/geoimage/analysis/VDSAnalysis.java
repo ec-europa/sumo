@@ -490,14 +490,15 @@ public class VDSAnalysis{
             // add pixel only if above new threshold
             if (pixelabove) {
             	// check if there is land in tile
-                Raster rastermask = null;
+                /*Raster rastermask = null;
                 if (mask != null) {
                     // check if land in tile
                     if (mask.intersects(cornerx, cornery, tilesize, tilesize)) {
                         // create raster mask
                         rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
                     }
-                }
+                }*/
+                int[] dataMask=createDataMask(cornerx, cornery, tilesize, tilesize, 0,0);
                 // add pixel to the list
                 BoatConnectedPixelMap boatpixel = null;
                 try{
@@ -532,7 +533,7 @@ public class VDSAnalysis{
                 			y++;
 
                 		try{
-                			if(rastermask==null||rastermask.getSample(x, y, 0)==0){
+                			if(dataMask==null||dataMask[x*y]==0){//.getSample(x, y, 0)==0){
                 				tileAvg=tileAvg+data[iBand][i];
                 			}
                 		}catch(Exception e ){
@@ -557,7 +558,9 @@ public class VDSAnalysis{
                     imagemap[i] = 0;
                 }
 
-                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data, thresholdvalues, new int[]{boatx, boaty}, neighboursdistance, tilesize, rastermask);
+                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data, 
+                		thresholdvalues, new int[]{boatx, boaty}, 
+                		neighboursdistance, tilesize, dataMask);
                 // set flag for touching land
                 boatpixel.setTouchesLandMask(result);
 

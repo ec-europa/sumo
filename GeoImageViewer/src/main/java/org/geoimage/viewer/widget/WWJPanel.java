@@ -167,7 +167,7 @@ public class WWJPanel extends javax.swing.JPanel {
                                     if (lm == null) {
                                         GeoImageViewer.main(new String[]{"-i", an.getText()});
                                     } else {
-                                        SumoPlatform.getApplication().getConsoleLayer().execute(new String[]{"image", "image", "file=" + an.getText()});
+                                        SumoPlatform.getApplication().getConsoleLayer().executeCommand(new String[]{"image", "image", "file=" + an.getText()});
                                     }
                                 }
                             }
