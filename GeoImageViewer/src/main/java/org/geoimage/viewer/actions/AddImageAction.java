@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
  * this class is called whenever we want to open an image. A new image consists in a new layer (SimpleVectorLayer).
  * thumbnails part need to be revised
  */
-public class AddImageConsoleAction extends SumoAbstractAction implements IProgress {
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageConsoleAction.class);
+public class AddImageAction extends SumoAbstractAction implements IProgress {
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageAction.class);
 
     private JFileChooser fileChooser;
     private String lastDirectory;
@@ -43,7 +43,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
 
 
 
-    public AddImageConsoleAction() {
+    public AddImageAction() {
     	super("image","Import/Image");
         if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
@@ -89,42 +89,21 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         boolean tileBuff=false;
 
         String imagefile = "";
-        if(paramsAction.size()!=3){//menu open image
-        	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
-                if (fileChooser == null) {
-                    fileChooser = new JFileChooser(lastDirectory);
-                }
-            } else {
+        
+    	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
+            if (fileChooser == null) {
                 fileChooser = new JFileChooser(lastDirectory);
             }
-            int returnVal = fileChooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
-                imagefile=fileChooser.getSelectedFile().getAbsolutePath();
-            }
-            tileBuff=paramsAction.get("Local_Buffer").equals("true");
-        }else{
-        	//**** menu open last image ********//
-
-        	String imagename = paramsAction.get("file");//.split("=")[1];
-            final String imagenamefile = imagename.substring(imagename.lastIndexOf(File.separator) + 1);
-            // check if a wildcard character is used
-            if (imagename.contains("*")) {
-                // find the most appropriate image
-                File file = new File(imagename.substring(0, imagename.lastIndexOf(File.separator)));
-                if (file != null) {
-                    File filefiltered = listFiles(file, imagenamefile);
-                    if (filefiltered != null) {
-                        imagefile = filefiltered.getAbsolutePath();
-                    } else {
-                        imagefile = "";
-                    }
-                }
-            } else {
-                imagefile = imagename;
-            }
-            tileBuff=paramsAction.get("buffer").equals("true");//.split("=")[1].equals("true");
+        } else {
+            fileChooser = new JFileChooser(lastDirectory);
         }
+        int returnVal = fileChooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            lastDirectory = fileChooser.getSelectedFile().getAbsolutePath();
+            imagefile=fileChooser.getSelectedFile().getAbsolutePath();
+        }
+        tileBuff=paramsAction.get("Local_Buffer").equals("true");
+        
         GeoImageReader temp = null;
         List<GeoImageReader> tempList = null;
 
@@ -153,9 +132,6 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
         	for(int i=0;i<tempList.size();i++){
         		temp=tempList.get(i);
 
-        		//ImageTiler it = new ImageTiler(temp);
-                //it.generateAllTiles();
-
         		ImageLayer newImage = new ImageLayer(temp);
                 SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
                 try {
@@ -169,7 +145,7 @@ public class AddImageConsoleAction extends SumoAbstractAction implements IProgre
             } catch (Exception ex) {
             	logger.error(ex.getMessage(),ex);
             }
-        	SumoPlatform.getApplication().getConsoleLayer().execute("home=home");
+        	SumoPlatform.getApplication().getConsoleLayer().executeCommand("home=home");
         }
         done = true;
     }

@@ -53,7 +53,7 @@ public class PositionDialog extends javax.swing.JDialog{
 
             public void windowClosing(WindowEvent e) {
                 layer.setActive(false);
-                SumoPlatform.refresh();
+                SumoPlatform.getApplication().refresh();
             }
 
             public void windowClosed(WindowEvent e) {

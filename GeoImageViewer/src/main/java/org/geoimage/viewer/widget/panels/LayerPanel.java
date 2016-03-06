@@ -147,18 +147,18 @@ public class LayerPanel extends JPanel {
                 jTextField1.setText(""+layer.getName());
             }
         }
-        SumoPlatform.refresh();        
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jTextField1KeyPressed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         layer.setActive(jCheckBox1.isSelected());
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         LayerManager.getIstanceManager().removeLayer(layer);
         ((JDialog)this.getParent().getParent().getParent().getParent().getParent()).dispose();
-        SumoPlatform.refresh();
+        SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked

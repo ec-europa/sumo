@@ -244,7 +244,7 @@ public class DetectedPixels {
     		double[][] thresholdaggregate, 
     		int[] position, int neighboursdistance, 
     		int tilesize, 
-    		Raster rastermask) {
+    		int[] rastermask) {
     	
         int numberofbands = thresholdaggregate.length;
         // touches land flag
@@ -274,7 +274,7 @@ public class DetectedPixels {
                         // mark as checked
                         imagemap[i + j * tilesize] = 1;
                         // check if pixel is in sea
-                        if ((rastermask == null) || (rastermask.getSample(i, j, 0) == 0)) {
+                        if ((rastermask == null) || (rastermask[i*j]==0)){//.getSample(i, j, 0) == 0)) {
 
                         	
                         	boolean aggregated = false;
