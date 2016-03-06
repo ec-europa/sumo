@@ -55,8 +55,8 @@ public class AddGenericWorldLayerAction extends AddWorldVectorLayerAction {
                             GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
 
                             int t=MaskVectorLayer.COASTLINE_MASK;
-                            if(args[1].equalsIgnoreCase("ice"))
-                            	t=MaskVectorLayer.ICE_MASK;
+                            //if(args[1].equalsIgnoreCase("ice"))
+                            //	t=MaskVectorLayer.ICE_MASK;
                             GenericLayer mask=FactoryLayer.createMaskLayer(gl,t);
 
                             LayerManager.addLayerInThread(mask);
