@@ -15,15 +15,16 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 /**
  *
  * @author leforth
  */
-public abstract class SumoAbstractAction extends AbstractAction implements IAction {
-	private String name=null;
-	private String absolutePath=null;
+public abstract class SumoAbstractAction extends AbstractAction implements IAction,IProgress {
+	protected String name=null;
+	protected String absolutePath=null;
 	protected Map<String,String> paramsAction;
 
 
@@ -100,5 +101,83 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	public List<ActionDialog.Argument> getArgumentTypes() {
 		return null;
 	}
+	
+	
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean isIndeterminate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean isDone() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getMaximum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int getCurrent() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setCurrent(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setMaximum(int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setMessage(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setIndeterminate(boolean value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setDone(boolean value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
