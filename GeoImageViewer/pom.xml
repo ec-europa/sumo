@@ -17,7 +17,7 @@
 				</os>
 			</activation>
 			<properties>
-				<dist.outputfolder>/mnt/sdb1/Sumo_dist</dist.outputfolder>
+				<dist.outputfolder>./dist</dist.outputfolder>
 			</properties>
 		</profile>
 
