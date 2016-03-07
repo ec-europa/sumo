@@ -17,10 +17,10 @@
 				</os>
 			</activation>
 			<properties>
-				<dist.outputfolder>H:/dist</dist.outputfolder>
+				<dist.outputfolder>/mnt/sdb1/Sumo_dist</dist.outputfolder>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>Windows</id>
 			<activation>
@@ -33,7 +33,7 @@
 			<properties>
 					<dist.outputfolder>H:/dist</dist.outputfolder>
 			</properties>
-		</profile>	
+		</profile>
 	</profiles>
 
 
@@ -126,14 +126,14 @@
 									<directory>../repo/gdal_lib_lin64/</directory>
 									 <includes>
           								<include>*.*</include>
-          							</includes>	
+          							</includes>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-		
+
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
@@ -151,7 +151,7 @@
 									<directory>${project.build.directory}</directory>
 									 <includes>
           								<include>sumo.jar</include>
-          							</includes>	
+          							</includes>
 								</resource>
 								<resource>
 									<directory>${project.build.directory}/lib</directory>
@@ -171,12 +171,12 @@
 				</executions>
 			</plugin>
 
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
-				<version>2.9</version> <executions> <execution> <id>copy-installed</id> <phase>install</phase> 
-				<goals> <goal>copy</goal> </goals> <configuration> <artifactItems> <artifactItem> 
-				<groupId>${project.groupId}</groupId> <artifactId>${project.artifactId}</artifactId> 
-				<version>${project.version}</version> <type>${project.packaging}</type> </artifactItem> 
-				</artifactItems> <outputDirectory>${dist.outputfolder}</outputDirectory> 
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId>
+				<version>2.9</version> <executions> <execution> <id>copy-installed</id> <phase>install</phase>
+				<goals> <goal>copy</goal> </goals> <configuration> <artifactItems> <artifactItem>
+				<groupId>${project.groupId}</groupId> <artifactId>${project.artifactId}</artifactId>
+				<version>${project.version}</version> <type>${project.packaging}</type> </artifactItem>
+				</artifactItems> <outputDirectory>${dist.outputfolder}</outputDirectory>
 				</configuration> </execution> </executions> </plugin> -->
 
 			<plugin>
