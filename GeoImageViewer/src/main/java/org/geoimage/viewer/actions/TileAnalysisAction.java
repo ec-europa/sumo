@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.geoimage.analysis.BlackBorderAnalysis;
@@ -34,6 +33,10 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 
 public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
 	private int current = 0;
@@ -139,7 +142,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                    	}
 	                    }
 	                }
-	                
+
 	                MaskGeometries mg=null;
 					IMask bufferedMask=null;
 	                if(coastlineMask!=null){
@@ -147,16 +150,16 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                		coastlineMask.getType(),0,((MaskVectorLayer)coastlineMask).getGeometriclayer(),
 	           				coastlineMask.getMaskType());
 	                	mg=new MaskGeometries("coast", bufferedMask.getGeometries());
-	                }	
+	                }
 	                MaskGeometries ice=null;
 	                IMask iceMask=null;
 	                if(iceMasks!=null){
 	                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
 	                		iceMasks.getType(),0,((MaskVectorLayer)iceMasks).getGeometriclayer(),
 	           				iceMasks.getMaskType());
-	                	 
+
 		                 ice=new MaskGeometries("ice",   iceMask.getGeometries());
-	                }	 
+	                }
 
 	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
 					analysis.setAnalyseSingleTile(true);
