@@ -26,7 +26,6 @@ import org.geoimage.viewer.core.api.iactions.IAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -38,7 +37,7 @@ public class ConsoleLayer extends GenericLayer {
     private String message = "";
     private String oldMessage = "";
 
-    private IProgress currentAction = null;
+    private SumoAbstractAction currentAction = null;
     private PluginsManager pl;
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ConsoleLayer.class);
@@ -47,13 +46,12 @@ public class ConsoleLayer extends GenericLayer {
     	super(parent,"Console",null,null);
         super.init(parent);
         pl=SumoPlatform.getApplication().getPluginsManager();
-        //commands=pl.getCommands();
     }
-    
+
     public void executeCommand(String argumentsString) {
     	executeCommand(parseCommandLineAction(argumentsString));
     }
-    
+
     public void executeCommand(String[] arguments) {
         for (String c : pl.getCommands()) {
             if (arguments[0].equals(c)) {
@@ -82,9 +80,7 @@ public class ConsoleLayer extends GenericLayer {
 	                    }
 
 	                	ica.setParamsAction(paramsAction);
-	                    if (ica instanceof IProgress) {
-	                        currentAction = (IProgress) ica;
-	                    }
+	                	currentAction = (AbstractConsoleAction) ica;
 	                    ica.execute();
 
                     }
@@ -141,20 +137,21 @@ public class ConsoleLayer extends GenericLayer {
 	                        if (!(a instanceof IConsoleAction)) {
 	                            return;
 	                        }
-	                        IConsoleAction ica = (IConsoleAction) a;
-	                        if (ica instanceof IProgress) {
-	                            currentAction = (IProgress) ica;
+	                        SumoAbstractAction ica = (SumoAbstractAction) a;
+	                        //if (ica instanceof IProgressListener) {
+	                            currentAction = (SumoAbstractAction) ica;
 	                            if (ica.execute()) {
 	                                return;
 	                            }
 	                            while (currentAction != null && !currentAction.isDone()) {
 	                                Thread.sleep(1000);
 	                            }
-	                        } else {
+	                        /*} else {
 	                            if (!ica.execute()) {
 	                                return;
 	                            }
-	                        }
+	                        }*/
+	                    	return;
 	                    } catch (Exception e) {
 	                        e.printStackTrace();
 	                        return;
@@ -185,20 +182,21 @@ public class ConsoleLayer extends GenericLayer {
                             if (!(a instanceof IConsoleAction)) {
                                 return;
                             }
-                            IConsoleAction ica = (IConsoleAction) a;
-                            if (ica instanceof IProgress) {
-                                currentAction = (IProgress) ica;
+                            AbstractConsoleAction ica = (AbstractConsoleAction) a;
+                            //if (ica instanceof IProgressListener) {
+                                currentAction = ica;
                                 if (!ica.execute()) {
                                     return;
                                 }
                                 while (currentAction != null && !currentAction.isDone()) {
                                     Thread.sleep(1000);
                                 }
-                            } else {
+                            /*} else {
                                 if (!ica.execute()) {
                                     return;
                                 }
-                            }
+                            }*/
+                            return;
                         } catch (Exception e) {
                             e.printStackTrace();
                             return;
@@ -313,11 +311,11 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-	public IProgress getCurrentAction() {
+	public IProgressListener getCurrentAction() {
 		return currentAction;
 	}
 
-	public void setCurrentAction(IProgress currentAction) {
+	public void setCurrentAction(SumoAbstractAction currentAction) {
 		this.currentAction = currentAction;
 	}
 

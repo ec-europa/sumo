@@ -15,14 +15,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.util.IProgress;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 /**
  *
  * @author leforth
  */
-public abstract class SumoAbstractAction extends AbstractAction implements IAction,IProgress {
+public abstract class SumoAbstractAction extends AbstractAction implements IAction,IProgressListener {
 	protected String name=null;
 	protected String absolutePath=null;
 	protected Map<String,String> paramsAction;

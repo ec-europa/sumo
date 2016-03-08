@@ -26,8 +26,8 @@ import javax.swing.UIManager;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.util.GeometryExtractor;
-import org.geoimage.viewer.util.IProgress;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.jrc.sumo.configuration.PlatformConfiguration;
@@ -358,7 +358,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             JOptionPane.showMessageDialog(null, "Analysis done!", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
 
-        class progress implements IProgress {
+        class progress implements IProgressListener {
 
             private boolean done = false;
             private int max;
