@@ -40,13 +40,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,
 	 */
 	private static final long serialVersionUID = 3649669297745164880L;
 
-
-	private String message = "";
-
-
     private int current = 0;
     private int maximum = 3;
-    private boolean done = false;
     private boolean indeterminate;
     private GeoImageReader gir = null;
     private MaskVectorLayer coastlineMask = null;
@@ -270,9 +265,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,
         return this.current;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
 
     public void setCurrent(int i) {
         current = i;
@@ -282,9 +274,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,
         maximum = size;
     }
 
-    public void setMessage(String string) {
-        message =  string;
-    }
 
     public void setIndeterminate(boolean value) {
         indeterminate = value;
@@ -342,7 +331,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
-		//setMessage(numSteps+"/"+maximum);
 		setCurrent(numSteps);
 	}
 

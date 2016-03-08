@@ -31,4 +31,54 @@ public abstract class AbstractConsoleAction extends SumoAbstractAction implement
    public void setCommandLine(String[] commandLine){
 	   this.commandLine=commandLine;
    }
+
+
+	@Override
+	public boolean isIndeterminate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isDone() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getMaximum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getCurrent() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setCurrent(int i) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setMaximum(int size) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void setIndeterminate(boolean value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setDone(boolean value) {
+		// TODO Auto-generated method stub
+
+	}
 }

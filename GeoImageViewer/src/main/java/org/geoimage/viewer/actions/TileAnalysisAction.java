@@ -42,7 +42,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	private int current = 0;
     private int maximum = 3;
     private boolean indeterminate;
-    private String message = "";
     private boolean stopping=false;
     private AnalysisProcess proc=null;
 
@@ -196,10 +195,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	        maximum = size;
 	    }
 
-	    public void setMessage(String string) {
-	        message =  string;
-	    }
-
 	    public void setIndeterminate(boolean value) {
 	        indeterminate = value;
 	    }
@@ -248,7 +243,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
-		//setMessage(numSteps+"/"+maximum);
 		setCurrent(numSteps);
 	}
 

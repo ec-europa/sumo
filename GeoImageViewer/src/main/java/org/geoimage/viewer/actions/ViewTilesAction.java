@@ -122,6 +122,51 @@ public class ViewTilesAction extends AbstractConsoleAction{
 	}
 
 
+	@Override
+	public boolean isIndeterminate() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isDone() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getMaximum() {
+		return 0;
+	}
+
+
+	@Override
+	public int getCurrent() {
+		return 0;
+	}
+
+
+	@Override
+	public void setCurrent(int i) {}
+
+
+	@Override
+	public void setMaximum(int size) {}
+
+
+
+	@Override
+	public void setIndeterminate(boolean value) {
+	}
+
+
+	@Override
+	public void setDone(boolean value) {
+		this.done=value;
+	}
+
+
 
 
 

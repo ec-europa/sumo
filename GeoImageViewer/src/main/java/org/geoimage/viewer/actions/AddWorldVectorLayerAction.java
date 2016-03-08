@@ -29,8 +29,6 @@ import com.vividsolutions.jts.geom.Polygon;
 public class AddWorldVectorLayerAction extends SumoAbstractAction implements IProgress {
 	private static Logger logger=LogManager.getLogger(AddWorldVectorLayerAction.class);
 
-    protected boolean done = false;
-
     public AddWorldVectorLayerAction() {
     	super("world","Import/Land mask");
     }
@@ -124,9 +122,6 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
     }
 
     public void setMaximum(int size) {
-    }
-
-    public void setMessage(String string) {
     }
 
     public void setIndeterminate(boolean value) {

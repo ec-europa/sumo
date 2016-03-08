@@ -26,6 +26,8 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	protected String name=null;
 	protected String absolutePath=null;
 	protected Map<String,String> paramsAction;
+	protected boolean done=false;
+	protected String message="";
 
 
 
@@ -101,83 +103,53 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	public List<ActionDialog.Argument> getArgumentTypes() {
 		return null;
 	}
-	
-	
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public boolean isIndeterminate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 
 	@Override
 	public boolean isDone() {
-		// TODO Auto-generated method stub
-		return false;
+		return done;
 	}
-
 
 	@Override
-	public int getMaximum() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setDone(final boolean value) {
+		done=value;
 	}
-
 
 	@Override
-	public int getCurrent() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setMessage(String message) {
+		this.message=message;
 	}
-
-
 	@Override
 	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
+
 
 
 	@Override
-	public void setCurrent(int i) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract String getDescription() ;
+
+	@Override
+	public abstract boolean isIndeterminate() ;
 
 
 	@Override
-	public void setMaximum(int size) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract int getMaximum();
+
+	@Override
+	public abstract int getCurrent();
 
 
 	@Override
-	public void setMessage(String string) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void setCurrent(int i);
+
+	@Override
+	public abstract void setMaximum(int size);
 
 
 	@Override
-	public void setIndeterminate(boolean value) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void setIndeterminate(boolean value);
 
-
-	@Override
-	public void setDone(boolean value) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 }
