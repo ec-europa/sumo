@@ -46,11 +46,10 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
 
     private JFileChooser fd;
     private static String lastDirectory;
-    boolean done = false;
-    private String message = "Adding data. Please wait...";
 
     public AddInterpolatedConsoleAction() {
     	super("interpolatedvector","Import/Interpolated Vector");
+    	super.message = "Adding data. Please wait...";
     	if(lastDirectory==null)
     		lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         fd = new JFileChooser(lastDirectory);
@@ -172,7 +171,7 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
                 }
         }
     }
-    
+
     private void addSimpleCSV() {
         if (paramsAction.size() == 4&&paramsAction.get("Id Column").contains("=")) {
             String file=paramsAction.get("Id Column").split("=")[3];
@@ -181,16 +180,16 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
             		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
                     GeometricLayer positions = csvio.readLayer();
                     if (positions.getProjection() == null) {
-                        addLayerInThread(paramsAction.get("Id Column"), 
+                        addLayerInThread(paramsAction.get("Id Column"),
                         		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                     } else {
                     	try{
                         	positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                    			addLayerInThread(paramsAction.get("Id Column"), 
+                    			addLayerInThread(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                     	}catch(Exception e){
                     		logger.error(e.getMessage(),e);
-                    	}		
+                    	}
                     }
             }
         } else {
@@ -203,18 +202,18 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
                     		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
                     		GeometricLayer positions = csvio.readLayer();
                             if (positions.getProjection() == null) {
-                                addLayerInThread(paramsAction.get("Id Column"), 
+                                addLayerInThread(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                             } else {
                                 positions = GeometricLayer.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
-                                addLayerInThread(paramsAction.get("Id Column"), 
+                                addLayerInThread(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l);
                             }
                     }
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(), ex);
                 }
-            } 
+            }
             return;
         }
     }
@@ -252,9 +251,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
         return 1;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
 
     public List<Argument> getArgumentTypes() {
         Argument a1 = new Argument("data type", Argument.STRING, false, "image","data type");
@@ -274,9 +270,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
     }
 
     public void setMaximum(int size) {
-    }
-
-    public void setMessage(String string) {
     }
 
     public void setIndeterminate(boolean value) {

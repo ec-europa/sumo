@@ -25,11 +25,10 @@ import org.slf4j.LoggerFactory;
 public class AddLastImageAction extends SumoAbstractAction implements IProgress {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(AddLastImageAction.class);
 
-	boolean done = false;
-	private String message = "Adding Image. Please wait...";
-
 	public AddLastImageAction() {
 		super("Last Image", "Import/Last Image");
+		super.message = "Adding Image. Please wait...";
+
 	}
 
 	@Override
@@ -112,10 +111,6 @@ public class AddLastImageAction extends SumoAbstractAction implements IProgress 
 		return 1;
 	}
 
-	public String getMessage() {
-		return this.message;
-	}
-
 	public List<Argument> getArgumentTypes() {
 		return null;
 	}
@@ -124,9 +119,6 @@ public class AddLastImageAction extends SumoAbstractAction implements IProgress 
 	}
 
 	public void setMaximum(int size) {
-	}
-
-	public void setMessage(String string) {
 	}
 
 	public void setIndeterminate(boolean value) {

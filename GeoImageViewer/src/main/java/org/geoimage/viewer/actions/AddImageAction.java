@@ -34,17 +34,13 @@ import org.slf4j.LoggerFactory;
  */
 public class AddImageAction extends SumoAbstractAction implements IProgress {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageAction.class);
-
     private JFileChooser fileChooser;
     private String lastDirectory;
-    boolean done = false;
-    private String message = "Adding Image. Please wait...";
-
-
 
 
     public AddImageAction() {
     	super("image","Import/Image");
+    	super.message = "Adding Image. Please wait...";
         if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
             lastDirectory = SumoPlatform.getApplication().getConfiguration().getImageFolder();
@@ -89,7 +85,7 @@ public class AddImageAction extends SumoAbstractAction implements IProgress {
         boolean tileBuff=false;
 
         String imagefile = "";
-        
+
     	if (lastDirectory.equals(SumoPlatform.getApplication().getConfiguration().getImageFolder())) {
             if (fileChooser == null) {
                 fileChooser = new JFileChooser(lastDirectory);
@@ -103,7 +99,7 @@ public class AddImageAction extends SumoAbstractAction implements IProgress {
             imagefile=fileChooser.getSelectedFile().getAbsolutePath();
         }
         tileBuff=paramsAction.get("Local_Buffer").equals("true");
-        
+
         GeoImageReader temp = null;
         List<GeoImageReader> tempList = null;
 
@@ -200,9 +196,6 @@ public class AddImageAction extends SumoAbstractAction implements IProgress {
         return 1;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
 
     public List<Argument> getArgumentTypes() {
         Argument a1 = new Argument("image_type", Argument.STRING, false, "image","data type");
@@ -224,8 +217,6 @@ public class AddImageAction extends SumoAbstractAction implements IProgress {
     public void setMaximum(int size) {
     }
 
-    public void setMessage(String string) {
-    }
 
     public void setIndeterminate(boolean value) {
     }

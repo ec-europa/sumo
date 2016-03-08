@@ -30,15 +30,15 @@ public class SendMailAction extends SumoAbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SendMailAction.class);
 
     boolean done = false;
-    private final String message = "Sending email. Please wait...";
     private static Properties fMailServerConfig = new Properties();
-    
-    
+
+
     public SendMailAction(){
     	super("sendmail","Tools/SendMail");
+    	super.message = "Sending email. Please wait...";
     }
-    
-    
+
+
     /**
     * Send a single email.
     */
@@ -114,7 +114,7 @@ public class SendMailAction extends SumoAbstractAction  {
 
     public List<Argument> getArgumentTypes() {
         List<Argument> out = new ArrayList<Argument>();
-        
+
       /*  Argument a1 = new Argument("email account", Argument.STRING, false, "ipsc-mail.jrc.it");
         out.add(a1);
 
@@ -123,16 +123,16 @@ public class SendMailAction extends SumoAbstractAction  {
 
         Argument a3 = new Argument("email account user password", Argument.STRING, false, "");
         out.add(a3);
-        
+
         Argument a4 = new Argument("destinary email account", Argument.STRING, false, "");
         out.add(a4);
 
         Argument a5 = new Argument("subject", Argument.STRING, false, "");
         out.add(a5);
-        
+
         Argument a6 = new Argument("email text", Argument.STRING, false, "");
         out.add(a6);
-        
+
         Argument a7 = new Argument("attachment file", Argument.FILE, false, "");
         out.add(a7);
         */
@@ -155,17 +155,11 @@ public class SendMailAction extends SumoAbstractAction  {
         return 1;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
 
     public void setCurrent(int i) {
     }
 
     public void setMaximum(int size) {
-    }
-
-    public void setMessage(String string) {
     }
 
     public void setIndeterminate(boolean value) {
