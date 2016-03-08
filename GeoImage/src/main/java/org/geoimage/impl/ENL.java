@@ -11,6 +11,8 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.envi.EnvisatImage;
 import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
+import org.geoimage.impl.s1.GDALSentinel1;
+import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
 
@@ -71,8 +73,8 @@ public class ENL  {
             enl = radarsatENLArray[ENLLine][ENLColumn];
         }else if(gir instanceof Sentinel1SLC){
         	enl=1;
-        }else if(gir instanceof Sentinel1GRD){
-        	String name=((Sentinel1GRD) gir).getSafeFilePath();
+        }else if(gir instanceof Sentinel1GRD||gir instanceof GDALSentinel1){
+        	String name=((Sentinel1) gir).getSafeFilePath();
         	String folder=new File(name).getParentFile().getAbsolutePath();
         	if(folder.contains("GRDF")){
         		enl=3.5F;
