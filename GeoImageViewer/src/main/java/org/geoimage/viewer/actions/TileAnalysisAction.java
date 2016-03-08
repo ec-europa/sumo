@@ -120,7 +120,9 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 					Float hv=1.5f;
 					Float vh=1.5f;
 					Float vv=1.5f;
+
 					Float buffer=0.0f;
+
 					if(commandLine.length>=5){
 						buffer=Float.parseFloat(commandLine[4]);
 						hh=Float.parseFloat(commandLine[5]);
@@ -174,9 +176,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			//proc.removeProcessListener(this);
-			//proc.dispose();
-
 			return false;
 		}finally{
 		}
