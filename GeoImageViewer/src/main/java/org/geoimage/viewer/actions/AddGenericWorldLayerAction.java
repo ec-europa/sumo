@@ -29,10 +29,8 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class AddGenericWorldLayerAction extends SumoAbstractAction implements IProgress  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddGenericWorldLayerAction.class);
-
     private File worldFile;
-    protected boolean done = false;
-    
+
     public AddGenericWorldLayerAction(String actionName,File worldFile) {
     	super(actionName,"Import/Coastline/"+actionName);
     	this.worldFile=worldFile;
@@ -75,6 +73,74 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction implements IP
     }
 
 
-	
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean isIndeterminate() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isDone() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getMaximum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int getCurrent() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+
+	@Override
+	public void setCurrent(int i) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void setMaximum(int size) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+	@Override
+	public void setIndeterminate(boolean value) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void setDone(boolean value) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+
+
+
 
 }

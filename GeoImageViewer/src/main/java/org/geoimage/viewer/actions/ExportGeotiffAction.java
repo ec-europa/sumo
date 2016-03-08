@@ -54,4 +54,40 @@ public class ExportGeotiffAction extends SumoAbstractAction{
         out.add(arg1);
         return out;
     }
+
+	@Override
+	public boolean isIndeterminate() {
+		return true;
+	}
+
+	@Override
+	public int getMaximum() {
+		return 0;
+	}
+
+	@Override
+	public int getCurrent() {
+		return 0;
+	}
+
+
+
+	@Override
+	public void setCurrent(int i) {
+
+	}
+
+	@Override
+	public void setMaximum(int size) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+	@Override
+	public void setIndeterminate(boolean value) {
+		// TODO Auto-generated method stub
+
+	}
 }

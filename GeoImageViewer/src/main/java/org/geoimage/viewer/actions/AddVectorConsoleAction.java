@@ -55,8 +55,6 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 
     private JFileChooser fd;
     private static String lastDirectory;
-    boolean done = false;
-    private String message = "Adding data. Please wait...";
 
     private static final String paramFileType="File type";
     private static final String paramType="Type";
@@ -65,6 +63,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 
     public AddVectorConsoleAction() {
     	super("vector","Import/Vector");
+    	message = "Adding data. Please wait...";
         if(SumoPlatform.getApplication().getConfiguration().getLastVector().equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
@@ -445,9 +444,6 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     }
 
     public void setMaximum(int size) {
-    }
-
-    public void setMessage(String string) {
     }
 
     public void setIndeterminate(boolean value) {

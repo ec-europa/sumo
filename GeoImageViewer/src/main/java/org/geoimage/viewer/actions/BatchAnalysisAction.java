@@ -49,9 +49,9 @@ public class BatchAnalysisAction extends AbstractConsoleAction{
         return null;
     }
 
-	@Override
-	public boolean executeFromConsole() {
-		return execute();
-	}
+    @Override
+   	public boolean executeFromConsole() {
+   		return execute();
+   	}
 
 }

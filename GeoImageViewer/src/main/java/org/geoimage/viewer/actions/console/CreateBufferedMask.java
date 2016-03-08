@@ -1,4 +1,4 @@
-package org.geoimage.viewer.actions;
+package org.geoimage.viewer.actions.console;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
-public class CreateBufferedMask extends SumoAbstractAction{
+public class CreateBufferedMask extends AbstractConsoleAction{
 	//private Logger logger = LogManager.getLogger(CreateBufferedMask.class);
 
 	public CreateBufferedMask() {
@@ -37,9 +37,18 @@ public class CreateBufferedMask extends SumoAbstractAction{
 
 	@Override
 	public boolean execute() {
-		Iterator it=paramsAction.values().iterator();
-		String arg=(String)it.next();
 		if(paramsAction.size()>=1){
+			super.commandLine=new String[1];
+			Iterator<String> it=paramsAction.values().iterator();
+			super.commandLine[0]=it.next();
+			return executeFromConsole();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean executeFromConsole() {
+			String arg=super.commandLine[0];
 			final GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
 			if(arg.equalsIgnoreCase("test")){
 				FileWriter fw=null;
@@ -115,7 +124,6 @@ public class CreateBufferedMask extends SumoAbstractAction{
 	      				bufferSize,((MaskVectorLayer)mask).getGeometriclayer(),MaskVectorLayer.COASTLINE_MASK);
 				LayerManager.getIstanceManager().addLayer(bufferedMask[0]);
 			}
-		}
 		return true;
 	}
 
@@ -124,5 +132,15 @@ public class CreateBufferedMask extends SumoAbstractAction{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public String getCommand() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 
 }

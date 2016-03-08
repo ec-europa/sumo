@@ -18,13 +18,11 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 
 public class ClearCacheAction extends SumoAbstractAction implements IProgress{
 	private Logger logger = LogManager.getLogger(this);
-	boolean done=false;
-	
-	
+
 	public ClearCacheAction(){
 		super("Clear cache","Tools/ClearCache");
 	}
-	
+
 
 	@Override
 	public String getDescription() {
@@ -99,17 +97,13 @@ public class ClearCacheAction extends SumoAbstractAction implements IProgress{
 	}
 
 	@Override
-	public void setMessage(String string) {
-	}
-
-	@Override
 	public void setIndeterminate(boolean value) {
 	}
 
 	@Override
 	public void setDone(boolean value) {
 		done=value;
-		
+
 	}
 
 }
