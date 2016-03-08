@@ -261,7 +261,7 @@ public class VDSAnalysis{
                     if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
                         continue;
 
-                   
+
                     maskdata=createDataMask(xLeftTile, yTopTile, sizeX, sizeY, dx, dy);
                     //count invalid pixel (land)
                     int inValidPixelCount = 0;
@@ -276,7 +276,7 @@ public class VDSAnalysis{
                         inValidPixelCount = 0;
                         for(int count = 0; count < maskdata.length; count++)
                             inValidPixelCount += maskdata[count];
-                    	
+
                         containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }
@@ -339,9 +339,9 @@ public class VDSAnalysis{
         return dpixels;
     }
 
-    
+
     /**
-     * 
+     *
      * @param xLeftTile
      * @param yTopTile
      * @param sizeX
@@ -362,7 +362,7 @@ public class VDSAnalysis{
         	//Read pixels for ice
         	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
         }
-        
+
         for(int count = 0; count < maskdata.length; count++){
             //if the pixel is valid check if this pixel is ice
             if(maskdata[count]==0){
@@ -373,8 +373,8 @@ public class VDSAnalysis{
         }
         return maskdata;
     }
-    
-    
+
+
     /**
      *
      * @param distance
@@ -558,8 +558,8 @@ public class VDSAnalysis{
                     imagemap[i] = 0;
                 }
 
-                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data, 
-                		thresholdvalues, new int[]{boatx, boaty}, 
+                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data,
+                		thresholdvalues, new int[]{boatx, boaty},
                 		neighboursdistance, tilesize, dataMask);
                 // set flag for touching land
                 boatpixel.setTouchesLandMask(result);
@@ -713,10 +713,11 @@ public class VDSAnalysis{
      * @return
      */
     public boolean intersects(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
-        if (coastMask == null) {
+        if (coastMask == null&&iceMask==null) {
             return false;
         }
-        if (coastMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if (coastMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)||
+        		iceMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
             return true;
         }
         return false;
@@ -731,11 +732,12 @@ public class VDSAnalysis{
      * @return
      */
     private boolean includes(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
-         if (coastMask == null) {
+         if (coastMask == null&&iceMask==null) {
             return false;
         }
 
-        if (coastMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if (coastMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)||
+        		iceMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
             return true;
         }
 
