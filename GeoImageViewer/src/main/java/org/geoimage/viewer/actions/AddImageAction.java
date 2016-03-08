@@ -16,11 +16,11 @@ import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * this class is called whenever we want to open an image. A new image consists in a new layer (SimpleVectorLayer).
  * thumbnails part need to be revised
  */
-public class AddImageAction extends SumoAbstractAction implements IProgress {
+public class AddImageAction extends SumoAbstractAction implements IProgressListener {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageAction.class);
     private JFileChooser fileChooser;
     private String lastDirectory;

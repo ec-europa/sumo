@@ -9,8 +9,8 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *         image consists in a new layer (SimpleVectorLayer). thumbnails part
  *         need to be revised
  */
-public class AddLastImageAction extends SumoAbstractAction implements IProgress {
+public class AddLastImageAction extends SumoAbstractAction implements IProgressListener {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(AddLastImageAction.class);
 
 	public AddLastImageAction() {

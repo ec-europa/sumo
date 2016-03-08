@@ -12,9 +12,9 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 
@@ -26,7 +26,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  *
  */
-public class AddWorldVectorLayerAction extends SumoAbstractAction implements IProgress {
+public class AddWorldVectorLayerAction extends SumoAbstractAction implements IProgressListener {
 	private static Logger logger=LogManager.getLogger(AddWorldVectorLayerAction.class);
 
     public AddWorldVectorLayerAction() {

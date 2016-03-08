@@ -26,9 +26,9 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.geoimage.viewer.widget.dialog.DatabaseDialog;
@@ -41,7 +41,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class AddInterpolatedConsoleAction extends SumoAbstractAction implements IProgress {
+public class AddInterpolatedConsoleAction extends SumoAbstractAction implements IProgressListener {
 	private  org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
 
     private JFileChooser fd;

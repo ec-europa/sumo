@@ -19,7 +19,7 @@ import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.util.IProgress;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.util.ImageTiler;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -81,7 +81,7 @@ public class ThumbnailsManager {
         return null;
     }
 
-    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir, IProgress ip,int band) {
+    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir, IProgressListener ip,int band) {
         try {
             if (ip != null) {
                 ip.setCurrent(0);

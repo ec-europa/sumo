@@ -30,8 +30,8 @@ public class SumoPlatform extends SingleFrameApplication {
     private static boolean batchMode=false;
     private PluginsManager plManager=null;
     private static int maxPBar = 0;
-    
-    
+
+
     /*private static Thread currentThreadRunning=null;
     public Thread getCurrentThreadRunning() {
 		return currentThreadRunning;
@@ -45,10 +45,10 @@ public class SumoPlatform extends SingleFrameApplication {
 				currentThreadRunning.interrupt();
 			}catch(Exception ex){
 				ex.printStackTrace();
-			}	
+			}
 		}
 	}*/
-    
+
     /**
      * At startup create and show the main frame of the application.
      */
@@ -80,24 +80,24 @@ public class SumoPlatform extends SingleFrameApplication {
     public static SumoPlatform getApplication() {
         return Application.getInstance(SumoPlatform.class);
     }
-    
-	
+
+
 	/**
-     * 
+     *
      * @return true if sumo is running in batch mode
      */
     public static boolean isBatchMode() {
 		return batchMode;
 	}
-    
+
     /**
-     * set batch mode = true 
+     * set batch mode = true
      */
 	public static void setInBatchMode() {
 		batchMode = true;
 	}
-	
-	
+
+
 	/**
 	 * default
 	 */
@@ -121,11 +121,11 @@ public class SumoPlatform extends SingleFrameApplication {
         return LayerManager.getIstanceManager();
     }
 
-    
+
     public GeoImageViewerView getMain() {
         return (GeoImageViewerView) getApplication().getMainView();
     }
-    
+
     static void setCacheManager(CacheManager cacheManager) {
         ((GeoImageViewerView) getApplication().getMainView()).setCacheManager(cacheManager);
     }
@@ -137,12 +137,12 @@ public class SumoPlatform extends SingleFrameApplication {
     public void addWidget(TransparentWidget widget) {
         ((GeoImageViewerView) getApplication().getMainView()).addWidget(widget);
     }
-    
-    
+
+
     public  void refresh() {
         ((GeoImageViewerView) getApplication().getMainView()).refresh();
     }
-    
+
 
     public void setInfo(String info) {
         setInfo(info, 10000);
@@ -185,18 +185,18 @@ public class SumoPlatform extends SingleFrameApplication {
         }
     }
 
-    
+
     public GeoImageReader getCurrentImageReader(){
     	if(isBatchMode()){
     		return Sumo.getCurrentReader();
     	}else{
     		return LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader();
     	}
-    	
+
     }
-    
- 
-    /** 
+
+
+    /**
      * search the cache in the DB, if it doesn't exist then read the properties file
      * even if the file is empty a default path is used
      */
@@ -204,9 +204,9 @@ public class SumoPlatform extends SingleFrameApplication {
         String cache = getConfiguration().getCachePrefFolder();
         return cache;
     }
-    
-    
-    
+
+
+
     /**
      * Main method launching the application.
      */
@@ -214,5 +214,5 @@ public class SumoPlatform extends SingleFrameApplication {
             JPopupMenu.setDefaultLightWeightPopupEnabled(false);
             launch(SumoPlatform.class, args);
     }
-   
+
 }

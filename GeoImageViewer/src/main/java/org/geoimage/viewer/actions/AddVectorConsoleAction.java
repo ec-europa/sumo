@@ -31,9 +31,9 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.util.files.ArchiveUtil;
 import org.geoimage.viewer.util.files.IceHttpClient;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
@@ -50,7 +50,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author thoorfr+ga
  * this class is called whenever you want to open one of the supported vector formats (shp, csv, xml, gml, query). It is opened as a new layer, linked to the active image.
  */
-public class AddVectorConsoleAction extends SumoAbstractAction implements IProgress {
+public class AddVectorConsoleAction extends SumoAbstractAction implements IProgressListener {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddVectorConsoleAction.class);
 
     private JFileChooser fd;

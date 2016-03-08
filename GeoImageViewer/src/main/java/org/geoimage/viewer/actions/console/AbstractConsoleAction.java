@@ -40,12 +40,6 @@ public abstract class AbstractConsoleAction extends SumoAbstractAction implement
 	}
 
 	@Override
-	public boolean isDone() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public int getMaximum() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -76,9 +70,4 @@ public abstract class AbstractConsoleAction extends SumoAbstractAction implement
 
 	}
 
-	@Override
-	public void setDone(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
 }

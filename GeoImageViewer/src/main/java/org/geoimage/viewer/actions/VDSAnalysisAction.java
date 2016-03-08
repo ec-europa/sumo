@@ -25,16 +25,16 @@ import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 /**
  *
  * @author
  */
-public class VDSAnalysisAction extends SumoAbstractAction implements  IProgress,VDSAnalysisProcessListener,ActionListener{
+public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysisProcessListener,ActionListener{
     /**
 	 *
 	 */

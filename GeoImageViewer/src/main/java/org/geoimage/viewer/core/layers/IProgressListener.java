@@ -3,13 +3,13 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.util;
+package org.geoimage.viewer.core.layers;
 
 /**
  * class to handle progressive tasks
  * @author thoorfr
  */
-public interface IProgress {
+public interface IProgressListener {
     public boolean isIndeterminate();
     public boolean isDone();
     public int getMaximum();
