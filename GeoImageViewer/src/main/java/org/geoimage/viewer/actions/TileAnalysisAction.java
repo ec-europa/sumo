@@ -22,9 +22,9 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.IProgressListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
-import org.geoimage.viewer.util.IProgress;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 
 
-public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,IProgress,ActionListener{
+public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,IProgressListener,ActionListener{
 	/**
 	 *
 	 */
