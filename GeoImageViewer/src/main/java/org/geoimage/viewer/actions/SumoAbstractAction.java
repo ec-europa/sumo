@@ -6,6 +6,7 @@
 package org.geoimage.viewer.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 	public SumoAbstractAction(String name,String path){
 		absolutePath=path;
 		this.name=name;
+		actionListeners=new ArrayList<>();
 	}
 
 	public String getParamValue(String paramName){
@@ -121,6 +123,15 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 
 	public void notifyEvent(SumoActionEvent event){
 		for(SumoActionListener list:actionListeners){
+			if(event.getEventType()==SumoActionEvent.STARTACTION){
+				list.startAction(event.getMessage(),this.actionSteps);
+			}else if(event.getEventType()==SumoActionEvent.ENDACTION){
+				list.stop(this.name);
+			}else if(event.getEventType()==SumoActionEvent.STOP_ACTION){
+				list.stop(this.name);
+			}else if(event.getEventType()==SumoActionEvent.UPDATE_STATUS){
+				list.updateProgress(event.getMessage(), event.getProgress(), this.actionSteps);
+			}
 
 		}
 	}
