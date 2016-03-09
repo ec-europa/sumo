@@ -83,6 +83,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
 
     @Override
     public boolean execute() {
+
         if (super.paramsAction.size() < 1) {
             errorWindow("Wrong arguments for add vector action\n" + getDescription());
             done = true;
