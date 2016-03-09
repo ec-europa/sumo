@@ -6,7 +6,7 @@ import javax.swing.Action;
 
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
-public interface IAction extends Action{
+public interface ISumoAction extends Action{
 
 		public String getName();
 	    public String getDescription();
@@ -16,6 +16,7 @@ public interface IAction extends Action{
 	     * @return
 	     */
 	    public String getPath();
-	    public boolean execute();//String[] args);
+	    public boolean execute();
+	    public boolean isDone();
 	    public List<ActionDialog.Argument> getArgumentTypes();
 }

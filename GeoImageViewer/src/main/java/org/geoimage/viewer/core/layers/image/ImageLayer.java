@@ -29,6 +29,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.jrc.sumo.util.Constant;
@@ -48,13 +49,13 @@ public class ImageLayer implements ILayer  {
 	protected boolean isRadio = false;
 	protected String type;
 	protected ILayer parent=null;
-	
+
 	class ServiceTile implements  Callable<Object[]> {
 		private String initfile;
 		private int level;
 		private int i;
 		private int j;
-		
+
 		public ServiceTile(String initfile, int level, int i, int j){
 			super();
 			this.initfile=initfile;
@@ -62,8 +63,8 @@ public class ImageLayer implements ILayer  {
 			this.j=j;
 			this.level=level;
 		}
-		
-		
+
+
         public Object[] call() {
         	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
         	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
@@ -85,7 +86,7 @@ public class ImageLayer implements ILayer  {
             	int y=j * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - ypadding;
             	float zoom=(1 << level);
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
-                
+
                 ImageIO.write(out, "png", f);
                 return new Object[]{f.getAbsolutePath(), next, out};
             } catch (Exception ex) {
@@ -96,10 +97,10 @@ public class ImageLayer implements ILayer  {
             return new Object[]{f.getAbsolutePath(), next, null};
         }
     }
-	
-	
-	
-	
+
+
+
+
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer.class);
 
     private GeoImageReader activeGir;
@@ -109,8 +110,8 @@ public class ImageLayer implements ILayer  {
     private int xpadding;
     private int ypadding;
     private TextureCacheManager tcm;
-    
-    
+
+
     private List<String> submitedTiles;
     private ImagePool imagePool;
     private List<Future<Object[]>> futures = new ArrayList<Future<Object[]>>();
@@ -124,56 +125,56 @@ public class ImageLayer implements ILayer  {
     private int levels;
     private boolean torescale = false;
     private int maxlevels;
-    
+
     //for cuncurrency reader
     private ExecutorService poolExcutorService;
     private int poolSize = 2;
-    
+
     private int arrayReadTilesOrder[][]=null ;
-    
+
     private int maxnumberoftiles = 7;
-    
+
     Iterator<ImageReader> iReader=null;
 	ImageReader pngReader=null;
-    
-    
+
+
     /**
-     * 
+     *
      * @param gir
      */
     public ImageLayer(GeoImageReader gir) {
     	iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
-  
+
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
         //poolSize=Runtime.getRuntime().availableProcessors();
         //poolExcutorService = Executors.newFixedThreadPool(poolSize);
         poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
-        
-        
+
+
         submitedTiles = new ArrayList<String>();
         imagePool = new ImagePool(gir, poolSize);
 
         setName(gir);
-        
+
         activeBand = 0;
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;
         maxlevels = (int) (Math.sqrt(Math.max(gir.getWidth() / (Constant.TILE_SIZE_DOUBLE*2), gir.getHeight() / (Constant.TILE_SIZE_DOUBLE*2)))) +1;  //massimo livello di zoom
         curlevel = levels;
-        
+
         //TODO Understand the meaning of this values for padding
         xpadding = (((1 << levels) << 8) - gir.getWidth()) / 2;  // is equal to(int)((Math.pow(2,levels+8)- gir.getWidth())/2);
         ypadding = (((1 << levels) << 8) - gir.getHeight()) / 2; //			   (int)((Math.pow(2,levels+8)- gir.getHeight())/2);
-        
+
         String temp = SumoPlatform.getApplication().getConfiguration().getMaxTileBuffer();
         int maxBuffer = Integer.parseInt(temp);
         tcm = new TextureCacheManager(maxBuffer);
         setInitialContrast();
         maxnumberoftiles = SumoPlatform.getApplication().getConfiguration().getMaxNumOfTiles();
         createMatrixTileOrder();
-        
-        
+
+
     }
 
     @Override
@@ -184,10 +185,10 @@ public class ImageLayer implements ILayer  {
             return activeGir.getDisplayName(activeBand);
         }
     }
-    
-   
-    
-    
+
+
+
+
     /**
      * Create the matrix that define the order in which the tiles will be read
      */
@@ -213,9 +214,9 @@ public class ImageLayer implements ILayer  {
         }
     }
 
-    
+
     /**
-     * 
+     *
      * @param gl
      */
     private void updateFutures(GL gl) {
@@ -236,36 +237,36 @@ public class ImageLayer implements ILayer  {
         }
         futures.removeAll(remove1);
     }
-    
+
     @Override
     /**
      * displays the tiles on screen
      */
     public void render(Object glContext) {
     	OpenGLContext context=(OpenGLContext)glContext;
-    	if(activeGir!=null){	
+    	if(activeGir!=null){
 	        if (torescale) {
 	            torescale = false;
 	            tcm.clear();
 	        }
 	        GL gl = context.getGL();
-	        
+
 	        updateFutures(gl);
-	        
+
 	        float zoom = context.getZoom();
 	        int width = context.getWidth();
 	        int height = context.getHeight();
 	        int x = context.getX();
 	        int y = context.getY();
-	        
+
 	        int xx = (int) (x + xpadding);
 	        int yy = (int) (y + ypadding);
-	 
+
 	        //max tiles to compute time by time
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
-        
+
 	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
-	        
+
 	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 		        if (zoom >= 1) {
 		            curlevel = (int) Math.sqrt(zoom + 1);
@@ -277,7 +278,7 @@ public class ImageLayer implements ILayer  {
 		                }
 		            	//modificato tramite action dalla console layer
 		                lll += increaseLevel;
-		                
+
 		                if (lll < 0) {
 		                    continue;
 		                }
@@ -286,18 +287,18 @@ public class ImageLayer implements ILayer  {
 		                    poolExcutorService.shutdown();
 		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
 		                }
-		                
+
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
 		                int h0 = yy / ((1 << lll) << 8);
-		                
-		                
+
+
 		                final String initfile = new StringBuffer("\\").
 		                		append((int) lll ).
 		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
-		                
+
 		                //AG loads the different tiles, starting from the center (k=0)
 		                for (int k = 0; k < max; k++) {//loop on priority
-		                	
+
 		                    for (int j = 0; j < max; j++) {
 		                        if (j + h0 < 0) {
 		                            continue;
@@ -312,7 +313,7 @@ public class ImageLayer implements ILayer  {
 		                                float ymax = (float) (((j + h0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy) / (height * zoom));
 		                                float xmin = (float) (((i + w0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
 		                                float xmax = (float) (((i + w0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx) / (1d * width * zoom));
-		
+
 		                                //check if the tile is in or out, if is not visible then is not loaded
 		                                if (ymin > 1 || ymax < 0) {
 		                                    continue;
@@ -320,7 +321,7 @@ public class ImageLayer implements ILayer  {
 		                                if (xmin > 1 || xmax < 0) {
 		                                    continue;
 		                                }
-		                                
+
 		                                String file = new StringBuffer(initfile).append(getBandFolder(activeBand))
 		                                		.append("/")
 		                                		.append((i + w0))
@@ -342,11 +343,11 @@ public class ImageLayer implements ILayer  {
 		                }
 		            }
 		        } else if (zoom > 0) {
-		        	
-		            curlevel = 0;//max zoom 
+
+		            curlevel = 0;//max zoom
 		            int w0 = xx / Constant.TILE_SIZE_IMG_LAYER;
 		            int h0 = yy / Constant.TILE_SIZE_IMG_LAYER;
-		            
+
 		            final String initfile = new StringBuilder(c.getPath().toString())
 		            						.append("/0/")
 		            						.append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"/":"")).toString();
@@ -363,7 +364,7 @@ public class ImageLayer implements ILayer  {
 		                    float ymax = (float) (((j + h0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - yy) / (height * zoom));
 		                    float xmin = (float) (((i + w0) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
 		                    float xmax = (float) (((i + w0 + 1) * Constant.OVERVIEW_SIZE_DOUBLE - xx) / (1d * width * zoom));
-		
+
 		                    //check if the tile is in or out, if is not visible then is not loaded
 		                    if (ymin > 1 || ymax < 0) {
 		                        continue;
@@ -377,7 +378,7 @@ public class ImageLayer implements ILayer  {
 		                    		.append("_")
 		                    		.append((j + h0))
 		                    		.append(".png").toString();
-		
+
 		                    //checked if the tile is already in memory or in cache, otherwise required it
 		                    if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
 		                        if (!tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
@@ -392,15 +393,16 @@ public class ImageLayer implements ILayer  {
 	        if (this.disposed) {
 	            disposeSync();
 	        }
-        }    
+        }
     }
 
     private void displayDownloading(int size) {
+    	GeoImageViewerView view=((GeoImageViewerView) SumoPlatform.getApplication().getMainView());
         if (currentSize != size) {
             if (size == 0) {
-                SumoPlatform.setInfo("", -1);
+                view.setInfo("", -1);
             } else {
-                SumoPlatform.getApplication().setInfo(new StringBuilder("loading ").append(size).toString());
+                view.setInfo(new StringBuilder("loading ").append(size).toString());
             }
 
             currentSize = size;
@@ -418,9 +420,9 @@ public class ImageLayer implements ILayer  {
 
         average = average / data.length;
         int factor=8 * activeGir.getNumberOfBytes();
-        //if the factor is >16 the contrast will be too high 
+        //if the factor is >16 the contrast will be too high
         factor=(factor<16)?factor:16;
-        	
+
         float contrastLevel=(1 << ((factor))) / 5 / average;
         if(contrastLevel==0)
         	contrastLevel=100;
@@ -430,8 +432,8 @@ public class ImageLayer implements ILayer  {
     }
 
 
-    
-    
+
+
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
     	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
@@ -444,7 +446,7 @@ public class ImageLayer implements ILayer  {
             			temp = ImageIO.read(cacheInstance.newFile(file));
             		} catch (Exception ex) {
             			try {
-            			    Thread.sleep(200);                 
+            			    Thread.sleep(200);
             			} catch(InterruptedException e) {
             			    Thread.currentThread().interrupt();
             			}
@@ -459,16 +461,16 @@ public class ImageLayer implements ILayer  {
                 }	finally{
             		pngReader.dispose();
                 }
-            	
+
             	if(ok){
 	                if (temp.getColorModel().getNumComponents() == 1) {
 	                    temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
 	                }
-	                
+
 	                Texture t = AWTTextureIO.newTexture(gl.getGLProfile(),temp, false);
 	                tcm.add(file, t);
 	                bindTexture(gl, t, xmin, xmax, ymin, ymax);
-            	}    
+            	}
         }else{
         	ok=false;
         }
@@ -486,7 +488,7 @@ public class ImageLayer implements ILayer  {
     }
 
     /**
-     * 
+     *
      * @param gl
      * @param texture
      * @param xmin
@@ -512,7 +514,7 @@ public class ImageLayer implements ILayer  {
     }
 
     /**
-     * 
+     *
      * @param gir
      * @param x
      * @param y
@@ -528,12 +530,12 @@ public class ImageLayer implements ILayer  {
         WritableRaster raster = bufferedImage.getRaster();
 
         // Put the pixels on the raster.
-        nat = gir.readAndDecimateTile(x, y, 
-        		(int) (width * zoom), 
-        		(int) (height * zoom), 
+        nat = gir.readAndDecimateTile(x, y,
+        		(int) (width * zoom),
+        		(int) (height * zoom),
         		width, height,((SarImageReader)gir).getWidth(),
         		((SarImageReader)gir).getHeight() ,true,activeBand);
-        
+
         raster.setPixels(0, 0, width, height, nat);
         return bufferedImage;
     }
@@ -545,9 +547,9 @@ public class ImageLayer implements ILayer  {
     }
 
     /**
-     * 
+     *
      * @param initfile file tile
-     * @param level	   zoom level	
+     * @param level	   zoom level
      * @param i
      * @param j
      */
@@ -555,14 +557,14 @@ public class ImageLayer implements ILayer  {
     	String tilesStr=new StringBuffer(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
         if (!submitedTiles.contains(tilesStr)) {
             submitedTiles.add(tilesStr);
-            
+
             futures.add(0, poolExcutorService.submit(new ServiceTile(initfile, level, i, j)));
-            
+
         }
     }
-    
+
     public void setContrast(float value) {
-        contrast.put(createBandsString(activeBand), value); 
+        contrast.put(createBandsString(activeBand), value);
         torescale = true;
         rescale = new RescaleOp(value, brightness, null);
     }
@@ -615,7 +617,7 @@ public class ImageLayer implements ILayer  {
         if(poolExcutorService!=null){
         	poolExcutorService.shutdownNow();
         	poolExcutorService = null;
-        }	
+        }
         if(activeGir!=null){
         	activeGir.dispose();
         	activeGir = null;
@@ -665,8 +667,8 @@ public class ImageLayer implements ILayer  {
     public void level(int levelIncrease) {
         this.increaseLevel = levelIncrease;
     }
-    
-    
+
+
     public void setName(GeoImageReader gir){
     	if(gir.getDisplayName(activeBand)!=null&&!gir.getDisplayName(activeBand).equals(""))
         	setName(gir.getDisplayName(activeBand));
@@ -676,10 +678,10 @@ public class ImageLayer implements ILayer  {
         	if(gir.getInternalImage()!=null)
         		name=name+"_"+gir.getInternalImage();
         	setName(name);
-        }	
+        }
     }
 
-    
+
     public boolean isActive() {
         return active;
     }
@@ -687,7 +689,7 @@ public class ImageLayer implements ILayer  {
 	public void setActive(boolean active) {
         this.active=active;
     }
-	
+
 	public String getName() {
         return name;
     }
@@ -695,8 +697,8 @@ public class ImageLayer implements ILayer  {
     public void setName(String name) {
         this.name = name;
     }
-	
-	
+
+
     public boolean isRadio() {
         return isRadio;
     }
@@ -704,12 +706,12 @@ public class ImageLayer implements ILayer  {
     public void setIsRadio(boolean radio) {
         isRadio = radio;
     }
-    
+
     public void init(ILayer parent) {
 		this.parent = parent;
 	}
 
-	
+
 	public ILayer getParent() {
 		return parent;
 	}
@@ -717,7 +719,7 @@ public class ImageLayer implements ILayer  {
 	public void setParent(ILayer parent) {
 		this.parent = parent;
 	}
-	
+
     public String getType() {
         return type;
     }
@@ -725,7 +727,7 @@ public class ImageLayer implements ILayer  {
     public void setType(String type) {
         this.type = type;
     }
-    
-    
-   
+
+
+
 }

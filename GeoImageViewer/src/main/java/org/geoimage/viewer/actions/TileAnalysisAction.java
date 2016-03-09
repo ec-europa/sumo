@@ -22,7 +22,8 @@ import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 
 
-public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,IProgressListener,ActionListener{
+public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,ActionListener{
 	/**
 	 *
 	 */
@@ -187,80 +188,63 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 		return args;
 	}
 
-	 public void setCurrent(int i) {
-	        current = i;
-	    }
 
-	    public void setMaximum(int size) {
-	        maximum = size;
-	    }
-
-	    public void setIndeterminate(boolean value) {
-	        indeterminate = value;
-	    }
-
-	    public void setDone(boolean value) {
-	        done = value;
-	    }
 
 
 	@Override
 	public void startAnalysis() {
-		setCurrent(1);
-		message="Starting VDS Analysis";
+		String message="Starting VDS Analysis";
+    	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
+
+
 	}
 	@Override
 	public void performVDSAnalysis(String message,int numSteps) {
 		if(!stopping){
-			setMaximum(numSteps);
-			setCurrent(1);
-			this.message=message;
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, message, numSteps));
 		}
 	}
 
 	@Override
 	public void startAnalysisBand(String message) {
 		if(!stopping){
-			setCurrent(2);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, message,-1));
 		}
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
 		if(!stopping){
-			setCurrent(3);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, message,-1));
 		}
 	}
 
 	@Override
 	public void agglomerating(String message) {
 		if(!stopping){
-			setCurrent(4);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, message,-1));
 		}
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
-		setCurrent(numSteps);
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, "",numSteps));
 	}
 
 
 	@Override
 	public void endAnalysis() {
-		setDone(true);
 		SumoPlatform.getApplication().getMain().removeStopListener(this);
 
 		if(proc!=null)
 			proc.dispose();
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(proc!=null&&e.getActionCommand().equals("STOP")){
 			this.proc.setStop(true);
-			this.message="stopping";
+
 			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc=null;
 		}
@@ -273,31 +257,12 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 		}
 	}
 
-	public boolean isIndeterminate() {
-        return this.indeterminate;
-    }
 
-    public boolean isDone() {
-        return this.done;
-    }
-
-    public int getMaximum() {
-        return this.maximum;
-    }
-
-    public int getCurrent() {
-        return this.current;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
 
 	@Override
 	public void startBlackBorederAnalysis(String message) {
 		if(!stopping){
-			setCurrent(1);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message,-1));
 		}
 
 	}

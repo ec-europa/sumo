@@ -9,7 +9,8 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
@@ -22,12 +23,12 @@ import org.slf4j.LoggerFactory;
  *         image consists in a new layer (SimpleVectorLayer). thumbnails part
  *         need to be revised
  */
-public class AddLastImageAction extends SumoAbstractAction implements IProgressListener {
+public class AddLastImageAction extends SumoAbstractAction {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(AddLastImageAction.class);
 
 	public AddLastImageAction() {
 		super("Last Image", "Import/Last Image");
-		super.message = "Adding Image. Please wait...";
+
 
 	}
 
@@ -40,6 +41,9 @@ public class AddLastImageAction extends SumoAbstractAction implements IProgressL
 	public boolean execute() {
 		done = false;
 		try {
+        	String message = "Adding Image. Please wait...";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
+
 			addImage();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,7 +74,10 @@ public class AddLastImageAction extends SumoAbstractAction implements IProgressL
 
 		if (tempList == null || tempList.isEmpty()) {
 			this.done = true;
-			this.setMessage("Could not open image file");
+			String message="Could not open image file";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ACTION_ERROR, message, -1));
+
+
 			final String filename = paramsAction.get("image_name").split("=")[1];
 			errorWindow("Could not open image file\n" + filename);
 		} else {
@@ -95,37 +102,9 @@ public class AddLastImageAction extends SumoAbstractAction implements IProgressL
 		done = true;
 	}
 
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-	public boolean isDone() {
-		return done;
-	}
-
-	public int getMaximum() {
-		return 100;
-	}
-
-	public int getCurrent() {
-		return 1;
-	}
 
 	public List<Argument> getArgumentTypes() {
 		return null;
-	}
-
-	public void setCurrent(int i) {
-	}
-
-	public void setMaximum(int size) {
-	}
-
-	public void setIndeterminate(boolean value) {
-	}
-
-	public void setDone(boolean value) {
-		this.done=value;
 	}
 
 }

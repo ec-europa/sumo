@@ -17,9 +17,11 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
+import org.geoimage.viewer.core.GeoImageViewerView;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.util.ImageTiler;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -81,22 +83,20 @@ public class ThumbnailsManager {
         return null;
     }
 
-    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir, IProgressListener ip,int band) {
+    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir,int progress,int band) {
         try {
+        	SumoPlatform ip=(SumoPlatform) SumoPlatform.getApplication();
             if (ip != null) {
-                ip.setCurrent(0);
-                ip.setIndeterminate(false);
-                ip.setMessage("building thumbnails...");
-                ip.setMaximum(glayer.getGeometries().size());
+                ip.startAction("building thumbnails...", glayer.getGeometries().size());
             }
             for (Geometry geom : glayer.getGeometries()) {
                 try {
                     if (ip != null) {
-                        ip.setCurrent(ip.getCurrent() + 1);
+                        ip.updateProgress("", progress, glayer.getGeometries().size());
                     }
                     if (!new File(path, glayer.getAttributes(geom).get(idColumnName).toString() + ".png").exists()) {
                         Coordinate p = geom.getCoordinate();
-                        BufferedImage image = ImageTiler.createImage(gir.readTile((int) p.x - (Constant.OVERVIEW_SIZE/2), (int) p.y - (Constant.OVERVIEW_SIZE/2), 
+                        BufferedImage image = ImageTiler.createImage(gir.readTile((int) p.x - (Constant.OVERVIEW_SIZE/2), (int) p.y - (Constant.OVERVIEW_SIZE/2),
                         		Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE,band), Constant.OVERVIEW_SIZE, Constant.OVERVIEW_SIZE, gir);
                         ImageIO.write(image, "png", new File(path, glayer.getAttributes(geom).get(idColumnName).toString() + ".png"));
                     }
@@ -106,7 +106,7 @@ public class ThumbnailsManager {
             }
             if (!new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png").exists()) {
                 if (ip != null) {
-                    ip.setMessage("building overview image...");
+                    ip.startAction("building thumbnails...", -1);
                 }
                 double scale=1;
                 if(gir.getWidth()<gir.getHeight()){
@@ -116,7 +116,7 @@ public class ThumbnailsManager {
                     scale=gir.getWidth()/1024.;
                 }
                 BufferedImage overview = new BufferedImage((int)(gir.getWidth()*(1.0/scale)), (int)(gir.getHeight()*(1.0/scale)), gir.getType(true));
-                overview.getRaster().setSamples(0, 0, overview.getWidth(), overview.getHeight(), 0, 
+                overview.getRaster().setSamples(0, 0, overview.getWidth(), overview.getHeight(), 0,
                 		gir.readAndDecimateTile(0, 0, gir.getWidth(), gir.getHeight(),1/scale, false, band));
                 ImageIO.write(overview, "png", new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png"));
             }
@@ -140,12 +140,8 @@ public class ThumbnailsManager {
         	logger.error(ex.getMessage(),ex);
         }
         File out=new File(path, glayer.getName().replaceAll(" ", "_") + ".sumo.xml");
-        
+
         SumoXmlIOOld.export(out, glayer, "EPSG:4326", (SarImageReader)gir);
-        if (ip != null) {
-            ip.setDone(true);
-            ip.setMessage(null);
-        }
 
     /*
     KSATVessel vesselFile = new KSATVessel(path.getAbsolutePath() + "vessel.gml");

@@ -12,7 +12,8 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
@@ -26,7 +27,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  *
  */
-public class AddWorldVectorLayerAction extends SumoAbstractAction implements IProgressListener {
+public class AddWorldVectorLayerAction extends SumoAbstractAction {
 	private static Logger logger=LogManager.getLogger(AddWorldVectorLayerAction.class);
 
     public AddWorldVectorLayerAction() {
@@ -42,10 +43,11 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
 
     public boolean execute() {
         done = false;
-        new Thread(new Runnable() {
+        String message= "Importing land mask from GSHHS shapefile...";
+    	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
 
+        new Thread(new Runnable() {
             public void run() {
-                SumoPlatform.setInfo("Importing land mask from GSHHS shapefile...",-1);
                 try {
                 	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
                 	if(l!=null){
@@ -67,7 +69,7 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction implements IPr
                 	}
                 } catch (Exception e) {
                 }
-                SumoPlatform.getApplication().setInfo(null);
+                notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"",-1));
             }
         }).start();
         return true;

@@ -31,7 +31,8 @@ import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.files.ArchiveUtil;
@@ -50,7 +51,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author thoorfr+ga
  * this class is called whenever you want to open one of the supported vector formats (shp, csv, xml, gml, query). It is opened as a new layer, linked to the active image.
  */
-public class AddVectorConsoleAction extends SumoAbstractAction implements IProgressListener {
+public class AddVectorConsoleAction extends SumoAbstractAction {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddVectorConsoleAction.class);
 
     private JFileChooser fd;
@@ -63,7 +64,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
 
     public AddVectorConsoleAction() {
     	super("vector","Import/Vector");
-    	message = "Adding data. Please wait...";
+
         if(SumoPlatform.getApplication().getConfiguration().getLastVector().equals("")){
         	lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         }else{
@@ -89,6 +90,10 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         }
         done = false;
         try {
+        	String message = "Adding Image. Please wait...";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
+
+
         	GenericLayer lay=null;
         	File shp=null;
         	Color shpColor=Color.GREEN;
@@ -400,25 +405,6 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
     	return positions;
     }
 
-    public boolean isIndeterminate() {
-        return true;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public int getMaximum() {
-        return 1;
-    }
-
-    public int getCurrent() {
-        return 1;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
 
     @Override
     public List<Argument> getArgumentTypes() {
@@ -440,16 +426,5 @@ public class AddVectorConsoleAction extends SumoAbstractAction implements IProgr
         return out;
     }
 
-    public void setCurrent(int i) {
-    }
 
-    public void setMaximum(int size) {
-    }
-
-    public void setIndeterminate(boolean value) {
-    }
-
-    public void setDone(boolean value) {
-        done = value;
-    }
 }

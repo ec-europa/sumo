@@ -13,7 +13,8 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
@@ -27,7 +28,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * this class is called when you want to load a coast line for an active image. The land mask is based on the GSHHS shapefile which is situated on /org/geoimage/viewer/core/resources/shapefile/.
  *
  */
-public class AddGenericWorldLayerAction extends SumoAbstractAction implements IProgressListener  {
+public class AddGenericWorldLayerAction extends SumoAbstractAction {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddGenericWorldLayerAction.class);
     private File worldFile;
 
@@ -42,7 +43,7 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction implements IP
         new Thread(new Runnable() {
 
             public void run() {
-                SumoPlatform.setInfo("Importing land coastline "+name,-1);
+                notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,"Importing land coastline "+name,-1));
                 try {
                 	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
                 	if(l!=null){
@@ -62,7 +63,7 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction implements IP
                 	}
                 } catch (Exception e) {
                 }
-                SumoPlatform.getApplication().setInfo(null);
+                notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"",-1));
             }
         }).start();
         return true;
@@ -78,65 +79,6 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction implements IP
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-
-	@Override
-	public boolean isDone() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getMaximum() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public int getCurrent() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-
-
-	@Override
-	public void setCurrent(int i) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setMaximum(int size) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-
-	@Override
-	public void setIndeterminate(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setDone(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
 
 
 

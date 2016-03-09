@@ -17,6 +17,7 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
@@ -45,7 +46,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
         if(shpFile!=null)
 	        new Thread(new Runnable() {
 	            public void run() {
-	                SumoPlatform.setInfo("Building new coastline ",-1);
+	            	notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,"Building new coastline "+name,-1));
 	                try {
 	                	ImageLayer  l=LayerManager.getIstanceManager().getCurrentImageLayer();
 	                	if(l!=null){
@@ -71,7 +72,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 	                	}
 	                } catch (Exception e) {
 	                }
-	                SumoPlatform.getApplication().setInfo(null);
+	            	notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,""+name,-1));
 	            }
 	        }).start();
         return true;
@@ -116,45 +117,5 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 	}
 
 
-	@Override
-	public boolean isIndeterminate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getMaximum() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public int getCurrent() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public void setCurrent(int i) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setMaximum(int size) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setIndeterminate(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

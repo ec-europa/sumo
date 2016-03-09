@@ -14,31 +14,37 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.geoimage.viewer.core.api.iactions.IAction;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
 /**
  *
  * @author leforth
  */
-public abstract class SumoAbstractAction extends AbstractAction implements IAction,IProgressListener {
+public abstract class SumoAbstractAction extends AbstractAction implements ISumoAction {
 	protected String name=null;
 	protected String absolutePath=null;
 	protected Map<String,String> paramsAction;
 	protected boolean done=false;
-	protected String message="";
 
+	//used for the progress bar
+	protected int  actionSteps=-1;
 
+	protected List<SumoActionListener> actionListeners=null ;
 
 
 	@Override
-	public abstract boolean execute();//String[] args);
+	public abstract boolean execute();
 
 	public Map<String, String> getParamsAction() {
 		return paramsAction;
 	}
 
+	public boolean isDone(){
+		return done;
+	}
 
 
 	public void setParamsAction(Map<String, String> paramsAction) {
@@ -105,51 +111,26 @@ public abstract class SumoAbstractAction extends AbstractAction implements IActi
 	}
 
 
-	@Override
-	public boolean isDone() {
-		return done;
+	public void addSumoActionListener(SumoActionListener listener){
+		actionListeners.add(listener);
 	}
 
-	@Override
-	public void setDone(final boolean value) {
-		done=value;
+	public void removeSumoActionListener(SumoActionListener listener){
+		actionListeners.remove(listener);
 	}
 
-	@Override
-	public void setMessage(String message) {
-		this.message=message;
-	}
-	@Override
-	public String getMessage() {
-		return message;
+	public void notifyEvent(SumoActionEvent event){
+		for(SumoActionListener list:actionListeners){
+
+		}
 	}
 
+	public int getActionSteps() {
+		return actionSteps;
+	}
 
-
-	@Override
-	public abstract String getDescription() ;
-
-	@Override
-	public abstract boolean isIndeterminate() ;
-
-
-	@Override
-	public abstract int getMaximum();
-
-	@Override
-	public abstract int getCurrent();
-
-
-	@Override
-	public abstract void setCurrent(int i);
-
-	@Override
-	public abstract void setMaximum(int size);
-
-
-	@Override
-	public abstract void setIndeterminate(boolean value);
-
-
+	public void setActionSteps(int actionSteps) {
+		this.actionSteps = actionSteps;
+	}
 
 }

@@ -26,7 +26,8 @@ import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
@@ -41,7 +42,7 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @author thoorfr
  */
-public class AddInterpolatedConsoleAction extends SumoAbstractAction implements IProgressListener {
+public class AddInterpolatedConsoleAction extends SumoAbstractAction {
 	private  org.slf4j.Logger logger=LoggerFactory.getLogger(AddInterpolatedConsoleAction.class);
 
     private JFileChooser fd;
@@ -49,7 +50,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
 
     public AddInterpolatedConsoleAction() {
     	super("interpolatedvector","Import/Interpolated Vector");
-    	super.message = "Adding data. Please wait...";
     	if(lastDirectory==null)
     		lastDirectory = java.util.ResourceBundle.getBundle("GeoImageViewer").getString("image_directory");
         fd = new JFileChooser(lastDirectory);
@@ -68,6 +68,10 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
         }
         done = false;
         try {
+        	String message = "Adding Image. Please wait...";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
+
+
         	String type=paramsAction.get("data type");
             if (type.equals("shp")) {
                 addShapeFile();
@@ -235,22 +239,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
     }
 
 
-    public boolean isIndeterminate() {
-        return true;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public int getMaximum() {
-        return 1;
-    }
-
-    public int getCurrent() {
-        return 1;
-    }
-
 
     public List<Argument> getArgumentTypes() {
         Argument a1 = new Argument("data type", Argument.STRING, false, "image","data type");
@@ -266,18 +254,6 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction implements 
         return out;
     }
 
-    public void setCurrent(int i) {
-    }
-
-    public void setMaximum(int size) {
-    }
-
-    public void setIndeterminate(boolean value) {
-    }
-
-    public void setDone(boolean value) {
-        done = value;
-    }
 
 
 }

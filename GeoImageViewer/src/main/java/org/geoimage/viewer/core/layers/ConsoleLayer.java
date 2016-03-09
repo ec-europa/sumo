@@ -22,7 +22,7 @@ import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.PluginsManager;
 import org.geoimage.viewer.core.SumoPlatform;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.api.iactions.IConsoleAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -60,7 +60,7 @@ public class ConsoleLayer extends GenericLayer {
                         return;
                     }
                     Object a = pl.getActions().get(c);
-                    if (!(a instanceof IAction)) {
+                    if (!(a instanceof ISumoAction)) {
                         return;
                     }
                     if(a instanceof AbstractConsoleAction){
@@ -164,9 +164,9 @@ public class ConsoleLayer extends GenericLayer {
         	raf.close();
         }
     }
-    
+
     /**
-     * 
+     *
      * @param script
      * @throws Exception
      */
@@ -222,15 +222,15 @@ public class ConsoleLayer extends GenericLayer {
     public void setName(String name) {
         //do nothing
     }
-    
+
     /**
-     * 
+     *
      * @param context
      */
     public void render(OpenGLContext context) {
-        if (currentAction != null) {
+        /*if (currentAction != null) {
             if (currentAction.isDone()) {
-                SumoPlatform.setInfo(((IAction) currentAction).getName() + " done", 10000);
+                SumoPlatform.setInfo(((ISumoAction) currentAction).getName() + " done", 10000);
                 currentAction = null;
             } else {
                 if (currentAction.isIndeterminate()) {
@@ -240,7 +240,7 @@ public class ConsoleLayer extends GenericLayer {
                 }
 
             }
-        }
+        }*/
     }
 
     public boolean isRadio() {
@@ -250,9 +250,9 @@ public class ConsoleLayer extends GenericLayer {
     public String getDescription() {
         return "Inline Console";
     }
-    
+
     /**
-     * 
+     *
      */
     public void addChar(char c) {
         if (c == '\n') {
@@ -303,7 +303,7 @@ public class ConsoleLayer extends GenericLayer {
     }
 
     public void updateTab(JTabbedPane jTabbedPane1) {
-        for (final IAction act : pl.getActions().values()) {
+        for (final ISumoAction act : pl.getActions().values()) {
             if (!pl.getPlugins().get(act.getName()).isActive()) {
                 continue;
             }
@@ -323,14 +323,13 @@ public class ConsoleLayer extends GenericLayer {
         }
     }
 
-	public IProgressListener getCurrentAction() {
+	public SumoAbstractAction getCurrentAction() {
 		return currentAction;
 	}
 
 	public void setCurrentAction(SumoAbstractAction currentAction) {
 		this.currentAction = currentAction;
 	}
-
 
 
 

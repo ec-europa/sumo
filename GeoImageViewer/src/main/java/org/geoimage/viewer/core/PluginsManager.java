@@ -14,7 +14,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geoimage.viewer.actions.AddGenericWorldLayerAction;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.jrc.sumo.util.files.ClassPathHacker;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +22,14 @@ public class PluginsManager {
 	private final EntityManagerFactory emf;
 	private Map<String, Plugins> plugins;
 	private String[] commands;
-	private Map<String, IAction> actions;
+	private Map<String, ISumoAction> actions;
 	
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PluginsManager.class);
 
 	 
 	public PluginsManager() {
 		plugins = new HashMap<String, Plugins>();
-		actions = new HashMap<String, IAction>();
+		actions = new HashMap<String, ISumoAction>();
 		
         emf = Persistence.createEntityManagerFactory("GeoImageViewerPU");
 
@@ -48,7 +48,7 @@ public class PluginsManager {
         em.getTransaction().commit();
 
         em.close();
-        List<IAction> landActions=getDynamicActionForLandmask();
+        List<ISumoAction> landActions=getDynamicActionForLandmask();
         parseActions(dbPlugins);
         
         parseActionsLandMask(landActions);
@@ -77,12 +77,12 @@ public class PluginsManager {
 	            		//ClassLoader cls = ClassLoader.getSystemClassLoader();
 	            		//Object temp = cls.loadClass(classes[i]).newInstance();
 		                Object temp = Class.forName(classes[i]).newInstance();
-		                if (temp instanceof IAction) {
+		                if (temp instanceof ISumoAction) {
 		                    Plugins p = new Plugins(classes[i]);
 		                    p.setActive(Boolean.TRUE);
 		                    p.setJarUrl(temp.getClass().getProtectionDomain().getCodeSource().getLocation().toString());
 		                    em.persist(p);
-		                    IAction action = (IAction) temp;
+		                    ISumoAction action = (ISumoAction) temp;
 		                    getPlugins().put(action.getName(), p);
 		                    logger.info(temp.toString() + " added");
 		                }
@@ -121,7 +121,7 @@ public class PluginsManager {
         em.getTransaction().commit();
 
         em.close();
-        List<IAction> landActions=getDynamicActionForLandmask();
+        List<ISumoAction> landActions=getDynamicActionForLandmask();
 
         parseActions(dbPlugins);
         parseActionsLandMask(landActions);
@@ -132,8 +132,8 @@ public class PluginsManager {
         for (Plugins p : plugins) {
             try {
                 Object temp = instanciate(p);
-                if (temp instanceof IAction) {
-                    IAction action = (IAction) temp;
+                if (temp instanceof ISumoAction) {
+                    ISumoAction action = (ISumoAction) temp;
                     getActions().put(action.getName(), action);
                     getPlugins().put(action.getName(), p);
                     System.out.println(temp.toString() + " added");
@@ -145,8 +145,8 @@ public class PluginsManager {
         commands = getActions().keySet().toArray(new String[getActions().size()]);
     }
     
-    private void parseActionsLandMask(List<IAction> acts) {
-        for (IAction act : acts) {
+    private void parseActionsLandMask(List<ISumoAction> acts) {
+        for (ISumoAction act : acts) {
             try {
             	Plugins p=new Plugins(act.getClass().getName());
 				p.setActive(Boolean.TRUE);
@@ -164,7 +164,7 @@ public class PluginsManager {
     /**
      * @return the actions
      */
-    public Map<String, IAction> getActions() {
+    public Map<String, ISumoAction> getActions() {
         return actions;
     }
     public String[] getCommands() {
@@ -172,14 +172,14 @@ public class PluginsManager {
 	}
 
     
-    private IAction instanciate(Plugins p) {
+    private ISumoAction instanciate(Plugins p) {
         try {
             ClassPathHacker.addFile(new File(new URI(p.getJarUrl())));
             //Thread thread = Thread.currentThread();
             //ClassLoader loader = thread.getContextClassLoader();
             //return (IAction)loader.loadClass(p.getClassName()).newInstance();
             //return (IAction)ClassLoader.getSystemClassLoader().loadClass(p.getClassName()).newInstance();
-            return (IAction) Class.forName(p.getClassName()).newInstance();
+            return (ISumoAction) Class.forName(p.getClassName()).newInstance();
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }
@@ -197,8 +197,8 @@ public class PluginsManager {
 	 /**
      * Create and return new actions dinamically for the land mask import options  
      */
-    private List<IAction> getDynamicActionForLandmask(){
-    	List<IAction> actions=new ArrayList<IAction>();
+    private List<ISumoAction> getDynamicActionForLandmask(){
+    	List<ISumoAction> actions=new ArrayList<ISumoAction>();
     	String folder=SumoPlatform.getApplication().getConfiguration().getCoastlinesFolder();
     	
     	File folderShapes=new File(folder);
