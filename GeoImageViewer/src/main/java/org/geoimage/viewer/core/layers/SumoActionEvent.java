@@ -10,6 +10,10 @@ public class SumoActionEvent {
 
 	private String message;
 	private int progress=0;
+	private int actionSteps=0;
+
+
+
 	private int eventType;
 
 
@@ -23,6 +27,19 @@ public class SumoActionEvent {
 		this.message=msg;
 		this.progress=progress;
 		this.eventType=eventType;
+	}
+
+	/**
+	 *
+	 * @param eventType
+	 * @param msg
+	 * @param progress
+	 */
+	public SumoActionEvent(int eventType,String msg,int progress,int numSteps) {
+		this.eventType=eventType;
+		this.message=msg;
+		this.progress=progress;
+		this.actionSteps=numSteps;
 	}
 
 
@@ -55,5 +72,12 @@ public class SumoActionEvent {
 		this.eventType = eventType;
 	}
 
+	public int getActionSteps() {
+		return actionSteps;
+	}
 
+
+	public void setActionSteps(int actionSteps) {
+		this.actionSteps = actionSteps;
+	}
 }

@@ -288,44 +288,45 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	@Override
 	public void startAnalysis() {
 		String message="Starting VDS Analysis";
-		super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message ,5));
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message ,0,5));
 	}
 	@Override
 	public void performVDSAnalysis(String message,int numSteps) {
 		if(!stopping){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,1));
+			this.actionSteps=numSteps;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,1,numSteps));
 		}
 	}
 	@Override
 	public void startBlackBorederAnalysis(String message) {
 		if(!stopping){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,2));
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,2,5));
 		}
 
 	}
 	@Override
 	public void startAnalysisBand(String message) {
 		if(!stopping){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,3));
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,3,5));
 		}
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
 		if(!stopping){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,4));
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,4,5));
 		}
 	}
 
 	@Override
 	public void agglomerating(String message) {
 		if(!stopping){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,5));
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,5,5));
 		}
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
-		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps));
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps,actionSteps));
 	}
 
 
