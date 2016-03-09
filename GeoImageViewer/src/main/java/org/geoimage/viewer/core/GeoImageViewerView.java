@@ -57,7 +57,7 @@ import org.geoimage.viewer.actions.AddLastImageAction;
 import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ILayerListener;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.gui.manager.LayerManagerWidget;
@@ -117,7 +117,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
     private GLU glu;
     private org.jdesktop.application.ResourceMap resourceMap;
     private javax.swing.ActionMap actionMap;
-    
+
     private static GLWindow window;
 
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoImageViewerView.class);
@@ -154,7 +154,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
     	resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(GeoImageViewerView.class);
         actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(GeoImageViewerView.class, this);
-    	
+
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
 
@@ -737,7 +737,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItemReloadPlugin= new javax.swing.JMenuItem();
-   
+
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -752,12 +752,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         vectormenu = new javax.swing.JMenu();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
-        
+
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         menuBar.setName("menuBar"); // NOI18N
         setMenuBar(menuBar);
         setMenus(menuBar);
-        
+
         statusPanel.setName("statusPanel"); // NOI18N
         statusPanelSeparator.setName("statusPanelSeparator"); // NOI18N
 
@@ -842,14 +842,14 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    
+
+
+
     public void setMenus(JMenuBar menubar) {
     	javax.swing.JMenu jMenuSystem = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
-    	
-        
+
+
         jMenuSystem.setText(resourceMap.getString("jMenuSystem.text")); // NOI18N
         jMenuSystem.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jMenuSystem.setName("jMenuSystem"); // NOI18N
@@ -873,23 +873,23 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         jMenuSystem.add(exitMenuItem);
         menuBar.add(jMenuSystem);
 
-        
+
         javax.swing.JMenu jMenuImport = new javax.swing.JMenu();
         jMenuImport.setText(resourceMap.getString("jMenuImport.text"));
         jMenuImport.setName(resourceMap.getString("jMenuImport.text"));
-        
+
         javax.swing.JMenuItem lastItem = new javax.swing.JMenuItem();
         lastItem.setText(resourceMap.getString("jMenuLast.text"));
         lastItem.setAction(actionMap.get("jMenuLast")); // NOI18N
         lastItem.setName("jMenuLast"); // NOI18N
         jMenuImport.add(lastItem);
         menuBar.add(jMenuImport);
-        
+
         javax.swing.JMenu jMenuTools = new javax.swing.JMenu();
         jMenuTools.setText(resourceMap.getString("jMenuTools.text"));
         jMenuTools.setName(resourceMap.getString("jMenuTools.text"));
         menuBar.add(jMenuTools);
-        
+
     	Map<String, JMenuItem> menus = new Hashtable<String, JMenuItem>();
         // fill with existing menu items
         for (int i = 0; i < menubar.getMenuCount(); i++) {
@@ -906,7 +906,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 
         JMenuItem temp = null;
         PluginsManager pl=SumoPlatform.getApplication().getPluginsManager();
-        for (final IAction action : pl.getActions().values()) {
+        for (final ISumoAction action : pl.getActions().values()) {
             if (!action.getPath().startsWith("$")) {
 	            if (!pl.getPlugins().get(action.getName()).isActive()) {
 	                continue;
@@ -923,6 +923,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		                } else {
 		                    if (i == path.length - 1) {
 		                    	((SumoAbstractAction)action).setMenuName(path[i]);
+		                    	((SumoAbstractAction)action).addSumoActionListener(SumoPlatform.getApplication());
 		                    	temp = new JMenuItem(action);
 		                    } else {
 		                        temp = new JMenu(path[i]);
@@ -954,11 +955,11 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focusGained
     refresh();
 }//GEN-LAST:event_focusGained
-	
+
 	@Action
 	public void jMenuLast() {
 		new AddLastImageAction().execute();
-	}	
+	}
 
     @Action
     public void infoDial() {
@@ -973,11 +974,11 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
  //   private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-   
+
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItemReloadPlugin;
-    
+
     private javax.swing.JTabbedPane jTabbedPane1;
     private GLCanvas mainCanvas;
     private javax.swing.JMenuBar menuBar;

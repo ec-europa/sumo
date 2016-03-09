@@ -11,6 +11,7 @@ import java.util.Vector;
 import org.geoimage.impl.GeotiffWriter;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.LoggerFactory;
 
@@ -36,13 +37,13 @@ public class ExportGeotiffAction extends SumoAbstractAction{
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    SumoPlatform.setInfo("Exporting file...", -1);
+                	notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,"Exporting file...",-1));
                     f.createNewFile();
                     GeotiffWriter.create(LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader(), 0,f.getAbsolutePath());
+                    notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Exporting file...",-1));
                 } catch (Exception ex) {
                 	logger.error(ex.getLocalizedMessage(),ex);
                 }
-                SumoPlatform.getApplication().setInfo("");
             }
         }).start();
         return true;
@@ -55,39 +56,5 @@ public class ExportGeotiffAction extends SumoAbstractAction{
         return out;
     }
 
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
 
-	@Override
-	public int getMaximum() {
-		return 0;
-	}
-
-	@Override
-	public int getCurrent() {
-		return 0;
-	}
-
-
-
-	@Override
-	public void setCurrent(int i) {
-
-	}
-
-	@Override
-	public void setMaximum(int size) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-
-	@Override
-	public void setIndeterminate(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
 }

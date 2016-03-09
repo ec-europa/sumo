@@ -75,49 +75,7 @@ public class DeleteConsoleAction extends SumoAbstractAction {
         return true;
     }
 
-
     public List<Argument> getArgumentTypes() {
         return null;
     }
-
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-
-
-	@Override
-	public int getMaximum() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getCurrent() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public void setCurrent(int i) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setMaximum(int size) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setIndeterminate(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-
 }

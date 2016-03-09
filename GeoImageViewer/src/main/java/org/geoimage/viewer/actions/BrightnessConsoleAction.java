@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Vector;
 
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -18,7 +18,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
  *
  * @author thoorfr
  */
-public class BrightnessConsoleAction extends SumoAbstractAction implements IAction	 {
+public class BrightnessConsoleAction extends SumoAbstractAction implements ISumoAction	 {
 
 	public BrightnessConsoleAction(){
 		super("","");
@@ -71,43 +71,4 @@ public class BrightnessConsoleAction extends SumoAbstractAction implements IActi
 	public void actionPerformed(ActionEvent e) {
 	}
 
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-	@Override
-	public boolean isDone() {
-		return false;
-	}
-
-	@Override
-	public int getMaximum() {
-		return 0;
-	}
-
-	@Override
-	public int getCurrent() {
-		return 0;
-	}
-
-
-	@Override
-	public void setCurrent(int i) {
-
-	}
-
-	@Override
-	public void setMaximum(int size) {
-
-	}
-
-	@Override
-	public void setIndeterminate(boolean value) {
-
-	}
-
-	@Override
-	public void setDone(boolean value) {
-	}
 }

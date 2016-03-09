@@ -10,7 +10,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ILayerManager;
-import org.geoimage.viewer.core.api.iactions.IAction;
+import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -20,7 +20,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
  *
  * @author thoorfr
  */
-public class HomeConsoleAction extends AbstractConsoleAction implements IAction{
+public class HomeConsoleAction extends AbstractConsoleAction implements ISumoAction{
 
 	public HomeConsoleAction(){
 		super("h");
