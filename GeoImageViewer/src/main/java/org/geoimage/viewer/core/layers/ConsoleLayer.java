@@ -164,7 +164,12 @@ public class ConsoleLayer extends GenericLayer {
         	raf.close();
         }
     }
-
+    
+    /**
+     * 
+     * @param script
+     * @throws Exception
+     */
     public void runScriptString(String script) throws Exception {
         String[] actionsscript = script.split("\n");
         for (int index = 0; index < actionsscript.length; index++) {
@@ -217,7 +222,11 @@ public class ConsoleLayer extends GenericLayer {
     public void setName(String name) {
         //do nothing
     }
-
+    
+    /**
+     * 
+     * @param context
+     */
     public void render(OpenGLContext context) {
         if (currentAction != null) {
             if (currentAction.isDone()) {
@@ -241,7 +250,10 @@ public class ConsoleLayer extends GenericLayer {
     public String getDescription() {
         return "Inline Console";
     }
-
+    
+    /**
+     * 
+     */
     public void addChar(char c) {
         if (c == '\n') {
             if (message.equals("")) {
