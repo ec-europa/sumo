@@ -91,7 +91,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
         }
         done = false;
         try {
-        	String message = "Adding Image. Please wait...";
+        	String message = "Adding Vector. Please wait...";
         	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
 
 
@@ -160,7 +160,11 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
             }
             if(lay!=null)
             	done=LayerManager.addLayerInThread(lay);
+
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION, "", -1));
+
         } catch (Exception e) {
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ACTION_ERROR, "Error importing layer", -1));
             errorWindow("Problem with import of vector data\n");
             done = true;
             return false;
