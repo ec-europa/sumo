@@ -26,7 +26,7 @@ import javax.swing.UIManager;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.util.GeometryExtractor;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -357,8 +357,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         protected void succeeded(Object result) {
             JOptionPane.showMessageDialog(null, "Analysis done!", "Message", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        class progress implements IProgressListener {
+/*
+        class progress implements SumoActionListener {
 
             private boolean done = false;
             private int max;
@@ -427,7 +427,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             public void setDone(boolean value) {
                 done = value;
             }
-        }
+        }*/
 
         private void runAnalysis(File f) {
      /*       if (new File(output + "/" + f.getParentFile().getName()).exists()) {
@@ -464,9 +464,9 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 // csv.save(gl, "EPSG:4326");
                 config.put(KmlIO.CONFIG_FILE, output + "/" + f.getParentFile().getName() + "/" + gl.getName() + ".sumo.kmz");
                 AbstractVectorIO kmzio = VectorIOFactory.createVectorIO(VectorIOFactory.KML, config);
-                
+
                 //TODO add the save method
-                
+
                 //kmzio.save(gl, "EPSG:4326",gir);
                 if (createThumbs && gl.getGeometries().size() < 200) {
                     ThumbnailsManager tm = new ThumbnailsManager(output + "/" + f.getParentFile().getName() + "/band" + i + "/");

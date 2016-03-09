@@ -19,6 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,8 @@ public class SendMailAction extends SumoAbstractAction  {
 
     public SendMailAction(){
     	super("sendmail","Tools/SendMail");
-    	super.message = "Sending email. Please wait...";
+    	String message = "Sending email. Please wait...";
+    	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
     }
 
 

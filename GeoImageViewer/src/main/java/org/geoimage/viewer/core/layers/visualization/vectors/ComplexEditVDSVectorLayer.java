@@ -235,7 +235,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	        }
 	        case ISave.OPT_EXPORT_THUMBS:{
 	            ThumbnailsManager tm = new ThumbnailsManager(file);
-	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, null,((ImageLayer)super.parent).getActiveBand());
+	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, -1,((ImageLayer)super.parent).getActiveBand());
 	            msgResult[0]="The thumnails have been successfully saved";
 	            break;
 	        }

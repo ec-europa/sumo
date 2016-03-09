@@ -10,6 +10,7 @@ import java.util.Vector;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 
@@ -46,7 +47,7 @@ public class BandSwitcherConsoleAction extends AbstractConsoleAction {
             	imL.setActiveBand(bb);
 
            		((ImageLayer)imL).setName(imL.getImageReader());
-                SumoPlatform.setInfo(imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()), 2000);
+                notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,imL.getImageReader().getBandName(((ImageLayer) l).getActiveBand()),-1));
             }
         }
         return true;

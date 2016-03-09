@@ -10,6 +10,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.geoimage.viewer.util.GeometryExtractor;
@@ -69,7 +70,7 @@ public class ViewTilesAction extends AbstractConsoleAction{
 	                }finally{
 	                	done=true;
 	                }
-	                SumoPlatform.getApplication().setInfo(null);
+	                notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"",-1));
 	            }
 	        }).start();
 	        return true;
@@ -120,52 +121,6 @@ public class ViewTilesAction extends AbstractConsoleAction{
 		}
 		return executeFromConsole();
 	}
-
-
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-
-	@Override
-	public boolean isDone() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getMaximum() {
-		return 0;
-	}
-
-
-	@Override
-	public int getCurrent() {
-		return 0;
-	}
-
-
-	@Override
-	public void setCurrent(int i) {}
-
-
-	@Override
-	public void setMaximum(int size) {}
-
-
-
-	@Override
-	public void setIndeterminate(boolean value) {
-	}
-
-
-	@Override
-	public void setDone(boolean value) {
-		this.done=value;
-	}
-
 
 
 

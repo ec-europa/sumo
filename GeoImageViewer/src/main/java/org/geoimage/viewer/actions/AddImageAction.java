@@ -16,7 +16,8 @@ import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * this class is called whenever we want to open an image. A new image consists in a new layer (SimpleVectorLayer).
  * thumbnails part need to be revised
  */
-public class AddImageAction extends SumoAbstractAction implements IProgressListener {
+public class AddImageAction extends SumoAbstractAction  {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AddImageAction.class);
     private JFileChooser fileChooser;
     private String lastDirectory;
@@ -40,7 +41,7 @@ public class AddImageAction extends SumoAbstractAction implements IProgressListe
 
     public AddImageAction() {
     	super("image","Import/Image");
-    	super.message = "Adding Image. Please wait...";
+
         if(SumoPlatform.getApplication().getConfiguration().getLastImage().equals("")){
             //AG set the default directory if no images have been opened before
             lastDirectory = SumoPlatform.getApplication().getConfiguration().getImageFolder();
@@ -64,6 +65,11 @@ public class AddImageAction extends SumoAbstractAction implements IProgressListe
         }
         done = false;
         try {
+
+        	String message = "Adding Image. Please wait...";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
+
+
         	String img=getParamValue("image_type");
             if (img.equals("image")) {
                 addImage();
@@ -121,7 +127,10 @@ public class AddImageAction extends SumoAbstractAction implements IProgressListe
 
         if (tempList==null||tempList.isEmpty()) {
             this.done = true;
-            this.setMessage("Could not open image file");
+            String message="Could not open image file";
+        	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ACTION_ERROR, message, -1));
+
+
             final String filename = paramsAction.get("image_name").split("=")[1];
             errorWindow("Could not open image file\n" + filename);
         } else {
@@ -180,23 +189,6 @@ public class AddImageAction extends SumoAbstractAction implements IProgressListe
 
     }
 
-    public boolean isIndeterminate() {
-        return true;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public int getMaximum() {
-        return 1;
-    }
-
-    public int getCurrent() {
-        return 1;
-    }
-
-
     public List<Argument> getArgumentTypes() {
         Argument a1 = new Argument("image_type", Argument.STRING, false, "image","data type");
         //AG import thumbnails removed
@@ -211,18 +203,6 @@ public class AddImageAction extends SumoAbstractAction implements IProgressListe
         return out;
     }
 
-    public void setCurrent(int i) {
-    }
-
-    public void setMaximum(int size) {
-    }
-
-
-    public void setIndeterminate(boolean value) {
-    }
-
-    public void setDone(boolean value) {
-    }
 
     public File listFiles(File file, String filter) {
         File[] entries = file.listFiles();

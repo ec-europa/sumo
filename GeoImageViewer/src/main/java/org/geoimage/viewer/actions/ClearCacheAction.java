@@ -12,11 +12,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.geoimage.viewer.core.layers.IProgressListener;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 
-public class ClearCacheAction extends SumoAbstractAction implements IProgressListener{
+public class ClearCacheAction extends SumoAbstractAction{
 	private Logger logger = LogManager.getLogger(this);
 
 	public ClearCacheAction(){
@@ -53,7 +54,7 @@ public class ClearCacheAction extends SumoAbstractAction implements IProgressLis
 			logger.error(e.getMessage());
 			return false;
 		}
-		setDone(true);
+    	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"cache cleaned...", -1));
 		return true;
 	}
 
@@ -63,47 +64,5 @@ public class ClearCacheAction extends SumoAbstractAction implements IProgressLis
 		return args;
 	}
 
-	@Override
-	public boolean isIndeterminate() {
-		return true;
-	}
-
-	@Override
-	public boolean isDone() {
-		return done;
-	}
-
-	@Override
-	public int getMaximum() {
-		return 0;
-	}
-
-	@Override
-	public int getCurrent() {
-		return 0;
-	}
-
-	@Override
-	public String getMessage() {
-		return "Clear the sumo cache?";
-	}
-
-	@Override
-	public void setCurrent(int i) {
-	}
-
-	@Override
-	public void setMaximum(int size) {
-	}
-
-	@Override
-	public void setIndeterminate(boolean value) {
-	}
-
-	@Override
-	public void setDone(boolean value) {
-		done=value;
-
-	}
 
 }

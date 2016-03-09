@@ -11,7 +11,7 @@ package org.geoimage.viewer.core.api.iactions;
  *
  * @author thoorfr
  */
-public interface IConsoleAction extends IAction{
+public interface IConsoleAction extends ISumoAction{
 
     public String getCommand();
 }

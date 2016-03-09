@@ -25,6 +25,7 @@ import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
@@ -39,9 +40,9 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	 */
 	private static final long serialVersionUID = 3649669297745164880L;
 
-    private int current = 0;
-    private int maximum = 3;
-    private boolean indeterminate;
+//    private int current = 0;
+//    private int maximum = 3;
+//    private boolean indeterminate;
     private GeoImageReader gir = null;
     private MaskVectorLayer coastlineMask = null;
     private MaskVectorLayer iceMasks = null;
@@ -246,7 +247,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
     }
 
 
-
+/*
 
     public boolean isIndeterminate() {
         return this.indeterminate;
@@ -281,62 +282,56 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
     public void setDone(boolean value) {
         done = value;
     }
-
+*/
 
 
 	@Override
 	public void startAnalysis() {
-		setCurrent(1);
-		message="Starting VDS Analysis";
+		String message="Starting VDS Analysis";
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message ,5));
 	}
 	@Override
 	public void performVDSAnalysis(String message,int numSteps) {
 		if(!stopping){
-			setMaximum(numSteps);
-			setCurrent(1);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,1));
 		}
 	}
 	@Override
 	public void startBlackBorederAnalysis(String message) {
 		if(!stopping){
-			setCurrent(1);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,2));
 		}
 
 	}
 	@Override
 	public void startAnalysisBand(String message) {
 		if(!stopping){
-			setCurrent(2);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,3));
 		}
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
 		if(!stopping){
-			setCurrent(3);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,4));
 		}
 	}
 
 	@Override
 	public void agglomerating(String message) {
 		if(!stopping){
-			setCurrent(4);
-			this.message=message;
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,5));
 		}
 	}
 
 	public void nextVDSAnalysisStep(int numSteps){
-		setCurrent(numSteps);
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps));
 	}
 
 
 	@Override
 	public void endAnalysis() {
-		setDone(true);
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"End Analysis",-1));
 		SumoPlatform.getApplication().getMain().removeStopListener(this);
 
 		if(proc!=null)
@@ -350,7 +345,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 		}else{
 			if(proc!=null&&e.getActionCommand().equals("STOP")){
 				this.proc.setStop(true);
-				this.message="stopping";
+				super.notifyEvent(new SumoActionEvent(SumoActionEvent.STOP_ACTION,"stopping",-1));
 				SumoPlatform.getApplication().getMain().removeStopListener(this);
 				this.proc=null;
 			}
@@ -364,6 +359,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 		}
 
 	}
+
 
 
 }

@@ -13,6 +13,7 @@ import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.jdesktop.application.Application;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author thoorfr
  */
-public class SumoPlatform extends SingleFrameApplication {
+public class SumoPlatform extends SingleFrameApplication implements SumoActionListener{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(SumoPlatform.class);
 
     private static boolean batchMode=false;
@@ -144,46 +145,7 @@ public class SumoPlatform extends SingleFrameApplication {
     }
 
 
-    public void setInfo(String info) {
-        setInfo(info, 10000);
-    }
 
-    public static void setInfo(String info, long timeout) {
-        //AG progress bar management
-        int progress = 0;//AG
-        GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
-        if (info == null || "".equals(info)) {
-        	mainView.setInfo("");
-            maxPBar = 0;//AG
-            mainView.setProgressValue(0);//AG
-            mainView.setProgressMax(0);//AG
-            mainView.iconTimer(false);//AG
-            return;
-        }
-        if (timeout==-1) {//AG
-        	mainView.setProgressMax(-1);//AG
-        }
-        if (info.startsWith("Adding ")) {//AG
-        	mainView.setProgressMax(-1);//AG
-        } else if (info.startsWith("loading ")) {//AG
-            progress = new Integer(info.replace("loading ", ""));      //AG
-        }//AG
-        else if(timeout>0){
-        	mainView.setProgressMax(0);//AG
-        }
-        if (maxPBar < progress) {//AG
-            maxPBar = progress;//AG
-            mainView.setProgressMax(maxPBar);//AG
-            mainView.iconTimer(true);//AG
-        }
-        mainView.setInfo(info);
-        mainView.setProgressValue(maxPBar - progress);//AG
-        if (progress == 1) {//AG
-            maxPBar = 0;//AG
-            mainView.setProgressValue(0);//AG
-            mainView.iconTimer(false);//AG
-        }
-    }
 
 
     public GeoImageReader getCurrentImageReader(){
@@ -215,4 +177,75 @@ public class SumoPlatform extends SingleFrameApplication {
             launch(SumoPlatform.class, args);
     }
 
+
+
+	@Override
+	public void stop(String actionName) {
+		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
+		mainView.setInfo(" done", 10000);
+	}
+
+
+	@Override
+	public void updateProgress(String msg,int progress,int max) {
+		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
+		if(progress==-1){
+            mainView.setInfo(msg);
+            mainView.iconTimer(true);
+        } else {
+            mainView.iconTimer(true);//AG
+            mainView.setInfo(progress + "/" + max + " " + msg);
+		}
+
+	}
+
+	@Override
+	public void startAction(String message,int size) {
+		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
+		mainView.setInfo(message);
+		maxPBar = 0;//AG
+		if(size==-1){//indeterminate
+            mainView.setProgressMax(0);//AG
+            mainView.iconTimer(false);//AG
+		}else{
+			mainView.setProgressMax(size);
+			mainView.iconTimer(true);//AG
+		}
+		mainView.setProgressValue(0);//AG
+	}
+
+	@Override
+	public void setMessageInfo(String msg) {
+		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
+		mainView.setInfo(msg);
+	}
+
+
+
+
+/*
+	public static void setInfo(String info, long timeout) {
+        //AG progress bar management
+        int progress = 0;//AG
+
+        if (timeout==-1) {//AG
+        	mainView.setProgressMax(-1);//AG
+        }
+        if (info.startsWith("Adding ")) {//AG
+        	mainView.setProgressMax(-1);//AG
+        } else if (info.startsWith("loading ")) {//AG
+            progress = new Integer(info.replace("loading ", ""));      //AG
+        }//AG
+        else if(timeout>0){
+        	mainView.setProgressMax(0);//AG
+        }
+
+        mainView.setInfo(info);
+        mainView.setProgressValue(maxPBar - progress);//AG
+        if (progress == 1) {//AG
+            maxPBar = 0;//AG
+            mainView.setProgressValue(0);//AG
+            mainView.iconTimer(false);//AG
+        }
+    }*/
 }
