@@ -130,7 +130,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 			}else if(event.getEventType()==SumoActionEvent.STOP_ACTION){
 				list.stop(this.name);
 			}else if(event.getEventType()==SumoActionEvent.UPDATE_STATUS){
-				list.updateProgress(event.getMessage(), event.getProgress(), this.actionSteps);
+				list.updateProgress(event.getMessage()!=null?event.getMessage():" ", event.getProgress(), event.getActionSteps());
 			}
 
 		}
