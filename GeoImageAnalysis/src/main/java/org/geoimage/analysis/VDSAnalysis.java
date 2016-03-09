@@ -716,8 +716,8 @@ public class VDSAnalysis{
         if (coastMask == null&&iceMask==null) {
             return false;
         }
-        if (coastMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)||
-        		iceMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if ((coastMask!=null && coastMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile))||
+        		(iceMask!=null&&iceMask.intersects(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile))) {
             return true;
         }
         return false;
@@ -736,8 +736,8 @@ public class VDSAnalysis{
             return false;
         }
 
-        if (coastMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)||
-        		iceMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile)) {
+        if ((coastMask!=null && coastMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile))||
+        		(iceMask!=null&&iceMask.includes(xLeftTile, yTopTile, xRightTile - xLeftTile, yBottomTile - yTopTile))) {
             return true;
         }
 
