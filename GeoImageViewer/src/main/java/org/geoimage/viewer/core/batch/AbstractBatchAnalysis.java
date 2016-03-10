@@ -129,11 +129,11 @@ public abstract class AbstractBatchAnalysis {
         MaskGeometries mg=null;
         if(mask!=null)
         	mg=new MaskGeometries(mask.getName(),mask.getGeometries());
-        
+
         MaskGeometries icemg=null;
         if(iceMask!=null)
         	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
-        
+
 
         analysis = new VDSAnalysis(reader,
         		mg,
@@ -217,7 +217,10 @@ public abstract class AbstractBatchAnalysis {
 
     		   //copy the xml in the folder for ingestion => copy the merged for multiple band or the single xml
     		   try{
-	    		   if(layerResults.size()==1||l.getBand().equals("Merged")&&params.xmlOutputFolder!=null){
+    			   if(params.xmlOutputFolder==null||params.outputFolder.equals("")){
+    				   params.xmlOutputFolder=folder.getParent();
+    			   }
+	    		   if(layerResults.size()==1||l.getBand().equals("Merged")){
 	    			   FileUtils.copyFile(outFile,new File( params.xmlOutputFolder+File.separator+reader.getImId()+".xml"));
 	    		   }
     	   	   }catch(Exception e){
