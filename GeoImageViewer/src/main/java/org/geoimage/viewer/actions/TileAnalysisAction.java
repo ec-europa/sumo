@@ -48,7 +48,8 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	boolean done=false;
 	private int xx = 0;
     private int yy = 0;
-    private int tileSize = 0;
+    private int tileSizeX = 0;
+    private int tileSizeY = 0;
     private boolean stopping=false;
     private AnalysisProcess proc=null;
 
@@ -182,7 +183,8 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 					yy=analysis.getRealSizeY()*row;
 					xx=analysis.getRealSizeX()*col;
-					tileSize=analysis.getTileSize();
+					tileSizeY=analysis.getRealSizeY();
+					tileSizeX=analysis.getRealSizeY();
 
 				}
 			}
@@ -269,9 +271,9 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 			com.vividsolutions.jts.geom.Polygon box;
 			try {
 				double[] v1=new double[]{xx,yy};
-				double[] v2=new double[]{xx+tileSize,yy};
-				double[] v3=new double[]{xx+tileSize,yy+tileSize};
-				double[] v4=new double[]{xx,yy+tileSize};
+				double[] v2=new double[]{xx+tileSizeX,yy};
+				double[] v3=new double[]{xx+tileSizeY,yy+tileSizeX};
+				double[] v4=new double[]{xx,yy+tileSizeY};
 				double[] v5=new double[]{xx,yy};
 				box = PolygonOp.createPolygon(v1,v2,v3,v4,v5);
 				List <Geometry>gg=new ArrayList<>();
