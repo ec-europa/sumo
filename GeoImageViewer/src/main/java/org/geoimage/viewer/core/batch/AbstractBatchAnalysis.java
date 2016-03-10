@@ -217,7 +217,7 @@ public abstract class AbstractBatchAnalysis {
 
     		   //copy the xml in the folder for ingestion => copy the merged for multiple band or the single xml
     		   try{
-    			   if(params.xmlOutputFolder==null||params.outputFolder.equals("")){
+    			   if(params.xmlOutputFolder==null||params.outputFolder.trim().equals("")){
     				   params.xmlOutputFolder=folder.getParent();
     			   }
 	    		   if(layerResults.size()==1||l.getBand().equals("Merged")){
