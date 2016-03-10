@@ -30,7 +30,6 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 
     private static boolean batchMode=false;
     private PluginsManager plManager=null;
-    private static int maxPBar = 0;
 
 
     /*private static Thread currentThreadRunning=null;
@@ -183,6 +182,7 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 	public void stop(String actionName) {
 		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
 		mainView.setInfo(" done", 10000);
+		mainView.iconTimer(false);
 	}
 
 
@@ -192,9 +192,13 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 		if(progress==-1){
             mainView.setInfo(msg);
             mainView.iconTimer(true);
+            mainView.setProgressMax(1);
         } else {
             mainView.iconTimer(true);//AG
             mainView.setInfo(progress + "/" + max + " " + msg);
+            mainView.setProgressValue(progress);//AG
+            if(max>0)
+            	mainView.setProgressMax(max);//AG
 		}
 
 	}
@@ -203,9 +207,8 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 	public void startAction(String message,int size) {
 		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
 		mainView.setInfo(message);
-		maxPBar = 0;//AG
 		if(size==-1){//indeterminate
-            mainView.setProgressMax(0);//AG
+            mainView.setProgressMax(1);//AG
             mainView.iconTimer(false);//AG
 		}else{
 			mainView.setProgressMax(size);

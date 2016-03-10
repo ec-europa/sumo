@@ -12,6 +12,7 @@ import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
+import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
@@ -25,12 +26,17 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.util.JTSUtil;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
+import org.geotools.data.shapefile.shp.JTSUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
 
 
 public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,ActionListener{
@@ -40,9 +46,9 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	private static final long serialVersionUID = 1L;
 	private Logger logger = LoggerFactory.getLogger(TileAnalysisAction.class);
 	boolean done=false;
-	private int current = 0;
-    private int maximum = 3;
-    private boolean indeterminate;
+	private int xx = 0;
+    private int yy = 0;
+    private int tileSize = 0;
     private boolean stopping=false;
     private AnalysisProcess proc=null;
 
@@ -169,9 +175,15 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 					analysis.setyTileToAnalyze(row);
 					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis,0,0);
 					proc.addProcessListener(this);
+
 					Thread t=new Thread(proc);
 	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
 	                t.start();
+
+					yy=analysis.getRealSizeY()*row;
+					xx=analysis.getRealSizeX()*col;
+					tileSize=analysis.getTileSize();
+
 				}
 			}
 		} catch (Exception e) {
@@ -253,6 +265,21 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	@Override
 	public void layerReady(ILayer layer) {
 		if(!SumoPlatform.isBatchMode()){
+			ComplexEditGeometryVectorLayer clayer=(ComplexEditGeometryVectorLayer)layer;
+			com.vividsolutions.jts.geom.Polygon box;
+			try {
+				double[] v1=new double[]{xx,yy};
+				double[] v2=new double[]{xx+tileSize,yy};
+				double[] v3=new double[]{xx+tileSize,yy+tileSize};
+				double[] v4=new double[]{xx,yy+tileSize};
+				double[] v5=new double[]{xx,yy};
+				box = PolygonOp.createPolygon(v1,v2,v3,v4,v5);
+				List <Geometry>gg=new ArrayList<>();
+				gg.add(box);
+				clayer.addGeometries("Tile", Color.YELLOW,2,GeometricLayer.POLYGON, gg, true);
+			} catch (ParseException e) {
+				logger.warn("box not added");
+			}
 			LayerManager.getIstanceManager().addLayer(layer);
 		}
 	}
