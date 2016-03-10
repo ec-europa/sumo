@@ -40,6 +40,8 @@ public class VDSAnalysis{
     private int tileSize;
     private int verTilesImage=0;
     private int horTilesImage=0;
+    private int realSizeX=0;
+	private int realSizeY=0;
 
 	private final double MIN_TRESH_FOR_ANALYSIS=0.7;
 
@@ -96,8 +98,22 @@ public class VDSAnalysis{
         progressListener=new ArrayList<ProgressListener>();
     }
 
+    public int getRealSizeX() {
+		return realSizeX;
+	}
+	public int getRealSizeY() {
+		return realSizeY;
+	}
 
-
+	public int getVerTilesImage() {
+		return verTilesImage;
+	}
+	public int getHorTilesImage() {
+		return horTilesImage;
+	}
+	public void setTileSize(int tileSize) {
+		this.tileSize = tileSize;
+	}
 	public boolean isAnalyseSingleTile() {
 		return analyseSingleTile;
 	}
@@ -204,8 +220,8 @@ public class VDSAnalysis{
         float thresholdBand=this.thresholdsBandParams.get(bb);
 
         // the real size of tiles
-        final int sizeX = gir.getWidth() / horTilesImage;
-        final int sizeY = gir.getHeight() / verTilesImage;
+        realSizeX = gir.getWidth() / horTilesImage;
+        realSizeY = gir.getHeight() / verTilesImage;
 
 
         int xLeftTile=0;
@@ -227,13 +243,13 @@ public class VDSAnalysis{
 
         	if(rowIndex==verTilesImage-1){
             	//the last tiles have more pixels so we need to calculate the real size
-            	dy=gir.getHeight()-((verTilesImage-1)*sizeY)-sizeY;
+            	dy=gir.getHeight()-((verTilesImage-1)*realSizeY)-realSizeY;
             }
 
             xLeftTile = 0;
             xRightTile = 0;//gir.getWidth();
-            yTopTile = rowIndex * sizeY;
-            yBottomTile = yTopTile + sizeY+dy; //dx is always 0 except on the last tile
+            yTopTile = rowIndex * realSizeY;
+            yBottomTile = yTopTile + realSizeY+dy; //dx is always 0 except on the last tile
 
             int dx=0;
 
@@ -244,11 +260,11 @@ public class VDSAnalysis{
             	}
             	if(colIndex==horTilesImage-1){
             		//the last tiles have more pixels so we need to calculate the real size
-                	dx=(gir.getWidth()-((horTilesImage-1)*sizeX))-sizeX;
+                	dx=(gir.getWidth()-((horTilesImage-1)*realSizeX))-realSizeX;
                 }
 
-                xLeftTile = colIndex * sizeX;   //x start tile
-                xRightTile = xLeftTile + sizeX+dx; //dx is always 0 except on the last tile
+                xLeftTile = colIndex * realSizeX;   //x start tile
+                xRightTile = xLeftTile + realSizeX+dx; //dx is always 0 except on the last tile
 
                 boolean containsMinPixelValid=false;
 
@@ -262,7 +278,7 @@ public class VDSAnalysis{
                         continue;
 
 
-                    maskdata=createDataMask(xLeftTile, yTopTile, sizeX, sizeY, dx, dy);
+                    maskdata=createDataMask(xLeftTile, yTopTile, realSizeX, realSizeY, dx, dy);
                     //count invalid pixel (land)
                     int inValidPixelCount = 0;
                     for(int count = 0; count < maskdata.length; count++)
@@ -271,7 +287,7 @@ public class VDSAnalysis{
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
 
                     if(!containsMinPixelValid){
-                    	maskdata=createDataMask(xLeftTile-30, yTopTile-30, sizeX+30, sizeY+30, dx, dy);
+                    	maskdata=createDataMask(xLeftTile-30, yTopTile-30, realSizeX+30, realSizeY+30, dx, dy);
                         //count invalid pixel (land)
                         inValidPixelCount = 0;
                         for(int count = 0; count < maskdata.length; count++)
@@ -288,8 +304,8 @@ public class VDSAnalysis{
                 	//check if it is avalaible the bb analysis for this tile
             		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(rowIndex,colIndex);
 
-                    int[] data = gir.readTile(xLeftTile, yTopTile, sizeX+dx, sizeY+dy,band);
-                    kdist.setImageData(xLeftTile, yTopTile,sizeX+dx, sizeY+dy,band,bbAnalysis);
+                    int[] data = gir.readTile(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy,band);
+                    kdist.setImageData(xLeftTile, yTopTile,realSizeX+dx, realSizeY+dy,band,bbAnalysis);
                     kdist.estimate(maskdata,data);
 
                     double[] thresh = kdist.getDetectThresh();
@@ -297,25 +313,25 @@ public class VDSAnalysis{
 
                     double threshWindowsVals[]=AnalysisUtil.calcThreshWindowVals(thresholdBand, thresh);
 
-                    for (int k = 0; k < (sizeY+dy); k++) {
-                        for (int h = 0; h < (sizeX+dx); h++) {
+                    for (int k = 0; k < (realSizeY+dy); k++) {
+                        for (int h = 0; h < (realSizeX+dx); h++) {
                             // check pixel is in the sea
                             if(maskdata==null||(maskdata[h*k]==0)){//rastermask.getSample(h, k, 0) == 0)){
                                 int subwindow = 1;
-                                if (h < (sizeX+dx) / 2) {
-                                    if (k < (sizeY+dy) / 2) {
+                                if (h < (realSizeX+dx) / 2) {
+                                    if (k < (realSizeY+dy) / 2) {
                                         subwindow = 1;
                                     } else {
                                         subwindow = 3;
                                     }
                                 } else {
-                                    if (k < (sizeY +dy)/ 2) {
+                                    if (k < (realSizeY +dy)/ 2) {
                                         subwindow = 2;
                                     } else {
                                         subwindow = 4;
                                     }
                                 }
-                                int pix = data[k * (sizeX+dx) + h];
+                                int pix = data[k * (realSizeX+dx) + h];
                                 if (pix > threshWindowsVals[subwindow-1]) {
                                 	double tileAvg=thresh[subwindow] / thresh[5];
 
@@ -344,29 +360,40 @@ public class VDSAnalysis{
      *
      * @param xLeftTile
      * @param yTopTile
-     * @param sizeX
-     * @param sizeY
+     * @param realSizeX
+     * @param realSizeY
      * @param dx
      * @param dy
      * @return
      */
-    public int[] createDataMask(int xLeftTile, int yTopTile, int sizeX, int sizeY,int dx,int dy){
-    	// create raster mask //dx and dy are for tile on the border that have different dimensions
-        Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
-        //Read pixels for the area and check there are enough sea pixels
-        int[] maskdata = rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
-
+    public int[] createDataMask(int xLeftTile, int yTopTile, int realSizeX, int realSizeY,int dx,int dy){
+    	int[] maskdata =null;
+    	int size=0;
+    	if(coastMask!=null){
+	    	// create raster mask //dx and dy are for tile on the border that have different dimensions
+	        Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+	        //Read pixels for the area and check there are enough sea pixels
+	        maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+	        size=maskdata.length;
+    	}
         int[] iceMaskdata = null;
         if(iceMask!=null){
-        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, sizeX+dx, sizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
+        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
         	//Read pixels for ice
         	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
+        	size=maskdata.length;
         }
 
-        for(int count = 0; count < maskdata.length; count++){
+        if(iceMaskdata==null)
+        	return maskdata;
+        if(maskdata==null)
+        	return iceMaskdata;
+
+        //merge the maskdata
+        for(int count = 0; count < size; count++){
             //if the pixel is valid check if this pixel is ice
             if(maskdata[count]==0){
-            	if(iceMaskdata!=null&&iceMaskdata[count]==1){
+            	if(iceMaskdata[count]==1){
             		maskdata[count]=1;
             	}
             }
