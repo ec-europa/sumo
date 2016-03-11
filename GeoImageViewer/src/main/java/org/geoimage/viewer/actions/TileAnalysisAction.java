@@ -113,6 +113,11 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 							direction=arg2;
 						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
+
+						yy=borderAn.getSizeY()*row;
+						xx=borderAn.getSizeX()*col;
+						tileSizeY=borderAn.getSizeY();
+						tileSizeX=borderAn.getSizeX();
 					}
 			//run vds analysis on a single tile
 				}else if(arg0.equalsIgnoreCase("vds")){
@@ -178,11 +183,10 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
 	                t.start();
 
-					yy=analysis.getRealSizeY()*row;
+	                yy=analysis.getRealSizeY()*row;
 					xx=analysis.getRealSizeX()*col;
 					tileSizeY=analysis.getRealSizeY();
 					tileSizeX=analysis.getRealSizeY();
-
 				}
 			}
 		} catch (Exception e) {

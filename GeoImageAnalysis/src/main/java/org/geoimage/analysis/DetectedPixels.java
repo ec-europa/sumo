@@ -239,12 +239,17 @@ public class DetectedPixels {
      * @param rastermask
      * @return
      */
-    public boolean checkNeighbours(List<int[]> pixels, int[] imagemap,
+    public boolean checkNeighbours(List<int[]> pixels,
     		int[][] imagedata,
     		double[][] thresholdaggregate,
     		int[] position, int neighboursdistance,
     		int tilesize,
     		int[] rastermask) {
+
+    	int[] imagemap = new int[tilesize * tilesize];
+        for (int i = 0; i < tilesize * tilesize; i++) {
+            imagemap[i] = 0;
+        }
 
         int numberofbands = thresholdaggregate.length;
         // touches land flag
@@ -257,10 +262,8 @@ public class DetectedPixels {
         imagemap[position[0] + position[1] * tilesize] = 1;
         // search for all connected neighbours
         while (!localpixels.isEmpty()) {
-            // get pixel from local list
-            int[] localpixel = localpixels.get(0);
-            // remove pixel from local list
-            localpixels.remove(localpixel);
+            // get pixel from local list and remove pixel from local list
+            int[] localpixel = localpixels.remove(0);
             // check neighbouring pixels
             for (int i = localpixel[0] - neighboursdistance; i < localpixel[0] + neighboursdistance + 1; i++) {
                 for (int j = localpixel[1] - neighboursdistance; j < localpixel[1] + neighboursdistance + 1; j++) {
@@ -297,9 +300,7 @@ public class DetectedPixels {
                                 }
                             }
                             if (aggregated) {
-                                //String positionstring = i + " " + j;
                                 // add pixel to the list of pixels
-                                //pixels.put(positionstring, new int[]{i, j, value, clipped ? 1 : 0});
                             	pixels.add(new int[]{i, j, value, clipped ? 1 : 0});
                                 localpixels.add(new int[]{i, j});
                             }
@@ -311,12 +312,6 @@ public class DetectedPixels {
                 }
             }
         }
-        /*
-        // go through list
-        for(int[] pixel : localpixels)
-        if(checkNeighbours(pixels, imagemap, imagedata, thresholdaggregate, pixel, neighboursdistance, tilesize, rastermask))
-        result = true;
-         */
         return result;
     }
 
