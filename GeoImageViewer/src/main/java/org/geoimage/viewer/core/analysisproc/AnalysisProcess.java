@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.Boat;
+import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
 import org.geoimage.analysis.S1ArtefactsAmbiguity;
@@ -37,15 +38,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
 
-		//private MaskGeometries coastlineGeoms=null;
-		//private MaskGeometries iceGeoms=null;
-
 		private int buffer;
 		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
 		private boolean stop=false;
 		private double neighbouringDistance;
-		private int tilesize;
+		private int neighbourTilesize;
 		private boolean removelandconnectedpixels;
 		private boolean display;
 		private int numPointLimit=0;
@@ -94,17 +92,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			this.ENL=ENL;
 			this.analysis=analysis;
 
-/*
-            if(bufferedMask!=null&&bufferedMask.length>0){
-            	for(int i=0;i<bufferedMask.length;i++){
-            		if(bufferedMask[i].getType().equals(MaskVectorLayer.COASTLINE_MASK)){
-           	 			bufferedMaskName=bufferedMask[0].getName();
-           	 			this.coastlineGeoms=new MaskGeometries(bufferedMask[0].getGeometries());
-            		}else if(bufferedMask[i].getType().equals(MaskVectorLayer.ICE_MASK)){
-            			this.iceGeoms=new MaskGeometries(bufferedMask[0].getGeometries());
-            		}
-            	}
-            }*/
 			if(analysis.getCoastMask()!=null)
 				bufferedMaskName=analysis.getCoastMask().getMaskName();
 
@@ -115,7 +102,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			this.numPointLimit=numLimitPoint;
 
 			neighbouringDistance=SumoPlatform.getApplication().getConfiguration().getNeighbourDistance(1.0);
-            tilesize=SumoPlatform.getApplication().getConfiguration().getTileSize(200);
+            neighbourTilesize=SumoPlatform.getApplication().getConfiguration().getTileSize(200);
             removelandconnectedpixels = PlatformConfiguration.getConfigurationInstance().removeLandConnectedPixel();
             display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel()&&!SumoPlatform.isBatchMode();
             displaybandanalysis= SumoPlatform.getApplication().getConfiguration().getDisplayBandAnalysis();
@@ -140,11 +127,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             		 int[] sideToAnalyze=new int[]{-1 ,-1 ,-1 ,-1};
             		 if(analysis.getxTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[0]=BlackBorderAnalysis.ANALYSE_LEFT;
-            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/tilesize-SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/ConstantVDSAnalysis.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[1]=BlackBorderAnalysis.ANALYSE_RIGHT;
             		 if(analysis.getyTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[2]=BlackBorderAnalysis.ANALYSE_TOP;
-            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/tilesize-SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/ConstantVDSAnalysis.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[3]=BlackBorderAnalysis.ANALYSE_BOTTOM;
 
             		 blackBorderAnalysis.analyse(SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis(),sideToAnalyze);
@@ -222,7 +209,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                         if(stop)
 	                        	 break;
 
-	                         boats=analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, tilesize,removelandconnectedpixels,
+	                         boats=analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, neighbourTilesize,removelandconnectedpixels,
 	                         		 (analysis.getCoastMask() != null) ? analysis.getCoastMask() : null, kdist,polarization,band);
 	                     }
 
@@ -282,7 +269,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     mergePixels.computeBoatsAttributes("merge");
 	                 } else {
 	                     // method neighbours used
-	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, tilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
+	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, neighbourTilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
 	                 }
 	                 if(stop){
 	                     stop();

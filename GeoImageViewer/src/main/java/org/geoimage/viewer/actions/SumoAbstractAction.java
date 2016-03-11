@@ -89,7 +89,8 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
             	return;
             }
         }
-        execute();
+        Thread t=new Thread(() -> execute());
+        t.start();
     }
 
     public String getName() {
