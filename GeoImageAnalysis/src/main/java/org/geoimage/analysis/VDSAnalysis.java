@@ -65,6 +65,9 @@ public class VDSAnalysis{
         this.gir = gir;
         this.coastMask = coastMask;
         this.iceMask=iceMask;
+
+
+
         init(enlf);
 	}
 	/**
@@ -80,6 +83,7 @@ public class VDSAnalysis{
         this.gir = gir;
         this.coastMask = mask;
         this.iceMask=iceMask;
+
         init(enlf);
     }
 
@@ -93,6 +97,10 @@ public class VDSAnalysis{
 
         this.horTilesImage = gir.getWidth() / this.tileSize;
         this.verTilesImage = gir.getHeight() / this.tileSize;
+
+     // the real size of tiles
+        realSizeX = gir.getWidth() / horTilesImage;
+        realSizeY = gir.getHeight() / verTilesImage;
 
 
         progressListener=new ArrayList<ProgressListener>();
@@ -218,11 +226,6 @@ public class VDSAnalysis{
         DetectedPixels dpixels = new DetectedPixels(gir.getRangeSpacing(),gir.getAzimuthSpacing());
         String bb=((SarImageReader)gir).getBands()[band];
         float thresholdBand=this.thresholdsBandParams.get(bb);
-
-        // the real size of tiles
-        realSizeX = gir.getWidth() / horTilesImage;
-        realSizeY = gir.getHeight() / verTilesImage;
-
 
         int xLeftTile=0;
         int xRightTile=0;
@@ -493,21 +496,18 @@ public class VDSAnalysis{
             boolean pixelabove = false;
 
             for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-            	try{
-	                // average the tile mean values
-	                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
-	                // aggregate value is mean + 3 * std
-	                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
-	                // clip value is mean + 5 * std
-	                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
-	                // check the pixel is still above the new threshold
-	                int value = data[bandcounter][boatx + boaty * tilesize];
-	                if (value > thresholdvalues[bandcounter][1]) {
-	                    pixelabove = true;
-	                }
-            	}catch(Exception e){
-            		pixelabove=false;
-            	}
+
+                // average the tile mean values
+                double mean = (statistics[bandcounter][1] + statistics[bandcounter][2] + statistics[bandcounter][3] + statistics[bandcounter][4]) / 4;
+                // aggregate value is mean + 3 * std
+                thresholdvalues[bandcounter][0] = mean + 3 * mean * statistics[bandcounter][0];
+                // clip value is mean + 5 * std
+                thresholdvalues[bandcounter][1] = mean + 5 * mean * statistics[bandcounter][0];
+                // check the pixel is still above the new threshold
+                int value = data[bandcounter][boatx + boaty * tilesize];
+                if (value > thresholdvalues[bandcounter][1]) {
+                    pixelabove = true;
+                }
             }
 
             // add pixel only if above new threshold
@@ -542,7 +542,7 @@ public class VDSAnalysis{
                 	int i=0;
                 	int y=-1;
                 	for(;i<data[iBand].length;i++){
-                		int x=i%200;
+                		int x=i%200; //??? //TODO check this value , why it
                 		if(x==0)
                 			y++;
 
@@ -557,8 +557,6 @@ public class VDSAnalysis{
                 	tileAvg=tileAvg/i;
 
                 	double tileStdDev=treshTile[0] * threshTotal / treshTile[5];
-
-                	//boatpixel.putMeanValue(bb,(statistics[iBand][1] + statistics[iBand][2] + statistics[iBand][3] + statistics[iBand][4]) / 4);
                 	boatpixel.getStatMap().setTreshold(Precision.round((threshWindowsVals[0]+threshWindowsVals[1]+threshWindowsVals[2]+threshWindowsVals[3])/4,3),bb);
                 	boatpixel.getStatMap().setTileStd(Precision.round(tileStdDev,3),bb);
                 	boatpixel.getStatMap().setTileAvg(Precision.round(tileAvg,3),bb);
@@ -567,12 +565,9 @@ public class VDSAnalysis{
 
                 // start list of aggregated pixels
                 List<int[]> boataggregatedpixels = new ArrayList<int[]>();
-                int[] imagemap = new int[tilesize * tilesize];
-                for (int i = 0; i < tilesize * tilesize; i++) {
-                    imagemap[i] = 0;
-                }
 
-                boolean result = detPixels.checkNeighbours(boataggregatedpixels, imagemap, data,
+
+                boolean result = detPixels.checkNeighbours(boataggregatedpixels, data,
                 		thresholdvalues, new int[]{boatx, boaty},
                 		neighboursdistance, tilesize, dataMask);
                 // set flag for touching land
