@@ -474,14 +474,10 @@ public class VDSAnalysis{
 
             //read the area for the bands
             int[][] data = new int[numberbands][];
-            try{
-	            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
-	            	data[bandcounter] = gir.read(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
-	            }
-            }catch(IOException e){
-        		logger.error(e.getMessage());
-        		throw e;
-        	}
+
+            for (int bandcounter = 0; bandcounter < numberbands; bandcounter++) {
+           		data[bandcounter] = gir.read(cornerx, cornery, tilesize, tilesize,bands[bandcounter]);
+            }
 
             // calculate thresholds
             int row=(cornery+1)/this.verTilesImage;
@@ -516,15 +512,6 @@ public class VDSAnalysis{
 
             // add pixel only if above new threshold
             if (pixelabove) {
-            	// check if there is land in tile
-                /*Raster rastermask = null;
-                if (mask != null) {
-                    // check if land in tile
-                    if (mask.intersects(cornerx, cornery, tilesize, tilesize)) {
-                        // create raster mask
-                        rastermask = (mask.rasterize(cornerx, cornery, tilesize, tilesize, -cornerx, -cornery, 1.0)).getData();
-                    }
-                }*/
                 int[] dataMask=createDataMask(cornerx, cornery, tilesize, tilesize, 0,0);
                 // add pixel to the list
                 BoatConnectedPixelMap boatpixel = null;

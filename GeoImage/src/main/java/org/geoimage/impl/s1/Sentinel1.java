@@ -44,68 +44,68 @@ import jrc.it.xml.wrapper.SumoAnnotationReader;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 /**
- * 
- * 
- * @author 
+ *
+ *
+ * @author
  */
 public abstract class Sentinel1 extends SarImageReader {
 	protected int[] preloadedInterval = new int[]{0, 0};
 
     protected AffineTransform matrix;
-   
+
     protected Document doc;
-    
+
     protected double MGtTime = 0;
     protected double MGtauTime = 0;
-    
+
     protected Map<String, IReader> tiffImages;
 
     //protected List<String> bands = new ArrayList<String>();
     protected List<String> polarizations=null;
-    
-    
+
+
 	protected double xposition = 0;
     protected double yposition = 0;
     protected double zposition = 0;
-    
+
     protected File mainFolder;
     protected String swath=null;
     protected int ipfVersion=0;
-    
+
 	private Logger logger= LoggerFactory.getLogger(Sentinel1.class);
-	
+
 	protected String files[]=new String[1];
 	protected List<GeolocationGridPointType> points=null;
     protected List<String> tiffs=null;
-    
+
     protected String safeFilePath=null;
     protected String instumentationMode="";
-    
+
     @Override
     public abstract int[] readTile(int x, int y, int width, int height,int band);
     @Override
     public abstract void preloadLineTile(int y, int length,int band);
     @Override
 	public abstract File getOverviewFile() ;
-    
+
     protected String geolocationAlgorithm=null;
-    
+
     protected List<Swath> swaths=null;
-    
-    
+
+
     public Sentinel1(String swath,String manifestXMLPath,String geolocationMethod) {
-    	super(new File(manifestXMLPath)); 
-    	this.swath=swath;
-    	this.geolocationAlgorithm=geolocationMethod;
-    }
-    
-    public Sentinel1(String swath,File manifestXML,String geolocationMethod) {
-    	super(manifestXML); 
+    	super(new File(manifestXMLPath));
     	this.swath=swath;
     	this.geolocationAlgorithm=geolocationMethod;
     }
 
-    
+    public Sentinel1(String swath,File manifestXML,String geolocationMethod) {
+    	super(manifestXML);
+    	this.swath=swath;
+    	this.geolocationAlgorithm=geolocationMethod;
+    }
+
+
     @Override
     public int getNBand() {
         return polarizations.size();
@@ -118,7 +118,7 @@ public abstract class Sentinel1 extends SarImageReader {
 		this.ipfVersion = ipfVersion;
 	}
 
-    
+
     public String getInstumentationMode() {
 		return instumentationMode;
 	}
@@ -126,20 +126,20 @@ public abstract class Sentinel1 extends SarImageReader {
 		this.instumentationMode = instumentationMode;
 	}
 	/**
-     * read ground control points from xml annotation file. 
-     *   
-     * There is one annotation file for each tiff image 
+     * read ground control points from xml annotation file.
+     *
+     * There is one annotation file for each tiff image
      * The annotation files are files in annotation folder with name "tiff image name".xml
-     * 
+     *
      * @return list of ground control points
      */
     @Override
     public List<Gcp> getGcps() {
         if (gcps == null||gcps.size()==0) {
-	        	
+
         	//read the ground control points
             gcps = new ArrayList<Gcp>(points.size());
-			
+
             for(int index=0;index<points.size()-1;index++){
             	GeolocationGridPointType point=points.get(index);
             	Gcp gcp=new Gcp();
@@ -156,11 +156,11 @@ public abstract class Sentinel1 extends SarImageReader {
             	gcp.setZgeo(point.getHeight().getValue());
             	gcps.add(gcp);
             }
-        }    
+        }
         return gcps;
     }
 
-    
+
 
     @Override
     public String[] getFilesList() {
@@ -173,8 +173,8 @@ public abstract class Sentinel1 extends SarImageReader {
 	public void setGeolocationAlgorithm(String geolocationAlgorithm) {
 		this.geolocationAlgorithm = geolocationAlgorithm;
 	}
-    
-    
+
+
     @Override
     public boolean initialise() {
         try {
@@ -185,19 +185,19 @@ public abstract class Sentinel1 extends SarImageReader {
         	polarizations=safeReader.getProductInformation().getTransmitterReceiverPolarisation();
         	safeFilePath=safeReader.getSafefile().getAbsolutePath();
         	this.instumentationMode=safeReader.getInstrumentationMode();
-        	
+
         	this.ipfVersion=safeReader.getIPFVersion();
-        	
+
 			//set image properties
             tiffImages=getImages();
             String bandName=getBandName(0);
-            
+
             String nameFirstFile=tiffImages.get(bandName).getImageFile().getName();
             nameFirstFile=nameFirstFile.replace(".tiff", ".xml");
-			//load the correct annotation file for the current images (per swath) 
+			//load the correct annotation file for the current images (per swath)
 			mainFolder=manifestFile.getParentFile();
 			String annotationFilePath=new StringBuilder(mainFolder.getAbsolutePath()).append("/annotation/").append(nameFirstFile).toString();
-			
+
 			SumoAnnotationReader annotationReader=new SumoAnnotationReader(annotationFilePath);
 			//read the ground control points
         	points= annotationReader.getGridPoints();
@@ -205,7 +205,7 @@ public abstract class Sentinel1 extends SarImageReader {
         	super.pixelsize[0]=annotationReader.getImageInformation().getRangePixelSpacing().getValue();
         	super.pixelsize[1]=annotationReader.getImageInformation().getAzimuthPixelSpacing().getValue();
 
-			
+
             List<SwathMergeType> swathMerges=annotationReader.getSwathMerges();
             List<DownlinkInformationType> downInfos=annotationReader.getDownLinkInformationList();
             swaths=new ArrayList<Swath>();
@@ -221,25 +221,25 @@ public abstract class Sentinel1 extends SarImageReader {
             	s.setPrf(info.getPrf().getValue());
             	swaths.add(s);
             }
-            
+
         	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData(manifestFile,safeReader,annotationReader);
-            
+
             gcps = getGcps();
             if (gcps == null) {
                 dispose();
                 return false;
             }
-            
-            
-          //TODO: remove or change this control!!! 
+
+
+          //TODO: remove or change this control!!!
             if(geolocationAlgorithm.equalsIgnoreCase("ORB")&& this instanceof Sentinel1GRD){
                    geotransform = GeoTransformFactory.createFromOrbitVector(annotationReader);
-            }else{       
+            }else{
             	String epsg = "EPSG:4326";
             	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
             }
-            
+
             //read the first orbit position from the annotation file
             List<OrbitType> orbitList=annotationReader.getOrbits();
             if(orbitList!=null&&!orbitList.isEmpty()){
@@ -248,21 +248,21 @@ public abstract class Sentinel1 extends SarImageReader {
             	yposition=o.getPosition().getY().getValue();
             	zposition=o.getPosition().getZ().getValue();
             }
-            
+
             //use the middle orbit position to calculate the satellite speed
             VelocityType middlePos=orbitList.get(orbitList.size()/2).getVelocity();
             satelliteSpeed=Math.sqrt((middlePos.getX().getValue()*middlePos.getX().getValue()+
             		middlePos.getY().getValue()*middlePos.getY().getValue()+
             		middlePos.getZ().getValue()*middlePos.getZ().getValue()));
-            
-            
+
+
             //set the satellite altitude
             double radialdist = Math.pow(xposition * xposition + yposition * yposition + zposition * zposition, 0.5);
             double[] latlon = geotransform.getGeoFromPixel(0, 0);
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
-            
+
             double earthradial = Math.pow(position[0] * position[0] + position[1] * position[1] + position[2] * position[2], 0.5);
             setSatelliteAltitude(radialdist - earthradial);
 
@@ -283,27 +283,27 @@ public abstract class Sentinel1 extends SarImageReader {
         } catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
-        
+
         return false;
     }
 
-    
+
     /**
-     * 
+     *
      */
    @Override
    public double getPRF(int x,int y){
 	   Swath s=findSwath(x, y);
 	   return s.getPrf();
    }
-   
+
    public String getSwathName(int x,int y){
 	   Swath s=findSwath(x, y);
 	   return s.getName();
    }
-   
+
    /**
-    * 
+    *
     * @param x
     * @param y
     * @return
@@ -322,7 +322,7 @@ public abstract class Sentinel1 extends SarImageReader {
 			   int yMax=bound.getLastAzimuthLine().getValue().intValue();
 			   int xMin=bound.getFirstRangeSample().getValue().intValue();
 			   int xMax=bound.getLastRangeSample().getValue().intValue();
-			   
+
 			   if((x>=xMin && x<xMax)&&(y>=yMin&&y<yMax)){
 				   findPrf=true;
 				   break;
@@ -331,10 +331,10 @@ public abstract class Sentinel1 extends SarImageReader {
 		   }
 	   }
 	   return s;
-   } 
-    
+   }
+
    /**
-    * 
+    *
     * @return
     */
     private Map<String, IReader> getImages() {
@@ -346,30 +346,16 @@ public abstract class Sentinel1 extends SarImageReader {
     			}
     		}
     	}
-    	//bands=polarizations;
         return tiffsMap;
     }
-    
+
     @Override
     public int readPixel(int x, int y,int band) {
-       /* TIFFImageReadParam t = new TIFFImageReadParam();
-        t.setSourceRegion(new Rectangle(x, y, 1, 1));
-        TIFF tiff=null;
-        try {
-        	String b=getBandName(band);
-        	tiff=tiffImages.get(b);
-            return tiff.getReader().read(0, t).getRGB(0, 0);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }finally{
-        }
-       
-        return -1;*/
     	return read(x,y,1,1,band)[0];
     }
 
     /**
-	  * 
+	  *
 	  * @param x
 	  * @param y
 	  * @param width
@@ -383,25 +369,30 @@ public abstract class Sentinel1 extends SarImageReader {
        int data[]=null;
 
         TIFF tiff=(TIFF)getImage(band);
+        BufferedImage bi=null;
         try {
-            
-        	BufferedImage bi=null;
-    		bi=tiff.read(0, rect);
-    		DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
-    		short[] b=raster.getData();
-    		data=new int[b.length];
-        	for(int i=0;i<b.length;i++)
-        		data[i]=b[i];
-    		
+        	bi=tiff.read(0, rect);
         } catch (Exception ex) {
-            logger.warn(ex.getMessage());
+        	try {
+        		//try again
+        		Thread.sleep(100);
+				bi=tiff.read(0, rect);
+			} catch (IOException | InterruptedException e) {
+				logger.warn(ex.getMessage());
+			}
         }finally{
         }
-       
+        if(bi!=null){
+			DataBufferUShort raster=(DataBufferUShort)bi.getRaster().getDataBuffer();
+			short[] b=raster.getData();
+			data=new int[b.length];
+	    	for(int i=0;i<b.length;i++)
+	    		data[i]=b[i];
+        }
        return data;
    }
-    
-    
+
+
     @Override
     public String getBandName(int band) {
         return polarizations.get(band);
@@ -411,7 +402,7 @@ public abstract class Sentinel1 extends SarImageReader {
     }
 
     /**
-     * set the current band and the associate image 
+     * set the current band and the associate image
      *
     @Override
     public void setBand(int band) {
@@ -420,7 +411,7 @@ public abstract class Sentinel1 extends SarImageReader {
         	tiffImages=getImages();
     }*/
 
-   
+
     @Override
     public void dispose() {
     	super.dispose();
@@ -431,7 +422,7 @@ public abstract class Sentinel1 extends SarImageReader {
         tiffImages=null;
     }
 
-    
+
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
 	    orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
@@ -459,19 +450,19 @@ public abstract class Sentinel1 extends SarImageReader {
 
             output[0] = (int) FastMath.floor(deltaAzimuth);
             output[1] = (int) FastMath.floor(deltaRange);
-            
+
         } catch (Exception ex) {
         	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage(),ex);
         }
         return output;
     }
-    
+
 	public double getSlanteRange(double lat, double lon) {
 		return ((GeoTransformOrbitState)geotransform).getSlanteRangeDist(lon, lat);
 	}
-    
+
     /**
-     * 
+     *
      * @param productxml
      * @param safeReader
      * @param annotationReader
@@ -481,7 +472,7 @@ public abstract class Sentinel1 extends SarImageReader {
 
         	setSatellite(new String("Sentinel-1"));
         	setSwath(this.swath);
-        	
+
         	//polarizations string
         	StandAloneProductInformation prodInfo=safeReader.getProductInformation();
         	List<String> pols=prodInfo.getTransmitterReceiverPolarisation();
@@ -491,11 +482,11 @@ public abstract class Sentinel1 extends SarImageReader {
             }
             setPolarization(strPol);
             setSensor("S1");
-            
+
             //annotation header informations
             AdsHeaderType header=annotationReader.getHeader();
             setProduct(header.getProductType().value());
-            
+
             setSatelliteOrbitInclination(98.18);
             setOrbitDirection(safeReader.getOrbitDirection());
 
@@ -508,11 +499,11 @@ public abstract class Sentinel1 extends SarImageReader {
 			float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL(String.valueOf(enl));
 
-            String start=header.getStartTime().toString().replace('T', ' ');	
+            String start=header.getStartTime().toString().replace('T', ' ');
             String stop=header.getStopTime().toString().replace('T', ' ');
             setTimeStampStart(start);//Timestamp.valueOf(start));
             setTimeStampStop(stop);//Timestamp.valueOf(stop));
-            
+
             String bytesStr=annotationReader.getImageInformation().getOutputPixels();
             int bytes=Integer.parseInt(bytesStr.substring(0,3).trim())/8;
             setNumberOfBytes(bytes);
@@ -521,15 +512,15 @@ public abstract class Sentinel1 extends SarImageReader {
             setRadarWaveLenght(299792457.9 / radarFrequency);
             setRevolutionsPerday(14.5833);//repeat cycle of 12 days, cycle length of 175 days ==>175/12=14.5833
 
-            
+
     }
     @Override
     public Date getImageDate(){
     	Timestamp t=Timestamp.valueOf(getTimeStampStart());
     	return new Date(t.getTime());
     }
-    
-    
+
+
     @Override
     public int getNumberOfBytes() {
         return super.getNumberOfBytes();
@@ -552,28 +543,28 @@ public abstract class Sentinel1 extends SarImageReader {
         	return tiffImages.get(getBandName(band)).getImageFile().getName();
     	}catch(Exception e){
     		return "S1"+System.currentTimeMillis();
-    	}		
+    	}
     }
-    
+
     @Override
     public String getImgName() {
     	try{
     		String name=tiffImages.get(getBandName(0)).getImageFile().getParentFile().getParentFile().getName();
     		return name;
-    	}catch(Exception e ){			
+    	}catch(Exception e ){
     		return tiffImages.get(getBandName(0)).getImageFile().getName();
-    	}	
+    	}
     }
 
     @Override
     public double calcSatelliteSpeed(){
     	return satelliteSpeed;
     }
-        
+
     public String getInternalImage() {
   		return null;
   	}
-    
+
     public String getSwath() {
 		return swath;
 	}
@@ -582,12 +573,12 @@ public abstract class Sentinel1 extends SarImageReader {
 	public void setSwath(String swath) {
 		this.swath = swath;
 	}
-	
-	
+
+
 	public String getSafeFilePath(){
 		return safeFilePath;
 	}
-	
+
 
     @Override
 	public int getWidth() {
@@ -599,14 +590,14 @@ public abstract class Sentinel1 extends SarImageReader {
 	public int getHeight() {
 		return getImage(0).getySize();
 	}
-	
-	
+
+
 
 	public IReader getImage(int band){
 		IReader img=null;
 		try{
 			img = tiffImages.get(getBandName(band));
-		}catch(Exception e){ 
+		}catch(Exception e){
 			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
 		}
 		return img;
