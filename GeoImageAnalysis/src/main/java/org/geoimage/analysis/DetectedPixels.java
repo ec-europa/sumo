@@ -43,7 +43,7 @@ public class DetectedPixels {
 	        this.threshold = threshold;
 	        this.band = band;
 	    }
-	    
+
 	    @Override
 	    public boolean equals(Object o){
 			BoatPixel bp=(BoatPixel)o;
@@ -59,16 +59,16 @@ public class DetectedPixels {
    // private Boat[] boatArray = null;
     // size of the search window in meters
     private final int SEARCHWINDOW = 50;
-   
+
     private double pixsam;//range
 	private double pixrec;//azimuth
     private int searchwindowWidth = 1;
     private int searchwindowHeight = 1;
-    
+
     ArrayList<BoatConnectedPixelMap> listboatneighbours = new ArrayList<BoatConnectedPixelMap>();
 
     private Logger logger= LoggerFactory.getLogger(DetectedPixels.class);
-    
+
     public double getPixsam() {
 		return pixsam;
 	}
@@ -77,10 +77,10 @@ public class DetectedPixels {
 	public void setPixsam(double pixsam) {
 		this.pixsam = pixsam;
 	}
-    
-   
+
+
     /**
-     * 
+     *
      * @param gir
      */
     public DetectedPixels(double pixsam,double pixrec) {
@@ -97,9 +97,9 @@ public class DetectedPixels {
         }
     }
 
-    
+
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param value
@@ -131,7 +131,7 @@ public class DetectedPixels {
         }
     }
     /**
-     * 
+     *
      * @param pixels
      */
     // marge the detectedpixels
@@ -142,9 +142,9 @@ public class DetectedPixels {
         for (BoatPixel boat:boats) {
         	position.setLength(0);
             // do not add if position already exists
-            position = position.append(boat.x).append(" ").append(boat.y); 
+            position = position.append(boat.x).append(" ").append(boat.y);
             //if (allDetectedPixels.get(position.toString()) == null) {
-            	//if the value is already in the map it will be replaced 
+            	//if the value is already in the map it will be replaced
                 //allDetectedPixels.put(position.toString(), boat);
             //}
             if(!allDetectedPixels.contains(boat))
@@ -160,8 +160,8 @@ public class DetectedPixels {
     private List<BoatPixel> getDetectedPixels() {
         return allDetectedPixels;
     }
-    
-    
+
+
     private BoatPixel findboat(int x,int y){
     	for(BoatPixel bp:allDetectedPixels){
     		if(bp.x==x&&bp.y==y)
@@ -169,9 +169,9 @@ public class DetectedPixels {
     	}
     	return null;
     }
-    
+
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param id
@@ -206,7 +206,7 @@ public class DetectedPixels {
             }
         }
     }
-    
+
     public void agglomerate() {
     	BoatPixel[] boats = allDetectedPixels.toArray(new BoatPixel[0]);
         int id = -1;
@@ -228,7 +228,7 @@ public class DetectedPixels {
 
 
     /**
-     * 
+     *
      * @param pixels
      * @param imagemap
      * @param imagedata
@@ -239,13 +239,13 @@ public class DetectedPixels {
      * @param rastermask
      * @return
      */
-    public boolean checkNeighbours(List<int[]> pixels, int[] imagemap, 
-    		int[][] imagedata, 
-    		double[][] thresholdaggregate, 
-    		int[] position, int neighboursdistance, 
-    		int tilesize, 
+    public boolean checkNeighbours(List<int[]> pixels, int[] imagemap,
+    		int[][] imagedata,
+    		double[][] thresholdaggregate,
+    		int[] position, int neighboursdistance,
+    		int tilesize,
     		int[] rastermask) {
-    	
+
         int numberofbands = thresholdaggregate.length;
         // touches land flag
         boolean result = false;
@@ -275,13 +275,11 @@ public class DetectedPixels {
                         imagemap[i + j * tilesize] = 1;
                         // check if pixel is in sea
                         if ((rastermask == null) || (rastermask[i*j]==0)){//.getSample(i, j, 0) == 0)) {
-
-                        	
                         	boolean aggregated = false;
                             boolean clipped = false;
                             int value = 0;
-                            
-                            //calculate the max pixel value for all bands --> Here we use only one value!!!! 
+
+                            //calculate the max pixel value for all bands --> Here we use only one value!!!!
                             for (int band = 0; band < numberofbands; band++) {
                                 int pixelvalue = imagedata[band][i + tilesize * j];
 
@@ -322,21 +320,21 @@ public class DetectedPixels {
         return result;
     }
 
-  
+
     /**
-     * 
+     *
      */
     public void computeBoatsAttributes(String polarization) {
         Collection<List<int[]>> enumeration = aggregatedBoats.values();
         List <Boat> boatsTemp=new ArrayList<Boat>();
-        
+
         for (List<int[]>agBoat:enumeration) {
             // start with estimating length, size and heading
             double[] boatvalues = Compute.fLenWidHead(agBoat, this.pixsam, this.pixrec);
 
             // look for maximum brightness point in cluster
             int[][] it = agBoat.toArray(new int[0][]);
-        
+
             // get the first boat in the aggregate
             int[] pixel = null;
             if (it.length>0) {
@@ -344,13 +342,13 @@ public class DetectedPixels {
                 // store in the table the boat values and the estimated size, heading and bearing of the aggregate
                 String id=new StringBuilder().append(pixel[0]).append(" ").append(pixel[1]).toString();
                 BoatPixel pixelValue = aggregatedPixels.get(id);
-                
+
                 //boatvalues[0]=number of pixel boatvalues[1-2]= posx e posy  boatvalues[3-4-5]=length,width,heading
                 Boat boatValue=new Boat(pixelValue.id, boatvalues[1], boatvalues[2], boatvalues[0],
                 						boatvalues[3], boatvalues[4], boatvalues[5],
                 						pixelValue.value,pixelValue.tileAvg,pixelValue.tileStd,
                 						pixelValue.threshold,pixelValue.band,polarization);
-  
+
                 // look for maximum value in agglomerate
                 for (int i=1;i<it.length;i++) {
                     pixel = it[i];
@@ -360,7 +358,7 @@ public class DetectedPixels {
                     	boatValue.setMaxValue(pxBoat.value);
                     }
                 }
-                
+
                 // check if agglomerated boat has a width or a length larger than filterSize
                 if (boatValue.getLength() > ConstantVDSAnalysis.filterminSize && boatValue.getWidth() > ConstantVDSAnalysis.filterminSize) { //AG changed || to &&
 
@@ -373,26 +371,26 @@ public class DetectedPixels {
         }
         //boatsTemp.clear();
         //boatsTemp=sortBoats(boatsTemp);
-       // boatArray=boatsTemp.toArray(new Boat[0]);			
+       // boatArray=boatsTemp.toArray(new Boat[0]);
     }
 
-   
-    
-    
-   
+
+
+
+
 
     public Collection<BoatPixel> getAllDetectedPixelsValues() {
     	return allDetectedPixels;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public List<Geometry> getAllDetectedPixels() {
         List<Geometry> out = new ArrayList<Geometry>();
         GeometryFactory gf = new GeometryFactory();
-        
+
         BoatPixel[] enumeration = allDetectedPixels.toArray(new BoatPixel[0]);
         for (BoatPixel pixel:enumeration) {
             out.add(gf.createPoint(new Coordinate(pixel.x, pixel.y)));
@@ -426,9 +424,9 @@ public class DetectedPixels {
 
         return out;
     }
-    
-    
-    
-    
-   
+
+
+
+
+
 }
