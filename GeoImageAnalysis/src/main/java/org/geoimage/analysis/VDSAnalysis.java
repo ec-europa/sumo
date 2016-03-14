@@ -6,6 +6,7 @@ package org.geoimage.analysis;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,6 +66,10 @@ public class VDSAnalysis{
         this.gir = gir;
         this.coastMask = coastMask;
         this.iceMask=iceMask;
+        this.realSizeX=realSizeTileX;
+        this.realSizeY=realSizeTileY;
+        this.horTilesImage=horTilesImage;
+        this.verTilesImage=verTilesImage;
 
 
 
@@ -376,15 +381,22 @@ public class VDSAnalysis{
         if(maskdata==null)
         	return iceMaskdata;
 
+        int occur=0;
         //merge the maskdata
         for(int count = 0; count < size; count++){
             //if the pixel is valid check if this pixel is ice
             if(maskdata[count]==0){
             	if(iceMaskdata[count]==1){
             		maskdata[count]=1;
+            		occur++;
             	}
+            }else{
+            	occur++;
             }
         }
+
+        System.out.println(occur);
+
         return maskdata;
     }
 
