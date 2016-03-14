@@ -35,7 +35,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 
 
-public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener,ActionListener{
+public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener{
 	/**
 	 *
 	 */

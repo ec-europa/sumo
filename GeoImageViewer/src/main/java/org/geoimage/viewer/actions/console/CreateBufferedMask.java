@@ -26,7 +26,7 @@ public class CreateBufferedMask extends AbstractConsoleAction{
 	//private Logger logger = LogManager.getLogger(CreateBufferedMask.class);
 
 	public CreateBufferedMask() {
-		super("buffer","Tools/buffer");
+		super("buffer","$Tools/buffer");
 	}
 
 
