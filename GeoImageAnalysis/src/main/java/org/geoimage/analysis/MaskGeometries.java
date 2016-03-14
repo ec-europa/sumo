@@ -235,7 +235,9 @@ public class MaskGeometries {
      */
     public int[] getRasterDataMask(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
     	Rectangle rect=new Rectangle(x,y,w,h);
-        Raster rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor).getData();
+        BufferedImage bi = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+        Raster rastermask=bi.getData();
+       // this.saveRaster(bi, new File("/home/argenpo/cache/"+x+"_"+y+".bmp"));
     	int[] maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
     	return maskdata;
     }
@@ -256,7 +258,7 @@ public class MaskGeometries {
     	Rectangle rect=new Rectangle(x,y,w,h);
         BufferedImage rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor);
         try {
-			ImageIO.write(rastermask, "png", output);
+			ImageIO.write(rastermask, "bmp", output);
 			return true;
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
@@ -265,6 +267,16 @@ public class MaskGeometries {
 
     }
 
+    public boolean saveRaster(BufferedImage rastermask ,File output){
+        try {
+			ImageIO.write(rastermask, "bmp", output);
+			return true;
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			return false;
+		}
+
+    }
 
 
 

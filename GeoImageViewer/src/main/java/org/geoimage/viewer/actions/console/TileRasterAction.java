@@ -73,7 +73,7 @@ public class TileRasterAction extends AbstractConsoleAction {
 	                    	if(folderOut==null)
 	                    		folderOut=SumoPlatform.getApplication().getCachePath();
 
-                    		File output=new File(folderOut+File.separator+mask.getName()+".png");
+                    		File output=new File(folderOut+File.separator+mask.getName()+row+"_"+col+".bmp");
 
 	                    	int y=layer.getRealTileSizeY()*row;
 	    					int x=layer.getRealTileSizeX()*col;

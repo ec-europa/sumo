@@ -51,7 +51,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 
     public TileAnalysisAction(){
-    	super("chktile","Tools/CheckTile");
+    	super("chktile","none");
     }
 
 
