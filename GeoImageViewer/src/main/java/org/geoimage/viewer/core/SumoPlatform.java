@@ -148,12 +148,10 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 
 
     public GeoImageReader getCurrentImageReader(){
-    	if(isBatchMode()){
-    		return Sumo.getCurrentReader();
-    	}else{
+    	if(!isBatchMode()){
     		return LayerManager.getIstanceManager().getCurrentImageLayer().getImageReader();
     	}
-
+    	return null;
     }
 
 

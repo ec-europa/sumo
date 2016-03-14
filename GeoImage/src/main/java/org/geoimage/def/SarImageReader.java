@@ -43,7 +43,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     protected String displayName = "";
     protected String imgName = "";
     protected List<Gcp> gcps;
-    
+
     protected GeoTransform geotransform;
 
     protected boolean containsMultipleImage=false;
@@ -54,59 +54,26 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
     protected double satelliteSpeed;
     protected double orbitInclination;
-    
+
   /*  protected double radarWavelength;
     protected double revolutionsPerDay;*/
     final int defaultMargin=100;
     protected Polygon bbox=null;
-    
+
     protected double[] pixelsize={0.0,0.0};
     private Logger logger= LogManager.getLogger(SarImageReader.class);
-    
 
-	public SarImageReader(File manifest){
-    	manifestFile=manifest;
-    }
-    
-    public File getManifestFile() {
-		return manifestFile;
-	}
 
-	public void setManifestFile(File manifestFile) {
-		this.manifestFile = manifestFile;
-	}
-	
-	public double[] getPixelsize() {
-		return pixelsize;
-	}
-	
-	public String getImId(){
-		String imId="";
-		try{
-			String start=getTimeStampStart();
-			Timestamp tStart=Timestamp.valueOf(start);
-			
-			String sensor=getSensor();
-			SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd_HHmmss");
-			//base file name for the xml
-			imId=sensor+"_"+format.format(tStart);
-		}catch(Exception e){
-			imId=System.currentTimeMillis()+"";
-			logger.warn("Error calculating ImId",e.getMessage());
-		}	
-		return imId;
-	}	
-    
     /**
      * used for XML
      */
 	public abstract String getImgName();
 	@Override
-	public abstract String getDisplayName(int band); 
+	public abstract String getDisplayName(int band);
 	@Override
     public abstract int getWidth();
-	
-	
+
+
 	/**
 	 * return an array contains the image bands HH,HV,VV,VH
 	 * @return
@@ -115,12 +82,68 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
     @Override
     public abstract int getHeight();
-    
+
     public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
     //public abstract double getSlanteRange(double lat ,double lon);
-    
-   
-    
+    /**
+     *  read part of the image starting from x,y
+     *  NO CACHE
+     *
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param band
+     * @return
+     */
+     public abstract int[] read(int x, int y,int width,int height,int band) throws IOException;
+     /**
+      *
+      * @param x
+      * @param y
+      * @return
+      */
+     public abstract double getPRF(int x,int y);
+     @Override
+ 	public abstract File getOverviewFile();
+
+
+
+	public SarImageReader(File manifest){
+    	manifestFile=manifest;
+    }
+
+
+    public File getManifestFile() {
+		return manifestFile;
+	}
+
+	public void setManifestFile(File manifestFile) {
+		this.manifestFile = manifestFile;
+	}
+
+	public double[] getPixelsize() {
+		return pixelsize;
+	}
+
+	public String getImId(){
+		String imId="";
+		try{
+			String start=getTimeStampStart();
+			Timestamp tStart=Timestamp.valueOf(start);
+
+			String sensor=getSensor();
+			SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd_HHmmss");
+			//base file name for the xml
+			imId=sensor+"_"+format.format(tStart);
+		}catch(Exception e){
+			imId=System.currentTimeMillis()+"";
+			logger.warn("Error calculating ImId",e.getMessage());
+		}
+		return imId;
+	}
+
+
     public void dispose(){
     	overViewImage=null;
     }
@@ -133,22 +156,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     public GeoTransform getGeoTransform() {
         return geotransform;
     }
-    
-   /**
-    *  read part of the image starting from x,y
-    *  NO CACHE
-    *  
-    * @param x
-    * @param y
-    * @param w
-    * @param h
-    * @param band
-    * @return
-    */
-    public abstract int[] read(int x, int y,int width,int height,int band) throws IOException;
-    
+
     /**
-     * 
+     *
      * @param margin
      * @return
      * @throws Exception
@@ -168,7 +178,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setBbox(Polygon bbox) {
 		this.bbox = bbox;
 	}
-    
+
     @Override
     public int[] readAndDecimateTile(int x, int y, int width, int height, int outWidth, int outHeight,int xSize,int ySize, boolean filter,int band) {
         if (x + width < 0 || y + height < 0 || x > xSize || y > ySize) {
@@ -211,9 +221,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
             float decY = height / (1f * outHeight);
             int index = 0;
             for (int i = 0; i < FastMath.ceil(incy); i++) {
-                int tileHeight = (int) FastMath.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
+                int tileHeight = (int) FastMath.min(Constant.GEOIMAGE_TILE_SIZE, height - i * Constant.GEOIMAGE_TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, FastMath.round(tileHeight / decY),xSize,ySize, filter,band);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.GEOIMAGE_TILE_SIZE, width, tileHeight, outWidth, FastMath.round(tileHeight / decY),xSize,ySize, filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -221,7 +231,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
                             }
                         }
                     } else {
-                        index += outWidth * (int) (Constant.TILE_SIZE / decY);
+                        index += outWidth * (int) (Constant.GEOIMAGE_TILE_SIZE / decY);
                     }
                     temp = null;
                 }
@@ -277,7 +287,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     }
 
     /**
-     * 
+     *
      */
     public double getImageAzimuth(){
         double az = 0;
@@ -292,12 +302,12 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	        az = gc.getAzimuth();
         }catch(GeoTransformException ge){
         	logger.warn(ge.getLocalizedMessage());
-        }    
+        }
         return az;
     }
-    
+
     /**
-     * 
+     *
      * @param margin
      * @return
      * @throws ParseException
@@ -307,67 +317,67 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     public Polygon buildBox(int margin) throws ParseException, GeoTransformException, CQLException{
 		   double h=getHeight();
 		   double w=getWidth();
-		
+
 	    GeoTransform gt = getGeoTransform();
 	    //int margin=PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0);
-	    
-	    
+
+
         double[] p0 = gt.getGeoFromPixel(-margin, -margin);
-        
+
         double[] p1 = gt.getGeoFromPixel(margin  + w/3, -margin);
         double[] p2 = gt.getGeoFromPixel(margin+w/2, -margin); //image center coords
-        
+
         double[] p3 = gt.getGeoFromPixel(margin + w*2/3, -margin ); //image center coords
         double[] p4 = gt.getGeoFromPixel(margin + w, -margin);
-        
+
         double[] p5 = gt.getGeoFromPixel(margin + w, h/3); //image center coords
         double[] p6 = gt.getGeoFromPixel(margin + w, h/2); //image center coords
-        double[] p7 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords        
+        double[] p7 = gt.getGeoFromPixel(margin + w, h*2/3); //image center coords
 
         double[] p8 = gt.getGeoFromPixel(margin + w, margin + h); //bottom right corner
-        
-        
+
+
         double[] p9 = gt.getGeoFromPixel(margin + w*2/3, margin +h); //image center coords
         double[] p10 = gt.getGeoFromPixel(margin + w/2, margin +h); //image center coords
         double[] p11 = gt.getGeoFromPixel(margin  + w/3, margin+h);
-        
-        
+
+
         double[] p12 = gt.getGeoFromPixel(-margin, margin + h);
-        
+
         double[] p13 = gt.getGeoFromPixel(-margin, h/3); //image center coords
         double[] p14 = gt.getGeoFromPixel(-margin, h/2); //image center coords
         double[] p15 = gt.getGeoFromPixel(-margin, h*2/3); //image center coords
-        
+
 
         //poligono con punti di riferimento dell'immagine
         Polygon imageP=PolygonOp.createPolygon(p0,p13,p14,p15,p12,p11,p10,p9,p8,p7,p6,p5,p4,p3,p2,p1,p0);
         imageP=(Polygon) imageP;//.buffer(0);
         logger.debug("Polygon imageP isvalid:"+imageP.isValid());
-        
+
         return imageP;
 	}
-    
+
     /**
      * Calculate the incidence angle
      */
     public double getIncidence(int position) {
     	double incidenceangle = 0.0;
     	try{
-	        
+
 	        // estimation of incidence angle based on near and range distance values
 	        double nearincidence = FastMath.toRadians(getIncidenceNear().doubleValue());
 	        double sataltitude=getSatelliteAltitude();
-	        
+
 	        double distancerange = sataltitude * FastMath.tan(nearincidence) + position * this.getPixelsize()[0];
 	        incidenceangle = FastMath.atan(distancerange / sataltitude);
     	}catch(Exception e){
     		logger.warn("Error calculatiing incidence angle:"+e.getMessage());
-    	}    
+    	}
         return incidenceangle;
     }
 
     /**
-     * calculate satellite speed 
+     * calculate satellite speed
      * @return
      */
     public double calcSatelliteSpeed() {
@@ -387,7 +397,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         return satellite_speed;
     }
     /**
-     * 
+     *
      */
     public double getSlantRange(int position,double incidenceAngle) {
         double slantrange = 0.0;
@@ -399,15 +409,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
         }
         return slantrange;
     }
-    
-    /**
-     * 
-     * @param x
-     * @param y
-     * @return
-     */
-    public abstract double getPRF(int x,int y); 
-    
+
     public double getBetaNought(int x, double DN) {
         double Kvalue = getK();
         return Math.pow(DN, 2) / Kvalue;
@@ -513,12 +515,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setContainsMultipleImage(boolean containsMultipleImage) {
 		this.containsMultipleImage = containsMultipleImage;
 	}
-	
 
-	@Override
-	public abstract File getOverviewFile();
-	
-	
+
 	public BufferedImage getOverViewImage() {
 		return overViewImage;
 	}
@@ -526,7 +524,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 	public void setOverViewImage(BufferedImage overViewImage) {
 		this.overViewImage = overViewImage;
 	}
-	 
+
 	@Override
     public Date getImageDate(){
 	 //TODO check this

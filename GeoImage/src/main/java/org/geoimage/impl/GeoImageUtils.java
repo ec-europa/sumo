@@ -24,7 +24,7 @@ public class GeoImageUtils {
      * @return a BufferedImage representing the quicklook
      */
     public static BufferedImage createOverview(GeoImageReader gir, int width, int height,int band){
-        int nPass=gir.getHeight()/Constant.TILE_SIZE;
+        int nPass=gir.getHeight()/Constant.GEOIMAGE_TILE_SIZE;
         int xstep=gir.getWidth()/width;
         int ystep=gir.getHeight()/height;
         width=gir.getWidth()/xstep;
@@ -32,7 +32,7 @@ public class GeoImageUtils {
         BufferedImage out=new BufferedImage(width,height, BufferedImage.TYPE_USHORT_GRAY);
         WritableRaster raster=out.getRaster();
         for(int i=0;i<nPass;i++){
-            int[] t=gir.readTile(0, i*Constant.TILE_SIZE, gir.getWidth(), Constant.TILE_SIZE,band);
+            int[] t=gir.readTile(0, i*Constant.GEOIMAGE_TILE_SIZE, gir.getWidth(), Constant.GEOIMAGE_TILE_SIZE,band);
             for(int x=0;x<width;x++){
                 for(int y=i*height/nPass;y<(i+1)*height/nPass;y++){
                     raster.setSample(x, y, 0, t[x*xstep*(y-i*height/nPass)*ystep]);

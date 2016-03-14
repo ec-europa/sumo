@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.geoimage.def.GeoImageReader;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -62,7 +63,7 @@ public class BlackBorderAnalysis {
 	private int bandAnalysis=0;
 
 
-	public BlackBorderAnalysis(GeoImageReader gir,int tSize,List<Geometry> land) {
+	public BlackBorderAnalysis(GeoImageReader gir,int hTileSize,int vTileSize,List<Geometry> land) {
 		this.gir=gir;
 
 		//if there is an image with cross-pol (HV or VH) we use it
@@ -75,29 +76,14 @@ public class BlackBorderAnalysis {
 				}
 			}
 		}
-		if(tSize==0){
-			//define the size of the tiles
-			tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
-			if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
-		}else{
-			this.tileSize=tSize;
-		}
-
-		horTiles = gir.getWidth() / tileSize;
-		verTiles = gir.getHeight() / tileSize;
-
 
 		 // the real size of tiles
-        sizeX = gir.getWidth() / horTiles;     //x step
-        sizeY = gir.getHeight() / verTiles;	   //y step
+        sizeX = hTileSize;    //x step
+        sizeY = vTileSize;	   //y step
 
         iNPixExtremes=tileSize/10;
 
         this.land=land;
-	}
-
-	public BlackBorderAnalysis(GeoImageReader gir,List<Geometry> land) {
-		this(gir,0,land);
 	}
 
 	public int getSizeX() {

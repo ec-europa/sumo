@@ -466,9 +466,9 @@ public class EnvisatImage extends SarImageReader {
             float decY = height / (1f * outHeight);
             int index = 0;
             for (int i = 0; i < Math.ceil(incy); i++) {
-                int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
+                int tileHeight = (int) Math.min(Constant.GEOIMAGE_TILE_SIZE, height - i * Constant.GEOIMAGE_TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, 
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.GEOIMAGE_TILE_SIZE, width, 
                     		tileHeight, outWidth, Math.round(tileHeight / decY), xSize, ySize,  filter,band);
                     int min = Math.min(temp.length, outData.length - index);
                     for (int j = 0; j < min; j++) {

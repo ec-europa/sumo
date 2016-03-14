@@ -14,6 +14,7 @@ import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.geoimage.viewer.util.GeometryExtractor;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,8 @@ public class ViewTilesAction extends AbstractConsoleAction{
 	                        try {
 	                        	GeoImageReader gir=l.getImageReader();
 	                        	if(tileSize==0){
-	                        		tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
-	                        		if(tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
+	                        		tileSize = (int)(Constant.TILESIZE / gir.getPixelsize()[0]);
+	                        		if(tileSize < Constant.TILESIZEPIXELS) tileSize = Constant.TILESIZEPIXELS;
 	                        	}
 
 	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader().getWidth(),l.getImageReader().getHeight(),tileSize);

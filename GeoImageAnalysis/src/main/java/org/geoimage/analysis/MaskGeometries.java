@@ -4,12 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import org.apache.xml.resolver.apps.resolver;
 import org.geoimage.utils.PolygonOp;
 import org.slf4j.LoggerFactory;
 
@@ -28,16 +34,16 @@ public class MaskGeometries {
 	private String maskName=null;
 	private Map<String,Boolean> intersectedMapCache=null;
     private Map<String,Boolean> includesMapCache=null;
-	
+
 	public List<Geometry> getMaskGeometries() {
 		return maskGeometries;
 	}
 	public void setMaskGeometries(List<Geometry> maskGeometries) {
 		this.maskGeometries = maskGeometries;
 	}
-	
-    
-    
+
+
+
     public String getMaskName() {
 		return maskName;
 	}
@@ -50,28 +56,28 @@ public class MaskGeometries {
     	intersectedMapCache=new HashMap<String,Boolean>();
     	includesMapCache=new HashMap<String,Boolean>();
 	}
-    
-    
-    
-	
+
+
+
+
 	private Boolean checkInIncludesCache(int x, int y, int width, int height){
 		return includesMapCache.get(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString());
 	}
 	private void putInIncludesCache(int x, int y, int width, int height,Boolean intersects){
 		includesMapCache.put(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString(),intersects);
 	}
-	
-	
+
+
 	private Boolean checkInIntersectionCache(int x, int y, int width, int height){
 		return intersectedMapCache.get(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString());
 	}
 	private void putInIntersectionCache(int x, int y, int width, int height,Boolean intersects){
 		intersectedMapCache.put(new StringBuilder().append(x).append("_").append(y).append("_").append(width).append("_").append(height).toString(),intersects);
 	}
-   
-	
+
+
 	 /**
-     * 
+     *
      */
     public boolean includes(int x, int y, int width, int height) {
       /*   if (getType().equals("point")) {
@@ -81,7 +87,7 @@ public class MaskGeometries {
     	 Boolean includesLandCache=checkInIncludesCache(x, y, width, height);
          if(includesLandCache!=null)
          	return includesLandCache.booleanValue();
-   
+
          try {
             WKTReader wkt = new WKTReader();
             StringBuilder polyStr=new StringBuilder("POLYGON((" )
@@ -95,8 +101,8 @@ public class MaskGeometries {
             						.append((y + height)).append(",")
             						.append(x).append(" ")
             						.append(y).append("))");
-            
-            Geometry geom = wkt.read(polyStr.toString());       
+
+            Geometry geom = wkt.read(polyStr.toString());
             for (Geometry p : maskGeometries) {
                 if (geom.within(p)) {
                 	putInIncludesCache(x, y, width, height, true);
@@ -133,8 +139,8 @@ public class MaskGeometries {
         }
         return false;
     }
-    
-    
+
+
     public boolean intersects(int x, int y, int width, int height) {
         Boolean intersectLandCache=checkInIntersectionCache(x, y, width, height);
         if(intersectLandCache!=null)
@@ -142,42 +148,42 @@ public class MaskGeometries {
 
     	boolean intersectLand=false;
         try {
-            
+
             double[][]c={{x,y},{(x + width),y},{(x + width),(y + height)},{x, (y + height)},{x, y}};
-            
+
             Geometry geom =(Geometry)(PolygonOp.createPolygon(c));
             GeometryFactory builder = new GeometryFactory();
-            
+
             	if(maskGeometries!=null&&!maskGeometries.isEmpty()){
             		for (int idx=0;idx<maskGeometries.size()&&intersectLand==false;idx++) {
 		            	Geometry p=(Geometry) maskGeometries.get(idx);
-		            	
-		            	
+
+
 	            		/*for(int i=0;i<p.getNumGeometries();i++){
 	            			Geometry g=p.getGeometryN(i);
-	            			
+
 	            			if(!g.isValid()){*/
 	            				//TODO: change this part for performance
 		            			/* Coordinate[] cs=g.getCoordinates();
 			            		 List<Coordinate>lcs=new ArrayList<Coordinate>();
 			            		 lcs.addAll(Arrays.asList(cs));
 			            		 lcs.add(cs[0]);
-			            		 
+
 			            		Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 	            				*/
 	            	/*			Geometry g2=g.buffer(0);
 
 			            		 if (g2.intersects(geom)) {
 			            			 intersectLand= true;
-			            		 }		
+			            		 }
 		            		}else{
-		            			if (g.intersects(geom)) 
+		            			if (g.intersects(geom))
 		            				intersectLand=true;
 		            		}
 	            		}*/
-		            	
-		            	
-		            	
+
+
+
 		            	if(p instanceof MultiPolygon){
 		            		MultiPolygon mp=(MultiPolygon)p;
 		            		for(int i=0;i<mp.getNumGeometries();i++){
@@ -192,12 +198,12 @@ public class MaskGeometries {
 
 				            		 if (e.intersects(geom)) {
 				            			 intersectLand= true;
-				            		 }		
+				            		 }
 			            		}else{
-			            			if (g.intersects(geom)) 
+			            			if (g.intersects(geom))
 			            				intersectLand=true;
 			            		}
-		            		}	
+		            		}
 		            	}else{
 		            		if(!p.isValid()){
 		            			 Coordinate[] cs=p.getCoordinates();
@@ -206,30 +212,62 @@ public class MaskGeometries {
 			            		 lcs.add(cs[0]);
 			            		 Geometry e=builder.createPolygon(lcs.toArray(new Coordinate[0]));
 			            		 e=e.buffer(0);
-			            		 if (e.intersects(geom)) 
+			            		 if (e.intersects(geom))
 			            			 intersectLand=true;
 		            		}else{
-		            			if (p.intersects(geom)) 
+		            			if (p.intersects(geom))
 		            				intersectLand=true;
 		            		}
-		            	} 
-		            	  
+		            	}
+
 		            }
-            	}	
+            	}
         } catch (ParseException ex) {
             logger.error(ex.getMessage(), ex);
         }
         putInIntersectionCache( x,  y,  width,  height, intersectLand);
         return intersectLand;
     }
-	
+
+
     /**
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
      */
-    public BufferedImage rasterize(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
+    public int[] getRasterDataMask(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
     	Rectangle rect=new Rectangle(x,y,w,h);
-    	return rasterize(rect, offsetX, offsetY, scalingFactor);
+        Raster rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor).getData();
+    	int[] maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+    	return maskdata;
     }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param offsetX
+     * @param offsetY
+     * @param scalingFactor
+     * @param output
+     * @return true if the raster is saved
+     */
+    public boolean saveRaster(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor,File output){
+    	Rectangle rect=new Rectangle(x,y,w,h);
+        BufferedImage rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+        try {
+			ImageIO.write(rastermask, "png", output);
+			return true;
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			return false;
+		}
+
+    }
+
+
+
+
     /**
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
      */
@@ -238,7 +276,7 @@ public class MaskGeometries {
     	// create the buffered image of the size of the Rectangle
         BufferedImage image = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_BYTE_BINARY);
         GeometryFactory gf = new GeometryFactory();
-        
+
         // define the clipping region in full scale
         Coordinate[] coords = new Coordinate[]{
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
@@ -246,11 +284,11 @@ public class MaskGeometries {
             new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
             new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),};
-        
+
         Polygon geom = gf.createPolygon(gf.createLinearRing(coords));
-        
+
         Graphics g2d = image.getGraphics();
-        
+
         g2d.setColor(Color.WHITE);
         for (Geometry p : maskGeometries) {
             if (p.intersects(geom)) {
@@ -267,6 +305,6 @@ public class MaskGeometries {
         }
         g2d.dispose();
         return image;
-        
+
     }
 }

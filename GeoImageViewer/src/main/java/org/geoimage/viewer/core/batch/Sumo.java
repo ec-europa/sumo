@@ -67,9 +67,9 @@ public class Sumo {
 		params.startDate=startDate;
 	}
 
-	public static GeoImageReader getCurrentReader(){
+	/*public static GeoImageReader getCurrentReader(){
 		return batch.getCurrentReader();
-	}
+	}*/
 
 	/**
 	 *
