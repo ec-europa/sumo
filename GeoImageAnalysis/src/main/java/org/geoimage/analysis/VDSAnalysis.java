@@ -4,7 +4,6 @@
  */
 package org.geoimage.analysis;
 
-import java.awt.image.Raster;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class VDSAnalysis{
     private DetectedPixels pixels;
     private MaskGeometries coastMask;
     private MaskGeometries iceMask;
-    private int tileSize;
+ //   private int tileSize;
     private int verTilesImage=0;
     private int horTilesImage=0;
     private int realSizeX=0;
@@ -54,7 +53,8 @@ public class VDSAnalysis{
     private int yTileToAnalyze=0;
 
 	public VDSAnalysis(SarImageReader gir, MaskGeometries coastMask,
-			MaskGeometries iceMask, float enlf, Float[] trhreshold ) {
+			MaskGeometries iceMask, float enlf, Float[] trhreshold
+			,int realSizeTileX,int realSizeTileY,int horTilesImage,int verTilesImage ) {
 
 		HashMap<String,Float>thresholdsBandParams=new HashMap<>();
 		thresholdsBandParams.put("HH",trhreshold[0]);
@@ -78,11 +78,17 @@ public class VDSAnalysis{
 	 * @param trhresholdMap
 	 */
     public VDSAnalysis(SarImageReader gir, MaskGeometries mask,
-    		MaskGeometries iceMask, float enlf, Map<String, Float> trhresholdMap ) {
+    		MaskGeometries iceMask, float enlf, Map<String, Float> trhresholdMap,int realSizeTileX,int realSizeTileY
+    		,int horTilesImage,int verTilesImage ) {
+
     	this.thresholdsBandParams=trhresholdMap;
         this.gir = gir;
         this.coastMask = mask;
         this.iceMask=iceMask;
+        this.realSizeX=realSizeTileX;
+        this.realSizeY=realSizeTileY;
+        this.horTilesImage=horTilesImage;
+        this.verTilesImage=verTilesImage;
 
         init(enlf);
     }
@@ -92,35 +98,15 @@ public class VDSAnalysis{
         if (this.enl.length() == 2) {
             this.enl = "0" + this.enl;
         }
-        this.tileSize = (int)(ConstantVDSAnalysis.TILESIZE / gir.getPixelsize()[0]);
-        if(this.tileSize < ConstantVDSAnalysis.TILESIZEPIXELS) this.tileSize = ConstantVDSAnalysis.TILESIZEPIXELS;
-
-        this.horTilesImage = gir.getWidth() / this.tileSize;
-        this.verTilesImage = gir.getHeight() / this.tileSize;
-
-     // the real size of tiles
-        realSizeX = gir.getWidth() / horTilesImage;
-        realSizeY = gir.getHeight() / verTilesImage;
-
-
         progressListener=new ArrayList<ProgressListener>();
     }
 
-    public int getRealSizeX() {
-		return realSizeX;
-	}
-	public int getRealSizeY() {
-		return realSizeY;
-	}
 
 	public int getVerTilesImage() {
 		return verTilesImage;
 	}
 	public int getHorTilesImage() {
 		return horTilesImage;
-	}
-	public void setTileSize(int tileSize) {
-		this.tileSize = tileSize;
 	}
 	public boolean isAnalyseSingleTile() {
 		return analyseSingleTile;
@@ -374,16 +360,14 @@ public class VDSAnalysis{
     	int size=0;
     	if(coastMask!=null){
 	    	// create raster mask //dx and dy are for tile on the border that have different dimensions
-	        Raster rastermask = coastMask.rasterize(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
 	        //Read pixels for the area and check there are enough sea pixels
-	        maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+	        maskdata=coastMask.getRasterDataMask(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0);
 	        size=maskdata.length;
     	}
         int[] iceMaskdata = null;
         if(iceMask!=null){
-        	Raster rasterIceMask    = iceMask.rasterize(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0).getData();
         	//Read pixels for ice
-        	iceMaskdata = rasterIceMask.getPixels(0, 0, rasterIceMask.getWidth(), rasterIceMask.getHeight(), (int[])null);
+        	iceMaskdata=iceMask.getRasterDataMask(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0);
         	size=maskdata.length;
         }
 
@@ -752,10 +736,6 @@ public class VDSAnalysis{
 
         return false;
     }
-
-    public int getTileSize() {
-		return tileSize;
-	}
 
 
     public void dispose(){

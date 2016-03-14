@@ -36,7 +36,7 @@ public class GeotiffWriter {
     public static void create(final GeoImageReader gir, String filepath,int band) throws FileNotFoundException, IOException, GeoTransformException {
       //  GeoImageReader mygir = gir.clone();
         ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_GRAY), false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT);
-        SampleModel sm = cm.createCompatibleSampleModel(Constant.TILE_SIZE, Constant.TILE_SIZE);
+        SampleModel sm = cm.createCompatibleSampleModel(Constant.GEOIMAGE_TILE_SIZE, Constant.GEOIMAGE_TILE_SIZE);
         DiskMemImage ti = new DiskMemImage(gir.getWidth(), gir.getHeight(), sm);
         ti.setUseCommonCache(true);
         System.out.println(ti.getNumXTiles() + "-" + ti.getNumYTiles());
@@ -77,7 +77,7 @@ public class GeotiffWriter {
     public static void create(final GeoImageReader gir, int band,String filepath) throws FileNotFoundException, IOException, GeoTransformException {
        // GeoImageReader mygir = gir.clone();
         ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_GRAY), false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT);
-        SampleModel sm = cm.createCompatibleSampleModel(Constant.TILE_SIZE, Constant.TILE_SIZE);
+        SampleModel sm = cm.createCompatibleSampleModel(Constant.GEOIMAGE_TILE_SIZE, Constant.GEOIMAGE_TILE_SIZE);
         DiskMemImage ti = new DiskMemImage(gir.getWidth(), gir.getHeight(), sm);
         ti.setUseCommonCache(true);
         System.out.println(ti.getNumXTiles() + "-" + ti.getNumYTiles());

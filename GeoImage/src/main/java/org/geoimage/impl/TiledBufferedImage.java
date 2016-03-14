@@ -299,9 +299,9 @@ public class TiledBufferedImage implements GeoImageReader {
             float decY = height / (1f * outHeight);
             int index = 0;
             for (int i = 0; i < Math.ceil(incy); i++) {
-                int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
+                int tileHeight = (int) Math.min(Constant.GEOIMAGE_TILE_SIZE, height - i * Constant.GEOIMAGE_TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter,band);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.GEOIMAGE_TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY), filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -309,7 +309,7 @@ public class TiledBufferedImage implements GeoImageReader {
                             }
                         }
                     } else {
-                        index += outWidth * (int) (Constant.TILE_SIZE / decY);
+                        index += outWidth * (int) (Constant.GEOIMAGE_TILE_SIZE / decY);
                     }
                 }
             }
