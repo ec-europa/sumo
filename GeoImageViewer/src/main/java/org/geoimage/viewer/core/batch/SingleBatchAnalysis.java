@@ -30,28 +30,28 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 		try{
 			//crate the reader
 			List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
-	
+
 			for(GeoImageReader r:readers){
-				currentReader=r;
+				//currentReader=r;
 				SarImageReader reader=(SarImageReader) r;
 				String enl=reader.getENL();
 				params.enl=Float.parseFloat(enl);
-	
+
 				GeometricLayer gl=null;
 				if(params.shapeFile!=null){
 			    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 					gl=readShapeFile(imageP,reader.getGeoTransform());
-				}	
+				}
 				IMask masks = null;
 				if(gl!=null){
 					masks=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
 				}
-	
+
 				analizeImage(reader,masks,null,params);
 				saveResults(reader.getImgName(),reader);
 			}
 		}catch(Exception e){
 			logger.error(e.getMessage(),e);
-		}	
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package org.geoimage.viewer.actions;
+package org.geoimage.viewer.actions.console;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -13,7 +13,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.PolygonOp;
-import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -66,6 +65,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 		//run the blackborder analysis for the s1 images
 		BlackBorderAnalysis blackBorderAnalysis=null;
 		GeoImageReader gir=SumoPlatform.getApplication().getCurrentImageReader();
+		ImageLayer il=SumoPlatform.getApplication().getLayerManager().getCurrentImageLayer();
         if(gir instanceof Sentinel1){
                 /*MaskVectorLayer mv=null;
            	 	if(bufferedMask!=null&&bufferedMask.length>0)
@@ -73,7 +73,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
            	 	if(mv!=null)
            	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,mv.getGeometries());
            	 	else*/
-           	blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
+           	blackBorderAnalysis= new BlackBorderAnalysis(gir,il.getRealTileSizeX(),il.getRealTileSizeY(),null);
          }
          if(blackBorderAnalysis!=null){
         	 int nTile=SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis();
@@ -111,7 +111,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 						String direction="H"; //h= horizontal v=vertical
 						if(paramsAction.size()==4)
 							direction=arg2;
-						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,0,null);
+						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,layer.getRealTileSizeX(),layer.getRealTileSizeY(),null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 
 						yy=borderAn.getSizeY()*row;
@@ -169,24 +169,27 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                		iceMasks.getType(),0,((MaskVectorLayer)iceMasks).getGeometriclayer(),
 	           				iceMasks.getMaskType());
 
-		                 ice=new MaskGeometries("ice",   iceMask.getGeometries());
+		                 ice=new MaskGeometries("ice", iceMask.getGeometries());
 	                }
 
-	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv});
+	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv},
+	                		layer.getRealTileSizeX(),layer.getRealTileSizeY(),
+	                		layer.getHorizontalTilesImage(),layer.getVerticalTilesImage());
+
 					analysis.setAnalyseSingleTile(true);
 					analysis.setxTileToAnalyze(col);
 					analysis.setyTileToAnalyze(row);
-					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis,0,0);
+					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis,0,0,null);
 					proc.addProcessListener(this);
 
 					Thread t=new Thread(proc);
 	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
 	                t.start();
 
-	                yy=analysis.getRealSizeY()*row;
-					xx=analysis.getRealSizeX()*col;
-					tileSizeY=analysis.getRealSizeY();
-					tileSizeX=analysis.getRealSizeY();
+	                yy=layer.getRealTileSizeY()*row;
+					xx=layer.getRealTileSizeX()*col;
+					tileSizeY=layer.getRealTileSizeY();
+					tileSizeX=layer.getRealTileSizeX();
 				}
 			}
 		} catch (Exception e) {

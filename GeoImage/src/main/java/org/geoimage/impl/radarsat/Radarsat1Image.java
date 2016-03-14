@@ -262,7 +262,7 @@ public class Radarsat1Image extends SarImageReader {
             setRevolutionsPerday(14.29988851);
             // for the constant calibration, with the radarsat we take the
             // middle value of the look up table (line Constant.TILE_SIZE)
-            lea.seek(65922 + 88 + 16 * Constant.TILE_SIZE);
+            lea.seek(65922 + 88 + 16 * Constant.GEOIMAGE_TILE_SIZE);
             byte[] KString = new byte[16];
             lea.read(KString, 0, 16);
             setK(Double.parseDouble(new String(KString)));
@@ -549,9 +549,9 @@ public class Radarsat1Image extends SarImageReader {
             float decY = height / (1f * outHeight);
             int index = 0;
             for (int i = 0; i < Math.ceil(incy); i++) {
-                int tileHeight = (int) Math.min(Constant.TILE_SIZE, height - i * Constant.TILE_SIZE);
+                int tileHeight = (int) Math.min(Constant.GEOIMAGE_TILE_SIZE, height - i * Constant.GEOIMAGE_TILE_SIZE);
                 if (tileHeight > decY) {
-                    int[] temp = readAndDecimateTile(x, y + i * Constant.TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter,band);
+                    int[] temp = readAndDecimateTile(x, y + i * Constant.GEOIMAGE_TILE_SIZE, width, tileHeight, outWidth, Math.round(tileHeight / decY),xSize,ySize, filter,band);
                     if (temp != null) {
                         for (int j = 0; j < temp.length; j++) {
                             if (index < outData.length) {
@@ -559,7 +559,7 @@ public class Radarsat1Image extends SarImageReader {
                             }
                         }
                     } else {
-                        index += outWidth * (int) (Constant.TILE_SIZE / decY);
+                        index += outWidth * (int) (Constant.GEOIMAGE_TILE_SIZE / decY);
                     }
                 }
             }

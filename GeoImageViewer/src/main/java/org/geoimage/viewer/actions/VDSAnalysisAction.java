@@ -11,12 +11,14 @@ import java.util.List;
 
 import javax.swing.JMenuItem;
 
+import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
+import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -69,6 +71,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
         // initialise the buffering distance value
         int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
         SumoPlatform.getApplication().getMain().addStopListener(this);
+        ImageLayer currentImgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (paramsAction.size() < 2) {
             return true;
@@ -77,8 +80,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
             if (paramsAction.get("algorithm").equals("k-dist")) {
                 done = false;
 
-                ImageLayer cl=LayerManager.getIstanceManager().getCurrentImageLayer();
-                GeoImageReader reader = ((ImageLayer) cl).getImageReader();
+
+                GeoImageReader reader = ((ImageLayer) currentImgLayer).getImageReader();
                 if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
                     gir = reader;
                 }
@@ -108,7 +111,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
                     }
                 }
                 //read the land mask
-                for (ILayer l : LayerManager.getIstanceManager().getChilds(cl)) {
+                for (ILayer l : LayerManager.getIstanceManager().getChilds(currentImgLayer)) {
                     if (l instanceof IMask ) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
                     		if( l.getName().startsWith(paramsAction.get("coastline")))
@@ -125,16 +128,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
                 bufferingDistance = Integer.parseInt(paramsAction.get("Buffer"));
                 final float ENL = Float.parseFloat(paramsAction.get("ENL"));
 
-                // create new buffered mask with bufferingDistance using the mask in parameters
-               /* final IMask[] bufferedMask = new IMask[coastlineMask.size()];
-
-                for (int i=0;i<coastlineMask.size();i++) {
-                	MaskVectorLayer maskList = coastlineMask.get(i);
-               		bufferedMask[i]=FactoryLayer.createMaskLayer(maskList.getName(), maskList.getType(),
-               				bufferingDistance,
-               				((MaskVectorLayer)maskList).getGeometriclayer(),
-               				maskList.getMaskType());
-                }*/
                 IMask bufferedMask=null;
                 if(coastlineMask!=null)
                 	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
@@ -159,9 +152,22 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
                 if(iceMask!=null)
                 	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
 
-                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds);
+                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds,
+                		currentImgLayer.getRealTileSizeX(),currentImgLayer.getRealTileSizeY(),
+                		currentImgLayer.getHorizontalTilesImage(),currentImgLayer.getVerticalTilesImage());
 
-                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0);
+
+                BlackBorderAnalysis blackBorderAnalysis=null;
+                if(gir instanceof Sentinel1){
+	           	 	if(vdsanalysis.getCoastMask()!=null)
+	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
+	           	 			currentImgLayer.getRealTileSizeY(),vdsanalysis.getCoastMask().getMaskGeometries());
+	           	 	else
+	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
+		           	 			currentImgLayer.getRealTileSizeY(),null);
+                }
+
+                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0,blackBorderAnalysis);
                 proc.addProcessListener(this);
 
                 SumoPlatform.getApplication().getConsoleLayer().setCurrentAction(this);

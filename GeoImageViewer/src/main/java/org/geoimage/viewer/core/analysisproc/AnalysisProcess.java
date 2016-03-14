@@ -24,6 +24,7 @@ import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.util.GeometryExtractor;
 import org.jrc.sumo.configuration.PlatformConfiguration;
+import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -50,6 +51,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private boolean displaybandanalysis;
 		private String agglomerationMethodology;
 		private String bufferedMaskName="";
+		private BlackBorderAnalysis blackBorderAnalysis=null;
 
 		private static org.slf4j.Logger logger=LoggerFactory.getLogger(AnalysisProcess.class);
 
@@ -88,7 +90,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		 * @param numLimitPoint   num max of point that we can analize (0=all)
 		 */
 		public AnalysisProcess(GeoImageReader gir,float ENL,VDSAnalysis analysis,
-				int buffer,int numLimitPoint) {
+				int buffer,int numLimitPoint,BlackBorderAnalysis blackBorderAnalysis) {
 			this.ENL=ENL;
 			this.analysis=analysis;
 
@@ -100,6 +102,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 			listeners=Collections.synchronizedList(new ArrayList<VDSAnalysisProcessListener>());
 			this.gir=gir;//.clone();
 			this.numPointLimit=numLimitPoint;
+			this.blackBorderAnalysis=blackBorderAnalysis;
 
 			neighbouringDistance=SumoPlatform.getApplication().getConfiguration().getNeighbourDistance(1.0);
             neighbourTilesize=SumoPlatform.getApplication().getConfiguration().getTileSize(200);
@@ -112,13 +115,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
 		public BlackBorderAnalysis runBBAnalysis(){
 			//run the blackborder analysis for the s1 images
-			BlackBorderAnalysis blackBorderAnalysis=null;
-            if(gir instanceof Sentinel1){
-	           	 	if(analysis.getCoastMask()!=null)
-	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,analysis.getCoastMask().getMaskGeometries());
-	           	 	else
-	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,null);
-             }
              if(blackBorderAnalysis!=null){
             	 notifyBBAnalysis("Start BB Analysis");
             	 if(!analysis.isAnalyseSingleTile()){
@@ -127,11 +123,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
             		 int[] sideToAnalyze=new int[]{-1 ,-1 ,-1 ,-1};
             		 if(analysis.getxTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[0]=BlackBorderAnalysis.ANALYSE_LEFT;
-            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/ConstantVDSAnalysis.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getxTileToAnalyze()>(gir.getWidth()/Constant.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[1]=BlackBorderAnalysis.ANALYSE_RIGHT;
             		 if(analysis.getyTileToAnalyze()<SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis())
             			 sideToAnalyze[2]=BlackBorderAnalysis.ANALYSE_TOP;
-            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/ConstantVDSAnalysis.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
+            		 if(analysis.getyTileToAnalyze()>(gir.getHeight()/Constant.TILESIZE -SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis()-1))
             			 sideToAnalyze[3]=BlackBorderAnalysis.ANALYSE_BOTTOM;
 
             		 blackBorderAnalysis.analyse(SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis(),sideToAnalyze);
@@ -168,6 +164,8 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
              String timeStampStart=reader.getTimeStampStart();
              double azimuth=reader.getAzimuthSpacing();
+
+             int tileSize = (int)(Constant.TILESIZE / gir.getPixelsize()[0]);
 
              try{
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
@@ -245,10 +243,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     }
 
                          if ((analysis.getCoastMask() != null) ) {
-	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometricLayer.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
+	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometricLayer.POLYGON,
+	                        		analysis.getCoastMask().getMaskGeometries(), true);
 	                     }
 	                     //leave display params forced to false
-	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING, GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,
+	                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
 
 	                     notifyLayerReady(vdsanalysisLayer);
 	                     resultLayers.add(vdsanalysisLayer);
@@ -289,7 +289,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 if ((analysis.getCoastMask() != null)) {
 	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometricLayer.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
 	                 }
-	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),analysis.getTileSize()), false);
+	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometricLayer.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
 
 
 	               //Azimuth Ambiguities

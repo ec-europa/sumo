@@ -126,6 +126,11 @@ public class ImageLayer implements ILayer  {
     private boolean torescale = false;
     private int maxlevels;
 
+    private int realTileSizeX=0;
+    private int realTileSizeY=0;
+    private int horizontalTilesImage=0;
+    private int verticalTilesImage=0;
+
     //for cuncurrency reader
     private ExecutorService poolExcutorService;
     private int poolSize = 2;
@@ -174,6 +179,16 @@ public class ImageLayer implements ILayer  {
         maxnumberoftiles = SumoPlatform.getApplication().getConfiguration().getMaxNumOfTiles();
         createMatrixTileOrder();
 
+        int tileSize = (int)(Constant.TILESIZE / gir.getPixelsize()[0]);
+        if(tileSize < Constant.TILESIZEPIXELS) tileSize = Constant.TILESIZEPIXELS;
+
+        this.horizontalTilesImage = gir.getWidth() / tileSize;
+        this.verticalTilesImage= gir.getHeight()/ tileSize;
+
+     // the real size of tiles
+        this.realTileSizeX = gir.getWidth() / horizontalTilesImage;
+        this.realTileSizeY = gir.getHeight() / verticalTilesImage;
+
 
     }
 
@@ -186,10 +201,39 @@ public class ImageLayer implements ILayer  {
         }
     }
 
+    public int getRealTileSizeX() {
+		return realTileSizeX;
+	}
 
+	public void setRealTileSizeX(int realTileSizeX) {
+		this.realTileSizeX = realTileSizeX;
+	}
 
+	public int getRealTileSizeY() {
+		return realTileSizeY;
+	}
 
-    /**
+	public void setRealTileSizeY(int realTileSizeY) {
+		this.realTileSizeY = realTileSizeY;
+	}
+
+	public int getHorizontalTilesImage() {
+		return horizontalTilesImage;
+	}
+
+	public void setHorizontalTilesImage(int horizontalTilesImage) {
+		this.horizontalTilesImage = horizontalTilesImage;
+	}
+
+	public int getVerticalTilesImage() {
+		return verticalTilesImage;
+	}
+
+	public void setVerticalTilesImage(int verticalTilesImage) {
+		this.verticalTilesImage = verticalTilesImage;
+	}
+
+	/**
      * Create the matrix that define the order in which the tiles will be read
      */
     private void createMatrixTileOrder(){
