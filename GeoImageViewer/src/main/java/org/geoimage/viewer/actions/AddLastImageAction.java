@@ -97,7 +97,7 @@ public class AddLastImageAction extends SumoAbstractAction {
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);
 			}
-			SumoPlatform.getApplication().getConsoleLayer().executeCommand("home=home");
+			SumoPlatform.getApplication().getConsoleLayer().executeCommand("h=h");
 		}
 		done = true;
 	}

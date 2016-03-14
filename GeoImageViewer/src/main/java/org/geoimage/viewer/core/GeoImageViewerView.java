@@ -907,7 +907,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         JMenuItem temp = null;
         PluginsManager pl=SumoPlatform.getApplication().getPluginsManager();
         for (final ISumoAction action : pl.getActions().values()) {
-            if (!action.getPath().startsWith("$")) {
+            if (!action.getPath().startsWith("$")&&!action.getPath().equalsIgnoreCase("none")) {
 	            if (!pl.getPlugins().get(action.getName()).isActive()) {
 	                continue;
 	            }
@@ -931,8 +931,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 		                    menus.put(mediumpath, temp);
 		                }
 		                if (mitem == null) {
-		                    mitem = temp;
-		                    menubar.add((JMenu) temp);
+		                	try{
+		                		mitem = temp;
+		                		menubar.add((JMenu) temp);
+		                	}catch(Exception e){
+		                		logger.warn("Menu not added"+e.getMessage());
+		                	}
 		                } else {
 		                    mitem.add(temp);
 		                    mitem = temp;
