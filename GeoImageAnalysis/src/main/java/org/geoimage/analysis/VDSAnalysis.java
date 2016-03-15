@@ -381,22 +381,15 @@ public class VDSAnalysis{
         if(maskdata==null)
         	return iceMaskdata;
 
-        int occur=0;
         //merge the maskdata
         for(int count = 0; count < size; count++){
             //if the pixel is valid check if this pixel is ice
             if(maskdata[count]==0){
             	if(iceMaskdata[count]==1){
             		maskdata[count]=1;
-            		occur++;
             	}
-            }else{
-            	occur++;
             }
         }
-
-        System.out.println(occur);
-
         return maskdata;
     }
 
