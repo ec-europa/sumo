@@ -15,16 +15,22 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.xml.resolver.apps.resolver;
 import org.geoimage.utils.PolygonOp;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.algorithm.locate.IndexedPointInAreaLocator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
+import com.vividsolutions.jts.geom.prep.PreparedPoint;
+import com.vividsolutions.jts.geom.prep.PreparedPolygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
@@ -237,8 +243,8 @@ public class MaskGeometries {
     	Rectangle rect=new Rectangle(x,y,w,h);
         BufferedImage bi = this.rasterize(rect, offsetX, offsetY, scalingFactor);
         Raster rastermask=bi.getData();
-       // this.saveRaster(bi, new File("/home/argenpo/cache/"+x+"_"+y+".bmp"));
-    	int[] maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
+    	int[] maskdata=rastermask.getSamples(0, 0, rastermask.getWidth(), rastermask.getHeight(), 0,(int[])null);
+    	//int[] maskdata=rasterMaskJTS(rect, offsetX, offsetY, scalingFactor);
     	return maskdata;
     }
 
@@ -256,7 +262,7 @@ public class MaskGeometries {
      */
     public boolean saveRaster(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor,File output){
     	Rectangle rect=new Rectangle(x,y,w,h);
-        BufferedImage rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+        BufferedImage rastermask = this.rasterizeJTS(rect, offsetX, offsetY, scalingFactor);
         try {
 			ImageIO.write(rastermask, "bmp", output);
 			return true;
@@ -317,6 +323,102 @@ public class MaskGeometries {
         }
         g2d.dispose();
         return image;
+
+    }
+
+    /**
+     * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+     */
+    public BufferedImage rasterizeJTS(Rectangle rect, int offsetX, int offsetY, double scalingFactor) {
+
+    	// create the buffered image of the size of the Rectangle
+        BufferedImage image = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_BYTE_BINARY);
+        GeometryFactory gf = new GeometryFactory();
+
+        // define the clipping region in full scale
+        Coordinate[] coords = new Coordinate[]{
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),};
+
+        Polygon geom = gf.createPolygon(gf.createLinearRing(coords));
+
+        for (Geometry p : maskGeometries) {
+            if (p.intersects(geom)) {
+            	Geometry pg=p.intersection(geom).buffer(0);
+            	//Coordinate[] coordsInter=gg.getCoordinates();
+            	//Polygon pg=gf.createPolygon(coordsInter);
+
+            	for(int x=0;x<rect.width;x++){
+            		for(int y=0;y<rect.height;y++){
+            			Point point=gf.createPoint(new Coordinate(rect.x+x,rect.y+y));
+            			if(pg.contains(point)){
+		            		try{
+		            			image.setRGB(x,y, Color.WHITE.getRGB());
+		            		}catch(Exception e){
+		            			logger.error(e.getMessage()+"  x:"+x+"  y:"+y);
+		            		}
+            			}
+	            	}
+	            }
+	        }
+        }
+        return image;
+
+    }
+
+    /**
+     * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage
+     */
+    public int[] rasterMaskJTS(Rectangle rect, int offsetX, int offsetY, double scalingFactor) {
+
+    	// create the buffered image of the size of the Rectangle
+        int[] mask = new int[rect.width* rect.height];
+        GeometryFactory gf = new GeometryFactory();
+
+        // define the clipping region in full scale
+        Coordinate[] coords = new Coordinate[]{
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMaxX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMaxY() / scalingFactor))),
+            new Coordinate((int) (((double) rect.getMinX() / scalingFactor)), (int) (((double) rect.getMinY() / scalingFactor))),};
+
+        Polygon geom = gf.createPolygon(gf.createLinearRing(coords));
+        PreparedPolygon ppol=new PreparedPolygon(geom);
+
+        int numPix=rect.width*rect.height;
+        for (Geometry p : maskGeometries) {
+            if (ppol.intersects(p)) {
+            	Geometry pg=p.intersection(geom).buffer(0);
+            	IndexedPointInAreaLocator locator=new IndexedPointInAreaLocator(pg);
+
+
+            	int x=0;
+            	int y=0;
+
+            	for(int ii=0;ii<numPix;ii++){
+            		if(ii%rect.width==0){
+            			x=0;
+            			y++;
+            		}
+        			//Point point=gf.createPoint(new Coordinate(rect.x+x,rect.y+y));
+        			//PreparedPoint ppoint=new PreparedPoint(point);
+        			//if(ppoint.within(pg)){
+            		int loc=locator.locate(new Coordinate(rect.x+x,rect.y+y));
+            		if(loc==Location.INTERIOR||loc==Location.BOUNDARY)
+	            		try{
+	            			mask[x]=1;
+	            		}catch(Exception e){
+	            			logger.warn(e.getMessage()+"  x:"+x+"  y:"+y);
+	            		}
+        			}
+	            }
+	        //}
+        }
+        return mask;
 
     }
 }

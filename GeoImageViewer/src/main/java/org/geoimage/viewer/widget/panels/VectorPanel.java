@@ -131,7 +131,8 @@ public class VectorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1KeyPressed
 
 private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    ((MaskVectorLayer) layer).buffer(Double.parseDouble(jTextField2.getText()));
+	if(layer instanceof MaskVectorLayer)
+		((MaskVectorLayer) layer).buffer(Double.parseDouble(jTextField2.getText()));
 }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
