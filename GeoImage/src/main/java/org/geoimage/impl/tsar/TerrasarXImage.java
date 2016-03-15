@@ -71,7 +71,7 @@ public class TerrasarXImage extends SarImageReader {
     protected int[] stripBounds = {0, 0, 0};
     protected Map<String, TIFF> tiffImages;
     protected String overview;
-    
+
     protected Vector<String> bands = new Vector<String>();
 
     public TerrasarXImage(File f) {
@@ -82,11 +82,11 @@ public class TerrasarXImage extends SarImageReader {
     public int getNBand() {
         return bands.size();
     }
-    
+
     public double[] getPixelsize() {
 		return super.pixelsize;
 	}
-    
+
     @Override
     /**gcps are computed atrting from the georef.xml file and the mapping_grid.bin file. Thats because the pixel positions are related to time
     / (t,tau) and not to (lon,lat) directly
@@ -316,7 +316,7 @@ public class TerrasarXImage extends SarImageReader {
 
 
     }
-    
+
     public static float arr2float(byte[] arr, int start) {
         int i = 0;
         int len = 4;
@@ -343,22 +343,22 @@ public class TerrasarXImage extends SarImageReader {
     @Override
     public boolean initialise() {
     	 try {
-    		 
+
     		 this.imgName=manifestFile.getParentFile().getName();
-    		 
+
 	    	setFile(manifestFile);
 	    	parseProductXML(productxml);
 	    	tiffImages = getImages();
-	    	
+
 	        if(tiffImages==null) return false;
-       
+
             //System.out.println(reader.getNumImages(false));
             TIFF image = tiffImages.values().iterator().next();
             this.displayName= this.imgName;//image.getImageFile().getName();
-            
+
             image.xSize = getWidth();
             image.ySize = getHeight();
-            
+
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
             gcps = getGcps();
             if (gcps == null) {
@@ -396,10 +396,10 @@ public class TerrasarXImage extends SarImageReader {
         }
         return true;
     }
-    
-    
+
+
     /**
-     * 
+     *
      * @param imageFile
      */
     protected void setFile(File imageFile) {
@@ -436,7 +436,7 @@ public class TerrasarXImage extends SarImageReader {
                 throw new IOException("Cannot find product.xml");
             }
             overview=new StringBuilder(parent.getAbsolutePath()).append("\\PREVIEW").append("\\BROWSE.tif").toString();
-            
+
         } catch (IOException ex) {
             dispose();
         }
@@ -444,7 +444,7 @@ public class TerrasarXImage extends SarImageReader {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private Map<String, TIFF> getImages() {
@@ -454,7 +454,8 @@ public class TerrasarXImage extends SarImageReader {
         bands=new Vector<String>();
         for (Object o : elements) {
             if (o instanceof Element) {
-                File f = new File(productxml.getParent()+"\\"+((Element) o).getChild("file").getChild("location").getChild("path").getText()+"\\"+((Element) o).getChild("file").getChild("location").getChild("filename").getText());
+                File f = new File(productxml.getParent()+File.separator+((Element) o).getChild("file").getChild("location").getChild("path").getText()+
+                		File.separator+((Element) o).getChild("file").getChild("location").getChild("filename").getText());
                 String polarisation = ((Element) o).getChild("polLayer").getValue();
                 tiffs.put(polarisation, new TIFF(f,0));
                 bands.add(polarisation);
@@ -462,7 +463,7 @@ public class TerrasarXImage extends SarImageReader {
         }
         return tiffs;
     }
-    
+
     @Override
 	public int[] read(int x, int y, int w, int h, int band) throws IOException {
 		Rectangle rect = new Rectangle(x, y, w, h);
@@ -475,8 +476,14 @@ public class TerrasarXImage extends SarImageReader {
         TIFFImageReadParam tirp=new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
-        int[] rawData = tiff.read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
-        
+
+        int[] rawData = null;
+        try{
+        	rawData=tiff.read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
+        }catch(Exception e){
+        	logger.warn(e.getMessage());
+        }
+
         int yOffset = getImage(band).xSize;
         int xinit = rect.x - x;
         int yinit = rect.y - y;
@@ -532,13 +539,13 @@ public class TerrasarXImage extends SarImageReader {
         return bands.get(band);
     }
     /**
-     * 
+     *
      * @return
      */
     public String[] getBands(){
     	return bands.toArray(new String[0]);
     }
-    
+
   /*  @Override
     public void setBand(int band) {
         this.band = band;
@@ -597,16 +604,19 @@ public class TerrasarXImage extends SarImageReader {
             setMetaHeight(Integer.parseInt(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfRows").getText()));
             String w=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("numberOfColumns").getText();
             setMetaWidth(Integer.parseInt(w) );
-            
+
             setRangeSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rowSpacing").getText()));
             setAzimuthSpacing(Float.parseFloat(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("columnSpacing").getText()));
-            
+
             pixelsize[0]=getRangeSpacing();
             pixelsize[1]=getAzimuthSpacing();
-            
+
             setNumberOfBytes(new Integer(atts.getChild("imageDataInfo").getChild("imageDataDepth").getText()) / 8);
-            setENL(atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText());
-          
+            String az=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("azimuthLooks").getText();
+            String rl=atts.getChild("imageDataInfo").getChild("imageRaster").getChild("rangeLooks").getText();
+            Double vald=Double.parseDouble(az)*Double.parseDouble(rl);
+            setENL(vald.toString());
+
             setHeadingAngle(Double.parseDouble(atts.getChild("sceneInfo").getChild("headingAngle").getText()));
             rangeTimeStart = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("firstPixel").getText());
             rangeTimeStop = Double.valueOf(atts.getChild("sceneInfo").getChild("rangeTime").getChild("lastPixel").getText());
@@ -650,7 +660,7 @@ public class TerrasarXImage extends SarImageReader {
                 setPRF1(prf[0]);
                 setPRF2(prf[1]);
                 setPRF3(prf[2]);
-                
+
                 setPRF(null); //to recognise the TSX SC in the azimuth computation
 
                 //the SC mode presents 4 strips which overlap, the idea is to consider one strip till the middle of the overlap area
@@ -667,7 +677,7 @@ public class TerrasarXImage extends SarImageReader {
                     int width=Integer.parseInt(w);
                     int stripBound = new Double(((aver_range_time - rangeTimeStart) * width) / (rangeTimeStop - rangeTimeStart)).intValue();
                     //setMetadata("STRIPBOUND" + b++, new Integer(stripBound).toString());
-                    
+
                     strip[0]=new Integer(stripBound);
                     b++;
                 }
@@ -675,10 +685,10 @@ public class TerrasarXImage extends SarImageReader {
                 setStripBound2(strip[1]);
                 setStripBound3(strip[2]);
             }
-            
+
             String val=doc.getRootElement().getChild("calibration").getChild("calibrationConstant").getChild("calFactor").getText();
             setK(Double.parseDouble(val));
-            
+
             //row and cols of the mapping_grid table used for geolocation
             MGRows = new Integer(doc.getRootElement().getChild("productSpecific").getChild("projectedImageInfo").getChild("mappingGridInfo").getChild("imageRaster").getChild("numberOfRows").getText());
             MGCols = new Integer(doc.getRootElement().getChild("productSpecific").getChild("projectedImageInfo").getChild("mappingGridInfo").getChild("imageRaster").getChild("numberOfColumns").getText());
@@ -700,7 +710,7 @@ public class TerrasarXImage extends SarImageReader {
         	logger.error(ex.getMessage(),ex);
         }
     }
-    
+
     @Override
     public int getNumberOfBytes() {
         return super.getNumberOfBytes();
@@ -753,18 +763,18 @@ public class TerrasarXImage extends SarImageReader {
 		return new File(this.overview);
 	}
 
-	
+
 
 	@Override
 	public String getImgName() {
 		return imgName;
 	}
-	
+
 	public TIFF getImage(int band){
 		return tiffImages.get(getBandName(band));
 	}
 
-	
+
 	@Override
 	public String getSensor() {
 		return "TX";
@@ -781,7 +791,7 @@ public class TerrasarXImage extends SarImageReader {
 	    	if(satelliteSpeed==0){
 		    	satelliteSpeed = calcSatelliteSpeed();
 		        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-	    	}    
+	    	}
 
 	        double temp, deltaAzimuth, deltaRange;
 	        int[] output = new int[2];

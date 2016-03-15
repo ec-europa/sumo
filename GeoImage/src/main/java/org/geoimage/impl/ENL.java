@@ -15,6 +15,7 @@ import org.geoimage.impl.s1.GDALSentinel1;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.impl.s1.Sentinel1GRD;
 import org.geoimage.impl.s1.Sentinel1SLC;
+import org.geoimage.impl.tsar.TerrasarXImage;
 
 /**
  * Convenience class to calculate the ENL (Equivalent Number of Looks)
@@ -101,8 +102,8 @@ public class ENL  {
         } else if (gir instanceof Radarsat2Image) {
             String temp = gir.getENL();
             enl = Float.parseFloat(temp);
-        } else if (gir instanceof GeotiffImage) {
-            enl = 1;
+        } else if (gir instanceof TerrasarXImage) {
+            enl = Float.parseFloat(gir.getENL());
         }
         return enl;
     }
