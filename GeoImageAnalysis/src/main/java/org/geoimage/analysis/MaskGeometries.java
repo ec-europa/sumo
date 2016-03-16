@@ -262,7 +262,9 @@ public class MaskGeometries {
      */
     public boolean saveRaster(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor,File output){
     	Rectangle rect=new Rectangle(x,y,w,h);
-        BufferedImage rastermask = this.rasterizeJTS(rect, offsetX, offsetY, scalingFactor);
+//        BufferedImage rastermask = this.rasterizeJTS(rect, offsetX, offsetY, scalingFactor);
+        BufferedImage rastermask = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+
         try {
 			ImageIO.write(rastermask, "bmp", output);
 			return true;
