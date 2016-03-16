@@ -172,9 +172,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 		String start=gir.getTimeStampStart();
+		start=start.replace("Z","");
 		Timestamp tStart=Timestamp.valueOf(start);
 
-		start=start.replace("Z","");
 		start=roundedMillis(start);
 
 		String stop=gir.getTimeStampStop();

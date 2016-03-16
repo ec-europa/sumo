@@ -225,7 +225,9 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
     }
 
     private static ILayer createLayer(String id, final String date, GeometricLayer layer, ImageLayer parent) {
-    	Timestamp t=Timestamp.valueOf(((SarImageReader)parent.getImageReader()).getTimeStampStart());
+    	String start=((SarImageReader)parent.getImageReader()).getTimeStampStart();
+    	start=start.replace("Z","");
+    	Timestamp t=Timestamp.valueOf(start);
         return new InterpolatedVectorLayer(layer.getName(),parent.getImageReader(), layer, id, date,t);
 
     }

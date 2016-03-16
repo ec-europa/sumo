@@ -1,5 +1,6 @@
 package org.geoimage.impl.tsar;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.util.Vector;
 
 import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
+import org.geoimage.exception.GeoTransformException;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.imgreader.IReader;
@@ -281,10 +283,7 @@ public class TerrasarXImage extends SarImageReader {
 
             return gcps;
 
-        } catch (JDOMException ex) {
-        	logger.error(ex.getMessage(),ex);
-            return null;
-        } catch (IOException ex) {
+        } catch (JDOMException|IOException ex) {
         	logger.error(ex.getMessage(),ex);
             return null;
         }
@@ -385,14 +384,9 @@ public class TerrasarXImage extends SarImageReader {
             setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 
 
-        } catch (TransformException ex) {
+        } catch (TransformException|FactoryException|GeoTransformException ex) {
+        	dispose();
         	logger.error(ex.getMessage(),ex);
-        } catch (FactoryException ex) {
-        	logger.error(ex.getMessage(),ex);
-        } catch (Exception ex) {
-            dispose();
-            logger.error(ex.getMessage(),ex);
-            return false;
         }
         return true;
     }
@@ -468,32 +462,15 @@ public class TerrasarXImage extends SarImageReader {
 	public int[] read(int x, int y, int w, int h, int band) throws IOException {
 		Rectangle rect = new Rectangle(x, y, w, h);
         rect = rect.intersection(bounds);
-        int[] data= new int[h*w];
-        if (rect.isEmpty()) {
-            return data;
-        }
+        int[] rawData= new int[h*w];
+        if (!rect.isEmpty()) {
+	        TIFFImageReadParam tirp=new TIFFImageReadParam();
+	        tirp.setSourceRegion(rect);
+	        TIFF tiff=getImage(band);
 
-        TIFFImageReadParam tirp=new TIFFImageReadParam();
-        tirp.setSourceRegion(rect);
-        TIFF tiff=getImage(band);
-
-        int[] rawData = null;
-        try{
-        	rawData=tiff.read(0, tirp).getRaster().getSamples(x, y,w,h, 0, (int[]) null);
-        }catch(Exception e){
-        	logger.warn(e.getMessage());
+	        rawData=tiff.read(0, tirp).getData().getSamples(0,0,w,h, 0, (int[]) null);
         }
-
-        int yOffset = getImage(band).xSize;
-        int xinit = rect.x - x;
-        int yinit = rect.y - y;
-        for (int i = 0; i < rect.height; i++) {
-            for (int j = 0; j < rect.width; j++) {
-                int temp = i * yOffset + j + rect.x;
-                data[(i + yinit) * w + j + xinit] = rawData[temp];
-            }
-        }
-        return data;
+        return rawData;
 	}
 
     @Override
@@ -527,7 +504,8 @@ public class TerrasarXImage extends SarImageReader {
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         TIFF tiff=getImage(band);
         try {
-            return  tiff.read(0, t).getRGB(x, y);
+            int val=  tiff.read(0, t).getRGB(0, 0);
+            return val;
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -679,6 +657,7 @@ public class TerrasarXImage extends SarImageReader {
                     //setMetadata("STRIPBOUND" + b++, new Integer(stripBound).toString());
 
                     strip[0]=new Integer(stripBound);
+
                     b++;
                 }
                 setStripBound1(strip[0]);

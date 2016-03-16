@@ -42,9 +42,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	 */
 	private static final long serialVersionUID = 3649669297745164880L;
 
-//    private int current = 0;
-//    private int maximum = 3;
-//    private boolean indeterminate;
     private GeoImageReader gir = null;
     private MaskVectorLayer coastlineMask = null;
     private MaskVectorLayer iceMasks = null;
@@ -68,6 +65,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
      * @return true, if successful
      */
     public boolean execute() {
+    	iceMasks=null;
+    	coastlineMask=null;
         // initialise the buffering distance value
         int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
         SumoPlatform.getApplication().getMain().addStopListener(this);
@@ -114,10 +113,10 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
                 for (ILayer l : LayerManager.getIstanceManager().getChilds(currentImgLayer)) {
                     if (l instanceof IMask ) {
                     	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
-                    		if( l.getName().startsWith(paramsAction.get("coastline")))
+                    		if( !"".equals(paramsAction.get("coastline"))&&l.getName().startsWith(paramsAction.get("coastline")))
                     			coastlineMask=(MaskVectorLayer) l;
                     	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
-                    		if( l.getName().startsWith(paramsAction.get("ice")))
+                    		if(!"".equals(paramsAction.get("ice"))&& l.getName().startsWith(paramsAction.get("ice")))
                     			iceMasks=(MaskVectorLayer) l;
                     	}else{
 

@@ -46,7 +46,7 @@ public class Radarsat2Image extends SarImageReader {
 	protected String timestampStart;
     protected String timestampStop;
     private String overviewImage;
-    	
+
     public Radarsat2Image(File f) {
     	super(f);
     }
@@ -77,24 +77,24 @@ public class Radarsat2Image extends SarImageReader {
     public String[] getBands() {
 		return bands;
 	}
-    
+
     @Override
     public boolean initialise() {
     	try {
     		super.imgName=manifestFile.getParentFile().getName();
-    		
+
     		SAXBuilder builder = new SAXBuilder();
     		setFile(manifestFile);
     		doc = builder.build(productxml);
     		tiffImages = getImages();
     		if(tiffImages==null) return false;
-    		
+
             TIFF image = tiffImages.values().iterator().next();
-            
+
             this.displayName=super.imgName;//+ "  " +image.getImageFile().getName();
-            
+
             parseProductXML(productxml);
-            
+
             bounds = new Rectangle(0, 0, image.xSize, image.ySize);
             readPixel(0,0,0);
         } catch (Exception ex) {
@@ -106,7 +106,7 @@ public class Radarsat2Image extends SarImageReader {
     }
 
     /**
-     * 
+     *
      * @param imageFile
      * @throws IOException
      */
@@ -123,44 +123,22 @@ public class Radarsat2Image extends SarImageReader {
             }
         }
         if (productxml == null) throw new IOException("Cannot find product.xml");
-                
+
         //set the path for the overview images
         overviewImage=new StringBuilder(parent.getAbsolutePath()).append("BrowseImage.tif").toString();
-        
+
     }
 
     public TIFF getImage(int band){
     	return this.tiffImages.get(getBandName(band));
     }
-    
+
 	@Override
 	public int[] read(int x, int y, int w, int h, int band) throws IOException {
-		//TODO: check 
-		
-		/*Rectangle rect = new Rectangle(x, y, w, h);
-        rect = rect.intersection(bounds);
-        int[] data= new int[h*w];
-        if (rect.isEmpty()) {
-            return data;
-        }
-
-        TIFF tiff=getImage(band);
-        int[] rawData = tiff.getReader().read(0).getData(rect).getSamples(x, y,rect.width,rect.height, 0, (int[]) null);
-        
-        int yOffset = getImage(band).xSize;
-        int xinit = rect.x - x;
-        int yinit = rect.y - y;
-        for (int i = 0; i < rect.height; i++) {
-            for (int j = 0; j < rect.width; j++) {
-                int temp = i * yOffset + j + rect.x;
-                data[(i + yinit) * w + j + xinit] = rawData[temp];
-            }
-        }
-        return data;*/
 		return readTile(x, y, w, h, band);
 	}
 
-    
+
     @Override
     public void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
@@ -178,7 +156,7 @@ public class Radarsat2Image extends SarImageReader {
             System.gc();
         }
     }
-    
+
     @Override
     public int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
@@ -222,7 +200,7 @@ public class Radarsat2Image extends SarImageReader {
         return bands[band];
     }
 
-    
+
 
     @Override
     public void dispose() {
@@ -237,7 +215,7 @@ public class Radarsat2Image extends SarImageReader {
     private Map<String, TIFF> getImages() {
         List<?> elements = doc.getRootElement().getChild("imageAttributes", ns).getChildren("fullResolutionImageData", ns);
         Map<String, TIFF> tiffs = new HashMap<String, TIFF>();
-        
+
         for (Object o : elements) {
             if (o instanceof Element) {
                 File f = new File(productxml.getParent(), ((Element) o).getText());
@@ -257,7 +235,7 @@ public class Radarsat2Image extends SarImageReader {
             setSatellite("RADARSAT-2");
             setSensor("SAR Payload Module");
 
-            
+
             Element atts = doc.getRootElement().getChild("imageGenerationParameters", ns);
 
             // generalprocessinginformation
@@ -272,8 +250,8 @@ public class Radarsat2Image extends SarImageReader {
             setMetadataXML(atts, "incidenceAngleFarRange", INCIDENCE_FAR, ns,Float.class);
             double slantRange=(Double)setMetadataXML(atts, "slantRangeNearEdge", SLANT_RANGE_NEAR_EDGE, ns,Double.class);
             double satH=(Double)setMetadataXML(atts, "satelliteHeight", SATELLITE_ALTITUDE, ns,Double.class);
-            
-            
+
+
             // rasterattributes
             atts = doc.getRootElement().getChild("imageAttributes", ns).getChild("rasterAttributes", ns);
             if(atts.getChild("numberOfLines", ns) != null)
@@ -282,64 +260,64 @@ public class Radarsat2Image extends SarImageReader {
                 setMetaWidth(Integer.parseInt(atts.getChild("numberOfSamplesPerLine", ns).getText()));
             if(atts.getChild("bitsPerSample", ns) != null)
                 setNumberOfBytes(Integer.parseInt(atts.getChild("bitsPerSample", ns).getText())/8);
-            
+
             float pixSpace=(Float)setMetadataXML(atts, "sampledPixelSpacing", AZIMUTH_SPACING, ns,Float.class);
             float rangeSpace=(Float)setMetadataXML(atts, "sampledPixelSpacing", RANGE_SPACING, ns,Float.class);
-            
+
             pixelsize[0]=rangeSpace;
             pixelsize[1]=pixSpace;
-            
+
             String pixelTimeOrd=(String)setMetadataXML(atts, "pixelTimeOrdering", SIMPLE_TIME_ORDERING, ns,String.class);
-            
+
             // geolocationgrid
             atts = doc.getRootElement().getChild("imageAttributes", ns);
             atts = atts.getChild("geographicInformation", ns);
-            
+
             Element attsEllipsoid =atts.getChild("referenceEllipsoidParameters", ns);
-            
-            
+
+
             double max=(Double)setMetadataXML(attsEllipsoid,MAJOR_AXIS, "semiMajorAxis",ns,Double.class);
             double min=(Double)setMetadataXML(attsEllipsoid,MINOR_AXIS, "semiMinorAxis",ns,Double.class);
             double sixeXPixel=new Double(getWidth());
             double geoH=(Double)setMetadataXML(attsEllipsoid,GEODETIC_TERRA_HEIGHT, "geodeticTerrainHeight",ns,Double.class);
-            
+
             atts = atts.getChild("geolocationGrid", ns);
-                        
+
             @SuppressWarnings("unchecked")
 			List <Element> tiePoints=atts.getChildren("imageTiePoint", ns);
             HashMap<Double,Double> iaValues=new HashMap<Double,Double>();
-            
-            
+
+
             Element first=tiePoints.get(0);
             Element last=tiePoints.get(tiePoints.size()-1);
             double latMin=Double.parseDouble(first.getChild("geodeticCoordinate", ns).getChild("latitude", ns).getText());
             double latMax=Double.parseDouble(last.getChild("geodeticCoordinate", ns).getChild("latitude", ns).getText());
-            
+
             double earthRad=GeoUtils.earthRadiusFromLatitude(Math.abs((latMax-latMin)/2),min ,max);
             double geoidHeight=0;
-            
+
             for (Element elem : tiePoints) {
                 Gcp gcp = new Gcp();
-                
+
                 Element imgCoo = elem.getChild("imageCoordinate", ns);
                 double pixel=Double.parseDouble(imgCoo.getChild("pixel", ns).getText());
                 double line= Double.parseDouble(imgCoo.getChild("line", ns).getText());
-                
+
                 Element geoCoo = elem.getChild("geodeticCoordinate", ns);
                 double longitude=Double.parseDouble(geoCoo.getChild("longitude", ns).getText());
                 double latitude=Double.parseDouble(geoCoo.getChild("latitude", ns).getText());
-                
+
                 gcp.setXpix(pixel);
                 gcp.setYpix(line);
                 gcp.setXgeo(longitude);
                 gcp.setYgeo(latitude);
                 gcp.setOriginalXpix(pixel);
                 gcp.setZgeo(Double.parseDouble(geoCoo.getChild("height", ns).getText()));
-                
+
                 Double ia=iaValues.get(pixel);
-                
+
                 try{
-                	
+
                 	if(!gcps.isEmpty()){
                 		Gcp previous=gcps.get(gcps.size()-1);
                 		double distanceFromPrevious=GeoUtils.distance(previous.getXgeo(),previous.getYgeo(), longitude, latitude);
@@ -349,7 +327,7 @@ public class Radarsat2Image extends SarImageReader {
                 	}else{
                 		geoidHeight=GeoUtils.getGeoidH(longitude,latitude);
                 	}
-	                
+
 	                double dx=0;
                 	if(ia==null){
 		                //geocorrection
@@ -370,10 +348,10 @@ public class Radarsat2Image extends SarImageReader {
 		                }else{
 		                	dx=GeoUtils.gcpGrdGeoCorrectionMeters(ia,geoH,geoidHeight);
 		                }
-                	}   
+                	}
 	                //covert from meters to pixel
 	                dx=(dx/pixSpace);
-	                 
+
 	                if(pixelTimeOrd.equalsIgnoreCase("Increasing"))
 	                	gcp.setXpix(pixel+dx);
 	                else
@@ -381,11 +359,11 @@ public class Radarsat2Image extends SarImageReader {
                 }catch(Exception e){
                 	logger.warn( "Error during geocorrection");
                     gcp.setXpix(pixel);
-                }   
-                
+                }
+
                 gcp.setYpix(line);
                 gcps.add(gcp);
-               
+
             }
 
             String epsg = "EPSG:4326";
@@ -416,7 +394,7 @@ public class Radarsat2Image extends SarImageReader {
 
             atts = doc.getRootElement().getChild("sourceAttributes", ns);
             atts = atts.getChild("radarParameters", ns);
-            
+
             setMetadataXML(atts, "beams", BEAM, ns,String.class);
             setMetadataXML(atts, "acquisitionType", MODE, ns,String.class);
             setMetadataXML(atts, "polarizations", POLARISATION, ns,String.class);
@@ -445,7 +423,7 @@ public class Radarsat2Image extends SarImageReader {
             setSatelliteOrbitInclination(98.5795);
             setRevolutionsPerdayDouble(new Double(14 + 7/34));
             setK(0.0);
-        
+
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -457,14 +435,14 @@ public class Radarsat2Image extends SarImageReader {
     public void setRevolutionsPerdayDouble(double data){
     	setMetadata(GeoMetadata.REVOLUTIONS_PERDAY,data);
     }
-    
-    
+
+
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
     	if(satelliteSpeed==0){
 	    	satelliteSpeed = calcSatelliteSpeed();
 	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-    	}    
+    	}
 
         double temp, deltaAzimuth, deltaRange;
         int[] output = new int[2];
@@ -487,8 +465,8 @@ public class Radarsat2Image extends SarImageReader {
 
             output[0] = (int) FastMath.floor(deltaAzimuth);
             output[1] = (int) FastMath.floor(deltaRange);
-            
-            
+
+
             if ((getSatellite()).equals("RADARSAT")) {
                 String myImageType = getType();
                 if (myImageType.equals("RSAT-1-SAR-SGF") || myImageType.equals("RSAT-1-SAR-SGX")) {
@@ -531,7 +509,7 @@ public class Radarsat2Image extends SarImageReader {
 	public int getHeight() {
 		return getImage(0).ySize;
 	}
-	
+
 	@Override
 	public File getOverviewFile() {
 		return new File(this.overviewImage);
@@ -546,7 +524,7 @@ public class Radarsat2Image extends SarImageReader {
 	public String getDisplayName(int band) {
 		return displayName;
 	}
-	
+
 	@Override
 	public double[] getPixelsize() {
 		return pixelsize;
