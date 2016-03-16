@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.SumoActionListener;
