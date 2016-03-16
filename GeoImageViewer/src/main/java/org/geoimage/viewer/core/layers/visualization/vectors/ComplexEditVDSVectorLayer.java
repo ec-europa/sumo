@@ -49,8 +49,6 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import gov.nasa.worldwind.layers.Layer;
-
 /**
  *
  * @author Pietro Argentieri
@@ -129,8 +127,8 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	        for(int i=0;i<thresholds.length;i++){
 	        	ts[i]=Float.parseFloat(thresholds[i]);
 	        }
-
-	        MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(this);
+	        ILayer current=SumoPlatform.getApplication().getLayerManager().getCurrentImageLayer();
+	        MaskVectorLayer mask=LayerManager.getIstanceManager().getChildMaskLayer(current);
 
 	        SumoXMLWriter.saveNewXML(new File(file),this,
 	        		//FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable),
