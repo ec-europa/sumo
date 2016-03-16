@@ -138,14 +138,9 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
         ((GeoImageViewerView) getApplication().getMainView()).addWidget(widget);
     }
 
-
     public  void refresh() {
         ((GeoImageViewerView) getApplication().getMainView()).refresh();
     }
-
-
-
-
 
     public GeoImageReader getCurrentImageReader(){
     	if(!isBatchMode()){
@@ -181,6 +176,7 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
 		mainView.setInfo(" done", 10000);
 		mainView.iconTimer(false);
+		mainView.setProgressMax(0);
 	}
 
 
