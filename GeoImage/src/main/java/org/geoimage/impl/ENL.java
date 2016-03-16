@@ -104,6 +104,8 @@ public class ENL  {
             enl = Float.parseFloat(temp);
         } else if (gir instanceof TerrasarXImage) {
             enl = Float.parseFloat(gir.getENL());
+        }else {
+            enl = 1;
         }
         return enl;
     }

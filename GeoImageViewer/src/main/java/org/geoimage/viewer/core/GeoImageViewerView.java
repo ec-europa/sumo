@@ -3,6 +3,7 @@
  */
 package org.geoimage.viewer.core;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -330,9 +331,17 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   double lat=FastMath.floor(geo[1]*100000)/100000;
 
 	                    	   int val=0;
+	                    	   StringBuilder pixelValue=new StringBuilder("");
 	                    	   try{
 	                    		  if(p.x>=0&&p.y>=0&&p.x<gir.getWidth()-1&&p.y<gir.getHeight()-1)
 	                    			  val=gir.readPixel(p.x, p.y, imgL.getActiveBand());
+	                    		  if(val>=0)
+	                    			  pixelValue.append(val);
+	                    		  else{
+		                    		  Color c=new Color(val);
+		                    		  pixelValue.append("R:").append(c.getRed()).append(" G:").append(c.getGreen())
+		                    		  			.append(" B:").append(c.getBlue()).append(" A:").append(c.getAlpha());
+	                    		  }
 	                    	   }catch(Exception ex){
 	                    		   val=0;
 	                    	   }
@@ -341,7 +350,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
 	                    	   		.append(lon).append("  Lat:")
 	                    	   		.append(lat).append("           x:")
 	                    	   		.append(p.x).append("  y:").append(p.y)
-	                    	   		.append("  value:").append(val);
+	                    	   		.append("  value:").append(pixelValue);
 
 	                    	   positionLabel.setText(infopos.toString());
 	                       }

@@ -527,8 +527,9 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
 
 	@Override
     public Date getImageDate(){
-	 //TODO check this
-    	Timestamp t=Timestamp.valueOf(getTimeStampStart());
+		String ts=getTimeStampStart();
+		ts=ts.replace("Z", "");
+    	Timestamp t=Timestamp.valueOf(ts);
     	return new Date(t.getTime());
     }
 
