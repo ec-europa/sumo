@@ -373,7 +373,7 @@ public class VDSAnalysis{
         if(iceMask!=null){
         	//Read pixels for ice
         	iceMaskdata=iceMask.getRasterDataMask(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy, -xLeftTile, -yTopTile, 1.0);
-        	size=maskdata.length;
+        	size=iceMaskdata.length;
         }
 
         if(iceMaskdata==null)

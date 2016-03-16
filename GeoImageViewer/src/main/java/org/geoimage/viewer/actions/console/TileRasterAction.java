@@ -89,11 +89,11 @@ public class TileRasterAction extends AbstractConsoleAction {
 							int y=layer.getRealTileSizeY()*row;
 							int x=layer.getRealTileSizeX()*col;
 
-							boolean saved=mg.saveRaster(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), 0, 0, 1, output);
+							boolean saved=mg.saveRaster(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), -x, -y, 1, output);
 							if(mergedDataMask==null){
-								mergedDataMask=mg.getRasterDataMask(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), 0, 0, 1);//new int [ layer.getRealTileSizeX()*layer.getRealTileSizeY()];
+								mergedDataMask=mg.getRasterDataMask(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), -x, -y, 1);//new int [ layer.getRealTileSizeX()*layer.getRealTileSizeY()];
 							}else{
-								int[] dataMaskTmp=mg.getRasterDataMask(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), 0, 0, 1);
+								int[] dataMaskTmp=mg.getRasterDataMask(x, y, layer.getRealTileSizeX(),layer.getRealTileSizeY(), -x, -y, 1);
 								for (int i=0;i<dataMaskTmp.length;i++){
 									if(mergedDataMask[i]==0){
 										if(dataMaskTmp[i]==1)
