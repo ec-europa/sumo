@@ -13,7 +13,6 @@ import java.util.Vector;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.wwj.VectorObject;
 
 import com.vividsolutions.jts.geom.Geometry;

@@ -1,4 +1,4 @@
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.visualization;
 
 import java.util.Collection;
 import java.util.HashMap;

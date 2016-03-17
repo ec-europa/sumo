@@ -26,6 +26,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.sumoxml.Analysis;
 import org.geoimage.viewer.core.io.sumoxml.Boat;
@@ -34,9 +35,8 @@ import org.geoimage.viewer.core.io.sumoxml.Gcps;
 import org.geoimage.viewer.core.io.sumoxml.SatImageMetadata;
 import org.geoimage.viewer.core.io.sumoxml.VdsAnalysis;
 import org.geoimage.viewer.core.io.sumoxml.VdsTarget;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.jdom.Document;
@@ -80,7 +80,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	            os.close();*/
 			
 			
-			GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
+			GeometryCollection layer = new GeometryCollection(GeometryCollection.POINT);
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = builder.build(input);
@@ -88,7 +88,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			GeometryFactory gf = new GeometryFactory();
 			Element root = doc.getRootElement().getChild("image");
 			if (root != null) {
-				layer.setGeometryType(GeometricLayer.MIXED);
+				layer.setGeometryType(GeometryCollection.MIXED);
 				Element gcps = root.getChild("gcps");
 				if (gcps != null) {
 					Coordinate[] coords = new Coordinate[gcps.getChildren("gcp").size() + 1];

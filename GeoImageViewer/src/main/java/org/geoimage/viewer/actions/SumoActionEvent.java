@@ -1,4 +1,4 @@
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.actions;
 
 public class SumoActionEvent {
 	public static final int STARTACTION=0;

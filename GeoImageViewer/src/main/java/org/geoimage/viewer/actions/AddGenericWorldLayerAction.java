@@ -7,15 +7,13 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 
 import org.geoimage.def.SarImageReader;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.SimpleShapefile;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
-import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
@@ -49,7 +47,7 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction {
                 	if(l!=null){
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-                            GeometricLayer gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
+                            GeometryCollection gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
 
                             int t=MaskVectorLayer.COASTLINE_MASK;
                             //if(args[1].equalsIgnoreCase("ice"))

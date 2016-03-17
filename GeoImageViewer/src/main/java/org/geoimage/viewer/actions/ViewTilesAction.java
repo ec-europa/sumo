@@ -10,7 +10,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.actions.console.AbstractConsoleAction;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.geoimage.viewer.util.GeometryExtractor;

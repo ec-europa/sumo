@@ -12,8 +12,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
-import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 

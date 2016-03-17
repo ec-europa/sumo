@@ -13,6 +13,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.actions.SumoActionEvent;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -20,10 +22,8 @@ import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
@@ -79,7 +79,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
         	 int nTile=SumoPlatform.getApplication().getConfiguration().getNumTileBBAnalysis();
         	 blackBorderAnalysis.analyse(nTile,BlackBorderAnalysis.ANALYSE_ALL);
         	 List<Coordinate>cc=blackBorderAnalysis.getCoordinatesThresholds();
-        	 GeometricLayer bbanal=new GeometricLayer("BBAnalysis",GeometricLayer.POINT,cc);
+        	 GeometryCollection bbanal=new GeometryCollection("BBAnalysis",GeometryCollection.POINT,cc);
         	 GenericLayer ivl = FactoryLayer.createComplexLayer(bbanal);
         	 ivl.setColor(Color.GREEN);
         	 ivl.setWidth(5);
@@ -109,7 +109,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 						int row=Integer.parseInt(arg1);
 						int col=Integer.parseInt(arg2);
 						String direction="H"; //h= horizontal v=vertical
-						if(paramsAction.size()==4)
+						if(commandLine.length==4)
 							direction=arg2;
 						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,layer.getRealTileSizeX(),layer.getRealTileSizeY(),null);
 						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
@@ -282,7 +282,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 				box = PolygonOp.createPolygon(v1,v2,v3,v4,v5);
 				List <Geometry>gg=new ArrayList<>();
 				gg.add(box);
-				clayer.addGeometries("Tile", Color.YELLOW,2,GeometricLayer.POLYGON, gg, true);
+				clayer.addGeometries("Tile", Color.YELLOW,2,GeometryCollection.POLYGON, gg, true);
 			} catch (ParseException e) {
 				logger.warn("box not added");
 			}

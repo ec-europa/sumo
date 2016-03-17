@@ -11,12 +11,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.api.ISelect;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.io.GenericCSVIO;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -31,7 +31,7 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
 
     private String whereClause = null;
 
-    public SelectableVectorLayer(ILayer parent,String layername,  String type, GeometricLayer layer) {
+    public SelectableVectorLayer(ILayer parent,String layername,  String type, GeometryCollection layer) {
         super(parent,layername, type, layer);
         buildDatabase(glayer);
     }
@@ -75,7 +75,7 @@ public class SelectableVectorLayer extends GenericLayer implements ISelect {
         }
     }
 
-    private void buildDatabase(GeometricLayer glayer) {
+    private void buildDatabase(GeometryCollection glayer) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/VectorData;AUTO_SERVER=TRUE", "sa", "");
             Statement stat = conn.createStatement();

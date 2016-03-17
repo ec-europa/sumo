@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IEditable;
@@ -17,9 +18,8 @@ import org.geoimage.viewer.core.api.IKeyPressed;
 import org.geoimage.viewer.core.api.IMouseDrag;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.LayerPickedData;
 import org.geoimage.viewer.widget.AttributesEditor;
 
@@ -50,7 +50,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
     protected boolean undo=false;
     
     
-    public EditGeometryVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+    public EditGeometryVectorLayer(ILayer parent,String layername, String type, GeometryCollection layer) {
         super(parent,layername, type, layer);
         gf = new GeometryFactory();
     }
@@ -140,7 +140,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         float zoom = context.getZoom(), width = context.getWidth() * zoom, height = context.getHeight() * zoom;
 
        
-        if (type.equalsIgnoreCase(GeometricLayer.POLYGON) || type.equalsIgnoreCase(GeometricLayer.LINESTRING)) {
+        if (type.equalsIgnoreCase(GeometryCollection.POLYGON) || type.equalsIgnoreCase(GeometryCollection.LINESTRING)) {
             GL2ShapesRender.renderPolygons(context, width, height,glayer.getGeometries(), 2,getColor());
         }
 
@@ -216,10 +216,10 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
     }
 
     protected void performAdd(Point imagePosition, OpenGLContext context) {
-        if (type.equals(GeometricLayer.POINT)) {
+        if (type.equals(GeometryCollection.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             glayer.put(selectedGeometry);
-        } else if (type.equals(GeometricLayer.POLYGON) || type.equals(GeometricLayer.LINESTRING)) {
+        } else if (type.equals(GeometryCollection.POLYGON) || type.equals(GeometryCollection.LINESTRING)) {
             if (selectedGeometry == null && (glayer.getGeometries().size() != 0)) {
                 mouseClicked(imagePosition, BUTTON1);
                 return;
@@ -228,7 +228,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
                 try {
                     double step = 5 * context.getZoom();
                     Coordinate initend = new Coordinate(imagePosition.x - step, imagePosition.y - step);
-                    if (type.equals(GeometricLayer.POLYGON)) {
+                    if (type.equals(GeometryCollection.POLYGON)) {
                         selectedGeometry = gf.createPolygon(gf.createLinearRing(new Coordinate[]{initend, new Coordinate(imagePosition.x - step, imagePosition.y + step), new Coordinate(imagePosition.x + step, imagePosition.y + step), initend}), null);
                     } else {
                         selectedGeometry = gf.createLineString(new Coordinate[]{initend, new Coordinate(imagePosition.x - step, imagePosition.y + step)});
@@ -246,7 +246,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
             }
             int index = -1;
             double dist = Double.MAX_VALUE;
-            if (type.equals(GeometricLayer.POLYGON)) {
+            if (type.equals(GeometryCollection.POLYGON)) {
                 Coordinate[] polygon = ((Polygon) currGeom).getExteriorRing().getCoordinates();
                 for (int i = 0; i < polygon.length - 1; i++) {
                     Coordinate point = polygon[i];
@@ -301,7 +301,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
                 }
             }
 
-            if (type.equals(GeometricLayer.POINT)) {
+            if (type.equals(GeometryCollection.POINT)) {
                 glayer.put(gf.createPoint(editedPoint));
                 editedPoint = null;
                 return;
@@ -319,12 +319,12 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
         }
         if (this.editedPoint == null) {
             com.vividsolutions.jts.geom.Point p = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
-            if (type.equals(GeometricLayer.POINT)) {
+            if (type.equals(GeometryCollection.POINT)) {
                 if (p.isWithinDistance(selectedGeometry, 5 * context.getZoom())) {
                     toBeRemoved.add(selectedGeometry);
                 }
                 selectedGeometry = null;
-            } else if (type.equals(GeometricLayer.POLYGON)) {
+            } else if (type.equals(GeometryCollection.POLYGON)) {
                 Coordinate[] polygon = ((Polygon) selectedGeometry).getExteriorRing().getCoordinates();
                 for (Coordinate point : polygon) {
                     if (p.isWithinDistance(gf.createPoint(point), 5 * context.getZoom())) {
@@ -358,9 +358,9 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
             //super.mouseClicked(imagePosition, IClickable.BUTTON1, context);
 
             if (this.editedPoint == null && selectedGeometry != null) {
-                if (type.equals(GeometricLayer.POINT)) {
+                if (type.equals(GeometryCollection.POINT)) {
                     this.editedPoint = selectedGeometry.getCoordinate();
-                } else if (type.equals(GeometricLayer.POLYGON)) {
+                } else if (type.equals(GeometryCollection.POLYGON)) {
                     LineString ls = ((Polygon) selectedGeometry).getExteriorRing();
                     for (int i = 0; i < ls.getNumPoints(); i++) {
                         Coordinate point = ls.getCoordinateN(i);
@@ -404,7 +404,7 @@ public class EditGeometryVectorLayer extends GenericLayer implements IClickable,
             selectedGeometry = null;
             return;
         }
-        if (type.equals(GeometricLayer.POLYGON) || type.equals(GeometricLayer.LINESTRING)) {
+        if (type.equals(GeometryCollection.POLYGON) || type.equals(GeometryCollection.LINESTRING)) {
             selectedGeometry.apply(new CoordinateSequenceFilter() {
 
                 public void filter(CoordinateSequence seq, int i) {
