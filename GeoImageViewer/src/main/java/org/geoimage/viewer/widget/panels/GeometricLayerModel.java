@@ -7,7 +7,7 @@ package org.geoimage.viewer.widget.panels;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -17,9 +17,9 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class GeometricLayerModel extends DefaultTableModel {
 
-    private GeometryCollection gl;
+    private GeometryImage gl;
 
-    public GeometricLayerModel(GeometryCollection gl) {
+    public GeometricLayerModel(GeometryImage gl) {
         this.gl = gl;
     }
 

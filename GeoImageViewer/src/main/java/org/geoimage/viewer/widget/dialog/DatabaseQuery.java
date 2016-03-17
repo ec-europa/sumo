@@ -8,7 +8,7 @@ package org.geoimage.viewer.widget.dialog;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -41,7 +41,7 @@ public class DatabaseQuery extends javax.swing.JPanel {
         this.connection = connection;
     }
 
-    public GeometryCollection getLayer() throws Exception {
+    public GeometryImage getLayer() throws Exception {
         if (rs == null) {
             return null;
         } else {
@@ -75,13 +75,13 @@ public class DatabaseQuery extends javax.swing.JPanel {
                 }
             }
 
-            GeometryCollection glayer = null;
+            GeometryImage glayer = null;
             if (geom instanceof Point) {
-                glayer = new GeometryCollection(GeometryCollection.POINT);
+                glayer = new GeometryImage(GeometryImage.POINT);
             } else if (geom instanceof Polygon) {
-                glayer = new GeometryCollection(GeometryCollection.POLYGON);
+                glayer = new GeometryImage(GeometryImage.POLYGON);
             } else if (geom instanceof LineString) {
-                glayer = new GeometryCollection(GeometryCollection.LINESTRING);
+                glayer = new GeometryImage(GeometryImage.LINESTRING);
             }
             glayer.setName(jTextArea1.getText());
             AttributesGeometry att = new AttributesGeometry(schema);

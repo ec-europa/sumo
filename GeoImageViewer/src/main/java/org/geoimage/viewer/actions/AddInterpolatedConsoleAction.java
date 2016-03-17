@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -104,7 +104,7 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
                     try {
                         PostgisIO pio=new PostgisIO(l.getImageReader(),config);
                         pio.setLayerName(layer);
-                        GeometryCollection gl = pio.readLayer();
+                        GeometryImage gl = pio.readLayer();
                         LayerManager.addLayerInThread(createLayer(args[1], args[2], gl, (ImageLayer) l));
 
                     } catch (Exception ex) {
@@ -166,7 +166,7 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
         if(l!=null){
                 try {
                 	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-                    GeometryCollection gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
+                    GeometryImage gl = SimpleShapefile.createIntersectedLayer(new File(file),imageP, ((SarImageReader)l.getImageReader()).getGeoTransform());
                     LayerManager.addLayerInThread(createLayer(getParamValue("data type"),
                     		getParamValue("Id Column"), gl, (ImageLayer) l));
 
@@ -182,13 +182,13 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
             ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
             if(l!=null){
             		GenericCSVIO csvio=new GenericCSVIO(file);//,l.getImageReader().getGeoTransform());
-                    GeometryCollection positions = csvio.readLayer();
+                    GeometryImage positions = csvio.readLayer();
                     if (positions.getProjection() == null) {
                         LayerManager.addLayerInThread(createLayer(paramsAction.get("Id Column"),
                         		paramsAction.get("Date Column"), positions, (ImageLayer) l));
                     } else {
                     	try{
-                        	positions = GeometryCollection.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                        	positions = GeometryImage.createImageProjected(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
                     			LayerManager.addLayerInThread(createLayer(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l));
                     	}catch(Exception e){
@@ -204,12 +204,12 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
                     ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
                     if(l!=null){
                     		GenericCSVIO csvio=new GenericCSVIO(fd.getSelectedFile());//,l.getImageReader().getGeoTransform());
-                    		GeometryCollection positions = csvio.readLayer();
+                    		GeometryImage positions = csvio.readLayer();
                             if (positions.getProjection() == null) {
                             	LayerManager.addLayerInThread(createLayer(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l));
                             } else {
-                                positions = GeometryCollection.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                                positions = GeometryImage.createImageProjected(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
                                 LayerManager.addLayerInThread(createLayer(paramsAction.get("Id Column"),
                                 		paramsAction.get("Date Column"), positions, (ImageLayer) l));
                             }
@@ -222,7 +222,7 @@ public class AddInterpolatedConsoleAction extends SumoAbstractAction {
         }
     }
 
-    private static ILayer createLayer(String id, final String date, GeometryCollection layer, ImageLayer parent) {
+    private static ILayer createLayer(String id, final String date, GeometryImage layer, ImageLayer parent) {
     	String start=((SarImageReader)parent.getImageReader()).getTimeStampStart();
     	start=start.replace("Z","");
     	Timestamp t=Timestamp.valueOf(start);

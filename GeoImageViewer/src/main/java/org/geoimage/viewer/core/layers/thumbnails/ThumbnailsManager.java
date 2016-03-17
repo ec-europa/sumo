@@ -19,7 +19,7 @@ import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
 import org.geoimage.viewer.actions.SumoActionListener;
 import org.geoimage.viewer.core.GeoImageViewerView;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.util.ImageTiler;
@@ -83,7 +83,7 @@ public class ThumbnailsManager {
         return null;
     }
 
-    public void createThumbnailsDir(GeometryCollection glayer, String idColumnName, GeoImageReader gir,int progress,int band) {
+    public void createThumbnailsDir(GeometryImage glayer, String idColumnName, GeoImageReader gir,int progress,int band) {
         try {
         	SumoPlatform ip=(SumoPlatform) SumoPlatform.getApplication();
             if (ip != null) {

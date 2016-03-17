@@ -19,7 +19,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.impl.s1.Sentinel1;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -205,7 +205,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
             for (ILayer l : LayerManager.getIstanceManager().getChilds(il)) {
-                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometryCollection.POINT)) {
+                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometryImage.POINT)) {
                 	if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
                 		coasts.add(l.getName());
                 	}else if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.ICE_MASK){

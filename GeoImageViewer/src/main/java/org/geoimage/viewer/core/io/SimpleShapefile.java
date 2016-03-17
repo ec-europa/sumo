@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.geoimage.def.GeoTransform;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
@@ -72,7 +72,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 
     private File shpInput=null;
     private GeoTransform transform=null;
-    private GeometryCollection layer=null;
+    private GeometryImage layer=null;
 
 
     public SimpleShapefile(File input,GeoTransform transform) {
@@ -105,8 +105,8 @@ public class SimpleShapefile extends AbstractVectorIO{
 	 * @param transform
 	 * @return
 	 */
-	public static GeometryCollection createLayer(File shpInput,GeoTransform transform) {
-    	GeometryCollection out=null;
+	public static GeometryImage createLayer(File shpInput,GeoTransform transform) {
+    	GeometryImage out=null;
         try {
         	Map<String, Serializable> params = new HashMap<String, Serializable>();
             params.put("url", shpInput.toURI().toURL());
@@ -128,7 +128,7 @@ public class SimpleShapefile extends AbstractVectorIO{
             String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
 
 
-            out=GeometryCollection.createLayerFromFeatures(geoName, dataStore,fc , schema, types,true ,transform);
+            out=GeometryImage.createLayerFromFeatures(geoName, dataStore,fc , schema, types,true ,transform);
             dataStore.dispose();
 
             //glout = GeometricLayer.createImageProjectedLayer(out, transform,null);
@@ -148,8 +148,8 @@ public class SimpleShapefile extends AbstractVectorIO{
 	 * @param transform
 	 * @return
 	 */
-    public static GeometryCollection createIntersectedLayer(File shpInput,Polygon bbox,GeoTransform transform) {
-    	GeometryCollection glout=null;
+    public static GeometryImage createIntersectedLayer(File shpInput,Polygon bbox,GeoTransform transform) {
+    	GeometryImage glout=null;
     	DataStore dataStore =null;
         try {
         	if(shpInput!=null){
@@ -179,7 +179,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            boolean applayT=false;
 	            if(transform!=null)
 	            	applayT=true;
-	            glout=GeometryCollection.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
+	            glout=GeometryImage.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
 
 
@@ -247,7 +247,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @return
      * @throws Exception
      */
-    public static GeometryCollection mergeShapeFile(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
+    public static GeometryImage mergeShapeFile(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
     	Map<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("url", shpInput.toURI().toURL());
 
@@ -278,7 +278,7 @@ public class SimpleShapefile extends AbstractVectorIO{
         Map<String, Serializable> params2 = new HashMap<String, Serializable>();
         params2.put("url", tmp.toURI().toURL());
         ShapefileDataStore newds=(ShapefileDataStore)factory.createNewDataStore(params2);
-        GeometryCollection out=null;
+        GeometryImage out=null;
         try{
 	        newds.createSchema(newFeatureType);
 
@@ -299,7 +299,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 
 
 	        String geoName = schemaLayer.getGeometryDescriptor().getType().getName().toString();
-	        out=GeometryCollection.createLayerFromFeatures(geoName, newds, mergeFeat.getFeatures(), schema, types,true,transform);
+	        out=GeometryImage.createLayerFromFeatures(geoName, newds, mergeFeat.getFeatures(), schema, types,true,transform);
 	        //out = GeometricLayer.createImageProjectedLayer(out, transform,null);
 	        out.setName("merge_"+shpInput.getName()+"_"+LayerManager.getIstanceManager().getCurrentImageLayer().getName());
         }finally{
@@ -318,7 +318,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @return
      * @throws Exception
      */
-    public static GeometryCollection mergeShapeFile2(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
+    public static GeometryImage mergeShapeFile2(SimpleFeatureCollection collectionsLayer, File shpInput,GeoTransform transform,Polygon bbox)throws Exception {
     	Map<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("url", shpInput.toURI().toURL());
 
@@ -352,7 +352,7 @@ public class SimpleShapefile extends AbstractVectorIO{
         String[] schema = createSchema(descriptorsMerge);
         String[] types = createTypes(descriptorsMerge);
 
-        GeometryCollection out=GeometryCollection.createLayerFromFeatures(geoName, newds, result, schema, types,true,transform);
+        GeometryImage out=GeometryImage.createLayerFromFeatures(geoName, newds, result, schema, types,true,transform);
 
         return out;
     }
@@ -429,7 +429,7 @@ public class SimpleShapefile extends AbstractVectorIO{
      * @param projection
      * @param reader
      */
-    public static void exportLayer(File output,GeometryCollection layer, String projection,GeoTransform transform) {
+    public static void exportLayer(File output,GeometryImage layer, String projection,GeoTransform transform) {
         try {
             String type=layer.getGeometries().get(0).getGeometryType();
             SimpleFeatureType featureType =createFeatureType(layer.getGeometries().get(0).getClass(),(AttributesGeometry)layer.getGeometries().get(0).getUserData());
@@ -635,7 +635,7 @@ public class SimpleShapefile extends AbstractVectorIO{
       * @return
       * @throws Exception
       */
-     public static FeatureCollection<SimpleFeatureType,SimpleFeature>  createFeatures(SimpleFeatureType ft, GeometryCollection glayer, String projection) throws Exception {
+     public static FeatureCollection<SimpleFeatureType,SimpleFeature>  createFeatures(SimpleFeatureType ft, GeometryImage glayer, String projection) throws Exception {
      	 DefaultFeatureCollection collection = new DefaultFeatureCollection();
           int id=0;
           for (Geometry geom : glayer.getGeometries()) {

@@ -9,7 +9,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.IThreshable;
@@ -31,7 +31,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	protected String name = "";
 	private boolean active = true;
 	private boolean isRadio = false;
-	protected GeometryCollection glayer;
+	protected GeometryImage glayer;
 	protected Color color = new Color(1f, 1f, 1f);
 	protected ILayer parent=null;
 	protected boolean threshable = false;
@@ -51,7 +51,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	 * @param type
 	 * @param layer
 	 */
-	public GenericLayer(ILayer parent,String layername,String type, GeometryCollection layer) {
+	public GenericLayer(ILayer parent,String layername,String type, GeometryImage layer) {
     	this.parent=parent;
         this.name = layername;
         this.displaysymbol = symbol.point;
@@ -76,7 +76,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	        	List<Geometry> geomList=glayer.getGeometries();
 
 	        	if (!threshable&&geomList!=null) {
-	                if (getType().equalsIgnoreCase(GeometryCollection.POINT)) {
+	                if (getType().equalsIgnoreCase(GeometryImage.POINT)) {
 	                    switch (this.displaysymbol) {
 	                        case point: {
 	                        	GL2ShapesRender.renderPolygons(context, width, height, geomList, this.renderWidth, color);
@@ -105,7 +105,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        default: {
 	                        }
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometryCollection.POLYGON)) {
+	                } else if (getType().equalsIgnoreCase(GeometryImage.POLYGON)) {
 	                    for (Geometry tmp : geomList) {
 	                    	if(tmp instanceof Polygon){
 		                    	Polygon polygon=(Polygon)tmp;
@@ -147,7 +147,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 
 	                    	}
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometryCollection.LINESTRING)) {
+	                } else if (getType().equalsIgnoreCase(GeometryImage.LINESTRING)) {
 	                    for (Geometry temp : geomList) {
 	                        if (temp.getCoordinates().length < 1) {
 	                            continue;
@@ -155,7 +155,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
                             float size=(temp == selectedGeometry ? this.renderWidth * 2 : this.renderWidth);
                             GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometryCollection.MIXED)) {
+	                } else if (getType().equalsIgnoreCase(GeometryImage.MIXED)) {
 	                    for (Geometry temp : geomList) {
 	                        if (temp.getCoordinates().length < 1) {
 	                            continue;
@@ -174,7 +174,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                    }
 	                }
 	            } else {
-	                if (getType().equalsIgnoreCase(GeometryCollection.POINT)&&geomList!=null) {
+	                if (getType().equalsIgnoreCase(GeometryImage.POINT)&&geomList!=null) {
 	                	List<Geometry> toVisualize=new ArrayList<>();
                     	for (Geometry temp : geomList) {
                             if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
@@ -208,7 +208,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                        default: {
 	                        }
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometryCollection.POLYGON)||getType().equalsIgnoreCase(GeometryCollection.LINESTRING)) {
+	                } else if (getType().equalsIgnoreCase(GeometryImage.POLYGON)||getType().equalsIgnoreCase(GeometryImage.LINESTRING)) {
 	                    for (Geometry temp : geomList) {
 	                        if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
 	                            if (temp.getCoordinates().length < 1) {
@@ -218,7 +218,7 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                            GL2ShapesRender.renderPolygon(context, width, height, temp.getCoordinates(), size, color);
 	                        }
 	                    }
-	                } else if (getType().equalsIgnoreCase(GeometryCollection.MIXED)) {
+	                } else if (getType().equalsIgnoreCase(GeometryImage.MIXED)) {
 	                    for (Geometry temp : geomList) {
 	                        if (((Double) glayer.getAttributes(temp).get(VDSSchema.SIGNIFICANCE)) > currentThresh) {
 	                            if (temp.getCoordinates().length < 1) {
@@ -305,11 +305,11 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
     }
 
 
-    public GeometryCollection getGeometriclayer() {
+    public GeometryImage getGeometriclayer() {
         return glayer;
     }
 
-    public void setGeometriclayer(GeometryCollection glayer) {
+    public void setGeometriclayer(GeometryImage glayer) {
         this.glayer = glayer;
     }
 

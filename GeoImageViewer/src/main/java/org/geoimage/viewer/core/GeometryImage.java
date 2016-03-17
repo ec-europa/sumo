@@ -41,9 +41,9 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
 
 /**
  * This is THE class model for all Vector Data
- * @author thoorfr
+ *
  */
-public class GeometryCollection implements Cloneable{
+public class GeometryImage implements Cloneable{
 
 
     public final static String POINT = "point";
@@ -58,7 +58,7 @@ public class GeometryCollection implements Cloneable{
     private String projection;
     private FeatureCollection<?,?> featureCollection =null;
 
-    private static Logger logger= LoggerFactory.getLogger(GeometryCollection.class);
+    private static Logger logger= LoggerFactory.getLogger(GeometryImage.class);
 
 
 	public String getType() {
@@ -77,7 +77,7 @@ public class GeometryCollection implements Cloneable{
 	 * @param pixels
 	 * @return
 	 */
-	public GeometryCollection(String name,String type,List<Coordinate>geoms) {
+	public GeometryImage(String name,String type,List<Coordinate>geoms) {
 		this.type=type;
 		this.name=name;
 
@@ -101,7 +101,7 @@ public class GeometryCollection implements Cloneable{
 	 * @param pixels
 	 * @return
 	 */
-	public GeometryCollection(String name,String type,String timeStampStart,double azimuth, Boat[] boats) {
+	public GeometryImage(String name,String type,String timeStampStart,double azimuth, Boat[] boats) {
 		this.type=type;
 		this.name=name;
         //GeometricLayer out = new GeometricLayer("point");
@@ -147,7 +147,7 @@ public class GeometryCollection implements Cloneable{
      * @return
      * @throws GeoTransformException
      */
-    public static GeometryCollection createImageProjectedLayer(GeometryCollection layer, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    public static GeometryImage createImageProjected(GeometryImage layer, GeoTransform geoTransform, String projection) throws GeoTransformException {
     	long startTime = System.currentTimeMillis();
     	for(Geometry geom:layer.geoms){
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
@@ -160,7 +160,7 @@ public class GeometryCollection implements Cloneable{
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */
-    public static GeometryCollection createImageProjectedLayer(GeometryCollection layer, AffineTransform geoTransform) {
+    public static GeometryImage createImageProjected(GeometryImage layer, AffineTransform geoTransform) {
         for(Geometry geom:layer.geoms){
             for(Coordinate pos:geom.getCoordinates()){
                 Point2D.Double temp=new Point2D.Double();
@@ -180,8 +180,8 @@ public class GeometryCollection implements Cloneable{
      * Modify the GeometricLayer so the layer coordinates system matches the world coordinate system (EPSG projection).
      * @throws GeoTransformException
      */
-    public static GeometryCollection createWorldProjectedLayer(GeometryCollection oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
-    	GeometryCollection positions=oldPositions.clone();
+    public static GeometryImage createWorldProjectedLayer(GeometryImage oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    	GeometryImage positions=oldPositions.clone();
 
         //Coordinate previous=new Coordinate(0,0);
         for(Geometry geom:positions.geoms){
@@ -208,13 +208,13 @@ public class GeometryCollection implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometryCollection createFromSimpleGeometry(final Polygon imageP,final String geoName,
+    public static GeometryImage createFromSimpleGeometry(final Polygon imageP,final String geoName,
     		FeatureCollection fc, final String[] schema,
     		final String[] types, boolean applayTransformation,GeoTransform transform) throws IOException{
-        GeometryCollection out=null;
+        GeometryImage out=null;
         GeometryFactory gf=new GeometryFactory();
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometryCollection(GeometryCollection.POLYGON);//LINESTRING);//POLYGON);
+                out = new GeometryImage(GeometryImage.POLYGON);//LINESTRING);//POLYGON);
                 //out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
                 out.setFeatureCollection(fc);
 
@@ -295,7 +295,7 @@ public class GeometryCollection implements Cloneable{
                 	fi.close();
                 }
             } else if (geoName.contains("Point")) {
-                out = new GeometryCollection(GeometryCollection.POINT);
+                out = new GeometryImage(GeometryImage.POINT);
                 FeatureIterator<?> fi = fc.features();
                 try{
 	                while (fi.hasNext()) {
@@ -336,15 +336,15 @@ public class GeometryCollection implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometryCollection createLayerFromFeatures(String geoName, DataStore dataStore,
+    public static GeometryImage createLayerFromFeatures(String geoName, DataStore dataStore,
     		FeatureCollection fc, final String[] schema,
     		final String[] types,boolean applayTransformation,GeoTransform transform) throws IOException{
 
-        GeometryCollection out=null;
+        GeometryImage out=null;
         if (geoName.contains("Polygon") || geoName.contains("Line"))
-                out = new GeometryCollection(GeometryCollection.POLYGON);
+                out = new GeometryImage(GeometryImage.POLYGON);
         else
-        	out = new GeometryCollection(GeometryCollection.POINT);
+        	out = new GeometryImage(GeometryImage.POINT);
 
        	out.setName(dataStore.getTypeNames()[0]);
        	//out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
@@ -419,11 +419,11 @@ public class GeometryCollection implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometryCollection addGeomsToLayerFromFeatures(GeometryCollection layer,String geoName,
+    public static GeometryImage addGeomsToLayerFromFeatures(GeometryImage layer,String geoName,
     		DataStore dataStore, FeatureCollection addFc,
     		final String[] schema, final String[] types,
     		boolean applayTransformation,GeoTransform transform) throws IOException{
-        GeometryCollection out=(GeometryCollection)layer.clone();
+        GeometryImage out=(GeometryImage)layer.clone();
 
 	        FeatureIterator<?> fi = addFc.features();
 	        try{
@@ -485,7 +485,7 @@ public class GeometryCollection implements Cloneable{
     }
 
 
-    public GeometryCollection(String type) {
+    public GeometryImage(String type) {
         geoms = new ArrayList<Geometry>();
         //attsMap = new HashMap<>();
         this.type=type;
@@ -496,8 +496,8 @@ public class GeometryCollection implements Cloneable{
      * @return
      */
     @Override
-    public GeometryCollection clone(){
-        GeometryCollection out=new GeometryCollection(type);
+    public GeometryImage clone(){
+        GeometryImage out=new GeometryImage(type);
         out.name=name;
         out.projection=projection;
       //  out.featureSource=featureSource;

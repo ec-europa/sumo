@@ -12,7 +12,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ITime;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -37,7 +37,7 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
     private Hashtable<Geometry,Date> datesOfgeoms=new Hashtable<Geometry, Date>();
     private boolean onWork;
 
-    public TimeVectorLayer(ILayer parent,String layername,  String type, GeometryCollection layer, String timeColumn) {
+    public TimeVectorLayer(ILayer parent,String layername,  String type, GeometryImage layer, String timeColumn) {
         super(parent,layername,  type, layer);
         this.timeColumn = timeColumn;
         renderedLayer.addAll(layer.getGeometries());
@@ -69,7 +69,7 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
             gl.glColor3f(c[0], c[1], c[2]);
 
             if (glayer != null) {
-                if (getType().equalsIgnoreCase(GeometryCollection.POINT)) {
+                if (getType().equalsIgnoreCase(GeometryImage.POINT)) {
                     gl.glPointSize(this.renderWidth);
                     gl.glBegin(GL.GL_POINTS);
                     for (Geometry temp : renderedLayer) {
@@ -86,7 +86,7 @@ public class TimeVectorLayer extends GenericLayer implements ITime {
                         gl.glEnd();
                         gl.glFlush();
                     }
-                } else if (getType().equalsIgnoreCase(GeometryCollection.POLYGON)) {
+                } else if (getType().equalsIgnoreCase(GeometryImage.POLYGON)) {
                     for (Geometry temp : renderedLayer) {
                         if (temp.getCoordinates().length < 1) {
                             continue;
