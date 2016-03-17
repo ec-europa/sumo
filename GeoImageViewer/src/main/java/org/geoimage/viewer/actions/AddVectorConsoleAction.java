@@ -28,6 +28,7 @@ import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.GmlIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
+import org.geoimage.viewer.core.io.SumoXMLWriter;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.GeometricLayer;
@@ -148,7 +149,9 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
 
             	GeometricLayer positions=loadSumoXML(args);
         		lay=FactoryLayer.createMaskLayer(positions,t);*/
-
+            	File xml=selectFile(new String[]{"xml","XML"});
+            	SumoXMLWriter xmlWR=new SumoXMLWriter(xml);
+            	xmlWR.read();
             } else if (getParamValue(paramFileType).equals("gml")) {
             	GeometricLayer positions=loadGml();
                 GenericLayer gl=FactoryLayer.createComplexLayer(positions);

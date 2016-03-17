@@ -121,7 +121,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            String typStr=fss.readLine();
 	            String[] types=null;
 	            if(typStr!=null&&!typStr.isEmpty()){
-	            	typStr.split(",");
+	            	types=typStr.split(",");
 	            }else{
 	            	types=new String[titles.length];
 	            	Arrays.fill(types,"String");
@@ -141,7 +141,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            boolean usegeom=true;
 	            if(titles[0].equals("geom")){
 	            	//if file contains the geom , atts start from the second colums
-                	types=ArrayUtils.subarray(types, 0,types.length);
+                	//types=ArrayUtils.subarray(types, 0,types.length);
                 	attributes=ArrayUtils.subarray(titles, 1,titles.length);
                 }else{
                 	usegeom=false;
