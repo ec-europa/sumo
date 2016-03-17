@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.impl.TiledBufferedImage;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.image.CacheManager;
@@ -166,7 +166,7 @@ public class AddImageAction extends SumoAbstractAction  {
             }
 	        if(old!=null){
 	        	try{
-			        GeometryCollection positions = old.readLayer();
+			        GeometryImage positions = old.readLayer();
 			        if (positions.getProjection() == null) {
 			            SumoPlatform.getApplication().getLayerManager().addLayer(new ThumbnailsLayer(null, positions, null, "id", new ThumbnailsManager(lastDirectory)));
 			        } else {

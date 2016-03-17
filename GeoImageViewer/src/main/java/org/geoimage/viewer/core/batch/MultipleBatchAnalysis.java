@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -84,7 +84,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 								activeParams.enl=confFile.getENL();
 							}
 
-							GeometryCollection gl=null;
+							GeometryImage gl=null;
 					    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
 							if(activeParams.shapeFile!=null)
@@ -100,7 +100,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 								File ice=getIceShapeFile(r.getImageDate());
 								if(ice!=null){
 									activeParams.iceShapeFile=ice.getAbsolutePath();
-									GeometryCollection glIce=readShapeFile(imageP,reader.getGeoTransform());
+									GeometryImage glIce=readShapeFile(imageP,reader.getGeoTransform());
 									iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
 								}
 							}

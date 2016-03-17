@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -52,7 +52,7 @@ public class AddWorldVectorLayerAction extends SumoAbstractAction {
                         try {
                         	File shape=new File(SumoPlatform.getApplication().getConfiguration().getDefaultLandMask());
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-                            GeometryCollection gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
+                            GeometryImage gl = SimpleShapefile.createIntersectedLayer(shape,imageP,((SarImageReader)l.getImageReader()).getGeoTransform());
 
                             int t=MaskVectorLayer.COASTLINE_MASK;
                             //if(paramsAction.get("data_type").equalsIgnoreCase("ice"))

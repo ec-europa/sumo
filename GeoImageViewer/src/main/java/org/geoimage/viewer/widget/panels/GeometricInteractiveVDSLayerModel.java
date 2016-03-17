@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -38,7 +38,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 
-    private GeometryCollection gl;
+    private GeometryImage gl;
     private ImageLayer il;
     private IComplexVectorLayer vdslayer;
     
@@ -194,8 +194,8 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 		        vdslayer.removeGeometriesByTag("boatshape");
 		        vdslayer.removeGeometriesByTag("target");
 		        // add new geometries
-		        vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometryCollection.LINESTRING, winGeom, display);
-		        vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometryCollection.LINESTRING, boatGeom, display);
+		        vdslayer.addGeometries("target", new Color(0xFF2200), 1, GeometryImage.LINESTRING, winGeom, display);
+		        vdslayer.addGeometries("boatshape", new Color(0xFF2200), 2, GeometryImage.LINESTRING, boatGeom, display);
             }    
             geoContext.setDirty(true);
             System.out.println(selectionLine + " " + geom.getCoordinate().x + " " + geom.getCoordinate().y);
@@ -261,7 +261,7 @@ public class GeometricInteractiveVDSLayerModel extends DefaultTableModel {
 	                coordinateshorizontal[0] = new Coordinate(0, posY);
 	                coordinateshorizontal[1] = new Coordinate(il.getImageReader().getWidth(), posY);
 	                winGeom.add(gf.createLineString(coordinateshorizontal));
-	                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, GeometryCollection.LINESTRING, winGeom, true);
+	                vdslayer.addGeometries(Constant.PREF_AZIMUTH_GEOMETRYTAG, this.azimuthGeometrycolor, this.azimuthGeometrylinewidth, GeometryImage.LINESTRING, winGeom, true);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}   

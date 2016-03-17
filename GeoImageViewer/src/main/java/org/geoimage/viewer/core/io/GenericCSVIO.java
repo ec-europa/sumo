@@ -16,7 +16,7 @@ import java.util.Vector;
 import org.apache.commons.lang3.ArrayUtils;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	private static org.slf4j.Logger logger = LoggerFactory
 			.getLogger(GenericCSVIO.class);
 	private File csvFile = null;
-	private GeometryCollection glayer=null;
+	private GeometryImage glayer=null;
 	
 	
 	
@@ -107,9 +107,9 @@ public class GenericCSVIO extends AbstractVectorIO{
 		return out;
 	}*/
 	//TODO: check the import from csv
-	 public GeometryCollection readLayer() {
+	 public GeometryImage readLayer() {
 	        RandomAccessFile fss = null;
-	        GeometryCollection out=null;
+	        GeometryImage out=null;
 	        try {
 	            fss = new RandomAccessFile(csvFile, "r");
 	            String line = null;
@@ -128,7 +128,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	            }
 	            
 	            String geomtype = layerinfo[0].split("=")[1];
-	            out = new GeometryCollection(geomtype);
+	            out = new GeometryImage(geomtype);
 	            out.setName(csvFile.getName().substring(0, csvFile.getName().lastIndexOf(".")));
 	            
 	            if(layerinfo.length==2){
@@ -226,7 +226,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	 * @param transform
 	 * @param append
 	 */
-	public static void export(File output,GeometryCollection glayer,String projection,GeoTransform transform,boolean append) {
+	public static void export(File output,GeometryImage glayer,String projection,GeoTransform transform,boolean append) {
 		FileWriter fis=null;
 		try {
 			fis = new FileWriter(output);
@@ -354,7 +354,7 @@ public class GenericCSVIO extends AbstractVectorIO{
 	
 	
 	
-	public static void createSimpleCSV(GeometryCollection glayer, String file,boolean append) throws IOException {
+	public static void createSimpleCSV(GeometryImage glayer, String file,boolean append) throws IOException {
 		FileWriter fw = new FileWriter(file,append);
 		try{
 	        if(!append)

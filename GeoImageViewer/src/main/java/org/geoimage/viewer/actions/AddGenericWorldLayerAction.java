@@ -7,7 +7,7 @@ package org.geoimage.viewer.actions;
 import java.io.File;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -47,7 +47,7 @@ public class AddGenericWorldLayerAction extends SumoAbstractAction {
                 	if(l!=null){
                         try {
                         	Polygon imageP=((SarImageReader)l.getImageReader()).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-                            GeometryCollection gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
+                            GeometryImage gl = SimpleShapefile.createIntersectedLayer(worldFile, imageP,l.getImageReader().getGeoTransform());
 
                             int t=MaskVectorLayer.COASTLINE_MASK;
                             //if(args[1].equalsIgnoreCase("ice"))

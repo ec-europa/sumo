@@ -14,7 +14,7 @@ import javax.media.opengl.GLBase;
 
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.visualization.GenericLayer;
@@ -43,13 +43,13 @@ public class ThumbnailsLayer extends GenericLayer {
     private ThumbnailsImageReader thumbReader;
     private float scale;
 
-    public ThumbnailsLayer(ILayer parent, GeometryCollection glayer, String projection, String idColumnName, ThumbnailsManager tmanager) throws GeoTransformException {
+    public ThumbnailsLayer(ILayer parent, GeometryImage glayer, String projection, String idColumnName, ThumbnailsManager tmanager) throws GeoTransformException {
     	super(parent,"",null,glayer);
         thumbReader = new ThumbnailsImageReader(tmanager);
         if (projection == null) {
             this.glayer = glayer;
         } else {
-            this.glayer = GeometryCollection.createImageProjectedLayer(glayer, thumbReader.getTransformation(), projection);
+            this.glayer = GeometryImage.createImageProjected(glayer, thumbReader.getTransformation(), projection);
         }
         this.id = idColumnName;
         this.tmanager = tmanager;

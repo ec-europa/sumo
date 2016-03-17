@@ -11,7 +11,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,10 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class SimpleGeometryLayer extends GenericLayer {
 
-    public final static String POINT = GeometryCollection.POINT;
-    public final static String POLYGON = GeometryCollection.POLYGON;
-    public final static String LINESTRING = GeometryCollection.LINESTRING;
-    public final static String MIXED = GeometryCollection.MIXED;
+    public final static String POINT = GeometryImage.POINT;
+    public final static String POLYGON = GeometryImage.POLYGON;
+    public final static String LINESTRING = GeometryImage.LINESTRING;
+    public final static String MIXED = GeometryImage.MIXED;
     protected boolean active = true;
 
 

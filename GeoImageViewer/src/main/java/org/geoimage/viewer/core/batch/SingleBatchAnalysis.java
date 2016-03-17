@@ -5,7 +5,7 @@ import java.util.List;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
@@ -37,7 +37,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 				String enl=reader.getENL();
 				params.enl=Float.parseFloat(enl);
 
-				GeometryCollection gl=null;
+				GeometryImage gl=null;
 				if(params.shapeFile!=null){
 			    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 					gl=readShapeFile(imageP,reader.getGeoTransform());

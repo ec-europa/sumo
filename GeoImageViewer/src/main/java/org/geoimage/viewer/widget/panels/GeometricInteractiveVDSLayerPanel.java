@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
@@ -253,7 +253,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
             		if(deleted.size()>0){
             			Geometry geom=deleted.remove(0);
             			AttributesGeometry attr=attrDeleted.remove(0);
-            			GeometryCollection gl=((ComplexEditVDSVectorLayer)layer).getGeometriclayer();
+            			GeometryImage gl=((ComplexEditVDSVectorLayer)layer).getGeometriclayer();
             			gl.put(geom,attr);
             			((ComplexEditVDSVectorLayer)layer).setSelectedGeometry(geom);
             			glm.fireTableDataChanged();
@@ -297,7 +297,7 @@ public class GeometricInteractiveVDSLayerPanel extends javax.swing.JPanel implem
         {
             if(t.getSelectedRow() != -1)
                 for(int i:t.getSelectedRows()){
-                	GeometryCollection gl=((ComplexEditVDSVectorLayer)layer).getGeometriclayer();
+                	GeometryImage gl=((ComplexEditVDSVectorLayer)layer).getGeometriclayer();
                 	Geometry geom=gl.getGeometries().get(i);
                 	deleted.add(0,geom);
                     attrDeleted.add(0,(gl).getAttributes(geom));

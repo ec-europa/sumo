@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import org.geoimage.analysis.VDSSchema;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.utils.PolygonOp;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
@@ -69,7 +69,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
      * @param masktype coastline, ice or windfarm
      * @param layer
      */
-    public MaskVectorLayer(ILayer parent,String layername,String geomType,int maskType, GeometryCollection layer) {
+    public MaskVectorLayer(ILayer parent,String layername,String geomType,int maskType, GeometryImage layer) {
     	super(parent,layername,geomType,layer);
     	this.maskType=maskType;
 
@@ -162,7 +162,7 @@ public class MaskVectorLayer extends EditGeometryVectorLayer implements  IMask,I
     }
 
     public boolean contains(int x, int y) {
-        if (getType().equals(GeometryCollection.POINT)) {
+        if (getType().equals(GeometryImage.POINT)) {
             return false;
         }
         GeometryFactory gf = new GeometryFactory();

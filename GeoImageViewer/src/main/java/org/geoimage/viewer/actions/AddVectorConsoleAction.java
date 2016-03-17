@@ -21,7 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -126,7 +126,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
              		shp=selectFile(new String[]{"shp","SHP"});
             	}
                 if(shp!=null){
-                	GeometryCollection gl=loadShapeFile(shp,"");
+                	GeometryImage gl=loadShapeFile(shp,"");
                 	lay=FactoryLayer.createMaskLayer(gl,t);
 
                 	lay.setColor(shpColor);
@@ -137,7 +137,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
                 addPostgis();
 
             } else if (getParamValue(paramFileType).equals("csv")) {
-            	GeometryCollection positions=loadGenericCSV();
+            	GeometryImage positions=loadGenericCSV();
                 lay=FactoryLayer.createComplexLayer(positions);
                 done=LayerManager.addLayerInThread(lay);
 
@@ -152,7 +152,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
             	SumoXMLWriter xmlWR=new SumoXMLWriter(xml);
             	xmlWR.read();
             } else if (getParamValue(paramFileType).equals("gml")) {
-            	GeometryCollection positions=loadGml();
+            	GeometryImage positions=loadGml();
                 GenericLayer gl=FactoryLayer.createComplexLayer(positions);
                 done=LayerManager.addLayerInThread(gl);
 
@@ -177,9 +177,9 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
      *
      * @param args
      */
-    private GeometryCollection loadGenericCSV() {
+    private GeometryImage loadGenericCSV() {
     	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-    	GeometryCollection positions=null;
+    	GeometryImage positions=null;
     	if(l!=null){
     		try {
 		    	GenericCSVIO csv=null;
@@ -190,7 +190,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
 	            if(csv!=null){
 	                positions = csv.readLayer();
 	                if (positions.getProjection() != null) {
-	                    positions = GeometryCollection.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+	                    positions = GeometryImage.createImageProjected(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
 	                }
 	            }
 	        } catch (Exception ex) {
@@ -296,8 +296,8 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
      *
      * @param args
      */
-    private GeometryCollection loadShapeFile(File file,String name){//String[] args) {
-        GeometryCollection gl=null;
+    private GeometryImage loadShapeFile(File file,String name){//String[] args) {
+        GeometryImage gl=null;
 
         ImageLayer imgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
         if(imgLayer!=null){
@@ -326,7 +326,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
      */
     private void addSimpleCSV(String[] args) {
     	try {
-    		GeometryCollection positions=null;
+    		GeometryImage positions=null;
     		GenericCSVIO csv=null;
 	        if (args.length == 2) {
 	            String file=args[1].split("=")[1];
@@ -343,7 +343,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
                 positions = csv.readLayer();
                 if (positions.getProjection() != null) {
                 	ImageLayer l=LayerManager.getIstanceManager().getCurrentImageLayer();
-                	positions = GeometryCollection.createImageProjectedLayer(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
+                	positions = GeometryImage.createImageProjected(positions, l.getImageReader().getGeoTransform(), positions.getProjection());
 
                 }
             }
@@ -359,8 +359,8 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
      *
      * @param args
      */
-    private GeometryCollection loadSumoXML(String[] args) {
-    	GeometryCollection positions =null;
+    private GeometryImage loadSumoXML(String[] args) {
+    	GeometryImage positions =null;
     	File sumoXml=null;
     	try{
 	        if (args.length == 2) {
@@ -376,7 +376,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
 	        SumoXmlIOOld old=new SumoXmlIOOld(sumoXml);
             positions = old.readLayer();
             if (positions.getProjection() != null) {
-            	positions = GeometryCollection.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+            	positions = GeometryImage.createImageProjected(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
             }
 
     	} catch (Exception ex) {
@@ -390,8 +390,8 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
      *
      * @param args
      */
-    private GeometryCollection loadGml() {
-    	GeometryCollection positions =null;
+    private GeometryImage loadGml() {
+    	GeometryImage positions =null;
     	try{
 	        int returnVal = fd.showOpenDialog(null);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -401,7 +401,7 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
             		GmlIO gmlIO=new GmlIO(fd.getSelectedFile(),(SarImageReader)l.getImageReader());
                     positions = gmlIO.readLayer();
                     if (positions.getProjection() != null) {
-                    	positions = GeometryCollection.createImageProjectedLayer(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
+                    	positions = GeometryImage.createImageProjected(positions, ((ImageLayer) l).getImageReader().getGeoTransform(), positions.getProjection());
                     }
 	        }
 	    } catch (Exception ex) {

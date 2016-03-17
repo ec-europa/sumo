@@ -17,7 +17,7 @@ import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -214,7 +214,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
 
 	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layerName,
-	                    		 "point", new GeometryCollection("VDS Analysis","point",timeStampStart,azimuth, boats),
+	                    		 "point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
 	                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
 
 	                     vdsanalysisLayer.addDetectedPixels(banddetectedpixels[band].getAllDetectedPixels(), display);
@@ -243,11 +243,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                     }
 
                          if ((analysis.getCoastMask() != null) ) {
-	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometryCollection.POLYGON,
+	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometryImage.POLYGON,
 	                        		analysis.getCoastMask().getMaskGeometries(), true);
 	                     }
 	                     //leave display params forced to false
-	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryCollection.LINESTRING,
+	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryImage.LINESTRING,
 	                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
 
 	                     notifyLayerReady(vdsanalysisLayer);
@@ -277,7 +277,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 }
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),"VDS analysis all bands merged",
-	                		 																	"point", new GeometryCollection("VDS Analysis","point",timeStampStart,azimuth, boats),
+	                		 																	"point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
 	                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
 	                 boolean display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel();
 	                 if (!agglomerationMethodology.startsWith("d")) {
@@ -287,9 +287,9 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 vdsanalysisLayer.addDetectedPixels(mergePixels.getAllDetectedPixels(), display);
 
 	                 if ((analysis.getCoastMask() != null)) {
-	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometryCollection.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
+	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometryImage.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
 	                 }
-	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryCollection.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
+	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryImage.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
 
 
 	               //Azimuth Ambiguities

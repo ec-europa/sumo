@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -55,7 +55,7 @@ public class MergeShapeFileAction extends SumoAbstractAction  {
 
 	                        		SimpleFeatureCollection collectionsLayer=(SimpleFeatureCollection) ml.getGeometriclayer().getFeatureCollection();
 
-	                        		GeometryCollection gl = SimpleShapefile.mergeShapeFile(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
+	                        		GeometryImage gl = SimpleShapefile.mergeShapeFile(collectionsLayer, shpFile,l.getImageReader().getGeoTransform(),
 	                        				((SarImageReader)l.getImageReader()).getBbox(100));
 
 	                        		int t=MaskVectorLayer.COASTLINE_MASK;

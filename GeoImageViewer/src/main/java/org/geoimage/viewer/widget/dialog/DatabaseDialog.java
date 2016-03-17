@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class DatabaseDialog extends javax.swing.JDialog {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(DatabaseDialog.class);
 
-    private GeometryCollection layer;
+    private GeometryImage layer;
     private ImageLayer ilayer;
     private String vtype;
 
@@ -37,7 +37,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
     }
 
-    public GeometryCollection getLayer() {
+    public GeometryImage getLayer() {
         return layer;
     }
 
@@ -50,7 +50,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
         this.vtype = vectorType;
     }
 
-    public void addLayerInThread(final String type, final GeometryCollection layer, final ImageLayer il) {
+    public void addLayerInThread(final String type, final GeometryImage layer, final ImageLayer il) {
         new Thread(new Runnable() {
 
             public void run() {
@@ -138,25 +138,25 @@ public class DatabaseDialog extends javax.swing.JDialog {
         return new AddDataToImageTask(org.jdesktop.application.Application.getInstance(org.geoimage.viewer.core.SumoPlatform.class));
     }
 
-    private class AddDataToImageTask extends org.jdesktop.application.Task<GeometryCollection, Void> {
+    private class AddDataToImageTask extends org.jdesktop.application.Task<GeometryImage, Void> {
         AddDataToImageTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to AddDataToImageTask fields, here.
             super(app);
         }
-        @Override protected GeometryCollection doInBackground() {
+        @Override protected GeometryImage doInBackground() {
             try {
                 layer = databaseQuery1.getLayer();
                 if (jCheckBox1.isSelected() && ilayer != null) {
-                    layer = GeometryCollection.createImageProjectedLayer(layer, ilayer.getImageReader().getGeoTransform(), "EPSG:4326");
+                    layer = GeometryImage.createImageProjected(layer, ilayer.getImageReader().getGeoTransform(), "EPSG:4326");
                 }
             } catch (Exception ex) {
             	logger.error(ex.getMessage(),ex);
             }
             return layer;
         }
-        @Override protected void succeeded(GeometryCollection result) {
+        @Override protected void succeeded(GeometryImage result) {
             if(result!=null){
                 addLayerInThread(vtype, result, ilayer);
             }
