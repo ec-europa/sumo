@@ -19,8 +19,8 @@ import org.fenggui.util.Color;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IThreshable;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.layers.BaseLayer;
-import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.core.layers.visualization.BaseLayer;
+import org.geoimage.viewer.core.layers.visualization.ConsoleLayer;
 import org.geoimage.viewer.widget.dialog.LayerDialog;
 
 /**

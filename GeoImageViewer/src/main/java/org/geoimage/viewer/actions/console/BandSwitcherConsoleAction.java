@@ -7,10 +7,10 @@ package org.geoimage.viewer.actions.console;
 import java.util.List;
 import java.util.Vector;
 
+import org.geoimage.viewer.actions.SumoActionEvent;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 

@@ -10,10 +10,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.files.ArchiveUtil;
 import org.geoimage.viewer.util.files.IceHttpClient;
@@ -84,7 +84,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 								activeParams.enl=confFile.getENL();
 							}
 
-							GeometricLayer gl=null;
+							GeometryCollection gl=null;
 					    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
 							if(activeParams.shapeFile!=null)
@@ -100,7 +100,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 								File ice=getIceShapeFile(r.getImageDate());
 								if(ice!=null){
 									activeParams.iceShapeFile=ice.getAbsolutePath();
-									GeometricLayer glIce=readShapeFile(imageP,reader.getGeoTransform());
+									GeometryCollection glIce=readShapeFile(imageP,reader.getGeoTransform());
 									iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
 								}
 							}

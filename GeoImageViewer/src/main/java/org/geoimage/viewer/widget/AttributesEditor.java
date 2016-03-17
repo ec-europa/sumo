@@ -21,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 
 /**
  *

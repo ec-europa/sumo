@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.actions;
 
 /**
  * class to handle progressive tasks

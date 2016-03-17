@@ -14,15 +14,15 @@ import javax.imageio.ImageIO;
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.actions.SumoActionEvent;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.GenericLayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
@@ -140,7 +140,7 @@ public class TileRasterAction extends AbstractConsoleAction {
 						//GeometricLayer gml=new GeometricLayer("test raster",GeometricLayer.POLYGON,Arrays.asList(cc));
 						List< Geometry> geoms=new ArrayList<>();
 						geoms.add(box);
-						SimpleGeometryLayer gl=new SimpleGeometryLayer(layer, "test raster", geoms,GeometricLayer.POLYGON);
+						SimpleGeometryLayer gl=new SimpleGeometryLayer(layer, "test raster", geoms,GeometryCollection.POLYGON);
 						LayerManager.getIstanceManager().addLayer(gl);
 					} catch (Exception e) {
 						logger.warn("layer not added");

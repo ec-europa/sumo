@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -22,6 +22,7 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.geoimage.viewer.util.JTSUtil;
 import org.geotools.data.DataStore;
 import org.geotools.feature.FeatureCollection;
@@ -42,25 +43,22 @@ import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
  * This is THE class model for all Vector Data
  * @author thoorfr
  */
-public class GeometricLayer implements Cloneable{
+public class GeometryCollection implements Cloneable{
 
 
     public final static String POINT = "point";
     public final static String POLYGON = "polygon";
     public final static String LINESTRING = "linestring";
+    public final static String MIXED = "mixed";
 
     private List<Geometry> geoms;
-    //private List<AttributesGeometry> atts;
-
-   // private HashMap<Integer, AttributesGeometry>attsMap=null;
 
     private String type;
     private String name;
     private String projection;
- //   private SimpleFeatureSource featureSource =null;
     private FeatureCollection<?,?> featureCollection =null;
 
-
+    private static Logger logger= LoggerFactory.getLogger(GeometryCollection.class);
 
 
 	public String getType() {
@@ -79,7 +77,7 @@ public class GeometricLayer implements Cloneable{
 	 * @param pixels
 	 * @return
 	 */
-	public GeometricLayer(String name,String type,List<Coordinate>geoms) {
+	public GeometryCollection(String name,String type,List<Coordinate>geoms) {
 		this.type=type;
 		this.name=name;
 
@@ -103,7 +101,7 @@ public class GeometricLayer implements Cloneable{
 	 * @param pixels
 	 * @return
 	 */
-	public GeometricLayer(String name,String type,String timeStampStart,double azimuth, Boat[] boats) {
+	public GeometryCollection(String name,String type,String timeStampStart,double azimuth, Boat[] boats) {
 		this.type=type;
 		this.name=name;
         //GeometricLayer out = new GeometricLayer("point");
@@ -141,12 +139,6 @@ public class GeometricLayer implements Cloneable{
         }
     }
 
-	/**
-     *
-     */
-    public final static String MIXED = "mixed";
-    private static Logger logger= LoggerFactory.getLogger(GeometricLayer.class);
-
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      * @param positions
@@ -155,7 +147,7 @@ public class GeometricLayer implements Cloneable{
      * @return
      * @throws GeoTransformException
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer layer, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    public static GeometryCollection createImageProjectedLayer(GeometryCollection layer, GeoTransform geoTransform, String projection) throws GeoTransformException {
     	long startTime = System.currentTimeMillis();
     	for(Geometry geom:layer.geoms){
             geom=geoTransform.transformGeometryPixelFromGeo(geom);
@@ -168,7 +160,7 @@ public class GeometricLayer implements Cloneable{
     /**
      * Modify the GeometricLayer so the layer coordinate system matches the image coordinate system ("pixel" projection).
      */
-    public static GeometricLayer createImageProjectedLayer(GeometricLayer layer, AffineTransform geoTransform) {
+    public static GeometryCollection createImageProjectedLayer(GeometryCollection layer, AffineTransform geoTransform) {
         for(Geometry geom:layer.geoms){
             for(Coordinate pos:geom.getCoordinates()){
                 Point2D.Double temp=new Point2D.Double();
@@ -188,8 +180,8 @@ public class GeometricLayer implements Cloneable{
      * Modify the GeometricLayer so the layer coordinates system matches the world coordinate system (EPSG projection).
      * @throws GeoTransformException
      */
-    public static GeometricLayer createWorldProjectedLayer(GeometricLayer oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
-    	GeometricLayer positions=oldPositions.clone();
+    public static GeometryCollection createWorldProjectedLayer(GeometryCollection oldPositions, GeoTransform geoTransform, String projection) throws GeoTransformException {
+    	GeometryCollection positions=oldPositions.clone();
 
         //Coordinate previous=new Coordinate(0,0);
         for(Geometry geom:positions.geoms){
@@ -216,13 +208,13 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer createFromSimpleGeometry(final Polygon imageP,final String geoName,
+    public static GeometryCollection createFromSimpleGeometry(final Polygon imageP,final String geoName,
     		FeatureCollection fc, final String[] schema,
     		final String[] types, boolean applayTransformation,GeoTransform transform) throws IOException{
-        GeometricLayer out=null;
+        GeometryCollection out=null;
         GeometryFactory gf=new GeometryFactory();
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometricLayer(GeometricLayer.POLYGON);//LINESTRING);//POLYGON);
+                out = new GeometryCollection(GeometryCollection.POLYGON);//LINESTRING);//POLYGON);
                 //out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
                 out.setFeatureCollection(fc);
 
@@ -303,7 +295,7 @@ public class GeometricLayer implements Cloneable{
                 	fi.close();
                 }
             } else if (geoName.contains("Point")) {
-                out = new GeometricLayer(GeometricLayer.POINT);
+                out = new GeometryCollection(GeometryCollection.POINT);
                 FeatureIterator<?> fi = fc.features();
                 try{
 	                while (fi.hasNext()) {
@@ -344,15 +336,15 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer createLayerFromFeatures(String geoName, DataStore dataStore,
+    public static GeometryCollection createLayerFromFeatures(String geoName, DataStore dataStore,
     		FeatureCollection fc, final String[] schema,
     		final String[] types,boolean applayTransformation,GeoTransform transform) throws IOException{
 
-        GeometricLayer out=null;
+        GeometryCollection out=null;
         if (geoName.contains("Polygon") || geoName.contains("Line"))
-                out = new GeometricLayer(GeometricLayer.POLYGON);
+                out = new GeometryCollection(GeometryCollection.POLYGON);
         else
-        	out = new GeometricLayer(GeometricLayer.POINT);
+        	out = new GeometryCollection(GeometryCollection.POINT);
 
        	out.setName(dataStore.getTypeNames()[0]);
        	//out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
@@ -427,11 +419,11 @@ public class GeometricLayer implements Cloneable{
 	 * @return Polygons (geometry) that are the intersection between the shape file and the sar image
 	 * @throws IOException
 	 */
-    public static GeometricLayer addGeomsToLayerFromFeatures(GeometricLayer layer,String geoName,
+    public static GeometryCollection addGeomsToLayerFromFeatures(GeometryCollection layer,String geoName,
     		DataStore dataStore, FeatureCollection addFc,
     		final String[] schema, final String[] types,
     		boolean applayTransformation,GeoTransform transform) throws IOException{
-        GeometricLayer out=(GeometricLayer)layer.clone();
+        GeometryCollection out=(GeometryCollection)layer.clone();
 
 	        FeatureIterator<?> fi = addFc.features();
 	        try{
@@ -493,7 +485,7 @@ public class GeometricLayer implements Cloneable{
     }
 
 
-    public GeometricLayer(String type) {
+    public GeometryCollection(String type) {
         geoms = new ArrayList<Geometry>();
         //attsMap = new HashMap<>();
         this.type=type;
@@ -504,8 +496,8 @@ public class GeometricLayer implements Cloneable{
      * @return
      */
     @Override
-    public GeometricLayer clone(){
-        GeometricLayer out=new GeometricLayer(type);
+    public GeometryCollection clone(){
+        GeometryCollection out=new GeometryCollection(type);
         out.name=name;
         out.projection=projection;
       //  out.featureSource=featureSource;

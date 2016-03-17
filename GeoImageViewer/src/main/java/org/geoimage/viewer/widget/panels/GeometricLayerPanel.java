@@ -6,18 +6,18 @@
 
 package org.geoimage.viewer.widget.panels;
 
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.GeometryCollection;
 
 /**
  *
  * @author  thoorfr
  */
 public class GeometricLayerPanel extends javax.swing.JPanel {
-    private GeometricLayer gl;
+    private GeometryCollection gl;
     private GeometricLayerModel glm;
 
     /** Creates new form GeometricLayerPanel */
-    public GeometricLayerPanel(GeometricLayer glayer) {
+    public GeometricLayerPanel(GeometryCollection glayer) {
         initComponents();
         this.gl=glayer;
         glm=new GeometricLayerModel(gl);

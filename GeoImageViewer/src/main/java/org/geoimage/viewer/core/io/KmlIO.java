@@ -29,8 +29,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.slf4j.LoggerFactory;
 
 import com.keithpower.gekmlib.Document;
@@ -66,7 +66,7 @@ public class KmlIO extends AbstractVectorIO {
 
     private SarImageReader gir=null;
     private File input=null;
-    private GeometricLayer glayer=null;
+    private GeometryCollection glayer=null;
     
     public KmlIO(File input,SarImageReader gir){
     	this.input=input;
@@ -76,12 +76,12 @@ public class KmlIO extends AbstractVectorIO {
     @Override
     public void save(File output,String projection,GeoTransform gt) {
     }	
-    public static void export(File output,GeometricLayer glayer,String projection,SarImageReader gir,GeoTransform gt) {
+    public static void export(File output,GeometryCollection glayer,String projection,SarImageReader gir,GeoTransform gt) {
         boolean toFlip = false;
         int t = 0; //thumbnails id name
         try {
 
-            if (!glayer.getGeometryType().equals(GeometricLayer.POINT)) {
+            if (!glayer.getGeometryType().equals(GeometryCollection.POINT)) {
                 return;
             }
 

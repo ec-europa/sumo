@@ -9,7 +9,6 @@ import javax.media.opengl.GL2;
 
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 
 /**

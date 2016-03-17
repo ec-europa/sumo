@@ -15,12 +15,12 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.impl.s1.Sentinel1;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.io.SumoXMLWriter;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -107,8 +107,8 @@ public abstract class AbstractBatchAnalysis {
 	 * @param reader
 	 * @return
 	 */
-	protected GeometricLayer readShapeFile(Polygon imgBox,GeoTransform gt){
-		GeometricLayer gl=null;
+	protected GeometryCollection readShapeFile(Polygon imgBox,GeoTransform gt){
+		GeometryCollection gl=null;
 	    try {
             gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imgBox,gt);
         } catch (Exception e) {

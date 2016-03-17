@@ -7,7 +7,7 @@ package org.geoimage.viewer.core;
 
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.ConsoleLayer;
+import org.geoimage.viewer.core.layers.visualization.ConsoleLayer;
 import org.slf4j.LoggerFactory;
 
 /**
