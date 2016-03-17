@@ -16,8 +16,8 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -37,7 +37,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     public static String CONFIG_FILE = "file";
     final Logger logger = LogManager.getLogger(SumoXmlIOOld.class);
     private File input=null;
-    private GeometricLayer glayer=null;
+    private GeometryCollection glayer=null;
     
     
     public SumoXmlIOOld(File file){
@@ -48,9 +48,9 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     	glayer=readLayer();
     }
     
-    public GeometricLayer readLayer() {
+    public GeometryCollection readLayer() {
         try {
-            GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
+            GeometryCollection layer = new GeometryCollection(GeometryCollection.POINT);
             
             //create xml doc
             SAXBuilder builder = new SAXBuilder();
@@ -60,7 +60,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
             GeometryFactory gf = new GeometryFactory();
             Element root = doc.getRootElement().getChild("image");
             if (root != null) {
-                layer.setGeometryType(GeometricLayer.MIXED);
+                layer.setGeometryType(GeometryCollection.MIXED);
                 Element gcps = root.getChild("gcps");
                 if (gcps != null) {
                     Coordinate[] coords = new Coordinate[gcps.getChildren("gcp").size() + 1];
@@ -121,7 +121,7 @@ public class SumoXmlIOOld extends AbstractVectorIO {
         return null;
     }
 
-    public static void export(File output,GeometricLayer glayer, String projection,SarImageReader gir) {
+    public static void export(File output,GeometryCollection glayer, String projection,SarImageReader gir) {
     	 try {
 	    	GeoTransform transform=gir.getGeoTransform();
 	    	

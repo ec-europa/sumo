@@ -12,14 +12,14 @@ import java.awt.event.KeyListener;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.GeometryCollection;
 
 /**
  *
  * @author  thoorfr
  */
 public class GeometricInteractiveLayerPanel extends javax.swing.JPanel {
-    private GeometricLayer gl;
+    private GeometryCollection gl;
     private GeometricLayerModel glm;
 
     private class jTable extends JTable  implements KeyListener
@@ -53,7 +53,7 @@ public class GeometricInteractiveLayerPanel extends javax.swing.JPanel {
     };
         
     /** Creates new form GeometricInteractiveLayerPanel */
-    public GeometricInteractiveLayerPanel(GeometricLayer glayer) {
+    public GeometricInteractiveLayerPanel(GeometryCollection glayer) {
         initComponents();
         this.gl=glayer;
         glm=new GeometricLayerModel(gl);

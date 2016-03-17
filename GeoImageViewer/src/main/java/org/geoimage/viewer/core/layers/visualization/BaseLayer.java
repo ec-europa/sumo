@@ -1,5 +1,5 @@
 
-package org.geoimage.viewer.core.layers;
+package org.geoimage.viewer.core.layers.visualization;
 
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 

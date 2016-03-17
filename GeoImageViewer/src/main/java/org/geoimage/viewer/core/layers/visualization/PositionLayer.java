@@ -16,7 +16,6 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.IMouseMove;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.GenericLayer;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.java2d.util.Positioning;
 import org.geoimage.viewer.widget.PositionDialog;

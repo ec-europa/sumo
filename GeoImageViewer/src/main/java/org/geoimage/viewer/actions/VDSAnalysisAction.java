@@ -19,6 +19,7 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.ENL;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.impl.s1.Sentinel1;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
@@ -26,8 +27,6 @@ import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.SumoActionEvent;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
@@ -206,7 +205,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
         if (il != null) {
           //  for (ILayer l : il.getLayers()) {
             for (ILayer l : LayerManager.getIstanceManager().getChilds(il)) {
-                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometricLayer.POINT)) {
+                if (l instanceof MaskVectorLayer && !((MaskVectorLayer) l).getType().equals(GeometryCollection.POINT)) {
                 	if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
                 		coasts.add(l.getName());
                 	}else if(((MaskVectorLayer )l).getMaskType()==MaskVectorLayer.ICE_MASK){

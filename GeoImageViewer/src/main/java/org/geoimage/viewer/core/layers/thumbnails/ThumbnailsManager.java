@@ -17,11 +17,11 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.impl.Gcp;
+import org.geoimage.viewer.actions.SumoActionListener;
 import org.geoimage.viewer.core.GeoImageViewerView;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
-import org.geoimage.viewer.core.layers.GeometricLayer;
-import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.util.ImageTiler;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class ThumbnailsManager {
         return null;
     }
 
-    public void createThumbnailsDir(GeometricLayer glayer, String idColumnName, GeoImageReader gir,int progress,int band) {
+    public void createThumbnailsDir(GeometryCollection glayer, String idColumnName, GeoImageReader gir,int progress,int band) {
         try {
         	SumoPlatform ip=(SumoPlatform) SumoPlatform.getApplication();
             if (ip != null) {

@@ -13,8 +13,8 @@ import org.geoimage.analysis.VDSSchema;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.layers.AttributesGeometry;
-import org.geoimage.viewer.core.layers.GeometricLayer;
+import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -36,7 +36,7 @@ public class GmlIO extends AbstractVectorIO {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GmlIO.class);
 	private File input=null;
 	private SarImageReader gir;
-	private GeometricLayer layer;
+	private GeometryCollection layer;
 	
     public static String CONFIG_FILE = "file";
 
@@ -49,10 +49,10 @@ public class GmlIO extends AbstractVectorIO {
     	layer=readLayer();
     }
     
-    public GeometricLayer readLayer() {
-    	GeometricLayer layer=null;
+    public GeometryCollection readLayer() {
+    	GeometryCollection layer=null;
         try {
-            layer = new GeometricLayer(GeometricLayer.POINT);
+            layer = new GeometryCollection(GeometryCollection.POINT);
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(input);
 
@@ -100,7 +100,7 @@ public class GmlIO extends AbstractVectorIO {
     	save(output,layer,projection,transform,gir);
     }
     
-	public static void save(File output, GeometricLayer glayer, String projection,GeoTransform transform,SarImageReader gir) {
+	public static void save(File output, GeometryCollection glayer, String projection,GeoTransform transform,SarImageReader gir) {
     	try {
 	    	
 	        Namespace gml=Namespace.getNamespace("gml", "http://www.opengis.net/gml");

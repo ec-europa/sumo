@@ -10,11 +10,11 @@ import javax.swing.JPopupMenu;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.actions.SumoActionListener;
 import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
-import org.geoimage.viewer.core.layers.ConsoleLayer;
-import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.CacheManager;
+import org.geoimage.viewer.core.layers.visualization.ConsoleLayer;
 import org.geoimage.viewer.widget.TransparentWidget;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;

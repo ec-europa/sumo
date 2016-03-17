@@ -13,10 +13,10 @@ import java.util.Map;
 
 import org.geoimage.opengl.GL2ShapesRender;
 import org.geoimage.opengl.OpenGLContext;
+import org.geoimage.viewer.core.GeometryCollection;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IComplexVectorLayer;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.layers.GeometricLayer;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -45,7 +45,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
         private String tag;
         private Color color;
         private int lineWidth = 1;
-        private String type = GeometricLayer.POINT;
+        private String type = GeometryCollection.POINT;
         private List<Geometry> geometries;
         private boolean status;
        
@@ -97,7 +97,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 
     private Map<String,Additionalgeometries> additionalGeometriesMap = new HashMap<String,Additionalgeometries>();
 
-    public ComplexEditGeometryVectorLayer(ILayer parent,String layername, String type, GeometricLayer layer) {
+    public ComplexEditGeometryVectorLayer(ILayer parent,String layername, String type, GeometryCollection layer) {
         super(parent,layername, type, layer);
     }
 
@@ -117,10 +117,10 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
         for(Additionalgeometries geometry : additionalGeometriesMap.values()){
             // check geometries need to be displayed
             if(geometry.isStatus()){
-                if (geometry.getType().equalsIgnoreCase(GeometricLayer.POINT)) {
+                if (geometry.getType().equalsIgnoreCase(GeometryCollection.POINT)) {
                 	GL2ShapesRender.renderPolygons(context,width,height,geometry.getGeometries(),geometry.getLinewidth(),geometry.getColor());
 
-                } else if (geometry.getType().equalsIgnoreCase(GeometricLayer.POLYGON)) {
+                } else if (geometry.getType().equalsIgnoreCase(GeometryCollection.POLYGON)) {
                     for (Geometry tmp : geometry.getGeometries()) {
                     	List<Geometry>gs=new ArrayList<>();
 	                    if(tmp instanceof MultiPolygon){
@@ -154,7 +154,7 @@ public static final String TRESHOLD_PIXELS_TAG="thresholdclippixels";
 	                    }
                     }
                     
-                } else if (geometry.getType().equalsIgnoreCase(GeometricLayer.LINESTRING)) {
+                } else if (geometry.getType().equalsIgnoreCase(GeometryCollection.LINESTRING)) {
                     for (Geometry temp : geometry.getGeometries()) {
                         if (temp.getCoordinates().length < 1) {
                             continue;

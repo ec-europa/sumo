@@ -26,7 +26,7 @@ import javax.swing.UIManager;
 
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
-import org.geoimage.viewer.core.layers.SumoActionListener;
+import org.geoimage.viewer.actions.SumoActionListener;
 import org.geoimage.viewer.util.GeometryExtractor;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;

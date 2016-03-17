@@ -9,7 +9,7 @@ import java.awt.Color;
 
 import javax.swing.JColorChooser;
 
-import org.geoimage.viewer.core.layers.GenericLayer;
+import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 
 /**
