@@ -26,6 +26,8 @@ import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
+import org.geoimage.viewer.util.JTSUtil;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +120,11 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 						xx=borderAn.getSizeX()*col;
 						tileSizeY=borderAn.getSizeY();
 						tileSizeX=borderAn.getSizeX();
+						com.vividsolutions.jts.geom.Polygon box=JTSUtil.createPolygon(xx,yy, layer.getRealTileSizeX(), layer.getRealTileSizeY());
+						GeometryImage gi=new GeometryImage(arg2, box);
+						SimpleGeometryLayer sgl=new SimpleGeometryLayer(layer,gi);
+						LayerManager.addLayerInThread(sgl);
+
 					}
 			//run vds analysis on a single tile
 				}else if(arg0.equalsIgnoreCase("vds")){
@@ -272,20 +279,12 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	public void layerReady(ILayer layer) {
 		if(!SumoPlatform.isBatchMode()){
 			ComplexEditGeometryVectorLayer clayer=(ComplexEditGeometryVectorLayer)layer;
-			com.vividsolutions.jts.geom.Polygon box;
-			try {
-				double[] v1=new double[]{xx,yy};
-				double[] v2=new double[]{xx+tileSizeX,yy};
-				double[] v3=new double[]{xx+tileSizeY,yy+tileSizeX};
-				double[] v4=new double[]{xx,yy+tileSizeY};
-				double[] v5=new double[]{xx,yy};
-				box = PolygonOp.createPolygon(v1,v2,v3,v4,v5);
-				List <Geometry>gg=new ArrayList<>();
-				gg.add(box);
-				clayer.addGeometries("Tile", Color.YELLOW,2,GeometryImage.POLYGON, gg, true);
-			} catch (ParseException e) {
-				logger.warn("box not added");
-			}
+
+			com.vividsolutions.jts.geom.Polygon box=JTSUtil.createPolygon(xx,yy, tileSizeX,tileSizeY);
+
+			List <Geometry>gg=new ArrayList<>();
+			gg.add(box);
+			clayer.addGeometries("Tile", Color.YELLOW,2,GeometryImage.POLYGON, gg, true);
 			LayerManager.getIstanceManager().addLayer(layer);
 		}
 	}

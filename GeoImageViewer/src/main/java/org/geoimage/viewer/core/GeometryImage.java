@@ -69,13 +69,11 @@ public class GeometryImage implements Cloneable{
 		this.type = type;
 	}
 
-
 	/**
 	 *
-	 * @param timeStampStart
-	 * @param azimuth
-	 * @param pixels
-	 * @return
+	 * @param name
+	 * @param type
+	 * @param geoms
 	 */
 	public GeometryImage(String name,String type,List<Coordinate>geoms) {
 		this.type=type;
@@ -92,6 +90,34 @@ public class GeometryImage implements Cloneable{
         	put(gg, att);
         }
     }
+
+	/**
+	 *
+	 * @param name
+	 * @param type
+	 * @param geoms
+	 */
+	public GeometryImage(String name,Polygon poligon) {
+		this.type=POLYGON;
+		this.name=name;
+
+		this.geoms=new ArrayList<>();
+		//attsMap=new HashMap<>();
+        GeometryFactory gf = new GeometryFactory();
+        int ng=poligon.getNumGeometries();
+        for(int i=0; i<ng;i++){
+        	Coordinate[] cc=poligon.getGeometryN(i).getCoordinates();
+	        for(Coordinate c:cc){
+	        	AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
+	        	att.set("x",c.x);
+	        	att.set("y",c.y);
+	        	Geometry gg=gf.createPoint(c);
+	        	put(gg, att);
+	        }
+        }
+    }
+
+
 
 
 	/**
