@@ -43,8 +43,8 @@ public class SimpleGeometryLayer extends GenericLayer {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(SimpleGeometryLayer.class);
 
 
-    public SimpleGeometryLayer(ILayer parent,GeometryImage gImg) {
-    	super(parent,gImg.getName(),gImg.getType(),null);
+    public SimpleGeometryLayer(ILayer parent,String name,GeometryImage gImg) {
+    	super(parent,name,gImg.getType(),null);
         this.geometries=gImg.getGeometries();
     }
 
@@ -103,7 +103,7 @@ public class SimpleGeometryLayer extends GenericLayer {
         gl.glColor3f(c[0], c[1], c[2]);
 
         if (geometries != null) {
-                if (getType().equalsIgnoreCase(POINT)) {
+                if (getType().equalsIgnoreCase(POINT)||getType().equalsIgnoreCase(MIXED)) {
                     switch (this.displaysymbol) {
                         case point: {
                             gl.glPointSize(this.renderWidth);
