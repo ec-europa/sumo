@@ -26,6 +26,7 @@ import org.geoimage.viewer.core.layers.visualization.GenericLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
+import org.geoimage.viewer.util.JTSUtil;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,14 +129,8 @@ public class TileRasterAction extends AbstractConsoleAction {
 					int yy=layer.getRealTileSizeY()*row;
 					int xx=layer.getRealTileSizeX()*col;
 					try {
-						com.vividsolutions.jts.geom.Polygon box;
-						Coordinate cc[]=new Coordinate[5];
-						cc[0]=new Coordinate(xx,yy);
-						cc[1]=new Coordinate(xx+layer.getRealTileSizeX(),yy);
-						cc[2]=new Coordinate(xx+layer.getRealTileSizeY(),yy+layer.getRealTileSizeX());
-						cc[3]=new Coordinate(xx,yy+layer.getRealTileSizeY());
-						cc[4]=new Coordinate(xx,yy);
-						box = PolygonOp.createPolygon(cc);
+						com.vividsolutions.jts.geom.Polygon box=JTSUtil.createPolygon(xx,yy, layer.getRealTileSizeX(), layer.getRealTileSizeY());
+
 
 						//GeometricLayer gml=new GeometricLayer("test raster",GeometricLayer.POLYGON,Arrays.asList(cc));
 						List< Geometry> geoms=new ArrayList<>();

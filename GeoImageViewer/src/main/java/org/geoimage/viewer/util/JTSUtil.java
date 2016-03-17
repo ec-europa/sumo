@@ -18,10 +18,13 @@ package org.geoimage.viewer.util;
 	import com.vividsolutions.jts.geom.Point;
 	import com.vividsolutions.jts.geom.Polygon;
 	import com.vividsolutions.jts.geom.TopologyException;
-	import com.vividsolutions.jts.operation.polygonize.Polygonizer;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 	import com.vividsolutions.jts.operation.valid.IsValidOp;
 	import com.vividsolutions.jts.operation.valid.TopologyValidationError;
-	import java.util.ArrayList;
+
+import java.awt.Color;
+import java.util.ArrayList;
 	import java.util.Arrays;
 	import java.util.Collection;
 	import java.util.Collections;
@@ -29,16 +32,19 @@ package org.geoimage.viewer.util;
 	import java.util.LinkedList;
 	import java.util.List;
 
+import org.geoimage.utils.PolygonOp;
+import org.geoimage.viewer.core.GeometryImage;
 
-	/** 
-	 * 
+
+	/**
+	 *
 	 */
 	public final strictfp class JTSUtil {
-	    
+
 	    //--------------------------------------------------------------------------
 	    // Class variables
 	    //--------------------------------------------------------------------------
-	    
+
 	    /** */
 	    private static final Comparator<Polygon> POLYGON_AREA_COMPARATOR = new Comparator<Polygon>() {
 	            public int compare (Polygon p1, Polygon p2) {
@@ -53,7 +59,7 @@ package org.geoimage.viewer.util;
 	                }
 	            }
 	        };
-	    
+
 	    /** */
 	    private static final Comparator<Polygon> POLYGON_CONTAINMENT_COMPARATOR = new Comparator<Polygon>() {
 	            public int compare (Polygon p1, Polygon p2) {
@@ -66,20 +72,20 @@ package org.geoimage.viewer.util;
 	                }
 	            }
 	        };
-	    
+
 	    //--------------------------------------------------------------------------
 	    // Class methods
 	    //--------------------------------------------------------------------------
-	    
+
 	    /**
 	     * JTS enforces a much stricter standards for the topology of Polygons
 	     * than the shapefile format does. This method takes a list of polygon
 	     * rings and does its best to build a valid JTS MultiPolygon out of them
 	     * by grouping negative-area "hole" rings with their containing positive-
-	     * area "shell" rings, and by repairing common topology errors such as 
+	     * area "shell" rings, and by repairing common topology errors such as
 	     * self intersections.
 	     */
-	    public static MultiPolygon buildPolygonGeometry (LinearRing[] rings, 
+	    public static MultiPolygon buildPolygonGeometry (LinearRing[] rings,
 	                                                     GeometryFactory factory,
 	                                                     boolean repair) {
 	        MultiPolygon result = null;
@@ -104,7 +110,7 @@ package org.geoimage.viewer.util;
 	            }
 	            if (shellRingList.size() == 1) {
 	                // short-circuit for another common, simple case
-	                Polygon poly = factory.createPolygon(shellRingList.get(0), 
+	                Polygon poly = factory.createPolygon(shellRingList.get(0),
 	                                                     GeometryFactory.toLinearRingArray(holeRingList));
 	                result = factory.createMultiPolygon(new Polygon[] { poly });
 	            } else if (holeRingList.size() == 0) {
@@ -116,7 +122,7 @@ package org.geoimage.viewer.util;
 	                result = factory.createMultiPolygon(polygons);
 	            } else {
 	                // complex case: we have multiple shell rings AND one or more hole rings,
-	                // so we need to do some work to figure out which shell ring each hole 
+	                // so we need to do some work to figure out which shell ring each hole
 	                // ring belongs to
 	                Polygon[] polygons = new Polygon[shellRingList.size()];
 	                for (int i = 0; i < shellRingList.size(); i += 1) {
@@ -158,8 +164,12 @@ package org.geoimage.viewer.util;
 	        }
 	        return result;
 	    }
-	    
-	    /** */
+
+	    /**
+	     *
+	     * @param geom
+	     * @return
+	     */
 	    public static Geometry repair (Geometry geom) {
 	        GeometryFactory factory = geom.getFactory();
 	        if (geom instanceof MultiPolygon) {
@@ -183,8 +193,12 @@ package org.geoimage.viewer.util;
 	            return(geom);
 	        }
 	    }
-	    
-	    /** */
+
+	    /**
+	     *
+	     * @param p
+	     * @return
+	     */
 	    @SuppressWarnings("unchecked")
 	    public static Polygon repair (Polygon p) {
 	        GeometryFactory factory = p.getFactory();
@@ -235,7 +249,7 @@ package org.geoimage.viewer.util;
 	        }
 	        return(p);
 	    }
-	    
+
 	    /** */
 	    public static GeometryCollection explodeMultiPolygon (MultiPolygon mp) {
 	        List<LinearRing> result = new ArrayList<LinearRing>(mp.getNumGeometries()*2);
@@ -245,10 +259,10 @@ package org.geoimage.viewer.util;
 	            for (int j = 0; j < p.getNumInteriorRing(); j += 1) {
 	                result.add((LinearRing)p.getInteriorRingN(j));
 	            }
-	        }   
+	        }
 	        return mp.getFactory().createGeometryCollection(GeometryFactory.toGeometryArray(result));
 	    }
-	    
+
 	    /** */
 	    public static Geometry flatten (GeometryCollection gc) {
 	        final List<Point> points = new LinkedList<Point>();
@@ -273,7 +287,7 @@ package org.geoimage.viewer.util;
 	            return gc.getFactory().createMultiPoint(GeometryFactory.toPointArray(points));
 	        }
 	    }
-	    
+
 	    /** */
 	    public static double getSharedAreaRatio (Geometry geom1, Geometry geom2) {
 	        try {
@@ -283,7 +297,7 @@ package org.geoimage.viewer.util;
 	            // reproduce it consistently. Why should computing the
 	            // intersection with a MultiPolygon fail when computing
 	            // the intersection with each of its constituent Polygons
-	            // succeeds? I have no idea, but it does happen. This 
+	            // succeeds? I have no idea, but it does happen. This
 	            // seems to fix the problem, though.
 	            double result = 0.0;
 	            if (geom2 instanceof GeometryCollection) {
@@ -297,9 +311,9 @@ package org.geoimage.viewer.util;
 	            }
 	        }
 	    }
-	    
+
 	    /**
-	     * This is ten times faster than the absolutely correct 
+	     * This is ten times faster than the absolutely correct
 	     * version above, and it's only off by an average of 1%.
 	     * Note that the first argument MUST be rectangular, or
 	     * your results will be meaningless.
@@ -313,7 +327,7 @@ package org.geoimage.viewer.util;
 	            // I suppose it is possible for a valid polygon geometry
 	            // to contain all four corners and share considerably less
 	            // than 100% of its area with the envelope in question.
-	            // But if you're that worried about correctness you 
+	            // But if you're that worried about correctness you
 	            // shouldn't be using this method in the first place.
 	            return 1.0;
 	        }
@@ -334,5 +348,26 @@ package org.geoimage.viewer.util;
 	        }
 	        return (ct / 100.0);
 	    }
+
+		/**
+		 *
+		 * @param vx
+		 * @param vy
+		 * @param width
+		 * @param height
+		 * @return
+		 */
+		public static Polygon createPolygon(double vx,double vy,double width,double height){
+			GeometryFactory gf=new GeometryFactory();
+			Coordinate[] vertex=new Coordinate[5];
+			vertex[0]=new Coordinate(vx,vy);
+			vertex[1]=new Coordinate(vx+width,vy);
+			vertex[2]=new Coordinate(vx+height,vy+width);
+			vertex[3]=new Coordinate(vx,vy+height);
+			vertex[4]=new Coordinate(vx,vy);
+
+			return gf.createPolygon(vertex);
+	    }
+
 
 }

@@ -43,6 +43,10 @@ public class SimpleGeometryLayer extends GenericLayer {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(SimpleGeometryLayer.class);
 
 
+    public SimpleGeometryLayer(ILayer parent,GeometryImage gImg) {
+    	super(parent,gImg.getName(),gImg.getType(),null);
+        this.geometries=gImg.getGeometries();
+    }
 
     public SimpleGeometryLayer(ILayer parent,String layername, List<Geometry> geometries,String type) {
     	super(parent,layername,type,null);

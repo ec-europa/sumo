@@ -19,10 +19,10 @@ import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
 
 public class PolygonOp {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(PolygonOp.class);
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @param geom
 	 * @return
 	 */
@@ -42,21 +42,21 @@ public class PolygonOp {
         		}	else{
         			union=union.union(gf.createPolygon(p.getCoordinates()));
         		}
-        	}	
+        	}
         	buff=union;
         }
         return buff;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param xs
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public static Polygon createPolygon(double[]...xs) throws ParseException{
 		StringBuilder builder =new StringBuilder("POLYGON((");
-		
+
 		for(int i=0;i<xs.length;i++){
 			double x[]=xs[i];
 			if(i<(xs.length-1))
@@ -71,35 +71,15 @@ public class PolygonOp {
 		}
 		GeometryFactory factor=new GeometryFactory();
 		Polygon imageP=factor.createPolygon(cs);*/
-		
+
 		return imageP;
 	}
-	
-	/**
-	 * 
-	 * @param xs
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static Polygon createPolygon(Coordinate[]...xs) throws ParseException{
-		StringBuilder builder =new StringBuilder("POLYGON((");
-		
-		for(int i=0;i<xs[0].length;i++){
-			Coordinate x=xs[0][i];
-			if(i<(xs[0].length-1))
-				builder=builder.append(x.x).append(" ").append(x.y).append(",");
-			else
-				builder=builder.append(xs[0][0].x).append(" ").append(xs[0][0].y).append("))");
-		}
-		
-		Polygon imageP = (Polygon) new WKTReader().read(builder.toString());
-		return imageP;
-	}
-	
-	
-	
+
+
+
+
 	  /**
-     * 
+     *
      * @param polygons
      * @return
      */
@@ -107,13 +87,13 @@ public class PolygonOp {
     	List <List<Geometry>>intersectedGeom =new ArrayList<List<Geometry>>();
     	List <Geometry>alreadySelected =new ArrayList<Geometry>();
     	for (int i = 0; i < polygons.size(); i++) {
-    		
+
     		Geometry a = polygons.get(i);
     		List <Geometry> l=new ArrayList<Geometry>();
     		l.add(a);
-    		
+
     		alreadySelected.add(a);
-    		
+
     		for (int j = i + 1; j < polygons.size();j++) {
     			final Geometry b = polygons.get(j);
     	        try{
@@ -132,7 +112,7 @@ public class PolygonOp {
     	for(List<Geometry> ll:intersectedGeom){
     		if(ll.size()>1){
     			try{
-    				
+
     				//10 e' un valore determinato solo da diversi test ...
     				if(buffer>10){
 						for(int i=0;i<ll.size();i++){
@@ -142,16 +122,16 @@ public class PolygonOp {
     				}
     				CascadedPolygonUnion cascadeU=new CascadedPolygonUnion(ll);
     				Geometry union=cascadeU.union();
-    				
+
     	            if (union instanceof Polygon && ((Polygon) union).getNumInteriorRing() > 0) {
     	            	LineString p=((Polygon) union).getExteriorRing();
     	            	union = factory.createPolygon(p.getCoordinates());
     	            }
     				polygons.add(union);
-    				
+
 	    		}catch(Exception e){
 	    			logger.warn(e.getMessage());
-	    			
+
 	    			for(Geometry g:ll){
 	    				polygons.add(g);
 	    			}
@@ -160,13 +140,13 @@ public class PolygonOp {
    				polygons.add(ll.get(0));
     		}
     	}
-    	
-    	
+
+
     	return polygons;
     }
-	
+
 	/**
-	 * 
+	 *
 	 * @param polygons
 	 * @return
 	 */
@@ -179,7 +159,7 @@ public class PolygonOp {
     	    for (int j = i + 1; j < polygons.size();) {
     	        final Geometry b = polygons.get(j);
     	        if (a.intersects(b)) {
-    	        	
+
     	            polygons.set(i, (Polygon) a.union(b));
     	            a = polygons.get(i);
     	            polygons.remove(j);
@@ -191,11 +171,11 @@ public class PolygonOp {
     	    }
     	}
     	} while (!done);
-    	
+
     	return polygons;
     }
     /**
-	 * 
+	 *
 	 * @param polygons
 	 * @return
 	 */
@@ -208,7 +188,7 @@ public class PolygonOp {
     	    for (int j = i + 1; j < polygons.size();) {
     	        final Geometry b = polygons.get(j);
     	        if (a.intersects(b)) {
-    	        	
+
     	            polygons.set(i, (Polygon) a.symDifference(b));
     	            a = polygons.get(i);
     	            polygons.remove(j);
@@ -220,7 +200,7 @@ public class PolygonOp {
     	    }
     	}
     	} while (!done);
-    	
+
     	return polygons;
     }
 }
