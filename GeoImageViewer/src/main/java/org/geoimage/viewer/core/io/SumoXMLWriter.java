@@ -1,9 +1,10 @@
 package org.geoimage.viewer.core.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,9 +15,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.Precision;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geoimage.analysis.VDSSchema;
@@ -24,6 +26,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.sumoxml.Analysis;
 import org.geoimage.viewer.core.io.sumoxml.Boat;
 import org.geoimage.viewer.core.io.sumoxml.Gcp;
@@ -35,6 +38,7 @@ import org.geoimage.viewer.core.layers.AttributesGeometry;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -48,10 +52,16 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
 	public static Logger logger = LogManager.getLogger(SumoXMLWriter.class);
 	private File input=null;
-	private GeometricLayer layer = null;
+	private static javax.xml.bind.JAXBContext jaxbCtx;
 
 	public SumoXMLWriter(File input){
 		this.input=input;
+		try {
+			jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
+			
+		} catch (JAXBException e) {
+			logger.error(e.getMessage(),e);
+		}
 	}
 
 	public SumoXMLWriter(){
@@ -62,8 +72,15 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	@Override
 	public void read() {
 		try {
-			layer = new GeometricLayer(GeometricLayer.POINT);
-
+	         /*   InputStream is = new FileInputStream(output );
+	            javax.xml.bind.Marshaller  marshaller = jaxbCtx.createMarshaller();
+		        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+		        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+	            marshaller.marshal( an, os );
+	            os.close();*/
+			
+			
+			GeometricLayer layer = new GeometricLayer(GeometricLayer.POINT);
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = builder.build(input);
@@ -105,9 +122,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 							AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
 							double lon = Double.parseDouble(boat.getChild("lon").getValue());
 							double lat = Double.parseDouble(boat.getChild("lat").getValue());
-							Geometry geom = gf.createPoint(new Coordinate(lon,
-									lat));
-							layer.put(geom, atts);
+							Geometry geom = gf.createPoint(new Coordinate(lon,lat));
 							try {
 								atts.set(VDSSchema.ID, Double.parseDouble(boat.getChild("id").getValue()));
 								atts.set(VDSSchema.MAXIMUM_VALUE,Double.parseDouble(boat.getChild("maxValue").getValue()));
@@ -122,10 +137,14 @@ public class SumoXMLWriter extends AbstractVectorIO {
 							} catch (Exception ex) {
 								logger.warn(ex.getMessage(), ex);
 							}
+							layer.put(geom, atts);
 						}
 					}
 				}
 			}
+			SimpleGeometryLayer sg=new SimpleGeometryLayer(null, "imported", 
+					layer.getGeometries(), SimpleGeometryLayer.POINT);
+			SumoPlatform.getApplication().getLayerManager().addLayerInThread(sg);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
@@ -188,7 +207,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setAlgorithm("k-dist");
 
 		vdsA.setBuffer(buffer);
-		vdsA.setDetectorVersion("SUMO_1.3.0");
+		vdsA.setDetectorVersion("SUMO_1.3.2");
 
 		/// fields removed in the last xml version
 		//add thresholds in order
@@ -354,13 +373,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 		/**** SAVING ***********/
 		try {
-            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
-            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
             OutputStream os = new FileOutputStream(output );
-            //marshaller.marshal(an, System.out);
+            javax.xml.bind.Marshaller  marshaller = jaxbCtx.createMarshaller();
+	        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+	        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal( an, os );
             os.close();
         } catch (javax.xml.bind.JAXBException|IOException ex) {
@@ -379,7 +395,6 @@ public class SumoXMLWriter extends AbstractVectorIO {
         double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
         double[] bottomLeft = gir.getGeoTransform().getGeoFromPixel(0, gir.getHeight());
         double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
-
 
 		/*double[] topLeft = gir.getGeoTransform().getGeoFromPixel(0, 0,"EPSG:4326");
 		double[] topRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), 0);
@@ -425,13 +440,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	@Override
 	public void save(File output, String projection, GeoTransform transform) {
 		// TODO Auto-generated method stub
-
 	}
 
-
-
-
-	//to test xml
 	public static void main(String[] args){
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd_HHmmSSS");

@@ -27,7 +27,6 @@ import org.geoimage.viewer.core.io.PostgisIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
 import org.geoimage.viewer.core.layers.GeometricLayer;
 import org.geoimage.viewer.core.layers.SumoActionEvent;
-import org.geoimage.viewer.core.layers.SumoActionListener;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.InterpolatedVectorLayer;
 import org.geoimage.viewer.widget.PostgisSettingsDialog;
