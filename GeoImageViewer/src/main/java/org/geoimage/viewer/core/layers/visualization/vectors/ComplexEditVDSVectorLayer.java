@@ -25,7 +25,7 @@ import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ISave;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -64,13 +64,13 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	//private String landMask;
 	private String band="";
 
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometryCollection layer) {
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometryImage layer) {
         super(parent,layername, type, layer);
         //this.landMask=landMask;
 
     }
 
-	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometryCollection layer,
+	public ComplexEditVDSVectorLayer(ILayer parent,String layername, String type, GeometryImage layer,
 			String[] thresholds,double enl,int buffer,String landMask,String band) {
         super(parent,layername, type, layer);
         this.thresholds=thresholds;
@@ -96,25 +96,25 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 
 
     public void addAzimuthAmbiguities(List<Geometry> azimuthGeoms,boolean display){
-    	super.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED,5, GeometryCollection.POINT, azimuthGeoms, display);
+    	super.addGeometries(AZIMUTH_AMBIGUITY_TAG, Color.RED,5, GeometryImage.POINT, azimuthGeoms, display);
 
     }
 
     public void addArtefactsAmbiguities(List<Geometry> artGeoms,boolean display){
-    	super.addGeometries(ARTEFACTS_AMBIGUITY_TAG, Color.CYAN,5, GeometryCollection.POINT, artGeoms, display);
+    	super.addGeometries(ARTEFACTS_AMBIGUITY_TAG, Color.CYAN,5, GeometryImage.POINT, artGeoms, display);
 
     }
 
     public void addDetectedPixels(List<Geometry> pixgeoms,boolean display){
-    	super.addGeometries(DETECTED_PIXELS_TAG,  new Color(0x00FF00),1, GeometryCollection.POINT, pixgeoms, display);
+    	super.addGeometries(DETECTED_PIXELS_TAG,  new Color(0x00FF00),1, GeometryImage.POINT, pixgeoms, display);
     }
 
     public void addThreshAggPixels(List<Geometry> threshAgg,boolean display){
-    	super.addGeometries(TRESHOLD_PIXELS_AGG_TAG,  new Color(0x0000FF),1, GeometryCollection.POINT, threshAgg, display);
+    	super.addGeometries(TRESHOLD_PIXELS_AGG_TAG,  new Color(0x0000FF),1, GeometryImage.POINT, threshAgg, display);
     }
 
     public void addThresholdPixels(List<Geometry> pixgeoms,boolean display){
-    	super.addGeometries(TRESHOLD_PIXELS_TAG,  new Color(0x00FFFF),1, GeometryCollection.POINT, pixgeoms, display);
+    	super.addGeometries(TRESHOLD_PIXELS_TAG,  new Color(0x00FFFF),1, GeometryImage.POINT, pixgeoms, display);
     }
 
     public void saveNewXML(String file, int formattype, String projection,String runVersion,Integer runVersionNumber) {
@@ -295,14 +295,14 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         return opts;
     }
 
-    private GeometryCollection postgisLayer(GeometryCollection glayer,String timeStampStart) {
+    private GeometryImage postgisLayer(GeometryImage glayer,String timeStampStart) {
         // id counter for the postgis database
         int id = 0;
         // date object for postgis database
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = dateformat.format(new Date());
         // create new layer
-        GeometryCollection layer = new GeometryCollection("POINT");
+        GeometryImage layer = new GeometryImage("POINT");
         layer.setName(glayer.getName());
         // change the layer fields to match the vds table layout
         for (Geometry geom : glayer.getGeometries()) {
@@ -377,7 +377,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 
 
 
-    private ArrayList<String> postgisCommands(GeometryCollection glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) throws GeoTransformException {
+    private ArrayList<String> postgisCommands(GeometryImage glayer, String table, String version, GeoTransform geotransform, String projection,String timeStampStart,String name) throws GeoTransformException {
         // id counter for the postgis database
         int id = 0;
         // list of postgis commands for database
@@ -423,7 +423,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     }
 
     protected void performAdd(java.awt.Point imagePosition, OpenGLContext context) {
-        if (type.equals(GeometryCollection.POINT)) {
+        if (type.equals(GeometryImage.POINT)) {
             selectedGeometry = gf.createPoint(new Coordinate(imagePosition.x, imagePosition.y));
             //final AttributesGeometry atts = new AttributesGeometry(glayer.getSchema());//, glayer.getSchemaTypes());
             int size=glayer.getGeometries().size();

@@ -7,7 +7,7 @@ package org.geoimage.viewer.widget.panels;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
@@ -288,7 +288,7 @@ public class ImagePanel extends javax.swing.JPanel {
     	LayerManager.getIstanceManager().addLayer(
     			new EditGeometryVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
     					jTextField2.getText(),(String)jComboBox1.getSelectedItem(), 
-    			new GeometryCollection((String)jComboBox1.getSelectedItem())));
+    			new GeometryImage((String)jComboBox1.getSelectedItem())));
         SumoPlatform.getApplication().refresh();
     }//GEN-LAST:event_jButton4ActionPerformed
 

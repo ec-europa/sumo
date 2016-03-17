@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.geoimage.def.GeoTransform;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 
 import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
@@ -31,12 +31,12 @@ import com.vividsolutions.jts.geom.Geometry;
 public class GeoRSSIO extends AbstractVectorIO {
 
     public static String CONFIG_FILE = "file";
-    public static GeometryCollection glayer=null;
+    public static GeometryImage glayer=null;
 
     public void save(File outputFile, String projection,	GeoTransform transform){
     	export(outputFile, glayer, projection, transform);
     }
-    public static void export(File outputFile, GeometryCollection glayer, String projection,	GeoTransform transform){
+    public static void export(File outputFile, GeometryImage glayer, String projection,	GeoTransform transform){
     		
     	try {
 	

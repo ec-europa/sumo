@@ -10,7 +10,7 @@ import java.util.List;
 //import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
@@ -83,7 +83,7 @@ public class CreateBufferedMask extends AbstractConsoleAction{
 
 			}else if(arg.equalsIgnoreCase("testreload")){
 				String fname="F:\\SumoImgs\\coastline\\OSMLandPoly_20141001_250\\OSMLandPoly_20141001_250m.shp";
-					GeometryCollection shpLayer=null;
+					GeometryImage shpLayer=null;
 					try{
 						 shpLayer=SimpleShapefile.createIntersectedLayer(new File(fname),((SarImageReader)reader).getBbox(100),reader.getGeoTransform());
 						final List<Geometry> geoms=shpLayer.getGeometries();

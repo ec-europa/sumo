@@ -21,7 +21,7 @@ import javax.media.opengl.GL2;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.IClickable;
 import org.geoimage.viewer.core.api.ISave;
@@ -49,7 +49,7 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
 
     protected boolean active = true;
     protected  GeoImageReader reader;
-    protected GeometryCollection glayer;
+    protected GeometryImage glayer;
     protected String type;
     protected float renderWidth = 1;
     protected Color color = new Color(1f, 1f, 1f);
@@ -60,7 +60,7 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
     private String dateColumn;
     private List<Point> interpolated = new ArrayList<Point>();
 
-    public InterpolatedVectorLayer(String layername, GeoImageReader reader, GeometryCollection layer, String idColumn, String dateColumn, Date date) {
+    public InterpolatedVectorLayer(String layername, GeoImageReader reader, GeometryImage layer, String idColumn, String dateColumn, Date date) {
     	super(null,layername,null,layer);
         this.date = date;
         this.glayer = layer;
@@ -205,11 +205,11 @@ public class InterpolatedVectorLayer extends GenericLayer implements  ISave, ICl
         this.type = type;
     }
 
-    public GeometryCollection getGeometriclayer() {
+    public GeometryImage getGeometriclayer() {
         return glayer;
     }
 
-    public void setGeometriclayer(GeometryCollection glayer) {
+    public void setGeometriclayer(GeometryImage glayer) {
         this.glayer = glayer;
     }
 

@@ -15,7 +15,7 @@ import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.actions.SumoActionEvent;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -140,7 +140,7 @@ public class TileRasterAction extends AbstractConsoleAction {
 						//GeometricLayer gml=new GeometricLayer("test raster",GeometricLayer.POLYGON,Arrays.asList(cc));
 						List< Geometry> geoms=new ArrayList<>();
 						geoms.add(box);
-						SimpleGeometryLayer gl=new SimpleGeometryLayer(layer, "test raster", geoms,GeometryCollection.POLYGON);
+						SimpleGeometryLayer gl=new SimpleGeometryLayer(layer, "test raster", geoms,GeometryImage.POLYGON);
 						LayerManager.getIstanceManager().addLayer(gl);
 					} catch (Exception e) {
 						logger.warn("layer not added");

@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -69,7 +69,7 @@ public class PostgisIO extends AbstractVectorIO {
 
     private GeoImageReader gir=null;
     private Map<String,String> config=null;
-    private GeometryCollection glayer=null;
+    private GeometryImage glayer=null;
     
     public PostgisIO(GeoImageReader gir,Map config){
     	this.gir=gir;
@@ -79,9 +79,9 @@ public class PostgisIO extends AbstractVectorIO {
     	glayer=readLayer();
     }
     
-    public GeometryCollection readLayer() {
+    public GeometryImage readLayer() {
         try {
-            GeometryCollection out = null;
+            GeometryImage out = null;
             DataStore dataStore = DataStoreFinder.getDataStore(config);
             FeatureSource featureSource = dataStore.getFeatureSource(layername);
             String geomName = featureSource.getSchema().getGeometryDescriptor().getLocalName();
@@ -117,7 +117,7 @@ public class PostgisIO extends AbstractVectorIO {
             String[] types = createTypes(fc.getSchema().getDescriptors());
             String geoName = fc.getSchema().getGeometryDescriptor().getType().getName().toString();
             if (geoName.contains("Polygon")) {
-                out = new GeometryCollection(GeometryCollection.POLYGON);
+                out = new GeometryImage(GeometryImage.POLYGON);
                 out.setName(layername);
                 FeatureIterator fi = fc.features();
                 try{
@@ -134,7 +134,7 @@ public class PostgisIO extends AbstractVectorIO {
 	            	fi.close();
 	            }	
             } else if (geoName.contains("Point")) {
-                out = new GeometryCollection(GeometryCollection.POINT);
+                out = new GeometryImage(GeometryImage.POINT);
                 out.setName(layername);
                 FeatureIterator fi = fc.features();
                 try{
@@ -153,7 +153,7 @@ public class PostgisIO extends AbstractVectorIO {
 	            }
             }
             dataStore.dispose();
-            return GeometryCollection.createImageProjectedLayer(out, gt, "EPSG:4326");
+            return GeometryImage.createImageProjected(out, gt, "EPSG:4326");
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -210,7 +210,7 @@ public class PostgisIO extends AbstractVectorIO {
 
 
 
-    public FeatureCollection createFeatures(SimpleFeatureType ft, GeometryCollection glayer, String projection, GeoTransform gt) throws Exception {
+    public FeatureCollection createFeatures(SimpleFeatureType ft, GeometryImage glayer, String projection, GeoTransform gt) throws Exception {
     	 //   FeatureCollection collection =  FeatureCollections.newCollection();
         DefaultFeatureCollection collection = new DefaultFeatureCollection();
         SimpleFeature simplefeature = null;
@@ -391,7 +391,7 @@ public class PostgisIO extends AbstractVectorIO {
      * @param projection
      * @param imageCis
      */
-    public void saveAll(GeometryCollection layer, String projection, Object[] imageCis,GeoImageReader gir) {
+    public void saveAll(GeometryImage layer, String projection, Object[] imageCis,GeoImageReader gir) {
         try {
         	//Data store to get access to ddbb
             DataStore datastore = (DataStore) DataStoreFinder.getDataStore(config);

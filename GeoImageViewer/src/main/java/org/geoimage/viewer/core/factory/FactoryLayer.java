@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.geoimage.analysis.VDSSchema;
-import org.geoimage.viewer.core.GeometryCollection;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.TimeComponent;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
@@ -84,7 +84,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */
-	public static GenericLayer createComplexLayer(GeometryCollection layer) {
+	public static GenericLayer createComplexLayer(GeometryImage layer) {
 
 		ComplexEditVDSVectorLayer clayer = null;
 		Geometry frame = layer.getGeometries().get(0);
@@ -96,7 +96,7 @@ public class FactoryLayer {
 			clayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
 					layer.getName(), layer.getGeometryType(), layer);
 
-			clayer.addGeometries("image frame", Color.BLUE, 1, GeometryCollection.LINESTRING, frames, false);
+			clayer.addGeometries("image frame", Color.BLUE, 1, GeometryImage.LINESTRING, frames, false);
 
 		} else {
 			clayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),
@@ -113,7 +113,7 @@ public class FactoryLayer {
 	 * @param parent
 	 * @return
 	 */
-	public static GenericLayer createMaskLayer(GeometryCollection layer,int maskType) {
+	public static GenericLayer createMaskLayer(GeometryImage layer,int maskType) {
 
 		boolean timestamplayer = false;
 		String timecolumnname = "";
@@ -145,7 +145,7 @@ public class FactoryLayer {
 	 * @param bufferingDistance
 	 * @return
 	 */
-	public static IMask createMaskLayer(String name, String geomType, double bufferingDistance,	GeometryCollection layer, int maskType) {
+	public static IMask createMaskLayer(String name, String geomType, double bufferingDistance,	GeometryImage layer, int maskType) {
 		MaskVectorLayer mask = null;
 		try {
 			mask = (new MaskVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(), name, geomType,maskType, layer.clone()));
@@ -161,9 +161,9 @@ public class FactoryLayer {
 	 * @param layer
 	 * @return
 	 */
-	public static GeometryCollection createThresholdedLayer(GeometryCollection layer, double currentThresh,
+	public static GeometryImage createThresholdedLayer(GeometryImage layer, double currentThresh,
 			boolean threshable) {
-		GeometryCollection out = layer.clone();
+		GeometryImage out = layer.clone();
 		if (threshable) {
 			List<Geometry> remove = new ArrayList<Geometry>();
 			for (Geometry geom : Collections.unmodifiableList(out.getGeometries())) {
