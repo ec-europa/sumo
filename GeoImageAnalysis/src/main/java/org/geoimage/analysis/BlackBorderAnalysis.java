@@ -81,7 +81,7 @@ public class BlackBorderAnalysis {
         sizeX = hTileSize;    //x step
         sizeY = vTileSize;	   //y step
 
-        iNPixExtremes=tileSize/10;
+        iNPixExtremes=hTileSize<vTileSize?vTileSize/10:hTileSize/10;
 
         this.land=land;
 	}
@@ -138,8 +138,9 @@ public class BlackBorderAnalysis {
 	 * analyze single tile
 	 * @param row
 	 * @param col
+	 * @return the threshold values for this tile
 	 */
-	public void analyse(int row,int col,boolean horizontalAnalysis) {
+	public int[] analyse(int row,int col,boolean horizontalAnalysis) {
 		int iniX = (col-1) * sizeX;
 		int iniY = (row-1) * sizeY;
 		boolean normalDirection=true; //from left to right or from top to bottom
@@ -150,7 +151,8 @@ public class BlackBorderAnalysis {
 		if((iniY>(gir.getWidth()/2)&&!horizontalAnalysis)){
 			normalDirection=false;
 		}
-		analyzeTile(iniX,iniY,horizontalAnalysis,normalDirection);
+		int[] trheshs=analyzeTile(iniX,iniY,horizontalAnalysis,normalDirection);
+		return trheshs;
 
 	}
 

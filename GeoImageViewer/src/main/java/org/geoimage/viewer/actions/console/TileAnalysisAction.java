@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 
 
@@ -110,19 +112,46 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 					}else{
 						int row=Integer.parseInt(arg1);
 						int col=Integer.parseInt(arg2);
-						String direction="H"; //h= horizontal v=vertical
-						if(commandLine.length==4)
-							direction=arg2;
-						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,layer.getRealTileSizeX(),layer.getRealTileSizeY(),null);
-						borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
 
-						yy=borderAn.getSizeY()*row;
-						xx=borderAn.getSizeX()*col;
-						tileSizeY=borderAn.getSizeY();
-						tileSizeX=borderAn.getSizeX();
+						yy=layer.getRealTileSizeY()*row;
+						xx=layer.getRealTileSizeX()*col;
+						tileSizeY=layer.getRealTileSizeY();
+						tileSizeX=layer.getRealTileSizeY();
+
+						String direction="H"; //h= horizontal v=vertical
+						if(commandLine.length==5)
+							direction=commandLine[4];
+
+						BlackBorderAnalysis borderAn=new BlackBorderAnalysis(sar,layer.getRealTileSizeX(),layer.getRealTileSizeY(),null);
+						int[] threshs=borderAn.analyse(row,col,direction.equalsIgnoreCase("H"));
+
+						List<Geometry> points=new ArrayList<>();
+						GeometryFactory gf=new GeometryFactory();
+						for(int i=0;i<threshs.length;i++){
+							int offset=threshs[i];
+							if(direction.equalsIgnoreCase("H")){
+								if(xx<(sar.getWidth()/2)){
+									Point p=gf.createPoint(new Coordinate(xx+offset,yy+i));
+									points.add(p);
+								}
+							}else{
+
+							}
+						}
+						GeometryImage giPoint=new GeometryImage(arg2, points);
+						SimpleGeometryLayer offset=new SimpleGeometryLayer(layer,"bb test"+row+" "+col,giPoint);
+						offset.setColor(Color.ORANGE);
+						offset.setWidth(2.0f);
+						LayerManager.addLayerInThread(offset);
+
 						com.vividsolutions.jts.geom.Polygon box=JTSUtil.createPolygon(xx,yy, layer.getRealTileSizeX(), layer.getRealTileSizeY());
-						GeometryImage gi=new GeometryImage(arg2, box);
-						SimpleGeometryLayer sgl=new SimpleGeometryLayer(layer,gi);
+						List<Geometry> geoms=new ArrayList<>();
+						geoms.add(box);
+						GeometryImage gi=new GeometryImage(arg2, geoms);
+
+						SimpleGeometryLayer sgl=new SimpleGeometryLayer(layer,"bb test"+row+" "+col,gi);
+						sgl.setColor(Color.ORANGE);
+						sgl.setWidth(2.0f);
 						LayerManager.addLayerInThread(sgl);
 
 					}
