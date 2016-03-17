@@ -94,27 +94,27 @@ public class GeometryImage implements Cloneable{
 	/**
 	 *
 	 * @param name
-	 * @param type
-	 * @param geoms
+	 * @param geometries
 	 */
-	public GeometryImage(String name,Polygon poligon) {
-		this.type=POLYGON;
+	public GeometryImage(String name,List<Geometry>geometries) {
+		this.type=geometries.get(0).getGeometryType();
 		this.name=name;
 
 		this.geoms=new ArrayList<>();
-		//attsMap=new HashMap<>();
-        GeometryFactory gf = new GeometryFactory();
-        int ng=poligon.getNumGeometries();
-        for(int i=0; i<ng;i++){
-        	Coordinate[] cc=poligon.getGeometryN(i).getCoordinates();
-	        for(Coordinate c:cc){
-	        	AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
-	        	att.set("x",c.x);
-	        	att.set("y",c.y);
-	        	Geometry gg=gf.createPoint(c);
-	        	put(gg, att);
-	        }
-        }
+
+		for(Geometry g:geometries){
+			AttributesGeometry att = null;
+
+			if(g instanceof Point){
+				att=new AttributesGeometry(new String[]{"x","y"});
+				att.set("x",g.getCoordinate().x);
+	        	att.set("y",g.getCoordinate().y);
+			}else{
+				att=new AttributesGeometry(new String[]{"geom"});
+				att.set("geom",g.toText());
+			}
+			put(g, att);
+		}
     }
 
 
