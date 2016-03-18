@@ -8,7 +8,24 @@ import java.util.List;
 public class SarFileUtil {
 
 	/**
-	 * 
+	 *
+	 * @param imagesFolder
+	 * @return
+	 * @throws Exception
+	 */
+	public static File findManifest(File imagesFolder) throws Exception{
+		//list only folders
+		File[] manifest=imagesFolder.listFiles(new SarImageFileFilter());
+
+		if(manifest.length!=1)
+			throw new Exception("Problem reading manifest for this image:"+imagesFolder.getPath());
+
+		return manifest[0];
+
+	}
+
+	/**
+	 *
 	 * @param imagesFolder
 	 * @return
 	 */
@@ -17,7 +34,7 @@ public class SarFileUtil {
 		final String pattFilterFolder=patternFilterFolder.replace("*",".*")+".*";
 		//list only folders
 		File[] childs=imagesFolder.listFiles(new FileFilter() {
-			
+
 			@Override
 			public boolean accept(File pathname) {
 				boolean match=true;
@@ -25,7 +42,7 @@ public class SarFileUtil {
 				return (pathname.isDirectory()&&match);
 			}
 		});
-				
+
 		if(childs!=null){
 			for(File f:childs){
 				File[] imgFile=f.listFiles(new SarImageFileFilter());
@@ -34,25 +51,22 @@ public class SarFileUtil {
 				}
 			}
 		}
-		//String s="S1A_IW_GRDH_1SDH_20141030T061035_20141030T061104_003055_0037E5_D3D1.SAFE";
-		//s.matches("S1");
-		
 		return imgFiles;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param imagesFolder
 	 * @return
 	 */
 	public static List<File> scanFoldersForImages(String[] inputFolders,String patternFilterFolder,boolean recursive){
 		List<File> imgFiles=new ArrayList<File>();
-		
+
 		for(int i=0;i<inputFolders.length;i++){
 			imgFiles.addAll(scanFolderForImages(new File(inputFolders[i]), patternFilterFolder));
 		}
-		
+
 		return imgFiles;
 	}
-	
+
 }
