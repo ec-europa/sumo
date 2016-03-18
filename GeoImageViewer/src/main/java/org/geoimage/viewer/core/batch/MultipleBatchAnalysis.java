@@ -1,8 +1,13 @@
 package org.geoimage.viewer.core.batch;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,87 +39,116 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 		super.setRunVersion(conf.getRunVersion());
 		super.setRunVersionNumber(conf.getRunVersionNumber());
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
+	private List<File> readFileList(){
+		try{
+			List<File>files=new ArrayList<>();
+			String fl=confFile.getInputFileList();
+			FileInputStream is=new FileInputStream(new File(fl));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				files.add(new File(line));
+			}
+			br.close();
+			is.close();
+			return files;
+		}catch(Exception e){
+			logger.error(e.getMessage(),e);
+			return null;
+		}	
+	}
+	
+	
 	/**
 	 *
 	 */
 	public void startAnalysis(){
-			List<File>filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
-
-			for (File image:filesImg){
-				try{
-					logger.info("Start analyzing:"+image.getParent());
-
-					AnalysisParams activeParams=params;
-
-					String folderName=image.getParentFile().getName();
-
-					//output folder have the same name of the input folder
-					String imagePathFolder=new StringBuilder(params.outputFolder)
-									.append(File.separator)
-									.append(folderName).toString();
-
-
-					boolean forceAnalysis=confFile.forceNewAnalysis();
-
-					//check if already analized
-					boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
-
-					if(!alreadyAnalyzed || forceAnalysis){
-						//check for use local configuration file
-						if(confFile.useLocalConfigurationFiles()){
-							//path to the single image conf file
-							String localImageConfFilePath=new StringBuilder(imagePathFolder)
-											.append(File.separator)
-											.append(Constant.CONF_FILE).toString();
-
-							activeParams=readLocalConfFile(params,localImageConfFilePath);
-						}
-
-						//crate the reader
-						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
-						for(GeoImageReader r:readers){
-							//super.currentReader=r;
-							SarImageReader reader=(SarImageReader) r;
-
-							if(confFile.getENL()==0){
-								String enl=reader.getENL();
-								activeParams.enl=Float.parseFloat(enl);
-							}else{
-								activeParams.enl=confFile.getENL();
+			List<File>filesImg=null;
+			if(!confFile.getUseFileList())
+				filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
+			else
+				filesImg=readFileList();
+			
+			if(filesImg!=null){
+				for (File image:filesImg){
+					try{
+						logger.info("Start analyzing:"+image.getParent());
+						AnalysisParams activeParams=params;
+						String folderName=image.getParentFile().getName();
+	
+						//output folder have the same name of the input folder
+						String imagePathFolder=new StringBuilder(params.outputFolder)
+										.append(File.separator)
+										.append(folderName).toString();
+	
+	
+						boolean forceAnalysis=confFile.forceNewAnalysis();
+	
+						//check if already analized
+						boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
+	
+						if(!alreadyAnalyzed || forceAnalysis){
+							//check for use local configuration file
+							if(confFile.useLocalConfigurationFiles()){
+								//path to the single image conf file
+								String localImageConfFilePath=new StringBuilder(imagePathFolder)
+												.append(File.separator)
+												.append(Constant.CONF_FILE).toString();
+	
+								activeParams=readLocalConfFile(params,localImageConfFilePath);
 							}
-
-							GeometryImage gl=null;
-					    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-
-							if(activeParams.shapeFile!=null)
-								gl=readShapeFile(imageP,reader.getGeoTransform());
-
-							IMask mask = null;
-							if(gl!=null){
-								mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
-							}
-
-							IMask iceMask = null;
-							if(confFile.useIceRepositoryShapeFile()){
-								File ice=getIceShapeFile(r.getImageDate());
-								if(ice!=null){
-									activeParams.iceShapeFile=ice.getAbsolutePath();
-									GeometryImage glIce=readShapeFile(imageP,reader.getGeoTransform());
-									iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
+	
+							//crate the reader
+							List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
+							for(GeoImageReader r:readers){
+								//super.currentReader=r;
+								SarImageReader reader=(SarImageReader) r;
+	
+								if(confFile.getENL()==0){
+									String enl=reader.getENL();
+									activeParams.enl=Float.parseFloat(enl);
+								}else{
+									activeParams.enl=confFile.getENL();
 								}
+	
+								GeometryImage gl=null;
+						    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
+	
+								if(activeParams.shapeFile!=null)
+									gl=readShapeFile(imageP,reader.getGeoTransform());
+	
+								IMask mask = null;
+								if(gl!=null){
+									mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
+								}
+	
+								IMask iceMask = null;
+								if(confFile.useIceRepositoryShapeFile()){
+									File ice=getIceShapeFile(r.getImageDate());
+									if(ice!=null){
+										activeParams.iceShapeFile=ice.getAbsolutePath();
+										GeometryImage glIce=readShapeFile(imageP,reader.getGeoTransform());
+										iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
+									}
+								}
+	
+								analizeImage(reader,mask,iceMask,activeParams);
+								String name=image.getParentFile().getName();
+								saveResults(name,reader);
 							}
-
-							analizeImage(reader,mask,iceMask,activeParams);
-							String name=image.getParentFile().getName();
-							saveResults(name,reader);
 						}
+						logger.info("Image processed:"+image.getAbsolutePath());
+					}catch(Exception e){
+						logger.error("Problem working this image:"+image.getAbsolutePath(),e);
 					}
-					logger.info("Image processed:"+image.getAbsolutePath());
-				}catch(Exception e){
-					logger.error("Problem working this image:"+image.getAbsolutePath(),e);
 				}
-			}
+			}else{
+				logger.error("No file found to analyze");
+			}	
 	}
 
 

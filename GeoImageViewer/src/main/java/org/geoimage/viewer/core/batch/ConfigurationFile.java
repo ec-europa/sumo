@@ -17,6 +17,15 @@ import java.util.Set;
 
 
 public class ConfigurationFile {
+	//param to choose file with the image list or search images on disk
+	public static  final String USE_FILE_LIST="use_file_list";
+	//the input file with the list of the images
+	public static final String INPUT_FILE_LIST="input_file";
+	//the input folder
+	public static  final String INPUT_FOLD_PARAM="input_folder";
+	public static  final String OUTPUT_FOLD_PARAM="output_folder";
+	public static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
+
 	//starting params
 	public static  final String TRESH_HH_PARAM="thh";
 	public static  final String TRESH_HV_PARAM="thv";
@@ -26,7 +35,6 @@ public class ConfigurationFile {
 	public static  final String ENL_PARAM="enl";
 
 	public static  final String SHP_FILE="shape_file";
-
 	public static  final String USE_ICE_SHP_FILE="use_ice";
 	//public static  final String ICE_SHP_FILE="ice_shape_file";
 	public static  final String ICE_REPOSITORY_SITE="ice_repository_site";
@@ -35,9 +43,6 @@ public class ConfigurationFile {
 
 
 	public static  final String BUFFER_PARAM="buffer";
-	public static  final String INPUT_FOLD_PARAM="input_folder";
-	public static  final String OUTPUT_FOLD_PARAM="output_folder";
-	public static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
 
 	public static  final String USE_LOCAL_CONF="use_local_conf";
 	//public static  final String REP_OLD_XML_ANALYSIS="replace_old_analysis";
@@ -84,7 +89,7 @@ public class ConfigurationFile {
 		public Integer getRunVersionNumber(){
 			return Integer.parseInt(prop.getProperty(RUN_VERSION_NUMBER,"1"));
 		}
-
+		
 		/***
 		 *
 		 * @return
@@ -129,7 +134,9 @@ public class ConfigurationFile {
 		public String getShapeFile(){
 			return prop.getProperty(SHP_FILE,"");
 		}
-
+		public String getInputFileList(){
+			return prop.getProperty(INPUT_FILE_LIST,"");
+		}
 		public String useIce(){
 			String useIce=((String)prop.get(USE_ICE_SHP_FILE));
 			return useIce!=null?useIce:"none";
@@ -151,21 +158,35 @@ public class ConfigurationFile {
 			return useIce!=null&&useIce.equalsIgnoreCase("single");
 		}
 
-
+		/**
+		 * 
+		 * @return
+		 */
 		public boolean getIsRemoteRepoIceFile(){
 			String remote=prop.getProperty(ICE_REPOSITORY_SITE,"");
 			return (remote!=null&&remote.equals("remote"));
 		}
-
+		/**
+		 * 
+		 * @return
+		 */
 		public String getIceRepositoryUrl(){
 			return prop.getProperty(ICE_REPOSITORY_PATH,"");
 		}
+		/**
+		 * 
+		 * @return
+		 */
 		public String getIceShapeFileName(){
 			return prop.getProperty(ICE_PATTERN_NAME,"");
 		}
-
-
-
+		/**
+		 * 
+		 * @return
+		 */
+		public Boolean getUseFileList(){
+			return Boolean.parseBoolean(prop.getProperty(USE_FILE_LIST,"false"));
+		}
 		/**
 		 *
 		 * @return
@@ -194,7 +215,6 @@ public class ConfigurationFile {
 					inputs.add((String)prop.get(o));
 				}
 			}
-
 			return inputs.toArray(new String[0]);
 		}
 

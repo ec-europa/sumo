@@ -1,7 +1,6 @@
 package org.geoimage.viewer.core.batch;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +64,6 @@ public abstract class AbstractBatchAnalysis {
 	public AbstractBatchAnalysis(AnalysisParams analysisParams){
 		params= analysisParams;
 		layerResults=null;//new ArrayList<ComplexEditVDSVectorLayer>();
-
 	}
 
 
@@ -114,9 +112,7 @@ public abstract class AbstractBatchAnalysis {
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
         }
-
         return gl;
-
 	}
 
 	/**
@@ -195,13 +191,11 @@ public abstract class AbstractBatchAnalysis {
         ap.run();
         return ap.getResultLayers();
     }
-
-
-
-
-	/**
-	 *
-	 */
+    /**
+     * 
+     * @param imageName
+     * @param reader
+     */
 	protected void saveResults(String imageName,SarImageReader reader){
 		if(layerResults!=null){
 			String outfolder=new StringBuilder(params.outputFolder)
