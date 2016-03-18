@@ -72,15 +72,14 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	@Override
 	public void read() {
 		try {
-	         /*   InputStream is = new FileInputStream(output );
-	            javax.xml.bind.Marshaller  marshaller = jaxbCtx.createMarshaller();
-		        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-		        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-	            marshaller.marshal( an, os );
-	            os.close();*/
+            InputStream is = new FileInputStream(input );
+            javax.xml.bind.Unmarshaller  uMarshaller = jaxbCtx.createUnmarshaller();
+            //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+            //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            Object o=uMarshaller.unmarshal(is);
 			
 			
-			GeometryImage layer = new GeometryImage(GeometryImage.POINT);
+		/*	GeometryImage layer = new GeometryImage(GeometryImage.POINT);
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = builder.build(input);
@@ -144,7 +143,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			}
 			SimpleGeometryLayer sg=new SimpleGeometryLayer(null, "imported", 
 					layer.getGeometries(), SimpleGeometryLayer.POINT);
-			SumoPlatform.getApplication().getLayerManager().addLayerInThread(sg);
+			SumoPlatform.getApplication().getLayerManager().addLayerInThread(sg);*/
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
