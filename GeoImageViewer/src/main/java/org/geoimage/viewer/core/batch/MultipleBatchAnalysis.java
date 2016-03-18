@@ -3,6 +3,7 @@ package org.geoimage.viewer.core.batch;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,29 +41,30 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 		super.setRunVersionNumber(conf.getRunVersionNumber());
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private List<File> readFileList(){
 		try{
 			List<File>files=new ArrayList<>();
 			String fl=confFile.getInputFileList();
-			FileInputStream is=new FileInputStream(new File(fl));
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = new BufferedReader(new FileReader(fl));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				files.add(new File(line));
+				if(!line.equals("")){
+					File manifest=SarFileUtil.findManifest(new File(line));
+					files.add(manifest);
+				}
 			}
 			br.close();
-			is.close();
 			return files;
 		}catch(Exception e){
 			logger.error(e.getMessage(),e);
 			return null;
-		}	
+		}
 	}
-	
-	
+
+
 	/**
 	 *
 	 */
@@ -72,25 +74,25 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 				filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
 			else
 				filesImg=readFileList();
-			
+
 			if(filesImg!=null){
 				for (File image:filesImg){
 					try{
 						logger.info("Start analyzing:"+image.getParent());
 						AnalysisParams activeParams=params;
 						String folderName=image.getParentFile().getName();
-	
+
 						//output folder have the same name of the input folder
 						String imagePathFolder=new StringBuilder(params.outputFolder)
 										.append(File.separator)
 										.append(folderName).toString();
-	
-	
+
+
 						boolean forceAnalysis=confFile.forceNewAnalysis();
-	
+
 						//check if already analized
 						boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
-	
+
 						if(!alreadyAnalyzed || forceAnalysis){
 							//check for use local configuration file
 							if(confFile.useLocalConfigurationFiles()){
@@ -98,34 +100,34 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 								String localImageConfFilePath=new StringBuilder(imagePathFolder)
 												.append(File.separator)
 												.append(Constant.CONF_FILE).toString();
-	
+
 								activeParams=readLocalConfFile(params,localImageConfFilePath);
 							}
-	
+
 							//crate the reader
 							List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
 							for(GeoImageReader r:readers){
 								//super.currentReader=r;
 								SarImageReader reader=(SarImageReader) r;
-	
+
 								if(confFile.getENL()==0){
 									String enl=reader.getENL();
 									activeParams.enl=Float.parseFloat(enl);
 								}else{
 									activeParams.enl=confFile.getENL();
 								}
-	
+
 								GeometryImage gl=null;
 						    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-	
+
 								if(activeParams.shapeFile!=null)
 									gl=readShapeFile(imageP,reader.getGeoTransform());
-	
+
 								IMask mask = null;
 								if(gl!=null){
 									mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
 								}
-	
+
 								IMask iceMask = null;
 								if(confFile.useIceRepositoryShapeFile()){
 									File ice=getIceShapeFile(r.getImageDate());
@@ -135,7 +137,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 										iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
 									}
 								}
-	
+
 								analizeImage(reader,mask,iceMask,activeParams);
 								String name=image.getParentFile().getName();
 								saveResults(name,reader);
@@ -148,7 +150,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 				}
 			}else{
 				logger.error("No file found to analyze");
-			}	
+			}
 	}
 
 
