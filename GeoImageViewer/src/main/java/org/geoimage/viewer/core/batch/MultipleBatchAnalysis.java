@@ -134,7 +134,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 									if(ice!=null){
 										activeParams.iceShapeFile=ice.getAbsolutePath();
 										GeometryImage glIce=readShapeFile(imageP,reader.getGeoTransform());
-										iceMask=FactoryLayer.createMaskLayer("buffered",glIce.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.ICE_MASK);
+										iceMask=FactoryLayer.createMaskLayer("ice",glIce.getGeometryType(),0,  gl,MaskVectorLayer.ICE_MASK);
 									}
 								}
 
