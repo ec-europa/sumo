@@ -81,6 +81,9 @@ public class BlackBorderAnalysis {
         sizeX = hTileSize;    //x step
         sizeY = vTileSize;	   //y step
 
+        horTiles=gir.getWidth()/hTileSize;
+        verTiles=gir.getHeight()/vTileSize;
+
         iNPixExtremes=hTileSize<vTileSize?vTileSize/10:hTileSize/10;
 
         this.land=land;
