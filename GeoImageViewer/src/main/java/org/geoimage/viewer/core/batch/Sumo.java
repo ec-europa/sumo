@@ -2,21 +2,12 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.slf4j.LoggerFactory;
-
-
-
-
-
-
-
 
 public class Sumo {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(Sumo.class);
@@ -52,8 +43,6 @@ public class Sumo {
 	private static  final String LOCAL_CONF_FILE_PARAM="-uselocalconf"; // Y/N
 
 	//
-
-
 	private AnalysisParams params;
 	private ConfigurationFile conf;
 	private static AbstractBatchAnalysis batch=null;
