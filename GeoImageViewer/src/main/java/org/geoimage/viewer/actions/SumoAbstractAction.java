@@ -15,7 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.widget.dialog.ActionDialog;
 
@@ -124,11 +123,11 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 	public void notifyEvent(SumoActionEvent event){
 		for(SumoActionListener list:actionListeners){
 			if(event.getEventType()==SumoActionEvent.STARTACTION){
-				list.startAction(event.getMessage(),this.actionSteps);
+				list.startAction(event.getMessage(),this.actionSteps,this);
 			}else if(event.getEventType()==SumoActionEvent.ENDACTION){
-				list.stop(this.name);
+				list.stop(this.name,this);
 			}else if(event.getEventType()==SumoActionEvent.STOP_ACTION){
-				list.stop(this.name);
+				list.stop(this.name,this);
 			}else if(event.getEventType()==SumoActionEvent.UPDATE_STATUS){
 				list.updateProgress(event.getMessage()!=null?event.getMessage():" ", event.getProgress(), event.getActionSteps());
 			}
