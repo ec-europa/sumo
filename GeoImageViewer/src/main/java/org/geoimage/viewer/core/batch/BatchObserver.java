@@ -3,6 +3,8 @@ package org.geoimage.viewer.core.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geoimage.viewer.core.batch.listener.BachListener;
+
 public class BatchObserver {
 
 	private static BatchObserver instance;
@@ -37,16 +39,15 @@ public class BatchObserver {
     }
 
     /**
-     * 
+     *
      * @param image
      * @param msg
      */
     public void notifyError(String image,String msg) {
         for (BachListener listener : listeners) {
-            listener.notifyError(image, msg);
         }
     }
 
-	
-	
+
+
 }
