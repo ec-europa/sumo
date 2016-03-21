@@ -287,8 +287,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 	@Override
 	public void endAnalysis() {
-		SumoPlatform.getApplication().getMain().removeStopListener(this);
-
+		//TODO: check the dispose function
 		if(proc!=null)
 			proc.dispose();
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
@@ -298,8 +297,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	public void actionPerformed(ActionEvent e) {
 		if(proc!=null&&e.getActionCommand().equals("STOP")){
 			this.proc.setStop(true);
-
-			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc=null;
 		}
 	}
