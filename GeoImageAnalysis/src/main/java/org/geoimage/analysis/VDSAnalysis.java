@@ -6,7 +6,6 @@ package org.geoimage.analysis;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ public class VDSAnalysis{
     private DetectedPixels pixels;
     private MaskGeometries coastMask;
     private MaskGeometries iceMask;
- //   private int tileSize;
     private int verTilesImage=0;
     private int horTilesImage=0;
     private int realSizeX=0;
@@ -710,7 +708,7 @@ public class VDSAnalysis{
      * @param yBottomTile
      * @return
      */
-    public boolean intersects(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
+    private boolean intersects(int xLeftTile,  int xRightTile,int yTopTile, int yBottomTile) {
         if (coastMask == null&&iceMask==null) {
             return false;
         }

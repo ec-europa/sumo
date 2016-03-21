@@ -95,7 +95,7 @@ import com.jogamp.opengl.util.GLReadBufferUtil;
 /**
  * The application's main frame.
  */
-public class GeoImageViewerView extends FrameView implements GLEventListener,VDSAnalysisProcessListener {
+public class GeoImageViewerView extends FrameView implements GLEventListener{
 
     private LayerManager lm;
     private OpenGLContext geoContext;
@@ -721,15 +721,15 @@ public class GeoImageViewerView extends FrameView implements GLEventListener,VDS
         progressBar.setValue(value);
     }
 
-    public void addStopListener(ActionListener lis){
-    	this.stopThreadButton.addActionListener(lis);
-    	this.stopThreadButton.setVisible(true);
-    	this.stopThreadButton.setEnabled(true);
+    public void showStopButton(){
+    	EventQueue.invokeLater(() -> {
+    		this.stopThreadButton.setVisible(true);
+    		this.stopThreadButton.setEnabled(true);
+    	});
     }
 
-    public void removeStopListener(ActionListener lis){
+    public void hideStopButton(){
         EventQueue.invokeLater(() -> {
-			stopThreadButton.removeActionListener(lis);
 			stopThreadButton.setVisible(false);
 	    	this.stopThreadButton.setEnabled(false);
 		});
@@ -999,7 +999,8 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
     private JButton stopThreadButton;
-    private javax.swing.JLabel statusAnimationLabel;
+
+	private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JPanel sumopanel;
@@ -1020,37 +1021,12 @@ private void focusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_focus
 		arg0.destroy();
 	}
 
-	@Override
-	public void startAnalysis() {
-		stopThreadButton.setVisible(true);
-	}
-	@Override
-	public void endAnalysis() {
-		stopThreadButton.setVisible(false);
+	public JButton getStopThreadButton() {
+		return stopThreadButton;
 	}
 
-	@Override
-	public void startAnalysisBand(String message) {
-	}
-
-	@Override
-	public void calcAzimuthAmbiguity(String message) {
-	}
-
-	@Override
-	public void agglomerating(String message) {
-	}
-	@Override
-	public void layerReady(ILayer layer) {
-	}
-	@Override
-	public void performVDSAnalysis(String message, int numSteps) {
-	}
-	@Override
-	public void startBlackBorederAnalysis(String message) {
-	}
-	@Override
-	public void nextVDSAnalysisStep(int numSteps) {
+	public void setStopThreadButton(JButton stopThreadButton) {
+		this.stopThreadButton = stopThreadButton;
 	}
 
 

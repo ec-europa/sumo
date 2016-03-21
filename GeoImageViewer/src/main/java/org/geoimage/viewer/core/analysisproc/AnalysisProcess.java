@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.geoimage.analysis.AzimuthAmbiguity;
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.Boat;
+import org.geoimage.analysis.ConstantVDSAnalysis;
 import org.geoimage.analysis.DetectedPixels;
 import org.geoimage.analysis.KDistributionEstimation;
 import org.geoimage.analysis.S1ArtefactsAmbiguity;
@@ -391,6 +392,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
 
 		public void dispose(){
+			//TODO: check dispose function
 			analysis.dispose();
 			//this.removeAllProcessListener();
 			//this.listeners.clear();
