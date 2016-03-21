@@ -68,7 +68,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	/**
 	 *
 	 */
-	public void startAnalysis(){
+	public void runAnalysis(){
 			List<File>filesImg=null;
 			if(!confFile.getUseFileList())
 				filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
@@ -256,6 +256,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 
 		return analyzed;
 	}
+
 
 
 

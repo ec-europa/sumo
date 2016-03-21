@@ -16,6 +16,7 @@ import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
+import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -67,7 +68,7 @@ public abstract class AbstractBatchAnalysis {
 	}
 
 
-	protected abstract void startAnalysis();
+	protected abstract void runAnalysis();
 	/*protected GeoImageReader getCurrentReader(){
 		return currentReader;
 	}*/
@@ -76,7 +77,7 @@ public abstract class AbstractBatchAnalysis {
 	 *
 	 */
 	protected void runProcess(){
-		startAnalysis();
+		runAnalysis();
 	}
 
 
@@ -192,7 +193,7 @@ public abstract class AbstractBatchAnalysis {
         return ap.getResultLayers();
     }
     /**
-     * 
+     *
      * @param imageName
      * @param reader
      */
@@ -228,7 +229,7 @@ public abstract class AbstractBatchAnalysis {
 					outfileName=outfileName.append("_").append(((AbstractCosmoSkymedImage)reader).getGroup());
 				}
 
-    		   l.save(outfileName.toString()+"_OLD",ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg);
+    		   l.save(outfileName.toString()+"_OLD",ComplexEditVDSVectorLayer.OPT_EXPORT_XML_SUMO_OLD,params.epsg,reader);
 
 
     		   File outFile=new File(outfileName.toString()+".xml");
