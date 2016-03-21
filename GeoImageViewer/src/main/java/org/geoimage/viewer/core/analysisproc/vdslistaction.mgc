@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="org.geoimage.viewer.actions.VDSAnalysisAction" x="288" y="543">
+    <Class name="org.geoimage.viewer.actions.VDSAnalysisAction" x="513" y="534">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
