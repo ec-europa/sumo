@@ -68,7 +68,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
     	coastlineMask=null;
         // initialise the buffering distance value
         int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
-        SumoPlatform.getApplication().getMain().addStopListener(this);
         ImageLayer currentImgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (paramsAction.size() < 2) {
@@ -251,42 +250,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
     }
 
 
-/*
-
-    public boolean isIndeterminate() {
-        return this.indeterminate;
-    }
-
-    public boolean isDone() {
-        return this.done;
-    }
-
-    public int getMaximum() {
-        return this.maximum;
-    }
-
-    public int getCurrent() {
-        return this.current;
-    }
-
-
-    public void setCurrent(int i) {
-        current = i;
-    }
-
-    public void setMaximum(int size) {
-        maximum = size;
-    }
-
-
-    public void setIndeterminate(boolean value) {
-        indeterminate = value;
-    }
-
-    public void setDone(boolean value) {
-        done = value;
-    }
-*/
 
 
 	@Override
@@ -337,7 +300,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	@Override
 	public void endAnalysis() {
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"End Analysis",-1));
-		SumoPlatform.getApplication().getMain().removeStopListener(this);
 
 		if(proc!=null)
 			proc.dispose();
@@ -347,13 +309,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JMenuItem){
 			super.actionPerformed(e);
-		}else{
-			if(proc!=null&&e.getActionCommand().equals("STOP")){
-				this.proc.setStop(true);
-				super.notifyEvent(new SumoActionEvent(SumoActionEvent.STOP_ACTION,"stopping",-1));
-				SumoPlatform.getApplication().getMain().removeStopListener(this);
-				this.proc=null;
-			}
 		}
 	}
 

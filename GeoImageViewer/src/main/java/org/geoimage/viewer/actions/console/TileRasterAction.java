@@ -168,8 +168,6 @@ public class TileRasterAction extends AbstractConsoleAction {
 	public void actionPerformed(ActionEvent e) {
 		if (proc != null && e.getActionCommand().equals("STOP")) {
 			this.proc.setStop(true);
-
-			SumoPlatform.getApplication().getMain().removeStopListener(this);
 			this.proc = null;
 		}
 	}
