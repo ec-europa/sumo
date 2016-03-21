@@ -26,7 +26,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 	/**
 	 *
 	 */
-	protected void startAnalysis(){
+	protected void runAnalysis(){
 		try{
 			//crate the reader
 			List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(params.pathImg[0],PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
