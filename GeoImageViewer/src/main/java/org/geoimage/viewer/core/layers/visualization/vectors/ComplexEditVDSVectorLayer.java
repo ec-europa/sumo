@@ -144,11 +144,12 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
     			logger.error(e.getMessage());
     	}
     }
+    /**
+     * Created to use with the batch mode
+     *
+     */
+    public void save(String file, int formattype, String projection,SarImageReader sar) {
 
-    @Override
-    public void save(String file, int formattype, String projection) {
-    	GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
-    	SarImageReader sar=((SarImageReader)reader);
         super.save(file, formattype, projection);
 
 
@@ -171,7 +172,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	                ArrayList<String> postgiscommands = postgisCommands(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), table, version,
 	                		sar.getGeoTransform(), projection,sar.getTimeStampStart(),sar.getDisplayName(0));
 	                // save the new layer in database
-	                PostgisIO vio=new PostgisIO(reader, config);
+	                PostgisIO vio=new PostgisIO(sar, config);
 	                vio.setLayerName(table);
 	                vio.executeCommands(postgiscommands);
 	                msgResult[0]="The VDS has been correctly uploaded to the database";
@@ -187,7 +188,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	                file = file.concat(".gml");
 	            }
 	            GmlIO gml=new GmlIO(new File(file), sar);
-	            ((GmlIO)gml).save(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,reader.getGeoTransform(),sar);
+	            ((GmlIO)gml).save(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,sar.getGeoTransform(),sar);
 	            msgResult[0]="The GML file has been succesfully created";
 	            break;
 	        }
@@ -196,7 +197,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	            if (!file.endsWith(".xml")) {
 	                file = file.concat(".xml");
 	            }
-	            SumoXmlIOOld.export(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,(SarImageReader)reader);
+	            SumoXmlIOOld.export(new File(file),FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), projection,sar);
 	            msgResult[0]="The VDS has been correctly saved into Sumo XML format";
 	            break;
 	        }
@@ -233,7 +234,7 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
 	        }
 	        case ISave.OPT_EXPORT_THUMBS:{
 	            ThumbnailsManager tm = new ThumbnailsManager(file);
-	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",reader, -1,((ImageLayer)super.parent).getActiveBand());
+	            tm.createThumbnailsDir(FactoryLayer.createThresholdedLayer(glayer,currentThresh,threshable), "id",sar, -1,((ImageLayer)super.parent).getActiveBand());
 	            msgResult[0]="The thumnails have been successfully saved";
 	            break;
 	        }
@@ -244,6 +245,12 @@ public class ComplexEditVDSVectorLayer extends ComplexEditGeometryVectorLayer  {
         	JOptionPane.showMessageDialog(null,msgResult[0], msgResult[1],JOptionPane.INFORMATION_MESSAGE);
         else
         	logger.info(msgResult[0]);
+    }
+
+    @Override
+    public void save(String file, int formattype, String projection) {
+    	GeoImageReader reader=SumoPlatform.getApplication().getCurrentImageReader();
+    	save(file,formattype,projection,((SarImageReader)reader));
     }
 
 
