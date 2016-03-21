@@ -56,7 +56,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.actions.AddLastImageAction;
 import org.geoimage.viewer.actions.SumoAbstractAction;
-import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
 import org.geoimage.viewer.core.api.ILayerListener;
 import org.geoimage.viewer.core.api.iactions.ISumoAction;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
@@ -721,17 +720,21 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
         progressBar.setValue(value);
     }
 
-    public void showStopButton(){
+    public void showStopButton(SumoAbstractAction action){
     	EventQueue.invokeLater(() -> {
+    		this.stopThreadButton.addActionListener(action);
     		this.stopThreadButton.setVisible(true);
     		this.stopThreadButton.setEnabled(true);
     	});
     }
 
-    public void hideStopButton(){
+    public void hideStopButton(SumoAbstractAction action){
         EventQueue.invokeLater(() -> {
-			stopThreadButton.setVisible(false);
-	    	this.stopThreadButton.setEnabled(false);
+        	this.stopThreadButton.removeActionListener(action);
+        	if(this.stopThreadButton.getActionListeners().length==0){
+        		stopThreadButton.setVisible(false);
+        		this.stopThreadButton.setEnabled(false);
+        	}
 		});
     }
 
