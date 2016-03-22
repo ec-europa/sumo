@@ -87,7 +87,7 @@ public class ThumbnailsManager {
         try {
         	SumoPlatform ip=(SumoPlatform) SumoPlatform.getApplication();
             if (ip != null) {
-                ip.startAction("building thumbnails...", glayer.getGeometries().size());
+                ip.startAction("building thumbnails...", glayer.getGeometries().size(),null);
             }
             for (Geometry geom : glayer.getGeometries()) {
                 try {
@@ -106,7 +106,7 @@ public class ThumbnailsManager {
             }
             if (!new File(path, "overview" + gir.getWidth() + "x" + gir.getHeight() + ".png").exists()) {
                 if (ip != null) {
-                    ip.startAction("building thumbnails...", -1);
+                    ip.startAction("building thumbnails...", -1,null);
                 }
                 double scale=1;
                 if(gir.getWidth()<gir.getHeight()){

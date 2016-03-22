@@ -287,7 +287,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 	@Override
 	public void endAnalysis() {
-		//TODO: check the dispose function
 		if(proc!=null)
 			proc.dispose();
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));

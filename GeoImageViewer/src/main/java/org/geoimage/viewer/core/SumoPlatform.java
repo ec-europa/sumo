@@ -203,10 +203,12 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
 	public void startAction(String message,int size,SumoAbstractAction action) {
 		GeoImageViewerView mainView=((GeoImageViewerView) getApplication().getMainView());
 
-		mainView.showStopButton(action);
+		if(action!=null)
+			mainView.showStopButton(action);
+
 		mainView.setInfo(message);
 		if(size==-1){//indeterminate
-            mainView.setProgressMax(1);//AG
+            mainView.setProgressIndeterminate();//AG
             mainView.iconTimer(false);//AG
 		}else{
 			mainView.setProgressMax(size);
