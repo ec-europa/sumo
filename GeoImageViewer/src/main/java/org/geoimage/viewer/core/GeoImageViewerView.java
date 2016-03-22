@@ -702,11 +702,12 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
         }
     }
 
+
+    public void setProgressIndeterminate(){
+    	progressBar.setIndeterminate(true);
+    }
+
     public void setProgressMax(int max) {
-        if (max == -1) {
-            progressBar.setIndeterminate(true);
-            return;
-        }
         progressBar.setMaximum(max);
         progressBar.setIndeterminate(false);
         if (max == 0) {

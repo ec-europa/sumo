@@ -53,4 +53,5 @@ public class CatalogConsoleAction extends AbstractAction implements ISumoAction{
 		return false;
 	}
 
+
 }

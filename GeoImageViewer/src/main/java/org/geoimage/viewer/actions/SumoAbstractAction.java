@@ -27,6 +27,15 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 	protected String absolutePath=null;
 	protected Map<String,String> paramsAction;
 	protected boolean done=false;
+	protected int status=0;
+
+
+
+	public static int STATUS_CREATED=0;
+	public static int STATUS_RUNNING=1;
+	public static int STATUS_CANCELLED=2;
+	public static int STATUS_END=3;
+
 
 	//used for the progress bar
 	protected int  actionSteps=-1;
@@ -45,6 +54,10 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 		return done;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
 
 	public void setParamsAction(Map<String, String> paramsAction) {
 		this.paramsAction = paramsAction;
@@ -52,6 +65,7 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 
 
 	public SumoAbstractAction(String name,String path){
+		status=STATUS_CREATED;
 		absolutePath=path;
 		this.name=name;
 		actionListeners=new ArrayList<>();
@@ -127,9 +141,12 @@ public abstract class SumoAbstractAction extends AbstractAction implements ISumo
 			}else if(event.getEventType()==SumoActionEvent.ENDACTION){
 				list.stop(this.name,this);
 			}else if(event.getEventType()==SumoActionEvent.STOP_ACTION){
-				list.stop(this.name,this);
+				list.updateProgress(event.getMessage(),-1,-1);//list.stop(this.name,this);
 			}else if(event.getEventType()==SumoActionEvent.UPDATE_STATUS){
-				list.updateProgress(event.getMessage()!=null?event.getMessage():" ", event.getProgress(), event.getActionSteps());
+				if(status==STATUS_RUNNING||status==STATUS_CREATED)
+					list.updateProgress(event.getMessage()!=null?event.getMessage():" ", event.getProgress(), event.getActionSteps());
+				else
+					list.updateProgress("STOPPING",-1,-1);
 			}
 
 		}
