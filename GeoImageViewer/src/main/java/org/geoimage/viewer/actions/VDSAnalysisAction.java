@@ -5,9 +5,13 @@
 package org.geoimage.viewer.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.swing.JMenuItem;
 
@@ -35,7 +39,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog;
  *
  * @author
  */
-public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysisProcessListener,ActionListener{
+public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysisProcessListener{
     /**
 	 *
 	 */
@@ -45,7 +49,6 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
     private MaskVectorLayer coastlineMask = null;
     private MaskVectorLayer iceMasks = null;
     private AnalysisProcess proc=null;
-    private boolean stopping=false;
 
     public VDSAnalysisAction() {
     	super("vds","Analysis/VDS");
@@ -64,115 +67,126 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
      * @return true, if successful
      */
     public boolean execute() {
-    	iceMasks=null;
-    	coastlineMask=null;
-        // initialise the buffering distance value
-        int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
-        ImageLayer currentImgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
+	    	status=STATUS_RUNNING;
+	    	iceMasks=null;
+	    	coastlineMask=null;
+	        // initialise the buffering distance value
+	        int bufferingDistance = Double.valueOf((SumoPlatform.getApplication().getConfiguration()).getBufferingDistance()).intValue();
+	        ImageLayer currentImgLayer=LayerManager.getIstanceManager().getCurrentImageLayer();
 
-        if (paramsAction.size() < 2) {
-            return true;
-        } else {
-
-            if (paramsAction.get("algorithm").equals("k-dist")) {
-                done = false;
-
-
-                GeoImageReader reader = ((ImageLayer) currentImgLayer).getImageReader();
-                if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
-                    gir = reader;
-                }
-                if (gir == null) {
-                    done = true;
-                    return false;
-                }
-
-                //this part mange the different thresholds for different bands
-                //in particular is also looking for which band is available and leave the threshold to 0 for the not available bands
-                java.util.HashMap<String,Float> thresholds = new java.util.HashMap<>();
-
-                int numberofbands = gir.getNBand();
-                thresholds.put("HH",0.0f);
-                thresholds.put("HV",0.0f);
-                thresholds.put("VH",0.0f);
-                thresholds.put("VV",0.0f);
-                for (int bb = 0; bb < numberofbands; bb++) {
-                    if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
-                    	thresholds.put("HH", Float.parseFloat(paramsAction.get("thresholdHH")));
-                    } else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
-                    	thresholds.put("HV", Float.parseFloat(paramsAction.get("thresholdHV")));
-                    } else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
-                    	thresholds.put("VH", Float.parseFloat(paramsAction.get("thresholdVH")));
-                    } else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
-                    	thresholds.put("VV", Float.parseFloat(paramsAction.get("thresholdVV")));
-                    }
-                }
-                //read the land mask
-                for (ILayer l : LayerManager.getIstanceManager().getChilds(currentImgLayer)) {
-                    if (l instanceof IMask ) {
-                    	if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
-                    		if( !"".equals(paramsAction.get("coastline"))&&l.getName().startsWith(paramsAction.get("coastline")))
-                    			coastlineMask=(MaskVectorLayer) l;
-                    	}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
-                    		if(!"".equals(paramsAction.get("ice"))&& l.getName().startsWith(paramsAction.get("ice")))
-                    			iceMasks=(MaskVectorLayer) l;
-                    	}else{
-
-                    	}
-                    }
-                }
-                //read the buffer distance
-                bufferingDistance = Integer.parseInt(paramsAction.get("Buffer"));
-                final float ENL = Float.parseFloat(paramsAction.get("ENL"));
-
-                IMask bufferedMask=null;
-                if(coastlineMask!=null)
-                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
-                		coastlineMask.getType(),
-           				bufferingDistance,
-           				((MaskVectorLayer)coastlineMask).getGeometriclayer(),
-           				coastlineMask.getMaskType());
-
-                IMask iceMask=null;
-                if(iceMasks!=null)
-                	 iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
-                		iceMasks.getType(),
-           				bufferingDistance,
-           				((MaskVectorLayer)iceMasks).getGeometriclayer(),
-           				iceMasks.getMaskType());
-
-                MaskGeometries mg=null;
-                if(bufferedMask!=null)
-                	mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
-
-                MaskGeometries icemg=null;
-                if(iceMask!=null)
-                	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
-
-                VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds,
-                		currentImgLayer.getRealTileSizeX(),currentImgLayer.getRealTileSizeY(),
-                		currentImgLayer.getHorizontalTilesImage(),currentImgLayer.getVerticalTilesImage());
+	        if (paramsAction.size() < 2) {
+	            return true;
+	        } else {
+	        	try{
+	        		if (paramsAction.get("algorithm").equals("k-dist")) {
+	        			done = false;
 
 
-                BlackBorderAnalysis blackBorderAnalysis=null;
-                if(gir instanceof Sentinel1){
-	           	 	if(vdsanalysis.getCoastMask()!=null)
-	           	 		blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
-	           	 			currentImgLayer.getRealTileSizeY(),vdsanalysis.getCoastMask().getMaskGeometries());
-	           	 	else
-	           		    blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
-		           	 			currentImgLayer.getRealTileSizeY(),null);
-                }
+	        			GeoImageReader reader = ((ImageLayer) currentImgLayer).getImageReader();
+	        			if (reader instanceof SarImageReader || reader instanceof TiledBufferedImage) {
+	        				gir = reader;
+	        			}
+	        			if (gir == null) {
+	        				done = true;
+	        				return false;
+	        			}
 
-                proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0,blackBorderAnalysis);
-                proc.addProcessListener(this);
+	        			//this part mange the different thresholds for different bands
+	        			//in particular is also looking for which band is available and leave the threshold to 0 for the not available bands
+	        			java.util.HashMap<String,Float> thresholds = new java.util.HashMap<>();
 
-                SumoPlatform.getApplication().getConsoleLayer().setCurrentAction(this);
+	        			int numberofbands = gir.getNBand();
+	        			thresholds.put("HH",0.0f);
+	        			thresholds.put("HV",0.0f);
+	        			thresholds.put("VH",0.0f);
+	        			thresholds.put("VV",0.0f);
+	        			for (int bb = 0; bb < numberofbands; bb++) {
+	        				if (gir.getBandName(bb).equals("HH") || gir.getBandName(bb).equals("H/H")) {
+	        					thresholds.put("HH", Float.parseFloat(paramsAction.get("thresholdHH")));
+	        				} else if (gir.getBandName(bb).equals("HV") || gir.getBandName(bb).equals("H/V")) {
+	        					thresholds.put("HV", Float.parseFloat(paramsAction.get("thresholdHV")));
+	        				} else if (gir.getBandName(bb).equals("VH") || gir.getBandName(bb).equals("V/H")) {
+	        					thresholds.put("VH", Float.parseFloat(paramsAction.get("thresholdVH")));
+	        				} else if (gir.getBandName(bb).equals("VV") || gir.getBandName(bb).equals("V/V")) {
+	        					thresholds.put("VV", Float.parseFloat(paramsAction.get("thresholdVV")));
+	        				}
+	        			}
+	        			//read the land mask
+	        			for (ILayer l : LayerManager.getIstanceManager().getChilds(currentImgLayer)) {
+	        				if (l instanceof IMask ) {
+	        					if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.COASTLINE_MASK){
+	        						if( !"".equals(paramsAction.get("coastline"))&&l.getName().startsWith(paramsAction.get("coastline")))
+	        							coastlineMask=(MaskVectorLayer) l;
+	        					}else if( ((MaskVectorLayer) l).getMaskType()==MaskVectorLayer.ICE_MASK){
+	        						if(!"".equals(paramsAction.get("ice"))&& l.getName().startsWith(paramsAction.get("ice")))
+	        							iceMasks=(MaskVectorLayer) l;
+	        					}else{
 
-                Thread t=new Thread(proc);
-                t.setName("VDS_analysis_"+gir.getDisplayName(0));
-                t.start();
-            }
+	        					}
+	        				}
+	        			}
+	        			//read the buffer distance
+	        			bufferingDistance = Integer.parseInt(paramsAction.get("Buffer"));
+	        			final float ENL = Float.parseFloat(paramsAction.get("ENL"));
+
+	        			IMask bufferedMask=null;
+	        			if(coastlineMask!=null)
+	        				bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
+	        						coastlineMask.getType(),
+	        						bufferingDistance,
+	        						((MaskVectorLayer)coastlineMask).getGeometriclayer(),
+	        						coastlineMask.getMaskType());
+
+	        			IMask iceMask=null;
+	        			if(iceMasks!=null)
+	        				iceMask=FactoryLayer.createMaskLayer(iceMasks.getName(),
+	        						iceMasks.getType(),
+	        						bufferingDistance,
+	        						((MaskVectorLayer)iceMasks).getGeometriclayer(),
+	        						iceMasks.getMaskType());
+
+	        			MaskGeometries mg=null;
+	        			if(bufferedMask!=null)
+	        				mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
+
+	        			MaskGeometries icemg=null;
+	        			if(iceMask!=null)
+	        				icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
+
+	        			VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds,
+	        					currentImgLayer.getRealTileSizeX(),currentImgLayer.getRealTileSizeY(),
+	        					currentImgLayer.getHorizontalTilesImage(),currentImgLayer.getVerticalTilesImage());
+
+
+	        			BlackBorderAnalysis blackBorderAnalysis=null;
+	        			if(gir instanceof Sentinel1){
+	        				if(vdsanalysis.getCoastMask()!=null)
+	        					blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
+	        							currentImgLayer.getRealTileSizeY(),vdsanalysis.getCoastMask().getMaskGeometries());
+	        				else
+	        					blackBorderAnalysis= new BlackBorderAnalysis(gir,currentImgLayer.getRealTileSizeX(),
+	        							currentImgLayer.getRealTileSizeY(),null);
+	        			}
+
+	        			proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0,blackBorderAnalysis);
+	        			proc.addProcessListener(this);
+
+	        			SumoPlatform.getApplication().getConsoleLayer().setCurrentAction(this);
+
+
+	        			//Thread t=new Thread(proc);
+	        			//t.setName("VDS_analysis_"+gir.getDisplayName(0));
+	        			//t.start();
+
+	        			Thread.currentThread().setName("VDS_analysis_"+gir.getDisplayName(0));
+	        			proc.run();
+	        		}
+	        	}finally{
+	        		proc.dispose();
+	        		if(status!=STATUS_END){
+	        			endAnalysis();
+	        		}
+	        	}
             return true;
         }
     }
@@ -259,56 +273,49 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	}
 	@Override
 	public void performVDSAnalysis(String message,int numSteps) {
-		if(!stopping){
 			this.actionSteps=numSteps;
 			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,1,numSteps));
-		}
 	}
 	@Override
 	public void startBlackBorederAnalysis(String message) {
-		if(!stopping){
 			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,2,5));
-		}
-
 	}
 	@Override
 	public void startAnalysisBand(String message) {
-		if(!stopping){
 			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,3,5));
-		}
 	}
 
 	@Override
 	public void calcAzimuthAmbiguity(String message) {
-		if(!stopping){
 			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,4,5));
-		}
 	}
 
 	@Override
 	public void agglomerating(String message) {
-		if(!stopping){
 			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message ,5,5));
-		}
 	}
 
+	@Override
 	public void nextVDSAnalysisStep(int numSteps){
-		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps,actionSteps));
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps,actionSteps));
 	}
 
 
 	@Override
 	public void endAnalysis() {
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"End Analysis",-1));
-
-		if(proc!=null)
-			proc.dispose();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JMenuItem){
 			super.actionPerformed(e);
+		}else{
+			if(proc!=null&&e.getActionCommand().equals("STOP")){
+				this.proc.setStop(true);
+				status=STATUS_CANCELLED;
+				super.notifyEvent(new SumoActionEvent(SumoActionEvent.STOP_ACTION,"ANALYSIS CANCELLED",-1));
+			}
 		}
 	}
 

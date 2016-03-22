@@ -254,7 +254,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 }
 	             }
 	             if(stop){
-	            	 stop();
 	            	 return;
 	             }
 
@@ -271,7 +270,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, neighbourTilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
 	                 }
 	                 if(stop){
-	                     stop();
 	                	 return;
 	                 }
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
@@ -311,16 +309,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 notifyLayerReady(vdsanalysisLayer);
 	                 resultLayers.add(vdsanalysisLayer);
 	             }
-            	 stop();
+	             notifyEndProcessListener();
              }catch(Exception ee){
             	 ee.printStackTrace();
              }
          }
 
-		private void stop(){
-           notifyEndProcessListener();
-           removeAllProcessListener();
-		}
 
 		/**
 		 *
@@ -391,10 +385,9 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
 
 		public void dispose(){
-			//TODO: check dispose function
-			analysis.dispose();
-			//this.removeAllProcessListener();
-			//this.listeners.clear();
+	        removeAllProcessListener();
+			analysis=null;
+	        blackBorderAnalysis=null;
 		}
      }
 

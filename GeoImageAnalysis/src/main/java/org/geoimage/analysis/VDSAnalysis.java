@@ -741,21 +741,5 @@ public class VDSAnalysis{
     }
 
 
-    public void dispose(){
-    	try {
-			if(blackBorderAnalysis!=null){
-	    		blackBorderAnalysis=null;
-	    	}
-	    	if(this.progressListener.size()>0){
-	    		this.progressListener.clear();
-	    		this.progressListener=null;
-	    	}
-	    	if(this.pixels!=null)
-	    		this.pixels=null;
-	    	if(this.gir!=null)
-	    		gir=null;
-		} catch (Throwable e) {
-			logger.error(e.getMessage());
-		}
-    }
+
 }
