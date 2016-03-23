@@ -52,16 +52,10 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
 	public static Logger logger = LogManager.getLogger(SumoXMLWriter.class);
 	private File input=null;
-	private static javax.xml.bind.JAXBContext jaxbCtx;
+	//private static javax.xml.bind.JAXBContext jaxbCtx;
 
 	public SumoXMLWriter(File input){
 		this.input=input;
-		try {
-			jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
-			
-		} catch (JAXBException e) {
-			logger.error(e.getMessage(),e);
-		}
 	}
 
 	public SumoXMLWriter(){
@@ -72,13 +66,14 @@ public class SumoXMLWriter extends AbstractVectorIO {
 	@Override
 	public void read() {
 		try {
+			javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             InputStream is = new FileInputStream(input );
             javax.xml.bind.Unmarshaller  uMarshaller = jaxbCtx.createUnmarshaller();
             //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
             //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             Object o=uMarshaller.unmarshal(is);
-			
-			
+
+
 		/*	GeometryImage layer = new GeometryImage(GeometryImage.POINT);
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
@@ -141,7 +136,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 					}
 				}
 			}
-			SimpleGeometryLayer sg=new SimpleGeometryLayer(null, "imported", 
+			SimpleGeometryLayer sg=new SimpleGeometryLayer(null, "imported",
 					layer.getGeometries(), SimpleGeometryLayer.POINT);
 			SumoPlatform.getApplication().getLayerManager().addLayerInThread(sg);*/
 		} catch (Exception ex) {
@@ -372,6 +367,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 		/**** SAVING ***********/
 		try {
+			javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             OutputStream os = new FileOutputStream(output );
             javax.xml.bind.Marshaller  marshaller = jaxbCtx.createMarshaller();
 	        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
