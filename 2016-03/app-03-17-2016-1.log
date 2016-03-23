@@ -1,0 +1,7 @@
+2016-03-17 17:01:07,444 ERROR o.g.f.GeoImageReaderFactory [Thread-31] Error reading:
+java.lang.NullPointerException
+	at org.geoimage.factory.GeoImageReaderFactory.createReaderForName(GeoImageReaderFactory.java:110) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageAction.addImage(AddImageAction.java:118) ~[classes/:?]
+	at org.geoimage.viewer.actions.AddImageAction.execute(AddImageAction.java:73) ~[classes/:?]
+	at org.geoimage.viewer.actions.SumoAbstractAction.lambda$0(SumoAbstractAction.java:91) ~[classes/:?]
+	at java.lang.Thread.run(Thread.java:745) [?:1.8.0_65]
