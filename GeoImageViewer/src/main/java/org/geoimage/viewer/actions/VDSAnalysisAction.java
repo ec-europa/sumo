@@ -179,12 +179,12 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	        			//t.start();
 
 	        			Thread.currentThread().setName("VDS_analysis_"+gir.getDisplayName(0));
-	        			proc.run();
+	        			proc.call();
 	        		}
 	        	}finally{
 	        		proc.dispose();
 	        		if(status!=STATUS_END){
-	        			endAnalysis();
+	        			endAnalysis(gir.getDisplayName(0));
 	        		}
 	        	}
             return true;
@@ -267,8 +267,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 
 	@Override
-	public void startAnalysis() {
-		String message="Starting VDS Analysis";
+	public void startAnalysis(String imgName) {
+		String message="Starting VDS Analysis:"+imgName;
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message ,0,5));
 	}
 	@Override
@@ -302,7 +302,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 
 	@Override
-	public void endAnalysis() {
+	public void endAnalysis(String imageName) {
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"End Analysis",-1));
 	}
 

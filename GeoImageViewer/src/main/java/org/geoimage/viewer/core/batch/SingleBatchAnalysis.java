@@ -6,8 +6,10 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.GeometryImage;
+import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.slf4j.LoggerFactory;
@@ -40,15 +42,17 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 				GeometryImage gl=null;
 				if(params.shapeFile!=null){
 			    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-					gl=readShapeFile(imageP,reader.getGeoTransform());
+					gl=readShapeFile(params.shapeFile,imageP,reader.getGeoTransform());
 				}
 				IMask masks = null;
 				if(gl!=null){
 					masks=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
 				}
 
-				analizeImage(reader,masks,null,params);
-				saveResults(reader.getImgName(),reader);
+				AnalysisProcess ap=prepareBatchAnalysis(reader,masks,null,params);
+				AnalysisProcess.Results rs=ap.call();
+				List<ComplexEditVDSVectorLayer> results=rs.getLayerResults();
+				saveResults(reader.getImgName(),reader,results);
 			}
 		}catch(Exception e){
 			logger.error(e.getMessage(),e);

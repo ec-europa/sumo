@@ -2,15 +2,26 @@ package org.geoimage.viewer.core.batch;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geoimage.def.GeoImageReader;
@@ -18,8 +29,11 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
+import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.util.files.ArchiveUtil;
 import org.geoimage.viewer.util.files.IceHttpClient;
@@ -33,6 +47,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(MultipleBatchAnalysis.class);
 	private ConfigurationFile confFile;
+	private int NTHREDS=4;
 
 	public MultipleBatchAnalysis(AnalysisParams analysisParams,ConfigurationFile conf) {
 		super(analysisParams);
@@ -69,6 +84,11 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	 *
 	 */
 	public void runAnalysis(){
+        //Get the ThreadFactory implementation to use
+	    //creating the ThreadPoolExecutor
+        ThreadPoolExecutor executorPool = new ThreadPoolExecutor(2, NTHREDS, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
+
 			List<File>filesImg=null;
 			if(!confFile.getUseFileList())
 				filesImg=SarFileUtil.scanFoldersForImages(super.params.pathImg, confFile.getFilterFolder(), false);
@@ -121,7 +141,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 						    	Polygon imageP=(reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
 
 								if(activeParams.shapeFile!=null)
-									gl=readShapeFile(imageP,reader.getGeoTransform());
+									gl=readShapeFile(params.shapeFile,imageP,reader.getGeoTransform());
 
 								IMask mask = null;
 								if(gl!=null){
@@ -133,21 +153,47 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 									File ice=getIceShapeFile(r.getImageDate());
 									if(ice!=null){
 										activeParams.iceShapeFile=ice.getAbsolutePath();
-										GeometryImage glIce=readShapeFile(imageP,reader.getGeoTransform());
-										iceMask=FactoryLayer.createMaskLayer("ice",glIce.getGeometryType(),0,  gl,MaskVectorLayer.ICE_MASK);
+										GeometryImage glIce=readShapeFile(params.iceShapeFile,imageP,reader.getGeoTransform());
+										iceMask=FactoryLayer.createMaskLayer("ice",glIce.getType(),0,glIce,MaskVectorLayer.ICE_MASK);
 									}
 								}
 
-								analizeImage(reader,mask,iceMask,activeParams);
-								String name=image.getParentFile().getName();
-								saveResults(name,reader);
+								AnalysisProcess ap=prepareBatchAnalysis(reader, mask, iceMask, activeParams);
+								ap.addProcessListener(this);
+								tasks.add(executorPool.submit(ap));
+
+
+							    //  retrieve and save the result
+							    for (Future<AnalysisProcess.Results> future : tasks) {
+							      try {
+							    	  AnalysisProcess.Results res=(AnalysisProcess.Results)future.get();
+							    	  List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
+							    	  SarImageReader gr=(SarImageReader)res.getReader();
+							    	  String name=(gr).getManifestFile().getParentFile().getName();
+									  saveResults(name,gr,results);
+							      } catch (InterruptedException e) {
+							        e.printStackTrace();
+							      } catch (ExecutionException e) {
+							        e.printStackTrace();
+							      }
+							    }
+
 							}
 						}
 						logger.info("Image processed:"+image.getAbsolutePath());
 					}catch(Exception e){
 						logger.error("Problem working this image:"+image.getAbsolutePath(),e);
+					}finally{
+						executorPool.shutdown();
 					}
-				}
+				}//end for loop on the images
+
+
+
+
+
+
+
 			}else{
 				logger.error("No file found to analyze");
 			}
@@ -256,9 +302,5 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 
 		return analyzed;
 	}
-
-
-
-
 
 }

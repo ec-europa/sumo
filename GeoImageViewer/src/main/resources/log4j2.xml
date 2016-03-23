@@ -51,11 +51,16 @@
 			<level value="DEBUG"/>
 			<AppenderRef ref="STDOUT"/>
 		</logger>
+		<logger name="org.geoimage.viewer.core.batch" additivity="false">
+			<level value="INFO"/>
+			<AppenderRef ref="STDOUT"/>
+			<AppenderRef ref="RollingFile"/>
+		</logger>
 		<logger name="org.geoimage.viewer.core.layers" additivity="false">
 			<level value="DEBUG"/>
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		
+
 		<root>
 			<level value="DEBUG"/>
 			<AppenderRef ref="STDOUT"/>

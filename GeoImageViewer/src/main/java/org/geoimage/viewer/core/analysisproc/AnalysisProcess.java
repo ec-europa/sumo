@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.geoimage.analysis.AzimuthAmbiguity;
@@ -34,12 +35,11 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Pietro Argentieri
  *
  */
-public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
+public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAnalysis.ProgressListener {
 		private float ENL;
 		private VDSAnalysis analysis;
 
 		private int buffer;
-		private List<ComplexEditVDSVectorLayer>resultLayers;
 		private GeoImageReader gir;
 		private boolean stop=false;
 		private double neighbouringDistance;
@@ -51,6 +51,35 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		private String agglomerationMethodology;
 		private String bufferedMaskName="";
 		private BlackBorderAnalysis blackBorderAnalysis=null;
+
+
+		public class Results{
+			private List<ComplexEditVDSVectorLayer> layerResults;
+			private GeoImageReader reader;
+
+			Results(GeoImageReader gir,List<ComplexEditVDSVectorLayer> results){
+				layerResults=results;
+				reader=gir;
+			}
+
+			public List<ComplexEditVDSVectorLayer> getLayerResults() {
+				return layerResults;
+			}
+
+			public void setLayerResults(List<ComplexEditVDSVectorLayer> layerResults) {
+				this.layerResults = layerResults;
+			}
+
+			public GeoImageReader getReader() {
+				return reader;
+			}
+
+			public void setReader(GeoImageReader reader) {
+				this.reader = reader;
+			}
+
+
+		}
 
 		private static org.slf4j.Logger logger=LoggerFactory.getLogger(AnalysisProcess.class);
 
@@ -65,17 +94,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
 		private List<VDSAnalysisProcessListener> listeners;
 
-		/**
-		 *
-		 * @return the list of the layers with the target results
-		 */
-		public List<ComplexEditVDSVectorLayer> getResultLayers() {
-			return resultLayers;
-		}
 
-		public void setResultLayers(List<ComplexEditVDSVectorLayer> resultLayers) {
-			this.resultLayers = resultLayers;
-		}
 
 		/**
 		 *
@@ -97,7 +116,6 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 				bufferedMaskName=analysis.getCoastMask().getMaskName();
 
 			this.buffer=buffer;
-			this.resultLayers=new ArrayList<ComplexEditVDSVectorLayer>();
 			listeners=Collections.synchronizedList(new ArrayList<VDSAnalysisProcessListener>());
 			this.gir=gir;//.clone();
 			this.numPointLimit=numLimitPoint;
@@ -139,7 +157,9 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		/**
 		 *  Exec the analysis process
 		 */
-		public void run() {
+		public 	Results call() {
+			List<ComplexEditVDSVectorLayer>resultLayers=new ArrayList<>();
+
 			notifyStartProcessListener();
 			SarImageReader reader=((SarImageReader)gir);
 
@@ -180,7 +200,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 
 	            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
 	            		 logger.warn("Too much points. Stop Image analysis!!!");
-	            		 return;
+	            		 return null;
 	            	 }
 
 	            	 if (mergePixels == null) {
@@ -254,7 +274,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                 }
 	             }
 	             if(stop){
-	            	 return;
+	            	 return null;
 	             }
 
 	             // create the merged Layers if we have more than one band
@@ -270,7 +290,7 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, neighbourTilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
 	                 }
 	                 if(stop){
-	                	 return;
+	                	 return null;
 	                 }
 	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
 	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),"VDS analysis all bands merged",
@@ -312,7 +332,11 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 	             notifyEndProcessListener();
              }catch(Exception ee){
             	 ee.printStackTrace();
+             }finally{
+            	 if(this.listeners!=null)
+            		 removeAllProcessListener();
              }
+             return new Results(reader, resultLayers);
          }
 
 
@@ -335,12 +359,12 @@ public  class AnalysisProcess implements Runnable,VDSAnalysis.ProgressListener {
 		}
 		public void notifyEndProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.endAnalysis();
+				listener.endAnalysis(gir.getInternalImage());
 			}
 		}
 		public void notifyStartProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.startAnalysis();
+				listener.startAnalysis(this.gir.getInternalImage());
 			}
 		}
 		public void notifyBBAnalysis(String msg){
