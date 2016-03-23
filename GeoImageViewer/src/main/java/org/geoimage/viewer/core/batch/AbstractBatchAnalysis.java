@@ -17,6 +17,7 @@ import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
 import org.geoimage.viewer.core.analysisproc.VDSAnalysisProcessListener;
+import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.io.GenericCSVIO;
 import org.geoimage.viewer.core.io.SimpleShapefile;
@@ -50,11 +51,10 @@ class AnalysisParams {
 	public int maxDetections=0;
 }
 
-public abstract class AbstractBatchAnalysis {
+public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListener{
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractBatchAnalysis.class);
 	protected AnalysisParams params=null;
-	private  List<ComplexEditVDSVectorLayer>layerResults=null;
-	//private SimpleDateFormat dFormat=new SimpleDateFormat("ddMMyy_hhmmss");//"dd-MM-yy hh-mm-ss");
+	//private  List<ComplexEditVDSVectorLayer>layerResults=null;
 	private VDSAnalysis analysis;
 	private int realTileSizeX=0;
 	private int realTileSizeY=0;
@@ -64,7 +64,6 @@ public abstract class AbstractBatchAnalysis {
 
 	public AbstractBatchAnalysis(AnalysisParams analysisParams){
 		params= analysisParams;
-		layerResults=null;//new ArrayList<ComplexEditVDSVectorLayer>();
 	}
 
 
@@ -106,21 +105,27 @@ public abstract class AbstractBatchAnalysis {
 	 * @param reader
 	 * @return
 	 */
-	protected GeometryImage readShapeFile(Polygon imgBox,GeoTransform gt){
+	protected GeometryImage readShapeFile(String shpFilePath,Polygon imgBox,GeoTransform gt){
 		GeometryImage gl=null;
 	    try {
-            gl = SimpleShapefile.createIntersectedLayer(new File(params.shapeFile),imgBox,gt);
+            gl = SimpleShapefile.createIntersectedLayer(new File(shpFilePath),imgBox,gt);
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
         }
         return gl;
 	}
 
-	/**
-	 * run analysis for 1 image
-	 */
-	protected void analizeImage(SarImageReader reader,IMask mask,IMask iceMask,AnalysisParams params){
-		int tileSize = (int)(Constant.TILESIZE / reader.getPixelsize()[0]);
+
+	 /**
+     *
+     * @param ENL
+     * @param analysis
+     * @param bufferedMask
+     * @param thresholds
+     * @return
+     */
+    public AnalysisProcess prepareBatchAnalysis(SarImageReader reader,IMask mask,IMask iceMask,AnalysisParams params){
+    	int tileSize = (int)(Constant.TILESIZE / reader.getPixelsize()[0]);
         if(tileSize < Constant.TILESIZEPIXELS) tileSize = Constant.TILESIZEPIXELS;
 
         int horizontalTilesImage = reader.getWidth() / tileSize;
@@ -132,7 +137,6 @@ public abstract class AbstractBatchAnalysis {
 
 
         java.util.HashMap<String,Float> thresholdsMap = new java.util.HashMap<>();
-
         thresholdsMap.put("HH", params.thresholdArrayValues[0]);
         thresholdsMap.put("HV", params.thresholdArrayValues[1]);
         thresholdsMap.put("VH", params.thresholdArrayValues[2]);
@@ -156,27 +160,6 @@ public abstract class AbstractBatchAnalysis {
         		);
 
 
-        final String[] thresholds={""+params.thresholdArrayValues[0],
-        		""+params.thresholdArrayValues[1],
-        		""+params.thresholdArrayValues[2],
-        		""+params.thresholdArrayValues[3]};
-        		//Utils.getStringThresholdsArray(reader, params.thresholdArrayValues);
-
-            layerResults=runBatchAnalysis(reader,params.enl,analysis,
-            		mask,iceMask,thresholds,params.buffer);
-
-	}
-
-	 /**
-     *
-     * @param ENL
-     * @param analysis
-     * @param bufferedMask
-     * @param thresholds
-     * @return
-     */
-    public List<ComplexEditVDSVectorLayer> runBatchAnalysis(GeoImageReader reader,float ENL, VDSAnalysis analysis,
-    		IMask bufferedMask,IMask bufferedIceMask, String[] thresholds,int buffer){
 
     	BlackBorderAnalysis blackBorderAnalysis=null;
         if(reader instanceof Sentinel1){
@@ -188,16 +171,18 @@ public abstract class AbstractBatchAnalysis {
        		    		realTileSizeY,null);
         }
 
-    	AnalysisProcess ap=new AnalysisProcess(reader,ENL,analysis, buffer,0,blackBorderAnalysis);
-        ap.run();
-        return ap.getResultLayers();
+    	return new AnalysisProcess(reader,params.enl,analysis, params.buffer,0,blackBorderAnalysis);
+
     }
+
+
+
     /**
      *
      * @param imageName
      * @param reader
      */
-	protected void saveResults(String imageName,SarImageReader reader){
+	protected void saveResults(String imageName,SarImageReader reader,List<ComplexEditVDSVectorLayer>layerResults){
 		if(layerResults!=null){
 			String outfolder=new StringBuilder(params.outputFolder)
    					.append(File.separator)
@@ -323,5 +308,47 @@ public abstract class AbstractBatchAnalysis {
 			   logger.error("Problem saving bbox in csv:"+imageName,e);
 		   }
 		}
+	}
+
+
+	@Override
+	public void startAnalysis(String imgName) {
+		logger.info("Start Analysis:"+imgName);
+
+	}
+	@Override
+	public void performVDSAnalysis(String message, int numSteps) {
+		logger.info(message);
+	}
+	@Override
+	public void nextVDSAnalysisStep(int numSteps) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void startBlackBorederAnalysis(String message) {
+		logger.info(message);
+	}
+	@Override
+	public void startAnalysisBand(String message) {
+		logger.info(message);
+	}
+	@Override
+	public void calcAzimuthAmbiguity(String message) {
+		logger.info(message);
+	}
+	@Override
+	public void agglomerating(String message) {
+		logger.info(message);
+	}
+	@Override
+	public void endAnalysis(String imgName) {
+		logger.info("Start Analysis:"+imgName);
+
+	}
+	@Override
+	public void layerReady(ILayer layer) {
+		// TODO Auto-generated method stub
+
 	}
 }

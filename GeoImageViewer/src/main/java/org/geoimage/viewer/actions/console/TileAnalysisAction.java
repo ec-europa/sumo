@@ -217,10 +217,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 					analysis.setyTileToAnalyze(row);
 					proc=new AnalysisProcess(sar,Float.parseFloat(sar.getENL()), analysis,0,0,null);
 					proc.addProcessListener(this);
-
-					Thread t=new Thread(proc);
-	                t.setName("VDS_analysis_"+sar.getDisplayName(0));
-	                t.start();
+					proc.call();
 
 	                yy=layer.getRealTileSizeY()*row;
 					xx=layer.getRealTileSizeX()*col;
@@ -246,7 +243,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 
 	@Override
-	public void startAnalysis() {
+	public void startAnalysis(String imgName) {
 		String message="Starting VDS Analysis";
     	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
 
@@ -286,7 +283,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 
 	@Override
-	public void endAnalysis() {
+	public void endAnalysis(String imageName) {
 		if(proc!=null)
 			proc.dispose();
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
