@@ -26,8 +26,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
-import org.geoimage.viewer.core.GeometryImage;
-import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.sumoxml.Analysis;
 import org.geoimage.viewer.core.io.sumoxml.Boat;
 import org.geoimage.viewer.core.io.sumoxml.Gcp;
@@ -35,18 +33,11 @@ import org.geoimage.viewer.core.io.sumoxml.Gcps;
 import org.geoimage.viewer.core.io.sumoxml.SatImageMetadata;
 import org.geoimage.viewer.core.io.sumoxml.VdsAnalysis;
 import org.geoimage.viewer.core.io.sumoxml.VdsTarget;
-import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
+import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 
 public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
