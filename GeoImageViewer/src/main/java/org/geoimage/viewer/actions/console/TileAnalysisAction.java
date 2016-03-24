@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.viewer.actions.console;
 
@@ -280,8 +280,8 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 		}
 	}
 
-	public void nextVDSAnalysisStep(int numSteps){
-		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, "",numSteps));
+	public void nextVDSAnalysisStep(String message,int numStep,int numSteps){
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS, message,numStep));
 	}
 
 

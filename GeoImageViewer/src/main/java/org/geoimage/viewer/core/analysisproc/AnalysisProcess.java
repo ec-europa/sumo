@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.viewer.core.analysisproc;
 
@@ -403,7 +403,7 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 		@Override
 		public void startRowProcesseing(int step) {
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.nextVDSAnalysisStep(step);
+				listener.nextVDSAnalysisStep("Tile:",step,analysis.getVerTiles());
 			}
 		}
 		@Override

@@ -324,9 +324,8 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
 		logger.info(message);
 	}
 	@Override
-	public void nextVDSAnalysisStep(int numSteps) {
-		logger.info("");
-
+	public void nextVDSAnalysisStep(String message,int step,int steps) {
+		logger.info(step+"/"+steps);
 	}
 	@Override
 	public void startBlackBorederAnalysis(String message) {
