@@ -296,8 +296,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 	}
 
 	@Override
-	public void nextVDSAnalysisStep(int numSteps){
-			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,null,numSteps,actionSteps));
+	public void nextVDSAnalysisStep(String message,int step,int numSteps){
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.UPDATE_STATUS,message,step,numSteps));
 	}
 
 
