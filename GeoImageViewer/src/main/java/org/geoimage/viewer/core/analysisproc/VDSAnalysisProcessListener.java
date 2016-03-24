@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.viewer.core.analysisproc;
 
@@ -9,7 +9,7 @@ public interface VDSAnalysisProcessListener {
 
 	public void startAnalysis(String imageName);
 	public void performVDSAnalysis(String message,int numSteps);
-	public void nextVDSAnalysisStep(int numSteps);
+	public void nextVDSAnalysisStep(String message,int step,int numSteps);
 	public void startBlackBorederAnalysis(String message);
 	public void startAnalysisBand(String message);
 	public void calcAzimuthAmbiguity(String message);
