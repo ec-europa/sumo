@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration >
+<Configuration ><!-- TRACE	DEBUG	INFO	WARN	ERROR	FATAL	OFF -->
 	<Appenders>
 		<RollingFile name="RollingFile" fileName="sumo.log" filePattern="$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
 			<PatternLayout>
@@ -15,54 +15,42 @@
 		</Console>
 	</Appenders>
    <Loggers>
-		<logger name="jrc.it.geolocation.common" additivity="false ">
-			<level value="ERROR"/>
+		<logger name="jrc.it.geolocation.common" level="ERROR" additivity="false ">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="jrc.it.geolocation.geo" additivity="false	">
-			<level value="ERROR"/>
+		<logger name="jrc.it.geolocation.geo" level="ERROR" additivity="false	">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="jrc.it.geolocation.interpolation" additivity="false">
-			<level value="ERROR"/>
+		<logger name="jrc.it.geolocation.interpolation" level="ERROR" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="jrc.it.geolocation.metadata" additivity="false">
-			<level value="ERROR"/>
+		<logger name="jrc.it.geolocation.metadata" level="ERROR" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="ncsa.hdf.hdflib.HDFLibrary">
-			<level value="WARN"/>
+		<logger name="ncsa.hdf.hdflib.HDFLibrary" level="WARN">
 		</logger>
-		<logger name="org.geoimage.analysis" additivity="false">
-			<level value="INFO"/>
+		<logger name="org.geoimage.analysis" level="INFO" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 			<AppenderRef ref="RollingFile"/>
 		</logger>
-		<logger name="org.geoimage.def" additivity="false">
-			<level value="DEBUG"/>
+		<logger name="org.geoimage.def" level="DEBUG" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="org.geoimage.impl" additivity="false">
-			<level value="DEBUG"/>
+		<logger name="org.geoimage.impl" additivity="false" level="DEBUG" >
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="org.geoimage.viewer" additivity="false">
-			<level value="DEBUG"/>
+		<logger name="org.geoimage.viewer" level="INFO" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
-		<logger name="org.geoimage.viewer.core.batch" additivity="false">
-			<level value="INFO"/>
+		<logger name="org.geoimage.viewer.core.batch" level="INFO" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 			<AppenderRef ref="RollingFile"/>
 		</logger>
-		<logger name="org.geoimage.viewer.core.layers" additivity="false">
-			<level value="DEBUG"/>
+		<logger name="org.geoimage.viewer.core.layers" level="INFO" additivity="false">
 			<AppenderRef ref="STDOUT"/>
 		</logger>
 
-		<root>
-			<level value="DEBUG"/>
+		<root level="DEBUG">
 			<AppenderRef ref="STDOUT"/>
 			<AppenderRef ref="RollingFile"/>
 		</root>
