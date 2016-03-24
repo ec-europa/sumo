@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.metadata;
 
 public interface IMetadata {

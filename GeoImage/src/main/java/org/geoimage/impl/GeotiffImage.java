@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl;
 
 import java.awt.Rectangle;

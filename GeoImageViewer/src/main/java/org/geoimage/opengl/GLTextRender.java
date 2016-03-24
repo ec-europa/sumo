@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.opengl;
 
 import java.awt.*;

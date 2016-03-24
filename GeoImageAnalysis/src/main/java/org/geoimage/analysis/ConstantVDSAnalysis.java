@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.analysis;
 
 public class ConstantVDSAnalysis {

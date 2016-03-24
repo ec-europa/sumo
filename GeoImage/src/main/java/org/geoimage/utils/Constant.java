@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.utils;
 
 public class Constant {

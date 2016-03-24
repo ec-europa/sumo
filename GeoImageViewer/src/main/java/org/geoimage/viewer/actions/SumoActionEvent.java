@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.actions;
 
 public class SumoActionEvent {

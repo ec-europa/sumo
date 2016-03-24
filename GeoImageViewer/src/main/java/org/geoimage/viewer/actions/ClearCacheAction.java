@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.actions;
 
 import java.io.File;

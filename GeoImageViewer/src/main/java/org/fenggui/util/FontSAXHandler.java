@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.util;
 
 import java.util.Hashtable;

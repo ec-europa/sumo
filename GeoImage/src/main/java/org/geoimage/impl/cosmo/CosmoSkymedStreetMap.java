@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.cosmo;
 
 import java.awt.Rectangle;

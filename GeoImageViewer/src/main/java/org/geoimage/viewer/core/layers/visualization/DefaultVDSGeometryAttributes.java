@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.layers.visualization;
 
 import java.util.Date;

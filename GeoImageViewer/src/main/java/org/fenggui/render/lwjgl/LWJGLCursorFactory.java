@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.render.lwjgl;
 
 import java.awt.image.BufferedImage;

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.analysisproc;
 
 import org.geoimage.viewer.core.api.ilayer.ILayer;

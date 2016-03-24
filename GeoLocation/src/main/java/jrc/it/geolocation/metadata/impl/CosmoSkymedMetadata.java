@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.metadata.impl;
 
 import jrc.it.geolocation.metadata.IMetadata;

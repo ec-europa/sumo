@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.cosmo;
 
 import org.geoimage.factory.GeoImageReaderFactory;

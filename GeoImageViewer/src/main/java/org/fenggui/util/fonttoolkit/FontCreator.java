@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.util.fonttoolkit;
 
 import java.awt.Font;

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.analysis;
 
 import java.io.IOException;

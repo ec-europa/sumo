@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.s1;
 
 import static org.junit.Assert.assertNotNull;

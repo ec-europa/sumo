@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.opengl.control;
 
 import javax.media.opengl.GL;
