@@ -86,7 +86,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	public void runAnalysis(){
         //Get the ThreadFactory implementation to use
 	    //creating the ThreadPoolExecutor
-        ThreadPoolExecutor executorPool = new ThreadPoolExecutor(2, NTHREDS, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        ExecutorService executorPool = Executors.newFixedThreadPool(10);//ThreadPoolExecutor(2, NTHREDS, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
 
 			List<File>filesImg=null;
