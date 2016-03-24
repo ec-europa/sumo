@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jrc.sumo.util.files;
 
 public class FileTypes {

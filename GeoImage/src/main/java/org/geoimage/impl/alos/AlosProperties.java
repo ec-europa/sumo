@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.alos;
 
 import java.io.ByteArrayInputStream;

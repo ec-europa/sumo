@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.menu;
 
 import org.fenggui.render.BufferedTextRenderer;

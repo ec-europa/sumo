@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.common;
 
 import java.util.ArrayList;

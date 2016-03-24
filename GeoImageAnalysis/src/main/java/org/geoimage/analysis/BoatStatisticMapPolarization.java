@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.analysis;
 
 import java.util.HashMap;

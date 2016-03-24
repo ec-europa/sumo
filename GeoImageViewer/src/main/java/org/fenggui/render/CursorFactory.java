@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.render;
 
 import java.awt.image.BufferedImage;

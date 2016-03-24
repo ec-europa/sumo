@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package others.imgproc;
 
 import java.io.File;

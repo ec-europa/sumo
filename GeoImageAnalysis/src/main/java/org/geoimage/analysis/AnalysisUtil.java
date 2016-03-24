@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.analysis;
 
 import org.geoimage.analysis.BlackBorderAnalysis.TileAnalysis;

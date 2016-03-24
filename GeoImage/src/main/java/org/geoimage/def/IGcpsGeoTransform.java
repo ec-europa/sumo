@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.def;
 
 import org.opengis.referencing.FactoryException;

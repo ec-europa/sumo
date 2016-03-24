@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.java2d.util;
 
 import java.awt.geom.AffineTransform;

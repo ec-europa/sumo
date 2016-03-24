@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.actions.console;
 
 import java.awt.Color;

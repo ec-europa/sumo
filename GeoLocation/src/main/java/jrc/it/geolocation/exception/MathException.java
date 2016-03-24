@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.exception;
 
 public class MathException extends Exception {

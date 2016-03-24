@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.geo;
 
 import jrc.it.geolocation.exception.GeoLocationException;

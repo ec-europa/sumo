@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.metadata;
 
 import java.util.List;

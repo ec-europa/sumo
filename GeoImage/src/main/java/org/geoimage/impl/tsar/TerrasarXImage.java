@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.tsar;
 
 import java.awt.Color;
