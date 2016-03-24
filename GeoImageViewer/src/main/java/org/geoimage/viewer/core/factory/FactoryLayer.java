@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.factory;
 
 import java.awt.Color;

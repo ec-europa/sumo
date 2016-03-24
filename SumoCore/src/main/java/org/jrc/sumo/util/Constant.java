@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jrc.sumo.util;
 
 public class Constant {

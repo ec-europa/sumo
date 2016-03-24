@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jrc.it.geolocation.common;
 
 import org.apache.commons.lang3.ArrayUtils;

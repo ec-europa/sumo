@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.radarsat;
 
 import java.awt.Rectangle;

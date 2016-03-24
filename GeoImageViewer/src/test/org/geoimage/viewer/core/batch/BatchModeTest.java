@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.batch;
 
 import static org.junit.Assert.assertTrue;

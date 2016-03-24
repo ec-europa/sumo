@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.text;
 
 import java.io.IOException;

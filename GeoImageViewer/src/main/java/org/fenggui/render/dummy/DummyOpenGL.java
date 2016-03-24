@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.fenggui.render.dummy;
 
 import java.nio.ByteBuffer;

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.impl.imgreader;
 
 import java.io.File;

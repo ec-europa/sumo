@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.batch.listener;
 
 public interface BachListener {

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.core.io;
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;

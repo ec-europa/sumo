@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package others;
 
 import java.awt.Rectangle;

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.factory;
 
 import java.io.File;

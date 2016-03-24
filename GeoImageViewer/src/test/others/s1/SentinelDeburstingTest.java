@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package others.s1;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

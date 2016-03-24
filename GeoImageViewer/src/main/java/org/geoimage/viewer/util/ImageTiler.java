@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.geoimage.viewer.util;
 
 import java.awt.image.BufferedImage;

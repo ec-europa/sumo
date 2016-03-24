@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jrc.sumo.util.files;
 
 import java.io.File;
