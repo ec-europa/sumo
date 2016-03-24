@@ -1,3 +1,6 @@
+/*
+ *
+ */
 package org.geoimage.viewer.core.batch;
 
 import java.io.File;
@@ -322,7 +325,7 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
 	}
 	@Override
 	public void nextVDSAnalysisStep(int numSteps) {
-		// TODO Auto-generated method stub
+		logger.info("");
 
 	}
 	@Override
