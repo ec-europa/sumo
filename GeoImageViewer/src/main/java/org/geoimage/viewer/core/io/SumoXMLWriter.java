@@ -40,7 +40,9 @@ import org.geoimage.viewer.core.layers.visualization.AttributesGeometry;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer.Additionalgeometries;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class SumoXMLWriter extends AbstractVectorIO {
 	public static String CONFIG_FILE = "file";
@@ -63,11 +65,24 @@ public class SumoXMLWriter extends AbstractVectorIO {
 			javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             InputStream is = new FileInputStream(input );
             javax.xml.bind.Unmarshaller  uMarshaller = jaxbCtx.createUnmarshaller();
-            //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-            //uMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             Object o=uMarshaller.unmarshal(is);
-
-
+            Analysis analysis=(Analysis)o;
+            
+            SatImageMetadata imgMeta=analysis.getSatImageMetadata();
+            VdsAnalysis vds=analysis.getVdsAnalysis();
+            VdsTarget targets=analysis.getVdsTarget();
+            
+            List<Boat>boats=targets.getBoat();
+            List<Geometry> gg=new ArrayList<Geometry>();
+            List<AttributesGeometry>ggAttr=new ArrayList<>();
+            GeometryFactory factory=new GeometryFactory();
+            for(Boat b:boats){
+        			AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
+        			Geometry geom=factory.createPoint(new Coordinate(b.getXpixel(),b.getYpixel()));
+        			gg.add(geom);
+        			ggAttr.add(att);
+            }
+            
 		/*	GeometryImage layer = new GeometryImage(GeometryImage.POINT);
 			// create xml doc
 			SAXBuilder builder = new SAXBuilder();
