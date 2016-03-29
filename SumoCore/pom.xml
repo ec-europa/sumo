@@ -37,7 +37,7 @@
 	
 	<parent>
 		<groupId>org.jrc.sumo</groupId>
-		<version>1.3.2</version>
+		<version>1.3.3</version>
 		<artifactId>Sumo</artifactId>
 	</parent>
 	<description>Sumo Common API</description>
