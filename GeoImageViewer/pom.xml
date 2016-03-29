@@ -31,7 +31,7 @@
 				</os>
 			</activation>
 			<properties>
-					<dist.outputfolder>H:/dist</dist.outputfolder>
+					<dist.outputfolder>C:/dist</dist.outputfolder>
 			</properties>
 		</profile>
 	</profiles>
