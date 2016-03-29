@@ -58,7 +58,7 @@ public class SumoPlatform extends SingleFrameApplication implements SumoActionLi
         try {
         	plManager=new PluginsManager();
         	JLabel label = new JLabel();
-            label.setName("SUMO_1.3.0");
+            label.setName("SUMO_1.3.3");
             show(new GeoImageViewerView(this));
         } catch (Throwable ex) {
         	logger.error(ex.getMessage(), ex);
