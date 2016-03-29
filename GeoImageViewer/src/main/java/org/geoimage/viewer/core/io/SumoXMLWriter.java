@@ -210,7 +210,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setAlgorithm("k-dist");
 
 		vdsA.setBuffer(buffer);
-		vdsA.setDetectorVersion("SUMO_1.3.2");
+		//TODO: remove the version as constant from here!!! 
+		vdsA.setDetectorVersion("SUMO_1.3.3");
 
 		/// fields removed in the last xml version
 		//add thresholds in order
