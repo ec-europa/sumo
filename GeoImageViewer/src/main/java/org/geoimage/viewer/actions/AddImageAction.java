@@ -63,10 +63,8 @@ public class AddImageAction extends SumoAbstractAction  {
         }
         done = false;
         try {
-
         	String message = "Adding Image. Please wait...";
         	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
-
 
         	String img=getParamValue("image_type");
             if (img.equals("image")) {
@@ -79,7 +77,8 @@ public class AddImageAction extends SumoAbstractAction  {
             errorWindow("Problem opening file");
         }
         done = true;
-
+    	SumoPlatform.getApplication().getConsoleLayer().executeCommand("h");
+    	super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION, "", -1));
         return true;
     }
 
@@ -148,7 +147,6 @@ public class AddImageAction extends SumoAbstractAction  {
             } catch (Exception ex) {
             	logger.error(ex.getMessage(),ex);
             }
-        	SumoPlatform.getApplication().getConsoleLayer().executeCommand("home=home");
         }
         done = true;
     }
@@ -201,7 +199,12 @@ public class AddImageAction extends SumoAbstractAction  {
         return out;
     }
 
-
+/**
+ * 
+ * @param file
+ * @param filter
+ * @return
+ */
     public File listFiles(File file, String filter) {
         File[] entries = file.listFiles();
 
