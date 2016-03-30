@@ -21,7 +21,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
  */
 public class DeleteConsoleAction extends SumoAbstractAction {
 
-    public DeleteConsoleAction(String name) {
+    public DeleteConsoleAction() {
 		super("delete","Tools/Delete Active Image");
 	}
 
