@@ -43,6 +43,9 @@ public class AddLastImageAction extends SumoAbstractAction {
         	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
 
 			addImage();
+			
+			super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION, "", -1));
+			SumoPlatform.getApplication().getConsoleLayer().executeCommand("h");
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorWindow("Problem opening file");
@@ -95,7 +98,6 @@ public class AddLastImageAction extends SumoAbstractAction {
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);
 			}
-			SumoPlatform.getApplication().getConsoleLayer().executeCommand("h=h");
 		}
 		done = true;
 	}

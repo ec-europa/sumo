@@ -62,7 +62,6 @@ public class WWJPanel extends javax.swing.JPanel {
         catalogPanel.setSize(new Dimension(200,jTabbedPane1.getHeight()/2));
         //catalogPanel.setBorder(new LineBorder(new Color(255)));
 
-
         jTabbedPane1.add("Catalog", catalogPanel);
         PlanningPanel planningPanel = new PlanningPanel(this);
         jTabbedPane1.add("Planner", planningPanel);

@@ -109,7 +109,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
     private TimeBarDialog timeSlider;
     private WWJPanel wwjPanel = null;
 
-    gov.nasa.worldwind.awt.WorldWindowGLCanvas wwjCanvas = null;
+   // gov.nasa.worldwind.awt.WorldWindowGLCanvas wwjCanvas = null;
 
     private static boolean onScreenshot = false;
     private boolean worldwindpanelenabled = true;
@@ -269,7 +269,6 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
         cl.setName("Console Layer");
         cl.setIsRadio(true);
         lm.setConsoleLayer(cl);
-
 
         infod = new InfoDialog(null, false);
 
