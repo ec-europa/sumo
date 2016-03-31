@@ -6,21 +6,14 @@
 package org.geoimage.viewer.core.wwj;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.geoimage.def.GeoImageReader;
-import org.geoimage.def.SarImageReader;
-import org.geoimage.exception.GeoTransformException;
 
 import gov.nasa.worldwind.Locatable;
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwindx.examples.Polygons;
 
 /**
  *
@@ -33,7 +26,7 @@ public class WWGeoImage implements Renderable, Locatable{
     private Color color;
     private Object owner;
 
-
+/*
     public static WWGeoImage create(GeoImageReader gir) throws GeoTransformException{
         List<double[]> imageframe = gir.getFrameLatLon(((SarImageReader)gir).getWidth(),((SarImageReader)gir).getHeight());
         if (imageframe != null) {
@@ -46,7 +39,7 @@ public class WWGeoImage implements Renderable, Locatable{
             return gi;
         }
         return null;
-    }
+    }*/
 
     public WWGeoImage(Polyline bounds, GlobeAnnotation annotation, Color color, Color highlightedcolor) {
         this.bounds=bounds;
@@ -72,9 +65,11 @@ public class WWGeoImage implements Renderable, Locatable{
         }
         else{
             bounds.setHighlighted(false);
-            //bounds.setColor(color);
+            bounds.setColor(color);
         }
+        bounds.setLineWidth(10);
         bounds.render(dc);
+        
     }
     
     
