@@ -67,7 +67,7 @@ public class WWGeoImage implements Renderable, Locatable{
             bounds.setHighlighted(false);
             bounds.setColor(color);
         }
-        bounds.setLineWidth(10);
+        bounds.setLineWidth(3.0);
         bounds.render(dc);
         
     }
