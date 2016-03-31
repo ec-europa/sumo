@@ -48,3 +48,13 @@ java.lang.NullPointerException
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101) [?:1.8.0_45]
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93) [?:1.8.0_45]
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82) [?:1.8.0_45]
+2016-03-31 16:53:16,065 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:00:48,074 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:02:55,514 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:03:14,586 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:03:41,124 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:03:46,087 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-03-31 17:03:46,270 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20160201T012818_20160201T012918_009746_00E3DC_E2B3.SAFE
+2016-03-31 17:05:07,448 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20150323T105843_20150323T105943_005158_006809_CBF7.SAFE
+2016-03-31 17:05:09,143 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-03-31 17:05:09,254 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:/mnt/sdb1/SumoImgs/S1/artic/EW/S1A_EW_GRDM_1SDH_20160201T012818_20160201T012918_009746_00E3DC_E2B3.SAFE
