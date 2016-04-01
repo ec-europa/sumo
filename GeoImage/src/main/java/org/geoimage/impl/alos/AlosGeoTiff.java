@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.alos;
 
@@ -29,12 +29,12 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class AlosGeoTiff extends Alos {
 	private Logger logger= LoggerFactory.getLogger(AlosGeoTiff.class);
-	
+
 	public AlosGeoTiff(File manifest){
 		super(manifest);
 		props=new AlosProperties(manifest);
 	}
-	
+
 	@Override
 	public int getNBand() {
 		return polarizations.size();
@@ -60,29 +60,29 @@ public class AlosGeoTiff extends Alos {
 	public boolean initialise() {
 		try {
 			File mainFolder=manifestFile.getParentFile();
-			
+
         	polarizations=props.getPolarizations();
-        	
+
         	//set image properties
         	alosImages=new HashMap<>();
         	List<String> imgNames=props.getImageNames();
-        	
+
         	for(int i=0;i<imgNames.size();i++){
         		String img=imgNames.get(i);
         		File imgFile=new File(mainFolder.getAbsolutePath()+File.separator+img);
         		TIFF t=new TIFF(imgFile,0);
         		alosImages.put(img.substring(4,6),t);
         	}
-            
+
             String bandName=getBandName(0);
             //String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
         	super.pixelsize[0]=props.getPixelSpacing();
         	super.pixelsize[1]=props.getPixelSpacing();
 
-			
+
         	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
-			
+
 			Coordinate[] corners=props.getCorners();
 			int lines=props.getNumberOfLines();
 			int pix=props.getNumberOfPixels();
@@ -92,21 +92,21 @@ public class AlosGeoTiff extends Alos {
             gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
             gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
             gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
-            
+
             Coordinate center=props.getCenter();
             gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
-            
+
             //String epsg = "EPSG:26921";
            	String epsg = "EPSG:4326";
            	geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
-            
-            
-            
+
+
+
             double[] latlon = geotransform.getGeoFromPixel(0, 0);
             double[] position = new double[3];
             MathTransform convert = CRS.findMathTransform(DefaultGeographicCRS.WGS84, DefaultGeocentricCRS.CARTESIAN);
             convert.transform(latlon, 0, position, 0, 1);
-            
+
 
             // get incidence angles from gcps
             float firstIncidenceangle = (float) (this.gcps.get(0).getAngle());
@@ -122,13 +122,13 @@ public class AlosGeoTiff extends Alos {
         } catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
-        
+
         return false;
 	}
-	
-	
-    
-    //TODO 
+
+
+
+    //TODO
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
     	return new int[]{0};
@@ -138,12 +138,12 @@ public class AlosGeoTiff extends Alos {
 	public String getBandName(int band) {
 		return polarizations.get(band);
 	}
-	
+
 	@Override
 	public String[] getBands() {
 		return polarizations.toArray(new String[0]);
 	}
-	
+
 	@Override
 	public String getImgName() {
 		return null;
@@ -182,7 +182,7 @@ public class AlosGeoTiff extends Alos {
 			public boolean accept(File pathname) {
 				if(pathname.getName().startsWith("BRS")&&pathname.getName().endsWith("jpg"))
 					return true;
-				return false;	
+				return false;
 			}
 		});
 		return files[0];
@@ -193,22 +193,22 @@ public class AlosGeoTiff extends Alos {
 		return "ALOS";
 	}
 
-	
+
 	public TIFF getImage(int band){
 		TIFF img=null;
 		try{
 			img = (TIFF)alosImages.get(getBandName(band));
-		}catch(Exception e){ 
+		}catch(Exception e){
 			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
 		}
 		return img;
 	}
-	
-	
+
+
 	//----------------------------------------------
-	
+
  /**
-  * 
+  *
   * @param x
   * @param y
   * @param width
@@ -230,17 +230,17 @@ public class AlosGeoTiff extends Alos {
    		data=new int[b.length];
        	for(int i=0;i<b.length;i++)
        		data[i]=b[i];
-   		
+
        } catch (Exception ex) {
            logger.warn(ex.getMessage());
        }finally{
        }
-      
+
       return data;
   }
 
 
-	
+
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
 		Rectangle rect = new Rectangle(x, y, width, height);
@@ -266,7 +266,7 @@ public class AlosGeoTiff extends Alos {
                 	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
                 }catch(ArrayIndexOutOfBoundsException e ){
                 	logger.warn("readTile function:"+e.getMessage());
-                }	
+                }
             }
             }
         return tile;
@@ -277,7 +277,7 @@ public class AlosGeoTiff extends Alos {
 			return read(x,y,1,1,band)[0];
 	}
 
-	
+
 
 	@Override
 	public void preloadLineTile(int y, int length, int band) {
@@ -286,7 +286,7 @@ public class AlosGeoTiff extends Alos {
         }
         preloadedInterval = new int[]{y, y + length};
         Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
-        
+
         TIFF tiff=getImage(band);
         rect=tiff.getBounds().intersection(rect);
         try {
@@ -296,12 +296,12 @@ public class AlosGeoTiff extends Alos {
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
-    			    Thread.sleep(100);                 
+    			    Thread.sleep(100);
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
         		bi=tiff.read(0, rect);
-        	}	
+        	}
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
         } catch (Exception ex) {
@@ -309,16 +309,11 @@ public class AlosGeoTiff extends Alos {
         }finally{
         	//tiff.reader.addIIOReadProgressListener(this);
         	//readComplete=false;
-        	
+
         }
 
 	}
 
-	@Override
-	public String getInternalImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	
+
 }

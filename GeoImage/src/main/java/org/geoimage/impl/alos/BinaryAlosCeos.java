@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.alos;
 
@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class BinaryAlosCeos extends Alos {
 	private Logger logger = LoggerFactory.getLogger(BinaryAlosCeos.class);
-    
+
 	public BinaryAlosCeos(File manifest) {
 		super(manifest);
 		props = new AlosProperties(manifest);
@@ -58,7 +58,7 @@ public class BinaryAlosCeos extends Alos {
 	public String[] getFilesList() {
 		return new String[] { manifestFile.getAbsolutePath() };
 	}
-	
+
 
 	@Override
 	public boolean initialise() {
@@ -88,7 +88,7 @@ public class BinaryAlosCeos extends Alos {
 
 			// we have only the corners
 			gcps = new ArrayList<>();
-			
+
 			Coordinate[] corners=props.getCorners();
 			int lines=props.getNumberOfLines();
 			int pix=props.getNumberOfPixels();
@@ -97,10 +97,10 @@ public class BinaryAlosCeos extends Alos {
             gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
             gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
             gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
-            
+
             Coordinate center=props.getCenter();
             gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
-			
+
 
 			String epsg = "EPSG:4326";
 			geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
@@ -128,8 +128,8 @@ public class BinaryAlosCeos extends Alos {
 		return false;
 	}
 
-	
-	
+
+
 
 	@Override
 	public String getDisplayName(int band) {
@@ -197,12 +197,12 @@ public class BinaryAlosCeos extends Alos {
 		   		data=new int[b.length];
 		       	for(int i=0;i<b.length;i++)
 		       		data[i]=b[i];
-		   		
+
 		       } catch (Exception ex) {
 		           logger.warn(ex.getMessage());
 		       }finally{
 		       }
-	      
+
 	      return data;
 	}
 
@@ -262,10 +262,10 @@ public class BinaryAlosCeos extends Alos {
 			return;
 		}
 		CeosBinaryReader tiff = (CeosBinaryReader)getImage(band);
-		
+
 		preloadedInterval = new int[] { y, y + length };
 		Rectangle rect = new Rectangle(0, y, tiff.getxSize(), length);
-		
+
 		rect = tiff.getBounds().intersection(rect);
 
 		try {
@@ -293,23 +293,19 @@ public class BinaryAlosCeos extends Alos {
 
 	public void setXMLMetaData() {
 		super.setXMLMetaData();
-		
-	}
-	
-	@Override
-	public String getInternalImage() {
-		return null;
+
 	}
 
-	
+
+
 	public static void main(String args[]) {
 		File f = new File(
 				"F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
 		File f2 = new File("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
-		
+
 		BinaryAlosCeos bin=new BinaryAlosCeos(new File("F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"));
-		
-		
+
+
 		//GeoToolsGDALReader gg = new GeoToolsGDALReader(f, 0);
 		//System.out.println("x:" + gg.xSize + " - y:" + gg.ySize);
 

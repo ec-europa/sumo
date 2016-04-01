@@ -67,6 +67,7 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
     /**
      * used for XML
      */
+    @Override
 	public abstract String getImgName();
 	@Override
 	public abstract String getDisplayName(int band);
