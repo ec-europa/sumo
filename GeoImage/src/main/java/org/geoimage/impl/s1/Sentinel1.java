@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.s1;
 
@@ -476,6 +476,8 @@ public abstract class Sentinel1 extends SarImageReader {
         	setSatellite(new String("Sentinel-1"));
         	setSwath(this.swath);
 
+        	this.imgName=manifestFile.getParentFile().getName();
+
         	//polarizations string
         	StandAloneProductInformation prodInfo=safeReader.getProductInformation();
         	List<String> pols=prodInfo.getTransmitterReceiverPolarisation();
@@ -551,22 +553,13 @@ public abstract class Sentinel1 extends SarImageReader {
 
     @Override
     public String getImgName() {
-    	try{
-    		String name=tiffImages.get(getBandName(0)).getImageFile().getParentFile().getParentFile().getName();
-    		return name;
-    	}catch(Exception e ){
-    		return tiffImages.get(getBandName(0)).getImageFile().getName();
-    	}
+    	return imgName;
     }
 
     @Override
     public double calcSatelliteSpeed(){
     	return satelliteSpeed;
     }
-
-    public String getInternalImage() {
-  		return null;
-  	}
 
     public String getSwath() {
 		return swath;

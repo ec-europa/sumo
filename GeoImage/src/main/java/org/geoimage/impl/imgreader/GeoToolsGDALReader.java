@@ -5,21 +5,31 @@
 package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageReaderSpi;
+import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
+import org.gdal.gdal.Driver;
 import org.gdal.gdal.GCP;
+import org.gdal.gdal.gdal;
+import org.gdal.gdalconst.gdalconst;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
+import it.geosolutions.imageio.gdalframework.GDALImageReader;
 import it.geosolutions.imageio.gdalframework.GDALImageReaderSpi;
 import it.geosolutions.imageio.gdalframework.GDALUtilities;
 
@@ -40,19 +50,22 @@ public class GeoToolsGDALReader implements IReader {
     private Dataset data;
 	ImageInputStream iis = null;
 
-	
-    
+
+
     /**
-     * 
+     *
      * @param imageFile
      * @param band form files with multiple band
      */
 	public GeoToolsGDALReader(File imageFile,int band) {
     	this.imageFile=imageFile;
         try {
-        	GDALUtilities.loadGDAL();
-        	
-        	/*int count = gdal.GetDriverCount();
+        	gdal.AllRegister();
+
+
+        	/*GDALUtilities.isGDALAvailable();
+
+        	int count = gdal.GetDriverCount();
 			System.out.println(count + " available Drivers");
 			for (int i = 0; i < count; i++) {
 				try {
@@ -63,7 +76,7 @@ public class GeoToolsGDALReader implements IReader {
 					System.err.println("Error loading driver " + i);
 				}
 			}
-*/        	
+
         	GDALImageReaderSpi spi=null;
         	IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
             final Class<ImageReaderSpi> spiClass = ImageReaderSpi.class;
@@ -75,9 +88,15 @@ public class GeoToolsGDALReader implements IReader {
                 	break;
                 }
             }
+
+            GDALImageReader ir=(GDALImageReader) spi.createReaderInstance();
+            ImageInputStream fi=ImageIO.createImageInputStream(imageFile);
+            ir.setInput(fi);
+
+            BufferedImage bi= ir.read(1);*/
         	this.band=band;
-        	data=GDALUtilities.acquireDataSet(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
-        	
+        	//data=GDALUtilities.acquireDataSet(imageFile.getAbsolutePath(), gdalconstConstants.GA_ReadOnly);
+        	data=(Dataset) gdal.Open(imageFile.getAbsolutePath(),gdalconst.GA_ReadOnly);
     		try{
     			xSize=data.getRasterXSize();
     			ySize=data.getRasterYSize();
@@ -85,13 +104,13 @@ public class GeoToolsGDALReader implements IReader {
     		}catch(Exception e){
     			bounds=null;
     			logger.warn("Problem reading size information");
-    		}	
+    		}
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
-        }	
+        }
 	}
 	/**
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 * @param offsetx
@@ -108,12 +127,12 @@ public class GeoToolsGDALReader implements IReader {
 		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
 		return dd;
 	}
-	
+
 	public List<GCP> getGCPS(){
 		return this.data.GetGCPs();
 	}
-	
-	
+
+
     /* (non-Javadoc)
 	 * @see org.geoimage.impl.ITIFF#getxSize()
 	 */
@@ -168,7 +187,7 @@ public class GeoToolsGDALReader implements IReader {
 	public void refreshBounds() {
 		bounds=new Rectangle(0,0,xSize,ySize);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.geoimage.impl.ITIFF#dispose()
 	 */
@@ -197,8 +216,8 @@ public class GeoToolsGDALReader implements IReader {
 	public void setImageFile(File imageFile) {
 		this.imageFile = imageFile;
 	}
-	
-	
-		
+
+
+
 
 }

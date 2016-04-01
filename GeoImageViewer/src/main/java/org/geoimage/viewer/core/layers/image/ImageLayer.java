@@ -28,6 +28,7 @@ import javax.media.opengl.GL2;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
+import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.SumoPlatform;
@@ -719,8 +720,10 @@ public class ImageLayer implements ILayer  {
         else{
         	String temp = gir.getFilesList()[0].replace("\\", "/");
         	String name=temp.substring(temp.lastIndexOf("/") + 1);
-        	if(gir.getInternalImage()!=null)
-        		name=name+"_"+gir.getInternalImage();
+        	//TODO: change this for the cosmoskymed images
+        	if(gir instanceof AbstractCosmoSkymedImage && ((AbstractCosmoSkymedImage)gir).getInternalImage()!=null){
+        		name=name+"_"+((AbstractCosmoSkymedImage)gir).getInternalImage();
+        	}
         	setName(name);
         }
     }

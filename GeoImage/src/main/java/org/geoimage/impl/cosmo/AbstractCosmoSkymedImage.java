@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.cosmo;
 
@@ -51,7 +51,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     protected String overview ;
 
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractCosmoSkymedImage.class);
-    
+
     public AbstractCosmoSkymedImage(File file,String pathImg,String group){
     	super(file);
     	internalImage=pathImg;
@@ -59,7 +59,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     }
 
 
-    
+
     @Override
     public void dispose(){
     	super.dispose();
@@ -75,7 +75,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     		imagedata=null;
     	}
     }
-    
+
 
     public H5File getH5file() {
 		return h5file;
@@ -107,7 +107,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     public String[] getFilesList() {
         return new String[]{h5file.getFilePath()};
     }
-    
+
     @SuppressWarnings("unchecked")
 	public boolean initialise() {
         try {
@@ -116,21 +116,21 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         	this.displayName=super.manifestFile.getName();
         	if(group!=null&&!group.equalsIgnoreCase(""))
         		this.displayName=this.displayName+"_"+group;
-        	
+
         	h5file = new H5File(super.manifestFile.getAbsolutePath(), H5File.READ);
         	imagedata = (H5ScalarDS) h5file.get(internalImage);
         	if(imagedata==null)
             	return false;
-        	
+
             extractQuickLook();
             HashMap<String,Object> metadata = new HashMap<>();
-            
-            
-            
+
+
+
             //used to initialize metadata in the HObjects
             List<Attribute>attrs=(imagedata.getMetadata());
             attrs.addAll(h5file.get("/").getMetadata());
-        	
+
             List<HObject>hobs=((H5Group)h5file.get("/")).getMemberList();
 
             for(HObject ho:hobs){
@@ -140,7 +140,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
             for(Attribute att:attrs){
             	metadata.put(att.getName(),att.getValue());
             }
-            
+
             long[] selected = imagedata.getSelectedDims(); // the selected size of the dataset
             selected[0]=1;
             if(selected.length>2)
@@ -158,28 +158,28 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
             //
             starts = imagedata.getStartDims();
 
-            
+
             setMetaWidth(xSize);
             setMetaHeight(ySize);
-            
+
             bounds = new Rectangle(0, 0, xSize, ySize);
-            
+
             gcps = new ArrayList<Gcp>();
 
-            
+
 
            /* Object oo=CollectionUtils.find(metadata, new Predicate() {
-				
+
 				@Override
 				public boolean evaluate(Object o) {
-					 
+
 					return ((Attribute)o).getName().contains("Speed");
 				}
 			});
             for (Object o : metadata) {
             	System.out.println(((Attribute)o).getName());
             }*/
-            
+
             for (String a : metadata.keySet()) {
                 //System.out.println(a.getName() + "=" + a.getValue().toString());
                 if (a.equals("Bottom Left Geodetic Coordinates")) {
@@ -275,10 +275,10 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
                 	double[] val = (double[]) metadata.get(a);
                     setPRF(val[0]);
                 }
-                
+
                 setSatelliteOrbitInclination(97.86);
                 setRevolutionsPerday(14.8125);
-                
+
             }
             setSensor("CS");
             if (getType().startsWith("SCS")) {
@@ -348,7 +348,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         }
         return tile;
     }
-   
+
 
     public int readPixel(int x, int y,int band) {
         if (x < 0 || y < 0 || x > xSize || y > ySize) {
@@ -376,7 +376,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     public String[] getBands() {
         return new String[]{getPolarization()};
     }
-    
+
 	@Override
 	public int[] read(int x, int y, int width, int height, int band) throws IOException {
 		return readTile(x, y, width, height, band);
@@ -437,12 +437,11 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     	}
     }
 
-	@Override
 	public String getInternalImage() {
 		return internalImage;
 	}
-	
-	
+
+
 	@Override
 	public GeoImageReader clone(){
 		AbstractCosmoSkymedImage geo=null;
@@ -469,7 +468,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     	if(satelliteSpeed==0){
 	    	satelliteSpeed = calcSatelliteSpeed();
 	        orbitInclination = FastMath.toRadians(getSatelliteOrbitInclination());
-    	}    
+    	}
 
         double temp, deltaAzimuth, deltaRange;
         int[] output = new int[2];
@@ -499,13 +498,13 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
         }
         return output;
     }
-	
-	
-	
+
+
+
 	public double[] getPixelsize(){
 		return pixelsize;
 	}
-	
+
  	public String getGroup() {
 		return group;
 	}
@@ -542,10 +541,10 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
 
 	@Override
 	public String getDisplayName(int band) {
-		
+
 		return displayName;
 	}
-	
+
 	@Override
 	public double getPRF(int x,int y){
         //for all the other cases with only one PRF
@@ -558,5 +557,5 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
 		return "CS";
 	}
 
-	
+
 }
