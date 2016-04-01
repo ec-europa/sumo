@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.alos;
 
@@ -56,7 +56,7 @@ public class GDALAlosCeos extends Alos {
 	public String[] getFilesList() {
 		return new String[] { manifestFile.getAbsolutePath() };
 	}
-	
+
 
 	@Override
 	public boolean initialise() {
@@ -92,7 +92,7 @@ public class GDALAlosCeos extends Alos {
 				Gcp g=new Gcp(gcp.getGCPPixel(),gcp.getGCPLine(),gcp.getGCPX(),gcp.getGCPY());
 				gcps.add(g);
 			}
-			
+
 
 			String epsg = "EPSG:4326";
 			geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
@@ -120,8 +120,8 @@ public class GDALAlosCeos extends Alos {
 		return false;
 	}
 
-	
-	
+
+
 
 	@Override
 	public String getDisplayName(int band) {
@@ -189,12 +189,12 @@ public class GDALAlosCeos extends Alos {
 		   		data=new int[b.length];
 		       	for(int i=0;i<b.length;i++)
 		       		data[i]=b[i];
-		   		
+
 		       } catch (Exception ex) {
 		           logger.warn(ex.getMessage());
 		       }finally{
 		       }
-	      
+
 	      return data;
 	}
 
@@ -252,10 +252,10 @@ public class GDALAlosCeos extends Alos {
 			return;
 		}
 		GeoToolsGDALReader tiff = (GeoToolsGDALReader)getImage(band);
-		
+
 		preloadedInterval = new int[] { y, y + length };
 		Rectangle rect = new Rectangle(0, y, tiff.getxSize(), length);
-		
+
 		rect = tiff.getBounds().intersection(rect);
 
 		try {
@@ -283,14 +283,10 @@ public class GDALAlosCeos extends Alos {
 
 	public void setXMLMetaData() {
 		super.setXMLMetaData();
-		
+
 	}
-	
-	
-	@Override
-	public String getInternalImage() {
-		return null;
-	}
+
+
 
 	public static void main(String args[]) {
 		File f = new File(

@@ -362,12 +362,12 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 		}
 		public void notifyEndProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.endAnalysis(gir.getInternalImage());
+				listener.endAnalysis(gir.getImgName());
 			}
 		}
 		public void notifyStartProcessListener(){
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.startAnalysis(this.gir.getInternalImage());
+				listener.startAnalysis(gir.getImgName());
 			}
 		}
 		public void notifyBBAnalysis(String msg){

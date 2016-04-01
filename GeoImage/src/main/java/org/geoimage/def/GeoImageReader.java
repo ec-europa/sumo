@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.def;
 
@@ -14,12 +14,14 @@ import org.geoimage.impl.Gcp;
  * Interface to be implemented by all the readers for "geographic" images
  */
 public interface GeoImageReader  {
-    
+
     /**
      *
      * @return the image bounding box in lattitude and longitude coordinates
      */
     public List<double[]> getFrameLatLon(int xSize,int ySize)throws GeoTransformException;
+
+    public String getImgName();
 
     /**
      *
@@ -119,7 +121,7 @@ public interface GeoImageReader  {
      * @return
      */
     public int[] readTile(int x, int y, int width, int height,int band) ;
-    
+
     /**
      *
      * @param x
@@ -179,20 +181,18 @@ public interface GeoImageReader  {
      */
     public void dispose();
 
-    public String getInternalImage();
-
     public Date getImageDate();
-    
+
     public GeoImageReader clone();
 
     public File getOverviewFile();
-    
+
     public int[] getAmbiguityCorrection(int xPos,int yPos);
 
-    
+
     public abstract double[] getPixelsize();
-    
-    
+
+
     public abstract String getImId();
 }
 

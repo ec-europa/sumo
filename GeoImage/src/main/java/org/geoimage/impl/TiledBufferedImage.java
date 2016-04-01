@@ -138,7 +138,7 @@ public class TiledBufferedImage implements GeoImageReader {
                     tile.force();
                     fis.close();
                 } catch (Exception ex) {
-                	logger.error(ex.getMessage(),ex);                
+                	logger.error(ex.getMessage(),ex);
                 }
             }
         }
@@ -248,7 +248,7 @@ public class TiledBufferedImage implements GeoImageReader {
     public Date getImageDate(){
     	return new Date();
     }
-    
+
     private void mapExistingTiles() {
         for (int yy = 0; yy < nYTiles; yy++) {
             for (int xx = 0; xx < nXTiles; xx++) {
@@ -398,7 +398,7 @@ public class TiledBufferedImage implements GeoImageReader {
     public String getInternalImage() {
   		return null;
   	}
-    
+
 	@Override
 	public List<double[]> getFrameLatLon(int xSize, int ySize) {
 		return null;
@@ -419,11 +419,11 @@ public class TiledBufferedImage implements GeoImageReader {
 	public int[] getAmbiguityCorrection(int xPos, int yPos) {
 		return null;
 	}
-	
-	
-	
- 
-    
+
+
+
+
+
     //test main
     public static void main(String[] args) {
         /*GeoImageReader gir = GeoImageReaderFactory.createReaderForName("/media/52f29c23-b0dd-44d5-ac24-2ca4871c7d46/09DEC05073305-S2AS_R2C1-052241789020_02_P001.TIF").get(0);
@@ -448,6 +448,11 @@ public class TiledBufferedImage implements GeoImageReader {
 	public String getImId() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getImgName() {
+		return this.getDisplayName();
 	}
 
 }

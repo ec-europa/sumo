@@ -11,7 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -80,8 +82,10 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	public void runAnalysis(){
 		//Get the ThreadFactory implementation to use
 		//creating the ThreadPoolExecutor
-		ExecutorService executorPool = new ThreadPoolExecutor(2, NTHREDS, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(20));
+		ExecutorService executorPool = new ThreadPoolExecutor(2, NTHREDS, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
 		final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
+		CompletionService<AnalysisProcess.Results> ecs  = new ExecutorCompletionService<AnalysisProcess.Results>(executorPool);
+
 
 		List<File>filesImg=null;
 		if(!confFile.getUseFileList())
@@ -162,26 +166,25 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 
 							AnalysisProcess ap=prepareBatchAnalysis(reader, mask, iceMask, activeParams);
 							ap.addProcessListener(this);
-							tasks.add(executorPool.submit(ap));
+							tasks.add(ecs.submit(ap));
 
+							Future<AnalysisProcess.Results> resTask=null;
+							//  retrieve and save the result
+							for (;(resTask=ecs.poll())!=null;) {
+								try{
+									AnalysisProcess.Results res=(AnalysisProcess.Results)resTask.get();
+									List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
+									SarImageReader gr=(SarImageReader)res.getReader();
+									String name=(gr).getManifestFile().getParentFile().getName();
+									saveResults(name,gr,results);
+								}catch(Exception e){
+									logger.error(e.getMessage(),e);
+								}
+							}
 						}
 					}
 
 				}//end for loop on the images
-				//  retrieve and save the result
-				for (Future<AnalysisProcess.Results> future : tasks) {
-					try {
-						AnalysisProcess.Results res=(AnalysisProcess.Results)future.get();
-						List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
-						SarImageReader gr=(SarImageReader)res.getReader();
-						String name=(gr).getManifestFile().getParentFile().getName();
-						saveResults(name,gr,results);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-				}
 
 			}finally{
 				executorPool.shutdown();

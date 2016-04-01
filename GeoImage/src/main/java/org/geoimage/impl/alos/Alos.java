@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.impl.alos;
 
@@ -30,12 +30,12 @@ public abstract class Alos extends SarImageReader {
 	protected AlosProperties props=null;
 	protected List<String> polarizations=null;
 	protected Map<String, IReader> alosImages;
-	
+
 	public Alos(File manifest){
 		super(manifest);
 		props=new AlosProperties(manifest);
 	}
-	
+
 	@Override
 	public int getNBand() {
 		return polarizations.size();
@@ -59,9 +59,9 @@ public abstract class Alos extends SarImageReader {
 
 	@Override
 	public abstract boolean initialise();
-	
 
-    //TODO 
+
+    //TODO
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
     	return new int[]{0};
@@ -71,12 +71,12 @@ public abstract class Alos extends SarImageReader {
 	public String getBandName(int band) {
 		return polarizations.get(band);
 	}
-	
+
 	@Override
 	public String[] getBands() {
 		return polarizations.toArray(new String[0]);
 	}
-	
+
 	@Override
 	public String getImgName() {
 		return null;
@@ -115,7 +115,7 @@ public abstract class Alos extends SarImageReader {
 			public boolean accept(File pathname) {
 				if(pathname.getName().startsWith("BRS")&&pathname.getName().endsWith("jpg"))
 					return true;
-				return false;	
+				return false;
 			}
 		});
 		return files[0];
@@ -126,22 +126,22 @@ public abstract class Alos extends SarImageReader {
 		return "ALOS";
 	}
 
-	
+
 	public IReader getImage(int band){
 		IReader img=null;
 		try{
 			img = alosImages.get(getBandName(band));
-		}catch(Exception e){ 
+		}catch(Exception e){
 			logger.error(this.getClass().getName()+":getImage function  "+e.getMessage());
 		}
 		return img;
 	}
-	
-	
+
+
 	//----------------------------------------------
-	
+
  /**
-  * 
+  *
   * @param x
   * @param y
   * @param width
@@ -163,23 +163,23 @@ public abstract class Alos extends SarImageReader {
 	   		data=new int[b.length];
 	       	for(int i=0;i<b.length;i++)
 	       		data[i]=b[i];
-   		
+
        } catch (Exception ex) {
            logger.warn(ex.getMessage());
        }
-      
+
       return data;
   }
 
 
-	
+
 	@Override
 	public int[] readTile(int x, int y, int width, int height, int band) {
 		TIFF tiff=(TIFF)getImage(band);
-		
+
 		Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(tiff.getBounds());
-        
+
         int[] tile = new int[height * width];
         if (rect.isEmpty()) {
             return tile;
@@ -201,7 +201,7 @@ public abstract class Alos extends SarImageReader {
                 	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
                 }catch(ArrayIndexOutOfBoundsException e ){
                 	logger.warn("readTile function:"+e.getMessage());
-                }	
+                }
             }
             }
         return tile;
@@ -212,7 +212,7 @@ public abstract class Alos extends SarImageReader {
 			return read(x,y,1,1,band)[0];
 	}
 
-	
+
 
 	@Override
 	public void preloadLineTile(int y, int length, int band) {
@@ -222,10 +222,10 @@ public abstract class Alos extends SarImageReader {
         }
         preloadedInterval = new int[]{y, y + length};
         Rectangle rect = new Rectangle(0, y, tiff.xSize, length);
-        
-        
+
+
         rect=tiff.getBounds().intersection(rect);
-        
+
         try {
         	BufferedImage bi=null;
         	try{
@@ -233,12 +233,12 @@ public abstract class Alos extends SarImageReader {
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
-    			    Thread.sleep(100);                 
+    			    Thread.sleep(100);
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
         		bi=tiff.read(0, rect);
-        	}	
+        	}
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
         } catch (Exception ex) {
@@ -246,13 +246,13 @@ public abstract class Alos extends SarImageReader {
         }finally{
         	//tiff.reader.addIIOReadProgressListener(this);
         	//readComplete=false;
-        	
+
         }
 
 	}
 
 	 /**
-     * 
+     *
      * @param productxml
      * @param safeReader
      * @param annotationReader
@@ -260,7 +260,7 @@ public abstract class Alos extends SarImageReader {
      */
     protected void setXMLMetaData() {
         	setSatellite(new String("ALOS"));
-        	
+
         	//polarizations string
         	List<String> pols=props.getPolarizations();
         	String strPol="";
@@ -269,7 +269,7 @@ public abstract class Alos extends SarImageReader {
             }
             setPolarization(strPol);
             setSensor("ALOS");
-            
+
             setSatelliteOrbitInclination(98.18);
 
             setRangeSpacing(new Float(props.getPixelSpacing()));
@@ -278,14 +278,14 @@ public abstract class Alos extends SarImageReader {
             setMetaWidth(props.getNumberOfPixels());
             setNumberBands(pols.size());
             setNumberOfBytes(16);
-            
+
             //TODO:check this value
             //float enl=org.geoimage.impl.ENL.getFromGeoImageReader(this);
             setENL("1");//String.valueOf(enl));
 
-            /*String start=header.getStartTime().toString().replace('T', ' ');	
+            /*String start=header.getStartTime().toString().replace('T', ' ');
             String stop=header.getStopTime().toString().replace('T', ' ');*/
-            
+
             Date st=props.getStartDate();
             Date end=props.getEndDate();
             Timestamp t=new Timestamp(st.getTime());
@@ -293,12 +293,7 @@ public abstract class Alos extends SarImageReader {
             t.setTime(end.getTime());
             setTimeStampStop(t.toString());//Timestamp.valueOf(stop));
     }
-	
-	@Override
-	public String getInternalImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	
+
+
 }
