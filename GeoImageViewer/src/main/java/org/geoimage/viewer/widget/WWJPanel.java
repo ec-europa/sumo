@@ -9,12 +9,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 
 import org.geoimage.def.GeoImageReader;
@@ -66,13 +69,36 @@ public class WWJPanel extends javax.swing.JPanel {
         jTabbedPane1.add("Catalog", catalogPanel);
         PlanningPanel planningPanel = new PlanningPanel(this);
         jTabbedPane1.add("Planner", planningPanel);
-
-        acquisitionLayer = new TimeRenderableLayer();
-        wwjCanvas.getModel().getLayers().add(acquisitionLayer);
-
-        // add image layer to visualise the images currently opened
-        imageLayer = new TimeRenderableLayer();
-        wwjCanvas.getModel().getLayers().add(imageLayer);
+        
+        this.addComponentListener(new ComponentListener() {
+			
+			@Override
+			public void componentShown(ComponentEvent e) {
+				if(acquisitionLayer==null){
+            		acquisitionLayer = new TimeRenderableLayer();
+            		wwjCanvas.getModel().getLayers().add(acquisitionLayer);
+	        	}
+	        	if(imageLayer==null){
+	        		// add image layer to visualise the images currently opened
+	        		imageLayer = new TimeRenderableLayer();
+	        		wwjCanvas.getModel().getLayers().add(imageLayer);
+	        	}
+				
+			}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+			}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {
+			}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+			}
+		});
+        
     }
     
     public void add(ImageLayer layer) {
