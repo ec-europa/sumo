@@ -74,16 +74,7 @@ public class WWJPanel extends javax.swing.JPanel {
 			
 			@Override
 			public void componentShown(ComponentEvent e) {
-				if(acquisitionLayer==null){
-            		acquisitionLayer = new TimeRenderableLayer();
-            		wwjCanvas.getModel().getLayers().add(acquisitionLayer);
-	        	}
-	        	if(imageLayer==null){
-	        		// add image layer to visualise the images currently opened
-	        		imageLayer = new TimeRenderableLayer();
-	        		wwjCanvas.getModel().getLayers().add(imageLayer);
-	        	}
-				
+				initGlobe();
 			}
 			
 			@Override
@@ -100,10 +91,21 @@ public class WWJPanel extends javax.swing.JPanel {
 		});
         
     }
-    
+    private void initGlobe(){
+    	if(acquisitionLayer==null){
+    		acquisitionLayer = new TimeRenderableLayer();
+    		wwjCanvas.getModel().getLayers().add(acquisitionLayer);
+    	}
+    	if(imageLayer==null){
+    		// add image layer to visualise the images currently opened
+    		imageLayer = new TimeRenderableLayer();
+    		wwjCanvas.getModel().getLayers().add(imageLayer);
+    	}
+    }
     public void add(ImageLayer layer) {
     	try{
 	        if(layer==null) return;
+	        initGlobe();
 	        GeoImageReader reader=layer.getImageReader();
 	        List<double[]> imageframe = layer.getImageReader().getFrameLatLon(reader.getWidth(),reader.getHeight());
 	        if (imageframe != null) {
