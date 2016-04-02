@@ -7,11 +7,6 @@ package org.geoimage.viewer.actions;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.swing.JMenuItem;
 
@@ -170,13 +165,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 	        			proc=new AnalysisProcess(reader,ENL, vdsanalysis, bufferingDistance,0,blackBorderAnalysis);
 	        			proc.addProcessListener(this);
-
+	        			//TODO: is necessary??
 	        			SumoPlatform.getApplication().getConsoleLayer().setCurrentAction(this);
-
-
-	        			//Thread t=new Thread(proc);
-	        			//t.setName("VDS_analysis_"+gir.getDisplayName(0));
-	        			//t.start();
 
 	        			Thread.currentThread().setName("VDS_analysis_"+gir.getDisplayName(0));
 	        			proc.call();
@@ -210,9 +200,7 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 
         final ArrayList<String> coasts = new ArrayList<String>();
-        coasts.add("");
         final ArrayList<String> ice = new ArrayList<String>();
-        ice.add("");
         final ImageLayer il=LayerManager.getIstanceManager().getCurrentImageLayer();
 
         if (il != null) {
@@ -227,7 +215,9 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
                 }
             }
         }
+        coasts.add("");
         a3.setPossibleValues(coasts.toArray());
+        ice.add("");
         a31.setPossibleValues(ice.toArray());
         out.add(a3);
         out.add(a31);
