@@ -13,7 +13,6 @@ import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.Renderable;
-import gov.nasa.worldwindx.examples.Polygons;
 
 /**
  *

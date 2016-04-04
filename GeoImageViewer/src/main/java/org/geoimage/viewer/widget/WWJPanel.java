@@ -102,6 +102,10 @@ public class WWJPanel extends javax.swing.JPanel {
     		wwjCanvas.getModel().getLayers().add(imageLayer);
     	}
     }
+    /**
+     * 
+     * @param layer
+     */
     public void add(ImageLayer layer) {
     	try{
 	        if(layer==null) return;
@@ -113,7 +117,14 @@ public class WWJPanel extends javax.swing.JPanel {
 	            for (double[] c : imageframe) {
 	                ll.add(new LatLon(Angle.fromDegreesLatitude(c[1]), Angle.fromDegreesLongitude(c[0])));
 	            }
-	            WWGeoImage gi = new WWGeoImage(new Polyline(ll, 1000), new GlobeAnnotation(layer.getName() + " opened", new Position(new LatLon(Angle.fromDegreesLatitude(imageframe.get(0)[1]), Angle.fromDegreesLongitude(imageframe.get(0)[0])), 2000)), layer.isActive() ? Color.CYAN : Color.BLUE, layer.isActive() ? Color.CYAN : Color.BLUE);
+	            GlobeAnnotation ga=new GlobeAnnotation(layer.getName() + " opened", 
+        		new Position(new LatLon(Angle.fromDegreesLatitude(imageframe.get(0)[1]), 
+        								Angle.fromDegreesLongitude(imageframe.get(0)[0])), 
+        								0));
+	            
+	            WWGeoImage gi = new WWGeoImage(new Polyline(ll,0),ga ,
+	            		layer.isActive() ? Color.CYAN : Color.BLUE, layer.isActive() ? Color.CYAN : Color.BLUE);
+	            
 	            gi.setAnnotationVisible(layer.isActive());
 	            gi.setDelegateOwner(layer);
 	            imageLayer.addRenderable(gi);
@@ -273,9 +284,9 @@ public class WWJPanel extends javax.swing.JPanel {
         addComponentListener(new ComponentListener() {
             // This method is called after the component's size changes
             public void componentResized(ComponentEvent evt) {
-            	splitPane.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
+            	/*splitPane.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
                 wwjCanvas.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
-                wwjCanvas.reshape(0, 0, 0, 0);
+                wwjCanvas.reshape(0, 0, 0, 0);*/
             }
 
             public void componentMoved(ComponentEvent e) {
