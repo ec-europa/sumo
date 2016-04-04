@@ -118,9 +118,9 @@ public class H2Fetcher {
 	            }
 	        }
 	        stat.close();
-	        statEx.close();
 	        conn.close();
         }
+        statEx.close();
         return listImageplanning;
     }
 
