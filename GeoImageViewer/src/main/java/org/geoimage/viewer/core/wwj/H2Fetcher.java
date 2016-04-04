@@ -79,40 +79,48 @@ public class H2Fetcher {
         List<ImagePlanning> listImageplanning = new ArrayList<ImagePlanning>();
         // connect to database
         Connection conn = DriverManager.getConnection("jdbc:h2:~/.sumo/" + dbname + ";AUTO_SERVER=TRUE", "sa", "");
-        Statement stat = conn.createStatement();
-        // get image planning
-        String sql = "SELECT * FROM IMAGEPLAN";
-        ResultSet res = stat.executeQuery(sql);
-        WKTReader wktr = new WKTReader();
-        Geometry imageGeom = null;
-        while (!res.isClosed() && res.next()) {
-            ImagePlanning imagePlanning = new ImagePlanning();
-            imagePlanning.setName(res.getString("IMAGE"));
-            imagePlanning.setAcquisitionTime(Timestamp.valueOf(res.getString("STARTDATE")));
-            imagePlanning.setAcquisitionStopTime(Timestamp.valueOf(res.getString("ENDDATE")));
-            imagePlanning.setRemoteLocation(new URL(res.getString("URL")));
-            imagePlanning.setAction(res.getString("ACTION"));
-            try {
-                imageGeom = wktr.read(res.getString("AREA"));
-            } catch (Exception e) {
-                imageGeom = null;
-            }
-            imagePlanning.setArea(imageGeom);
-            // check the maximum time for acquisition
-            if (imagePlanning.getAcquisitionStopTime().getTime() - System.currentTimeMillis() < 0) {
-                try {
-                    // remove the row from the database
-                    stat.execute("DELETE FROM IMAGEPLAN WHERE IMAGE = '" + res.getString("IMAGE") + "' AND STARTDATE = '" + res.getString("STARTDATE") + "'");
-                } catch (Exception e) {
-                    System.out.println("Could not delete entry " + res.getString("IMAGE"));
-                }
-            } else {
-                listImageplanning.add(imagePlanning);
-            }
+        
+        String sqlCheckEx="SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_name = 'IMAGEPLAN'";
+        Statement statEx = conn.createStatement();
+        ResultSet res = statEx.executeQuery(sqlCheckEx);
+        res.next();
+        int count=res.getInt(1);
+        if(count!=0){
+	        Statement stat = conn.createStatement();
+	        // get image planning
+	        String sql = "SELECT * FROM IMAGEPLAN";
+	        res = stat.executeQuery(sql);
+	        WKTReader wktr = new WKTReader();
+	        Geometry imageGeom = null;
+	        while (!res.isClosed() && res.next()) {
+	            ImagePlanning imagePlanning = new ImagePlanning();
+	            imagePlanning.setName(res.getString("IMAGE"));
+	            imagePlanning.setAcquisitionTime(Timestamp.valueOf(res.getString("STARTDATE")));
+	            imagePlanning.setAcquisitionStopTime(Timestamp.valueOf(res.getString("ENDDATE")));
+	            imagePlanning.setRemoteLocation(new URL(res.getString("URL")));
+	            imagePlanning.setAction(res.getString("ACTION"));
+	            try {
+	                imageGeom = wktr.read(res.getString("AREA"));
+	            } catch (Exception e) {
+	                imageGeom = null;
+	            }
+	            imagePlanning.setArea(imageGeom);
+	            // check the maximum time for acquisition
+	            if (imagePlanning.getAcquisitionStopTime().getTime() - System.currentTimeMillis() < 0) {
+	                try {
+	                    // remove the row from the database
+	                    stat.execute("DELETE FROM IMAGEPLAN WHERE IMAGE = '" + res.getString("IMAGE") + "' AND STARTDATE = '" + res.getString("STARTDATE") + "'");
+	                } catch (Exception e) {
+	                    System.out.println("Could not delete entry " + res.getString("IMAGE"));
+	                }
+	            } else {
+	                listImageplanning.add(imagePlanning);
+	            }
+	        }
+	        stat.close();
+	        statEx.close();
+	        conn.close();
         }
-        stat.close();
-        conn.close();
-
         return listImageplanning;
     }
 
