@@ -187,8 +187,9 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
              String timeStampStart=reader.getTimeStampStart();
              double azimuth=reader.getAzimuthSpacing();
 
-             int tileSize = (int)(Constant.TILESIZE / gir.getPixelsize()[0]);
-
+             int xtileSize = analysis.getRealSizeX();
+             int ytileSize = analysis.getRealSizeY();
+             
              try{
 	             for (int band = 0; band < numberofbands&&!stop; band++) {
 	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
@@ -269,8 +270,10 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 	                        		analysis.getCoastMask().getMaskGeometries(), true);
 	                     }
 	                     //leave display params forced to false
-	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryImage.LINESTRING,
-	                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
+	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
+	                    		 GeometryImage.LINESTRING,
+	                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
+	                    		 false);
 
 	                     notifyLayerReady(vdsanalysisLayer);
 	                     resultLayers.add(vdsanalysisLayer);
@@ -309,7 +312,10 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 	                 if ((analysis.getCoastMask() != null)) {
 	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometryImage.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
 	                 }
-	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, GeometryImage.LINESTRING,GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),tileSize), false);
+	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
+	                		 GeometryImage.LINESTRING,
+	                		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
+	                		 false);
 
 
 	               //Azimuth Ambiguities

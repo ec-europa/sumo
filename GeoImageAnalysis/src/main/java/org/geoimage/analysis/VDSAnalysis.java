@@ -105,6 +105,18 @@ public class VDSAnalysis{
     }
 
 
+	public int getRealSizeX() {
+		return realSizeX;
+	}
+	public void setRealSizeX(int realSizeX) {
+		this.realSizeX = realSizeX;
+	}
+	public int getRealSizeY() {
+		return realSizeY;
+	}
+	public void setRealSizeY(int realSizeY) {
+		this.realSizeY = realSizeY;
+	}
 	public int getVerTilesImage() {
 		return verTilesImage;
 	}
