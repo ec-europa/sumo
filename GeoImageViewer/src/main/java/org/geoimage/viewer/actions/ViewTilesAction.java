@@ -62,7 +62,8 @@ public class ViewTilesAction extends AbstractConsoleAction{
 	                        		if(tileSize < Constant.TILESIZEPIXELS) tileSize = Constant.TILESIZEPIXELS;
 	                        	}
 
-	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader().getWidth(),l.getImageReader().getHeight(),tileSize);
+	                        	List <Geometry> tiles=GeometryExtractor.getTiles(l.getImageReader().getWidth(),
+	                        			l.getImageReader().getHeight(),tileSize,tileSize);
 	                        	SimpleGeometryLayer sgl=new SimpleGeometryLayer(l, "tiles",tiles,SimpleGeometryLayer.LINESTRING);
 	                            addLayerInThread(sgl);
 	                        } catch (Exception ex) {

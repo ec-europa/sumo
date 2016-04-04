@@ -45,10 +45,10 @@ public class GeometryExtractor {
     }
     
     // return a geometry of grid of Tiles
-    public static List<Geometry> getTiles(int width,int height ,int tileSize) {
+    public static List<Geometry> getTiles(int width,int height ,int xtileSize,int ytileSize) {
         
-        int horTiles = width / tileSize;
-        int verTiles = height / tileSize;
+        int horTiles = width / xtileSize;
+        int verTiles = height / ytileSize;
         
         List<Geometry> tiles = new ArrayList<Geometry>(horTiles*verTiles*8);
         
