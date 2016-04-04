@@ -332,7 +332,12 @@ public class KDistributionEstimation {
 					//mask is the raster mask . Is used to understand if the point is on land
 					if ((mask == null) || (mask[x*y]==0)){//(mask.getSample(x, y, 0) == 0)) {
 						try{
-							val = data[y * sizeTileX + x];
+							int index=y * sizeTileX + x;
+							if(index<=data.length)
+								val = data[index];
+							else{
+								logger.warn("Kdistribution:check calcStatValues function ");
+							}	
 						}catch(Exception e ){
 							logger.warn(e.toString(),e);
 							break;
