@@ -5,6 +5,7 @@
  */
 package org.geoimage.viewer.widget;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
@@ -35,6 +36,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.Model;
+import gov.nasa.worldwind.WorldWind;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
@@ -253,11 +257,14 @@ public class WWJPanel extends javax.swing.JPanel {
 
         splitPane = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jTabbedPane1.setMaximumSize(new Dimension(200,getHeight()));
+        jTabbedPane1.setMaximumSize(new Dimension(200,getHeight()-200));
         
         wwjCanvas = new gov.nasa.worldwind.awt.WorldWindowGLCanvas();
         wwjCanvas.setPreferredSize(new java.awt.Dimension(1000, 800));
-        wwjCanvas.setModel(new BasicModel());
+        //Model model = (Model) WorldWind.createConfigurationComponent(AVKey.MODEL_CLASS_NAME);
+        BasicModel model=new BasicModel();
+        
+        wwjCanvas.setModel(model);
         wwjCanvas.getSceneController().setVerticalExaggeration(10);
 
         setName("NASA Worldwind Layer"); // NOI18N
@@ -300,7 +307,7 @@ public class WWJPanel extends javax.swing.JPanel {
         });
 
       splitPane.setRightComponent(wwjCanvas);
-      add(splitPane);
+      add(splitPane,BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged

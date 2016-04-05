@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.impl.alos.AlosGeoTiff;
-import org.geoimage.impl.alos.AlosProperties;
+import org.geoimage.impl.alos.TiffAlosProperties;
 import org.geoimage.impl.alos.GDALAlosCeos;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.impl.cosmo.CosmoSkyFactory;
@@ -129,7 +129,7 @@ public class GeoImageReaderFactory {
 	        	}else if(parent.contains("ASA_")){
 	        		gir=new EnvisatImage_SLC(f);
 	        	}else if(new File(file).getName().equalsIgnoreCase("summary.txt")){
-	        		AlosProperties props=new AlosProperties(file);
+	        		TiffAlosProperties props=new TiffAlosProperties(file);
 	        		if(props.getProductFormat().equalsIgnoreCase("CEOS")){
 	        			gir=new GDALAlosCeos(f);
 	        		}else{

@@ -27,13 +27,13 @@ public abstract class Alos extends SarImageReader {
 	protected int[] preloadedInterval = new int[]{0, 0};
 	protected short[] preloadedData;
 
-	protected AlosProperties props=null;
+	protected TiffAlosProperties props=null;
 	protected List<String> polarizations=null;
 	protected Map<String, IReader> alosImages;
 
 	public Alos(File manifest){
 		super(manifest);
-		props=new AlosProperties(manifest);
+		props=new TiffAlosProperties(manifest);
 	}
 
 	@Override
