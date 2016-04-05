@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -25,6 +26,11 @@ public class CeosAlosProperties extends TiffAlosProperties {
 	public CeosAlosProperties(File propFile,File rudFile){
 		super(propFile);
 		this.rudFile=rudFile;
+		try{
+			loadFromBin();
+		}catch(Exception e){
+			logger.error(e.getMessage());
+		}	
 	}
 	
 	/**
@@ -48,16 +54,18 @@ public class CeosAlosProperties extends TiffAlosProperties {
 	        out.close();
 	        in.close();
 		}    
+    }
+	public void loadFromBin() throws IOException{
 		BinaryReader reader=new BinaryReader(this.rudFile);
 		try{
-			int n=reader.readB3(57, 3);
-			
+			int n=reader.readB4(935, 4,false);
+			logger.info("VAL:"+n);
 		}catch(Exception e){
-			
+			logger.error(e.getMessage());
 		}finally{
 			reader.dispose();
 		}
-    }
+	}
 	
 
 	
