@@ -33,7 +33,7 @@ public class BinaryAlosCeos extends Alos {
 
 	public BinaryAlosCeos(File manifest) {
 		super(manifest);
-		props = new AlosProperties(manifest);
+		props = new TiffAlosProperties(manifest);
 	}
 
 	@Override

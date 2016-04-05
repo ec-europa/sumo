@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class AlosProperties extends Properties {
-    private static org.slf4j.Logger logger=LoggerFactory.getLogger(AlosProperties.class);
+public abstract class AbstractAlosProperties extends Properties {
+    private static org.slf4j.Logger logger=LoggerFactory.getLogger(AbstractAlosProperties.class);
 
     public static final String PROP_ODI_SCENEID="Odi_SceneId";
     public static final String PROP_ODI_SITE_DATETIME="Odi_SiteDateTime";
@@ -49,8 +49,6 @@ public class AlosProperties extends Properties {
     public static final String PROP_CENTER_LAT="Img_ImageSceneCenterLatitude";
     public static final String PROP_CENTER_LON="Img_ImageSceneCenterLongitude";
     
-    
-    
     public static final String PROP_BIT_X_PIX="Pdi_BitPixel";
     public static final String PROP_N_PIXELS="Pdi_NoOfPixels_0";
     public static final String PROP_N_LINES="Pdi_NoOfLines_0";
@@ -59,19 +57,16 @@ public class AlosProperties extends Properties {
     public static final String PROP_START_DATE_TIME="Img_SceneStartDateTime";
     public static final String PROP_END_DATE_TIME="Img_SceneEndDateTime";
     
-    
-    	
-
-    
 	
-	private File propFile=null;
 	private List<String> imageNames;
 	private List<String> polarizations;
 	private SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");//"20150422 09:02:41.377");
 	
-	
-	public AlosProperties(String propFile){
-		this.propFile=new File(propFile);
+	/**
+	 * 
+	 * @param propFile
+	 */
+	public AbstractAlosProperties(String propFile){
 		try {
 			load(new FileInputStream(propFile));
 			init();
@@ -79,9 +74,11 @@ public class AlosProperties extends Properties {
 			e.printStackTrace();
 		}
 	}
-	
-	public AlosProperties(File propFile){
-		this.propFile=propFile;
+	/**
+	 * 
+	 * @param propFile
+	 */
+	public AbstractAlosProperties(File propFile){
 		try {
 			load(new FileInputStream(propFile));
 			init();
@@ -94,24 +91,12 @@ public class AlosProperties extends Properties {
 		return polarizations;
 	}
 	
-	
-	public void load(FileInputStream fis) throws IOException {
-		Scanner in = new Scanner(fis);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		InputStream is=null;
-		try{
-	        while(in.hasNext()) {
-	            out.write(in.nextLine().replace("\"","").getBytes());
-	            out.write("\n".getBytes());
-	        }
-	        is = new ByteArrayInputStream(out.toByteArray());
-	        super.load(is);
-		}finally{    
-	        is.close();
-	        out.close();
-	        in.close();
-		}    
-    }
+	/**
+	 * 
+	 * @param fis
+	 * @throws IOException
+	 */
+	public abstract void load(FileInputStream fis) throws IOException ;
 	
 	/**
 	 * init some properties
@@ -166,7 +151,10 @@ public class AlosProperties extends Properties {
 		String val=this.getProperty(PROP_PROD_FORM);
 		return val;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Date getStartDate(){
 		String val=this.getProperty(PROP_START_DATE_TIME);
 		Date d;
@@ -177,6 +165,11 @@ public class AlosProperties extends Properties {
 		}
 		return d;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Date getEndDate(){
 		String val=this.getProperty(PROP_END_DATE_TIME);
 		Date d;
@@ -196,6 +189,10 @@ public class AlosProperties extends Properties {
 		return this.imageNames;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Coordinate[] getCorners(){
 		Coordinate[] coor=new Coordinate[4];
 		
@@ -218,6 +215,10 @@ public class AlosProperties extends Properties {
 		return coor;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Coordinate getCenter(){
 		
 		String lat=getProperty(PROP_CENTER_LAT);
@@ -225,12 +226,5 @@ public class AlosProperties extends Properties {
 		Coordinate coor=new Coordinate(Double.parseDouble(lon),Double.parseDouble(lat));
 		return coor;
 	}	
-	
-	
-	public static void main(String[] args){
-		AlosProperties aa=new AlosProperties("F:/SumoImgs/AlosTrialTmp/SM/0000054535_001001_ALOS2051343700-150506/summary.txt");
-		aa.getCorners();
-		
-	}
 	
 }
