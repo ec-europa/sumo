@@ -32,7 +32,7 @@ public class AlosGeoTiff extends Alos {
 
 	public AlosGeoTiff(File manifest){
 		super(manifest);
-		props=new AlosProperties(manifest);
+		props=new TiffAlosProperties(manifest);
 	}
 
 	@Override

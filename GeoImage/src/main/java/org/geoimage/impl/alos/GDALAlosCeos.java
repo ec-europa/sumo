@@ -31,7 +31,7 @@ public class GDALAlosCeos extends Alos {
 
 	public GDALAlosCeos(File manifest) {
 		super(manifest);
-		props = new AlosProperties(manifest);
+		props = new TiffAlosProperties(manifest);
 	}
 
 	@Override
