@@ -299,12 +299,14 @@ public class BinaryAlosCeos extends Alos {
 
 
 	public static void main(String args[]) {
-		File f = new File(
-				"F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
-		File f2 = new File("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
+		//File f = new File(
+		//		"F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
+		//File f2 = new File("H:/sat/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
 
-		BinaryAlosCeos bin=new BinaryAlosCeos(new File("F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"));
-
+		//BinaryAlosCeos bin=new BinaryAlosCeos(new File("F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"));
+				
+		BinaryAlosCeos bin=new BinaryAlosCeos(new File(
+				"H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\IMG-HH-ALOS2049273700-150422-FBDR1.5RUD"));
 
 		//GeoToolsGDALReader gg = new GeoToolsGDALReader(f, 0);
 		//System.out.println("x:" + gg.xSize + " - y:" + gg.ySize);

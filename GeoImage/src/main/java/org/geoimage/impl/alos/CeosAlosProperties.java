@@ -7,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -63,10 +62,25 @@ public class CeosAlosProperties extends TiffAlosProperties {
 			logger.info("VAL:"+nf);
 			nf=reader.bytearray2float((720*2+57),4, false);
 			logger.info("VAL:"+nf);
-			int n=reader.readB4(720*2+57, 4, true);
+			
+			/*int n=reader.readB4(720*2+57, 4, true);
 			logger.info("VAL:"+n);
 			n=reader.readB4(720*2+57, 4, false);
 			logger.info("VAL:"+n);
+			n=reader.readB4(720*2+57, 4, false);
+*/
+			
+			
+			byte[]bb=reader.readBytes(720+389, 4);
+			logger.info("VAL:"+bb.toString());
+			int aa=reader.readB3(720+389, 3);
+			logger.info("VAL:"+aa);
+			
+		/*	float nf=reader.bytearray2float((720+4096+935),16,true);
+			logger.info("VAL:"+nf);
+			nf=reader.bytearray2float((720+4096+935),16,false);
+			logger.info("VAL:"+nf);
+			*/
 		}catch(Exception e){
 			logger.error(e.getMessage());
 		}finally{
@@ -74,11 +88,9 @@ public class CeosAlosProperties extends TiffAlosProperties {
 		}
 	}
 	
-
-	
 	
 	public static void main(String[] args){
-		CeosAlosProperties aa=new CeosAlosProperties(
+		/*CeosAlosProperties aa=new CeosAlosProperties(
 				new File("Y:/Images/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"),
 				new File("Y:/Images/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/LED-ALOS2049273700-150422-FBDR1.5RUD")
 				);*/
@@ -93,7 +105,6 @@ public class CeosAlosProperties extends TiffAlosProperties {
 				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\IMG-HH-ALOS2049273700-150422-FBDR1.5RUD")
 				);
 		aa.getCorners();
-		
 	}
 	
 }
