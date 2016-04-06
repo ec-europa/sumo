@@ -57,11 +57,14 @@ public class CeosAlosProperties extends TiffAlosProperties {
 	public void loadFromBin() throws IOException{
 		BinaryReader reader=new BinaryReader(this.rudFile);
 		try{
-			int n=reader.readB4(720+935, 5,true);
-			float nf=reader.bytearray2float((720*2+57),4,true);
+			int n=reader.bytearray2Int(934, 15,false);
+			logger.info("VAL:"+n);
+
+			/*
+			 * float nf=reader.bytearray2float((720*2+57),4,true);
 			logger.info("VAL:"+nf);
 			nf=reader.bytearray2float((720*2+57),4, false);
-			logger.info("VAL:"+nf);
+			 */
 			
 			/*int n=reader.readB4(720*2+57, 4, true);
 			logger.info("VAL:"+n);
@@ -71,10 +74,10 @@ public class CeosAlosProperties extends TiffAlosProperties {
 */
 			
 			
-			byte[]bb=reader.readBytes(720+389, 4);
+			/*byte[]bb=reader.readBytes(720+389, 4);
 			logger.info("VAL:"+bb.toString());
 			int aa=reader.readB3(720+389, 3);
-			logger.info("VAL:"+aa);
+			logger.info("VAL:"+aa);*/
 			
 		/*	float nf=reader.bytearray2float((720+4096+935),16,true);
 			logger.info("VAL:"+nf);
@@ -95,16 +98,16 @@ public class CeosAlosProperties extends TiffAlosProperties {
 				new File("Y:/Images/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/LED-ALOS2049273700-150422-FBDR1.5RUD")
 				);*/
 		
-		/*CeosAlosProperties aa=new CeosAlosProperties(
-				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\summary.txt"),
-				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\LED-ALOS2049273700-150422-FBDR1.5RUD")
-				);*/
-		
+		CeosAlosProperties aa=new CeosAlosProperties(
+				new File("H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\summary.txt"),
+				new File("H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\LED-ALOS2029163650-141207-WBDR1.5RUD")
+				);
+		/*
 		CeosAlosProperties aa=new CeosAlosProperties(
 				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\summary.txt"),
 				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\IMG-HH-ALOS2049273700-150422-FBDR1.5RUD")
 				);
-		aa.getCorners();
+		aa.getCorners();*/
 	}
 	
 }
