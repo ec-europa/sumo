@@ -69,11 +69,26 @@ public class BinaryReader {
 	 */
 	public float bytearray2float(int pos, int len, boolean bigEndian) throws IOException {
 		byte[] b = readBytes(pos, len);
-		ByteBuffer buf = ByteBuffer.wrap(b);
+		ByteBuffer buf = ByteBuffer.wrap(b); 
 		if(bigEndian)
 			return buf.order(ByteOrder.BIG_ENDIAN).getFloat();
 		else
 			return buf.order(ByteOrder.LITTLE_ENDIAN).getFloat();
+	}
+	/**
+	 * 
+	 * @param pos
+	 * @param len
+	 * @return
+	 * @throws IOException
+	 */
+	public int bytearray2Int(int pos, int len, boolean bigEndian) throws IOException {
+		byte[] b = readBytes(pos, len);
+		ByteBuffer buf = ByteBuffer.wrap(b); 
+		if(bigEndian)
+			return buf.order(ByteOrder.BIG_ENDIAN).getInt();
+		else
+			return buf.order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 
 	/**

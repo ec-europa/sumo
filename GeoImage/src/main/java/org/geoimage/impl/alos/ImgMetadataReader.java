@@ -21,13 +21,13 @@ import org.geoimage.impl.imgreader.BinaryReader;
 9 Facility related        Variable
 */
 
-public class LedReader {
-	public static final int[] FIELD_14=new int[]{49,16};
-	public static final int[] FIELD_1=new int[]{0,4};
+public class ImgMetadataReader {
+	public static final int[] FIELD_14_File_ID=new int[]{49,16};
+	public static final int[] FIELD_1_REC_NUM=new int[]{0,4};
 	
 	private BinaryReader reader=null;
 	
-	public LedReader(File input) throws FileNotFoundException {
+	public ImgMetadataReader(File input) throws FileNotFoundException {
 		reader=new BinaryReader(input);
 	}
 	
@@ -40,14 +40,17 @@ public class LedReader {
     }
 	
 	public int readField1() throws IOException{
-		return reader.readB4(FIELD_1[0], FIELD_1[1],true);
+		return reader.readB4(FIELD_1_REC_NUM[0], FIELD_1_REC_NUM[1],true);
 	}
 	
 	public int readField6() throws IOException{
 		return reader.readB4(8, 4,true);
 	}
 	
-	
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	public void readDataSetSummary() throws IOException{
 		String sceneid=readString((719+21),32);
 		System.out.println(":"+sceneid);
@@ -58,12 +61,16 @@ public class LedReader {
 		String ellipse=readString((719+165),16);
 		System.out.println(":"+ellipse);
 		
+		String prf=readString((719+935),15);
+		System.out.println(":"+prf);
+		
 	}
 	
 	
 	public static void main(String[]args){
 		try {
-			LedReader lr=new LedReader(new File("F:/SumoImgs/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/LED-ALOS2049273700-150422-FBDR1.5RUD"));
+			ImgMetadataReader lr=new ImgMetadataReader(new File(
+					"H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\LED-ALOS2029163650-141207-WBDR1.5RUD"));
 			int val=lr.readField1();
 			/*
 			System.out.println(":"+val);
