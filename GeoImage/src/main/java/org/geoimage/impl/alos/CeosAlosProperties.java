@@ -58,7 +58,14 @@ public class CeosAlosProperties extends TiffAlosProperties {
 	public void loadFromBin() throws IOException{
 		BinaryReader reader=new BinaryReader(this.rudFile);
 		try{
-			int n=reader.readB4(935, 4,false);
+			int n=reader.readB4(720+935, 5,true);
+			float nf=reader.bytearray2float((720*2+57),4,true);
+			logger.info("VAL:"+nf);
+			nf=reader.bytearray2float((720*2+57),4, false);
+			logger.info("VAL:"+nf);
+			int n=reader.readB4(720*2+57, 4, true);
+			logger.info("VAL:"+n);
+			n=reader.readB4(720*2+57, 4, false);
 			logger.info("VAL:"+n);
 		}catch(Exception e){
 			logger.error(e.getMessage());
@@ -74,6 +81,16 @@ public class CeosAlosProperties extends TiffAlosProperties {
 		CeosAlosProperties aa=new CeosAlosProperties(
 				new File("Y:/Images/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/summary.txt"),
 				new File("Y:/Images/AlosTrialTmp/SM/0000054534_001001_ALOS2049273700-150422/LED-ALOS2049273700-150422-FBDR1.5RUD")
+				);*/
+		
+		/*CeosAlosProperties aa=new CeosAlosProperties(
+				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\summary.txt"),
+				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\LED-ALOS2049273700-150422-FBDR1.5RUD")
+				);*/
+		
+		CeosAlosProperties aa=new CeosAlosProperties(
+				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\summary.txt"),
+				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\IMG-HH-ALOS2049273700-150422-FBDR1.5RUD")
 				);
 		aa.getCorners();
 		
