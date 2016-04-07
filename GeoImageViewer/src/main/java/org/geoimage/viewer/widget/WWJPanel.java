@@ -253,7 +253,7 @@ public class WWJPanel extends javax.swing.JPanel {
     /**
      * 
      */
-    private void initComponents() {
+    final void initComponents() {
 
         splitPane = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
