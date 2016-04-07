@@ -24,6 +24,7 @@ import org.geoimage.impl.imgreader.BinaryReader;
 public class LedMetadataReader {
 	public static final int[] FIELD_14_File_ID=new int[]{49,16};
 	public static final int[] FIELD_1_REC_NUM=new int[]{0,4};
+	public static final int[] FIELD_PRF=new int[]{719+935,15};
 	
 	private BinaryReader reader=null;
 	/**
@@ -34,23 +35,13 @@ public class LedMetadataReader {
 	public LedMetadataReader(File input) throws FileNotFoundException {
 		reader=new BinaryReader(input);
 	}
-	/**
-	 * 
-	 * @param pos
-	 * @param nbytes
-	 * @return
-	 * @throws IOException
-	 */
-	public String readString(int pos,int nbytes) throws IOException {
-        final byte[] data=reader.readBytes(pos,nbytes);
-        return new String(data);
-    }
+	
 	/**
 	 * 
 	 * @return
 	 * @throws IOException
 	 */
-	public int readField1() throws IOException{
+	public int readFileID() throws IOException{
 		return reader.readB4(FIELD_1_REC_NUM[0], FIELD_1_REC_NUM[1],true);
 	}
 	/**
@@ -58,25 +49,37 @@ public class LedMetadataReader {
 	 * @return
 	 * @throws IOException
 	 */
-	public int readField6() throws IOException{
+	public int readRecNum() throws IOException{
 		return reader.readB4(8, 4,true);
 	}
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public float readPrf()throws IOException{
+		String prf=reader.readBytesAsString(FIELD_PRF[0],FIELD_PRF[1]);
+		float val=Float.parseFloat(prf)/1000;
+		return val;
+	}
+	
+	
 	
 	/**
 	 * 
 	 * @throws IOException
 	 */
 	public void readDataSetSummary() throws IOException{
-		String sceneid=readString((719+21),32);
+		String sceneid=reader.readBytesAsString((719+21),32);
 		System.out.println(":"+sceneid);
 		
 		int first=reader.readB4(719,4,false);
 		System.out.println(":"+first);
 		
-		String ellipse=readString((719+165),16);
+		String ellipse=reader.readBytesAsString((719+165),16);
 		System.out.println(":"+ellipse);
 		
-		String prf=readString((719+935),15);
+		float prf=readPrf();
 		System.out.println(":"+prf);
 		
 		
@@ -85,9 +88,13 @@ public class LedMetadataReader {
 	
 	public static void main(String[]args){
 		try {
+			//LedMetadataReader lr=new LedMetadataReader(new File(
+					//"H:////Radar-Images////AlosTrial////Alos2////WBD////PON_000000476_0000060609////LED-ALOS2029163650-141207-WBDR1.5RUD"));
 			LedMetadataReader lr=new LedMetadataReader(new File(
-					"H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\LED-ALOS2029163650-141207-WBDR1.5RUD"));
-			int val=lr.readField1();
+					"H://sat//AlosTrialTmp//SM//0000054534_001001_ALOS2049273700-150422//LED-ALOS2049273700-150422-FBDR1.5RUD"));
+		
+			int val=lr.readFileID();
+			
 			/*
 			System.out.println(":"+val);
 			
