@@ -182,6 +182,18 @@ public class BinaryReader {
 		// inputStream.read(buff, 0, numBytes);
 		return dd;
 	}
+	
+	/**
+	 * 
+	 * @param pos
+	 * @param nbytes
+	 * @return
+	 * @throws IOException
+	 */
+	public String readBytesAsString(int pos,int nbytes) throws IOException {
+        final byte[] data=readBytes(pos,nbytes);
+        return new String(data);
+    }
 
 	/**
 	 * 
