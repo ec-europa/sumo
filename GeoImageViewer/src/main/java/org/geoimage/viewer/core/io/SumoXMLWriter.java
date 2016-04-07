@@ -407,19 +407,19 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		double[] bottomRight = gir.getGeoTransform().getGeoFromPixel(gir.getWidth(), gir.getHeight());
 		*/
 		Gcp gcpTopL = new Gcp();
-		gcpTopL.setColumn(0);
-		gcpTopL.setRow(0);
+		gcpTopL.setColumn(1);
+		gcpTopL.setRow(1);
 		gcpTopL.setLon(topLeft[0]);
 		gcpTopL.setLat(topLeft[1]);
 
 		Gcp gcpTopR = new Gcp();
 		gcpTopR.setColumn(gir.getWidth());
-		gcpTopR.setRow(0);
+		gcpTopR.setRow(1);
 		gcpTopR.setLon(topRight[0]);
 		gcpTopR.setLat( topRight[1]);
 
 		Gcp gcpBottomL = new Gcp();
-		gcpBottomL.setColumn(0);
+		gcpBottomL.setColumn(1);
 		gcpBottomL.setRow(gir.getHeight());
 		gcpBottomL.setLon(bottomLeft[0]);
 		gcpBottomL.setLat(bottomLeft[1]);

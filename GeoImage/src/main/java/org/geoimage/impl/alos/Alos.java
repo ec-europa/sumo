@@ -123,7 +123,7 @@ public abstract class Alos extends SarImageReader {
 
 	@Override
 	public String getSensor() {
-		return "ALOS";
+		return "A2";
 	}
 
 
