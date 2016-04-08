@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.alos.prop.CeosAlosProperties;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
@@ -34,6 +36,7 @@ public class AlosCeos extends Alos {
 
 	public AlosCeos(File manifest){
 		super(manifest);
+		prop=new CeosAlosProperties(manifest.getParent());
 	}
 
 
@@ -47,11 +50,11 @@ public class AlosCeos extends Alos {
 		try {
 			File mainFolder=manifestFile.getParentFile();
 
-        	polarizations=props.getPolarizations();
+        	polarizations=prop.getPolarizations();
 
         	//set image properties
         	alosImages=new HashMap<>();
-        	List<String> imgNames=props.getImageNames();
+        	List<String> imgNames=prop.getImageNames();
 
         	for(int i=0;i<imgNames.size();i++){
         		String img=imgNames.get(i);
@@ -60,16 +63,16 @@ public class AlosCeos extends Alos {
         		alosImages.put(img.substring(4,6),t);
         	}
 
-        	super.pixelsize[0]=props.getPixelSpacing();
-        	super.pixelsize[1]=props.getPixelSpacing();
+        	super.pixelsize[0]=prop.getPixelSpacing();
+        	super.pixelsize[1]=prop.getPixelSpacing();
 
 
         	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
 
-			Coordinate[] corners=props.getCorners();
-			int lines=props.getNumberOfLines();
-			int pix=props.getNumberOfPixels();
+			Coordinate[] corners=prop.getCorners();
+			int lines=prop.getNumberOfLines();
+			int pix=prop.getNumberOfPixels();
             //we have only the corners
             gcps = new ArrayList<>();
             gcps.add(new Gcp(corners[0].x,corners[0].y,0,0));
@@ -119,7 +122,7 @@ public class AlosCeos extends Alos {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return 0;
+		return prop.getPrf();
 	}
 
 	@Override

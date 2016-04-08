@@ -5,32 +5,20 @@
 package org.geoimage.impl.imgreader;
 
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.spi.IIORegistry;
-import javax.imageio.spi.ImageReaderSpi;
-import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
 import org.gdal.gdal.Band;
 import org.gdal.gdal.Dataset;
-import org.gdal.gdal.Driver;
 import org.gdal.gdal.GCP;
 import org.gdal.gdal.gdal;
 import org.gdal.gdalconst.gdalconst;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.slf4j.LoggerFactory;
 
-import it.geosolutions.imageio.gdalframework.GDALImageReader;
-import it.geosolutions.imageio.gdalframework.GDALImageReaderSpi;
 import it.geosolutions.imageio.gdalframework.GDALUtilities;
 
 /**
@@ -119,8 +107,7 @@ public class GeoToolsGDALReader implements IReader {
 	 */
 	public short[] readShortValues(int x,int y,int offsetx,int offsety){
 		int pixels = offsetx * offsety;
-		Band b=data.GetRasterBand(band+1);
-		//int type=gdal.GetDataTypeSize(b.getDataType());
+		Band b=data.GetRasterBand(band);
 		int buf_size = pixels;
 
 		short[] dd = new short[buf_size];

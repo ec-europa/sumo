@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.geoimage.def.SarImageReader;
+import org.geoimage.impl.alos.prop.AbstractAlosProperties;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.IReader;
 import org.geoimage.impl.imgreader.TIFF;
 import org.opengis.referencing.operation.TransformException;
@@ -27,13 +29,12 @@ public abstract class Alos extends SarImageReader {
 	protected int[] preloadedInterval = new int[]{0, 0};
 	protected short[] preloadedData;
 
-	protected TiffAlosProperties props=null;
+	protected AbstractAlosProperties prop=null;
 	protected List<String> polarizations=null;
 	protected Map<String, IReader> alosImages;
 
 	public Alos(File manifest){
 		super(manifest);
-		props=new TiffAlosProperties(manifest);
 	}
 
 	@Override
@@ -64,6 +65,7 @@ public abstract class Alos extends SarImageReader {
     //TODO
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	float prf=prop.getPrf();
     	return new int[]{0};
     }
 
@@ -104,7 +106,7 @@ public abstract class Alos extends SarImageReader {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return 0;
+		return prop.getPrf();
 	}
 
 	@Override
@@ -244,9 +246,6 @@ public abstract class Alos extends SarImageReader {
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }finally{
-        	//tiff.reader.addIIOReadProgressListener(this);
-        	//readComplete=false;
-
         }
 
 	}
@@ -262,7 +261,7 @@ public abstract class Alos extends SarImageReader {
         	setSatellite(new String("ALOS"));
 
         	//polarizations string
-        	List<String> pols=props.getPolarizations();
+        	List<String> pols=prop.getPolarizations();
         	String strPol="";
             for (String p:pols) {
             	strPol=strPol.concat(p).concat(" ");
@@ -272,10 +271,10 @@ public abstract class Alos extends SarImageReader {
 
             setSatelliteOrbitInclination(98.18);
 
-            setRangeSpacing(new Float(props.getPixelSpacing()));
-            setAzimuthSpacing(new Float(props.getPixelSpacing()));
-            setMetaHeight(props.getNumberOfLines());
-            setMetaWidth(props.getNumberOfPixels());
+            setRangeSpacing(new Float(prop.getPixelSpacing()));
+            setAzimuthSpacing(new Float(prop.getPixelSpacing()));
+            setMetaHeight(prop.getNumberOfLines());
+            setMetaWidth(prop.getNumberOfPixels());
             setNumberBands(pols.size());
             setNumberOfBytes(16);
 
@@ -286,8 +285,8 @@ public abstract class Alos extends SarImageReader {
             /*String start=header.getStartTime().toString().replace('T', ' ');
             String stop=header.getStopTime().toString().replace('T', ' ');*/
 
-            Date st=props.getStartDate();
-            Date end=props.getEndDate();
+            Date st=prop.getStartDate();
+            Date end=prop.getEndDate();
             Timestamp t=new Timestamp(st.getTime());
             setTimeStampStart(t.toString());//Timestamp.valueOf(start));
             t.setTime(end.getTime());

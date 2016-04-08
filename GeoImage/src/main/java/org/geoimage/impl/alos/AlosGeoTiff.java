@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.TIFF;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
@@ -32,7 +33,7 @@ public class AlosGeoTiff extends Alos {
 
 	public AlosGeoTiff(File manifest){
 		super(manifest);
-		props=new TiffAlosProperties(manifest);
+		prop=new TiffAlosProperties(manifest);
 	}
 
 	@Override
@@ -61,11 +62,11 @@ public class AlosGeoTiff extends Alos {
 		try {
 			File mainFolder=manifestFile.getParentFile();
 
-        	polarizations=props.getPolarizations();
+        	polarizations=prop.getPolarizations();
 
         	//set image properties
         	alosImages=new HashMap<>();
-        	List<String> imgNames=props.getImageNames();
+        	List<String> imgNames=prop.getImageNames();
 
         	for(int i=0;i<imgNames.size();i++){
         		String img=imgNames.get(i);
@@ -76,16 +77,16 @@ public class AlosGeoTiff extends Alos {
 
             String bandName=getBandName(0);
             //String nameFirstFile=alosImages.get(bandName).getImageFile().getName();
-        	super.pixelsize[0]=props.getPixelSpacing();
-        	super.pixelsize[1]=props.getPixelSpacing();
+        	super.pixelsize[0]=prop.getPixelSpacing();
+        	super.pixelsize[1]=prop.getPixelSpacing();
 
 
         	//read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
 
-			Coordinate[] corners=props.getCorners();
-			int lines=props.getNumberOfLines();
-			int pix=props.getNumberOfPixels();
+			Coordinate[] corners=prop.getCorners();
+			int lines=prop.getNumberOfLines();
+			int pix=prop.getNumberOfPixels();
             //we have only the corners
             gcps = new ArrayList<>();
             gcps.add(new Gcp(0,0,corners[0].x,corners[0].y));
@@ -93,7 +94,7 @@ public class AlosGeoTiff extends Alos {
             gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
             gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
 
-            Coordinate center=props.getCenter();
+            Coordinate center=prop.getCenter();
             gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
 
             //String epsg = "EPSG:26921";
@@ -131,6 +132,8 @@ public class AlosGeoTiff extends Alos {
     //TODO
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	float prf=prop.getPrf();
+    			
     	return new int[]{0};
     }
 

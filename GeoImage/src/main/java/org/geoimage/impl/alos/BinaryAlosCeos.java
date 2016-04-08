@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.CeosBinaryReader;
 import org.geoimage.impl.imgreader.IReader;
 import org.geotools.referencing.CRS;
@@ -33,7 +34,7 @@ public class BinaryAlosCeos extends Alos {
 
 	public BinaryAlosCeos(File manifest) {
 		super(manifest);
-		props = new TiffAlosProperties(manifest);
+		prop = new TiffAlosProperties(manifest);
 	}
 
 	@Override
@@ -65,23 +66,23 @@ public class BinaryAlosCeos extends Alos {
 		try {
 			File mainFolder = manifestFile.getParentFile();
 
-			polarizations = props.getPolarizations();
+			polarizations = prop.getPolarizations();
 
 			// set image properties
 			alosImages = new HashMap<>();
-			List<String> imgNames = props.getImageNames();
+			List<String> imgNames = prop.getImageNames();
 
 			for (int i = 0; i < imgNames.size(); i++) {
 				String img = imgNames.get(i);
 				File imgFile = new File(mainFolder.getAbsolutePath() + File.separator + img);
-				CeosBinaryReader t = new CeosBinaryReader(imgFile,props);
+				CeosBinaryReader t = new CeosBinaryReader(imgFile,prop);
 				alosImages.put(img.substring(4, 6), t);
 			}
 
 			// String
 			// nameFirstFile=alosImages.get(bandName).getImageFile().getName();
-			super.pixelsize[0] = props.getPixelSpacing();
-			super.pixelsize[1] = props.getPixelSpacing();
+			super.pixelsize[0] = prop.getPixelSpacing();
+			super.pixelsize[1] = prop.getPixelSpacing();
 
 			// read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
@@ -89,16 +90,16 @@ public class BinaryAlosCeos extends Alos {
 			// we have only the corners
 			gcps = new ArrayList<>();
 
-			Coordinate[] corners=props.getCorners();
-			int lines=props.getNumberOfLines();
-			int pix=props.getNumberOfPixels();
+			Coordinate[] corners=prop.getCorners();
+			int lines=prop.getNumberOfLines();
+			int pix=prop.getNumberOfPixels();
 			gcps = new ArrayList<>();
             gcps.add(new Gcp(0,0,corners[0].x,corners[0].y));
             gcps.add(new Gcp(pix,0,corners[1].x,corners[1].y));
             gcps.add(new Gcp(pix,lines,corners[2].x,corners[2].y));
             gcps.add(new Gcp(0,lines,corners[3].x,corners[3].y));
 
-            Coordinate center=props.getCenter();
+            Coordinate center=prop.getCenter();
             gcps.add(new Gcp(pix/2,lines/2,center.x,center.y));
 
 
@@ -152,7 +153,7 @@ public class BinaryAlosCeos extends Alos {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return 0;
+		return prop.getPrf();
 	}
 
 	@Override
@@ -171,7 +172,7 @@ public class BinaryAlosCeos extends Alos {
 
 	@Override
 	public String getSensor() {
-		return "ALOS";
+		return "A2";
 	}
 
 	public IReader getImage(int band) {

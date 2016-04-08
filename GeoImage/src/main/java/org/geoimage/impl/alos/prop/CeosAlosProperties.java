@@ -1,35 +1,45 @@
 /*
  * 
  */
-package org.geoimage.impl.alos;
+package org.geoimage.impl.alos.prop;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import org.geoimage.impl.imgreader.BinaryReader;
+import org.geoimage.impl.alos.LedMetadataReader;
+import org.geoimage.impl.alos.VolumeDirectoryReader;
 import org.slf4j.LoggerFactory;
 
 public class CeosAlosProperties extends TiffAlosProperties {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(CeosAlosProperties.class);
-	private File rudFile=null;
+    private LedMetadataReader ledprop=null;
+    private VolumeDirectoryReader volprop=null;
     
 	/**
 	 * 
 	 * @param propFile
 	 */
-	public CeosAlosProperties(File propFile,File rudFile){
-		super(propFile);
-		this.rudFile=rudFile;
-		try{
-			loadFromBin();
-		}catch(Exception e){
-			logger.error(e.getMessage());
-		}	
+	public CeosAlosProperties(String imgPath){
+		super(imgPath+File.separator+"summary.txt");
+		File f=new File(imgPath);
+		File[] files=f.listFiles();
+		try {
+			for(int i=0;i<files.length;i++){
+				if(files[i].getName().startsWith("LED-"))
+						ledprop=new LedMetadataReader(files[i]);
+				if(files[i].getName().startsWith("VOL-"))
+						volprop=new VolumeDirectoryReader(files[i]);
+
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -54,7 +64,19 @@ public class CeosAlosProperties extends TiffAlosProperties {
 	        in.close();
 		}    
     }
-	public void loadFromBin() throws IOException{
+	
+	public float getPrf(){
+		Float prf;
+		try {
+			prf = ledprop.readPrf();
+		} catch (IOException e) {
+			logger.warn(e.getMessage(),e);
+			return 0;
+		}
+		return prf;
+	}
+	
+	/*public void loadFromBin() throws IOException{
 		BinaryReader reader=new BinaryReader(this.rudFile);
 		try{
 			int n=reader.bytearray2Int(934, 15,false);
@@ -84,12 +106,12 @@ public class CeosAlosProperties extends TiffAlosProperties {
 			nf=reader.bytearray2float((720+4096+935),16,false);
 			logger.info("VAL:"+nf);
 			*/
-		}catch(Exception e){
+	/*	}catch(Exception e){
 			logger.error(e.getMessage());
 		}finally{
 			reader.dispose();
 		}
-	}
+	}*/
 	
 	
 	public static void main(String[] args){
@@ -99,9 +121,9 @@ public class CeosAlosProperties extends TiffAlosProperties {
 				);*/
 		
 		CeosAlosProperties aa=new CeosAlosProperties(
-				new File("H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\summary.txt"),
-				new File("H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\LED-ALOS2029163650-141207-WBDR1.5RUD")
-				);
+				"H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609");
+		//,new File("H:\\Radar-Images\\AlosTrial\\Alos2\\WBD\\PON_000000476_0000060609\\LED-ALOS2029163650-141207-WBDR1.5RUD")
+				
 		/*
 		CeosAlosProperties aa=new CeosAlosProperties(
 				new File("H:\\sat\\AlosTrialTmp\\SM\\0000054534_001001_ALOS2049273700-150422\\summary.txt"),
