@@ -109,6 +109,22 @@ public class BinaryReader {
 		return Float.intBitsToFloat(bits);
 	}
 	
+	/**
+	 * 
+	 * @param pos
+	 * @param len
+	 * @return
+	 * @throws IOException
+	 */
+	public int readB5(int pos, int len, boolean bigEndian) throws IOException {
+		byte[] array = readBytes(pos, len);
+		if(bigEndian)
+			return ((int) (array[0] & 0xff) << 40) | ((int) (array[1] & 0xff) << 32) | ((int) (array[2] & 0xff) << 24)
+				| ((int) (array[3] & 0xff) << 16) | ((int) (array[4] & 0xff) << 8);
+		else
+			return ((int) (array[4] & 0xff) << 40) | ((int) (array[3] & 0xff) << 32) | ((int) (array[2] & 0xff) << 24)
+					| ((int) (array[1] & 0xff) << 16) | ((int) (array[0] & 0xff) << 8);
+	}
 	
 
 	/**

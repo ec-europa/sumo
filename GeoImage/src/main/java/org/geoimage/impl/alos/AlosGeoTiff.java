@@ -317,6 +317,4 @@ public class AlosGeoTiff extends Alos {
 
 	}
 
-
-
 }
