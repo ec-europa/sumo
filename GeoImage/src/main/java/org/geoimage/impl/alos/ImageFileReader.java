@@ -12,11 +12,15 @@ import java.util.Arrays;
 import org.geoimage.impl.imgreader.BinaryReader;
 
 public class ImageFileReader {
-	public static final int START_SIGNAL_DATA=720;
+	public static final int START_SIGNAL_DATA=719;
 	
 	public static final int[] POS_NUMBER_OF_SAR_SIGN_DATA_REC=new int[]{180,6};
 	public static final int[] POS_SAR_DATA_REC_LENGTH=new int[]{186,6};
-	public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
+	//public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
+
+	//process data
+	//public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
+	
 	
 	private BinaryReader reader=null;
 	

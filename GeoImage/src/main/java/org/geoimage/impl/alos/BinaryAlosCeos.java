@@ -311,6 +311,6 @@ public class BinaryAlosCeos extends Alos {
 
 		//GeoToolsGDALReader gg = new GeoToolsGDALReader(f, 0);
 		//System.out.println("x:" + gg.xSize + " - y:" + gg.ySize);
-
 	}
+
 }

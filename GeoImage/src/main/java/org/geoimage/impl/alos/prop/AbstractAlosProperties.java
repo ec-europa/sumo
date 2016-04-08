@@ -58,6 +58,17 @@ public abstract class AbstractAlosProperties extends Properties {
 	private List<String> polarizations;
 	private SimpleDateFormat df=new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");//"20150422 09:02:41.377");
 	
+	
+	/**
+	 * 
+	 * @param fis
+	 * @throws IOException
+	 */
+	public abstract void load(FileInputStream fis) throws IOException ;
+	public abstract float getPrf();
+	public abstract float getSatelliteAltitude();
+	
+	
 	/**
 	 * 
 	 * @param propFile
@@ -86,15 +97,7 @@ public abstract class AbstractAlosProperties extends Properties {
 	public List<String> getPolarizations(){
 		return polarizations;
 	}
-	
-	/**
-	 * 
-	 * @param fis
-	 * @throws IOException
-	 */
-	public abstract void load(FileInputStream fis) throws IOException ;
-	public abstract float getPrf();
-	
+
 	
 	/**
 	 * init some properties
