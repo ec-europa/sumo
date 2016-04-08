@@ -1,7 +1,7 @@
 /*
  * 
  */
-package org.geoimage.impl.alos;
+package org.geoimage.impl.alos.prop;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,6 +93,8 @@ public abstract class AbstractAlosProperties extends Properties {
 	 * @throws IOException
 	 */
 	public abstract void load(FileInputStream fis) throws IOException ;
+	public abstract float getPrf();
+	
 	
 	/**
 	 * init some properties

@@ -14,6 +14,8 @@ import java.util.List;
 import org.gdal.gdal.GCP;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.alos.prop.CeosAlosProperties;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.GeoToolsGDALReader;
 import org.geoimage.impl.imgreader.IReader;
 import org.geotools.referencing.CRS;
@@ -31,7 +33,7 @@ public class GDALAlosCeos extends Alos {
 
 	public GDALAlosCeos(File manifest) {
 		super(manifest);
-		props = new TiffAlosProperties(manifest);
+		prop = new CeosAlosProperties(manifest.getParent());
 	}
 
 	@Override
@@ -63,11 +65,11 @@ public class GDALAlosCeos extends Alos {
 		try {
 			File mainFolder = manifestFile.getParentFile();
 
-			polarizations = props.getPolarizations();
+			polarizations = prop.getPolarizations();
 
 			// set image properties
 			alosImages = new HashMap<>();
-			List<String> imgNames = props.getImageNames();
+			List<String> imgNames = prop.getImageNames();
 
 			for (int i = 0; i < imgNames.size(); i++) {
 				String img = imgNames.get(i);
@@ -78,8 +80,8 @@ public class GDALAlosCeos extends Alos {
 
 			// String
 			// nameFirstFile=alosImages.get(bandName).getImageFile().getName();
-			super.pixelsize[0] = props.getPixelSpacing();
-			super.pixelsize[1] = props.getPixelSpacing();
+			super.pixelsize[0] = prop.getPixelSpacing();
+			super.pixelsize[1] = prop.getPixelSpacing();
 
 			// read and set the metadata from the manifest and the annotation
 			setXMLMetaData();
@@ -92,8 +94,6 @@ public class GDALAlosCeos extends Alos {
 				Gcp g=new Gcp(gcp.getGCPPixel(),gcp.getGCPLine(),gcp.getGCPX(),gcp.getGCPY());
 				gcps.add(g);
 			}
-
-
 			String epsg = "EPSG:4326";
 			geotransform = GeoTransformFactory.createFromGcps(gcps, epsg);
 
@@ -144,7 +144,7 @@ public class GDALAlosCeos extends Alos {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return 0;
+		return prop.getPrf();
 	}
 
 	@Override

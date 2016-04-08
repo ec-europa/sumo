@@ -1,7 +1,7 @@
 /*
  * 
  */
-package org.geoimage.impl.alos;
+package org.geoimage.impl.alos.prop;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,6 +56,11 @@ public class TiffAlosProperties extends AbstractAlosProperties {
 	        in.close();
 		}    
     }
+
+	@Override
+	public float getPrf() {
+		return 0;
+	}
 	
 
 	
@@ -63,7 +68,6 @@ public class TiffAlosProperties extends AbstractAlosProperties {
 	public static void main(String[] args){
 		TiffAlosProperties aa=new TiffAlosProperties("F:/SumoImgs/AlosTrialTmp/SM/0000054535_001001_ALOS2051343700-150506/summary.txt");
 		aa.getCorners();
-		
 	}
 	
 }
