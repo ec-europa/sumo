@@ -291,9 +291,9 @@ public class WWJPanel extends javax.swing.JPanel {
         addComponentListener(new ComponentListener() {
             // This method is called after the component's size changes
             public void componentResized(ComponentEvent evt) {
-            	/*splitPane.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
+            	splitPane.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
                 wwjCanvas.setSize(((JPanel)evt.getSource()).getWidth(),((JPanel)evt.getSource()).getHeight());
-                wwjCanvas.reshape(0, 0, 0, 0);*/
+                wwjCanvas.reshape(0, 0, 0, 0);
             }
 
             public void componentMoved(ComponentEvent e) {

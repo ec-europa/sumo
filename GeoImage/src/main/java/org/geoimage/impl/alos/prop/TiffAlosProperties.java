@@ -61,13 +61,16 @@ public class TiffAlosProperties extends AbstractAlosProperties {
 	public float getPrf() {
 		return 0;
 	}
-	
-
+	@Override
+	public float getSatelliteAltitude() {
+		return 628000;
+	}
 	
 	
 	public static void main(String[] args){
 		TiffAlosProperties aa=new TiffAlosProperties("F:/SumoImgs/AlosTrialTmp/SM/0000054535_001001_ALOS2051343700-150506/summary.txt");
 		aa.getCorners();
 	}
+	
 	
 }
