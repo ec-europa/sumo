@@ -338,7 +338,7 @@ public class GDALSentinel1 extends Sentinel1 {
     	for(String pol:polarizations){
     		for(String tiff:tiffs){
     			if(tiff.toUpperCase().contains(pol.toUpperCase())){
-    				tiffsMap.put(pol,new GeoToolsGDALReader(new File(tiff),0));
+    				tiffsMap.put(pol,new GeoToolsGDALReader(new File(tiff),1));
     			}
     		}
     	}

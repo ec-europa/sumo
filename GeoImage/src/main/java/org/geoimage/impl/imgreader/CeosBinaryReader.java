@@ -8,14 +8,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.geoimage.impl.alos.TiffAlosProperties;
+import org.geoimage.impl.alos.prop.AbstractAlosProperties;
+import org.geoimage.impl.alos.prop.TiffAlosProperties;
 
 
 public class CeosBinaryReader extends BinaryReader implements IReader{
-	TiffAlosProperties prop=null;
+	AbstractAlosProperties prop=null;
 	public final int OFF_SET=720+545;
 	
-	public CeosBinaryReader(File file,TiffAlosProperties alosProp) throws FileNotFoundException{
+	public CeosBinaryReader(File file,AbstractAlosProperties alosProp) throws FileNotFoundException{
 		super(file);
 		prop=alosProp;
 	}
