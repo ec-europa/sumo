@@ -19,7 +19,7 @@ public class ImageFileReader {
 	//public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
 
 	//process data
-	//public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
+	public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
 	
 	
 	private BinaryReader reader=null;
