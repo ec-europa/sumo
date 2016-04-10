@@ -281,7 +281,6 @@ public class VDSAnalysis{
                     if(includes(xLeftTile,xRightTile,yTopTile,yBottomTile))
                         continue;
 
-
                     maskdata=createDataMask(xLeftTile, yTopTile, realSizeX, realSizeY, dx, dy);
                     //count invalid pixel (land)
                     int inValidPixelCount = 0;

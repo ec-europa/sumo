@@ -5,7 +5,6 @@ package org.geoimage.viewer.actions.console;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.geoimage.analysis.VDSAnalysis;
 import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.s1.Sentinel1;
-import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.actions.SumoActionEvent;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
@@ -39,7 +37,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
 
 
 public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnalysisProcessListener{
@@ -287,9 +284,9 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 	@Override
 	public void endAnalysis(String imageName) {
+		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
 		if(proc!=null)
 			proc.dispose();
-		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
 	}
 
 	@Override
