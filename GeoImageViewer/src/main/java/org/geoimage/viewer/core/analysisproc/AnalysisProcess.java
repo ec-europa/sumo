@@ -418,7 +418,7 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 
 
 		public void dispose(){
-	        removeAllProcessListener();
+	       // removeAllProcessListener();
 			analysis=null;
 	        blackBorderAnalysis=null;
 		}
