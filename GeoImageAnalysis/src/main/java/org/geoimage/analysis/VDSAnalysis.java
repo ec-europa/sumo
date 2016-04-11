@@ -319,7 +319,7 @@ public class VDSAnalysis{
                     for (int k = 0; k < (realSizeY+dy); k++) {
                         for (int h = 0; h < (realSizeX+dx); h++) {
                             // check pixel is in the sea
-                            if(maskdata==null||(maskdata[h*k]==0)){//rastermask.getSample(h, k, 0) == 0)){
+                            if(maskdata==null||(maskdata[h+((realSizeX+dx)*k)]==0)){//rastermask.getSample(h, k, 0) == 0)){
                                 int subwindow = 1;
                                 if (h < (realSizeX+dx) / 2) {
                                     if (k < (realSizeY+dy) / 2) {
@@ -339,7 +339,7 @@ public class VDSAnalysis{
                                 	double tileAvg=thresh[subwindow] / thresh[5];
 
                                 	double tileStdDev=thresh[0] * thresh[subwindow] / thresh[5];
-
+                                	
                                 	dpixels.add(h + xLeftTile,//x
                                     		    k + yTopTile, //y
                                     		    pix,//pixelvalue
@@ -437,7 +437,8 @@ public class VDSAnalysis{
      * @param kdist
      * @throws IOException
      */
-    private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, MaskGeometries mask, KDistributionEstimation kdist)throws IOException {
+    private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, 
+    		MaskGeometries mask, KDistributionEstimation kdist)throws IOException {
         int id = 0;
         // scan through list of detected pixels
         DetectedPixels.BoatPixel pixels[]=detPixels.getAllDetectedPixelsValues().toArray(new DetectedPixels.BoatPixel[0]);
@@ -540,16 +541,16 @@ public class VDSAnalysis{
                 	int i=0;
                 	int y=-1;
                 	for(;i<data[iBand].length;i++){
-                		int x=i%200; //??? //TODO check this value , why it
+                		int x=i%200; //??? //TODO: check this value , why it
                 		if(x==0)
                 			y++;
 
                 		try{
-                			if(dataMask==null||dataMask[x*y]==0){//.getSample(x, y, 0)==0){
+                			if(dataMask==null||dataMask[x+(y*tilesize)]==0){//.getSample(x, y, 0)==0){
                 				tileAvg=tileAvg+data[iBand][i];
                 			}
                 		}catch(Exception e ){
-                			System.out.println("X:"+x+"Y:"+y);
+                			System.out.print("X:"+x+"--Y:"+y+"\n");
                 		}
                 	}
                 	tileAvg=tileAvg/i;
@@ -634,7 +635,6 @@ public class VDSAnalysis{
 								val = gir.read(x, y, 1, 1,i);
 								pixelValues.add(val[0]);
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
             			}

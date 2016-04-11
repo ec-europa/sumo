@@ -329,8 +329,7 @@ public class KDistributionEstimation {
 
 				for (int x = newStart; x < newEnd ; x += 2) {
 					//mask is the raster mask . Is used to understand if the point is on land
-					if ((mask == null) || (mask[x*y]==0)){//(mask.getSample(x, y, 0) == 0)) {
-						System.out.print(mask[x*y]);
+					if ((mask == null) || (mask[x+(y*sizeTileX)]==0)){//(mask.getSample(x, y, 0) == 0)) {
 						try{
 							int index=y * sizeTileX + x;
 							if(index<=data.length)
