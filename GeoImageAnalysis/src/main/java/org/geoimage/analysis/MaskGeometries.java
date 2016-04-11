@@ -246,7 +246,7 @@ public class MaskGeometries {
     	Rectangle rect=new Rectangle(x,y,w,h);
         BufferedImage bi = this.rasterize(rect, offsetX, offsetY, scalingFactor);
         Raster rastermask=bi.getData();
-    	int[] maskdata=rastermask.getSamples(0, 0, rastermask.getWidth(), rastermask.getHeight(), 0,(int[])null);
+    	int[] maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
     	//int[] maskdata=rasterMaskJTS(rect, offsetX, offsetY, scalingFactor);
     	return maskdata;
     }

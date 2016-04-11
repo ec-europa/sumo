@@ -170,10 +170,12 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 					if(commandLine.length>=5){
 						buffer=Float.parseFloat(commandLine[4]);
-						hh=Float.parseFloat(commandLine[5]);
-						hv=Float.parseFloat(commandLine[6]);
-						vh=Float.parseFloat(commandLine[7]);
-						vv=Float.parseFloat(commandLine[8]);
+						if(commandLine.length>5){
+							hh=Float.parseFloat(commandLine[5]);
+							hv=Float.parseFloat(commandLine[6]);
+							vh=Float.parseFloat(commandLine[7]);
+							vv=Float.parseFloat(commandLine[8]);
+						}	
 					}
 
 
@@ -285,8 +287,6 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	@Override
 	public void endAnalysis(String imageName) {
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.ENDACTION,"Analysis Complete",-1));
-		if(proc!=null)
-			proc.dispose();
 	}
 
 	@Override
