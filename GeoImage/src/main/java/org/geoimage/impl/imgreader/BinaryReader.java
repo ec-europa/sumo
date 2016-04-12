@@ -10,7 +10,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class BinaryReader {
+public class BinaryReader {  
 	private File binaryFile = null;
 
 	private RandomAccessFile inputStream;
@@ -114,7 +114,7 @@ public class BinaryReader {
 	 * @param pos
 	 * @param len
 	 * @return
-	 * @throws IOException
+	 * @throws IOException  
 	 */
 	public int readB5(int pos, int len, boolean bigEndian) throws IOException {
 		byte[] array = readBytes(pos, len);

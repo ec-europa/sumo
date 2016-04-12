@@ -9,30 +9,39 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import org.geoimage.impl.alos.prop.CeosAlosProperties;
 import org.geoimage.impl.imgreader.BinaryReader;
 
+
 public class ImageFileReader {
+	/* Signal data is not present in product 1.1
 	public static final int START_SIGNAL_DATA=719;
 	
 	public static final int[] POS_NUMBER_OF_SAR_SIGN_DATA_REC=new int[]{180,6};
-	public static final int[] POS_SAR_DATA_REC_LENGTH=new int[]{186,6};
+	public static final int[] POS_SAR_DATA_REC_LENGTH=new int[]{186,6};*/
 	//public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
 
 	//process data
-	public static final int[] POS_SIGNAL_PRF=new int[]{719+57,3};
+	public static final int START_PROCESS_DATA=719;
+	public static final int[] POS_SIGNAL_PRF=new int[]{START_PROCESS_DATA+57,3};
 	
 	
 	private BinaryReader reader=null;
+	private int numberOfLines=0;
+	private int numberOfPixels=0;
+	private int bitPerPixel=0;
+	private int bytesPerRec=0;
 	
-	public ImageFileReader(File input) throws FileNotFoundException {
+	public ImageFileReader(File input,int numberOfLines,int numberOfPixels,int bitPerPixel) throws FileNotFoundException {
 		reader=new BinaryReader(input);
+		this.numberOfLines=numberOfLines;
+		this.numberOfPixels=numberOfPixels;
+		this.bitPerPixel=bitPerPixel;
+		bytesPerRec=192+numberOfPixels*(bitPerPixel/8);
 	}
 	
 	
 	
-	/*public int getNumberOfRecordszz() throws IOException{
-		return reader.readB6(POS_NUMBER_OF_SAR_SIGN_DATA_REC[0], POS_NUMBER_OF_SAR_SIGN_DATA_REC[1]);
-	}*/
 	
 	/**
 	 * 
@@ -40,26 +49,21 @@ public class ImageFileReader {
 	 * @throws IOException
 	 */
 	public int getSarDataLength() throws IOException{
-		byte[] bb=reader.readBytes(POS_SAR_DATA_REC_LENGTH[0], POS_SAR_DATA_REC_LENGTH[1]);
+		byte[] bb=reader.readBytes(0,0);
 		String s=new String(bb,StandardCharsets.UTF_8);
 		int val=Integer.parseInt(s.trim());
 		return val;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 * @throws IOException
-	 */
-	public int[] getNumberOfRecords() throws IOException{
-		byte[] bb=reader.readBytes(POS_NUMBER_OF_SAR_SIGN_DATA_REC[0], POS_NUMBER_OF_SAR_SIGN_DATA_REC[1]);
-		byte[] b1=Arrays.copyOfRange(bb,0, 2);
-		byte[] b2=Arrays.copyOfRange(bb,3, 5);
-		String s1=new String(b1,StandardCharsets.UTF_8);
-		String s2=new String(b2,StandardCharsets.UTF_8);
-		int[]res=new int[]{Integer.parseInt(s1.trim()),Integer.parseInt(s2.trim())};
+	public int getSlantRangeNear() throws IOException{
+		//720+ (round( (NRec+ 1)/ 2)- 1)* recbyt
+		int pos=START_PROCESS_DATA+((numberOfLines+1)/2)*bytesPerRec;
+		int res=reader.bytearray2Int(pos+65, 4,false);
+		
 		return res;
 	}
+	
+	
 	
 	public float getPrf() throws IOException{
 		String ff=reader.readBytesAsString(POS_SIGNAL_PRF[0],POS_SIGNAL_PRF[1]);
@@ -68,19 +72,22 @@ public class ImageFileReader {
 	}
 	
 	public static void main(String[] args){
-		File input=new File("H://sat//AlosTrialTmp//SM//0000054534_001001_ALOS2049273700-150422//IMG-HH-ALOS2049273700-150422-FBDR1.5RUD");
+		File input=new File("H://Radar-Images//AlosTrial//Alos2//WBD//PON_000000476_0000060609//LED-ALOS2029163650-141207-WBDR1.5RUD");
 		try {
-			ImageFileReader read=new ImageFileReader(input);
-			int[] x=read.getNumberOfRecords();
+			CeosAlosProperties pp=new CeosAlosProperties(input.getParentFile().getAbsolutePath());
 			
-			System.out.println("XX:"+x[0]);
-			System.out.println("XX:"+x[1]);
+			ImageFileReader read=new ImageFileReader(input,
+					pp.getNumberOfLines(),
+					pp.getNumberOfPixels(),
+					pp.getBitsPerPixel());
 			
-			int y=read.getSarDataLength();
+			
+			
+			int y=read.getSlantRangeNear();
 			System.out.println("yy:"+y);
 			
-			float prf=read.getPrf();
-			System.out.println("prf:"+prf);
+	//		float prf=read.getPrf();
+	//		System.out.println("prf:"+prf);
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

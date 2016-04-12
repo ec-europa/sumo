@@ -148,6 +148,14 @@ public abstract class AbstractAlosProperties extends Properties {
 	/**
 	 * @return
 	 */
+	public int getBitsPerPixel(){
+		String val=this.getProperty(PROP_BIT_X_PIX);
+		return Integer.parseInt(val);
+	}
+	
+	/**
+	 * @return
+	 */
 	public String getProductFormat(){
 		String val=this.getProperty(PROP_PROD_FORM);
 		return val;
