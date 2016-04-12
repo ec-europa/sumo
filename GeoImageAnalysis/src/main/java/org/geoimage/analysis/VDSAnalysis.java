@@ -273,6 +273,8 @@ public class VDSAnalysis{
                 boolean containsMinPixelValid=false;
 
                 int[] maskdata =null;
+                int[] enlargedMaskData=null;
+                int offsetEnlarge=30;
                 if (coastMask == null || !intersects(xLeftTile,xRightTile,yTopTile,yBottomTile)) {
                 	maskdata =null;
                 }else{
@@ -290,13 +292,13 @@ public class VDSAnalysis{
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
 
                     if(!containsMinPixelValid){
-                    	maskdata=createDataMask(xLeftTile-30, yTopTile-30, realSizeX+30, realSizeY+30, dx, dy);
+                    	enlargedMaskData=createDataMask(xLeftTile-offsetEnlarge, yTopTile-offsetEnlarge, realSizeX+offsetEnlarge, realSizeY+offsetEnlarge, dx, dy);
                         //count invalid pixel (land)
                         inValidPixelCount = 0;
-                        for(int count = 0; count < maskdata.length; count++)
-                            inValidPixelCount += maskdata[count];
+                        for(int count = 0; count < enlargedMaskData.length; count++)
+                            inValidPixelCount += enlargedMaskData[count];
 
-                        containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
+                        containsMinPixelValid=((double)inValidPixelCount / enlargedMaskData.length) <= MIN_TRESH_FOR_ANALYSIS;
                     }
                 }
                 //check if we have the min pixels avalaible for the analysis else we try to "enlarge" the tile
@@ -306,10 +308,17 @@ public class VDSAnalysis{
 
                 	//check if it is avalaible the bb analysis for this tile
             		if(blackBorderAnalysis!=null)bbAnalysis=blackBorderAnalysis.getAnalysisTile(rowIndex,colIndex);
-
-                    int[] data = gir.readTile(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy,band);
-                    kdist.setImageData(xLeftTile, yTopTile,realSizeX+dx, realSizeY+dy,band,bbAnalysis);
-                    kdist.estimate(maskdata,data);
+            		
+            		int[] data = gir.readTile(xLeftTile, yTopTile, realSizeX+dx, realSizeY+dy,band);
+            		if(enlargedMaskData==null){
+            			kdist.setImageData(xLeftTile, yTopTile,realSizeX+dx, realSizeY+dy,band,bbAnalysis);
+            			kdist.estimate(maskdata,data);
+            		}else{
+            			//used only to estimate the threshold
+            			int[] dataEn = gir.readTile(xLeftTile-offsetEnlarge, yTopTile-offsetEnlarge, realSizeX+dx+offsetEnlarge, realSizeY+dy+offsetEnlarge,band);
+            			kdist.setImageData(xLeftTile-offsetEnlarge, yTopTile-offsetEnlarge,realSizeX+offsetEnlarge+dx, realSizeY+offsetEnlarge+dy,band,bbAnalysis);
+            			kdist.estimate(enlargedMaskData,dataEn);
+            		}
 
                     double[] thresh = kdist.getDetectThresh();
                     tileStat[rowIndex][0] = kdist.getTileStat();
@@ -451,9 +460,10 @@ public class VDSAnalysis{
             int xx = detectedPix.x;
             int yy = detectedPix.y;
 
-            if((count % 100)==0)
-            	logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
-
+            if((count % 100)==0){
+            	if(logger.isInfoEnabled())
+            		logger.info(new StringBuilder().append("Aggregating pixel Num:").append(count).append("  x:").append(xx).append("   y:").append(yy).toString() );
+            }
             // check pixels is not aggregated
             boolean checked = false;
             for (BoatConnectedPixelMap boatpixel : detPixels.listboatneighbours) {
@@ -550,7 +560,7 @@ public class VDSAnalysis{
                 				tileAvg=tileAvg+data[iBand][i];
                 			}
                 		}catch(Exception e ){
-                			System.out.print("X:"+x+"--Y:"+y+"\n");
+                			logger.warn(new StringBuilder(e.getMessage()).append("  X:").append(x).append("--Y:").append(y).append("\n").toString());
                 		}
                 	}
                 	tileAvg=tileAvg/i;
