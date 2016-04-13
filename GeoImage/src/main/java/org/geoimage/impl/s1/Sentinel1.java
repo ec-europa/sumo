@@ -437,7 +437,7 @@ public abstract class Sentinel1 extends SarImageReader {
         	// already in radian
             double incidenceAngle = getIncidence(xPos);
             double[] lonlat=geotransform.getGeoFromPixel(xPos, yPos);
-            double slantRange = getSlanteRange(lonlat[0], lonlat[1]);
+            double slantRange = getSlanteRange(lonlat[1], lonlat[0]);
           //  double sold=getSlantRange(xPos,incidenceAngle);
             double prf = getPRF(xPos,yPos);
 
