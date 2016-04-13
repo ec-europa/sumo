@@ -132,8 +132,6 @@ public class AlosGeoTiff extends Alos {
     //TODO
     @Override
     public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-    	float prf=prop.getPrf();
-    			
     	return new int[]{0};
     }
 

@@ -44,8 +44,8 @@ public class BinaryReader {
 	 * @return
 	 * @throws IOException
 	 */
-	public int readB4(int pos, int len, boolean bigEndian) throws IOException {
-		byte[] b = readBytes(pos, len);
+	public int readB4(int pos, boolean bigEndian) throws IOException {
+		byte[] b = readBytes(pos,4);
 		int i = 0;
 		/*
 		 * int i= (b[0]<<24)&0xff000000| (b[1]<<16)&0x00ff0000| (b[2]<<

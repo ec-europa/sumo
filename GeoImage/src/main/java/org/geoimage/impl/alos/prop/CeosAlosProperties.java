@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import org.geoimage.impl.alos.ImageFileReader;
 import org.geoimage.impl.alos.LedMetadataReader;
 import org.geoimage.impl.alos.VolumeDirectoryReader;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class CeosAlosProperties extends AbstractAlosProperties {
     private static org.slf4j.Logger logger=LoggerFactory.getLogger(CeosAlosProperties.class);
     private LedMetadataReader ledprop=null;
     private VolumeDirectoryReader volprop=null;
+    private ImageFileReader imageprop=null;
     
 	/**
 	 * 
@@ -35,7 +37,11 @@ public class CeosAlosProperties extends AbstractAlosProperties {
 						ledprop=new LedMetadataReader(files[i]);
 				if(files[i].getName().startsWith("VOL-"))
 						volprop=new VolumeDirectoryReader(files[i]);
-
+				if(files[i].getName().startsWith("IMG-")&&imageprop==null)
+						imageprop=new ImageFileReader(files[i],
+								getNumberOfLines(),
+								getNumberOfPixels(),
+								getBitsPerPixel());
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -65,14 +71,9 @@ public class CeosAlosProperties extends AbstractAlosProperties {
 		}    
     }
 	
-	public float getPrf(){
+	public float getPrf() throws IOException{
 		Float prf;
-		try {
-			prf = ledprop.readPrf();
-		} catch (IOException e) {
-			logger.warn(e.getMessage(),e);
-			return 0;
-		}
+		prf = ledprop.readPrf();
 		return prf;
 	}
 
@@ -84,7 +85,18 @@ public class CeosAlosProperties extends AbstractAlosProperties {
 			return 628000;
 		}
 	}
+
+	public float getWaveLength() {
+		try {
+			return this.ledprop.readRadarWaveLength();
+		} catch (IOException e) {
+			return 0;
+		}
+	}
 	
+	public float getSlantRange() throws IOException{
+		return imageprop.getSlantRangeMiddle();
+	}
 	
 	
 	

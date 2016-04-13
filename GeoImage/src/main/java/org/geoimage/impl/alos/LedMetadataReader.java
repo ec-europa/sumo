@@ -23,7 +23,6 @@ import org.geoimage.impl.imgreader.BinaryReader;
 
 public class LedMetadataReader {
 	private  final int[] FIELD_14_File_ID=new int[]{720+48,16};
-	private  final int[] FIELD_1_REC_NUM=new int[]{0,4};
 	
 	//data set summary
 	private  final int[] FIELD_PRF=new int[]{720+934,15};
@@ -58,7 +57,7 @@ public class LedMetadataReader {
 	 * @throws IOException
 	 */
 	public int readFileID() throws IOException{
-		return reader.readB4(FIELD_14_File_ID[0], FIELD_14_File_ID[1],true);
+		return reader.readB4(FIELD_14_File_ID[0], true);
 	}
 	/**
 	 * 
@@ -66,7 +65,7 @@ public class LedMetadataReader {
 	 * @throws IOException
 	 */
 	public int readRecNum() throws IOException{
-		return reader.readB4(8, 4,true);
+		return reader.readB4(8, true);
 	}
 	/**
 	 * 
@@ -95,9 +94,9 @@ public class LedMetadataReader {
 	 * @return
 	 * @throws IOException
 	 */
-	public String readRadarWaveLength()throws IOException{
+	public float readRadarWaveLength()throws IOException{
 		String a=reader.readBytesAsString(FIELD_RADAR_WAVELENGTH[0],FIELD_RADAR_WAVELENGTH[1]);
-		return a;
+		return Float.parseFloat(a);
 	}
 	
 	
@@ -138,7 +137,7 @@ public class LedMetadataReader {
 	 * @throws IOException
 	 */
 	public int readRecSeqNumberOfDataQuality()throws IOException{
-		int aar=reader.readB4(FIELD_REC_SEQ_NUM_AMB_AAR[0],FIELD_REC_SEQ_NUM_AMB_AAR[1],true);
+		int aar=reader.readB4(FIELD_REC_SEQ_NUM_AMB_AAR[0],true);
 		return aar;
 	}
 	
@@ -161,7 +160,7 @@ public class LedMetadataReader {
 		String sceneid=reader.readBytesAsString((720+20),32);
 		System.out.println(":"+sceneid);
 		
-		int first=reader.readB4(719,4,false);
+		int first=reader.readB4(719,false);
 		System.out.println(":"+first);
 		
 		String ellipse=reader.readBytesAsString((719+165),16);
