@@ -18,6 +18,7 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.jdom2.JDOMException;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 
+import it.geosolutions.imageio.gdalframework.GDALUtilities;
 import jrc.it.xml.wrapper.SumoJaxbSafeReader;
 
 
@@ -44,7 +45,7 @@ public class Sentinel1Factory {
 				sentinel=new Sentinel1SLC(sw,f,geoAlgorithm);
 			}else{
 			   try{
-				   if(PlatformConfiguration.getConfigurationInstance().getUseGdalForS1(false)){
+				   if(PlatformConfiguration.getConfigurationInstance().getUseGdalForS1(false)&&GDALUtilities.isGDALAvailable()){
 					   gdal.AllRegister();
 					   sentinel=new GDALSentinel1(sw,f,geoAlgorithm);
 				   }else{
