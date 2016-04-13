@@ -94,6 +94,9 @@ public class Constant {
 
   public static final String PREF_THRESH_MIN_PIX_VAL = "Min threshold Pixel value";
 
+  public static final String PREF_GDAL_FOR_S1 = "Use gdal with S1";
+
+  
   //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
   //constants to define the margin x,y in which we need to check the value of the pixel
   /*public static final String PREF_XMARGIN_EXCLUSION_PIXEL_ANALYSIS="Horizontal exclusion margin pixel";

@@ -195,6 +195,15 @@ public class PlatformConfiguration {
     	return prefDB.getPrefDefaultLandMask();
     }
     
+    public boolean getUseGdalForS1(boolean defaultValue){
+    	try{
+    		return prefDB.getPrefUseGdalForS1Imgs();
+    	}catch(Exception e){
+    		return defaultValue;
+    	}	
+    }
+    
+    
     public String getMaxTileBuffer(){
     	return prefDB.getPrefMaxTileBuffer();
     }
