@@ -158,6 +158,7 @@ public class PreferencesDB {
         
         insertIfNotExistRow(Constant.PREF_NUM_TILES_BB_ANALYSIS, "10");
         
+        insertIfNotExistRow(Constant.PREF_GDAL_FOR_S1, "true");
         
         //------------------REMOVED AFTER THE BLACK BAND ANALYSIS-----------------------------
         //check pixel for analysis
@@ -208,6 +209,16 @@ public class PreferencesDB {
     public int getTileSize(int defaultValue){
         return Integer.parseInt(readRow(PREF_NEIGHBOUR_TILESIZE));
     }
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
+    public boolean getPrefUseGdalForS1Imgs(){
+        return Boolean.parseBoolean(readRow(Constant.PREF_GDAL_FOR_S1));
+    }
+    
     
     /**
      * 

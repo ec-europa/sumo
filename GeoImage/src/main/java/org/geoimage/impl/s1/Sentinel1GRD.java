@@ -14,6 +14,8 @@ import org.geoimage.impl.imgreader.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
+
 
 /**
  * 
@@ -42,7 +44,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
             return tile;
         }
 
-        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
+        if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(getImage(band).getxSize()*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
         	//logger.debug("using preloaded data");
@@ -154,11 +156,13 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
         
         TIFF tiff=(TIFF)getImage(band);
         rect=tiff.getBounds().intersection(rect);
-        
+        TIFFImageReadParam tirp=new TIFFImageReadParam();
+        tirp.setSourceRegion(rect);
         try {
         	BufferedImage bi=null;
         	try{
-        			bi=tiff.read(0, rect);
+        			
+        		bi=tiff.read(0, tirp);
         	}catch(Exception e){
         		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
         		try {
@@ -166,7 +170,7 @@ public class  Sentinel1GRD extends Sentinel1 {//implements IIOReadProgressListen
     			} catch(InterruptedException exx) {
     			    Thread.currentThread().interrupt();
     			}
-        		bi=tiff.read(0, rect);
+        		bi=tiff.read(0, tirp);
         	}	
         	WritableRaster raster=bi.getRaster();
         	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
