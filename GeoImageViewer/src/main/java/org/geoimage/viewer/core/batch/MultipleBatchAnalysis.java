@@ -63,8 +63,13 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				if(!line.equals("")){
-					File manifest=SarFileUtil.findManifest(new File(line));
-					files.add(manifest);
+					try{
+						File manifest=SarFileUtil.findManifest(new File(line));
+						files.add(manifest);
+					}catch(Exception e){
+						logger.warn("Problem with this image:"+line);
+						continue;
+					}	
 				}
 			}
 			br.close();
@@ -82,7 +87,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	public void runAnalysis(){
 		//Get the ThreadFactory implementation to use
 		//creating the ThreadPoolExecutor
-		ExecutorService executorPool = new ThreadPoolExecutor(2, NTHREDS, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
+		ExecutorService executorPool = new ThreadPoolExecutor(1, 1, 180, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
 		final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
 		CompletionService<AnalysisProcess.Results> ecs  = new ExecutorCompletionService<AnalysisProcess.Results>(executorPool);
 
@@ -96,98 +101,103 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 		if(filesImg!=null){
 			try{
 				for (File image:filesImg){
-
-					logger.info("Start analyzing:"+image.getParent());
-					AnalysisParams activeParams=params;
-					String folderName=image.getParentFile().getName();
-
-					//output folder have the same name of the input folder
-					String imagePathFolder=new StringBuilder(params.outputFolder)
-							.append(File.separator)
-							.append(folderName).toString();
-
-
-					boolean forceAnalysis=confFile.forceNewAnalysis();
-
-					//check if already analized
-					boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
-
-					if(!alreadyAnalyzed || forceAnalysis){
-						//check for use local configuration file
-						if(confFile.useLocalConfigurationFiles()){
-							//path to the single image conf file
-							String localImageConfFilePath=new StringBuilder(imagePathFolder)
-									.append(File.separator)
-									.append(Constant.CONF_FILE).toString();
-
-							activeParams=readLocalConfFile(params,localImageConfFilePath);
-						}
-
-						//crate the reader
-						List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
-						for(GeoImageReader r:readers){
-							//super.currentReader=r;
-							SarImageReader reader=(SarImageReader) r;
-
-							if(confFile.getENL()==0){
-								String enl=reader.getENL();
-								activeParams.enl=Float.parseFloat(enl);
-							}else{
-								activeParams.enl=confFile.getENL();
+					try{
+						logger.info("Start analyzing:"+image.getParent());
+						AnalysisParams activeParams=params;
+						String folderName=image.getParentFile().getName();
+	
+						//output folder have the same name of the input folder
+						String imagePathFolder=new StringBuilder(params.outputFolder)
+								.append(File.separator)
+								.append(folderName).toString();
+	
+	
+						boolean forceAnalysis=confFile.forceNewAnalysis();
+	
+						//check if already analized
+						boolean alreadyAnalyzed=checkAlreadyAnalized(imagePathFolder);
+	
+						if(!alreadyAnalyzed || forceAnalysis){
+							//check for use local configuration file
+							if(confFile.useLocalConfigurationFiles()){
+								//path to the single image conf file
+								String localImageConfFilePath=new StringBuilder(imagePathFolder)
+										.append(File.separator)
+										.append(Constant.CONF_FILE).toString();
+	
+								activeParams=readLocalConfFile(params,localImageConfFilePath);
 							}
-
-							GeometryImage gl=null;
-							Polygon imageP=null;
-							try {
-								imageP = (reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
-							} catch (Exception e) {
-								logger.info("Image not analyzed:"+reader.getImgName()+"  Error creating box:"+e.getMessage());
-								continue;
-							}
-
-							if(activeParams.shapeFile!=null)
-								gl=readShapeFile(params.shapeFile,imageP,reader.getGeoTransform());
-
-							IMask mask = null;
-							if(gl!=null){
-								mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
-							}
-
-							IMask iceMask = null;
-							if(confFile.useIceRepositoryShapeFile()){
-								File ice=getIceShapeFile(r.getImageDate());
-								if(ice!=null){
-									activeParams.iceShapeFile=ice.getAbsolutePath();
-									GeometryImage glIce=readShapeFile(params.iceShapeFile,imageP,reader.getGeoTransform());
-									if(glIce!=null)
-										iceMask=FactoryLayer.createMaskLayer("ice",glIce.getType(),0,glIce,MaskVectorLayer.ICE_MASK);
+	
+							//crate the reader
+							List<GeoImageReader> readers =  GeoImageReaderFactory.createReaderForName(image.getAbsolutePath(),PlatformConfiguration.getConfigurationInstance().getS1GeolocationAlgorithm());
+							for(GeoImageReader r:readers){
+								//super.currentReader=r;
+								SarImageReader reader=(SarImageReader) r;
+	
+								if(confFile.getENL()==0){
+									String enl=reader.getENL();
+									activeParams.enl=Float.parseFloat(enl);
+								}else{
+									activeParams.enl=confFile.getENL();
+								}
+	
+								GeometryImage gl=null;
+								Polygon imageP=null;
+								try {
+									imageP = (reader).getBbox(PlatformConfiguration.getConfigurationInstance().getLandMaskMargin(0));
+								} catch (Exception e) {
+									logger.info("Image not analyzed:"+reader.getImgName()+"  Error creating box:"+e.getMessage());
+									continue;
+								}
+	
+								if(activeParams.shapeFile!=null)
+									gl=readShapeFile(params.shapeFile,imageP,reader.getGeoTransform());
+	
+								IMask mask = null;
+								if(gl!=null){
+									mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
+								}
+	
+								IMask iceMask = null;
+								if(confFile.useIceRepositoryShapeFile()){
+									File ice=getIceShapeFile(r.getImageDate());
+									if(ice!=null){
+										activeParams.iceShapeFile=ice.getAbsolutePath();
+										GeometryImage glIce=readShapeFile(params.iceShapeFile,imageP,reader.getGeoTransform());
+										if(glIce!=null)
+											iceMask=FactoryLayer.createMaskLayer("ice",glIce.getType(),0,glIce,MaskVectorLayer.ICE_MASK);
+									}
+								}
+	
+								AnalysisProcess ap=prepareBatchAnalysis(reader, mask, iceMask, activeParams);
+								ap.addProcessListener(this);
+								tasks.add(ecs.submit(ap));
+	
+								Future<AnalysisProcess.Results> resTask=null;
+								//  retrieve and save the result
+								
+								for (int i=0;i<tasks.size();i++) {
+									try{
+										//(resTask=ecs.poll())!=null
+										//resTask=ecs.poll();
+										AnalysisProcess.Results res=(AnalysisProcess.Results)ecs.take().get();
+										List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
+										SarImageReader gr=(SarImageReader)res.getReader();
+										String name=(gr).getManifestFile().getParentFile().getName();
+										saveResults(name,gr,results);
+									}catch(Exception e){
+										logger.error(e.getMessage(),e);
+									}
 								}
 							}
-
-							AnalysisProcess ap=prepareBatchAnalysis(reader, mask, iceMask, activeParams);
-							ap.addProcessListener(this);
-							tasks.add(ecs.submit(ap));
-
-							Future<AnalysisProcess.Results> resTask=null;
-							//  retrieve and save the result
-							for (;(resTask=ecs.poll())!=null;) {
-								try{
-									AnalysisProcess.Results res=(AnalysisProcess.Results)resTask.get();
-									List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
-									SarImageReader gr=(SarImageReader)res.getReader();
-									String name=(gr).getManifestFile().getParentFile().getName();
-									saveResults(name,gr,results);
-								}catch(Exception e){
-									logger.error(e.getMessage(),e);
-								}
-							}
 						}
+					}catch(Exception e){
+						logger.error("Image not analyzed:"+image,e);
 					}
-
 				}//end for loop on the images
 
 			}finally{
-				executorPool.shutdown();
+				//executorPool.shutdown();
 			}
 
 		}else{

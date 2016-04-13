@@ -1,0 +1,51 @@
+2016-04-13 22:36:54,108 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] H:saticelist.txt (Impossibile trovare il file specificato)
+java.io.FileNotFoundException: H:saticelist.txt (Impossibile trovare il file specificato)
+	at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_45]
+	at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_45]
+	at java.io.FileInputStream.<init>(FileInputStream.java:138) ~[?:1.8.0_45]
+	at java.io.FileInputStream.<init>(FileInputStream.java:93) ~[?:1.8.0_45]
+	at java.io.FileReader.<init>(FileReader.java:58) ~[?:1.8.0_45]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.readFileList(MultipleBatchAnalysis.java:62) [classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.runAnalysis(MultipleBatchAnalysis.java:94) [classes/:?]
+	at org.geoimage.viewer.core.batch.AbstractBatchAnalysis.runProcess(AbstractBatchAnalysis.java:82) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.execAnalysis(Sumo.java:77) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.main(Sumo.java:215) [classes/:?]
+2016-04-13 22:36:54,120 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] No file found to analyze
+2016-04-13 22:37:24,196 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Problem reading manifest for this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+java.lang.Exception: Problem reading manifest for this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+	at org.geoimage.viewer.util.files.SarFileUtil.findManifest(SarFileUtil.java:24) ~[classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.readFileList(MultipleBatchAnalysis.java:66) [classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.runAnalysis(MultipleBatchAnalysis.java:94) [classes/:?]
+	at org.geoimage.viewer.core.batch.AbstractBatchAnalysis.runProcess(AbstractBatchAnalysis.java:82) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.execAnalysis(Sumo.java:77) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.main(Sumo.java:215) [classes/:?]
+2016-04-13 22:37:24,201 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] No file found to analyze
+2016-04-13 23:33:48,692 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Problem reading manifest for this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+java.lang.Exception: Problem reading manifest for this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+	at org.geoimage.viewer.util.files.SarFileUtil.findManifest(SarFileUtil.java:24) ~[classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.readFileList(MultipleBatchAnalysis.java:66) [classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.runAnalysis(MultipleBatchAnalysis.java:94) [classes/:?]
+	at org.geoimage.viewer.core.batch.AbstractBatchAnalysis.runProcess(AbstractBatchAnalysis.java:82) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.execAnalysis(Sumo.java:77) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.main(Sumo.java:215) [classes/:?]
+2016-04-13 23:33:48,697 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] No file found to analyze
+2016-04-13 23:48:16,842 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+2016-04-13 23:48:28,033 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-13 23:48:30,484 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-13 23:48:30,701 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20141012T180214_20141012T180243_002800_003275_C958.SAFE
+2016-04-13 23:48:30,812 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20150911T181748_20150911T181813_007671_00AA55_1F8E.SAFE
+2016-04-13 23:48:30,916 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160202T164016_20160202T164041_009770_00E487_3FF2.SAFE
+2016-04-13 23:48:30,992 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160204T163028_20160204T163053_009799_00E55A_EB9A.SAFE
+2016-04-13 23:48:31,077 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SSV_20141006T205930_20141006T205955_002714_00309F_FE9F.SAFE
+2016-04-13 23:49:07,642 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+2016-04-13 23:49:07,648 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-13 23:49:09,979 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-13 23:49:10,053 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20141012T180214_20141012T180243_002800_003275_C958.SAFE
+2016-04-13 23:49:10,143 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20150911T181748_20150911T181813_007671_00AA55_1F8E.SAFE
+2016-04-13 23:49:10,213 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160202T164016_20160202T164041_009770_00E487_3FF2.SAFE
+2016-04-13 23:49:10,287 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160204T163028_20160204T163053_009799_00E55A_EB9A.SAFE
+2016-04-13 23:49:10,360 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SSV_20141006T205930_20141006T205955_002714_00309F_FE9F.SAFE
+2016-04-13 23:49:45,935 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+2016-04-13 23:49:48,191 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-13 23:51:12,988 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-13 23:53:58,762 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20141012T180214_20141012T180243_002800_003275_C958.SAFE
