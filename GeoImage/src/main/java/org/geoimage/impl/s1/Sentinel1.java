@@ -311,7 +311,7 @@ public abstract class Sentinel1 extends SarImageReader {
     * @param y
     * @return
     */
-   private Swath findSwath(int x,int y){
+   protected Swath findSwath(int x,int y){
 	   if(swaths.size()==1)
 		   return swaths.get(0);
 	   boolean findPrf=false;
