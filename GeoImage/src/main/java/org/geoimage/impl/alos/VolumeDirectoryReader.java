@@ -112,7 +112,7 @@ public class VolumeDirectoryReader {
 	 * @throws IOException
 	 */
 	public int getReqSeqNum() throws IOException{
-		int val=reader.readB4(REC_SEQ_NUM[0]+VOLUME_DESCRIPTOR_SIZE, REC_SEQ_NUM[1],true);
+		int val=reader.readB4(REC_SEQ_NUM[0]+VOLUME_DESCRIPTOR_SIZE, true);
 		return val;
 	}
 	

@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.math3.util.FastMath;
 import org.gdal.gdal.GCP;
+import org.geoimage.def.GeoMetadata;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.alos.prop.CeosAlosProperties;
-import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.GeoToolsGDALReader;
 import org.geoimage.impl.imgreader.IReader;
 import org.geotools.referencing.CRS;
@@ -107,7 +108,8 @@ public class GDALAlosCeos extends Alos {
 			float lastIncidenceAngle = (float) (this.gcps.get(this.gcps.size() - 1).getAngle());
 			setIncidenceNear(firstIncidenceangle < lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
 			setIncidenceFar(firstIncidenceangle > lastIncidenceAngle ? firstIncidenceangle : lastIncidenceAngle);
-
+			
+			
 			return true;
 		} catch (TransformException ex) {
 			logger.error(ex.getMessage(), ex);
@@ -144,7 +146,12 @@ public class GDALAlosCeos extends Alos {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return prop.getPrf();
+		try {
+			return prop.getPrf();
+		} catch (Exception e) {
+			logger.warn("Error reading PRF",e);
+			return 0;
+		}
 	}
 
 	@Override
@@ -283,9 +290,53 @@ public class GDALAlosCeos extends Alos {
 
 	public void setXMLMetaData() {
 		super.setXMLMetaData();
-
+		try {
+			setMetadata(GeoMetadata.SATELLITE_ALTITUDE,prop.getSatelliteAltitude());
+		} catch (Exception e) {
+			logger.warn(e.getMessage(),e);
+		}
 	}
 
+	@Override
+    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
+    	float prf=0;
+    	if(isScanSar())
+    		prf=NOMINAL_PRF; //Nominal PRF
+		else
+			try {
+				prf=prop.getPrf();
+			} catch (Exception e) {
+				logger.warn("Error reading PRF",e);
+				prf=0;
+			}
+    	
+	    satelliteSpeed = calcSatelliteSpeed();
+
+        double temp, deltaAzimuth, deltaRange;
+        int[] output = new int[2];
+
+        try {
+        	// already in radian
+            double incidenceAngle = getIncidence(xPos);
+            double slantRange = ((CeosAlosProperties)prop).getSlantRange();
+
+            double sampleDistAzim = getPixelsize()[0];
+            double sampleDistRange =getPixelsize()[1];
+
+            temp = (((CeosAlosProperties)prop).getWaveLength() * slantRange * prf) /
+                    (2 * satelliteSpeed * (1 - FastMath.cos(ORBIT_INCLINATION) / REV_PER_DAY));
+
+            //azimuth and delta in number of pixels
+            deltaAzimuth = temp / sampleDistAzim;
+            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
+
+            output[0] = (int) FastMath.floor(deltaAzimuth);
+            output[1] = (int) FastMath.floor(deltaRange);
+        } catch (Exception ex) {
+        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
+        }
+    	return output;
+    }
 
 
 	public static void main(String args[]) {

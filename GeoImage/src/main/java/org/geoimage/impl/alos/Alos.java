@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.util.FastMath;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.alos.prop.AbstractAlosProperties;
 import org.geoimage.impl.imgreader.IReader;
@@ -49,8 +48,9 @@ public abstract class Alos extends SarImageReader {
 	}
 	
 	public boolean isScanSar(){
-		String imgName=super.getManifestFile().getParentFile().getName();
-		if(imgName.startsWith("W"))
+		//String imgName=super.getManifestFile().getParentFile().getName();
+		String id=prop.getPdsProdId();
+		if(id.startsWith("W"))
 			return true;
 		else return false;
 	}
@@ -85,48 +85,20 @@ public abstract class Alos extends SarImageReader {
         // Ephemeris --> R + H
         //Approaching the orbit as circular V=SQRT(GM/(R+H))
         
-        satellite_speed = Math.pow(GeoUtils.GRS80_EARTH_MU / (GeoUtils.R_HEART + prop.getSatelliteAltitude()), 0.5);
-        setSatelliteSpeed(satellite_speed);
-
+        try {
+			satellite_speed = Math.pow(GeoUtils.GRS80_EARTH_MU / (GeoUtils.R_HEART + prop.getSatelliteAltitude()), 0.5);
+			setSatelliteSpeed(satellite_speed);
+		} catch (Exception e) {
+			logger.warn("Problem calculatin sat speed",e);
+			setSatelliteSpeed(0);
+		}
         return satellite_speed;
     }
 	
 
     @Override
-    public int[] getAmbiguityCorrection(final int xPos,final int yPos) {
-    	float prf=0;
-    	if(isScanSar())
-    		prf=NOMINAL_PRF; //Nominal PRF
-    	else
-    		prf=prop.getPrf();
+    public abstract int[] getAmbiguityCorrection(final int xPos,final int yPos);
     	
-	    satelliteSpeed = calcSatelliteSpeed();
-
-        double temp, deltaAzimuth, deltaRange;
-        int[] output = new int[2];
-
-        try {
-        	// already in radian
-            double incidenceAngle = getIncidence(xPos);
-            double slantRange = getSlantRange(xPos,incidenceAngle);
-
-            double sampleDistAzim = getPixelsize()[0];
-            double sampleDistRange =getPixelsize()[1];
-
-            temp = (getRadarWaveLenght() * slantRange * prf) /
-                    (2 * satelliteSpeed * (1 - FastMath.cos(ORBIT_INCLINATION) / REV_PER_DAY));
-
-            //azimuth and delta in number of pixels
-            deltaAzimuth = temp / sampleDistAzim;
-            deltaRange = (temp * temp) / (2 * slantRange * sampleDistRange * FastMath.sin(incidenceAngle));
-
-            output[0] = (int) FastMath.floor(deltaAzimuth);
-            output[1] = (int) FastMath.floor(deltaRange);
-        } catch (Exception ex) {
-        	logger.error("Problem calculating the Azimuth ambiguity:"+ex.getMessage());
-        }
-    	return new int[]{0};
-    }
 
 	@Override
 	public String getBandName(int band) {
@@ -165,7 +137,12 @@ public abstract class Alos extends SarImageReader {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return prop.getPrf();
+		try {
+			return prop.getPrf();
+		} catch (Exception e) {
+			logger.warn("Error reading PRF",e);
+			return 0;
+		}
 	}
 
 	@Override

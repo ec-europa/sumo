@@ -65,8 +65,8 @@ public abstract class AbstractAlosProperties extends Properties {
 	 * @throws IOException
 	 */
 	public abstract void load(FileInputStream fis) throws IOException ;
-	public abstract float getPrf();
-	public abstract float getSatelliteAltitude();
+	public abstract float getPrf()throws Exception;
+	public abstract float getSatelliteAltitude()throws Exception;
 	
 	
 	/**
@@ -128,6 +128,14 @@ public abstract class AbstractAlosProperties extends Properties {
 		return Double.parseDouble(val);
 		
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public String getPdsProdId(){
+		String val=this.getProperty(PROP_PDS_PRODUCT_ID);
+		return val;
+	}	
 	
 	/**
 	 * @return
