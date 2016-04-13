@@ -213,7 +213,7 @@ public class Sumo {
 		if(st!=s.PARAM_ERROR){
 			System.out.println("Run Analysis");
 			s.execAnalysis();
-			System.out.println("Save results");
+			System.out.println("End Analysis");
 		}
 		long end=System.currentTimeMillis();
 		long time=end-start;
