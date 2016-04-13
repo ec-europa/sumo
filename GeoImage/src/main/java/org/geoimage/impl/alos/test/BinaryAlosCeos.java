@@ -1,7 +1,7 @@
 /*
  *
  */
-package org.geoimage.impl.alos;
+package org.geoimage.impl.alos.test;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
+import org.geoimage.impl.alos.Alos;
 import org.geoimage.impl.alos.prop.TiffAlosProperties;
 import org.geoimage.impl.imgreader.CeosBinaryReader;
 import org.geoimage.impl.imgreader.IReader;
@@ -153,7 +154,12 @@ public class BinaryAlosCeos extends Alos {
 
 	@Override
 	public double getPRF(int x, int y) {
-		return prop.getPrf();
+		try {
+			return prop.getPrf();
+		} catch (Exception e) {
+			logger.warn("Error reading PRF",e);
+			return 0;
+		}
 	}
 
 	@Override
@@ -311,6 +317,12 @@ public class BinaryAlosCeos extends Alos {
 
 		//GeoToolsGDALReader gg = new GeoToolsGDALReader(f, 0);
 		//System.out.println("x:" + gg.xSize + " - y:" + gg.ySize);
+	}
+
+	@Override
+	public int[] getAmbiguityCorrection(int xPos, int yPos) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -40,9 +40,6 @@ public class ImageFileReader {
 		bytesPerRec=192+numberOfPixels*(bitPerPixel/8);
 	}
 	
-	
-	
-	
 	/**
 	 * 
 	 * @return
@@ -54,25 +51,44 @@ public class ImageFileReader {
 		int val=Integer.parseInt(s.trim());
 		return val;
 	}
-	
-	public int getSlantRangeNear() throws IOException{
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public int getSlantRangeFirst() throws IOException{
 		//720+ (round( (NRec+ 1)/ 2)- 1)* recbyt
 		int pos=START_PROCESS_DATA+((numberOfLines+1)/2)*bytesPerRec;
-		int res=reader.bytearray2Int(pos+65, 4,false);
-		
+		int res=reader.readB4(pos+65,true);
+		return res;
+	}
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public int getSlantRangeMiddle() throws IOException{
+		//720+ (round( (NRec+ 1)/ 2)- 1)* recbyt
+		int pos=START_PROCESS_DATA+((numberOfLines+1)/2)*bytesPerRec;
+		int res=reader.readB4(pos+69,true);
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public int getSlantRangeLast() throws IOException{
+		//720+ (round( (NRec+ 1)/ 2)- 1)* recbyt
+		int pos=START_PROCESS_DATA+((numberOfLines+1)/2)*bytesPerRec;
+		int res=reader.readB4(pos+73,true);
 		return res;
 	}
 	
 	
-	
-	public float getPrf() throws IOException{
-		String ff=reader.readBytesAsString(POS_SIGNAL_PRF[0],POS_SIGNAL_PRF[1]);
-		float val=Float.parseFloat(ff);
-		return val;
-	}
-	
 	public static void main(String[] args){
-		File input=new File("H://Radar-Images//AlosTrial//Alos2//WBD//PON_000000476_0000060609//LED-ALOS2029163650-141207-WBDR1.5RUD");
+		File input=new File("H://Radar-Images//AlosTrial//Alos2//WBD//PON_000000476_0000060609//IMG-HH-ALOS2029163650-141207-WBDR1.5RUD");
 		try {
 			CeosAlosProperties pp=new CeosAlosProperties(input.getParentFile().getAbsolutePath());
 			
@@ -83,7 +99,7 @@ public class ImageFileReader {
 			
 			
 			
-			int y=read.getSlantRangeNear();
+			int y=read.getSlantRangeMiddle();
 			System.out.println("yy:"+y);
 			
 	//		float prf=read.getPrf();
