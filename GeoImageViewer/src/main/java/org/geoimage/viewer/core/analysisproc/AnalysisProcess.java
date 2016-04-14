@@ -161,191 +161,200 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 		 *  Exec the analysis process
 		 */
 		public 	Results call() {
-			List<ComplexEditVDSVectorLayer>resultLayers=new ArrayList<>();
-
-			notifyStartProcessListener();
-			SarImageReader reader=((SarImageReader)gir);
-
-			String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
-
-			BlackBorderAnalysis blackBorderAnalysis=runBBAnalysis();
-
-             analysis.setBlackBorderAnalysis(blackBorderAnalysis);
-
-             // list of bands
-             int numberofbands = gir.getNBand();
-             int[] bands = new int[numberofbands];
-
-             // create K distribution
-             int noiseFloor=SumoPlatform.getApplication().getConfiguration().getNoiseFloor(0);
-             int thresPixelMin=SumoPlatform.getApplication().getConfiguration().getThreshMinPixelValue(500);
-             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,noiseFloor,thresPixelMin);
-
-             DetectedPixels mergePixels = new DetectedPixels(reader.getRangeSpacing(),reader.getAzimuthSpacing());
-             DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
-
-             String timeStampStart=reader.getTimeStampStart();
-             double azimuth=reader.getAzimuthSpacing();
-
-             int xtileSize = analysis.getRealSizeX();
-             int ytileSize = analysis.getRealSizeY();
-             
-             try{
-	             for (int band = 0; band < numberofbands&&!stop; band++) {
-	            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
-
-	            	 int vTiles=analysis.getVerTiles();
-	            	 notifyVDSAnalysis("Performing VDS Analysis",vTiles);
-	            	 analysis.addProgressListener(this);
-
-	            	 //identify probably target
-	            	 banddetectedpixels[band]=analysis.analyse(kdist,band);
-	            	 //banddetectedpixels[band]=analysis.getPixels();
-
-	            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
-	            		 logger.warn("Too much points. Stop Image analysis!!!");
-	            		 return null;
-	            	 }
-
-	            	 if (mergePixels == null) {
-	            		mergePixels=banddetectedpixels[band];
-	            	}else{
-	            		mergePixels.merge(banddetectedpixels[band]);
-	            	}
-
-	            	 bands[band] = band;
-	            	 String polarization=reader.getBands()[band];
-
-	                 if (numberofbands < 1 || displaybandanalysis) {
-	                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(polarization).toString());
-
-	                     Boat[] boats=null;
-		            	 //merge pixel to build the "boats"
-	                     if (agglomerationMethodology.startsWith("d")) {
-	                         // method distance used
-	                         banddetectedpixels[band].agglomerate();
-	                         banddetectedpixels[band].computeBoatsAttributes(polarization);
-	                     } else {
-	                         // method neighbours used
-	                         if(stop)
-	                        	 break;
-
-	                         boats=analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, neighbourTilesize,removelandconnectedpixels,
-	                         		 (analysis.getCoastMask() != null) ? analysis.getCoastMask() : null, kdist,polarization,band);
-	                     }
-
-	                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
-
-	                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layerName,
-	                    		 "point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
-	                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
-
-	                     vdsanalysisLayer.addDetectedPixels(banddetectedpixels[band].getAllDetectedPixels(), display);
-
-	                     if (!agglomerationMethodology.startsWith("d")) {
-	                         vdsanalysisLayer.addThreshAggPixels(banddetectedpixels[band].getThresholdaggregatePixels(), display);
-	                         vdsanalysisLayer.addThresholdPixels(banddetectedpixels[band].getThresholdclipPixels(), display);
-	                     }
-
-	                     //Azimuth Ambiguities
+			 final Thread currentThread = Thread.currentThread();
+		     final String oldName = currentThread.getName();
+		     currentThread.setName("Process-" + gir.getImId());
+		     
+			try{
+				List<ComplexEditVDSVectorLayer>resultLayers=new ArrayList<>();
+	
+				notifyStartProcessListener();
+				SarImageReader reader=((SarImageReader)gir);
+	
+				String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
+	
+				BlackBorderAnalysis blackBorderAnalysis=runBBAnalysis();
+	
+	             analysis.setBlackBorderAnalysis(blackBorderAnalysis);
+	
+	             // list of bands
+	             int numberofbands = gir.getNBand();
+	             int[] bands = new int[numberofbands];
+	
+	             // create K distribution
+	             int noiseFloor=SumoPlatform.getApplication().getConfiguration().getNoiseFloor(0);
+	             int thresPixelMin=SumoPlatform.getApplication().getConfiguration().getThreshMinPixelValue(500);
+	             final KDistributionEstimation kdist = new KDistributionEstimation(ENL,noiseFloor,thresPixelMin);
+	
+	             DetectedPixels mergePixels = new DetectedPixels(reader.getRangeSpacing(),reader.getAzimuthSpacing());
+	             DetectedPixels banddetectedpixels[]=new DetectedPixels[numberofbands];
+	
+	             String timeStampStart=reader.getTimeStampStart();
+	             double azimuth=reader.getAzimuthSpacing();
+	
+	             int xtileSize = analysis.getRealSizeX();
+	             int ytileSize = analysis.getRealSizeY();
+	             
+	             try{
+		             for (int band = 0; band < numberofbands&&!stop; band++) {
+		            	 notifyAnalysisBand( new StringBuilder().append("VDS: analyzing band ").append(gir.getBandName(band)).toString());
+	
+		            	 int vTiles=analysis.getVerTiles();
+		            	 notifyVDSAnalysis("Performing VDS Analysis",vTiles);
+		            	 analysis.addProgressListener(this);
+	
+		            	 //identify probably target
+		            	 banddetectedpixels[band]=analysis.analyse(kdist,band);
+		            	 //banddetectedpixels[band]=analysis.getPixels();
+	
+		            	 if(numPointLimit!=0&&banddetectedpixels[band].getAllDetectedPixels().size()>numPointLimit){
+		            		 logger.warn("Too much points. Stop Image analysis!!!");
+		            		 return null;
+		            	 }
+	
+		            	 if (mergePixels == null) {
+		            		mergePixels=banddetectedpixels[band];
+		            	}else{
+		            		mergePixels.merge(banddetectedpixels[band]);
+		            	}
+	
+		            	 bands[band] = band;
+		            	 String polarization=reader.getBands()[band];
+	
+		                 if (numberofbands < 1 || displaybandanalysis) {
+		                     notifyAgglomerating( new StringBuilder().append("VDS: agglomerating detections for band ").append(polarization).toString());
+	
+		                     Boat[] boats=null;
+			            	 //merge pixel to build the "boats"
+		                     if (agglomerationMethodology.startsWith("d")) {
+		                         // method distance used
+		                         banddetectedpixels[band].agglomerate();
+		                         banddetectedpixels[band].computeBoatsAttributes(polarization);
+		                     } else {
+		                         // method neighbours used
+		                         if(stop)
+		                        	 break;
+	
+		                         boats=analysis.agglomerateNeighbours(banddetectedpixels[band],neighbouringDistance, neighbourTilesize,removelandconnectedpixels,
+		                         		 (analysis.getCoastMask() != null) ? analysis.getCoastMask() : null, kdist,polarization,band);
+		                     }
+	
+		                     String layerName=new StringBuilder("VDS analysis ").append(polarization).append(" ").append(analysis.getThresholdParam(polarization)).toString();
+	
+		                     ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),layerName,
+		                    		 "point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
+		                    		 thresholdsString,ENL,buffer,bufferedMaskName,""+band);
+	
+		                     vdsanalysisLayer.addDetectedPixels(banddetectedpixels[band].getAllDetectedPixels(), display);
+	
+		                     if (!agglomerationMethodology.startsWith("d")) {
+		                         vdsanalysisLayer.addThreshAggPixels(banddetectedpixels[band].getThresholdaggregatePixels(), display);
+		                         vdsanalysisLayer.addThresholdPixels(banddetectedpixels[band].getThresholdclipPixels(), display);
+		                     }
+	
+		                     //Azimuth Ambiguities
+		                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
+		                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,band);
+		                     azimuthAmbiguity.process();
+		                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
+		                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
+	
+		                     //Azimuth Ambiguities ONLY FOR S1
+		                     if(gir instanceof Sentinel1){
+		                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
+				                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
+				                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,band);
+				                     arAmbiguity.process();
+				                     List<Geometry> artefactsA=arAmbiguity.getAmbiguityboatgeometry();
+				                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
+		                    	 }
+		                     }
+	
+	                         if ((analysis.getCoastMask() != null) ) {
+		                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometryImage.POLYGON,
+		                        		analysis.getCoastMask().getMaskGeometries(), true);
+		                     }
+		                     //leave display params forced to false
+		                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
+		                    		 GeometryImage.LINESTRING,
+		                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
+		                    		 false);
+	
+		                     notifyLayerReady(vdsanalysisLayer);
+		                     resultLayers.add(vdsanalysisLayer);
+		                 }
+		             }
+		             if(stop){
+		            	 return null;
+		             }
+	
+		             // create the merged Layers if we have more than one band
+		             if (bands.length > 1) {
+		                 notifyAgglomerating("VDS: agglomerating detections...");
+		                 Boat[] boats=null;
+		                 if (agglomerationMethodology.startsWith("d")) {
+		                     // method distance used
+		                     mergePixels.agglomerate();
+		                     mergePixels.computeBoatsAttributes("merge");
+		                 } else {
+		                     // method neighbours used
+		                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, neighbourTilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
+		                 }
+		                 if(stop){
+		                	 return null;
+		                 }
+		                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
+		                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),"VDS analysis all bands merged",
+		                		 																	"point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
+		                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
+		                 boolean display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel();
+		                 if (!agglomerationMethodology.startsWith("d")) {
+		                     vdsanalysisLayer.addThreshAggPixels(mergePixels.getThresholdaggregatePixels(), display);
+		                     vdsanalysisLayer.addThresholdPixels(mergePixels.getThresholdclipPixels(), display);
+		                 }
+		                 vdsanalysisLayer.addDetectedPixels(mergePixels.getAllDetectedPixels(), display);
+	
+		                 if ((analysis.getCoastMask() != null)) {
+		                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometryImage.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
+		                 }
+		                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
+		                		 GeometryImage.LINESTRING,
+		                		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
+		                		 false);
+	
+	
+		               //Azimuth Ambiguities
 	                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-	                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,band);
+	                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,bands);
 	                     azimuthAmbiguity.process();
 	                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
 	                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
-
+	
 	                     //Azimuth Ambiguities ONLY FOR S1
 	                     if(gir instanceof Sentinel1){
 	                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
 			                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
-			                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,band);
+			                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,bands);
 			                     arAmbiguity.process();
 			                     List<Geometry> artefactsA=arAmbiguity.getAmbiguityboatgeometry();
 			                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
 	                    	 }
 	                     }
-
-                         if ((analysis.getCoastMask() != null) ) {
-	                        vdsanalysisLayer.addGeometries("bufferedmask", Color.BLUE, 1, GeometryImage.POLYGON,
-	                        		analysis.getCoastMask().getMaskGeometries(), true);
-	                     }
-	                     //leave display params forced to false
-	                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
-	                    		 GeometryImage.LINESTRING,
-	                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
-	                    		 false);
-
-	                     notifyLayerReady(vdsanalysisLayer);
-	                     resultLayers.add(vdsanalysisLayer);
-	                 }
+		                 notifyLayerReady(vdsanalysisLayer);
+		                 resultLayers.add(vdsanalysisLayer);
+		             }
+		             notifyEndProcessListener();
+	             }catch(Exception ee){
+	            	 ee.printStackTrace();
+	             }finally{
+	            	 if(this.listeners!=null)
+	            		 removeAllProcessListener();
 	             }
-	             if(stop){
-	            	 return null;
-	             }
-
-	             // create the merged Layers if we have more than one band
-	             if (bands.length > 1) {
-	                 notifyAgglomerating("VDS: agglomerating detections...");
-	                 Boat[] boats=null;
-	                 if (agglomerationMethodology.startsWith("d")) {
-	                     // method distance used
-	                     mergePixels.agglomerate();
-	                     mergePixels.computeBoatsAttributes("merge");
-	                 } else {
-	                     // method neighbours used
-	                	 boats=analysis.agglomerateNeighbours(mergePixels,neighbouringDistance, neighbourTilesize, removelandconnectedpixels, (analysis.getCoastMask() != null)  ? analysis.getCoastMask() : null, kdist,"merge",bands);
-	                 }
-	                 if(stop){
-	                	 return null;
-	                 }
-	                 //TODO: per ora Merged viene utilizzato per indicare che e' il layer del merge e non delle bande ma VA CAMBIATO!!!
-	                 ComplexEditVDSVectorLayer vdsanalysisLayer = new ComplexEditVDSVectorLayer(LayerManager.getIstanceManager().getCurrentImageLayer(),"VDS analysis all bands merged",
-	                		 																	"point", new GeometryImage("VDS Analysis","point",timeStampStart,azimuth, boats),
-	                		 																	thresholdsString,ENL,buffer,bufferedMaskName,"Merged");
-	                 boolean display = SumoPlatform.getApplication().getConfiguration().getDisplayPixel();
-	                 if (!agglomerationMethodology.startsWith("d")) {
-	                     vdsanalysisLayer.addThreshAggPixels(mergePixels.getThresholdaggregatePixels(), display);
-	                     vdsanalysisLayer.addThresholdPixels(mergePixels.getThresholdclipPixels(), display);
-	                 }
-	                 vdsanalysisLayer.addDetectedPixels(mergePixels.getAllDetectedPixels(), display);
-
-	                 if ((analysis.getCoastMask() != null)) {
-	                     vdsanalysisLayer.addGeometries("bufferedmask", new Color(0x0000FF), 1, GeometryImage.POLYGON, analysis.getCoastMask().getMaskGeometries(), true);
-	                 }
-	                 vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
-	                		 GeometryImage.LINESTRING,
-	                		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
-	                		 false);
-
-
-	               //Azimuth Ambiguities
-                     notifyCalcAzimuth("VDS: looking for azimuth ambiguities...");
-                     AzimuthAmbiguity azimuthAmbiguity = new AzimuthAmbiguity(boats, (SarImageReader) gir,bands);
-                     azimuthAmbiguity.process();
-                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
-                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
-
-                     //Azimuth Ambiguities ONLY FOR S1
-                     if(gir instanceof Sentinel1){
-                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
-		                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
-		                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,bands);
-		                     arAmbiguity.process();
-		                     List<Geometry> artefactsA=arAmbiguity.getAmbiguityboatgeometry();
-		                     vdsanalysisLayer.addArtefactsAmbiguities(artefactsA, display);
-                    	 }
-                     }
-	                 notifyLayerReady(vdsanalysisLayer);
-	                 resultLayers.add(vdsanalysisLayer);
-	             }
-	             notifyEndProcessListener();
-             }catch(Exception ee){
-            	 ee.printStackTrace();
-             }finally{
-            	 if(this.listeners!=null)
-            		 removeAllProcessListener();
-             }
-             return new Results(reader, resultLayers);
+	             return new Results(reader, resultLayers);
+			}finally{
+				currentThread.setName(oldName);
+			}    
+             
          }
 
 

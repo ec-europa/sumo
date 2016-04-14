@@ -28,7 +28,8 @@ public class ConfigurationFile {
 	public static  final String INPUT_FOLD_PARAM="input_folder";
 	public static  final String OUTPUT_FOLD_PARAM="output_folder";
 	public static  final String XML_OUTPUT_FOLD_PARAM="xml_output_folder";
-
+	public static  final String USE_MULTI_THREAD="useMultithread";
+	
 	//starting params
 	public static  final String TRESH_HH_PARAM="thh";
 	public static  final String TRESH_HV_PARAM="thv";
@@ -87,6 +88,10 @@ public class ConfigurationFile {
 
 		public String getRunVersion(){
 			return prop.getProperty(RUN_VERSION,"BATCH");
+		}
+		
+		public boolean isMultithread(){
+			return Boolean.parseBoolean(prop.getProperty(USE_MULTI_THREAD,"false"));
 		}
 
 		public Integer getRunVersionNumber(){

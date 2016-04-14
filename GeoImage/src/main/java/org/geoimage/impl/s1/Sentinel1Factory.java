@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gdal.gdal.gdal;
 import org.geoimage.def.GeoImageReader;
-import org.geoimage.viewer.core.SumoPlatform;
 import org.jdom2.JDOMException;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 
