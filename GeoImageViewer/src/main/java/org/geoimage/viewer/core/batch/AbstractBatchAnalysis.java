@@ -12,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import org.geoimage.analysis.BlackBorderAnalysis;
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.analysis.VDSAnalysis;
-import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
@@ -236,7 +235,7 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
     	   	   }catch(Exception e){
     	   		   logger.error("File xml not saved in the xmloutputfolder:",e);
     	   	   }
-
+/* moved out of the loop
     		   //save the bound box as shape file
     		   try{
     			   String bbox=outfolder+File.separator+"bbox.shp";
@@ -253,7 +252,7 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
     			   GenericCSVIO.geomCsv(new File(bboxcsv),ggBbox,null,imageName,true);
     		   }catch(Exception e ){
     			   logger.error("Problem saving bbox in csv:"+imageName,e);
-    		   }
+    		   }*/
 
     		   //save targets as shape file
     		   try{
