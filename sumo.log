@@ -2488,3 +2488,1562 @@ java.lang.ArithmeticException: / by zero
 2016-04-14 01:43:54,743 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-730-thread-1] Start Analysis:
 2016-04-14 01:44:47,828 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
 2016-04-14 01:44:47,831 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-14 01:45:58,721 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:45:58,729 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:45:58,732 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:45:59,860 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:45:59,861 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:45:59,861 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:46:02,171 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:46:04,202 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:46:06,176 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:46:08,135 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:46:10,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:46:12,134 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:46:14,092 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:46:16,017 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:46:17,922 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:46:19,733 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:46:21,378 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:46:22,894 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:46:24,453 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:46:26,073 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:46:27,707 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:46:29,289 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:46:30,848 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:46:32,315 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:46:33,760 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:46:35,272 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:46:36,921 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:46:38,558 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:46:40,218 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:46:41,815 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:46:43,449 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:46:45,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:46:46,737 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:46:48,377 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:46:49,982 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:46:51,635 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:46:53,228 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:46:54,815 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:46:56,356 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:46:57,992 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:46:59,566 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:47:01,057 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:47:02,651 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:47:04,265 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:47:05,838 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:47:07,388 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:47:08,936 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:47:10,567 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:47:12,021 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:47:13,464 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:47:14,872 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:47:16,330 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:47:17,858 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:47:19,517 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:47:21,151 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:47:22,850 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:47:24,575 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:47:26,348 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:47:28,172 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:47:28,192 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:47:28,202 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:47:28,206 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:47:28,206 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:47:28,206 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:47:28,212 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:47:28,215 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:47:28,218 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:47:28,220 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:47:28,223 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:47:28,228 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:47:28,231 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:47:28,234 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:47:28,236 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:47:28,266 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:47:28,323 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:47:28,366 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:47:28,398 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:47:28,424 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:47:28,450 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:47:28,484 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:47:28,516 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:47:28,548 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:47:28,578 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:47:28,603 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:47:28,629 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:47:28,649 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:47:28,663 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:47:28,682 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:47:28,701 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:47:28,722 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:47:28,741 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:47:28,760 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:47:28,780 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:47:28,808 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:47:28,829 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:47:28,848 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:47:28,868 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:47:28,886 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:47:28,901 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:47:28,925 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:47:28,955 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:47:28,972 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:47:28,988 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:47:29,002 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:47:29,024 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:47:29,047 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:47:29,072 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:47:29,095 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:47:29,125 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:47:29,165 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:47:29,191 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:47:29,209 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:47:29,233 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:47:29,259 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:47:29,291 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:47:29,312 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:47:29,334 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:47:29,334 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:47:29,335 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:47:29,335 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:47:29,356 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:47:29,363 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:47:29,365 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:47:34,690 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-14 01:47:47,252 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:47:47,255 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:47:47,256 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:47:47,345 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:47:47,345 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:47:47,346 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:47:47,731 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:47:48,103 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:47:48,462 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:47:48,803 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:47:49,149 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:47:49,507 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:47:49,881 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:47:50,240 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:47:50,588 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:47:50,957 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:47:51,321 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:47:51,682 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:47:52,053 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:47:52,427 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:47:52,798 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:47:53,167 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:47:53,538 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:47:53,910 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:47:54,275 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:47:54,645 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:47:54,998 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:47:55,348 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:47:55,683 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:47:56,005 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:47:56,319 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:47:56,609 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:47:57,105 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:47:57,402 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:47:57,693 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:47:57,976 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:47:58,260 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:47:58,544 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:47:58,821 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:47:59,099 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:47:59,380 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:47:59,672 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:47:59,965 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:48:00,263 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:48:00,563 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:48:00,894 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:48:01,242 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:48:01,617 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:48:01,980 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:48:02,342 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:48:02,695 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:48:03,041 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:48:03,375 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:48:03,682 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:48:04,000 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:48:04,011 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:48:04,081 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:48:04,081 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:48:04,082 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:48:04,082 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:48:04,082 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:48:04,104 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:48:04,124 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:48:04,144 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:48:04,166 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:48:04,188 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:48:04,208 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:48:04,231 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:48:04,253 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:48:04,277 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:48:04,296 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:48:04,317 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:48:04,336 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:48:04,360 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:48:04,380 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:48:04,398 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:48:04,418 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:48:04,437 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:48:04,455 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:48:04,474 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:48:04,493 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:48:04,524 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:48:04,553 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:48:04,579 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:48:04,599 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:48:04,627 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:48:04,649 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:48:04,671 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:48:04,693 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:48:04,711 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:48:04,727 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:48:04,742 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:48:04,757 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:48:04,770 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:48:04,786 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:48:04,804 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:48:04,827 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:48:04,845 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:48:04,866 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:48:04,898 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:48:04,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:48:04,957 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:48:04,985 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:48:05,020 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:48:05,052 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:48:05,076 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:48:05,108 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:48:05,138 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:48:05,164 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:48:05,210 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:48:05,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:48:05,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:48:05,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:48:05,229 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:48:05,266 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:48:05,267 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:48:05,267 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:50:17,572 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+2016-04-14 01:50:17,578 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-14 01:51:32,177 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:51:32,185 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:51:32,189 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:51:33,332 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:51:33,332 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:51:33,333 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:51:35,757 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:51:38,001 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:51:40,172 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:51:42,297 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:51:44,451 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:51:46,608 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:51:48,716 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:51:50,774 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:51:52,854 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:51:54,867 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:51:56,622 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:51:58,260 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:51:59,927 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:52:01,676 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:52:03,449 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:52:05,172 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:52:06,848 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:52:08,448 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:52:10,000 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:52:11,606 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:52:13,368 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:52:15,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:52:16,948 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:52:18,679 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:52:20,463 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:52:22,264 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:52:23,992 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:52:25,742 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:52:27,440 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:52:29,226 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:52:30,921 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:52:32,626 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:52:34,318 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:52:36,072 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:52:37,758 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:52:39,372 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:52:41,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:52:42,835 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:52:44,518 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:52:46,198 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:52:47,898 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:52:49,544 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:52:51,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:52:52,649 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:52:54,187 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:52:55,795 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:52:57,482 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:52:59,315 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:53:01,085 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:53:02,914 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:53:04,773 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:53:06,696 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:53:08,641 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:53:08,665 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:53:08,676 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:53:08,679 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:53:08,679 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:53:08,680 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:53:08,686 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:53:08,688 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:53:08,691 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:53:08,694 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:53:08,697 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:53:08,702 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:53:08,705 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:53:08,708 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:53:08,711 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:53:08,743 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:53:08,813 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:53:08,864 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:53:08,905 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:53:08,936 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:53:08,965 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:53:09,002 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:53:09,035 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:53:09,071 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:53:09,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:53:09,149 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:53:09,177 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:53:09,197 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:53:09,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:53:09,232 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:53:09,257 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:53:09,276 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:53:09,293 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:53:09,312 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:53:09,330 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:53:09,354 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:53:09,373 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:53:09,394 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:53:09,413 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:53:09,431 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:53:09,447 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:53:09,470 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:53:09,505 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:53:09,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:53:09,538 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:53:09,553 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:53:09,575 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:53:09,600 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:53:09,622 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:53:09,647 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:53:09,685 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:53:09,732 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:53:09,763 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:53:09,785 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:53:09,814 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:53:09,846 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:53:09,882 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:53:09,908 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:53:09,932 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:53:09,933 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:53:09,933 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:53:09,934 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:53:09,958 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:53:09,965 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:53:09,967 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:53:32,580 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-14 01:53:45,581 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:53:45,585 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:53:45,586 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:53:45,688 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:53:45,689 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:53:45,689 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:53:46,100 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:53:46,483 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:53:46,846 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:53:47,218 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:53:47,577 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:53:47,935 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:53:48,299 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:53:48,667 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:53:49,034 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:53:49,409 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:53:49,775 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:53:50,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:53:50,552 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:53:50,949 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:53:51,347 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:53:51,738 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:53:52,159 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:53:52,594 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:53:52,987 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:53:53,389 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:53:53,753 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:53:54,127 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:53:54,471 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:53:54,814 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:53:55,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:53:55,481 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:53:55,820 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:53:56,153 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:53:56,475 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:53:56,783 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:53:57,075 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:53:57,368 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:53:57,663 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:53:57,959 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:53:58,256 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:53:58,571 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:53:58,885 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:53:59,205 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:53:59,536 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:53:59,903 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:54:00,283 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:54:00,683 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:54:01,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:54:01,481 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:54:01,891 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:54:02,257 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:54:02,611 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:54:02,940 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:54:03,289 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:54:03,305 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:54:03,384 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:54:03,384 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:54:03,384 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:54:03,384 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:54:03,385 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:54:03,408 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:54:03,431 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:54:03,459 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:54:03,483 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:54:03,507 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:54:03,529 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:54:03,555 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:54:03,586 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:54:03,608 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:54:03,629 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:54:03,649 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:54:03,669 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:54:03,692 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:54:03,712 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:54:03,733 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:54:03,752 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:54:03,773 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:54:03,792 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:54:03,811 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:54:03,830 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:54:03,870 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:54:03,900 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:54:03,923 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:54:03,945 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:54:03,976 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:54:03,998 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:54:04,020 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:54:04,043 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:54:04,065 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:54:04,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:54:04,100 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:54:04,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:54:04,133 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:54:04,150 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:54:04,169 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:54:04,194 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:54:04,212 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:54:04,233 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:54:04,260 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:54:04,289 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:54:04,315 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:54:04,344 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:54:04,376 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:54:04,409 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:54:04,433 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:54:04,471 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:54:04,501 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:54:04,529 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:54:04,572 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:54:04,573 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:54:04,573 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:54:04,573 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:54:04,586 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:54:04,631 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:54:04,631 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:54:04,631 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:55:04,280 WARN o.g.v.c.b.MultipleBatchAnalysis [main] Problem with this image:H:\sat\ice\S1A_IW_GRDH_1SDH_20140607T205125_20140607T205150_000949_000EC8_CDCE.SAFE
+2016-04-14 01:55:04,284 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-14 01:56:14,676 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:14,684 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-14 01:56:14,685 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:56:14,688 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:56:16,297 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:56:16,298 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:56:16,298 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:56:19,163 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:56:21,716 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:56:24,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:56:26,714 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:56:27,998 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:27,999 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20141012T180214_20141012T180243_002800_003275_C958.SAFE
+2016-04-14 01:56:29,196 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:56:29,517 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:29,518 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20150911T181748_20150911T181813_007671_00AA55_1F8E.SAFE
+2016-04-14 01:56:31,642 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:56:33,346 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:33,347 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160202T164016_20160202T164041_009770_00E487_3FF2.SAFE
+2016-04-14 01:56:33,853 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:33,854 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Image not analyzed:H:\sat\ice\S1A_IW_GRDH_1SDV_20160202T164016_20160202T164041_009770_00E487_3FF2.SAFE\manifest.safe
+java.lang.ArithmeticException: / by zero
+	at org.geoimage.viewer.core.batch.AbstractBatchAnalysis.prepareBatchAnalysis(AbstractBatchAnalysis.java:138) ~[classes/:?]
+	at org.geoimage.viewer.core.batch.MultipleBatchAnalysis.runAnalysis(MultipleBatchAnalysis.java:172) [classes/:?]
+	at org.geoimage.viewer.core.batch.AbstractBatchAnalysis.runProcess(AbstractBatchAnalysis.java:82) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.execAnalysis(Sumo.java:77) [classes/:?]
+	at org.geoimage.viewer.core.batch.Sumo.main(Sumo.java:215) [classes/:?]
+2016-04-14 01:56:33,856 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SDV_20160204T163028_20160204T163053_009799_00E55A_EB9A.SAFE
+2016-04-14 01:56:34,014 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:56:34,497 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:34,498 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_IW_GRDH_1SSV_20141006T205930_20141006T205955_002714_00309F_FE9F.SAFE
+2016-04-14 01:56:36,327 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:56:38,695 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:56:40,907 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:56:42,955 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:56:44,264 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 01:56:44,660 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:56:46,209 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:56:47,798 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:56:49,438 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:56:51,019 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:56:52,570 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:56:54,005 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:56:55,430 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:56:56,913 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:56:58,562 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:57:00,218 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:57:01,882 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:57:03,469 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:57:05,086 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:57:06,730 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:57:08,332 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:57:09,948 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:57:11,492 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:57:13,132 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:57:14,699 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:57:16,249 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:57:17,773 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:57:19,393 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:57:20,926 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:57:22,414 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:57:23,981 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:57:25,565 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:57:27,127 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:57:28,671 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:57:30,186 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:57:31,723 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:57:33,144 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:57:34,573 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:57:35,963 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:57:37,378 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:57:38,876 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:57:40,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:57:42,164 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:57:43,852 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:57:45,571 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:57:47,345 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:57:49,149 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:57:49,169 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:57:49,178 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:57:49,180 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:57:49,181 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:57:49,181 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 01:57:49,186 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 01:57:49,189 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 01:57:49,192 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 01:57:49,194 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
+2016-04-14 01:57:49,197 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/53
+2016-04-14 01:57:49,203 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/53
+2016-04-14 01:57:49,206 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/53
+2016-04-14 01:57:49,209 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/53
+2016-04-14 01:57:49,211 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/53
+2016-04-14 01:57:49,243 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/53
+2016-04-14 01:57:49,302 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/53
+2016-04-14 01:57:49,343 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/53
+2016-04-14 01:57:49,379 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/53
+2016-04-14 01:57:49,407 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/53
+2016-04-14 01:57:49,432 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/53
+2016-04-14 01:57:49,464 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/53
+2016-04-14 01:57:49,491 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/53
+2016-04-14 01:57:49,522 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/53
+2016-04-14 01:57:49,552 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/53
+2016-04-14 01:57:49,577 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/53
+2016-04-14 01:57:49,606 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/53
+2016-04-14 01:57:49,625 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/53
+2016-04-14 01:57:49,640 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/53
+2016-04-14 01:57:49,659 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/53
+2016-04-14 01:57:49,679 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/53
+2016-04-14 01:57:49,699 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/53
+2016-04-14 01:57:49,715 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/53
+2016-04-14 01:57:49,734 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/53
+2016-04-14 01:57:49,752 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/53
+2016-04-14 01:57:49,774 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/53
+2016-04-14 01:57:49,797 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/53
+2016-04-14 01:57:49,815 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/53
+2016-04-14 01:57:49,834 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/53
+2016-04-14 01:57:49,852 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/53
+2016-04-14 01:57:49,867 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/53
+2016-04-14 01:57:49,890 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/53
+2016-04-14 01:57:49,920 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/53
+2016-04-14 01:57:49,937 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/53
+2016-04-14 01:57:49,953 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/53
+2016-04-14 01:57:49,970 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/53
+2016-04-14 01:57:49,992 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/53
+2016-04-14 01:57:50,015 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/53
+2016-04-14 01:57:50,035 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/53
+2016-04-14 01:57:50,059 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/53
+2016-04-14 01:57:50,088 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/53
+2016-04-14 01:57:50,126 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/53
+2016-04-14 01:57:50,153 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/53
+2016-04-14 01:57:50,170 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/53
+2016-04-14 01:57:50,193 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/53
+2016-04-14 01:57:50,221 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/53
+2016-04-14 01:57:50,256 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/53
+2016-04-14 01:57:50,276 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/53
+2016-04-14 01:57:50,299 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:57:50,300 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:57:50,300 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:57:50,301 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:57:50,322 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:57:50,331 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:57:50,333 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:57:50,334 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:57:50,335 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:57:50,405 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 01:57:50,405 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:57:50,405 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:57:50,788 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:57:51,253 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:57:51,658 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:57:52,043 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:57:52,429 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:57:52,774 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:57:53,125 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:57:53,487 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:57:53,835 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:57:54,190 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:57:54,545 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:57:54,907 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:57:55,287 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:57:55,647 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:57:56,006 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:57:56,369 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:57:56,731 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:57:57,087 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:57:57,446 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:57:57,806 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:57:58,143 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:57:58,483 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:57:58,837 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:57:59,152 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:57:59,496 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:57:59,823 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:58:00,321 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:58:00,614 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:58:00,899 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:58:01,174 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:58:01,452 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:58:01,728 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:58:02,009 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:58:02,280 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:58:02,557 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:58:02,847 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:58:03,129 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:58:03,423 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:58:03,722 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:58:04,042 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:58:04,382 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:58:04,734 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:58:05,089 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:58:05,443 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:58:05,789 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:58:06,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:58:06,449 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:58:06,755 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:58:07,070 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HH
+2016-04-14 01:58:07,082 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:58:07,156 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:07,156 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:07,156 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HV
+2016-04-14 01:58:07,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:07,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/49
+2016-04-14 01:58:07,183 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/49
+2016-04-14 01:58:07,203 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/49
+2016-04-14 01:58:07,226 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/49
+2016-04-14 01:58:07,249 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/49
+2016-04-14 01:58:07,271 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/49
+2016-04-14 01:58:07,292 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/49
+2016-04-14 01:58:07,316 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/49
+2016-04-14 01:58:07,339 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/49
+2016-04-14 01:58:07,359 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/49
+2016-04-14 01:58:07,379 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/49
+2016-04-14 01:58:07,399 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/49
+2016-04-14 01:58:07,419 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/49
+2016-04-14 01:58:07,446 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/49
+2016-04-14 01:58:07,465 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/49
+2016-04-14 01:58:07,482 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/49
+2016-04-14 01:58:07,500 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/49
+2016-04-14 01:58:07,518 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/49
+2016-04-14 01:58:07,536 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/49
+2016-04-14 01:58:07,555 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/49
+2016-04-14 01:58:07,572 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/49
+2016-04-14 01:58:07,603 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/49
+2016-04-14 01:58:07,631 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/49
+2016-04-14 01:58:07,654 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/49
+2016-04-14 01:58:07,673 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/49
+2016-04-14 01:58:07,701 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/49
+2016-04-14 01:58:07,723 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/49
+2016-04-14 01:58:07,744 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/49
+2016-04-14 01:58:07,765 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/49
+2016-04-14 01:58:07,787 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/49
+2016-04-14 01:58:07,804 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/49
+2016-04-14 01:58:07,820 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/49
+2016-04-14 01:58:07,835 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/49
+2016-04-14 01:58:07,849 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/49
+2016-04-14 01:58:07,863 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/49
+2016-04-14 01:58:07,881 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/49
+2016-04-14 01:58:07,904 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/49
+2016-04-14 01:58:07,924 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/49
+2016-04-14 01:58:07,944 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/49
+2016-04-14 01:58:07,970 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/49
+2016-04-14 01:58:07,998 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/49
+2016-04-14 01:58:08,026 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/49
+2016-04-14 01:58:08,058 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/49
+2016-04-14 01:58:08,089 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/49
+2016-04-14 01:58:08,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/49
+2016-04-14 01:58:08,140 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/49
+2016-04-14 01:58:08,174 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/49
+2016-04-14 01:58:08,205 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/49
+2016-04-14 01:58:08,231 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/49
+2016-04-14 01:58:08,273 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band HV
+2016-04-14 01:58:08,274 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:08,274 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:08,274 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:58:08,288 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:5409   y:8220
+2016-04-14 01:58:08,324 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:08,324 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:08,324 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:08,325 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:08,325 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:58:08,858 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VV
+2016-04-14 01:58:08,859 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:08,859 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/96
+2016-04-14 01:58:08,956 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/96
+2016-04-14 01:58:09,053 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/96
+2016-04-14 01:58:09,148 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/96
+2016-04-14 01:58:09,235 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/96
+2016-04-14 01:58:09,326 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/96
+2016-04-14 01:58:09,413 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/96
+2016-04-14 01:58:09,512 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/96
+2016-04-14 01:58:09,597 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/96
+2016-04-14 01:58:09,684 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/96
+2016-04-14 01:58:09,803 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/96
+2016-04-14 01:58:09,892 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/96
+2016-04-14 01:58:09,982 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/96
+2016-04-14 01:58:10,068 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/96
+2016-04-14 01:58:10,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/96
+2016-04-14 01:58:10,252 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/96
+2016-04-14 01:58:10,339 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/96
+2016-04-14 01:58:10,435 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/96
+2016-04-14 01:58:10,524 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/96
+2016-04-14 01:58:10,610 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/96
+2016-04-14 01:58:10,695 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/96
+2016-04-14 01:58:10,784 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/96
+2016-04-14 01:58:10,911 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/96
+2016-04-14 01:58:11,006 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/96
+2016-04-14 01:58:11,092 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/96
+2016-04-14 01:58:11,180 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/96
+2016-04-14 01:58:11,286 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/96
+2016-04-14 01:58:11,377 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/96
+2016-04-14 01:58:11,468 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/96
+2016-04-14 01:58:11,556 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/96
+2016-04-14 01:58:11,651 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/96
+2016-04-14 01:58:11,741 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/96
+2016-04-14 01:58:11,829 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/96
+2016-04-14 01:58:11,921 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/96
+2016-04-14 01:58:12,010 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/96
+2016-04-14 01:58:12,097 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/96
+2016-04-14 01:58:12,186 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/96
+2016-04-14 01:58:12,289 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/96
+2016-04-14 01:58:12,378 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/96
+2016-04-14 01:58:12,471 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/96
+2016-04-14 01:58:12,557 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/96
+2016-04-14 01:58:12,642 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/96
+2016-04-14 01:58:12,732 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/96
+2016-04-14 01:58:12,819 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/96
+2016-04-14 01:58:12,904 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/96
+2016-04-14 01:58:12,990 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/96
+2016-04-14 01:58:13,093 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/96
+2016-04-14 01:58:13,190 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/96
+2016-04-14 01:58:13,279 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/96
+2016-04-14 01:58:13,364 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/96
+2016-04-14 01:58:13,449 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/96
+2016-04-14 01:58:13,521 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/96
+2016-04-14 01:58:13,597 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/96
+2016-04-14 01:58:13,670 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/96
+2016-04-14 01:58:13,742 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/96
+2016-04-14 01:58:13,816 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/96
+2016-04-14 01:58:13,893 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/96
+2016-04-14 01:58:13,972 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/96
+2016-04-14 01:58:14,051 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/96
+2016-04-14 01:58:14,139 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/96
+2016-04-14 01:58:14,219 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/96
+2016-04-14 01:58:14,298 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/96
+2016-04-14 01:58:14,376 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/96
+2016-04-14 01:58:14,457 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/96
+2016-04-14 01:58:14,536 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/96
+2016-04-14 01:58:14,617 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/96
+2016-04-14 01:58:14,700 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/96
+2016-04-14 01:58:14,781 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/96
+2016-04-14 01:58:14,861 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/96
+2016-04-14 01:58:14,942 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/96
+2016-04-14 01:58:15,022 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/96
+2016-04-14 01:58:15,109 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/96
+2016-04-14 01:58:15,191 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/96
+2016-04-14 01:58:15,272 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/96
+2016-04-14 01:58:15,355 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/96
+2016-04-14 01:58:15,439 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/96
+2016-04-14 01:58:15,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/96
+2016-04-14 01:58:15,582 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/96
+2016-04-14 01:58:15,639 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/96
+2016-04-14 01:58:15,694 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/96
+2016-04-14 01:58:15,751 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/96
+2016-04-14 01:58:15,807 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/96
+2016-04-14 01:58:15,865 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/96
+2016-04-14 01:58:15,920 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 83/96
+2016-04-14 01:58:15,976 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 84/96
+2016-04-14 01:58:16,032 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 85/96
+2016-04-14 01:58:16,088 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 86/96
+2016-04-14 01:58:16,146 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 87/96
+2016-04-14 01:58:16,209 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 88/96
+2016-04-14 01:58:16,266 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 89/96
+2016-04-14 01:58:16,322 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 90/96
+2016-04-14 01:58:16,379 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 91/96
+2016-04-14 01:58:16,437 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 92/96
+2016-04-14 01:58:16,492 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 93/96
+2016-04-14 01:58:16,550 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 94/96
+2016-04-14 01:58:16,606 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 95/96
+2016-04-14 01:58:16,665 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VV
+2016-04-14 01:58:16,676 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:21993   y:4652
+2016-04-14 01:58:16,680 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:22089   y:4723
+2016-04-14 01:58:16,686 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:22195   y:4777
+2016-04-14 01:58:16,686 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:22188   y:4781
+2016-04-14 01:58:16,700 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:23400   y:7025
+2016-04-14 01:58:16,701 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:23550   y:6998
+2016-04-14 01:58:16,716 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:16,865 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:16,960 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VH
+2016-04-14 01:58:16,960 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:16,961 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/96
+2016-04-14 01:58:16,976 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/96
+2016-04-14 01:58:16,990 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/96
+2016-04-14 01:58:17,005 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/96
+2016-04-14 01:58:17,020 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/96
+2016-04-14 01:58:17,034 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/96
+2016-04-14 01:58:17,050 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/96
+2016-04-14 01:58:17,065 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/96
+2016-04-14 01:58:17,082 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/96
+2016-04-14 01:58:17,098 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/96
+2016-04-14 01:58:17,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/96
+2016-04-14 01:58:17,129 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/96
+2016-04-14 01:58:17,146 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/96
+2016-04-14 01:58:17,162 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/96
+2016-04-14 01:58:17,179 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/96
+2016-04-14 01:58:17,194 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/96
+2016-04-14 01:58:17,210 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/96
+2016-04-14 01:58:17,227 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/96
+2016-04-14 01:58:17,243 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/96
+2016-04-14 01:58:17,260 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/96
+2016-04-14 01:58:17,276 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/96
+2016-04-14 01:58:17,292 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/96
+2016-04-14 01:58:17,309 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/96
+2016-04-14 01:58:17,326 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/96
+2016-04-14 01:58:17,343 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/96
+2016-04-14 01:58:17,361 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/96
+2016-04-14 01:58:17,395 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/96
+2016-04-14 01:58:17,421 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/96
+2016-04-14 01:58:17,438 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/96
+2016-04-14 01:58:17,455 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/96
+2016-04-14 01:58:17,471 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/96
+2016-04-14 01:58:17,487 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/96
+2016-04-14 01:58:17,504 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/96
+2016-04-14 01:58:17,521 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/96
+2016-04-14 01:58:17,536 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/96
+2016-04-14 01:58:17,553 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/96
+2016-04-14 01:58:17,569 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/96
+2016-04-14 01:58:17,586 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/96
+2016-04-14 01:58:17,600 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/96
+2016-04-14 01:58:17,615 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/96
+2016-04-14 01:58:17,630 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/96
+2016-04-14 01:58:17,645 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/96
+2016-04-14 01:58:17,660 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/96
+2016-04-14 01:58:17,675 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/96
+2016-04-14 01:58:17,689 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/96
+2016-04-14 01:58:17,703 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/96
+2016-04-14 01:58:17,733 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/96
+2016-04-14 01:58:17,747 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/96
+2016-04-14 01:58:17,761 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/96
+2016-04-14 01:58:17,775 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/96
+2016-04-14 01:58:17,788 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/96
+2016-04-14 01:58:17,789 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/96
+2016-04-14 01:58:17,790 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/96
+2016-04-14 01:58:17,790 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/96
+2016-04-14 01:58:17,790 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/96
+2016-04-14 01:58:17,793 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/96
+2016-04-14 01:58:17,799 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/96
+2016-04-14 01:58:17,804 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/96
+2016-04-14 01:58:17,811 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/96
+2016-04-14 01:58:17,817 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/96
+2016-04-14 01:58:17,823 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/96
+2016-04-14 01:58:17,829 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/96
+2016-04-14 01:58:17,835 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/96
+2016-04-14 01:58:17,843 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/96
+2016-04-14 01:58:17,849 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/96
+2016-04-14 01:58:17,855 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/96
+2016-04-14 01:58:17,862 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/96
+2016-04-14 01:58:17,869 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/96
+2016-04-14 01:58:17,876 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/96
+2016-04-14 01:58:17,882 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/96
+2016-04-14 01:58:17,887 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/96
+2016-04-14 01:58:17,894 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/96
+2016-04-14 01:58:17,900 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/96
+2016-04-14 01:58:17,906 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/96
+2016-04-14 01:58:17,911 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/96
+2016-04-14 01:58:17,919 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/96
+2016-04-14 01:58:17,926 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/96
+2016-04-14 01:58:17,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/96
+2016-04-14 01:58:17,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/96
+2016-04-14 01:58:17,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/96
+2016-04-14 01:58:17,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 83/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 84/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 85/96
+2016-04-14 01:58:17,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 86/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 87/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 88/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 89/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 90/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 91/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 92/96
+2016-04-14 01:58:17,930 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 93/96
+2016-04-14 01:58:17,931 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 94/96
+2016-04-14 01:58:17,931 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 95/96
+2016-04-14 01:58:17,932 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VH
+2016-04-14 01:58:17,948 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:22247   y:4678
+2016-04-14 01:58:17,966 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:18,096 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:18,168 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:58:18,185 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:21993   y:4652
+2016-04-14 01:58:18,190 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:22089   y:4723
+2016-04-14 01:58:18,195 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:22195   y:4777
+2016-04-14 01:58:18,196 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:22188   y:4781
+2016-04-14 01:58:18,217 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:23400   y:7025
+2016-04-14 01:58:18,219 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:23550   y:6998
+2016-04-14 01:58:18,266 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:18,469 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:18,626 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:18,626 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:18,626 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:58:18,783 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VV
+2016-04-14 01:58:18,784 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:18,784 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/83
+2016-04-14 01:58:18,970 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/83
+2016-04-14 01:58:19,167 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/83
+2016-04-14 01:58:19,359 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/83
+2016-04-14 01:58:19,545 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/83
+2016-04-14 01:58:19,737 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/83
+2016-04-14 01:58:19,933 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/83
+2016-04-14 01:58:20,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/83
+2016-04-14 01:58:20,327 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/83
+2016-04-14 01:58:20,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/83
+2016-04-14 01:58:20,713 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/83
+2016-04-14 01:58:20,909 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/83
+2016-04-14 01:58:21,100 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/83
+2016-04-14 01:58:21,307 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/83
+2016-04-14 01:58:21,505 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/83
+2016-04-14 01:58:21,701 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/83
+2016-04-14 01:58:21,910 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/83
+2016-04-14 01:58:22,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/83
+2016-04-14 01:58:22,308 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/83
+2016-04-14 01:58:22,512 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/83
+2016-04-14 01:58:22,729 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/83
+2016-04-14 01:58:22,927 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/83
+2016-04-14 01:58:23,130 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/83
+2016-04-14 01:58:23,359 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/83
+2016-04-14 01:58:23,577 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/83
+2016-04-14 01:58:23,783 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/83
+2016-04-14 01:58:23,990 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/83
+2016-04-14 01:58:24,200 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/83
+2016-04-14 01:58:24,411 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/83
+2016-04-14 01:58:24,651 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/83
+2016-04-14 01:58:24,865 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/83
+2016-04-14 01:58:25,088 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/83
+2016-04-14 01:58:25,298 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/83
+2016-04-14 01:58:25,503 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/83
+2016-04-14 01:58:25,711 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/83
+2016-04-14 01:58:25,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/83
+2016-04-14 01:58:26,133 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/83
+2016-04-14 01:58:26,347 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/83
+2016-04-14 01:58:26,561 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/83
+2016-04-14 01:58:26,784 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/83
+2016-04-14 01:58:27,010 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/83
+2016-04-14 01:58:27,255 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/83
+2016-04-14 01:58:27,491 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/83
+2016-04-14 01:58:27,725 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/83
+2016-04-14 01:58:27,964 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/83
+2016-04-14 01:58:28,201 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/83
+2016-04-14 01:58:28,455 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/83
+2016-04-14 01:58:28,701 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/83
+2016-04-14 01:58:28,954 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/83
+2016-04-14 01:58:29,225 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/83
+2016-04-14 01:58:29,479 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/83
+2016-04-14 01:58:29,734 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/83
+2016-04-14 01:58:30,014 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/83
+2016-04-14 01:58:30,269 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/83
+2016-04-14 01:58:30,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/83
+2016-04-14 01:58:30,791 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/83
+2016-04-14 01:58:31,043 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/83
+2016-04-14 01:58:31,303 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/83
+2016-04-14 01:58:31,554 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/83
+2016-04-14 01:58:31,802 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/83
+2016-04-14 01:58:32,057 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/83
+2016-04-14 01:58:32,311 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/83
+2016-04-14 01:58:32,562 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/83
+2016-04-14 01:58:32,821 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/83
+2016-04-14 01:58:33,065 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/83
+2016-04-14 01:58:33,331 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/83
+2016-04-14 01:58:33,587 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/83
+2016-04-14 01:58:33,852 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/83
+2016-04-14 01:58:34,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/83
+2016-04-14 01:58:34,390 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/83
+2016-04-14 01:58:34,660 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/83
+2016-04-14 01:58:34,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/83
+2016-04-14 01:58:35,182 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/83
+2016-04-14 01:58:35,464 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/83
+2016-04-14 01:58:35,722 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/83
+2016-04-14 01:58:35,986 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/83
+2016-04-14 01:58:36,251 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/83
+2016-04-14 01:58:36,502 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/83
+2016-04-14 01:58:36,748 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/83
+2016-04-14 01:58:37,004 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/83
+2016-04-14 01:58:37,266 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/83
+2016-04-14 01:58:37,512 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/83
+2016-04-14 01:58:37,759 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/83
+2016-04-14 01:58:38,073 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VV
+2016-04-14 01:58:38,097 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:22358   y:2981
+2016-04-14 01:58:38,107 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:19870   y:3564
+2016-04-14 01:58:38,121 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:7112   y:5801
+2016-04-14 01:58:38,131 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:12437   y:6394
+2016-04-14 01:58:38,138 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:10779   y:7252
+2016-04-14 01:58:38,146 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:22521   y:7737
+2016-04-14 01:58:38,152 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:700  x:18918   y:7856
+2016-04-14 01:58:38,153 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:800  x:20889   y:7919
+2016-04-14 01:58:38,156 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:900  x:7388   y:8126
+2016-04-14 01:58:38,164 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1000  x:17102   y:8124
+2016-04-14 01:58:38,166 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1100  x:20132   y:8162
+2016-04-14 01:58:38,167 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1200  x:22564   y:8204
+2016-04-14 01:58:38,169 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1300  x:24938   y:8125
+2016-04-14 01:58:38,175 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1400  x:5542   y:8294
+2016-04-14 01:58:38,178 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1500  x:18921   y:8412
+2016-04-14 01:58:38,180 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1600  x:23311   y:8436
+2016-04-14 01:58:38,185 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1700  x:1498   y:8602
+2016-04-14 01:58:38,186 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1800  x:3755   y:8445
+2016-04-14 01:58:38,188 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1900  x:6200   y:8634
+2016-04-14 01:58:38,191 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2000  x:11063   y:8549
+2016-04-14 01:58:38,194 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2100  x:18034   y:8620
+2016-04-14 01:58:38,194 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2200  x:18044   y:8626
+2016-04-14 01:58:38,196 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2300  x:21993   y:8500
+2016-04-14 01:58:38,197 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2400  x:23393   y:8523
+2016-04-14 01:58:38,204 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2500  x:3615   y:8708
+2016-04-14 01:58:38,207 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2600  x:8523   y:8813
+2016-04-14 01:58:38,211 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2700  x:20934   y:8820
+2016-04-14 01:58:38,212 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2800  x:20907   y:8824
+2016-04-14 01:58:38,214 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2900  x:24942   y:8708
+2016-04-14 01:58:38,223 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3000  x:20009   y:9041
+2016-04-14 01:58:38,226 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3100  x:901   y:9075
+2016-04-14 01:58:38,232 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3200  x:4853   y:9104
+2016-04-14 01:58:38,235 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3300  x:6008   y:9200
+2016-04-14 01:58:38,240 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3400  x:16087   y:9096
+2016-04-14 01:58:38,243 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3500  x:18743   y:9099
+2016-04-14 01:58:38,244 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3600  x:18728   y:9105
+2016-04-14 01:58:38,245 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3700  x:19982   y:9058
+2016-04-14 01:58:38,246 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3800  x:24611   y:9133
+2016-04-14 01:58:38,253 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3900  x:3421   y:9272
+2016-04-14 01:58:38,260 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4000  x:8414   y:9338
+2016-04-14 01:58:38,263 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4100  x:20995   y:9334
+2016-04-14 01:58:38,272 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4200  x:9764   y:9509
+2016-04-14 01:58:38,280 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4300  x:14168   y:9774
+2016-04-14 01:58:38,288 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4400  x:7515   y:10035
+2016-04-14 01:58:38,298 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4500  x:7551   y:10188
+2016-04-14 01:58:38,308 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4600  x:7580   y:10340
+2016-04-14 01:58:38,311 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4700  x:8142   y:10349
+2016-04-14 01:58:38,317 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4800  x:7093   y:10514
+2016-04-14 01:58:38,321 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4900  x:7530   y:10521
+2016-04-14 01:58:38,331 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5000  x:8215   y:10567
+2016-04-14 01:58:38,347 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5100  x:7427   y:10878
+2016-04-14 01:58:38,377 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5200  x:17315   y:14685
+2016-04-14 01:58:38,511 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:40,167 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:41,129 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VH
+2016-04-14 01:58:41,130 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:41,130 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/83
+2016-04-14 01:58:41,165 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/83
+2016-04-14 01:58:41,197 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/83
+2016-04-14 01:58:41,230 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/83
+2016-04-14 01:58:41,264 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/83
+2016-04-14 01:58:41,298 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/83
+2016-04-14 01:58:41,334 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/83
+2016-04-14 01:58:41,370 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/83
+2016-04-14 01:58:41,406 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/83
+2016-04-14 01:58:41,438 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/83
+2016-04-14 01:58:41,470 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/83
+2016-04-14 01:58:41,506 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/83
+2016-04-14 01:58:41,538 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/83
+2016-04-14 01:58:41,570 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/83
+2016-04-14 01:58:41,603 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/83
+2016-04-14 01:58:41,636 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/83
+2016-04-14 01:58:41,671 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/83
+2016-04-14 01:58:41,707 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/83
+2016-04-14 01:58:41,739 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/83
+2016-04-14 01:58:41,776 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/83
+2016-04-14 01:58:41,814 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/83
+2016-04-14 01:58:41,849 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/83
+2016-04-14 01:58:41,885 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/83
+2016-04-14 01:58:41,938 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/83
+2016-04-14 01:58:41,991 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/83
+2016-04-14 01:58:42,026 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/83
+2016-04-14 01:58:42,063 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/83
+2016-04-14 01:58:42,099 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/83
+2016-04-14 01:58:42,157 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/83
+2016-04-14 01:58:42,194 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/83
+2016-04-14 01:58:42,231 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/83
+2016-04-14 01:58:42,284 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/83
+2016-04-14 01:58:42,321 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/83
+2016-04-14 01:58:42,359 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/83
+2016-04-14 01:58:42,396 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/83
+2016-04-14 01:58:42,433 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/83
+2016-04-14 01:58:42,470 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/83
+2016-04-14 01:58:42,509 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/83
+2016-04-14 01:58:42,551 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/83
+2016-04-14 01:58:42,603 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/83
+2016-04-14 01:58:42,649 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/83
+2016-04-14 01:58:42,696 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/83
+2016-04-14 01:58:42,742 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/83
+2016-04-14 01:58:42,784 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/83
+2016-04-14 01:58:42,827 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/83
+2016-04-14 01:58:42,869 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/83
+2016-04-14 01:58:42,912 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/83
+2016-04-14 01:58:42,954 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/83
+2016-04-14 01:58:43,018 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/83
+2016-04-14 01:58:43,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/83
+2016-04-14 01:58:43,127 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/83
+2016-04-14 01:58:43,177 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/83
+2016-04-14 01:58:43,240 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/83
+2016-04-14 01:58:43,285 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/83
+2016-04-14 01:58:43,331 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/83
+2016-04-14 01:58:43,391 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/83
+2016-04-14 01:58:43,431 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/83
+2016-04-14 01:58:43,470 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/83
+2016-04-14 01:58:43,536 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/83
+2016-04-14 01:58:43,574 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/83
+2016-04-14 01:58:43,615 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/83
+2016-04-14 01:58:43,652 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/83
+2016-04-14 01:58:43,689 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/83
+2016-04-14 01:58:43,724 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/83
+2016-04-14 01:58:43,759 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/83
+2016-04-14 01:58:43,810 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/83
+2016-04-14 01:58:43,846 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/83
+2016-04-14 01:58:43,889 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/83
+2016-04-14 01:58:43,929 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/83
+2016-04-14 01:58:43,980 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/83
+2016-04-14 01:58:44,025 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/83
+2016-04-14 01:58:44,087 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/83
+2016-04-14 01:58:44,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/83
+2016-04-14 01:58:44,165 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/83
+2016-04-14 01:58:44,192 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/83
+2016-04-14 01:58:44,225 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/83
+2016-04-14 01:58:44,256 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/83
+2016-04-14 01:58:44,272 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/83
+2016-04-14 01:58:44,287 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/83
+2016-04-14 01:58:44,302 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/83
+2016-04-14 01:58:44,335 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/83
+2016-04-14 01:58:44,350 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/83
+2016-04-14 01:58:44,365 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/83
+2016-04-14 01:58:44,390 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VH
+2016-04-14 01:58:44,408 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:20928   y:3679
+2016-04-14 01:58:44,428 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:22519   y:7736
+2016-04-14 01:58:44,453 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:1502   y:8604
+2016-04-14 01:58:44,463 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:20936   y:8820
+2016-04-14 01:58:44,477 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:18743   y:9100
+2016-04-14 01:58:44,501 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:7037   y:10105
+2016-04-14 01:58:44,528 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:700  x:7467   y:10657
+2016-04-14 01:58:44,577 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:45,373 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:45,823 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:58:45,868 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:22358   y:2981
+2016-04-14 01:58:45,886 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:19870   y:3564
+2016-04-14 01:58:45,910 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:7112   y:5801
+2016-04-14 01:58:45,928 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:12437   y:6394
+2016-04-14 01:58:45,939 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:10779   y:7252
+2016-04-14 01:58:45,955 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:22521   y:7737
+2016-04-14 01:58:45,970 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:700  x:18918   y:7856
+2016-04-14 01:58:45,972 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:800  x:20889   y:7919
+2016-04-14 01:58:45,976 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:900  x:7388   y:8126
+2016-04-14 01:58:45,989 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1000  x:17102   y:8124
+2016-04-14 01:58:45,992 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1100  x:20132   y:8162
+2016-04-14 01:58:45,994 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1200  x:22564   y:8204
+2016-04-14 01:58:45,997 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1300  x:24938   y:8125
+2016-04-14 01:58:46,012 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1400  x:5542   y:8294
+2016-04-14 01:58:46,017 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1500  x:18921   y:8412
+2016-04-14 01:58:46,020 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1600  x:23311   y:8436
+2016-04-14 01:58:46,029 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1700  x:1498   y:8602
+2016-04-14 01:58:46,030 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1800  x:3755   y:8445
+2016-04-14 01:58:46,035 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1900  x:6200   y:8634
+2016-04-14 01:58:46,038 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2000  x:11063   y:8549
+2016-04-14 01:58:46,043 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2100  x:18034   y:8620
+2016-04-14 01:58:46,043 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2200  x:18044   y:8626
+2016-04-14 01:58:46,045 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2300  x:21993   y:8500
+2016-04-14 01:58:46,047 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2400  x:23393   y:8523
+2016-04-14 01:58:46,065 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2500  x:3615   y:8708
+2016-04-14 01:58:46,069 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2600  x:8523   y:8813
+2016-04-14 01:58:46,076 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2700  x:20934   y:8820
+2016-04-14 01:58:46,077 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2800  x:20907   y:8824
+2016-04-14 01:58:46,080 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:2900  x:24942   y:8708
+2016-04-14 01:58:46,099 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3000  x:20009   y:9041
+2016-04-14 01:58:46,104 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3100  x:901   y:9075
+2016-04-14 01:58:46,115 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3200  x:4853   y:9104
+2016-04-14 01:58:46,118 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3300  x:6008   y:9200
+2016-04-14 01:58:46,127 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3400  x:16087   y:9096
+2016-04-14 01:58:46,132 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3500  x:18743   y:9099
+2016-04-14 01:58:46,133 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3600  x:18728   y:9105
+2016-04-14 01:58:46,134 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3700  x:19982   y:9058
+2016-04-14 01:58:46,137 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3800  x:24611   y:9133
+2016-04-14 01:58:46,149 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:3900  x:3421   y:9272
+2016-04-14 01:58:46,161 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4000  x:8414   y:9338
+2016-04-14 01:58:46,166 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4100  x:20995   y:9334
+2016-04-14 01:58:46,180 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4200  x:9764   y:9509
+2016-04-14 01:58:46,193 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4300  x:14168   y:9774
+2016-04-14 01:58:46,233 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4400  x:7515   y:10035
+2016-04-14 01:58:46,250 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4500  x:7551   y:10188
+2016-04-14 01:58:46,270 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4600  x:7580   y:10340
+2016-04-14 01:58:46,273 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4700  x:8142   y:10349
+2016-04-14 01:58:46,282 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4800  x:7093   y:10514
+2016-04-14 01:58:46,290 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:4900  x:7530   y:10521
+2016-04-14 01:58:46,303 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5000  x:8215   y:10567
+2016-04-14 01:58:46,327 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5100  x:7427   y:10878
+2016-04-14 01:58:46,378 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:5200  x:17315   y:14685
+2016-04-14 01:58:46,827 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:49,652 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:51,816 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:51,816 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:51,816 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:58:51,821 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VV
+2016-04-14 01:58:51,821 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:51,821 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/83
+2016-04-14 01:58:51,824 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/83
+2016-04-14 01:58:51,827 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/83
+2016-04-14 01:58:51,830 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/83
+2016-04-14 01:58:51,833 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/83
+2016-04-14 01:58:51,836 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/83
+2016-04-14 01:58:51,839 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/83
+2016-04-14 01:58:51,842 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/83
+2016-04-14 01:58:51,846 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/83
+2016-04-14 01:58:51,849 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/83
+2016-04-14 01:58:51,852 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/83
+2016-04-14 01:58:51,855 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/83
+2016-04-14 01:58:51,859 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/83
+2016-04-14 01:58:51,862 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/83
+2016-04-14 01:58:51,865 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/83
+2016-04-14 01:58:51,869 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/83
+2016-04-14 01:58:51,872 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/83
+2016-04-14 01:58:51,875 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/83
+2016-04-14 01:58:51,878 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/83
+2016-04-14 01:58:51,882 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/83
+2016-04-14 01:58:51,885 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/83
+2016-04-14 01:58:51,888 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/83
+2016-04-14 01:58:51,892 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/83
+2016-04-14 01:58:51,895 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/83
+2016-04-14 01:58:51,898 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/83
+2016-04-14 01:58:51,902 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/83
+2016-04-14 01:58:51,905 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/83
+2016-04-14 01:58:51,908 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/83
+2016-04-14 01:58:51,911 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/83
+2016-04-14 01:58:51,915 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/83
+2016-04-14 01:58:51,918 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/83
+2016-04-14 01:58:51,922 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/83
+2016-04-14 01:58:51,925 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/83
+2016-04-14 01:58:51,928 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/83
+2016-04-14 01:58:51,932 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/83
+2016-04-14 01:58:51,935 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/83
+2016-04-14 01:58:51,939 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/83
+2016-04-14 01:58:51,942 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/83
+2016-04-14 01:58:51,945 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/83
+2016-04-14 01:58:51,948 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/83
+2016-04-14 01:58:51,952 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/83
+2016-04-14 01:58:51,955 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/83
+2016-04-14 01:58:51,960 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/83
+2016-04-14 01:58:51,965 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/83
+2016-04-14 01:58:51,969 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/83
+2016-04-14 01:58:51,972 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/83
+2016-04-14 01:58:51,976 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/83
+2016-04-14 01:58:51,980 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/83
+2016-04-14 01:58:51,983 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/83
+2016-04-14 01:58:51,988 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/83
+2016-04-14 01:58:51,991 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/83
+2016-04-14 01:58:51,995 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/83
+2016-04-14 01:58:51,998 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/83
+2016-04-14 01:58:52,002 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/83
+2016-04-14 01:58:52,006 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/83
+2016-04-14 01:58:52,009 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/83
+2016-04-14 01:58:52,013 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/83
+2016-04-14 01:58:52,016 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/83
+2016-04-14 01:58:52,020 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/83
+2016-04-14 01:58:52,023 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/83
+2016-04-14 01:58:52,027 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/83
+2016-04-14 01:58:52,030 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/83
+2016-04-14 01:58:52,033 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/83
+2016-04-14 01:58:52,037 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/83
+2016-04-14 01:58:52,040 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/83
+2016-04-14 01:58:52,043 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/83
+2016-04-14 01:58:52,047 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/83
+2016-04-14 01:58:52,050 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/83
+2016-04-14 01:58:52,053 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/83
+2016-04-14 01:58:52,057 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/83
+2016-04-14 01:58:52,060 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/83
+2016-04-14 01:58:52,064 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/83
+2016-04-14 01:58:52,067 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/83
+2016-04-14 01:58:52,072 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/83
+2016-04-14 01:58:52,075 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/83
+2016-04-14 01:58:52,079 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/83
+2016-04-14 01:58:52,082 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/83
+2016-04-14 01:58:52,085 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/83
+2016-04-14 01:58:52,089 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/83
+2016-04-14 01:58:52,092 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/83
+2016-04-14 01:58:52,095 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/83
+2016-04-14 01:58:52,099 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/83
+2016-04-14 01:58:52,102 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/83
+2016-04-14 01:58:52,105 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VV
+2016-04-14 01:58:52,106 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:52,107 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:52,107 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VH
+2016-04-14 01:58:52,107 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:58:52,108 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/83
+2016-04-14 01:58:52,108 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/83
+2016-04-14 01:58:52,109 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/83
+2016-04-14 01:58:52,109 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/83
+2016-04-14 01:58:52,109 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/83
+2016-04-14 01:58:52,109 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/83
+2016-04-14 01:58:52,110 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/83
+2016-04-14 01:58:52,111 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/83
+2016-04-14 01:58:52,112 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/83
+2016-04-14 01:58:52,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/83
+2016-04-14 01:58:52,114 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/83
+2016-04-14 01:58:52,115 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/83
+2016-04-14 01:58:52,116 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/83
+2016-04-14 01:58:52,117 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/83
+2016-04-14 01:58:52,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/83
+2016-04-14 01:58:52,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/83
+2016-04-14 01:58:52,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/83
+2016-04-14 01:58:52,118 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/83
+2016-04-14 01:58:52,119 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/83
+2016-04-14 01:58:52,119 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/83
+2016-04-14 01:58:52,119 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/83
+2016-04-14 01:58:52,119 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/83
+2016-04-14 01:58:52,119 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/83
+2016-04-14 01:58:52,120 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/83
+2016-04-14 01:58:52,120 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/83
+2016-04-14 01:58:52,120 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/83
+2016-04-14 01:58:52,120 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/83
+2016-04-14 01:58:52,120 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/83
+2016-04-14 01:58:52,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/83
+2016-04-14 01:58:52,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/83
+2016-04-14 01:58:52,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/83
+2016-04-14 01:58:52,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/83
+2016-04-14 01:58:52,121 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/83
+2016-04-14 01:58:52,122 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/83
+2016-04-14 01:58:52,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/83
+2016-04-14 01:58:52,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/83
+2016-04-14 01:58:52,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/83
+2016-04-14 01:58:52,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/83
+2016-04-14 01:58:52,123 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VH
+2016-04-14 01:58:52,124 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:52,124 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:52,125 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections...
+2016-04-14 01:58:52,126 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 01:58:52,126 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 01:58:52,126 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:52,126 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 01:58:52,127 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 01:59:01,176 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band VV
+2016-04-14 01:59:01,176 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 01:59:01,176 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/83
+2016-04-14 01:59:02,084 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/83
+2016-04-14 01:59:03,954 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/83
+2016-04-14 01:59:05,693 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/83
+2016-04-14 01:59:07,651 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/83
+2016-04-14 01:59:09,521 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 5/83
+2016-04-14 01:59:11,552 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 6/83
+2016-04-14 01:59:13,717 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 7/83
+2016-04-14 01:59:15,033 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 8/83
+2016-04-14 01:59:16,124 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 9/83
+2016-04-14 01:59:17,229 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 10/83
+2016-04-14 01:59:18,355 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 11/83
+2016-04-14 01:59:19,523 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 12/83
+2016-04-14 01:59:20,855 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 13/83
+2016-04-14 01:59:21,995 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 14/83
+2016-04-14 01:59:23,139 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 15/83
+2016-04-14 01:59:24,279 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 16/83
+2016-04-14 01:59:25,416 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 17/83
+2016-04-14 01:59:26,551 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 18/83
+2016-04-14 01:59:27,647 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 19/83
+2016-04-14 01:59:28,841 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 20/83
+2016-04-14 01:59:30,002 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 21/83
+2016-04-14 01:59:31,234 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 22/83
+2016-04-14 01:59:32,497 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 23/83
+2016-04-14 01:59:33,689 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 24/83
+2016-04-14 01:59:34,924 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 25/83
+2016-04-14 01:59:36,083 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 26/83
+2016-04-14 01:59:37,284 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 27/83
+2016-04-14 01:59:38,470 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 28/83
+2016-04-14 01:59:39,629 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 29/83
+2016-04-14 01:59:40,834 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 30/83
+2016-04-14 01:59:42,019 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 31/83
+2016-04-14 01:59:43,204 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 32/83
+2016-04-14 01:59:44,379 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 33/83
+2016-04-14 01:59:45,234 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 34/83
+2016-04-14 01:59:46,079 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 35/83
+2016-04-14 01:59:46,939 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 36/83
+2016-04-14 01:59:47,806 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 37/83
+2016-04-14 01:59:48,657 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 38/83
+2016-04-14 01:59:49,516 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 39/83
+2016-04-14 01:59:50,663 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 40/83
+2016-04-14 01:59:51,532 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 41/83
+2016-04-14 01:59:52,708 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 42/83
+2016-04-14 01:59:53,873 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 43/83
+2016-04-14 01:59:55,075 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 44/83
+2016-04-14 01:59:56,231 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 45/83
+2016-04-14 01:59:57,431 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 46/83
+2016-04-14 01:59:58,553 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 47/83
+2016-04-14 01:59:59,692 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 48/83
+2016-04-14 02:00:00,835 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 49/83
+2016-04-14 02:00:01,993 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 50/83
+2016-04-14 02:00:03,143 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 51/83
+2016-04-14 02:00:04,303 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 52/83
+2016-04-14 02:00:05,458 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 53/83
+2016-04-14 02:00:06,671 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 54/83
+2016-04-14 02:00:07,785 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 55/83
+2016-04-14 02:00:08,957 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 56/83
+2016-04-14 02:00:10,113 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 57/83
+2016-04-14 02:00:11,292 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 58/83
+2016-04-14 02:00:12,456 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 59/83
+2016-04-14 02:00:13,627 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 60/83
+2016-04-14 02:00:14,817 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 61/83
+2016-04-14 02:00:15,968 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 62/83
+2016-04-14 02:00:17,140 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 63/83
+2016-04-14 02:00:18,319 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 64/83
+2016-04-14 02:00:19,513 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 65/83
+2016-04-14 02:00:20,700 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 66/83
+2016-04-14 02:00:21,860 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 67/83
+2016-04-14 02:00:22,705 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 68/83
+2016-04-14 02:00:23,559 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 69/83
+2016-04-14 02:00:24,745 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 70/83
+2016-04-14 02:00:25,967 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 71/83
+2016-04-14 02:00:27,181 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 72/83
+2016-04-14 02:00:28,399 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 73/83
+2016-04-14 02:00:29,599 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 74/83
+2016-04-14 02:00:30,770 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 75/83
+2016-04-14 02:00:31,946 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 76/83
+2016-04-14 02:00:33,052 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 77/83
+2016-04-14 02:00:34,242 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 78/83
+2016-04-14 02:00:35,417 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 79/83
+2016-04-14 02:00:36,551 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 80/83
+2016-04-14 02:00:37,646 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 81/83
+2016-04-14 02:00:38,773 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 82/83
+2016-04-14 02:00:39,703 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: agglomerating detections for band VV
+2016-04-14 02:00:39,732 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:100  x:16130   y:4939
+2016-04-14 02:00:39,776 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:200  x:800   y:9221
+2016-04-14 02:00:39,851 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:300  x:13101   y:14036
+2016-04-14 02:00:39,967 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:400  x:12890   y:14087
+2016-04-14 02:00:39,994 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:500  x:12912   y:14549
+2016-04-14 02:00:40,003 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:600  x:19598   y:14519
+2016-04-14 02:00:40,017 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:700  x:13911   y:14826
+2016-04-14 02:00:40,029 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:800  x:13870   y:15025
+2016-04-14 02:00:40,033 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:900  x:21151   y:15022
+2016-04-14 02:00:40,053 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1000  x:18245   y:15240
+2016-04-14 02:00:40,065 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1100  x:13953   y:15308
+2016-04-14 02:00:40,084 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1200  x:13669   y:15584
+2016-04-14 02:00:40,101 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1300  x:13300   y:15724
+2016-04-14 02:00:40,112 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1400  x:14047   y:15986
+2016-04-14 02:00:40,118 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1500  x:12967   y:16137
+2016-04-14 02:00:40,134 INFO o.g.a.VDSAnalysis [pool-2-thread-1] Aggregating pixel Num:1600  x:15618   y:16637
+2016-04-14 02:00:40,163 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for azimuth ambiguities...
+2016-04-14 02:00:42,585 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: looking for artefacts ambiguities...
+2016-04-14 02:00:43,549 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 02:04:22,715 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160130T050441_20160130T050546_009719_00E30C_0996.SAFE
+2016-04-14 02:05:32,411 ERROR o.g.v.c.b.MultipleBatchAnalysis [main] Ice shape file not loaded:null
+2016-04-14 02:05:32,419 INFO o.g.v.c.b.MultipleBatchAnalysis [main] Start analyzing:H:\sat\ice\S1A_EW_GRDM_1SDH_20160312T221037_20160312T221137_010342_00F516_BB3A.SAFE
+2016-04-14 02:05:32,419 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start Analysis:
+2016-04-14 02:05:32,422 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Start BB Analysis
+2016-04-14 02:05:33,823 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] VDS: analyzing band HH
+2016-04-14 02:05:33,823 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] Performing VDS Analysis
+2016-04-14 02:05:33,824 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 0/53
+2016-04-14 02:05:36,957 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 1/53
+2016-04-14 02:05:39,504 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 2/53
+2016-04-14 02:05:42,013 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 3/53
+2016-04-14 02:05:44,480 INFO o.g.v.c.b.AbstractBatchAnalysis [pool-2-thread-1] 4/53
