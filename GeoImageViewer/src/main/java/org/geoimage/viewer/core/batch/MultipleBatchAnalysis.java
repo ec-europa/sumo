@@ -87,7 +87,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	public void runAnalysis(){
 		//Get the ThreadFactory implementation to use
 		//creating the ThreadPoolExecutor
-		ExecutorService executorPool = new ThreadPoolExecutor(1, 1, 180, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
+		ExecutorService executorPool = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
 		final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
 		CompletionService<AnalysisProcess.Results> ecs  = new ExecutorCompletionService<AnalysisProcess.Results>(executorPool);
 
@@ -175,20 +175,6 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 	
 								Future<AnalysisProcess.Results> resTask=null;
 								//  retrieve and save the result
-								
-								for (int i=0;i<tasks.size();i++) {
-									try{
-										//(resTask=ecs.poll())!=null
-										//resTask=ecs.poll();
-										AnalysisProcess.Results res=(AnalysisProcess.Results)ecs.take().get();
-										List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
-										SarImageReader gr=(SarImageReader)res.getReader();
-										String name=(gr).getManifestFile().getParentFile().getName();
-										saveResults(name,gr,results);
-									}catch(Exception e){
-										logger.error(e.getMessage(),e);
-									}
-								}
 							}
 						}
 					}catch(Exception e){
@@ -199,7 +185,19 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis{
 			}finally{
 				//executorPool.shutdown();
 			}
-
+			for (int i=0;i<tasks.size();i++) {
+				try{
+					//(resTask=ecs.poll())!=null
+					//resTask=ecs.poll();
+					AnalysisProcess.Results res=(AnalysisProcess.Results)ecs.take().get();
+					List<ComplexEditVDSVectorLayer>results=res.getLayerResults();
+					SarImageReader gr=(SarImageReader)res.getReader();
+					String name=(gr).getManifestFile().getParentFile().getName();
+					saveResults(name,gr,results);
+				}catch(Exception e){
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}else{
 			logger.error("No file found to analyze");
 		}
