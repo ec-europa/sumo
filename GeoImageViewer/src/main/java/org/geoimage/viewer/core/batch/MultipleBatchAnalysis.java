@@ -26,6 +26,7 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
+import org.geoimage.viewer.core.analysisproc.AnalysisProcess.Results;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -89,37 +90,42 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 		// Get the ThreadFactory implementation to use
 		// creating the ThreadPoolExecutor
 		int minT = NTHREDS > 1 ? 2 : 1;
-		ExecutorService executorPool = new ThreadPoolExecutor(minT, NTHREDS, 60, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(40));
+		ThreadPoolExecutor executorPool = new ThreadPoolExecutor(minT, NTHREDS, 60, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<>(50));
 		final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
-		CompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(
+		ExecutorCompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(
 				executorPool);
+		int count=0;
 		try {
 			for (File image : filesImg) {
 				try {
 					AnalysisProcess ap = singleAnalysisTask(image);
 					tasks.add(ecs.submit(ap));
+					count++;
 				} catch (Exception e) {
 					logger.error("Image not analyzed:" + image, e);
 				}
-			}
-			// retrieve and save the result
-			for (int i = 0; i < tasks.size(); i++) {
-				try {
-					AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get();
-					List<ComplexEditVDSVectorLayer> results = res.getLayerResults();
-					SarImageReader gr = (SarImageReader) res.getReader();
-					String name = (gr).getManifestFile().getParentFile().getName();
-					saveResults(name, gr, results);
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				}finally{
-					
+				if(count%5==0||(filesImg.size()-count)<=5){
+					// retrieve and save the result
+					while (!executorPool.getQueue().isEmpty()){//int i = 0; i < tasks.size(); i++) {
+						try {
+							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get();
+							List<ComplexEditVDSVectorLayer> results = res.getLayerResults();
+							SarImageReader gr = (SarImageReader) res.getReader();
+							String name = (gr).getManifestFile().getParentFile().getName();
+							saveResults(name, gr, results);
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						}finally{
+							
+						}
+					}
 				}
 			}
-
+			
 		} finally {
 			executorPool.shutdown();
+			logger.info("Analyzed:"+count+"  images");
 		}
 	}
 
@@ -270,7 +276,9 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 					fd.applyPattern(tokenUrl);
 					iceRepoUrl = iceRepoUrl.replace("%" + tokenUrl + "%", fd.format(imgDate));
 
-					String completeUrl = iceRepoUrl.concat(File.separator).concat(icePatternName);
+					if(!iceRepoUrl.endsWith(File.separator)||iceRepoUrl.endsWith("/"))
+						iceRepoUrl.concat(File.separator);
+					String completeUrl = iceRepoUrl.concat(icePatternName);
 					String output = SumoPlatform.getApplication().getCachePath().concat(File.separator)
 							.concat(icePatternName);
 					ice = new IceHttpClient().download(completeUrl, output);
