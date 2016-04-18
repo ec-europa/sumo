@@ -108,7 +108,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 				}
 				if(count%5==0||(filesImg.size()-(count+1))<=5){
 					// retrieve and save the result
-					while (!executorPool.getQueue().isEmpty()||((filesImg.size()-count<5))&&(complete<filesImg.size())){
+					while (!executorPool.getQueue().isEmpty()){
 						try {
 							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get(20,TimeUnit.SECONDS);
 							List<ComplexEditVDSVectorLayer> results = res.getLayerResults();
@@ -127,7 +127,8 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 			
 		} finally {
 			try {
-				executorPool.awaitTermination(120,TimeUnit.SECONDS);
+				if(!executorPool.getQueue().isEmpty())
+					executorPool.awaitTermination(180,TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				logger.warn(e.getMessage(), e);
 			}
