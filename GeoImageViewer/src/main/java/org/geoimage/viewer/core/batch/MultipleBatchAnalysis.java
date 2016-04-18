@@ -96,6 +96,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 		ExecutorCompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(
 				executorPool);
 		int count=0;
+		int complete=0;
 		try {
 			for (File image : filesImg) {
 				try {
@@ -105,15 +106,16 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 				} catch (Exception e) {
 					logger.error("Image not analyzed:" + image, e);
 				}
-				if(count%5==0||(filesImg.size()-count)<=5){
+				if(count%5==0||(filesImg.size()-(count+1))<=5){
 					// retrieve and save the result
-					while (!executorPool.getQueue().isEmpty()){//int i = 0; i < tasks.size(); i++) {
+					while (!executorPool.getQueue().isEmpty()||((filesImg.size()-count<5))&&(complete<filesImg.size())){
 						try {
-							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get();
+							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get(20,TimeUnit.SECONDS);
 							List<ComplexEditVDSVectorLayer> results = res.getLayerResults();
 							SarImageReader gr = (SarImageReader) res.getReader();
 							String name = (gr).getManifestFile().getParentFile().getName();
 							saveResults(name, gr, results);
+							complete++;
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}finally{
@@ -124,6 +126,11 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 			}
 			
 		} finally {
+			try {
+				executorPool.awaitTermination(120,TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				logger.warn(e.getMessage(), e);
+			}
 			executorPool.shutdown();
 			logger.info("Analyzed:"+count+"  images");
 		}
