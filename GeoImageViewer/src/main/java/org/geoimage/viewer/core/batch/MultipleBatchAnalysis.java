@@ -276,10 +276,12 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 					String tokenUrl = iceRepoUrl.substring(iceRepoUrl.indexOf("%") + 1, iceRepoUrl.lastIndexOf("%"));
 
 					SimpleDateFormat fd = new SimpleDateFormat(tokenName);
-					icePatternName = icePatternName.replace("%" + tokenName + "%", fd.format(imgDate));
+					String strImgDate=fd.format(imgDate);
+					icePatternName = icePatternName.replace("%" + tokenName + "%",strImgDate );
 
 					fd.applyPattern(tokenUrl);
-					iceRepoUrl = iceRepoUrl.replace("%" + tokenUrl + "%", fd.format(imgDate));
+					String strYearDate=fd.format(imgDate);
+					iceRepoUrl = iceRepoUrl.replace("%" + tokenUrl + "%", strYearDate);
 
 					if(!iceRepoUrl.endsWith(File.separator)||iceRepoUrl.endsWith("/"))
 						iceRepoUrl.concat(File.separator);
@@ -289,8 +291,8 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 					ice = new IceHttpClient().download(completeUrl, output);
 					if (ArchiveUtil.isArchive(ice)) {
 						ArchiveUtil.unZip(ice.getAbsolutePath());
-						File[] shpfiles = ice.getParentFile().listFiles((java.io.FileFilter) pathname -> FilenameUtils
-								.getExtension(pathname.getName()).equalsIgnoreCase("shp"));
+						File[] shpfiles = ice.getParentFile().listFiles((java.io.FileFilter) pathname ->( FilenameUtils
+								.getExtension(pathname.getName()).equalsIgnoreCase("shp")&&pathname.getName().contains(strImgDate)));
 						ice = shpfiles[0];
 					}
 
