@@ -11,9 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,7 +24,6 @@ import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.analysisproc.AnalysisProcess;
-import org.geoimage.viewer.core.analysisproc.AnalysisProcess.Results;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.factory.FactoryLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditVDSVectorLayer;
@@ -96,7 +93,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 		ExecutorCompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(
 				executorPool);
 		int count=0;
-		int complete=0;
+		int completati=0;
 		try {
 			for (File image : filesImg) {
 				try {
@@ -106,16 +103,16 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 				} catch (Exception e) {
 					logger.error("Image not analyzed:" + image, e);
 				}
-				if(count%5==0||(filesImg.size()-(count+1))<=5){
+				if(count%5==0||(filesImg.size()-(count+1))<=0){
 					// retrieve and save the result
-					while (!executorPool.getQueue().isEmpty()){
+					while (!executorPool.getQueue().isEmpty()||((filesImg.size()-(count+1))<0)&&completati!=filesImg.size()){
 						try {
-							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get(20,TimeUnit.SECONDS);
+							AnalysisProcess.Results res = (AnalysisProcess.Results) ecs.take().get();
 							List<ComplexEditVDSVectorLayer> results = res.getLayerResults();
 							SarImageReader gr = (SarImageReader) res.getReader();
 							String name = (gr).getManifestFile().getParentFile().getName();
 							saveResults(name, gr, results);
-							complete++;
+							completati++;
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}finally{
