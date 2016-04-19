@@ -292,7 +292,7 @@ public class VDSAnalysis{
                     containsMinPixelValid=((double)inValidPixelCount / maskdata.length) <= MIN_TRESH_FOR_ANALYSIS;
 
                     if(!containsMinPixelValid){
-                    	enlargedMaskData=createDataMask(xLeftTile-offsetEnlarge, yTopTile-offsetEnlarge, realSizeX+offsetEnlarge, realSizeY+offsetEnlarge, dx, dy);
+                    	enlargedMaskData=createDataMask(xLeftTile-offsetEnlarge, yTopTile-offsetEnlarge, realSizeX+(offsetEnlarge*2), realSizeY+(offsetEnlarge*2), dx, dy);
                         //count invalid pixel (land)
                         inValidPixelCount = 0;
                         for(int count = 0; count < enlargedMaskData.length; count++)
