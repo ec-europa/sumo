@@ -167,7 +167,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 
 	            ClipProcess clip=new ClipProcess();
 	            SimpleFeatureCollection fc=clip.execute(featureSource.getFeatures(), imageP,true);
-
+	            //exportFeaturesToShapeFile(new File("H:\\tmp\\test.shp"), fc);
 	            if (fc.isEmpty()) {
 	                return null;
 	            }
@@ -181,7 +181,9 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            	applayT=true;
 	            glout=GeometryImage.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
-
+	            /*exportGeometriesToShapeFile(glout.getGeometries(), 
+	            		new File("H:\\tmp\\test2.shp"), glout.getGeometryType(), 
+	            		transform, featureSource.getSchema());*/
 
         	}
         } catch (Exception ex) {
@@ -703,12 +705,14 @@ public class SimpleShapefile extends AbstractVectorIO{
 	        String[]schema= attr.getSchema();
 	        for(int i=0;i<schema.length;i++){
 	        	Object val=attr.get(schema[i]);
-	        	if(val.getClass().isArray()){
-	        		String valArray=ArrayUtils.toString(val);
-	        		builder.add(schema[i],valArray.getClass());
-	        	}else{
-	        		builder.add(schema[i],val.getClass());
-	        	}
+	        	if(val!=null){
+		        	if(val.getClass().isArray()){
+		        		String valArray=ArrayUtils.toString(val);
+		        		builder.add(schema[i],valArray.getClass());
+		        	}else{
+		        		builder.add(schema[i],val.getClass());
+		        	}
+	        	}	
 	        }
         }
 
