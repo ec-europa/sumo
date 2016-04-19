@@ -142,11 +142,11 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 	        			MaskGeometries mg=null;
 	        			if(bufferedMask!=null)
-	        				mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries());
+	        				mg=new MaskGeometries(bufferedMask.getName(),bufferedMask.getGeometries(),bufferedMask.getName());
 
 	        			MaskGeometries icemg=null;
 	        			if(iceMask!=null)
-	        				icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
+	        				icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries(),iceMask.getName());
 
 	        			VDSAnalysis vdsanalysis = new VDSAnalysis((SarImageReader) gir, mg,icemg, ENL, thresholds,
 	        					currentImgLayer.getRealTileSizeX(),currentImgLayer.getRealTileSizeY(),
@@ -257,8 +257,8 @@ public class VDSAnalysisAction extends SumoAbstractAction implements  VDSAnalysi
 
 
 	@Override
-	public void startAnalysis(String imgName) {
-		String message="Starting VDS Analysis:"+imgName;
+	public void startAnalysis(String imgName,String msg) {
+		String message="Starting VDS Analysis:"+imgName+" "+msg;
 		super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION,message ,0,5));
 	}
 	@Override

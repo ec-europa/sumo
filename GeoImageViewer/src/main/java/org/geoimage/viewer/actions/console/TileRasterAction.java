@@ -3,20 +3,17 @@
  */
 package org.geoimage.viewer.actions.console;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.geoimage.analysis.MaskGeometries;
 import org.geoimage.def.SarImageReader;
-import org.geoimage.utils.PolygonOp;
 import org.geoimage.viewer.actions.SumoActionEvent;
 import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.SumoPlatform;
@@ -25,8 +22,6 @@ import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.api.ilayer.IMask;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.visualization.GenericLayer;
-import org.geoimage.viewer.core.layers.visualization.vectors.ComplexEditGeometryVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.MaskVectorLayer;
 import org.geoimage.viewer.core.layers.visualization.vectors.SimpleGeometryLayer;
 import org.geoimage.viewer.util.JTSUtil;
@@ -34,9 +29,7 @@ import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
 
 public class TileRasterAction extends AbstractConsoleAction {
 	/**
@@ -82,7 +75,7 @@ public class TileRasterAction extends AbstractConsoleAction {
 					for (ILayer l : childs) {
 						if (l instanceof IMask ) {
 							MaskVectorLayer mask=(MaskVectorLayer) l;
-							MaskGeometries	mg=new MaskGeometries(mask.getName(), mask.getGeometries());
+							MaskGeometries	mg=new MaskGeometries(mask.getName(), mask.getGeometries(),mask.getName());
 
 
 							if(folderOut==null)

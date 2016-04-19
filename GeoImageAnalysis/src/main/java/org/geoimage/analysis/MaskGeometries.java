@@ -18,8 +18,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.xml.resolver.apps.resolver;
 import org.geoimage.utils.PolygonOp;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +29,6 @@ import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
-import com.vividsolutions.jts.geom.prep.PreparedPoint;
 import com.vividsolutions.jts.geom.prep.PreparedPolygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
@@ -43,7 +39,14 @@ public class MaskGeometries {
 	private String maskName=null;
 	private Map<String,Boolean> intersectedMapCache=null;
     private Map<String,Boolean> includesMapCache=null;
+    private String fileName;
 
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 	public List<Geometry> getMaskGeometries() {
 		return maskGeometries;
 	}
@@ -59,11 +62,12 @@ public class MaskGeometries {
 	public void setMaskName(String maskName) {
 		this.maskName = maskName;
 	}
-	public MaskGeometries(String maskName,List<Geometry> maskGeometries) {
+	public MaskGeometries(String maskName,List<Geometry> maskGeometries,String fileName) {
     	this.maskName=maskName;
     	this.maskGeometries=maskGeometries;
     	intersectedMapCache=new HashMap<String,Boolean>();
     	includesMapCache=new HashMap<String,Boolean>();
+    	this.fileName=fileName;
 	}
 
 
