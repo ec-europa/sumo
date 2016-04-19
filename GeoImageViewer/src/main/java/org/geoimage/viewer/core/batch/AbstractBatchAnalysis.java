@@ -146,11 +146,11 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
 
         MaskGeometries mg=null;
         if(mask!=null)
-        	mg=new MaskGeometries(mask.getName(),mask.getGeometries());
+        	mg=new MaskGeometries(mask.getName(),mask.getGeometries(),mask.getName());
 
         MaskGeometries icemg=null;
         if(iceMask!=null)
-        	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries());
+        	icemg=new MaskGeometries(iceMask.getName(),iceMask.getGeometries(),iceMask.getName());
 
 
         analysis = new VDSAnalysis(reader,
@@ -314,8 +314,8 @@ public abstract class AbstractBatchAnalysis implements VDSAnalysisProcessListene
 
 
 	@Override
-	public void startAnalysis(String imgName) {
-		logger.info("Start Analysis:"+imgName);
+	public void startAnalysis(String imgName,String msg) {
+		logger.info("Start Analysis:"+imgName+"  "+msg);
 
 	}
 	@Override

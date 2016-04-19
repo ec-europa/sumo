@@ -49,7 +49,7 @@ public class SingleBatchAnalysis extends AbstractBatchAnalysis {
 				}
 				IMask masks = null;
 				if(gl!=null){
-					masks=FactoryLayer.createMaskLayer("buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
+					masks=FactoryLayer.createMaskLayer(params.shapeFile+"-buffered", gl.getGeometryType(), params.buffer, gl,MaskVectorLayer.COASTLINE_MASK);
 				}
 
 				AnalysisProcess ap=prepareBatchAnalysis(reader,masks,null,params);

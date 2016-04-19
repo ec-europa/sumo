@@ -159,7 +159,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 	 */
 	public AnalysisProcess singleAnalysisTask(File image){
 		AnalysisProcess ap=null;
-			logger.info("Start analyzing:"+image.getParent());
+			logger.info("Start analyzing IMAGE:"+image.getParent());
 			AnalysisParams activeParams=params;
 			String folderName=image.getParentFile().getName();
 
@@ -212,7 +212,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 
 					IMask mask = null;
 					if(gl!=null){
-						mask=FactoryLayer.createMaskLayer("buffered",gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
+						mask=FactoryLayer.createMaskLayer(params.shapeFile,gl.getGeometryType(),activeParams.buffer,  gl,MaskVectorLayer.COASTLINE_MASK);
 					}
 
 					IMask iceMask = null;
@@ -222,7 +222,7 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 							activeParams.iceShapeFile=ice.getAbsolutePath();
 							GeometryImage glIce=readShapeFile(params.iceShapeFile,imageP,reader.getGeoTransform());
 							if(glIce!=null)
-								iceMask=FactoryLayer.createMaskLayer("ice",glIce.getType(),0,glIce,MaskVectorLayer.ICE_MASK);
+								iceMask=FactoryLayer.createMaskLayer(params.iceShapeFile,glIce.getType(),0,glIce,MaskVectorLayer.ICE_MASK);
 						}
 					}
 
