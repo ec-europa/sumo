@@ -240,8 +240,7 @@ public class GeometryImage implements Cloneable{
         GeometryImage out=null;
         GeometryFactory gf=new GeometryFactory();
         if (geoName.contains("Polygon") || geoName.contains("Line")) {
-                out = new GeometryImage(GeometryImage.POLYGON);//LINESTRING);//POLYGON);
-                //out.setFeatureSource(dataStore.getFeatureSource(dataStore.getTypeNames()[0]));
+                out = new GeometryImage(GeometryImage.POLYGON);
                 out.setFeatureCollection(fc);
 
                 FeatureIterator<?> fi = fc.features();
@@ -264,16 +263,13 @@ public class GeometryImage implements Cloneable{
 				                        }
 				                      //todo:check this part -> forse non serve
 				                        g=PolygonOp.removeInteriorRing(g);
-
 				                        Geometry gbuff=g.buffer(0);
-
 					                        if(imageP.contains(gbuff)){
 					                        	Object[]o=new Object[2];
 					                        	o[0]=gbuff;
 				                                o[1]=at;
 				                                result.add(o);
 					                        }else if(imageP.intersects(gbuff)){
-
 					                        	Geometry p2 =EnhancedPrecisionOp.intersection(imageP.buffer(1),gbuff);
 					                        	p2=p2.buffer(0);
 					                        	if (!p2.isEmpty()) {
@@ -298,7 +294,6 @@ public class GeometryImage implements Cloneable{
                 	List<Future<Object[][]>> results=executor.invokeAll(tasks);
 	                executor.shutdown();
 
-
 	                for(Future<Object[][]> f:results){
 	                	Object o[][]=f.get();
 	                	if(o!=null){
@@ -314,7 +309,6 @@ public class GeometryImage implements Cloneable{
 	                		}
 	                	}
 	                }
-
                 }catch(Exception e){
                 	logger.error(e.getMessage(),e);
                 }finally{
