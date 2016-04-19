@@ -7,7 +7,7 @@ import org.geoimage.viewer.core.api.ilayer.ILayer;
 
 public interface VDSAnalysisProcessListener {
 
-	public void startAnalysis(String imageName);
+	public void startAnalysis(String imageName,String msg);
 	public void performVDSAnalysis(String message,int numSteps);
 	public void nextVDSAnalysisStep(String message,int step,int numSteps);
 	public void startBlackBorederAnalysis(String message);

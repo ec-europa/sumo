@@ -198,7 +198,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                	bufferedMask=FactoryLayer.createMaskLayer(coastlineMask.getName(),
 	                		coastlineMask.getType(),0,((MaskVectorLayer)coastlineMask).getGeometriclayer(),
 	           				coastlineMask.getMaskType());
-	                	mg=new MaskGeometries("coast", bufferedMask.getGeometries());
+	                	mg=new MaskGeometries("coast", bufferedMask.getGeometries(),bufferedMask.getName());
 	                }
 	                MaskGeometries ice=null;
 	                IMask iceMask=null;
@@ -207,7 +207,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 	                		iceMasks.getType(),0,((MaskVectorLayer)iceMasks).getGeometriclayer(),
 	           				iceMasks.getMaskType());
 
-		                 ice=new MaskGeometries("ice", iceMask.getGeometries());
+		                 ice=new MaskGeometries("ice", iceMask.getGeometries(),bufferedMask.getName());
 	                }
 
 	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv},
@@ -245,7 +245,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 
 	@Override
-	public void startAnalysis(String imgName) {
+	public void startAnalysis(String imgName,String msg) {
 		String message="Starting VDS Analysis";
     	super.notifyEvent(new SumoActionEvent(SumoActionEvent.STARTACTION, message, -1));
 

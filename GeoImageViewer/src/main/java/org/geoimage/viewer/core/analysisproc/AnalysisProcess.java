@@ -168,7 +168,10 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 			try{
 				List<ComplexEditVDSVectorLayer>resultLayers=new ArrayList<>();
 	
-				notifyStartProcessListener();
+				String coastMaskName=analysis.getCoastMask()!=null?analysis.getCoastMask().getFileName():"not ice mask used";
+				String iceMaskName=analysis.getIceMask()!=null?analysis.getIceMask().getFileName():"not ice mask used";
+				notifyStartProcessListener("with coastline"+coastMaskName
+											+"\n and Icemask:"+iceMaskName);
 				SarImageReader reader=((SarImageReader)gir);
 	
 				String[] thresholdsString=StringUtils.join(analysis.getThresholdsParams(),",").split(",");
@@ -380,9 +383,9 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 				listener.endAnalysis(gir.getImgName());
 			}
 		}
-		public void notifyStartProcessListener(){
+		public void notifyStartProcessListener(String msg){
 			for(VDSAnalysisProcessListener listener:listeners){
-				listener.startAnalysis(gir.getImgName());
+				listener.startAnalysis(gir.getImgName(),msg);
 			}
 		}
 		public void notifyBBAnalysis(String msg){

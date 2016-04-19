@@ -12,7 +12,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.actions.SumoAbstractAction;
 import org.geoimage.viewer.actions.SumoActionListener;
-import org.geoimage.viewer.core.batch.Sumo;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.visualization.ConsoleLayer;
