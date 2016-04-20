@@ -153,7 +153,7 @@ public class Radarsat2Image extends SarImageReader {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedData = tiff.read(0, tirp).getRaster().getSamples(0, 0, getImage(band).xSize, length, 0, (int[]) null);
+            preloadedData = tiff.read(0, tirp).getRaster().getSamples(0, 0,rect.width, rect.height, 0, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
             System.gc();
