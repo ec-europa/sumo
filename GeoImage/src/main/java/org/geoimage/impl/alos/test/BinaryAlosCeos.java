@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.alos.Alos;
@@ -236,7 +237,7 @@ public class BinaryAlosCeos extends Alos {
 			for (int j = 0; j < rect.width; j++) {
 				int temp = i * yOffset + j + rect.x;
 				try {
-					tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+					tile[(i + yinit) * width + j + xinit] = (int)preloadedData[temp];
 				} catch (ArrayIndexOutOfBoundsException e) {
 					logger.warn("readTile function:" + e.getMessage());
 				}
@@ -246,7 +247,7 @@ public class BinaryAlosCeos extends Alos {
 	}
 
 	@Override
-	public int readPixel(int x, int y, int band) {
+	public long readPixel(int x, int y, int band) {
 		Rectangle rect = new Rectangle(x, y, 1, 1);
 		rect = rect.intersection(getImage(band).getBounds());
 		short data[] = null;
@@ -276,9 +277,9 @@ public class BinaryAlosCeos extends Alos {
 		rect = tiff.getBounds().intersection(rect);
 
 		try {
-			short[] bi = null;
+			int[] bi = null;
 			try {
-				bi = tiff.readShort(0, y, rect.width, rect.height);
+				bi = tiff.readInt(0, y, rect.width, rect.height);
 				//bi = tiff.readShortValues(0, y, tiff.xSize, length);
 			} catch (Exception e) {
 				logger.warn("Problem reading image POS x:" + 0 + "  y: " + y + "   try to read again");
@@ -287,9 +288,9 @@ public class BinaryAlosCeos extends Alos {
 				} catch (InterruptedException exx) {
 					Thread.currentThread().interrupt();
 				}
-				bi = tiff.readShort(0, y, rect.width, rect.height);
+				bi = tiff.readInt(0, y, rect.width, rect.height);
 			}
-			preloadedData = bi;
+			preloadedData = ArrayUtils.toObject(bi);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		} finally {

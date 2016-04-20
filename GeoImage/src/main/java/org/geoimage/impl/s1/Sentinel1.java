@@ -353,7 +353,7 @@ public abstract class Sentinel1 extends SarImageReader {
     }
 
     @Override
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
     	return read(x,y,1,1,band)[0];
     }
 

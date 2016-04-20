@@ -154,7 +154,7 @@ public interface GeoImageReader  {
      * @param y
      * @return pixel value
      */
-    public int readPixel(int x, int y,int band);
+    public long readPixel(int x, int y,int band);
 
     /**
      * Return the name of the band number. For instance in RGBA image this would be:

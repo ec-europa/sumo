@@ -5,6 +5,7 @@ package org.geoimage.impl.alos;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Conversion;
 import org.geoimage.factory.GeoTransformFactory;
 import org.geoimage.impl.Gcp;
 import org.geoimage.impl.alos.prop.TiffAlosProperties;
@@ -254,7 +257,7 @@ public class AlosGeoTiff extends Alos {
         if (rect.y != preloadedInterval[0] || rect.y + rect.height != preloadedInterval[1]||preloadedData.length<(rect.width*rect.height-1)) {
             preloadLineTile(rect.y, rect.height,band);
         }else{
-        	logger.debug("using preloaded data");
+        	//logger.debug("using preloaded data");
         }
 
         int yOffset = getImage(band).xSize;
@@ -264,7 +267,7 @@ public class AlosGeoTiff extends Alos {
             for (int j = 0; j < rect.width; j++) {
                 int temp = i * yOffset + j + rect.x;
                 try{
-                	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                	tile[(i + yinit) * width + j + xinit] = ((Short)preloadedData[temp]).intValue();
                 }catch(ArrayIndexOutOfBoundsException e ){
                 	logger.warn("readTile function:"+e.getMessage());
                 }
@@ -274,7 +277,7 @@ public class AlosGeoTiff extends Alos {
 	}
 
 	@Override
-	public int readPixel(int x, int y, int band) {
+	public long readPixel(int x, int y, int band) {
 			return read(x,y,1,1,band)[0];
 	}
 
@@ -304,7 +307,8 @@ public class AlosGeoTiff extends Alos {
         		bi=tiff.read(0, rect);
         	}
         	WritableRaster raster=bi.getRaster();
-        	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
+        	short[]ss=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
+        	preloadedData=ArrayUtils.toObject(ss);
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }finally{
