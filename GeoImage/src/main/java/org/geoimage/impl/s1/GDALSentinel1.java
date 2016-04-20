@@ -42,7 +42,7 @@ public class GDALSentinel1 extends Sentinel1 {
     protected Map<String, GeoToolsGDALReader> tiffImages;
 
 	private Logger logger= LoggerFactory.getLogger(GDALSentinel1.class);
-    protected short[] preloadedData;
+    protected int[] preloadedData;
     
     
     
@@ -96,8 +96,8 @@ public class GDALSentinel1 extends Sentinel1 {
        	}else{
 	 	        GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
 	 	        try {
-	 	        	short[] bi=null;
-	        		bi=tiff.readShortValues(x, y, 1, 1);
+	 	        	int[] bi=null;
+	        		bi=tiff.readPixValues(x, y, 1, 1);
 	 	        	val=bi[0];
 	 	        } catch (Exception ex) {
 	 	            logger.error(ex.getMessage(),ex);
@@ -121,9 +121,9 @@ public class GDALSentinel1 extends Sentinel1 {
        rect=tiff.getBounds().intersection(rect);
        
        try {
-       	short[] bi=null;
+       	int[] bi=null;
        	try{
-       		bi = tiff.readShortValues(0, y, rect.width, rect.height);
+       		bi = tiff.readPixValues(0, y, rect.width, rect.height);
        	}catch(Exception e){
        		logger.warn("Problem reading image POS x:"+0+ "  y: "+y +"   try to read again");
        		try {
@@ -131,7 +131,7 @@ public class GDALSentinel1 extends Sentinel1 {
    			} catch(InterruptedException exx) {
    			    Thread.currentThread().interrupt();
    			}
-       		bi=tiff.readShortValues(0, y, rect.width, rect.height);
+       		bi=tiff.readPixValues(0, y, rect.width, rect.height);
        	}	
        	preloadedData=bi;
        } catch (Exception ex) {
@@ -288,7 +288,7 @@ public class GDALSentinel1 extends Sentinel1 {
 
       GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
        try {
-   		short[] b=tiff.readShortValues(x, y, w,h);
+   		int[] b=tiff.readPixValues(x, y, w,h);
    		data=new int[b.length];
        	for(int i=0;i<b.length;i++)
        		data[i]=b[i];
@@ -321,12 +321,12 @@ public class GDALSentinel1 extends Sentinel1 {
 
     
     @Override
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
     	GeoToolsGDALReader tiff=null;
         try {
         	String b=getBandName(band);
         	tiff=tiffImages.get(b);
-            return tiff.readShortValues(x, y,1,1)[0];
+            return tiff.readPixValues(x, y,1,1)[0];
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }finally{
@@ -359,6 +359,8 @@ public class GDALSentinel1 extends Sentinel1 {
 
         	setSatellite(new String("Sentinel-1"));
         	setSwath(this.swath);
+
+        	this.imgName=manifestFile.getParentFile().getName();
         	
         	//polarizations string
         	StandAloneProductInformation prodInfo=safeReader.getProductInformation();

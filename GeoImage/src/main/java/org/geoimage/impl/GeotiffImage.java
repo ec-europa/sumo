@@ -210,7 +210,7 @@ public class GeotiffImage extends SarImageReader {
     }
 
     @Override
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
         int[] pix = new int[1];

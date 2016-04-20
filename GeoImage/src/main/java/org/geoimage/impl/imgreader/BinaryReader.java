@@ -201,6 +201,29 @@ public class BinaryReader {
 	
 	/**
 	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
+	public int[] readInt(int startPosition, int x, int y, int offsetx, int offsety) throws IOException {
+		int buf_size = offsetx * offsety;
+		int[] dd = new int[buf_size];
+
+		inputStream.seek(startPosition);
+
+		for (int i = 0; i < dd.length; i++) {
+			dd[i] = (int) inputStream.readUnsignedShort();
+		}
+		// inputStream.seek(startPosition);
+		// int val=inputStream.readUnsignedShort();
+		// inputStream.read(buff, 0, numBytes);
+		return dd;
+	}
+	
+	
+	/**
+	 * 
 	 * @param pos
 	 * @param nbytes
 	 * @return

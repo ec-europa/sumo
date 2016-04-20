@@ -350,7 +350,7 @@ public abstract class AbstractCosmoSkymedImage extends SarImageReader {
     }
 
 
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
         if (x < 0 || y < 0 || x > xSize || y > ySize) {
             return -1;
         }

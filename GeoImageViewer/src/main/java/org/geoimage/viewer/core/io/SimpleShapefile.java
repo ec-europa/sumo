@@ -182,8 +182,8 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            glout=GeometryImage.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
 	            /*exportGeometriesToShapeFile(glout.getGeometries(), 
-	            		new File("H:\\tmp\\test2.shp"), glout.getGeometryType(), 
-	            		transform, featureSource.getSchema());*/
+	            		new File("E:\\tmp\\test2.shp"), glout.getGeometryType(), 
+	            		nulltransform, featureSource.getSchema());*/
 
         	}
         } catch (Exception ex) {
