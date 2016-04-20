@@ -125,8 +125,8 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         tirp.setSourceRegion(rect);
         TIFF tiff=getImage(band);
         try {
-            preloadedDataReal =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 0, (int[]) null);
-            preloadedDataImg =   tiff.read(0, tirp).getRaster().getSamples(0, 0,  getImage(band).xSize, length, 1, (int[]) null);
+            preloadedDataReal =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 0, (int[]) null);
+            preloadedDataImg =   tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 1, (int[]) null);
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
