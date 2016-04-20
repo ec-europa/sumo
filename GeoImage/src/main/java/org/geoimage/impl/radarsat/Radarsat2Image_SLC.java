@@ -63,7 +63,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
     }
 
     @Override
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
         Rectangle rect=new Rectangle(x, y, 1, 1);
         rect = rect.intersection(bounds);

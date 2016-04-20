@@ -156,7 +156,7 @@ public class TerrasarXImage_SLC extends TerrasarXImage {
 
     @Override
     //used by the position dialog to link pixel(x,y) to pixel value
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[4];

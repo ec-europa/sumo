@@ -43,6 +43,20 @@ public class CeosBinaryReader extends BinaryReader implements IReader{
 	 * @return
 	 * @throws IOException
 	 */
+	public int[] readInt(int x,int y,int width ,int height) throws IOException{
+		int position=(this.getxSize()-1)*(y-2)+x+OFF_SET;
+		int[] dd =super.readInt(position, x, y, width, height);
+		
+		return dd;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param numBytes
+	 * @return
+	 * @throws IOException
+	 */
 	public short readShort(int x,int y){
 		try{
 			int position=(this.getxSize())*(y)+x+OFF_SET;

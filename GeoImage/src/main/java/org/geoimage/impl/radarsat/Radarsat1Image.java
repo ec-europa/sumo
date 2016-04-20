@@ -367,7 +367,7 @@ public class Radarsat1Image extends SarImageReader {
     }
 
     @Override
-    public int readPixel(int x, int y,int band) {
+    public long readPixel(int x, int y,int band) {
         int result = 0;
         long temp = 0;
         byte[] pixelByte = new byte[2];

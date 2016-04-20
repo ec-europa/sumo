@@ -105,13 +105,13 @@ public class GeoToolsGDALReader implements IReader {
 	 * @param offsety
 	 * @return
 	 */
-	public short[] readShortValues(int x,int y,int offsetx,int offsety){
+	public int[] readPixValues(int x,int y,int offsetx,int offsety){
 		int pixels = offsetx * offsety;
 		Band b=data.GetRasterBand(band);
 		int buf_size = pixels;
 
-		short[] dd = new short[buf_size];
-		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt16, dd);
+		int[] dd = new int[buf_size];
+		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
 		return dd;
 	}
 

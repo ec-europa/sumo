@@ -328,7 +328,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
 	                    	   double lon=FastMath.floor(geo[0]*100000)/100000;
 	                    	   double lat=FastMath.floor(geo[1]*100000)/100000;
 
-	                    	   int val=0;
+	                    	   long val=0;
 	                    	   StringBuilder pixelValue=new StringBuilder("");
 	                    	   try{
 	                    		  if(p.x>=0&&p.y>=0&&p.x<gir.getWidth()-1&&p.y<gir.getHeight()-1)
@@ -336,7 +336,7 @@ public class GeoImageViewerView extends FrameView implements GLEventListener{
 	                    		  if(val>=0)
 	                    			  pixelValue.append(val);
 	                    		  else{
-		                    		  Color c=new Color(val);
+		                    		  Color c=new Color((int)val);
 		                    		  pixelValue.append("R:").append(c.getRed()).append(" G:").append(c.getGreen())
 		                    		  			.append(" B:").append(c.getBlue()).append(" A:").append(c.getAlpha());
 	                    		  }

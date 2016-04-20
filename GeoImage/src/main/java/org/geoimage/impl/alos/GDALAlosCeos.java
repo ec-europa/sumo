@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.gdal.gdal.GCP;
 import org.geoimage.def.GeoMetadata;
@@ -192,7 +193,7 @@ public class GDALAlosCeos extends Alos {
 	      GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
 	       try {
 
-		   		short[] b=tiff.readShortValues(x, y, width,height);
+		   		int[] b=tiff.readPixValues(x, y, width,height);
 		   		data=new int[b.length];
 		       	for(int i=0;i<b.length;i++)
 		       		data[i]=b[i];
@@ -228,7 +229,7 @@ public class GDALAlosCeos extends Alos {
 			for (int j = 0; j < rect.width; j++) {
 				int temp = i * yOffset + j + rect.x;
 				try {
-					tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+					tile[(i + yinit) * width + j + xinit] =(int) preloadedData[temp];
 				} catch (ArrayIndexOutOfBoundsException e) {
 					logger.warn("readTile function:" + e.getMessage());
 				}
@@ -238,14 +239,14 @@ public class GDALAlosCeos extends Alos {
 	}
 
 	@Override
-	public int readPixel(int x, int y, int band) {
+	public long readPixel(int x, int y, int band) {
 		Rectangle rect = new Rectangle(x, y, 1, 1);
 		rect = rect.intersection(getImage(band).getBounds());
-		short data[] = null;
+		int data[] = null;
 
 		GeoToolsGDALReader img = (GeoToolsGDALReader)getImage(band);
 		try {
-			data=img.readShortValues(x, y,1,1);
+			data=img.readPixValues(x, y,1,1);
 		} finally {
 		}
 
@@ -266,9 +267,9 @@ public class GDALAlosCeos extends Alos {
 		rect = tiff.getBounds().intersection(rect);
 
 		try {
-			short[] bi = null;
+			int[] bi = null;
 			try {
-				bi = tiff.readShortValues(0, y, rect.width, rect.height);
+				bi = tiff.readPixValues(0, y, rect.width, rect.height);
 				//bi = tiff.readShortValues(0, y, tiff.xSize, length);
 			} catch (Exception e) {
 				logger.warn("Problem reading image POS x:" + 0 + "  y: " + y + "   try to read again");
@@ -277,9 +278,9 @@ public class GDALAlosCeos extends Alos {
 				} catch (InterruptedException exx) {
 					Thread.currentThread().interrupt();
 				}
-				bi = tiff.readShortValues(0, y, rect.width, rect.height);
+				bi = tiff.readPixValues(0, y, rect.width, rect.height);
 			}
-			preloadedData = bi;
+			preloadedData =ArrayUtils.toObject(bi);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		} finally {

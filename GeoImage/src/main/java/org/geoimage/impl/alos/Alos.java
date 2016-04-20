@@ -32,7 +32,7 @@ public abstract class Alos extends SarImageReader {
 	public static final double REV_PER_DAY=15+(3/14);
 	
 	protected int[] preloadedInterval = new int[]{0, 0};
-	protected short[] preloadedData;
+	protected Object[] preloadedData;
 
 	protected AbstractAlosProperties prop=null;
 	protected List<String> polarizations=null;
@@ -236,7 +236,7 @@ public abstract class Alos extends SarImageReader {
             for (int j = 0; j < rect.width; j++) {
                 int temp = i * yOffset + j + rect.x;
                 try{
-                	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                	tile[(i + yinit) * width + j + xinit] =(int) preloadedData[temp];
                 }catch(ArrayIndexOutOfBoundsException e ){
                 	logger.warn("readTile function:"+e.getMessage());
                 }
@@ -246,7 +246,7 @@ public abstract class Alos extends SarImageReader {
 	}
 
 	@Override
-	public int readPixel(int x, int y, int band) {
+	public long readPixel(int x, int y, int band) {
 			return read(x,y,1,1,band)[0];
 	}
 
@@ -278,7 +278,7 @@ public abstract class Alos extends SarImageReader {
         		bi=tiff.read(0, rect);
         	}
         	WritableRaster raster=bi.getRaster();
-        	preloadedData=(short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
+        	preloadedData=(Short[])raster.getDataElements(0, 0, raster.getWidth(), raster.getHeight(), null);//tSamples(0, 0, raster.getWidth(), raster.getHeight(), 0, (short[]) null);
         } catch (Exception ex) {
             logger.error(ex.getMessage(),ex);
         }finally{
