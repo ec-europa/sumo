@@ -333,9 +333,9 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 	                     List<Geometry> az=azimuthAmbiguity.getAmbiguityboatgeometry();
 	                     vdsanalysisLayer.addAzimuthAmbiguities(az, display);
 	
-	                     //Azimuth Ambiguities ONLY FOR S1
+	                     //Artefacts Ambiguities ONLY FOR S1
 	                     if(gir instanceof Sentinel1){
-	                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
+	                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){//||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")){
 			                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
 			                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,bands);
 			                     arAmbiguity.process();

@@ -11,6 +11,7 @@ import javax.media.opengl.GL2;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 public class GL2ShapesRender {
 
@@ -182,4 +183,25 @@ public class GL2ShapesRender {
         gl.glEnd();
         gl.glFlush();
     }
+    
+    
+    /**
+     * 
+     * @param gl
+     * @param cs
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
+    public static void drawMultiPoly(OpenGLContext context,MultiPolygon pol,float width,float height,int x,int y,float rwidth,Color color){
+    	int ng=pol.getNumGeometries();
+    	for(int i=0;i<ng;i++){
+    		Geometry g=pol.getGeometryN(i);
+    		drawPoly(context,g.getCoordinates(),width,height,x,y,rwidth,color);
+    	}
+    
+    }
+    
+    
 }
