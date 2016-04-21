@@ -29,6 +29,8 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 public class GenericLayer implements ILayer, ISave, IThreshable{
 	protected String name = "";
@@ -145,8 +147,8 @@ public class GenericLayer implements ILayer, ISave, IThreshable{
 	                            	}
 	                            	GL2ShapesRender.drawPoly(context,g.getCoordinates(),width,height,x,y,rWidth,color);
 	                            }*/
-
-	                            GL2ShapesRender.drawPoly(context,mpolygon.getCoordinates(),width,height,x,y,rWidth,color);
+	                 //           Coordinate[]cc=mpolygon.getCoordinates();
+	                            GL2ShapesRender.drawMultiPoly(context,mpolygon,width,height,x,y,rWidth,color);
 
 	                    	}
 	                    }

@@ -209,7 +209,11 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 
 		                 ice=new MaskGeometries("ice", iceMask.getGeometries(),bufferedMask.getName());
 	                }
-
+	                yy=layer.getRealTileSizeY()*row;
+					xx=layer.getRealTileSizeX()*col;
+					tileSizeY=layer.getRealTileSizeY();
+					tileSizeX=layer.getRealTileSizeX();
+					
 	                VDSAnalysis analysis = new VDSAnalysis(sar, mg,ice, Float.parseFloat(sar.getENL()), new Float[]{hh,hv,vh,vv},
 	                		layer.getRealTileSizeX(),layer.getRealTileSizeY(),
 	                		layer.getHorizontalTilesImage(),layer.getVerticalTilesImage());
@@ -221,10 +225,7 @@ public class TileAnalysisAction extends AbstractConsoleAction implements VDSAnal
 					proc.addProcessListener(this);
 					proc.call();
 
-	                yy=layer.getRealTileSizeY()*row;
-					xx=layer.getRealTileSizeX()*col;
-					tileSizeY=layer.getRealTileSizeY();
-					tileSizeX=layer.getRealTileSizeX();
+	                
 				}
 			}
 		} catch (Exception e) {

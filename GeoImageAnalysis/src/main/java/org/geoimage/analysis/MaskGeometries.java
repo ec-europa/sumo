@@ -5,9 +5,13 @@ package org.geoimage.analysis;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.geoimage.utils.PolygonOp;
+import org.geotools.coverage.grid.GridCoverage2D;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.algorithm.locate.IndexedPointInAreaLocator;
@@ -68,8 +73,23 @@ public class MaskGeometries {
     	intersectedMapCache=new HashMap<String,Boolean>();
     	includesMapCache=new HashMap<String,Boolean>();
     	this.fileName=fileName;
+    	splitMultiPolygons();
 	}
 
+	private void splitMultiPolygons(){
+		List<Geometry>clone=new ArrayList<>(maskGeometries);
+		for(Geometry gt:clone){
+			if(gt instanceof MultiPolygon){
+				int n=gt.getNumGeometries();
+				for(int i=0;i<n;i++){
+					Polygon pp=(Polygon)gt.getGeometryN(i);
+					maskGeometries.add(pp);
+				}
+				maskGeometries.remove(gt);
+			}
+		}
+	}
+	
 
 
 
@@ -248,10 +268,11 @@ public class MaskGeometries {
      */
     public int[] getRasterDataMask(int x,int y,int w,int h,  int offsetX, int offsetY, double scalingFactor) {
     	Rectangle rect=new Rectangle(x,y,w,h);
-        BufferedImage bi = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+        //BufferedImage bi = this.rasterize(rect, offsetX, offsetY, scalingFactor);
+        BufferedImage bi = this.rasterize(rect, offsetX, offsetY,scalingFactor);
+        //this.saveRaster(bi, new File("E:/tmp/raster.bmp"));
         Raster rastermask=bi.getData();
-    	int[] maskdata=rastermask.getPixels(0, 0, rastermask.getWidth(), rastermask.getHeight(), (int[])null);
-    	//int[] maskdata=rasterMaskJTS(rect, offsetX, offsetY, scalingFactor);
+    	int[] maskdata=rastermask.getSamples(0, 0, rastermask.getWidth(), rastermask.getHeight(),0, (int[])null);
     	return maskdata;
     }
 
@@ -316,24 +337,32 @@ public class MaskGeometries {
 
         Graphics g2d = image.getGraphics();
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.white);
         for (Geometry p : maskGeometries) {
+        	/*if(p instanceof MultiPolygon){
+        		p=p.getBoundary();
+        	}*/
             if (p.intersects(geom)) {
                 int[] xPoints = new int[p.getNumPoints()];//build array for x coordinates
                 int[] yPoints = new int[p.getNumPoints()];//build array for y coordinates
                 int i = 0;
                 for (Coordinate c : p.getCoordinates()) {
-                    xPoints[i] = (int) ((c.x + offsetX) * scalingFactor);
-                    yPoints[i] = (int) ((c.y + offsetY) * scalingFactor);
+                    xPoints[i] = (int) ((c.x + offsetX ) * scalingFactor);
+                    yPoints[i] = (int) ((c.y + offsetY ) * scalingFactor);
                     i++;
                 }
-                g2d.fillPolygon(xPoints, yPoints, p.getNumPoints());
+                g2d.fillPolygon(xPoints, yPoints, i);
             }
         }
         g2d.dispose();
         return image;
 
     }
+    
+    
+    
+    
+    
 
     /**
      * rasterize the mask clipped with the Rectangle scaled back to full size with an offset onto a BufferedImage

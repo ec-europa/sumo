@@ -448,7 +448,7 @@ public class VDSAnalysis{
      */
     private void aggregate(DetectedPixels detPixels,int neighboursdistance, int tilesize, boolean removelandconnectedpixels, int[] bands, 
     		MaskGeometries mask, KDistributionEstimation kdist)throws IOException {
-        int id = 0;
+    	int id = 0;
         // scan through list of detected pixels
         DetectedPixels.BoatPixel pixels[]=detPixels.getAllDetectedPixelsValues().toArray(new DetectedPixels.BoatPixel[0]);
         int count=0;
@@ -516,6 +516,8 @@ public class VDSAnalysis{
                 int value = data[bandcounter][boatx + boaty * tilesize];
                 if (value > thresholdvalues[bandcounter][1]) {
                     pixelabove = true;
+                }else{
+                	//logger.debug("detected pixel excluded");
                 }
             }
 
@@ -551,7 +553,7 @@ public class VDSAnalysis{
                 	int i=0;
                 	int y=-1;
                 	for(;i<data[iBand].length;i++){
-                		int x=i%200; //??? //TODO: check this value , why it
+                		int x=i%tilesize;
                 		if(x==0)
                 			y++;
 

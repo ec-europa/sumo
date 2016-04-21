@@ -161,8 +161,6 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            //retrieve a FeatureSource to work with the feature data
 	            SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
 
-
-
 	            Polygon imageP=bbox;
 
 	            ClipProcess clip=new ClipProcess();
@@ -181,6 +179,7 @@ public class SimpleShapefile extends AbstractVectorIO{
 	            	applayT=true;
 	            glout=GeometryImage.createFromSimpleGeometry(imageP, geoName, fc, schemaStr, types,applayT,transform);
 	            glout.setName(shpInput.getName());
+	            glout.splitMultiPolygons();
 	            /*exportGeometriesToShapeFile(glout.getGeometries(), 
 	            		new File("E:\\tmp\\test2.shp"), glout.getGeometryType(), 
 	            		nulltransform, featureSource.getSchema());*/
