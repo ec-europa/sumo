@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.precision.EnhancedPrecisionOp;
@@ -341,7 +342,23 @@ public class GeometryImage implements Cloneable{
         return out;
     }
 
-
+    /**
+     * 
+     */
+    public void splitMultiPolygons(){
+		List<Geometry>clone=new ArrayList<>(this.geoms);
+		for(Geometry gt:clone){
+			if(gt instanceof MultiPolygon){
+				int n=gt.getNumGeometries();
+				for(int i=0;i<n;i++){
+					Polygon pp=(Polygon)gt.getGeometryN(i);
+					put(pp,(AttributesGeometry)pp.getUserData());
+				}
+				geoms.remove(gt);
+			}
+		}
+	}
+	
 
 
 
@@ -595,47 +612,6 @@ public class GeometryImage implements Cloneable{
         }
     }
 
-    /**
-     * PLEASE DO NOT USE, AT YOUR OWN RISKS
-     * @param name
-     * @param type
-     * @return
-     *
-    public boolean addColumn(String name, String type){
-        for(AttributesGeometry att:atts){
-            att.addColumn(name, type);
-        }
-        return true;
-    }*/
-
-    /**
-     *
-     * @return the types of the schema. @see Attributes
-     *
-    public String[] getSchemaTypes(){
-          if (atts.size() > 0) {
-            return atts.get(0).getTypes();
-        } else {
-            return new String[]{};
-        }
-    }*/
-
-    /**
-     * The types of the schema. @see Attributes
-     * @param separator
-     * @return
-     *
-    public String getSchemaTypes(char separator) {
-        String out = "";
-        for (String att : getSchemaTypes()) {
-            out += att + separator;
-        }
-        if (out.equals("")) {
-            return out;
-        } else {
-            return out.substring(0, out.length() - 1);
-        }
-    }*/
 
     /**
      * Adds a new geometry with attributes to the layer. NOTE THAT NEITHER
