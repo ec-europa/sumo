@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import org.geoimage.impl.imgreader.IReader;
 import org.geoimage.impl.imgreader.TIFF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +76,9 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         } catch (ArrayIndexOutOfBoundsException ex) {
-        	logger.warn(ex.getMessage());ex.printStackTrace();
+        	logger.warn("Pixel value not readed "+ex.getMessage());
         }catch(IllegalArgumentException iae){
-        	logger.warn(iae.getMessage());
+        	logger.warn("Pixel value not readed "+iae.getMessage());
         }finally{
         }
         return -1;

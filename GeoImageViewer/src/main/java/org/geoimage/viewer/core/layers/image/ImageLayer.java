@@ -30,7 +30,6 @@ import org.geoimage.def.SarImageReader;
 import org.geoimage.impl.TiledBufferedImage;
 import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.opengl.OpenGLContext;
-import org.geoimage.viewer.core.GeoImageViewerView;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.jrc.sumo.util.Constant;
@@ -154,8 +153,6 @@ public class ImageLayer implements ILayer  {
 
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-        //poolSize=Runtime.getRuntime().availableProcessors();
-        //poolExcutorService = Executors.newFixedThreadPool(poolSize);
         poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
 
 
@@ -330,16 +327,16 @@ public class ImageLayer implements ILayer  {
 		                if (this.mylevel != curlevel) {
 		                    this.mylevel = curlevel;
 		                    poolExcutorService.shutdown();
-		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
+		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,1000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
 		                }
 
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
 		                int h0 = yy / ((1 << lll) << 8);
 
 
-		                final String initfile = new StringBuffer("\\").
+		                final String initfile = new StringBuffer(File.separator).
 		                		append((int) lll ).
-		                		append("\\").append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"\\":"")).toString();
+		                		append(File.separator).append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+File.separator:"")).toString();
 
 		                //AG loads the different tiles, starting from the center (k=0)
 		                for (int k = 0; k < max; k++) {//loop on priority
@@ -368,20 +365,26 @@ public class ImageLayer implements ILayer  {
 		                                }
 
 		                                String file = new StringBuffer(initfile).append(getBandFolder(activeBand))
-		                                		.append("/")
+		                                		.append(File.separator)
 		                                		.append((i + w0))
 		                                		.append("_")
 		                                		.append((j + h0)).append(".png").toString();
-		                                //checked if the tile is already in memory or in cache, otherwise required it
-		                                if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
-		                                    if (!tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
-		                                        if (curlevel == 0 && lll == 0) {
-		                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
-		                                        } else if (curlevel == lll) {
-		                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
-		                                        }
-		                                    }
-		                                }
+		                                
+		                              //checked if the tile is already in memory or in cache, otherwise required it
+		    		                    Texture t=tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
+		    		                    if (t==null) {
+		    		                    	//check in cache
+		    		                    	BufferedImage tile=tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax, ymin, ymax);
+		    		                    	if (tile!=null) {
+		    		                        	t = AWTTextureIO.newTexture(gl.getGLProfile(),tile, false);
+		    		                        	tcm.add(file, t);
+		    		                        }
+		    		                    }
+		    		                    if(t!=null){
+	                    	                bindTexture(gl, t, xmin, xmax, ymin, ymax);
+		    		                    }else if ((curlevel == 0 && lll == 0)||(curlevel == lll)) {
+                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
+                                        } 
 		                            }
 		                        }
 		                    }
@@ -425,11 +428,20 @@ public class ImageLayer implements ILayer  {
 		                    		.append(".png").toString();
 
 		                    //checked if the tile is already in memory or in cache, otherwise required it
-		                    if (!tryMemoryCache(gl, file, xmin, xmax, ymin, ymax)) {
-		                        if (!tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax)) {
-		                            addTileToQueue(initfile, 0, (i + w0), (j + h0));
+		                    Texture t=tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
+		                    if (t==null) {
+		                    	//check in cache
+		                    	BufferedImage tile=tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax);
+		                    	if (tile!=null) {
+		                        	t = AWTTextureIO.newTexture(gl.getGLProfile(),tile, false);
+		                        	tcm.add(file, t);
 		                        }
 		                    }
+		                    if(t!=null){
+		                    	bindTexture(gl, t, xmin, xmax, ymin, ymax);
+		                    }else{
+		                    	addTileToQueue(initfile, 0, (i + w0), (j + h0));
+		                    }	
 		                }
 		            }
 		        }
@@ -442,17 +454,14 @@ public class ImageLayer implements ILayer  {
     }
 
     private void displayDownloading(int size) {
-    	GeoImageViewerView view=((GeoImageViewerView) SumoPlatform.getApplication().getMainView());
         if (currentSize != size) {
             if (size == 0) {
-                view.setInfo("", -1);
+            	SumoPlatform.getApplication().setMessageInfo("");
             } else {
-                view.setInfo(new StringBuilder("loading ").append(size).toString());
+            	SumoPlatform.getApplication().setMessageInfo(new StringBuilder("loading ").append(size).toString());
             }
-
             currentSize = size;
         }
-
     }
 
     private void setInitialContrast() {
@@ -479,13 +488,27 @@ public class ImageLayer implements ILayer  {
 
 
 
-    //search for tiles in the file cache
-    private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
+    /**
+     * search for tiles in the file cache
+     * @param gl
+     * @param file
+     * @param level
+     * @param i
+     * @param j
+     * @param xmin
+     * @param xmax
+     * @param ymin
+     * @param ymax
+     * @return
+     */
+    private BufferedImage tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
     	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
-    	boolean ok=true;
+    	
+    	BufferedImage temp=null;
+    	
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
-            	BufferedImage temp =null;
+            	
             	try {
             		try {
             			temp = ImageIO.read(cacheInstance.newFile(file));
@@ -497,39 +520,34 @@ public class ImageLayer implements ILayer  {
             			}
             			temp = ImageIO.read(cacheInstance.newFile(file));
             		}
-                    if (temp == null) {
-                        ok=false;
-                    }
             	} catch (Exception ex) {
-            		ok=false;
             		logger.warn("Problem reading tile:"+file+":   "+ex.getMessage());
+            		return null;
                 }	finally{
             		pngReader.dispose();
                 }
 
-            	if(ok){
-	                if (temp.getColorModel().getNumComponents() == 1) {
-	                    temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
-	                }
-
-	                Texture t = AWTTextureIO.newTexture(gl.getGLProfile(),temp, false);
-	                tcm.add(file, t);
-	                bindTexture(gl, t, xmin, xmax, ymin, ymax);
-            	}
-        }else{
-        	ok=false;
+                if (temp.getColorModel().getNumComponents() == 1) {
+                    temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
+                }
         }
-        return ok;
+        return temp;
     }
 
-    //search for the tiles on memory
-    private boolean tryMemoryCache(GL gl, String file, float xmin, float xmax, float ymin, float ymax) {
+    /**
+     * search for the tiles on memory
+     * 
+     * @param gl
+     * @param file
+     * @param xmin
+     * @param xmax
+     * @param ymin
+     * @param ymax
+     * @return
+     */
+    private Texture tryMemoryCache(GL gl, String file, float xmin, float xmax, float ymin, float ymax) {
         Texture t = tcm.getTexture(file);
-        if (t != null) {
-            bindTexture(gl, t, xmin, xmax, ymin, ymax);
-            return true;
-        }
-        return false;
+        return t;
     }
 
     /**
