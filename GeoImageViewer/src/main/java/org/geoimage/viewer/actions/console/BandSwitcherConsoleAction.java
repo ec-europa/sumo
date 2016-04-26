@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.geoimage.viewer.actions.SumoActionEvent;
-import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
 import org.geoimage.viewer.core.gui.manager.LayerManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
