@@ -29,16 +29,15 @@ import it.geosolutions.imageio.gdalframework.GDALUtilities;
 public class GeoToolsGDALReader implements IReader {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(GeoToolsGDALReader.class);
 
-
     private File imageFile;
     public int xSize = -1;
     public int ySize = -1;
     private Rectangle bounds;
     private int band=1;
     private Dataset data;
+
+
 	ImageInputStream iis = null;
-
-
 
     /**
      *
@@ -115,10 +114,17 @@ public class GeoToolsGDALReader implements IReader {
 		return dd;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<GCP> getGCPS(){
 		return this.data.GetGCPs();
 	}
 
+	public Dataset getData() {
+		return data;
+	}
+	public void setData(Dataset data) {
+		this.data = data;
+	}
 
     /* (non-Javadoc)
 	 * @see org.geoimage.impl.ITIFF#getxSize()

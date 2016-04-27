@@ -71,7 +71,7 @@ public class GDALSentinel1 extends Sentinel1 {
                 try{
                 	tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
                 }catch(ArrayIndexOutOfBoundsException e ){
-                	logger.warn("readTile function:"+e.getMessage());
+                	logger.warn("readTile function:"+e.getMessage()+"  index:"+temp+" preloadedData.length"+preloadedData.length);
                 }	
             }
             }
@@ -137,7 +137,7 @@ public class GDALSentinel1 extends Sentinel1 {
        } catch (Exception ex) {
            logger.error(ex.getMessage(),ex);
        }finally{
-       	//tiff.reader.addIIOReadProgressListener(this);
+       	 //reader.addIIOReadProgressListener(this);
        	//readComplete=false;
        	
        }
