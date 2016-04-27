@@ -30,6 +30,7 @@ public class TextureCacheManager {
     public void add(String path, Texture texture) {
         if (count >= max) {
             map.remove(paths[index]);
+            count--;
         }
         map.put(path, texture);
         paths[index++] = path;
@@ -49,9 +50,10 @@ public class TextureCacheManager {
 
     public void clear() {
         try {
-            for (String key : Collections.synchronizedSet(map.keySet())) {
+           /* for (String key : Collections.synchronizedSet(map.keySet())) {
                 map.remove(key);
-            }
+            }*/
+            map.clear();
         } catch (Exception e) {
             System.out.println("stop");
         }

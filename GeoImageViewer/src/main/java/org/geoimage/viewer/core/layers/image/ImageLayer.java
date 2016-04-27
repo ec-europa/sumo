@@ -73,7 +73,7 @@ public class ImageLayer implements ILayer  {
                 return new Object[]{ff.toString(), null};
             }
 
-            GeoImageReader gir2 = imagePool.get();
+            GeoImageReader gir2 = activeGir;
             String next=new StringBuilder().append(level)
             		.append(" ").append(getBandFolder(activeBand))
             		.append(" ").append(i)
@@ -92,7 +92,7 @@ public class ImageLayer implements ILayer  {
             } catch (Exception ex) {
                 logger.error(ex.getMessage(),ex);
             }finally{
-            	imagePool.release(gir2);
+            	//imagePool.release(gir2);
             }
             return new Object[]{f.getAbsolutePath(), next, null};
         }
@@ -113,7 +113,7 @@ public class ImageLayer implements ILayer  {
 
 
     private List<String> submitedTiles;
-    private ImagePool imagePool;
+
     private List<Future<Object[]>> futures = new ArrayList<Future<Object[]>>();
     private int mylevel = -1;
     private RescaleOp rescale = new RescaleOp(1f, brightness, null);
@@ -133,14 +133,14 @@ public class ImageLayer implements ILayer  {
 
     //for cuncurrency reader
     private ExecutorService poolExcutorService;
-    private int poolSize = 2;
-
     private int arrayReadTilesOrder[][]=null ;
-
     private int maxnumberoftiles = 7;
 
-    Iterator<ImageReader> iReader=null;
 	ImageReader pngReader=null;
+	int nThreads=1;
+	
+    // private ImagePool imagePool;
+    //private int poolSize = 2;
 
 
     /**
@@ -148,20 +148,21 @@ public class ImageLayer implements ILayer  {
      * @param gir
      */
     public ImageLayer(GeoImageReader gir) {
-    	iReader=ImageIO.getImageReadersByFormatName("png");
+    	Iterator<ImageReader> iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
 
         this.activeGir = gir;
-        poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-        poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
-
+        setName(gir);
+        activeBand = 0;
+        
+       // poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
+       // imagePool = new ImagePool(gir, poolSize);
+        int nThreads=Runtime.getRuntime().availableProcessors();
+        poolExcutorService = new ThreadPoolExecutor(1,nThreads,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
 
         submitedTiles = new ArrayList<String>();
-        imagePool = new ImagePool(gir, poolSize);
 
-        setName(gir);
-
-        activeBand = 0;
+        
         levels = (int) (Math.sqrt(Math.max(gir.getWidth() / Constant.TILE_SIZE_DOUBLE, gir.getHeight() / Constant.TILE_SIZE_DOUBLE))) + 1;
         maxlevels = (int) (Math.sqrt(Math.max(gir.getWidth() / (Constant.TILE_SIZE_DOUBLE*2), gir.getHeight() / (Constant.TILE_SIZE_DOUBLE*2)))) +1;  //massimo livello di zoom
         curlevel = levels;
@@ -170,9 +171,10 @@ public class ImageLayer implements ILayer  {
         xpadding = (((1 << levels) << 8) - gir.getWidth()) / 2;  // is equal to(int)((Math.pow(2,levels+8)- gir.getWidth())/2);
         ypadding = (((1 << levels) << 8) - gir.getHeight()) / 2; //			   (int)((Math.pow(2,levels+8)- gir.getHeight())/2);
 
-        String temp = SumoPlatform.getApplication().getConfiguration().getMaxTileBuffer();
-        int maxBuffer = Integer.parseInt(temp);
+        String strmaxBuffer = SumoPlatform.getApplication().getConfiguration().getMaxTileBuffer();
+        int maxBuffer = Integer.parseInt(strmaxBuffer);
         tcm = new TextureCacheManager(maxBuffer);
+        
         setInitialContrast();
         maxnumberoftiles = SumoPlatform.getApplication().getConfiguration().getMaxNumOfTiles();
         createMatrixTileOrder();
@@ -187,50 +189,9 @@ public class ImageLayer implements ILayer  {
         this.realTileSizeX = gir.getWidth() / horizontalTilesImage;
         this.realTileSizeY = gir.getHeight() / verticalTilesImage;
 
-
     }
 
-    @Override
-    public String getDescription() {
-        if (activeGir.getDescription() != null&&!activeGir.getDescription().equals("")) {
-            return activeGir.getDescription();
-        } else {
-            return activeGir.getDisplayName(activeBand);
-        }
-    }
-
-    public int getRealTileSizeX() {
-		return realTileSizeX;
-	}
-
-	public void setRealTileSizeX(int realTileSizeX) {
-		this.realTileSizeX = realTileSizeX;
-	}
-
-	public int getRealTileSizeY() {
-		return realTileSizeY;
-	}
-
-	public void setRealTileSizeY(int realTileSizeY) {
-		this.realTileSizeY = realTileSizeY;
-	}
-
-	public int getHorizontalTilesImage() {
-		return horizontalTilesImage;
-	}
-
-	public void setHorizontalTilesImage(int horizontalTilesImage) {
-		this.horizontalTilesImage = horizontalTilesImage;
-	}
-
-	public int getVerticalTilesImage() {
-		return verticalTilesImage;
-	}
-
-	public void setVerticalTilesImage(int verticalTilesImage) {
-		this.verticalTilesImage = verticalTilesImage;
-	}
-
+   
 	/**
      * Create the matrix that define the order in which the tiles will be read
      */
@@ -327,7 +288,7 @@ public class ImageLayer implements ILayer  {
 		                if (this.mylevel != curlevel) {
 		                    this.mylevel = curlevel;
 		                    poolExcutorService.shutdown();
-		                    poolExcutorService = new ThreadPoolExecutor(1,poolSize,1000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
+		                    poolExcutorService = new ThreadPoolExecutor(1,nThreads,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());// Executors.newFixedThreadPool(poolSize);
 		                }
 
 		                int w0 = xx / ((1 << lll) << 8);//xx/(int)Math.pow(2,lll+8);
@@ -502,13 +463,14 @@ public class ImageLayer implements ILayer  {
      * @return
      */
     private BufferedImage tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
-    	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
-    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
+    	String tileId=new StringBuilder("").append(level)
+    			.append(" ").append(getBandFolder(activeBand))
+    			.append(" ").append(i).append(" ").append(j).toString();
     	
+    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
     	BufferedImage temp=null;
     	
         if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
-            	
             	try {
             		try {
             			temp = ImageIO.read(cacheInstance.newFile(file));
@@ -527,7 +489,7 @@ public class ImageLayer implements ILayer  {
             		pngReader.dispose();
                 }
 
-                if (temp.getColorModel().getNumComponents() == 1) {
+                if (temp!=null&&temp.getColorModel().getNumComponents() == 1) {
                     temp = rescale.filter(temp, rescale.createCompatibleDestImage(temp, temp.getColorModel()));
                 }
         }
@@ -665,15 +627,7 @@ public class ImageLayer implements ILayer  {
             rescale = new RescaleOp(contrast.get(createBandsString(activeBand)), brightness, null);
         }
     }
-
-    public int getNumberOfBands() {
-        return activeGir.getNBand();
-    }
-
-    public int getActiveBand() {
-        return activeBand;
-    }
-
+   
     @Override
     public void dispose() {
         disposed = true;
@@ -693,15 +647,14 @@ public class ImageLayer implements ILayer  {
         	submitedTiles.clear();
         	submitedTiles = null;
         }
-        if(imagePool!=null){
+       /* if(imagePool!=null){
         	imagePool.dispose();
         	imagePool = null;
-        }
+        }*/
         SumoPlatform.getApplication().getLayerManager().removeLayer(this);
     }
 
     private void disposeSync() {
-
         poolExcutorService.shutdownNow();
         poolExcutorService = null;
         activeGir.dispose();
@@ -710,25 +663,9 @@ public class ImageLayer implements ILayer  {
         tcm = null;
         submitedTiles.clear();
         submitedTiles = null;
-        imagePool.dispose();
-        imagePool = null;
+      //  imagePool.dispose();
+      //  imagePool = null;
         SumoPlatform.getApplication().getLayerManager().removeLayer(this);
-    }
-
-    public GeoImageReader getImageReader() {
-        return activeGir;
-    }
-
-    public void setMaximumCut(float value) {
-        maxCut = (int) value;
-    }
-
-    public float getMaximumCut() {
-        return maxCut;
-    }
-
-    public void level(int levelIncrease) {
-        this.increaseLevel = levelIncrease;
     }
 
 
@@ -745,7 +682,32 @@ public class ImageLayer implements ILayer  {
         	setName(name);
         }
     }
+    
 
+    public int getNumberOfBands() {
+        return activeGir.getNBand();
+    }
+
+    public int getActiveBand() {
+        return activeBand;
+    }
+
+    
+    public GeoImageReader getImageReader() {
+        return activeGir;
+    }
+
+    public void setMaximumCut(float value) {
+        maxCut = (int) value;
+    }
+
+    public float getMaximumCut() {
+        return maxCut;
+    }
+
+    public void level(int levelIncrease) {
+        this.increaseLevel = levelIncrease;
+    }
 
     public boolean isActive() {
         return active;
@@ -793,6 +755,45 @@ public class ImageLayer implements ILayer  {
         this.type = type;
     }
 
+    @Override
+    public String getDescription() {
+        if (activeGir.getDescription() != null&&!activeGir.getDescription().equals("")) {
+            return activeGir.getDescription();
+        } else {
+            return activeGir.getDisplayName(activeBand);
+        }
+    }
 
+    public int getRealTileSizeX() {
+		return realTileSizeX;
+	}
+
+	public void setRealTileSizeX(int realTileSizeX) {
+		this.realTileSizeX = realTileSizeX;
+	}
+
+	public int getRealTileSizeY() {
+		return realTileSizeY;
+	}
+
+	public void setRealTileSizeY(int realTileSizeY) {
+		this.realTileSizeY = realTileSizeY;
+	}
+
+	public int getHorizontalTilesImage() {
+		return horizontalTilesImage;
+	}
+
+	public void setHorizontalTilesImage(int horizontalTilesImage) {
+		this.horizontalTilesImage = horizontalTilesImage;
+	}
+
+	public int getVerticalTilesImage() {
+		return verticalTilesImage;
+	}
+
+	public void setVerticalTilesImage(int verticalTilesImage) {
+		this.verticalTilesImage = verticalTilesImage;
+	}
 
 }
