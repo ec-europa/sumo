@@ -58,10 +58,13 @@ public class ImagePool {
     }
 
     private GeoImageReader get(int i) {
-        if(i==images.length) return null;
-        if(index>images.length-1) index=0;
-        if(locked[index]) return get(i+1);
-        else{
+        if(i==images.length) 
+        	return null;
+        if(index>images.length-1) 
+        	index=0;
+        if(locked[index]){ 
+        	return get(i+1);
+        }else{
             locked[index]=true;
             return images[index++];
         }
