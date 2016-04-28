@@ -10,6 +10,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;
@@ -85,7 +86,7 @@ public class AddLastImageAction extends SumoAbstractAction {
 			for (int i = 0; i < tempList.size(); i++) {
 				temp = tempList.get(i);
 
-				ImageLayer newImage = new ImageLayer(temp);
+				ImageLayerSingleThread newImage = new ImageLayerSingleThread(temp);
 				SumoPlatform.getApplication().getLayerManager().addLayer(newImage, i == 0);
 				try {
 					Thread.sleep(5000);

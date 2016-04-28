@@ -23,7 +23,7 @@ public class TextureCacheManager {
 
     public TextureCacheManager(int max) {
         this.max = max;
-        map = new ConcurrentHashMap <String, Texture>(max,1);
+        map = new ConcurrentHashMap <String, Texture>(max);
         paths = new String[max];
     }
 
@@ -31,6 +31,7 @@ public class TextureCacheManager {
         if (count >= max) {
             map.remove(paths[index]);
             count--;
+            index--;
         }
         map.put(path, texture);
         paths[index++] = path;
@@ -63,4 +64,14 @@ public class TextureCacheManager {
         index = 0;
         count = 0;
     }
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+    
+    
 }

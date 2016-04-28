@@ -26,7 +26,6 @@ import jrc.it.annotation.reader.jaxb.AdsHeaderType;
 import jrc.it.annotation.reader.jaxb.DownlinkInformationType;
 import jrc.it.annotation.reader.jaxb.ImageInformationType;
 import jrc.it.annotation.reader.jaxb.OrbitType;
-import jrc.it.annotation.reader.jaxb.SwathBoundsType;
 import jrc.it.annotation.reader.jaxb.SwathMergeType;
 import jrc.it.annotation.reader.jaxb.VelocityType;
 import jrc.it.safe.reader.jaxb.StandAloneProductInformation;
