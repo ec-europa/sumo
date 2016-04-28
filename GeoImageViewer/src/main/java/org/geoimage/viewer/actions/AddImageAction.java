@@ -18,6 +18,7 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
+import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
@@ -134,7 +135,7 @@ public class AddImageAction extends SumoAbstractAction  {
         	for(int i=0;i<tempList.size();i++){
         		temp=tempList.get(i);
 
-        		ImageLayer newImage = new ImageLayer(temp);
+        		ImageLayerSingleThread newImage = new ImageLayerSingleThread(temp);
                 SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
                 try {
                     Thread.sleep(5000);
