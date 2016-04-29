@@ -87,11 +87,9 @@ public class MultipleBatchAnalysis extends AbstractBatchAnalysis {
 		// Get the ThreadFactory implementation to use
 		// creating the ThreadPoolExecutor
 		int minT = NTHREDS > 1 ? 2 : 1;
-		ThreadPoolExecutor executorPool = new ThreadPoolExecutor(minT, NTHREDS, 60, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<>(50));
+		ThreadPoolExecutor executorPool = new ThreadPoolExecutor(minT, NTHREDS, 60, TimeUnit.SECONDS,new LinkedBlockingQueue<>(50));
 		final List<Future<AnalysisProcess.Results>> tasks = new ArrayList<Future<AnalysisProcess.Results>>();
-		ExecutorCompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(
-				executorPool);
+		ExecutorCompletionService<AnalysisProcess.Results> ecs = new ExecutorCompletionService<AnalysisProcess.Results>(executorPool);
 		int count=0;
 		int completati=0;
 		try {
