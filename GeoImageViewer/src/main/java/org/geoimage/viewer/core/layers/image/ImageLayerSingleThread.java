@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -74,8 +79,12 @@ public class ImageLayerSingleThread implements ILayer {
 	private int arrayReadTilesOrder[][] = null;
 	private int maxnumberoftiles = 7;
 
-	ImageReader pngReader = null;
-
+	private ImageReader pngReader = null;
+	private ThreadPoolExecutor tileWorker =null;
+	//private List<Future<String>> taskTiles=null;
+	private ExecutorCompletionService<String> tileService=null;
+	private ConsumerTile consumer=null;
+	private OpenGLContext context=null;
 	/**
 	 *
 	 * @param gir
@@ -124,9 +133,14 @@ public class ImageLayerSingleThread implements ILayer {
 		// the real size of tiles
 		this.realTileSizeX = gir.getWidth() / horizontalTilesImage;
 		this.realTileSizeY = gir.getHeight() / verticalTilesImage;
+		
+		int NTHREDS = Runtime.getRuntime().availableProcessors();
+		int minT = NTHREDS > 1 ? 2 : 1;
 
-		// tiles=new ArrayList<>();
-
+		tileWorker = new ThreadPoolExecutor(minT, NTHREDS, 3000, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<>());
+		tileService = new ExecutorCompletionService<String>(tileWorker);
+		consumer=new ConsumerTile();
+		consumer.run();
 	}
 
 	/**
@@ -156,34 +170,18 @@ public class ImageLayerSingleThread implements ILayer {
 		}
 	}
 
-	/**
-	 *
-	 * @param gl
-	 *
-	 *            private void updateTiles(GL gl) { List<Object> remove1 = new
-	 *            ArrayList<>(); for (Object f : futures) { if (f.isDone() ||
-	 *            f.isCancelled()) { remove1.add(f); try { Object[] o = f.get();
-	 *            //o[0]=path file o[1]=next tile string o[2]=Buffered image
-	 *            submitedTiles.remove(o[1]); if (o.length>2&&o[2] != null) {
-	 *            tcm.add((String) o[0],
-	 *            AWTTextureIO.newTexture(gl.getGLProfile(),(BufferedImage)
-	 *            o[2], false)); } } catch (Exception ex) {
-	 *            logger.error(ex.getMessage(),ex); } } }
-	 *            futures.removeAll(remove1); }
-	 */
 
 	@Override
 	/**
 	 * displays the tiles on screen
 	 */
 	public void render(Object glContext) {
-		OpenGLContext context = (OpenGLContext) glContext;
+		context = (OpenGLContext) glContext;
 		if (activeGir != null) {
 			if (torescale) {
 				torescale = false;
 				tcm.clear();
 			}
-			GL gl = context.getGL();
 
 			float zoom = context.getZoom();
 			int width = context.getWidth();
@@ -198,9 +196,7 @@ public class ImageLayerSingleThread implements ILayer {
 			int max = maxnumberoftiles; // for the computation of the array is
 										// important to keep this number odd
 
-			Cache c = CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
-
-			gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
+			context.getGL().getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 			if (zoom >= 1) {
 				curlevel = (int) Math.sqrt(zoom + 1);
 				// cycle to avoid the black area when zooming in/out and tiles
@@ -244,14 +240,10 @@ public class ImageLayerSingleThread implements ILayer {
 								if (arrayReadTilesOrder[i][j] == k) {
 									// start reading tiles in center of the
 									// image and go through the borders
-									float ymin = (float) (((j + h0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy)
-											/ (height * zoom));
-									float ymax = (float) (((j + h0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy)
-											/ (height * zoom));
-									float xmin = (float) (((i + w0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx)
-											/ (1d * width * zoom));
-									float xmax = (float) (((i + w0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx)
-											/ (1d * width * zoom));
+									float ymin = (float) (((j + h0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy)/ (height * zoom));
+									float ymax = (float) (((j + h0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - yy)/ (height * zoom));
+									float xmin = (float) (((i + w0) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx)/ (1d * width * zoom));
+									float xmax = (float) (((i + w0 + 1) * Constant.TILE_SIZE_DOUBLE * (1 << lll) - xx)/ (1d * width * zoom));
 
 									// check if the tile is in or out, if is not
 									// visible then is not loaded
@@ -265,28 +257,11 @@ public class ImageLayerSingleThread implements ILayer {
 									String file = new StringBuffer(initfile).append(activeBand).append(File.separator)
 											.append((i + w0)).append("_").append((j + h0)).append(".png").toString();
 
-									// checked if the tile is already in memory
-									// or in cache, otherwise required it
-									Texture t = tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
-									if (t == null) {
-										// check in cache
-										BufferedImage tile = tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax,
-												ymin, ymax);
-										if (tile != null) {
-											t = AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
-											tcm.add(file, t);
-										}
-									}
-									if (t != null) {
-										bindTexture(gl, t, xmin, xmax, ymin, ymax);
-									} else if ((curlevel == 0 && lll == 0) || (curlevel == lll)) {
-										File fTile = c.newFile(file);
-										BufferedImage tile = createTile(activeGir, fTile, lll, (i + w0), (j + h0),
-												activeBand);
-										t=AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
-										tcm.add(file, t);
-										bindTexture(gl, t, xmin, xmax, ymin, ymax);
-									}
+									Texture t=null;
+									if((t=tcm.getTexture(file))==null)
+										tileService.submit(new TextureTask(file,lll,i,j,w0,h0));
+									else
+										bindTexture(context.getGL().getGL2(), t, xmin, xmax, ymin, ymax);
 								}
 							}
 						}
@@ -334,37 +309,107 @@ public class ImageLayerSingleThread implements ILayer {
 						}
 						String file = new StringBuilder(initfile).append(activeBand).append("/").append((i + w0))
 								.append("_").append((j + h0)).append(".png").toString();
-
-						// checked if the tile is already in memory or in cache,
-						// otherwise required it
-						Texture t = tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
-						if (t == null) {
-							// check in cache
-							BufferedImage tile = tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax);
-							if (tile != null) {
-								t = AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
-								tcm.add(file, t);
-							}
-						}
-						if (t != null) {
-							bindTexture(gl, t, xmin, xmax, ymin, ymax);
-						} else {
-							final File f = c.newFile(file.toString());
-							BufferedImage tile = createTile(activeGir, f, 0, (i + w0), (j + h0), activeBand);
-							t=AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
-							tcm.add(file, t);
-							bindTexture(gl, t, xmin, xmax, ymin, ymax);
-						}
+						
+						Texture t=null;
+						if((t=tcm.getTexture(file))==null)
+							tileService.submit(new TextureTask(file,0,i,j,w0,h0));
+						else
+							bindTexture(context.getGL().getGL2(), t, xmin, xmax, ymin, ymax);
 					}
 				}
 			}
-			displayDownloading(tcm.getCount());
 			SumoPlatform.getApplication().refresh();
 			if (this.disposed) {
 				disposeSync();
 			}
 		}
 	}
+	
+	class ConsumerTile implements Runnable{
+		@Override
+		public void run() {
+			while (!tileWorker.getQueue().isEmpty()){
+					
+					try {
+						String idTile = (String) tileService.take().get();
+			/*			Texture t=tcm.getTexture(idTile);
+						if(t!=null)
+							bindTexture(context.getGL().getGL2(), t, xmin, xmax, ymin, ymax);*/
+						displayDownloading(tileWorker.getQueue().size());
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}finally{
+						
+					}
+			}
+			
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @author argenpo
+	 *
+	 */
+	class TextureTask implements Callable<String>{
+		String file=null;
+		int level=0, i=0, j=0, w0=0,h0=0;
+		
+		TextureTask(String file,int level,int i,int j,int w0,int h0){
+			this.file=file;
+			this.level=level;
+			this.i=i;
+			this.j=j;
+			this.w0=w0;
+			this.h0=h0;
+		}
+		
+		
+		@Override
+		public String call() throws Exception {
+			Texture t=getTexture(file,level,i,j,w0,h0);
+			if(t!=null){
+				tcm.add(file, t);
+			}
+			return file;
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @param file
+	 * @param i
+	 * @param j
+	 * @param w0
+	 * @param h0
+	 * @return texture id
+	 */
+	private Texture getTexture(final String file,int level,int i,int j,int w0,int h0){
+		GL2 gl=context.getGL().getGL2();
+		// checked if the tile is already in memory
+		// or in cache, otherwise required it
+		Texture t = tryMemoryCache(file);
+		if (t == null) {
+			// check in cache
+			BufferedImage tile = tryFileCache(file, level, (i + w0), (j + h0));
+			if (tile != null) {
+				t = AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
+			}
+		}
+		if (t == null) {
+			if ((curlevel == 0 && level == 0) || (curlevel == level)) {
+				Cache c = CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
+				File fTile = c.newFile(file);
+				BufferedImage tile = createTile(activeGir, fTile, level, (i + w0), (j + h0),activeBand);
+				t=AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
+			}	
+		}
+		return t;
+	}
+	
 
 	/**
 	 * 
@@ -448,8 +493,7 @@ public class ImageLayerSingleThread implements ILayer {
 	 * @param ymax
 	 * @return
 	 */
-	private BufferedImage tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin,
-			float ymax) {
+	private BufferedImage tryFileCache(String file, int level, int i, int j) {
 		String tileId = new StringBuilder("").append(level).append(" ").append(activeBand).append(" ").append(i)
 				.append(" ").append(j).toString();
 
@@ -493,7 +537,7 @@ public class ImageLayerSingleThread implements ILayer {
 	 * @param ymax
 	 * @return
 	 */
-	private Texture tryMemoryCache(GL gl, String file, float xmin, float xmax, float ymin, float ymax) {
+	private Texture tryMemoryCache(String file) {
 		Texture t = tcm.getTexture(file);
 		return t;
 	}
@@ -739,5 +783,7 @@ public class ImageLayerSingleThread implements ILayer {
 	public void setVerticalTilesImage(int verticalTilesImage) {
 		this.verticalTilesImage = verticalTilesImage;
 	}
+
+
 
 }
