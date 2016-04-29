@@ -183,7 +183,7 @@ public class ImageLayerSingleThread implements ILayer {
 				tcm.clear();
 			}
 
-			float zoom = context.getZoom();
+			final float zoom = context.getZoom();
 			int width = context.getWidth();
 			int height = context.getHeight();
 			int x = context.getX();
@@ -400,12 +400,12 @@ public class ImageLayerSingleThread implements ILayer {
 			}
 		}
 		if (t == null) {
-			if ((curlevel == 0 && level == 0) || (curlevel == level)) {
+			//if (((curlevel == 0 && level == 0) || (curlevel == level))||context.getZoom()<=1) {
 				Cache c = CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
 				File fTile = c.newFile(file);
 				BufferedImage tile = createTile(activeGir, fTile, level, (i + w0), (j + h0),activeBand);
 				t=AWTTextureIO.newTexture(gl.getGLProfile(), tile, false);
-			}	
+			//}	
 		}
 		return t;
 	}
