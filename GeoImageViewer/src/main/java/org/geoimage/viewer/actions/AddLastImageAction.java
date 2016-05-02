@@ -10,7 +10,6 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.factory.GeoImageReaderFactory;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;
 import org.jrc.sumo.configuration.PlatformConfiguration;
 import org.jrc.sumo.util.Constant;

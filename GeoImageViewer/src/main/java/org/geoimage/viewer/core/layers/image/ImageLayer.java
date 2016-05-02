@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,7 +30,6 @@ import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
-import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread.ConsumerTile;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
@@ -50,39 +47,47 @@ public class ImageLayer implements ILayer  {
 	protected boolean isRadio = false;
 	protected String type;
 	protected ILayer parent=null;
+	
+	class TileInfo{
+		String idTile;
+		String path;
+		BufferedImage pngImage;
+		
+		public TileInfo(String id,String absPath,BufferedImage img) {
+			idTile=id;
+			path=absPath;
+			pngImage=img;
+		}
+	}
 
-	class ServiceTile implements  Callable<Object[]> {
-		private String initfile;
+	
+	
+	class ServiceTile implements  Callable<TileInfo> {
+		private File tileFile;
 		private int level;
 		private int xTile;
 		private int yTile;
+		private String idTile;
 
-		public ServiceTile(String initfile, int level, int xTile, int yTile){
+		public ServiceTile(File initfile,String idTile, int level, int xTile, int yTile){
 			super();
-			this.initfile=initfile;
+			this.tileFile=initfile;
 			this.xTile=xTile;
 			this.yTile=yTile;
 			this.level=level;
+			this.idTile=idTile;
 		}
 
 
-        public Object[] call() {
-        	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
-        	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/")
-        			.append(xTile).append("_").append(yTile).append(".png");
-           
-        	final File f = c.newFile(ff.toString());
-            if (f == null) {
-                return new Object[]{ff.toString(), null};
-            }
+        public TileInfo call() {
 
             GeoImageReader gir2 = activeGir;
-            String next=new StringBuilder().append(level)
+         /*   String next=new StringBuilder().append(level)
             		.append(" ").append(getBandFolder(activeBand))
             		.append(" ").append(xTile)
-            		.append(" ").append(yTile).toString();
+            		.append(" ").append(yTile).toString();*/
             if (gir2 == null) {
-                return new Object[]{f.getAbsolutePath(),next, null};
+                return new TileInfo(idTile, tileFile.getAbsolutePath(), null);
             }
             try {
             	int x=xTile * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - xpadding;
@@ -90,18 +95,15 @@ public class ImageLayer implements ILayer  {
             	float zoom=(1 << level);
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
 
-                ImageIO.write(out, "png", f);
-                return new Object[]{f.getAbsolutePath(), next, out};
+                ImageIO.write(out, "png", tileFile);
+                return new TileInfo(idTile, tileFile.getAbsolutePath(), out);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(),ex);
             }finally{
             	//imagePool.release(gir2);
             }
-            return new Object[]{f.getAbsolutePath(), next, null};
+            return new TileInfo(idTile, tileFile.getAbsolutePath(), null);
         }
-        
-        
-        
         /**
         *
         * @param gir
@@ -142,11 +144,9 @@ public class ImageLayer implements ILayer  {
     private int xpadding;
     private int ypadding;
     private TextureCacheManager tcm;
-
-
     private List<String> submitedTiles;
 
-    private List<Future<Object[]>> futures = new ArrayList<Future<Object[]>>();
+    private List<Future<TileInfo>> futures = new ArrayList<Future<TileInfo>>();
     private int mylevel = -1;
     private RescaleOp rescale = new RescaleOp(1f, brightness, null);
     private boolean disposed = false;
@@ -163,9 +163,7 @@ public class ImageLayer implements ILayer  {
     private int horizontalTilesImage=0;
     private int verticalTilesImage=0;
 
-    //for cuncurrency reader
     private ThreadPoolExecutor poolExcutorService;
-	private ExecutorCompletionService<Object[]> tileService=null;
 
     private int arrayReadTilesOrder[][]=null ;
     private int maxnumberoftiles = 7;
@@ -173,32 +171,6 @@ public class ImageLayer implements ILayer  {
 	ImageReader pngReader=null;
 	int nThreads=1;
 	OpenGLContext context;
-	private ConsumerTile consumer=null;
-
-    // private ImagePool imagePool;
-    //private int poolSize = 2;
-
-	
-	class ConsumerTile implements Runnable{
-		@Override
-		public void run() {
-			while (!poolExcutorService.getQueue().isEmpty()){
-					try {
-						Object[] obj = (Object[]) tileService.take().get();
-						updateFutures(context.getGL().getGL2());
-						/*Texture t=AWTTextureIO.newTexture(context.getGL().getGL2().getGLProfile(),(BufferedImage) obj[1], false);
-						if(t!=null)
-							tcm.add((String)obj[0], t);
-						
-						displayDownloading(poolExcutorService.getQueue().size());*/
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-					}finally{
-						
-					}
-			}
-		}
-	}
 	
 
     /**
@@ -213,11 +185,8 @@ public class ImageLayer implements ILayer  {
         setName(gir);
         activeBand = 0;
         
-       // poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-       // imagePool = new ImagePool(gir, poolSize);
         int nThreads=Runtime.getRuntime().availableProcessors();
         poolExcutorService = new ThreadPoolExecutor(1,nThreads,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
-		tileService = new ExecutorCompletionService<Object[]>(poolExcutorService);
 
         submitedTiles = new ArrayList<String>();
 
@@ -247,8 +216,6 @@ public class ImageLayer implements ILayer  {
      // the real size of tiles
         this.realTileSizeX = gir.getWidth() / horizontalTilesImage;
         this.realTileSizeY = gir.getHeight() / verticalTilesImage;
-        consumer=new ConsumerTile();
-		consumer.run();
     }
 
    
@@ -283,15 +250,15 @@ public class ImageLayer implements ILayer  {
      * @param gl
      */
     private void updateFutures(GL gl) {
-        List<Future<Object[]>> remove1 = new ArrayList<Future<Object[]>>();
-        for (Future<Object[]> f : futures) {
+        List<Future<TileInfo>> remove1 = new ArrayList<Future<TileInfo>>();
+        for (Future<TileInfo> f : futures) {
             if (f.isDone() || f.isCancelled()) {
                 remove1.add(f);
                 try {
-                    Object[] o = f.get();
-                    submitedTiles.remove(o[1]);
-                    if (o.length>2&&o[2] != null) {
-                        tcm.add((String) o[0], AWTTextureIO.newTexture(gl.getGLProfile(),(BufferedImage) o[2], false));
+                	TileInfo o = f.get();
+                    submitedTiles.remove(o.idTile); //o[0]=file o[1]=id o[2]=buffered image 
+                    if (o.pngImage!=null) {
+                        tcm.add(o.idTile, AWTTextureIO.newTexture(gl.getGLProfile(),o.pngImage, false));
                     }
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(),ex);
@@ -307,14 +274,18 @@ public class ImageLayer implements ILayer  {
      */
     public void render(Object glContext) {
     	context=(OpenGLContext)glContext;
+    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
+    	
     	if(activeGir!=null){
+    		String description=activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+File.separator:"";
+    		
 	        if (torescale) {
 	            torescale = false;
 	            tcm.clear();
 	        }
 	        GL gl = context.getGL();
 
-	        //updateFutures(gl);
+	        updateFutures(gl);
 
 	        float zoom = context.getZoom();
 	        int width = context.getWidth();
@@ -327,14 +298,10 @@ public class ImageLayer implements ILayer  {
 
 	        //max tiles to compute time by time
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
-
-	        Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
-
 	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 		        if (zoom >= 1) {
 		            curlevel = (int) Math.sqrt(zoom + 1);
-		            //cycle to avoid the black area when zooming in/out and tiles not in memory
-		            //stop when lll=max zoom level
+		            //cycle to avoid the black area when zooming in/out and tiles not in memory. Stop when lll=max zoom level
 		            for (int lll = maxlevels; (lll > curlevel - 1); lll--) {
 		            	if (lll > maxlevels) {
 		                    break;
@@ -355,9 +322,12 @@ public class ImageLayer implements ILayer  {
 		                int h0 = yy / ((1 << lll) << 8);
 
 
-		                final String initfile = new StringBuffer(File.separator).
-		                		append((int) lll ).
-		                		append(File.separator).append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+File.separator:"")).toString();
+		                final String initfile = new StringBuffer(File.separator)
+		                		.append((int) lll )
+		                		.append(File.separator)
+		                		.append(description)
+		                		.toString();
+		                
 
 		                //AG loads the different tiles, starting from the center (k=0)
 		                for (int k = 0; k < max; k++) {//loop on priority
@@ -384,27 +354,25 @@ public class ImageLayer implements ILayer  {
 		                                if (xmin > 1 || xmax < 0) {
 		                                    continue;
 		                                }
+		    		                    
+		                                String relativePath = buildPathString(initfile, (i + w0),(j + h0));
+		                                File absolutePath=cacheInstance.newFile(relativePath);
+		                                String idTile=buildTileId(lll, (i + w0),(j + h0));
 
-		                                String file = new StringBuffer(initfile).append(getBandFolder(activeBand))
-		                                		.append(File.separator)
-		                                		.append((i + w0))
-		                                		.append("_")
-		                                		.append((j + h0)).append(".png").toString();
-		                                
 		                              //checked if the tile is already in memory or in cache, otherwise required it
-		    		                    Texture t=tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
+		    		                    Texture t=tcm.getTexture(idTile);
 		    		                    if (t==null) {
 		    		                    	//check in cache
-		    		                    	BufferedImage tile=tryFileCache(gl, file, lll, (i + w0), (j + h0), xmin, xmax, ymin, ymax);
+		    		                    	BufferedImage tile=tryFileCache(gl, absolutePath,idTile);
 		    		                    	if (tile!=null) {
 		    		                        	t = AWTTextureIO.newTexture(gl.getGLProfile(),tile, false);
-		    		                        	tcm.add(file, t);
+		    		                        	tcm.add(idTile, t);
 		    		                        }
 		    		                    }
 		    		                    if(t!=null){
 	                    	                bindTexture(gl, t, xmin, xmax, ymin, ymax);
 		    		                    }else if ((curlevel == 0 && lll == 0)||(curlevel == lll)) {
-                                            addTileToQueue(initfile, lll, (i + w0), (j + h0));
+                                            addTileToQueue(absolutePath,idTile,lll,i,j);
                                         } 
 		                            }
 		                        }
@@ -419,7 +387,8 @@ public class ImageLayer implements ILayer  {
 
 		            final String initfile = new StringBuilder(File.separator)
 		            						.append("0").append(File.separator)
-		            						.append((activeGir instanceof TiledBufferedImage?((TiledBufferedImage)activeGir).getDescription()+"/":"")).toString();
+		            						.append(description).append(File.separator).toString();
+		            
 		            for (int j = 0; j < max; j++) {
 		                if (j + h0 < 0) {
 		                    continue;
@@ -441,27 +410,25 @@ public class ImageLayer implements ILayer  {
 		                    if (xmin > 1 || xmax < 0) {
 		                        continue;
 		                    }
-		                    String file = new StringBuilder(initfile).append(getBandFolder(activeBand))
-		                    		.append("/")
-		                    		.append((i + w0))
-		                    		.append("_")
-		                    		.append((j + h0))
-		                    		.append(".png").toString();
+		                    
+		                    String relativePath = buildPathString(initfile, (i + w0),(j + h0));
+                            File absolutePath=cacheInstance.newFile(relativePath);
+                            String idTile=buildTileId(0, (i + w0),(j + h0));
 
 		                    //checked if the tile is already in memory or in cache, otherwise required it
-		                    Texture t=tryMemoryCache(gl, file, xmin, xmax, ymin, ymax);
+		                    Texture t=tcm.getTexture(idTile);
 		                    if (t==null) {
 		                    	//check in cache
-		                    	BufferedImage tile=tryFileCache(gl, file, 0, (i + w0), (j + h0), xmin, xmax, ymin, ymax);
+		                    	BufferedImage tile=tryFileCache(gl,absolutePath,idTile);
 		                    	if (tile!=null) {
 		                        	t = AWTTextureIO.newTexture(gl.getGLProfile(),tile, false);
-		                        	tcm.add(file, t);
+		                        	tcm.add(idTile,t);
 		                        }
 		                    }
 		                    if(t!=null){
 		                    	bindTexture(gl, t, xmin, xmax, ymin, ymax);
 		                    }else{
-		                    	addTileToQueue(initfile, 0, (i + w0), (j + h0));
+		                    	addTileToQueue(absolutePath,idTile,0,i,j);
 		                    }	
 		                }
 		            }
@@ -472,6 +439,37 @@ public class ImageLayer implements ILayer  {
 	            disposeSync();
 	        }
         }
+    }
+    
+    /**
+     * 
+     * @param level
+     * @param xtile
+     * @param ytile
+     * @return
+     */
+    public String buildTileId(int level,int xtile,int ytile){
+    	String tileId=new StringBuilder("").append(level)
+    			.append(" ").append(activeBand)
+    			.append(" ").append(xtile).append(" ").append(ytile).toString();
+    	
+    	return tileId;
+    }
+    
+    /**
+     * 
+     * @param initfile
+     * @param xtile
+     * @param ytile
+     * @return
+     */
+    private String buildPathString(String initfile,int xtile,int ytile){
+    	return new StringBuilder(initfile).append(getBandFolder(activeBand))
+        		.append("/")
+        		.append(xtile)
+        		.append("_")
+        		.append(ytile)
+        		.append(".png").toString();
     }
 
     private void displayDownloading(int size) {
@@ -522,28 +520,24 @@ public class ImageLayer implements ILayer  {
      * @param ymax
      * @return
      */
-    private BufferedImage tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
-    	String tileId=new StringBuilder("").append(level)
-    			.append(" ").append(getBandFolder(activeBand))
-    			.append(" ").append(i).append(" ").append(j).toString();
-    	
+    private BufferedImage tryFileCache(GL gl, File absoluteFile,String idTile) {
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
     	BufferedImage temp=null;
     	
-        if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
+        if (cacheInstance.contains(absoluteFile.getAbsolutePath()) & !submitedTiles.contains(idTile)) {
             	try {
             		try {
-            			temp = ImageIO.read(cacheInstance.newFile(file));
+            			temp = ImageIO.read(absoluteFile);
             		} catch (Exception ex) {
             			try {
             			    Thread.sleep(200);
             			} catch(InterruptedException e) {
             			    Thread.currentThread().interrupt();
             			}
-            			temp = ImageIO.read(cacheInstance.newFile(file));
+            			temp = ImageIO.read(absoluteFile);
             		}
             	} catch (Exception ex) {
-            		logger.warn("Problem reading tile:"+file+":   "+ex.getMessage());
+            		logger.warn("Problem reading tile:"+absoluteFile.getAbsolutePath()+":   "+ex.getMessage());
             		return null;
                 }	finally{
             		pngReader.dispose();
@@ -556,21 +550,6 @@ public class ImageLayer implements ILayer  {
         return temp;
     }
 
-    /**
-     * search for the tiles on memory
-     * 
-     * @param gl
-     * @param file
-     * @param xmin
-     * @param xmax
-     * @param ymin
-     * @param ymax
-     * @return
-     */
-    private Texture tryMemoryCache(GL gl, String file, float xmin, float xmax, float ymin, float ymax) {
-        Texture t = tcm.getTexture(file);
-        return t;
-    }
 
     /**
      *
@@ -613,13 +592,10 @@ public class ImageLayer implements ILayer  {
      * @param i
      * @param j
      */
-    public void addTileToQueue(final String initfile, final int level, final int i, final int j) {
-    	String tilesStr=new StringBuffer(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
-        if (!submitedTiles.contains(tilesStr)) {
-            submitedTiles.add(tilesStr);
-
-            futures.add(0, poolExcutorService.submit(new ServiceTile(initfile, level, i, j)));
-
+    public void addTileToQueue(final File fileTile,String idTile,int level,int i, int j) {
+        if (!submitedTiles.contains(idTile)) {
+            submitedTiles.add(idTile);
+            futures.add(0, poolExcutorService.submit(new ServiceTile(fileTile,idTile, level, i, j)));
         }
     }
 
@@ -631,9 +607,7 @@ public class ImageLayer implements ILayer  {
 
     private String createBandsString(int b) {
         StringBuilder out = new StringBuilder();
-        //for (int i = 0; i < b.length; i++) {
-            out.append(b).append(",");
-        //}
+        out.append(b).append(",");
         return out.toString();
     }
 
@@ -650,7 +624,11 @@ public class ImageLayer implements ILayer  {
     public float getBrightness() {
         return brightness;
     }
-
+    
+    /**
+     * 
+     * @param val
+     */
     public void setActiveBand(int val) {
         if (futures.size() > 0) {
             return;
