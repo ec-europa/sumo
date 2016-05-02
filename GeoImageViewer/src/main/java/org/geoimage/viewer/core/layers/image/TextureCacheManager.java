@@ -4,7 +4,6 @@
  */
 package org.geoimage.viewer.core.layers.image;
 
-import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -26,27 +25,33 @@ public class TextureCacheManager {
         map = new ConcurrentHashMap <String, Texture>(max);
         paths = new String[max];
     }
-
-    public void add(String path, Texture texture) {
+    
+    /**
+     * 
+     * @param idTile
+     * @param texture
+     */
+    public void add(String idTile, Texture texture) {
         if (count >= max) {
             map.remove(paths[index]);
             count--;
             index--;
         }
-        map.put(path, texture);
-        paths[index++] = path;
+        map.put(idTile, texture);
+        paths[index++] = idTile;
         if (index >= max) {
             index = 0;
         }
         count++;
     }
-
-    public boolean isCached(String path) {
-        return map.containsKey(path);
+    
+    public boolean isCached(String tileId) {
+        return map.containsKey(tileId);
     }
-
-    public Texture getTexture(String path) {
-        return map.get(path);
+    
+    
+    public Texture getTexture(String idTile) {
+        return map.get(idTile);
     }
 
     public void clear() {

@@ -18,7 +18,6 @@ import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.io.SumoXmlIOOld;
 import org.geoimage.viewer.core.layers.image.CacheManager;
 import org.geoimage.viewer.core.layers.image.ImageLayer;
-import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsLayer;
 import org.geoimage.viewer.core.layers.thumbnails.ThumbnailsManager;
 import org.geoimage.viewer.widget.dialog.ActionDialog.Argument;

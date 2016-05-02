@@ -65,7 +65,12 @@ public class Cache {
 
 	        return 0;
 	    }
-
+	    
+	    /**
+	     * 
+	     * @param fileName
+	     * @return
+	     */
 	    public boolean contains(String fileName) {
 	        if (fileName == null) {
 	            return false;
