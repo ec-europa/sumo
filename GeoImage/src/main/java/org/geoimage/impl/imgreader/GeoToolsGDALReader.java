@@ -104,7 +104,7 @@ public class GeoToolsGDALReader implements IReader {
 	 * @param offsety
 	 * @return
 	 */
-	public int[] readPixValues(int x,int y,int offsetx,int offsety){
+	public synchronized int[] readPixValues(int x,int y,int offsetx,int offsety){
 		int pixels = offsetx * offsety;
 		Band b=data.GetRasterBand(band);
 		int buf_size = pixels;
