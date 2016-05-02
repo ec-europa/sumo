@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,6 +32,7 @@ import org.geoimage.impl.cosmo.AbstractCosmoSkymedImage;
 import org.geoimage.opengl.OpenGLContext;
 import org.geoimage.viewer.core.SumoPlatform;
 import org.geoimage.viewer.core.api.ilayer.ILayer;
+import org.geoimage.viewer.core.layers.image.ImageLayerSingleThread.ConsumerTile;
 import org.jrc.sumo.util.Constant;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +100,8 @@ public class ImageLayer implements ILayer  {
             return new Object[]{f.getAbsolutePath(), next, null};
         }
         
+        
+        
         /**
         *
         * @param gir
@@ -160,16 +164,42 @@ public class ImageLayer implements ILayer  {
     private int verticalTilesImage=0;
 
     //for cuncurrency reader
-    private ExecutorService poolExcutorService;
+    private ThreadPoolExecutor poolExcutorService;
+	private ExecutorCompletionService<Object[]> tileService=null;
+
     private int arrayReadTilesOrder[][]=null ;
     private int maxnumberoftiles = 7;
 
 	ImageReader pngReader=null;
 	int nThreads=1;
-	
+	OpenGLContext context;
+	private ConsumerTile consumer=null;
+
     // private ImagePool imagePool;
     //private int poolSize = 2;
 
+	
+	class ConsumerTile implements Runnable{
+		@Override
+		public void run() {
+			while (!poolExcutorService.getQueue().isEmpty()){
+					try {
+						Object[] obj = (Object[]) tileService.take().get();
+						updateFutures(context.getGL().getGL2());
+						/*Texture t=AWTTextureIO.newTexture(context.getGL().getGL2().getGLProfile(),(BufferedImage) obj[1], false);
+						if(t!=null)
+							tcm.add((String)obj[0], t);
+						
+						displayDownloading(poolExcutorService.getQueue().size());*/
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}finally{
+						
+					}
+			}
+		}
+	}
+	
 
     /**
      *
@@ -187,6 +217,7 @@ public class ImageLayer implements ILayer  {
        // imagePool = new ImagePool(gir, poolSize);
         int nThreads=Runtime.getRuntime().availableProcessors();
         poolExcutorService = new ThreadPoolExecutor(1,nThreads,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
+		tileService = new ExecutorCompletionService<Object[]>(poolExcutorService);
 
         submitedTiles = new ArrayList<String>();
 
@@ -216,7 +247,8 @@ public class ImageLayer implements ILayer  {
      // the real size of tiles
         this.realTileSizeX = gir.getWidth() / horizontalTilesImage;
         this.realTileSizeY = gir.getHeight() / verticalTilesImage;
-
+        consumer=new ConsumerTile();
+		consumer.run();
     }
 
    
@@ -274,7 +306,7 @@ public class ImageLayer implements ILayer  {
      * displays the tiles on screen
      */
     public void render(Object glContext) {
-    	OpenGLContext context=(OpenGLContext)glContext;
+    	context=(OpenGLContext)glContext;
     	if(activeGir!=null){
 	        if (torescale) {
 	            torescale = false;
@@ -282,7 +314,7 @@ public class ImageLayer implements ILayer  {
 	        }
 	        GL gl = context.getGL();
 
-	        updateFutures(gl);
+	        //updateFutures(gl);
 
 	        float zoom = context.getZoom();
 	        int width = context.getWidth();

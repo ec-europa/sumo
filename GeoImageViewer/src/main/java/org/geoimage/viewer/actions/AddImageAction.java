@@ -135,7 +135,7 @@ public class AddImageAction extends SumoAbstractAction  {
         	for(int i=0;i<tempList.size();i++){
         		temp=tempList.get(i);
 
-        		ImageLayerSingleThread newImage = new ImageLayerSingleThread(temp);
+        		ImageLayer newImage = new ImageLayer(temp);
                 SumoPlatform.getApplication().getLayerManager().addLayer(newImage,i==0);
                 try {
                     Thread.sleep(5000);

@@ -47,7 +47,7 @@ public class GDALSentinel1 extends Sentinel1 {
     
     
     @Override
-    public int[] readTile(int x, int y, int width, int height,int band) {
+    public synchronized int[] readTile(int x, int y, int width, int height,int band) {
         Rectangle rect = new Rectangle(x, y, width, height);
         rect = rect.intersection(getImage(band).getBounds());
         int[] tile = new int[height * width];
@@ -280,7 +280,7 @@ public class GDALSentinel1 extends Sentinel1 {
 	  * @param band
 	  * @return
 	  */
-  public int[] read(int x, int y,int w,int h, int band) {
+  public synchronized int[] read(int x, int y,int w,int h, int band) {
       Rectangle rect = new Rectangle(x, y, w, h);
       rect = rect.intersection(getImage(band).getBounds());
       int data[]=null;
@@ -320,7 +320,7 @@ public class GDALSentinel1 extends Sentinel1 {
 
     
     @Override
-    public long readPixel(int x, int y,int band) {
+    public synchronized long readPixel(int x, int y,int band) {
     	GeoToolsGDALReader tiff=null;
         try {
         	String b=getBandName(band);
