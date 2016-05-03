@@ -41,7 +41,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class ImageLayer implements ILayer  {
+public class ImageLayer_old implements ILayer  {
 	protected String name = "";
 	protected boolean active = true;
 	protected boolean isRadio = false;
@@ -135,7 +135,7 @@ public class ImageLayer implements ILayer  {
 
 
 
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer.class);
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer_old.class);
 
     private GeoImageReader activeGir;
     private HashMap<String, Float> contrast = new HashMap<String, Float>();
@@ -177,7 +177,7 @@ public class ImageLayer implements ILayer  {
      *
      * @param gir
      */
-    public ImageLayer(GeoImageReader gir) {
+    public ImageLayer_old(GeoImageReader gir) {
     	Iterator<ImageReader> iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
 
@@ -187,7 +187,6 @@ public class ImageLayer implements ILayer  {
         
         int nThreads=Runtime.getRuntime().availableProcessors();
         poolExcutorService = new ThreadPoolExecutor(1,nThreads,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
-
         submitedTiles = new ArrayList<String>();
 
         
@@ -359,7 +358,7 @@ public class ImageLayer implements ILayer  {
 		                                File absolutePath=cacheInstance.newFile(relativePath);
 		                                String idTile=buildTileId(lll, (i + w0),(j + h0));
 
-		                              //checked if the tile is already in memory or in cache, otherwise required it
+		                                //checked if the tile is already in memory or in cache, otherwise required it
 		    		                    Texture t=tcm.getTexture(idTile);
 		    		                    if (t==null) {
 		    		                    	//check in cache
@@ -521,10 +520,10 @@ public class ImageLayer implements ILayer  {
      * @return
      */
     private BufferedImage tryFileCache(GL gl, File absoluteFile,String idTile) {
-    	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
+    //	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
     	BufferedImage temp=null;
     	
-        if (cacheInstance.contains(absoluteFile.getAbsolutePath()) & !submitedTiles.contains(idTile)) {
+        if (absoluteFile.exists() && !submitedTiles.contains(idTile)) {
             	try {
             		try {
             			temp = ImageIO.read(absoluteFile);
@@ -595,8 +594,7 @@ public class ImageLayer implements ILayer  {
     public void addTileToQueue(final File fileTile,String idTile,int level,int i, int j) {
         if (!submitedTiles.contains(idTile)) {
             submitedTiles.add(idTile);
-            futures.add(0, poolExcutorService.submit(
-            		new ServiceTile(fileTile,idTile, level, i, j)));
+            futures.add(0, poolExcutorService.submit(new ServiceTile(fileTile,idTile, level, i, j)));
         }
     }
 
