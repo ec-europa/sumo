@@ -10,15 +10,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 
 import org.geoimage.def.GeoImageReader;
@@ -36,9 +33,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.Model;
-import gov.nasa.worldwind.WorldWind;
-import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
