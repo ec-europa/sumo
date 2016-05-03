@@ -31,14 +31,14 @@ public class TextureCacheManager {
      * @param idTile
      * @param texture
      */
-    public void add(String idTile, Texture texture) {
+    public void add(String path, Texture texture) {
         if (count > max) {
             map.remove(paths[index]);
             count--;
             index--;
         }
-        map.put(idTile, texture);
-        paths[index++] = idTile;
+        map.put(path, texture);
+        paths[index++] = path;
         if (index >= max) {
             index = 0;
         }

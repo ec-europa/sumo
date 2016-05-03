@@ -41,7 +41,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  *
  * @author thoorfr
  */
-public class ImageLayer_old implements ILayer  {
+public class ImageLayer implements ILayer  {
 	protected String name = "";
 	protected boolean active = true;
 	protected boolean isRadio = false;
@@ -82,10 +82,6 @@ public class ImageLayer_old implements ILayer  {
         public TileInfo call() {
 
             GeoImageReader gir2 = activeGir;
-         /*   String next=new StringBuilder().append(level)
-            		.append(" ").append(getBandFolder(activeBand))
-            		.append(" ").append(xTile)
-            		.append(" ").append(yTile).toString();*/
             if (gir2 == null) {
                 return new TileInfo(idTile, tileFile.getAbsolutePath(), null);
             }
@@ -135,7 +131,7 @@ public class ImageLayer_old implements ILayer  {
 
 
 
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer_old.class);
+	private static org.slf4j.Logger logger=LoggerFactory.getLogger(ImageLayer.class);
 
     private GeoImageReader activeGir;
     private HashMap<String, Float> contrast = new HashMap<String, Float>();
@@ -170,14 +166,14 @@ public class ImageLayer_old implements ILayer  {
 
 	ImageReader pngReader=null;
 	int nThreads=1;
-	OpenGLContext context;
+	GL2 gl;
 	
 
     /**
      *
      * @param gir
      */
-    public ImageLayer_old(GeoImageReader gir) {
+    public ImageLayer(GeoImageReader gir) {
     	Iterator<ImageReader> iReader=ImageIO.getImageReadersByFormatName("png");
 		pngReader=(ImageReader)iReader.next();
 
@@ -272,7 +268,8 @@ public class ImageLayer_old implements ILayer  {
      * displays the tiles on screen
      */
     public void render(Object glContext) {
-    	context=(OpenGLContext)glContext;
+    	OpenGLContext context=(OpenGLContext)glContext;
+    	gl=(context).getGL().getGL2();
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
     	
     	if(activeGir!=null){
@@ -282,7 +279,6 @@ public class ImageLayer_old implements ILayer  {
 	            torescale = false;
 	            tcm.clear();
 	        }
-	        GL gl = context.getGL();
 
 	        updateFutures(gl);
 
@@ -297,7 +293,7 @@ public class ImageLayer_old implements ILayer  {
 
 	        //max tiles to compute time by time
 	        int max = maxnumberoftiles; //for the computation of the array is important to keep this number odd
-	        gl.getGL2().glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
+	        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
 		        if (zoom >= 1) {
 		            curlevel = (int) Math.sqrt(zoom + 1);
 		            //cycle to avoid the black area when zooming in/out and tiles not in memory. Stop when lll=max zoom level
@@ -559,20 +555,20 @@ public class ImageLayer_old implements ILayer  {
      * @param ymin
      * @param ymax
      */
-    private void bindTexture(GL gl, Texture texture, float xmin, float xmax, float ymin, float ymax) {
+    private void bindTexture(GL2 gl, Texture texture, float xmin, float xmax, float ymin, float ymax) {
         texture.enable(gl);
         texture.bind(gl);
         TextureCoords coords = texture.getImageTexCoords();
-        gl.getGL2().glBegin(GL2.GL_QUADS);
-        gl.getGL2().glTexCoord2f(coords.left(), coords.top());
-        gl.getGL2().glVertex2f(xmin, 1 - ymin);
-        gl.getGL2().glTexCoord2f(coords.right(), coords.top());
-        gl.getGL2().glVertex2f(xmax, 1 - ymin);
-        gl.getGL2().glTexCoord2f(coords.right(), coords.bottom());
-        gl.getGL2().glVertex2f(xmax, 1 - ymax);
-        gl.getGL2().glTexCoord2f(coords.left(), coords.bottom());
-        gl.getGL2().glVertex2f(xmin, 1 - ymax);
-        gl.getGL2().glEnd();
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glTexCoord2f(coords.left(), coords.top());
+        gl.glVertex2f(xmin, 1 - ymin);
+        gl.glTexCoord2f(coords.right(), coords.top());
+        gl.glVertex2f(xmax, 1 - ymin);
+        gl.glTexCoord2f(coords.right(), coords.bottom());
+        gl.glVertex2f(xmax, 1 - ymax);
+        gl.glTexCoord2f(coords.left(), coords.bottom());
+        gl.glVertex2f(xmin, 1 - ymax);
+        gl.glEnd();
         texture.disable(gl);
     }
 
