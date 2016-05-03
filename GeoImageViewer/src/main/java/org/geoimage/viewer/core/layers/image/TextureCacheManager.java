@@ -32,7 +32,7 @@ public class TextureCacheManager {
      * @param texture
      */
     public void add(String idTile, Texture texture) {
-        if (count >= max) {
+        if (count > max) {
             map.remove(paths[index]);
             count--;
             index--;

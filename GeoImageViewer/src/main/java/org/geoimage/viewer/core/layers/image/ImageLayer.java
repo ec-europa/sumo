@@ -51,7 +51,21 @@ public class ImageLayer implements ILayer  {
 	protected String type;
 	protected ILayer parent=null;
 
-	class ServiceTile implements  Callable<Object[]> {
+	
+	class TileInfo{
+		String idTile;
+		String path;
+		BufferedImage pngImage;
+		
+		public TileInfo(String id,String absPath,BufferedImage img) {
+			idTile=id;
+			path=absPath;
+			pngImage=img;
+		}
+	}
+
+	
+	class ServiceTile implements  Callable<TileInfo> {
 		private String initfile;
 		private int level;
 		private int i;
@@ -66,12 +80,13 @@ public class ImageLayer implements ILayer  {
 		}
 
 
-        public Object[] call() {
+        public TileInfo call() {
         	Cache c=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
         	StringBuilder ff=new StringBuilder(initfile).append(getBandFolder(activeBand)).append("/").append(i).append("_").append(j).append(".png");
             final File f = c.newFile(ff.toString());
+            
             if (f == null) {
-                return new Object[]{ff.toString(), null};
+                return new TileInfo(null,ff.toString(),null);
             }
 
             GeoImageReader gir2 = imagePool.get();
@@ -80,7 +95,7 @@ public class ImageLayer implements ILayer  {
             		.append(" ").append(i)
             		.append(" ").append(j).toString();
             if (gir2 == null) {
-                return new Object[]{f.getAbsolutePath(),next, null};
+                return new TileInfo(next,f.getAbsolutePath(), null);
             }
             try {
             	int x=i * (1 << level) * Constant.TILE_SIZE_IMG_LAYER - xpadding;
@@ -89,13 +104,13 @@ public class ImageLayer implements ILayer  {
                 final BufferedImage out = createImage(gir2, x,y, Constant.TILE_SIZE_IMG_LAYER, Constant.TILE_SIZE_IMG_LAYER, zoom);
 
                 ImageIO.write(out, "png", f);
-                return new Object[]{f.getAbsolutePath(), next, out};
+                return new TileInfo(next,f.getAbsolutePath(),  out);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(),ex);
             }finally{
             	imagePool.release(gir2);
             }
-            return new Object[]{f.getAbsolutePath(), next, null};
+            return new TileInfo( next,f.getAbsolutePath(), null);
         }
     }
 
@@ -115,7 +130,7 @@ public class ImageLayer implements ILayer  {
 
     private List<String> submitedTiles;
     private ImagePool imagePool;
-    private List<Future<Object[]>> futures = new ArrayList<Future<Object[]>>();
+    private List<Future<TileInfo>> futures = new ArrayList<Future<TileInfo>>();
     private int mylevel = -1;
     private RescaleOp rescale = new RescaleOp(1f, brightness, null);
     private boolean disposed = false;
@@ -154,8 +169,6 @@ public class ImageLayer implements ILayer  {
 
         this.activeGir = gir;
         poolSize = Integer.parseInt(ResourceBundle.getBundle("GeoImageViewer").getString("maxthreads"));
-        //poolSize=Runtime.getRuntime().availableProcessors();
-        //poolExcutorService = Executors.newFixedThreadPool(poolSize);
         poolExcutorService = new ThreadPoolExecutor(1,poolSize,100, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());//,new ThreadPoolExecutor.DiscardOldestPolicy());
 
 
@@ -265,15 +278,15 @@ public class ImageLayer implements ILayer  {
      * @param gl
      */
     private void updateFutures(GL gl) {
-        List<Future<Object[]>> remove1 = new ArrayList<Future<Object[]>>();
-        for (Future<Object[]> f : futures) {
+        List<Future<TileInfo>> remove1 = new ArrayList<Future<TileInfo>>();
+        for (Future<TileInfo> f : futures) {
             if (f.isDone() || f.isCancelled()) {
                 remove1.add(f);
                 try {
-                    Object[] o = f.get();
-                    submitedTiles.remove(o[1]);
-                    if (o.length>2&&o[2] != null) {
-                        tcm.add((String) o[0], AWTTextureIO.newTexture(gl.getGLProfile(),(BufferedImage) o[2], false));
+                    TileInfo o = f.get();
+                    submitedTiles.remove(o.idTile);
+                    if (o.pngImage != null) {
+                        tcm.add(o.idTile, AWTTextureIO.newTexture(gl.getGLProfile(),o.pngImage, false));
                     }
                 } catch (Exception ex) {
                 	logger.error(ex.getMessage(),ex);
@@ -481,10 +494,10 @@ public class ImageLayer implements ILayer  {
 
     //search for tiles in the file cache
     private boolean tryFileCache(GL gl, String file, int level, int i, int j, float xmin, float xmax, float ymin, float ymax) {
-    	String tileId=new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
+    	String tileId=this.buildTileId(level, i,j);//new StringBuilder("").append(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
     	Cache cacheInstance=CacheManager.getCacheInstance(activeGir.getDisplayName(activeBand));
     	boolean ok=true;
-        if (cacheInstance.contains(file) & !submitedTiles.contains(tileId)) {
+        if (cacheInstance.contains(file) && !submitedTiles.contains(tileId)) {
             	BufferedImage temp =null;
             	try {
             		try {
@@ -545,7 +558,7 @@ public class ImageLayer implements ILayer  {
         texture.enable(gl);
         texture.bind(gl);
         TextureCoords coords = texture.getImageTexCoords();
-        gl.getGL2().glBegin(GL2.GL_QUADS);
+        gl.getGL2().glBegin(GL2.GL_POLYGON);
         gl.getGL2().glTexCoord2f(coords.left(), coords.top());
         gl.getGL2().glVertex2f(xmin, 1 - ymin);
         gl.getGL2().glTexCoord2f(coords.right(), coords.top());
@@ -599,7 +612,7 @@ public class ImageLayer implements ILayer  {
      * @param j
      */
     public void addTileToQueue(final String initfile, final int level, final int i, final int j) {
-    	String tilesStr=new StringBuffer(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
+    	String tilesStr=this.buildTileId(level,i,j);//new StringBuffer(level).append(" ").append(getBandFolder(activeBand)).append(" ").append(i).append(" ").append(j).toString();
         if (!submitedTiles.contains(tilesStr)) {
             submitedTiles.add(tilesStr);
 
@@ -729,6 +742,37 @@ public class ImageLayer implements ILayer  {
     }
 
 
+    /**
+     * 
+     * @param level
+     * @param xtile
+     * @param ytile
+     * @return
+     */
+    public String buildTileId(int level,int xtile,int ytile){
+    	String tileId=new StringBuilder("").append(level)
+    			.append(" ").append(activeBand)
+    			.append(" ").append(xtile).append(" ").append(ytile).toString();
+    	
+    	return tileId;
+    }
+    
+    /**
+     * 
+     * @param initfile
+     * @param xtile
+     * @param ytile
+     * @return
+     */
+    private String buildPathString(String initfile,int xtile,int ytile){
+    	return new StringBuilder(initfile).append(getBandFolder(activeBand))
+        		.append("/")
+        		.append(xtile)
+        		.append("_")
+        		.append(ytile)
+        		.append(".png").toString();
+    }
+    
     public boolean isActive() {
         return active;
     }
