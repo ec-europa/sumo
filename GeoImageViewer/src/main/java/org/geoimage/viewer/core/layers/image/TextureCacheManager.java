@@ -16,14 +16,14 @@ public class TextureCacheManager {
 
     private int max = 128;
     private int count = 0;
-    private String[] paths;
+    private String[] idTiles;
     private int index = 0;
     private ConcurrentHashMap<String, Texture> map;
 
     public TextureCacheManager(int max) {
         this.max = max;
         map = new ConcurrentHashMap <String, Texture>(max);
-        paths = new String[max];
+        idTiles = new String[max];
     }
     
     /**
@@ -31,14 +31,14 @@ public class TextureCacheManager {
      * @param idTile
      * @param texture
      */
-    public void add(String path, Texture texture) {
+    public void add(String idTile, Texture texture) {
         if (count > max) {
-            map.remove(paths[index]);
+            map.remove(idTiles[index]);
             count--;
             index--;
         }
-        map.put(path, texture);
-        paths[index++] = path;
+        map.put(idTile, texture);
+        idTiles[index++] = idTile;
         if (index >= max) {
             index = 0;
         }
@@ -65,7 +65,7 @@ public class TextureCacheManager {
         }
 
         map.clear();
-        paths = new String[max];
+        idTiles = new String[max];
         index = 0;
         count = 0;
     }
