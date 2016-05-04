@@ -64,13 +64,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public class KmlIO extends AbstractVectorIO {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(KmlIO.class);
 
-    private SarImageReader gir=null;
-    private File input=null;
-    private GeometryImage glayer=null;
     
     public KmlIO(File input,SarImageReader gir){
-    	this.input=input;
-    	this.gir=gir;
     }
 
     @Override
@@ -415,7 +410,8 @@ public class KmlIO extends AbstractVectorIO {
     }
 
 	@Override
-	public void read() {
+	public GeometryImage read() {
+		return null;
 		
 	}
 	

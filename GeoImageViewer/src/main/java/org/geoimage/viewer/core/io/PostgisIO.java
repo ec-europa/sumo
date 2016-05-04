@@ -75,8 +75,9 @@ public class PostgisIO extends AbstractVectorIO {
     	this.gir=gir;
     	this.config=config;
     }
-    public void read() {
+    public GeometryImage read() {
     	glayer=readLayer();
+    	return glayer;
     }
     
     public GeometryImage readLayer() {

@@ -93,7 +93,8 @@ public class GeoRSSIO extends AbstractVectorIO {
     
 
 	@Override
-	public void read() {
+	public GeometryImage read() {
+		return null;
 	}
 
 	

@@ -45,8 +45,9 @@ public class GmlIO extends AbstractVectorIO {
     	this.gir=gir;
     }
     
-    public void read() {
+    public GeometryImage read() {
     	layer=readLayer();
+    	return layer;
     }
     
     public GeometryImage readLayer() {
