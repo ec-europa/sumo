@@ -7,6 +7,7 @@ package org.geoimage.viewer.core.io;
 import java.io.File;
 
 import org.geoimage.def.GeoTransform;
+import org.geoimage.viewer.core.GeometryImage;
 
 /**
  *
@@ -43,7 +44,7 @@ public abstract class AbstractVectorIO {
         this.layername = layername;
     }
 
-    public abstract void read();//File shpInput,GeoTransform transform);
+    public abstract GeometryImage read();//File shpInput,GeoTransform transform);
 	public abstract void save(File output, String projection,GeoTransform transform) ;
     
 }

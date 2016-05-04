@@ -18,8 +18,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +27,7 @@ import org.geoimage.def.GeoImageReader;
 import org.geoimage.def.GeoTransform;
 import org.geoimage.def.SarImageReader;
 import org.geoimage.exception.GeoTransformException;
+import org.geoimage.viewer.core.GeometryImage;
 import org.geoimage.viewer.core.io.sumoxml.Analysis;
 import org.geoimage.viewer.core.io.sumoxml.Boat;
 import org.geoimage.viewer.core.io.sumoxml.Gcp;
@@ -60,8 +59,13 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 
 	@Override
-	public void read() {
+	public GeometryImage read() {
+		GeometryImage layer = new GeometryImage(GeometryImage.POINT);
+
 		try {
+			layer.setProjection("EPSG:4326");
+			layer.setName(input.getName());
+			
 			javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             InputStream is = new FileInputStream(input );
             javax.xml.bind.Unmarshaller  uMarshaller = jaxbCtx.createUnmarshaller();
@@ -71,86 +75,31 @@ public class SumoXMLWriter extends AbstractVectorIO {
             SatImageMetadata imgMeta=analysis.getSatImageMetadata();
             VdsAnalysis vds=analysis.getVdsAnalysis();
             VdsTarget targets=analysis.getVdsTarget();
+                        
             
             List<Boat>boats=targets.getBoat();
-            List<Geometry> gg=new ArrayList<Geometry>();
-            List<AttributesGeometry>ggAttr=new ArrayList<>();
             GeometryFactory factory=new GeometryFactory();
+            int i=0;
             for(Boat b:boats){
+            		i++;
         			AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
         			Geometry geom=factory.createPoint(new Coordinate(b.getXpixel(),b.getYpixel()));
-        			gg.add(geom);
-        			ggAttr.add(att);
+        			att.set(VDSSchema.ID, i);
+					att.set(VDSSchema.MAXIMUM_VALUE,Double.parseDouble(b.getMaxValue()));
+					att.set(VDSSchema.TILE_AVERAGE,b.getBgndMean());
+					att.set(VDSSchema.TILE_STANDARD_DEVIATION,b.getBgndStdev());
+					att.set(VDSSchema.THRESHOLD,Double.parseDouble(b.getThresholdTile()));
+					att.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS,b.getNrPixels());
+					att.set(VDSSchema.ESTIMATED_LENGTH,b.getLength());
+					att.set(VDSSchema.ESTIMATED_WIDTH,b.getWidth());
+					att.set(VDSSchema.ESTIMATED_HEADING,b.getHeadingNorth());
+        			layer.put(geom, att);
             }
-            
-		/*	GeometryImage layer = new GeometryImage(GeometryImage.POINT);
-			// create xml doc
-			SAXBuilder builder = new SAXBuilder();
-			Document doc = builder.build(input);
-
-			GeometryFactory gf = new GeometryFactory();
-			Element root = doc.getRootElement().getChild("image");
-			if (root != null) {
-				layer.setGeometryType(GeometryImage.MIXED);
-				Element gcps = root.getChild("gcps");
-				if (gcps != null) {
-					Coordinate[] coords = new Coordinate[gcps.getChildren("gcp").size() + 1];
-					int i = 0;
-					for (Object gcp : gcps.getChildren("gcp")) {
-						if (gcp instanceof Element) {
-							double lon = Double.parseDouble(((Element) gcp).getChild("lon").getValue());
-							double lat = Double.parseDouble(((Element) gcp).getChild("lat").getValue());
-							coords[i] = new Coordinate(lon, lat);
-							// close the ring
-							if (i == 0) {
-								coords[gcps.getChildren("gcp").size()] = new Coordinate(lon, lat);
-							}
-							i++;
-						}
-					}
-					Polygon frame = gf.createPolygon(gf.createLinearRing(coords), null);
-					AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
-					layer.put(frame.convexHull(), atts);
-				}
-			}
-			root = doc.getRootElement().getChild("boatlist");
-			if (root != null) {
-
-				layer.setProjection("EPSG:4326");
-				layer.setName(input.getName());
-				for (Object obj : root.getChildren()) {
-					if (obj instanceof Element) {
-						Element boat = (Element) obj;
-						if (boat.getName().equals("boat")) {
-							AttributesGeometry atts = new AttributesGeometry(VDSSchema.schema);
-							double lon = Double.parseDouble(boat.getChild("lon").getValue());
-							double lat = Double.parseDouble(boat.getChild("lat").getValue());
-							Geometry geom = gf.createPoint(new Coordinate(lon,lat));
-							try {
-								atts.set(VDSSchema.ID, Double.parseDouble(boat.getChild("id").getValue()));
-								atts.set(VDSSchema.MAXIMUM_VALUE,Double.parseDouble(boat.getChild("maxValue").getValue()));
-								atts.set(VDSSchema.TILE_AVERAGE,Double.parseDouble(boat.getChild("averageTile").getValue()));
-								atts.set(VDSSchema.TILE_STANDARD_DEVIATION,Double.parseDouble(boat.getChild("tileSTD").getValue()));
-								atts.set(VDSSchema.THRESHOLD,Double.parseDouble(boat.getChild("maxValue").getValue()));
-								atts.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS,Double.parseDouble(boat.getChild("subObjs").getValue()));
-								atts.set(VDSSchema.RUN_ID,boat.getChild("runid").getValue());
-								atts.set(VDSSchema.ESTIMATED_LENGTH,Double.parseDouble(boat.getChild("length").getValue()));
-								atts.set(VDSSchema.ESTIMATED_WIDTH,Double.parseDouble(boat.getChild("width").getValue()));
-								atts.set(VDSSchema.ESTIMATED_HEADING,Double.parseDouble(boat.getChild("heading").getValue()));
-							} catch (Exception ex) {
-								logger.warn(ex.getMessage(), ex);
-							}
-							layer.put(geom, atts);
-						}
-					}
-				}
-			}
-			SimpleGeometryLayer sg=new SimpleGeometryLayer(null, "imported",
-					layer.getGeometries(), SimpleGeometryLayer.POINT);
-			SumoPlatform.getApplication().getLayerManager().addLayerInThread(sg);*/
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
+        return layer;
+
 	}
 
 	/**

@@ -44,8 +44,9 @@ public class SumoXmlIOOld extends AbstractVectorIO {
     	this.input=file;
 	}
     
-    public void read() {
+    public GeometryImage read() {
     	glayer=readLayer();
+    	return glayer;
     }
     
     public GeometryImage readLayer() {

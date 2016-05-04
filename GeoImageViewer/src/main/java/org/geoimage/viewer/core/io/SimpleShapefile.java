@@ -95,8 +95,9 @@ public class SimpleShapefile extends AbstractVectorIO{
 
 
 	@Override
-	public void read() {
+	public GeometryImage read() {
 		this.layer=createLayer(this.shpInput,transform);
+		return layer;
 	}
 
 	/**

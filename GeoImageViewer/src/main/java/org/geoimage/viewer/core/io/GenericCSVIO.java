@@ -53,8 +53,9 @@ public class GenericCSVIO extends AbstractVectorIO{
 		csvFile = new File(filePath);
 	}
 	
-	public void read() {
+	public GeometryImage read() {
 		glayer=readLayer();
+		return glayer;
 	}
 	
 	/*public GeometricLayer readLayer() {
