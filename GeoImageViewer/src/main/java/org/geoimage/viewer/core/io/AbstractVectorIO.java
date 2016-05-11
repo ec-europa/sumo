@@ -44,7 +44,7 @@ public abstract class AbstractVectorIO {
         this.layername = layername;
     }
 
-    public abstract GeometryImage read();//File shpInput,GeoTransform transform);
+    public abstract Object read();//File shpInput,GeoTransform transform);
 	public abstract void save(File output, String projection,GeoTransform transform) ;
     
 }
