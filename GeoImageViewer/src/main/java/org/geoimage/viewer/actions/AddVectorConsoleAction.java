@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Polygon;
 
+import gov.nasa.worldwind.layers.Layer;
+
 /**
  *
  * @author thoorfr+ga
@@ -142,19 +144,13 @@ public class AddVectorConsoleAction extends SumoAbstractAction {
                 done=LayerManager.addLayerInThread(lay);
 
             } else if (getParamValue(paramFileType).equals("sumo XML")) {
-            /*    int t=MaskVectorLayer.COASTLINE_MASK;
-                if(args[1].equalsIgnoreCase("ice"))
-                	t=MaskVectorLayer.ICE_MASK;
-
-            	GeometricLayer positions=loadSumoXML(args);
-        		lay=FactoryLayer.createMaskLayer(positions,t);*/
             	File xml=selectFile(new String[]{"xml","XML"});
             	SumoXMLWriter xmlWR=new SumoXMLWriter(xml);
-            	xmlWR.read();
+            	lay=xmlWR.read();
+            	lay.setParent(LayerManager.getIstanceManager().getCurrentImageLayer());
             } else if (getParamValue(paramFileType).equals("gml")) {
             	GeometryImage positions=loadGml();
-                GenericLayer gl=FactoryLayer.createComplexLayer(positions);
-                done=LayerManager.addLayerInThread(gl);
+                lay=FactoryLayer.createComplexLayer(positions);
 
             } else if (getParamValue(paramFileType).equals("query")) {
                 addQuery();
