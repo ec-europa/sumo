@@ -65,18 +65,18 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		try {
 			layer.setProjection("EPSG:4326");
 			layer.setName(input.getName());
-			
+
 			javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance("org.geoimage.viewer.core.io.sumoxml");
             InputStream is = new FileInputStream(input );
             javax.xml.bind.Unmarshaller  uMarshaller = jaxbCtx.createUnmarshaller();
             Object o=uMarshaller.unmarshal(is);
             Analysis analysis=(Analysis)o;
-            
+
             SatImageMetadata imgMeta=analysis.getSatImageMetadata();
             VdsAnalysis vds=analysis.getVdsAnalysis();
             VdsTarget targets=analysis.getVdsTarget();
-                        
-            
+
+
             List<Boat>boats=targets.getBoat();
             GeometryFactory factory=new GeometryFactory();
             int i=0;
@@ -159,8 +159,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
 		vdsA.setAlgorithm("k-dist");
 
 		vdsA.setBuffer(buffer);
-		//TODO: remove the version as constant from here!!! 
-		vdsA.setDetectorVersion("SUMO_1.3.3");
+		//TODO: remove the version as constant from here!!!
+		vdsA.setDetectorVersion("SUMO_1.3.4");
 
 		/// fields removed in the last xml version
 		//add thresholds in order
