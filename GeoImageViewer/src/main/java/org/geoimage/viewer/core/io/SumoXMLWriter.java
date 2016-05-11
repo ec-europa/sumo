@@ -59,8 +59,9 @@ public class SumoXMLWriter extends AbstractVectorIO {
 
 
 	@Override
-	public GeometryImage read() {
+	public ComplexEditVDSVectorLayer read() {
 		GeometryImage layer = new GeometryImage(GeometryImage.POINT);
+        ComplexEditVDSVectorLayer cev=new ComplexEditVDSVectorLayer(null, input.getName(), layer.getGeometryType(), layer);
 
 		try {
 			layer.setProjection("EPSG:4326");
@@ -76,7 +77,8 @@ public class SumoXMLWriter extends AbstractVectorIO {
             VdsAnalysis vds=analysis.getVdsAnalysis();
             VdsTarget targets=analysis.getVdsTarget();
                         
-            
+            List<Geometry>boatsAA=new ArrayList<>();
+            List<Geometry>boatsPA=new ArrayList<>();
             List<Boat>boats=targets.getBoat();
             GeometryFactory factory=new GeometryFactory();
             int i=0;
@@ -85,20 +87,31 @@ public class SumoXMLWriter extends AbstractVectorIO {
         			AttributesGeometry att = new AttributesGeometry(new String[]{"x","y"});
         			Geometry geom=factory.createPoint(new Coordinate(b.getXpixel(),b.getYpixel()));
         			att.set(VDSSchema.ID, i);
-					att.set(VDSSchema.MAXIMUM_VALUE,Double.parseDouble(b.getMaxValue()));
-					att.set(VDSSchema.TILE_AVERAGE,b.getBgndMean());
-					att.set(VDSSchema.TILE_STANDARD_DEVIATION,b.getBgndStdev());
-					att.set(VDSSchema.THRESHOLD,Double.parseDouble(b.getThresholdTile()));
+					att.set(VDSSchema.MAXIMUM_VALUE,b.getMaxValue());
+					att.set(VDSSchema.SIGNIFICANCE,b.getSignificance());
+					
+					att.set(VDSSchema.THRESHOLD,b.getThresholdTile());
 					att.set(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS,b.getNrPixels());
 					att.set(VDSSchema.ESTIMATED_LENGTH,b.getLength());
 					att.set(VDSSchema.ESTIMATED_WIDTH,b.getWidth());
 					att.set(VDSSchema.ESTIMATED_HEADING,b.getHeadingNorth());
-        			layer.put(geom, att);
+					geom.setUserData(att);
+            		if(b.getReliability()==3){
+            			if(b.getFalseAlarmCause().equals("AA"))
+            				boatsAA.add(geom);
+            			else
+            				boatsPA.add(geom);
+            		}else
+            			layer.put(geom, att);
             }
+    		cev.addArtefactsAmbiguities(boatsPA, true);
+    		cev.addAzimuthAmbiguities(boatsAA, true);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-        return layer;
+		
+		
+        return cev;
 
 	}
 
