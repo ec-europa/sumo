@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.geoimage.viewer.util.files;
 
@@ -32,16 +32,6 @@ public class IceHttpClient extends FileHttpClient{
 	 * @return
 	 */
 	public File downloadFromNoaa(Date date,String outputFolder){
-		/*GregorianCalendar gc=new GregorianCalendar();
-		gc.setTimeInMillis(date.getTime());
-
-		int year=gc.get(Calendar.YEAR);
-		int numberofDaysPassed=gc.get(GregorianCalendar.DAY_OF_YEAR);
-		String dateStr=""+year+numberofDaysPassed;
-		if(numberofDaysPassed<=99){
-			dateStr=""+year+"0"+numberofDaysPassed;
-		}*/
-
 		SimpleDateFormat df=new SimpleDateFormat();
 		df.applyPattern(TOKEN_DATE);
 		String fileName=noaaFileName.replace(TOKEN_DATE,df.format(date));
