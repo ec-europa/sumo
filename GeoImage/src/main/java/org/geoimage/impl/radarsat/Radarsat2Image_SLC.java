@@ -42,7 +42,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         if (rect.y != preloadedInterval[0] | rect.y + rect.height != preloadedInterval[1]) {
             preloadLineTile(rect.y, rect.height,band);
         }
-        int yOffset =  getImage(band).xSize;
+        int yOffset =  getImage(band).getxSize();
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         int temp =0;
@@ -67,7 +67,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         Rectangle rect=new Rectangle(x, y, 1, 1);
         rect = rect.intersection(bounds);
         t.setSourceRegion(rect);
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         try {            
             int img =  tiff.read(0, t).getRaster().getSample(0,0, 1);
             int real =  tiff.read(0, t).getRaster().getSample(0, 0, 0);
@@ -92,7 +92,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
         rect = rect.intersection(bounds);
         t.setSourceRegion(rect);
         
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         try {            
             int[] img =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 1,(int[])null);
             int[] real =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 0,(int[])null);
@@ -119,10 +119,10 @@ public class Radarsat2Image_SLC extends Radarsat2Image {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y,  getImage(band).xSize, length);
+        Rectangle rect = new Rectangle(0, y,  getImage(band).getxSize(), length);
         TIFFImageReadParam tirp = new TIFFImageReadParam();
         tirp.setSourceRegion(rect);
-        TIFF tiff=getImage(band);
+        TIFF tiff=(TIFF)getImage(band);
         try {
             preloadedDataReal =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 0, (int[]) null);
             preloadedDataImg =   tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 1, (int[]) null);
