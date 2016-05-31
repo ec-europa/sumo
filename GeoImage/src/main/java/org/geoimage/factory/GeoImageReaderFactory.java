@@ -20,6 +20,7 @@ import org.geoimage.impl.cosmo.CosmoSkyFactory;
 import org.geoimage.impl.envi.EnvisatImage_SLC;
 import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
+import org.geoimage.impl.radarsat.Radarsat2ImageGDAL;
 import org.geoimage.impl.radarsat.Radarsat2Image_SLC;
 import org.geoimage.impl.s1.GDALSentinel1;
 import org.geoimage.impl.s1.Sentinel1;
@@ -29,6 +30,7 @@ import org.geoimage.impl.s1.Sentinel1SLC;
 import org.geoimage.impl.tsar.TerrasarXImage;
 import org.geoimage.impl.tsar.TerrasarXImage_SLC;
 
+import it.geosolutions.imageio.gdalframework.GDALUtilities;
 import ncsa.hdf.object.HObject;
 import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5Group;
@@ -123,7 +125,10 @@ public class GeoImageReaderFactory {
 	        	}else if(parent.contains("RS2")&& parent.contains("SLC")){
 	        		gir=new Radarsat2Image_SLC(f);
 	        	}else if(parent.contains("RS2")&& !parent.contains("SLC")){
-	        		gir=new Radarsat2Image(f);
+	        		if(GDALUtilities.isGDALAvailable())
+	        			gir=new Radarsat2ImageGDAL(f);
+	        		else
+	        			gir=new Radarsat2Image(f);
 	        	}else if(parent.contains("RS1")){
 	        		gir=new Radarsat1Image(f);
 	        	}else if(parent.contains("ASA_")){

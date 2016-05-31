@@ -110,7 +110,14 @@ public class GeoToolsGDALReader implements IReader {
 		int buf_size = pixels;
 
 		int[] dd = new int[buf_size];
-		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
+		try {
+			b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
+    	} catch (Exception ex2) {
+    		try {
+    			Thread.sleep(1000);
+    		} catch (Exception ex) {}
+    		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
+    	}
 		return dd;
 	}
 

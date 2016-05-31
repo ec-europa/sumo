@@ -255,6 +255,8 @@ public abstract class SarImageReader extends SUMOMetadata implements GeoImageRea
                 for (int j = 0; j < outWidth; j++) {
                     try {
                         outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1,band)[0];
+                        if(outData.length==0)
+                        	outData[i * outWidth + j] = readTile((int) (x + j * a), (int) (y + i * b), 1, 1,band)[0];
                     } catch (Exception e) {
                     }
                 }
