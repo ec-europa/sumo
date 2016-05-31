@@ -44,7 +44,7 @@ public class Radarsat2Image extends SarImageReader {
     protected File productxml;
     protected Document doc;
     protected Namespace ns = Namespace.getNamespace("http://www.rsi.ca/rs2/prod/xml/schemas");
-    protected Map<String, TIFF> tiffImages;
+    protected Map<String, IReader> tiffImages;
     protected String[] bands;
 	protected String timestampStart;
     protected String timestampStop;
@@ -92,13 +92,13 @@ public class Radarsat2Image extends SarImageReader {
     		tiffImages = getImages();
     		if(tiffImages==null) return false;
 
-            TIFF image = tiffImages.values().iterator().next();
+    		IReader image = tiffImages.values().iterator().next();
 
             this.displayName=super.imgName;//+ "  " +image.getImageFile().getName();
 
             parseProductXML(productxml);
 
-            bounds = new Rectangle(0, 0, image.xSize, image.ySize);
+            bounds = new Rectangle(0, 0, image.getxSize(), image.getySize());
             readPixel(0,0,0);
         } catch (Exception ex) {
             dispose();
@@ -132,7 +132,7 @@ public class Radarsat2Image extends SarImageReader {
 
     }
 
-    public TIFF getImage(int band){
+    public IReader getImage(int band){
     	return this.tiffImages.get(getBandName(band));
     }
 
@@ -143,20 +143,29 @@ public class Radarsat2Image extends SarImageReader {
 
 
     @Override
-    public void preloadLineTile(int y, int length,int band) {
+    public synchronized void preloadLineTile(int y, int length,int band) {
         if (y < 0) {
             return;
         }
         preloadedInterval = new int[]{y, y + length};
-        Rectangle rect = new Rectangle(0, y, getImage(band).xSize, length);
+        Rectangle rect = new Rectangle(0, y, getImage(band).getxSize(), length);
+        IReader tiff=getImage(band);
         TIFFImageReadParam tirp=new TIFFImageReadParam();
+        rect=tiff.getBounds().intersection(rect);
         tirp.setSourceRegion(rect);
-        TIFF tiff=getImage(band);
+        
+        BufferedImage img=null;
         try {
-            preloadedData = tiff.read(0, tirp).getRaster().getSamples(0, 0,rect.width, rect.height, 0, (int[]) null);
+        	img=((TIFF)tiff).read(0, tirp);
+            preloadedData = img.getRaster().getSamples(0, 0,rect.width, rect.height, 0, (int[]) null);
         } catch (Exception ex) {
-        	logger.error(ex.getMessage(),ex);
-            System.gc();
+        	try {
+	        	Thread.sleep(4000);
+	        	img=((TIFF)tiff).read(0, tirp);
+	            preloadedData = img.getRaster().getSamples(0, 0,rect.width, rect.height, 0, (int[]) null);
+        	} catch (Exception ex2) {    
+        		logger.warn(ex2.getMessage(),ex2);
+        	}	
         }
     }
 
@@ -171,13 +180,18 @@ public class Radarsat2Image extends SarImageReader {
         if (rect.y != preloadedInterval[0] | rect.y + rect.height != preloadedInterval[1]) {
             preloadLineTile(rect.y, rect.height,band);
         }
-        int yOffset = getImage(band).xSize;
+        int yOffset = getImage(band).getxSize();
         int xinit = rect.x - x;
         int yinit = rect.y - y;
         for (int i = 0; i < rect.height; i++) {
             for (int j = 0; j < rect.width; j++) {
                 int temp = i * yOffset + j + rect.x;
-                tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                	if(preloadedData.length>=temp){
+                		tile[(i + yinit) * width + j + xinit] = preloadedData[temp];
+                	}else{
+                		
+                    	//logger.debug("");
+                	}	
             }
         }
         return tile;
@@ -188,9 +202,9 @@ public class Radarsat2Image extends SarImageReader {
     public long readPixel(int x, int y,int band) {
         TIFFImageReadParam t=new TIFFImageReadParam();
         t.setSourceRegion(new Rectangle(x, y, 1, 1));
-        TIFF tiff=getImage(band);
+        IReader tiff=getImage(band);
         try {
-            return tiff.read(0, t).getRGB(x, y);
+            return ((TIFF)tiff).read(0, t).getRGB(x, y);
         } catch (IOException ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -210,14 +224,14 @@ public class Radarsat2Image extends SarImageReader {
     	super.dispose();
         if(tiffImages==null) return;
         for(IReader t:tiffImages.values()){
-            t.dispose();
+         //   t.dispose();
         }
         tiffImages=null;
     }
 
-    private Map<String, TIFF> getImages() {
+    private Map<String, IReader> getImages() {
         List<?> elements = doc.getRootElement().getChild("imageAttributes", ns).getChildren("fullResolutionImageData", ns);
-        Map<String, TIFF> tiffs = new HashMap<String, TIFF>();
+        Map<String, IReader> tiffs = new HashMap<String, IReader>();
 
         for (Object o : elements) {
             if (o instanceof Element) {
@@ -231,7 +245,7 @@ public class Radarsat2Image extends SarImageReader {
         return tiffs;
     }
 
-    private void parseProductXML(File productxml) {
+    protected void parseProductXML(File productxml) {
         try {
             gcps = new ArrayList<Gcp>();
 
@@ -505,12 +519,12 @@ public class Radarsat2Image extends SarImageReader {
 
 	@Override
 	public int getWidth() {
-		return getImage(0).xSize;
+		return getImage(0).getxSize();
 	}
 
 	@Override
 	public int getHeight() {
-		return getImage(0).ySize;
+		return getImage(0).getySize();
 	}
 
 	@Override

@@ -136,9 +136,6 @@ public class GDALSentinel1 extends Sentinel1 {
        } catch (Exception ex) {
            logger.error(ex.getMessage(),ex);
        }finally{
-       	 //reader.addIIOReadProgressListener(this);
-       	//readComplete=false;
-       	
        }
    }
 	
@@ -341,9 +338,6 @@ public class GDALSentinel1 extends Sentinel1 {
     public void dispose() {
         super.dispose();
         if(tiffImages==null) return;
-        for(GeoToolsGDALReader t:tiffImages.values()){
-          //  t.dispose();
-        }
         tiffImages=null;
     }
 
