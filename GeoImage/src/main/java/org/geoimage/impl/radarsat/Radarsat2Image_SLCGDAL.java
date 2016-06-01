@@ -6,25 +6,22 @@ package org.geoimage.impl.radarsat;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
-import org.geoimage.impl.imgreader.TIFF;
+import org.geoimage.impl.imgreader.GeoToolsGDALReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.media.imageio.plugins.tiff.TIFFImageReadParam;
 
 /**
  * A class that reads Radarsat 2 SLC images
  * @author gabbaan
  */
-public class Radarsat2Image_SLC extends Radarsat2Image{
+public class Radarsat2Image_SLCGDAL extends Radarsat2ImageGDAL {
 
     private int[] preloadedDataReal;
     private int[] preloadedDataImg;
-	private Logger logger= LoggerFactory.getLogger(Radarsat2Image_SLC.class);
+	private Logger logger= LoggerFactory.getLogger(Radarsat2Image_SLCGDAL.class);
 
-    public Radarsat2Image_SLC(File f) {
+    public Radarsat2Image_SLCGDAL(File f) {
     	super(f);
     }
 
@@ -60,7 +57,7 @@ public class Radarsat2Image_SLC extends Radarsat2Image{
         }    
         return tile;
     }
-
+/*
     @Override
     public long readPixel(int x, int y,int band) {
         TIFFImageReadParam t = new TIFFImageReadParam();
@@ -82,26 +79,37 @@ public class Radarsat2Image_SLC extends Radarsat2Image{
         }finally{
         }
         return -1;
+    }*/
+    
+    @Override
+    public synchronized long readPixel(int x, int y,int band) {
+    	GeoToolsGDALReader tiff=null;
+        try {
+        	String b=getBandName(band);
+        	tiff=(GeoToolsGDALReader)tiffImages.get(b);
+        	int px[][]=tiff.readComplexPixValues(x, y,1,1);
+        	Double v=(Math.sqrt((px[0][0]*px[0][0]+px[1][0]*px[1][0])));
+            return v.longValue();
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }finally{
+        }
+       
+        return -1;
     }
     
     @Override
     public int[] read(int x, int y,int w,int h,int band) {
     	int[] data=new int[w*h];
-        TIFFImageReadParam t = new TIFFImageReadParam();
-        Rectangle rect=new Rectangle(x, y, w, h);
-        rect = rect.intersection(bounds);
-        t.setSourceRegion(rect);
         
-        TIFF tiff=(TIFF)getImage(band);
+    	GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
         try {            
-            int[] img =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 1,(int[])null);
-            int[] real =  tiff.read(0, t).getRaster().getSamples(0,0,w,h, 0,(int[])null);
-            for(int i=0;i<img.length;i++){
-            	data[i]= (int) Math.sqrt(real[i] * real[i] + img[i] * img[i]);
+            int px[][]=tiff.readComplexPixValues(0,0,w,h);
+            
+            for(int i=0;i<px[0].length;i++){
+            	data[i]= (int) Math.sqrt(px[0][i] * px[0][i]  + px[1][i]  * px[1][i] );
             }
             
-        } catch (IOException ex) {
-        	logger.error(ex.getMessage(),ex);
         } catch (ArrayIndexOutOfBoundsException ex) {
         	logger.warn(ex.getMessage());
         }catch(IllegalArgumentException iae){
@@ -120,12 +128,11 @@ public class Radarsat2Image_SLC extends Radarsat2Image{
         }
         preloadedInterval = new int[]{y, y + length};
         Rectangle rect = new Rectangle(0, y,  getImage(band).getxSize(), length);
-        TIFFImageReadParam tirp = new TIFFImageReadParam();
-        tirp.setSourceRegion(rect);
-        TIFF tiff=(TIFF)getImage(band);
+        GeoToolsGDALReader tiff=(GeoToolsGDALReader)getImage(band);
         try {
-            preloadedDataReal =  tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 0, (int[]) null);
-            preloadedDataImg =   tiff.read(0, tirp).getRaster().getSamples(0, 0,  rect.width, rect.height, 1, (int[]) null);
+        	int px[][]=tiff.readComplexPixValues(0,0,rect.width, rect.height);
+            preloadedDataReal =  px[0];
+            preloadedDataImg =   px[1];
         } catch (Exception ex) {
         	logger.error(ex.getMessage(),ex);
         }
@@ -139,11 +146,11 @@ public class Radarsat2Image_SLC extends Radarsat2Image{
 
     @Override
     public int getType(boolean oneBand) {
-        if (oneBand || bands.length < 2) {
+        ////if (oneBand || bands.length < 2) {
             return BufferedImage.TYPE_USHORT_GRAY;
-        } else {
-            return BufferedImage.TYPE_INT_RGB;
-        }
+        //} else {
+        //    return BufferedImage.TYPE_INT_RGB;
+        //}
     }
 
     @Override
