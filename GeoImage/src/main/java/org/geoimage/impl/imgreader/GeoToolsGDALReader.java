@@ -104,23 +104,33 @@ public class GeoToolsGDALReader implements IReader {
 	 * @param offsety
 	 * @return
 	 */
-	public synchronized int[] readPixValues(int x,int y,int offsetx,int offsety){
+	public synchronized int[] readPixValues(int x,int y,int offsetx,int offsety,int type,int band){
 		int pixels = offsetx * offsety;
 		Band b=data.GetRasterBand(band);
 		int buf_size = pixels;
 
 		int[] dd = new int[buf_size];
 		try {
-			b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
+			b.ReadRaster(x, y, offsetx, offsety,type, dd);
     	} catch (Exception ex2) {
     		try {
     			Thread.sleep(1000);
     		} catch (Exception ex) {}
-    		b.ReadRaster(x, y, offsetx, offsety,gdalconstConstants.GDT_UInt32, dd);
+    		b.ReadRaster(x, y, offsetx, offsety,type, dd);
     	}
 		return dd;
 	}
 
+	public synchronized int[] readPixValues(int x,int y,int offsetx,int offsety){
+		return readPixValues( x, y, offsetx, offsety, gdalconstConstants.GDT_UInt32,1);
+	}
+	public synchronized int[][] readComplexPixValues(int x,int y,int offsetx,int offsety){
+		int data[][]=new int[2][x*offsetx+y*offsety];
+		data[0]=readPixValues( x, y, offsetx, offsety, gdalconstConstants.GDT_UInt32,1);
+		data[1]=readPixValues( x, y, offsetx, offsety, gdalconstConstants.GDT_UInt32,2);
+		return data; 
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<GCP> getGCPS(){
 		return this.data.GetGCPs();
