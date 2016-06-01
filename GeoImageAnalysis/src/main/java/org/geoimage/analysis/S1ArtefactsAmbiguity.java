@@ -71,7 +71,7 @@ public class S1ArtefactsAmbiguity extends Ambiguity{
 			            Object o=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get(swath+"_"+ipfVersion);
 			            if(o==null){
 			            	//default value for the moment
-			            	deltaAzimuth=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get("IW1_243");
+			            	deltaAzimuth=DISTANCE_LOOKUP_TABLE_AMBIGUITY.get(swath+"_"+"243");
 			            }else{
 			            	deltaAzimuth=(int)o;
 			            }
