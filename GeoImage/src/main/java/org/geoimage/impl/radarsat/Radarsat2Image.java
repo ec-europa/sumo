@@ -128,7 +128,7 @@ public class Radarsat2Image extends SarImageReader {
         if (productxml == null) throw new IOException("Cannot find product.xml");
 
         //set the path for the overview images
-        overviewImage=new StringBuilder(parent.getAbsolutePath()).append("BrowseImage.tif").toString();
+        overviewImage=new StringBuilder(parent.getAbsolutePath()).append(File.separator).append("BrowseImage.tif").toString();
 
     }
 
@@ -529,7 +529,11 @@ public class Radarsat2Image extends SarImageReader {
 
 	@Override
 	public File getOverviewFile() {
-		return new File(this.overviewImage);
+		try{
+			return new File(this.overviewImage);
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import org.geoimage.impl.radarsat.Radarsat1Image;
 import org.geoimage.impl.radarsat.Radarsat2Image;
 import org.geoimage.impl.radarsat.Radarsat2ImageGDAL;
 import org.geoimage.impl.radarsat.Radarsat2Image_SLC;
+import org.geoimage.impl.radarsat.Radarsat2Image_SLCGDAL;
 import org.geoimage.impl.s1.GDALSentinel1;
 import org.geoimage.impl.s1.Sentinel1;
 import org.geoimage.impl.s1.Sentinel1Factory;
@@ -123,7 +124,10 @@ public class GeoImageReaderFactory {
 	        	}else if(parent.contains("TSX1_SAR__SSC")||parent.contains("TDX1_SAR__SSC")){
 	        		gir=new TerrasarXImage_SLC(f);
 	        	}else if(parent.contains("RS2")&& parent.contains("SLC")){
-	        		gir=new Radarsat2Image_SLC(f);
+	        		if(GDALUtilities.isGDALAvailable())
+	        			gir=new Radarsat2Image_SLCGDAL(f);
+	        		else
+	        			gir=new Radarsat2Image_SLC(f);
 	        	}else if(parent.contains("RS2")&& !parent.contains("SLC")){
 	        		if(GDALUtilities.isGDALAvailable())
 	        			gir=new Radarsat2ImageGDAL(f);

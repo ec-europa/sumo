@@ -36,7 +36,9 @@ public class BoatStatisticMapPolarization {
 	}
 
 	public void setMaxValue(int value,String polarization) {
-		this.statisticsBoatForPolarization.get(polarization).maxValue=value;
+		BoatStatisticMapPolarization.Statistics stats=this.statisticsBoatForPolarization.get(polarization);
+		stats.maxValue=value;
+		statisticsBoatForPolarization.put(polarization,stats);
 	}
 	
 	public int[] getAllMaxValue() {

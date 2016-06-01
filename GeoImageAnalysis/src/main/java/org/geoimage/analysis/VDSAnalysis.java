@@ -542,7 +542,7 @@ public class VDSAnalysis{
 
                 	kdist.setImageData(cornerx, cornery, tilesize, tilesize, iBand,bbAnalysis);
                 	int[] newdata = gir.read(cornerx, cornery, tilesize, tilesize,bands[iBand]);
-                	kdist.estimate(newdata, newdata);
+                	kdist.estimate(dataMask, newdata);
 
                 	double[] treshTile=kdist.getDetectThresh();
                 	double threshTotal=treshTile[0]+treshTile[1]+treshTile[2]+treshTile[3];
