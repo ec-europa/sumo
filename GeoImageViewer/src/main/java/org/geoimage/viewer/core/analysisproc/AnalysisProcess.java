@@ -264,7 +264,7 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 	
 		                     //Azimuth Ambiguities ONLY FOR S1
 		                     if(gir instanceof Sentinel1){
-		                    	 if(((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
+		                    	 if(/*((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("EW")||*/((Sentinel1)gir).getInstumentationMode().equalsIgnoreCase("IW")){
 				                     notifyCalcAzimuth("VDS: looking for artefacts ambiguities...");
 				                     S1ArtefactsAmbiguity arAmbiguity  = new S1ArtefactsAmbiguity(boats, (SarImageReader) gir,band);
 				                     arAmbiguity.process();
@@ -278,7 +278,7 @@ public  class AnalysisProcess implements Callable<AnalysisProcess.Results>,VDSAn
 		                        		analysis.getCoastMask().getMaskGeometries(), true);
 		                     }
 		                     //leave display params forced to false
-		                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF00FF), 1, 
+		                     vdsanalysisLayer.addGeometries("tiles", new Color(0xFF0391), 1,
 		                    		 GeometryImage.LINESTRING,
 		                    		 GeometryExtractor.getTiles(gir.getWidth(),gir.getHeight(),xtileSize,ytileSize), 
 		                    		 false);
