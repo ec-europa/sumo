@@ -280,7 +280,7 @@ public class SumoXMLWriter extends AbstractVectorIO {
 				b.setNrPixels(((Double)att.get(VDSSchema.NUMBER_OF_AGGREGATED_PIXELS)).intValue());
 
 			if(att.get(VDSSchema.ESTIMATED_HEADING)!=null)
-				b.setHeadingRange(Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR)-90);
+				b.setHeadingRange(Precision.round((Double)att.get(VDSSchema.ESTIMATED_HEADING),2,BigDecimal.ROUND_FLOOR));
 
 			b.setHeadingNorth(0);
 

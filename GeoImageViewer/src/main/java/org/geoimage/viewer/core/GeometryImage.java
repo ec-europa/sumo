@@ -158,7 +158,7 @@ public class GeometryImage implements Cloneable{
             if (degree > 180) {
                 degree = degree - 180;
             }
-
+			degree = degree-90;
             atts.set(VDSSchema.ESTIMATED_HEADING, degree);
             Point p=gf.createPoint(new Coordinate(boat.getPosx(), boat.getPosy()));
             p.setUserData(atts);
