@@ -1,3 +1,5 @@
+#!/bin/sh
+
 #java -jar sumo.jar
 
 install_folder=$(pwd)

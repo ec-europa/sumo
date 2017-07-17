@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -18,58 +18,27 @@
     <orderEntry type="library" name="Maven: org.geotools:gt-shapefile:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-data:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-main:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jdom:jdom:1.1.3" level="project" />
-    <orderEntry type="library" name="Maven: javax.media:jai_core:1.1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-swing:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-api:14.2" level="project" />
+    <orderEntry type="library" name="Maven: com.vividsolutions:jts:1.13" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-referencing:14.2" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.efficient-java-matrix-library:core:0.26" level="project" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-metadata:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-opengis:14.2" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jsr-275:jsr-275:1.0-beta-2" level="project" />
+    <orderEntry type="library" name="Maven: javax.media:jai_core:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: jgridshift:jgridshift:1.0" level="project" />
     <orderEntry type="library" name="Maven: net.sf.geographiclib:GeographicLib-Java:1.44" level="project" />
+    <orderEntry type="library" name="Maven: org.jdom:jdom:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-swing:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-render:14.2" level="project" />
-    <orderEntry type="library" name="Maven: com.miglayout:miglayout:swing:3.7" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-wfs-ng:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-complex:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-app-schema-resolver:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-gml3:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-api:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-core:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-graph:14.2" level="project" />
-    <orderEntry type="library" name="Maven: picocontainer:picocontainer:1.2" level="project" />
-    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
-    <orderEntry type="library" name="Maven: commons-jxpath:commons-jxpath:1.3" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.xsd:xsd:2.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-gml2:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-xml:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.xml:xml-commons-resolver:1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-wfs:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-filter:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-fes:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-ows:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.ows:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.wfs:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.ogc:org.w3.xlink:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.fes:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.emf:common:2.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.emf:ecore:2.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-cql:14.2" level="project" />
-    <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.4c" level="project" />
-    <orderEntry type="library" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.2" level="project" />
-    <orderEntry type="library" name="Maven: xmlunit:xmlunit:1.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.geotools:gt-epsg-wkt:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-process-feature:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-process:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-grid:14.2" level="project" />
-    <orderEntry type="library" name="Maven: org.geotools:gt-imageio-ext-gdal:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-coverage:14.2" level="project" />
-    <orderEntry type="library" name="Maven: com.vividsolutions:jts:1.13" level="project" />
+    <orderEntry type="library" name="Maven: javax.media:jai_imageio:1.1" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-tiff:1.1.13" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-utilities:1.1.13" level="project" />
+    <orderEntry type="library" name="Maven: javax.media:jai_codec:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-geocore:1.1.13" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-streams:1.1.13" level="project" />
     <orderEntry type="library" name="Maven: org.jaitools:jt-zonalstats:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.jaitools:jt-utils:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.affine:jt-affine:1.0.8" level="project" />
@@ -84,8 +53,8 @@
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.border:jt-border:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.buffer:jt-buffer:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.crop:jt-crop:1.0.8" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.jaiext.lookup:jt-lookup:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.mosaic:jt-mosaic:1.0.8" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.jaiext.lookup:jt-lookup:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.nullop:jt-nullop:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.rescale:jt-rescale:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.stats:jt-stats:1.0.8" level="project" />
@@ -103,7 +72,46 @@
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.classifier:jt-classifier:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.rlookup:jt-rlookup:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.jaiext.vectorbin:jt-vectorbin:1.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-cql:14.2" level="project" />
+    <orderEntry type="library" name="Maven: com.miglayout:miglayout:swing:3.7" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-wfs-ng:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-complex:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-xml:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-wfs:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.wfs:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.ogc:org.w3.xlink:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.emf:common:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.emf:ecore:2.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.fes:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.ogc:net.opengis.ows:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-filter:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-core:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-graph:14.2" level="project" />
+    <orderEntry type="library" name="Maven: picocontainer:picocontainer:1.2" level="project" />
+    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+    <orderEntry type="library" name="Maven: commons-jxpath:commons-jxpath:1.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.xsd:xsd:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-gml2:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-gml3:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-fes:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools.xsd:gt-xsd-ows:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.xml:xml-commons-resolver:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-app-schema-resolver:14.2" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: xmlunit:xmlunit:1.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.geotools:gt-epsg-wkt:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-process-feature:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-process:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-grid:14.2" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-imageio-ext-gdal:14.2" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdalarcbinarygrid:1.1.13" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdalframework:1.1.13" level="project" />
+    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdal-bindings:1.9.2" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdalmrsid:1.1.13" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdalecw:1.1.13" level="project" />
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdaldted:1.1.13" level="project" />
@@ -119,13 +127,6 @@
     <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-imagereadmt:1.1.13" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-epsg-hsql:14.2" level="project" />
     <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.0" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdal-bindings:1.9.2" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-gdalframework:1.1.13" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-streams:1.1.13" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-utilities:1.1.13" level="project" />
-    <orderEntry type="library" name="Maven: it.geosolutions.imageio-ext:imageio-ext-geocore:1.1.13" level="project" />
-    <orderEntry type="library" name="Maven: javax.media:jai_codec:1.1.3" level="project" />
-    <orderEntry type="library" name="Maven: javax.media:jai_imageio:1.1" level="project" />
     <orderEntry type="library" name="Maven: rome:modules:0.3.2" level="project" />
     <orderEntry type="library" name="Maven: rome:rome:1.0RC2" level="project" />
     <orderEntry type="library" name="Maven: jdom:jdom:1.0" level="project" />
@@ -166,7 +167,6 @@
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.osgeo:proj4j:0.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: commons-net:commons-net:3.3" level="project" />
@@ -192,5 +192,4 @@
     <orderEntry type="library" name="Maven: org.jrc.sumo:jhdf5obj:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: org.gdal:gdal:1.11.1" level="project" />
   </component>
-  <component name="POM File Configuration" pomFile="" />
 </module>
