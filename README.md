@@ -44,7 +44,7 @@ Sum can run in two ways , interactive mode  ( with GUI ) and in batch mode. The 
 configuration file as explained in the manual.
 
 To run in interactive mode use start.sh for Linux and start.bat for Windows .
-
+    
 To use the batch mode use start_batch.sh for Linux and start_batch.bat for Windows.
 
 
