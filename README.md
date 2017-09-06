@@ -46,18 +46,29 @@ SUMO is licensed under the BSD 2-clause "Simplified" License.
 
 ### Literature
 There is a basic manual and installation guide available: 
-H. Greidanus, P. Argentieri, M. Alvarez, C. Santamaria, N. Kourti, The SUMO ship detection software for satellite radar images – Short installation and user guide, EUR KJ-01-17-945-EN-N, doi:10.2760/349278
+
+H. Greidanus, P. Argentieri, M. Alvarez, C. Santamaria, N. Kourti, The SUMO ship detection software for satellite radar images – Short installation and user guide, EUR KJ-01-17-945-EN-N, doi:10.2760/349278 
 
 The SUMO algorithm is described in detail in: 
-H. Greidanus, M. Alvarez, C. Santamaria, F.-X. Thoorens, N. Kourti, P. Argentieri, The SUMO Ship Detector Algorithm for Satellite Radar Images, Remote Sensing 2017, 9, 246, doi:10.3390/rs9030246
+
+H. Greidanus, M. Alvarez, C. Santamaria, F.-X. Thoorens, N. Kourti, P. Argentieri, The SUMO Ship Detector Algorithm for Satellite Radar Images, Remote Sensing 2017, 9, 246, doi:10.3390/rs9030246 
 
 Some results from SUMO can be found in: 
-C. Santamaria, M. Alvarez, H. Greidanus, V. Syrris, P. Soille, P. Argentieri, Mass processing of Sentinel-1 images for maritime surveillance, Remote Sensing 2017, 9(7), 678, doi:10.3390/rs9070678
-H. Greidanus, C. Santamaria, M. Alvarez, D. Krause, M. Stasolla, P. W. Vachon, Non-Reporting Ship Traffic in the Western Indian Ocean, Proc. ESA Living Planet Symposium, Prague, Czech Republic, 9-13 May 2016, Ed. L. Ouwehand, SP-740, Aug 2016, ISBN 978-92-9221-305-3
-C. Santamaria, H. Greidanus, M. Fournier, T. Eriksen, M. Vespe, M. Alvarez, V. Fernandez Arguedas, C. Delaney, P. Argentieri, Sentinel-1 Contribution to Monitoring Maritime Activity in the Arctic, Proc. ESA Living Planet Symposium, Prague, Czech Republic, 9-13 May 2016, Ed. L. Ouwehand, SP-740, Aug 2016, ISBN 978-92-9221-305-3
+
+C. Santamaria, M. Alvarez, H. Greidanus, V. Syrris, P. Soille, P. Argentieri, Mass processing of Sentinel-1 images for maritime surveillance, Remote Sensing 2017, 9(7), 678, doi:10.3390/rs9070678 
+
+H. Greidanus, C. Santamaria, M. Alvarez, D. Krause, M. Stasolla, P. W. Vachon, Non-Reporting Ship Traffic in the Western Indian Ocean, Proc. ESA Living Planet Symposium, Prague, Czech Republic, 9-13 May 2016, Ed. L. Ouwehand, SP-740, Aug 2016, ISBN 978-92-9221-305-3 
+
+C. Santamaria, H. Greidanus, M. Fournier, T. Eriksen, M. Vespe, M. Alvarez, V. Fernandez Arguedas, C. Delaney, P. Argentieri, Sentinel-1 Contribution to Monitoring Maritime Activity in the Arctic, Proc. ESA Living Planet Symposium, Prague, Czech Republic, 9-13 May 2016, Ed. L. Ouwehand, SP-740, Aug 2016, ISBN 978-92-9221-305-3 
+
 M. Stasolla, J.J. Mallorqui, G. Margarit, C. Santamaria, N. Walker, A comparative study of operational vessel detectors for maritime surveillance using satellite-borne Synthetic Aperture Radar, IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 2016, 9, 2687–2701 
-J. Cicuendez Perez, M. Alvarez Alvarez, J. Heikkonen, M. Indregard, Identification of bluefin tuna cages in Mediterranean Sea fishing grounds from SAR images, Int. J. Rem. Sens. 2011, 32, 4461–4474
-H. Greidanus, D. Ardill, N. Ansell, F.X. Thoorens, P. Peries, Surveying shipping and fishing in the SW Indian Ocean with satellite SAR, Proc. 33rd International Symposium on Remote Sensing of Environment, Stresa, Italy, 4–8 May 2009
+
+J. Cicuendez Perez, M. Alvarez Alvarez, J. Heikkonen, M. Indregard, Identification of bluefin tuna cages in Mediterranean Sea fishing grounds from SAR images, Int. J. Rem. Sens. 2011, 32, 4461–4474 
+
+H. Greidanus, D. Ardill, N. Ansell, F.X. Thoorens, P. Peries, Surveying shipping and fishing in the SW Indian Ocean with satellite SAR, Proc. 33rd International Symposium on Remote Sensing of Environment, Stresa, Italy, 4–8 May 2009 
+
 T. Lefort, F. Thoorens, H. Greidanus, M. Indregard, R. Gallagher, V. Aznar-Abian, S. Defever, N. Ramponi, Providing cost efficient near real time fisheries monitoring capability to remote and isolated areas of the globe — The case of Comoros, Proc. 33rd International Symposium on Remote Sensing of Environment, Stresa, Italy, 4–8 May 2009, pp. 833–836 
+
 N. Kourti, I. Shepherd, H. Greidanus, M. Alvarez, E. Aresu, T. Bauna, J. Chesworth, G. Lemoine, G. Schwartz, Integrating remote sensing in fisheries control, Fish. Manag. Ecol. 2005, 12, 295–307 
-H. Greidanus, P. Clayton, M. Indregard, G. Staples, N. Suzuki, P. Vachon, C. Wackerman, T. Tennvassas, J. Mallorqui, N. Kourti, Benchmarking operational SAR ship detection, Proc. IGARSS 2004, Anchorage, AL, USA, 20–24 Sep 2004
+
+H. Greidanus, P. Clayton, M. Indregard, G. Staples, N. Suzuki, P. Vachon, C. Wackerman, T. Tennvassas, J. Mallorqui, N. Kourti, R. Ringose, H. Melief, Benchmarking operational SAR ship detection, Proc. IGARSS 2004, Anchorage, AL, USA, 20–24 Sep 2004 
