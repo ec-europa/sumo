@@ -34,12 +34,17 @@ SUMO is organised as a Maven project with several subprojects:
 SUMO doesn’t need to be actually installed, it’s enough to copy the SUMO folder (downloaded from the releases page and then unzipped) on your system. 
 SUMO requires JRE (or JDK) 1.7.x or above. If you don't want to install a new Java version, you could simply copy the JRE folder in your SUMO folder.
 
+#### Test with Docker container
+The Docker file in the main folder show the steps and the configuration used to did a test with the Docker container with Ubuntu .
+The result of this test is visible at this link: https://dx.doi.org/10.3390/rs907067
+
 ### Run SUMO
 SUMO can run in two ways, interactive mode (with GUI) and batch mode. The batch mode requires a configuration file as explained in the manual.
 
 To run in interactive mode use start.sh for Linux and start.bat for Windows.
     
 To use the batch mode use start_batch.sh for Linux and start_batch.bat for Windows.
+
 
 ### License
 SUMO is licensed under the BSD 2-clause "Simplified" License.
