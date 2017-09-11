@@ -35,8 +35,8 @@ SUMO doesn’t need to be actually installed, it’s enough to copy the SUMO fol
 SUMO requires JRE (or JDK) 1.7.x or above. If you don't want to install a new Java version, you could simply copy the JRE folder in your SUMO folder.
 
 #### Test with Docker container
-The Docker file in the main folder show the steps and the configuration used to did a test with the Docker container with Ubuntu .
-The result of this test is visible at this link: https://dx.doi.org/10.3390/rs907067
+The Docker file in the main folder shows the steps and the configuration used to do a test with the Docker container with Ubuntu.
+This method was actually used to produce the results for C. Santamaria et al. 2017 (below). 
 
 ### Run SUMO
 SUMO can run in two ways, interactive mode (with GUI) and batch mode. The batch mode requires a configuration file as explained in the manual.
