@@ -4,6 +4,29 @@
 # - modified: 2017-03-06 
 # Generate it:
 #	sudo docker build -t marsec:java1.8_gdalext_SUMO_Lin64_1.3.5 .
+#
+# This Dockerfile was used as basis to perform on the JRC Earth Observation
+# Data and Processing Platform (JEODPP) the experiments reported in 
+# https://dx.doi.org/10.3390/rs907067 
+#
+# @Article{     santamaria-etal2017rs,
+#   author      = {Santamaria, C. and Alvarez, M. and Greidanus, H. and
+#                 Syrris, V. and Soille, P. and Argentieri, P.},
+#   title       = {Mass processing of {S}entinel-1 images for maritime
+#                 surveillance},
+#   journal     = {Remote Sensing},
+#   year        = {2017},
+#   doi         = {10.3390/rs9070678},
+#   volume      = {9},
+#   number      = {7},
+#   pages       = {678/1-678/20}
+# }
+#
+# JEODPP concept paper: http://publications.jrc.ec.europa.eu/repository/bitstream/JRC98089/soille-etal2016bids.pdf
+#
+# JEODPP web site: https://cidportal.jrc.ec.europa.eu/home/
+#
+# (c) European Union, 2017
 #=================================================================
 
 FROM ubuntu:xenial
