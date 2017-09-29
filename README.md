@@ -77,3 +77,8 @@ T. Lefort, F. Thoorens, H. Greidanus, M. Indregard, R. Gallagher, V. Aznar-Abian
 N. Kourti, I. Shepherd, H. Greidanus, M. Alvarez, E. Aresu, T. Bauna, J. Chesworth, G. Lemoine, G. Schwartz, Integrating remote sensing in fisheries control, Fish. Manag. Ecol. 2005, 12, 295–307 
 
 H. Greidanus, P. Clayton, M. Indregard, G. Staples, N. Suzuki, P. Vachon, C. Wackerman, T. Tennvassas, J. Mallorqui, N. Kourti, R. Ringose, H. Melief, Benchmarking operational SAR ship detection, Proc. IGARSS 2004, Anchorage, AL, USA, 20–24 Sep 2004 
+
+
+### Manual
+The manual is available in the doc folder under the project root folder
+https://github.com/ec-europa/sumo/blob/master/doc/SumoManual2017_v17.pdf
