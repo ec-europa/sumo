@@ -49,6 +49,10 @@ To use the batch mode use start_batch.sh for Linux and start_batch.bat for Windo
 ### License
 SUMO is licensed under the BSD 2-clause "Simplified" License.
 
+### Manual
+The manual is available in the doc folder under the project root folder 
+
+
 ### Literature
 There is a basic manual and installation guide available: 
 
@@ -79,6 +83,3 @@ N. Kourti, I. Shepherd, H. Greidanus, M. Alvarez, E. Aresu, T. Bauna, J. Cheswor
 H. Greidanus, P. Clayton, M. Indregard, G. Staples, N. Suzuki, P. Vachon, C. Wackerman, T. Tennvassas, J. Mallorqui, N. Kourti, R. Ringose, H. Melief, Benchmarking operational SAR ship detection, Proc. IGARSS 2004, Anchorage, AL, USA, 20–24 Sep 2004 
 
 
-### Manual
-The manual is available in the doc folder under the project root folder
-https://github.com/ec-europa/sumo/blob/master/doc/SumoManual2017_v17.pdf
