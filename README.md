@@ -50,11 +50,11 @@ To use the batch mode use start_batch.sh for Linux and start_batch.bat for Windo
 SUMO is licensed under the BSD 2-clause "Simplified" License.
 
 ### Manual
-There is a basic manual and installation guide available under the project root folder. 
+There is a basic manual and installation guide available under the project root / doc folder. 
 
 
 ### Literature
-The manual mentioned above: 
+The basic manual mentioned above: 
 
 H. Greidanus, P. Argentieri, M. Alvarez, C. Santamaria, N. Kourti, The SUMO ship detection software for satellite radar images – Short installation and user guide, EUR KJ-01-17-945-EN-N, doi:10.2760/349278 
 
