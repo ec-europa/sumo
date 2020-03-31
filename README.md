@@ -1,3 +1,5 @@
+## IMPORTANT: Software not actively maintained and with known security vulnerabilities
+
 # SUMO
 SUMO is a Java software package to perform ship detection on satellite SAR (Synthetic Aperture Radar) images. 
 It takes as main input a SAR images and its metadata, and produces as main output a list of detected ships with their attributes. 
